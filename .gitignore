@@ -1,0 +1,5 @@
+.vscode/
+upload/
+*.DS_Store
+error.log
+ads.txt

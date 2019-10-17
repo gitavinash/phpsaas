@@ -1,0 +1,62 @@
+<?php
+	
+	/* Project root directory of the server */
+
+	define('ROOT', dirname(__FILE__));
+
+	/* database connection setting */
+
+	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
+	define('DB_USER', 'root');		// database username ex :- root
+	define('DB_PASS', '');		// datapase user password :- 12345
+	define('DB_NAME', 'isw_cms');		// database name ex :- cms_db
+
+	/* database table prefix */
+
+	define('TABLE_PREFIX', 'isw_'); 
+
+	/* dafault timezone is asia calcutta for indian user if you want to change timezone please read http://php.net/manual/en/timezones.php */
+
+	$time_zone = 'Asia/Calcutta';
+	$time_zone_value = '+5:30';
+
+	/* Error Reporting */
+
+	define('DEVELOPMENT_MODE', false); // Error reporting true to show error or false to hide error
+
+	/** User IP Address */
+
+	define('IP', $_SERVER['REMOTE_ADDR']);
+
+	/** OTP and Verification Code Expire Time in Minutes */
+
+	define('TIME_LIMIT', '60');
+
+	#############################################################################################
+	############################  DO NOT CHANGE CODE BELOW THIS LINE  ###########################
+	#############################################################################################
+
+	/* Active domain and URL information */
+	
+	define('HTTP_PROTOCOL', $_SERVER['REQUEST_SCHEME'].'://'); // Check HTTP protocol is secure or not
+	define('SITE_DOMAIN', $_SERVER['HTTP_HOST']); // return only site domain with protocol
+	define('SITE_URL', HTTP_PROTOCOL.$_SERVER['HTTP_HOST']); // return site domain without protocol
+	define('MAIN_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -2, 3, true))); // show only the actual domain like :- example.com
+	define('SUB_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -3, 1, true))); // show only the actual domain like :- example.com
+	define('ACTIVE_URL', (str_replace('', '', $_SERVER['REQUEST_URI']))); // echo complete url show on the url bar
+	define('QUERY_URL', htmlspecialchars_decode($_SERVER['QUERY_STRING'])); // echo only query string of the url
+	define('BASE_URL', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?'))); // return only the actual url and remove query string
+
+	/** Redirect www url to non www url */
+
+	if(SUB_DOMAIN=='www') {
+		if((substr(BASE_URL, -1))!='/') {
+			$redirectURL=BASE_URL.'/'.((QUERY_URL!='') ? '?'.QUERY_URL : '' );
+			header("Location: {$redirectURL}", TRUE, 301);
+		} else {
+			header("Location: ".HTTP_PROTOCOL.MAIN_DOMAIN.ACTIVE_URL, TRUE, 301);
+		}
+		exit();
+	}
+	
+?>
