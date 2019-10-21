@@ -54,9 +54,9 @@
 			
 			$keyType='key';
 			$keyMedium='email';
+			$verifyURL=SITE_URL.'/verify/email.php?user_id='.$saltKey.'&email='.base64_encode($email);
 			
 			require_once 'generateKey.php';
-			
 
 			header("Location: /install/?step=2");
 			exit();

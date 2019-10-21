@@ -3,3 +3,4 @@ upload/
 *.DS_Store
 error.log
 ads.txt
+config.php

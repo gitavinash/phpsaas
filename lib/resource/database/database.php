@@ -26,28 +26,28 @@
 
   /* category table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."category(category_id bigint(20) NOT NULL, category_parent_id bigint(20) NOT NULL, category_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, category_description LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, category_site_id bigint(20) NOT NULL, category_owner_id bigint(20) NOT NULL, category_type varchar(10) NOT NULL DEFAULT 'post', category_total_count bigint(20) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."category(category_id bigint(20) NOT NULL, category_parent_id bigint(20) NOT NULL, category_title varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, category_description LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, category_site_id bigint(20) NOT NULL, category_owner_id bigint(20) NOT NULL, category_type varchar(10) NOT NULL DEFAULT 'post', category_total_count bigint(20) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category ADD PRIMARY KEY (category_id), ADD INDEX (category_type)");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category MODIFY category_id bigint(20) NOT NULL AUTO_INCREMENT");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."category(category_name, category_site_id, category_owner_id, category_type, category_total_count) VALUES ('Uncategorized', '1', '1', 'post', '0')");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."category(category_title, category_site_id, category_owner_id, category_type, category_total_count) VALUES ('Uncategorized', '1', '1', 'post', '0')");
 
   /* directory table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."directory(directory_id int(11) NOT NULL, directory_name varchar(50) NOT NULL, directory_path varchar(20) NOT NULL, directory_status int(1) NOT NULL, directory_type varchar(10) NOT NULL, directory_creation timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."directory ADD PRIMARY KEY (directory_id), ADD UNIQUE KEY directory_path (directory_path)");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."directory MODIFY directory_id bigint(20) NOT NULL AUTO_INCREMENT");
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."directory(directory_name, directory_path, directory_status, directory_type, directory_creation) VALUES('Content Management System', 'cms', '1', 'app', NOW())");
 
-  /** key table */
+  /** Key Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."key(key_id bigint(20) NOT NULL, key_user_id bigint(20) NOT NULL, key_value varchar(255) NOT NULL, key_medium varchar(10) NOT NULL, key_type varchar(10) NOT NULL, key_expire_time datetime NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."key ADD PRIMARY KEY (key_id)");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."key MODIFY key_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-
   /* link table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."link(link_id bigint(20) NOT NULL, link_url varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, link_relation_id int(11) NOT NULL, link_status varchar(3) NOT NULL, link_type varchar(20) DEFAULT 'post', link_owner_id bigint(20) NOT NULL, link_site_id bigint(20) NOT NULL, link_creation datetime NOT NULL, link_published datetime NOT NULL, link_modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."link(link_id bigint(20) NOT NULL, link_url varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, link_relation_id int(11) NOT NULL, link_is_featured int(1) NOT NULL, link_status varchar(3) NOT NULL, link_type varchar(20) DEFAULT 'post', link_owner_id bigint(20) NOT NULL, link_site_id bigint(20) NOT NULL, link_creation datetime NOT NULL, link_published datetime NOT NULL, link_modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link ADD PRIMARY KEY (link_id), ADD UNIQUE KEY link_url (link_url), ADD KEY link_status (link_status), ADD KEY link_type (link_type), ADD KEY link_published (link_published), ADD KEY link_relation_id (link_relation_id), ADD KEY link_site_id (link_site_id), ADD KEY link_owner_id (link_owner_id)");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link MODIFY link_id bigint(20) NOT NULL AUTO_INCREMENT");
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('/category/uncategorized/', '1', '200', 'category', '1', '1', NOW(), NOW(), NOW())");
@@ -66,13 +66,13 @@
 
   /* post table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."post(post_id bigint(20) NOT NULL, post_parent_id bigint(20) NOT NULL, post_image longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, post_title TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, post_content longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, post_category varchar(11) NOT NULL, post_owner_id bigint(20) NOT NULL, post_status int(1) NOT NULL, post_type varchar(30) NOT NULL DEFAULT 'post') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."post(post_id bigint(20) NOT NULL, post_parent_id bigint(20) NOT NULL, post_image longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, post_title TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, post_description longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, post_category varchar(11) NOT NULL, post_owner_id bigint(20) NOT NULL, post_status int(1) NOT NULL, post_type varchar(30) NOT NULL DEFAULT 'post') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post ADD PRIMARY KEY (post_id), ADD KEY post_category (post_category), ADD INDEX (post_type)");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post MODIFY post_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   /* profile table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."profile(profile_id bigint(20) NOT NULL, profile_owner_id bigint(20) NOT NULL, profile_first_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL, profile_last_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL, profile_display_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, profile_mobile varchar(20) NOT NULL, profile_alt_mobile varchar(20) NOT NULL, profile_email varchar(191) NOT NULL, profile_alt_email varchar(191) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."profile(profile_id bigint(20) NOT NULL, profile_owner_id bigint(20) NOT NULL, profile_first_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL, profile_last_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL, profile_display_name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, profile_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, profile_mobile varchar(20) NOT NULL, profile_alt_mobile varchar(20) NOT NULL, profile_email varchar(191) NOT NULL, profile_alt_email varchar(191) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile ADD PRIMARY KEY (profile_id), ADD UNIQUE KEY profile_owner_id (profile_owner_id), ADD UNIQUE KEY profile_email (profile_email)");
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile MODIFY profile_id bigint(20) NOT NULL AUTO_INCREMENT");
 

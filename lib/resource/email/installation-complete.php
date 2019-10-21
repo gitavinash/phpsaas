@@ -2,7 +2,7 @@
 
 	include_once 'header.php';
 
-	$subject='Welcome on Board';
+	$subject='Verify your Email';
 
 	$email_body = "
 		
@@ -10,7 +10,7 @@
 			<tr>
 				<td style='text-align: center'>
 					<h1 style='color: {$themeColor}'>{$subject}</h1>
-					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque accumsan tempor laoreet. Quisque hendrerit nulla vitae purus commodo porta. Mauris eget eleifend nulla, sed pellentesque ante. Donec nec ipsum justo. Sed condimentum scelerisque mi eu rhoncus. Integer pellentesque ex ligula, at aliquam odio porttitor nec. Nam efficitur gravida magna, id sollicitudin lectus tristique a. Nunc sollicitudin purus commodo, pellentesque felis ac, ultricies massa. Pellentesque placerat condimentum venenatis. Pellentesque mollis turpis a porta vestibulum. Nam sed rhoncus est. Suspendisse eget tincidunt ipsum.</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Kindly verify your email id to continue the installation process.<p>
 				</td>
 			</tr>
 			<tr>

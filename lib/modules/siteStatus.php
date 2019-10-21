@@ -17,8 +17,10 @@
 				/** Redirect to Installation step 1 url */
 				
 				if(ACTIVE_URL!='/install/?step=1') {
+					
 					header("Location: /install/?step=1", TRUE, 301);
 					exit();
+
 				}
 
 				/** Installtion step 1 */
@@ -52,17 +54,17 @@
 				}
 
 			} else {
-
+				
 				extract(mysqli_fetch_assoc($checkInstallation));
 
 				if($site_status==0) {
 
 					/** Redirect to Installation step 2 url */
 					
-					if(ACTIVE_URL!='/install/?step=2') {
-						header("Location: /install/?step=2", TRUE, 301);
-						exit();
-					}
+					// if(ACTIVE_URL!='/install/?step=2') {
+					// 	header("Location: /install/?step=2", TRUE, 301);
+					// 	exit();
+					// }
 
 					/** Step 2 of installation process */
 					

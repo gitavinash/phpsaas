@@ -13,7 +13,7 @@
     }
 
     if($insertKey=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."key(key_user_id, key_value, key_medium, key_type, key_expire_time) VALUES('{$userID}', '{$saltKey}', '{$keyMedium}', '{$keyType}', '".EXPIRE_TIME."')")) {
-
+        
         require_once EMAIL_TEMPLATE.'installation-complete.php';
 
     }

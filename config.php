@@ -7,9 +7,9 @@
 	/* database connection setting */
 
 	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
-	define('DB_USER', 'isw');		// database username ex :- root
-	define('DB_PASS', 'Tech@_36db');		// datapase user password :- 12345
-	define('DB_NAME', 'isw_one');		// database name ex :- cms_db
+	define('DB_USER', 'root');		// database username ex :- root
+	define('DB_PASS', '');		// datapase user password :- 12345
+	define('DB_NAME', 'isw_cms');		// database name ex :- cms_db
 
 	/* database table prefix */
 
@@ -22,7 +22,7 @@
 
 	/* Error Reporting */
 
-	define('DEVELOPMENT_MODE', false); // Error reporting true to show error or false to hide error
+	define('DEVELOPMENT_MODE', true); // Error reporting true to show error or false to hide error
 
 	/** User IP Address */
 
