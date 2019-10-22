@@ -4,7 +4,7 @@
 
 	/** Check website domain status */
 
-	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/siteStatus.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/checkDomain.php';
 	
 	/** Check configuration file is exist or not */
 

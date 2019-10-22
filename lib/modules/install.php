@@ -6,6 +6,8 @@
 
 		extract($data);
 
+		$siteExprireDate=date('Y-m-d', strtotime("+5 Years"));
+
 		if($checkUser=mysqli_query($connection, "SELECT user_email FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
 			if(mysqli_num_rows($checkUser)!=0) {
 
@@ -42,7 +44,7 @@
 		$insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_app, user_type, user_reg_time, user_reg_ip) VALUES('administrator', '{$email}', '{$dbPassword}', '$saltKey', 'system', 'administrator', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
 		$userID=mysqli_insert_id($connection);
 
-		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_domain, site_name, site_description, site_app, site_theme, site_indexing, site_status) VALUES('{$userID}', '".SITE_DOMAIN."', '{$site_name}', '{$site_desc}', 'system', 'default', '{$index}', 0)");
+		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_domain, site_name, site_description, site_app, site_theme, site_indexing, site_status, site_expire_date) VALUES('{$userID}', '".SITE_DOMAIN."', '{$site_name}', '{$site_desc}', 'system', 'default', '{$index}', 1, '{$siteExprireDate}')");
 
 		$insertProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '', '', '', '{$site_name}', '{$email}')");
 

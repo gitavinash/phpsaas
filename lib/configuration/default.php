@@ -6,6 +6,7 @@
 	/** Current Time */
 
 	define('CURRENT_DISPLAY_TIME', date('Y-m-d H:i:s'));		// This time is used for users
+	define('CURRENT_DISPLAY_DATE', date('Y-m-d'));		// This Date is used for users
 	define('CURRENT_MACHINE_TIME', date('Y-m-d H:i:s'));		// This time is user for all backend tasks
 	define('EXPIRE_TIME', date('Y-m-d H:i:s', strtotime("+ ".TIME_LIMIT." minutes", strtotime(CURRENT_DISPLAY_TIME))));
 	
