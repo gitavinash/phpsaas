@@ -6,7 +6,7 @@
 
 	} else {
 
-		echo '<h1>'.SITE_VERSION.' theme not found</h1>'.USER_VIEW_PATH.'index.php';
+		echo '<h1>'.SITE_VERSION.' theme not found</h1>';
 
 	}
 
