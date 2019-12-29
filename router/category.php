@@ -47,7 +47,27 @@
 
 				} else {
 
-					require_once USER_VIEW_PATH.'category.php';
+					if(file_exists($category_path)) {
+
+						/** Use custome template of this category */
+						
+						require_once $category_path;
+	
+					} else {
+	
+						/** Use parent category template */
+	
+						if(file_exists(USER_VIEW_PATH.'category.php')) {
+	
+							require_once USER_VIEW_PATH.'category.php';
+	
+						} else {
+	
+							echo '<h1>Unable to find the template path</h1>';
+	
+						}
+	
+					}
 
 				}
 

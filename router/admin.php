@@ -4,9 +4,9 @@
 
 	require_once LOGIN_CHECK;
 
-	/* include admin functions.php */
+	// /* include admin functions.php */
 
-	require_once APP_MODULES.'functions.php';
+	// require_once APP_MODULES.'functions.php';
 
 	/* url router for admin dashboard */
 

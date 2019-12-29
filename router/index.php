@@ -64,6 +64,10 @@
 				require_once 'admin.php';
 				break;
 
+			case 'api' :
+				require_once 'api.php';
+				break;
+
 			case 'login' :
 				require_once USER_VIEW_PATH.'login.php';
 				break;
