@@ -4,7 +4,7 @@
 
 	/** Check website domain status */
 
-	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/checkDomain.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/siteStatus.php';
 	
 	/** Check configuration file is exist or not */
 
@@ -20,7 +20,7 @@
 		exit();
 
 	}
-	
+
 	/** Manage All POST method request */
 
 	if($_SERVER['REQUEST_METHOD']=="POST") {
@@ -64,10 +64,6 @@
 				require_once 'admin.php';
 				break;
 
-			case 'api' :
-				require_once 'api.php';
-				break;
-
 			case 'login' :
 				require_once USER_VIEW_PATH.'login.php';
 				break;
@@ -84,6 +80,26 @@
 
 			case 'email' :
 				require_once 'email.php';
+				break;
+
+			case 'search' :
+				require_once 'search.php';
+				break;
+
+			case 'tag' :
+				require_once 'tag.php';
+				break;
+
+			case 'category' :
+				require_once 'category.php';
+				break;
+
+			case 'feed' :
+				require_once 'feed.php';
+				break;
+
+			case 'redirect' :
+				include_once ROOT.'/redirect.php';
 				break;
 			
 			case (preg_match('/sitemap.xml/', $urlStructure[0]) ? true : false) :

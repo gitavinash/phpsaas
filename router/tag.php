@@ -1,6 +1,6 @@
 <?php
 
-	/** Pagination */
+    /** Pagination */
 
 	$currentPage=end($urlStructure);
 
@@ -17,9 +17,7 @@
 
     }
 
-    $postFrom=(($currentPage==0) ? 0 : ($currentPage-1)*PER_PAGE_LIMIT );
-
-    //echo "SELECT DISTINCT(link_relation_id), link_status, link_url, post_image, post_title, meta_description FROM ".TABLE_PREFIX."tag, ".TABLE_PREFIX."link, ".TABLE_PREFIX."post, ".TABLE_PREFIX."meta WHERE tag_name='{$tag_name}' AND link_relation_id=post_id AND link_relation_id=tag_relation_id AND tag_type='post' AND link_type='post' AND tag_relation_id=post_id AND post_id=meta_relation_id AND link_status=200 ORDER BY link_published DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT;
+    $postFrom=(($currentPage==0) ? 0 : $currentPage*PER_PAGE_LIMIT );
 
     if($tagList=mysqli_query($connection, "SELECT DISTINCT(link_relation_id), link_status, link_url, post_image, post_title, meta_description FROM ".TABLE_PREFIX."tag, ".TABLE_PREFIX."link, ".TABLE_PREFIX."post, ".TABLE_PREFIX."meta WHERE tag_name='{$tag_name}' AND link_relation_id=post_id AND link_relation_id=tag_relation_id AND tag_type='post' AND link_type='post' AND tag_relation_id=post_id AND post_id=meta_relation_id AND link_status=200 ORDER BY link_published DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT)) {
 
@@ -31,7 +29,7 @@
 
             }
 
-            $tag_path=USER_VIEW_PATH.$urlStructure[1].'-category.php';
+            $tag_path=USER_VIEW_PATH.$urlStructure[1].'-tag.php';
 
             /** Include Tag view template */
 
@@ -44,15 +42,39 @@
                 $link_type='tag';
                 $link_url=BASE_URL;
 
-                require_once USER_VIEW_PATH.'tag.php';
+                if(file_exists(USER_VIEW_PATH.'tag.php')) {
+
+                    require_once USER_VIEW_PATH.'tag.php';
+
+                } else {
+
+                    echo '<h1>Unable to find the template path</h1>';
+
+                }
 
             }
 
         } else {
 
-            header("Location: /", TRUE, 301);
+            if(file_exists(ERROR_404)) {
+
+                echo 'Page Not Found';
+                //require_once ERROR_404;
+
+            } else {
+
+                echo $tag_name;
+                exit();
+
+                echo '<h1>Unable to find the Error page template path</h1>';
+
+            }
 
         }
+
+    } else {
+
+        echo 'i m here';
 
     }
 

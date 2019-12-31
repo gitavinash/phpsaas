@@ -29,8 +29,10 @@
 			if($link_status==200) {
 
 				$category_path=USER_VIEW_PATH.str_replace('/category/', '', rtrim($categoryLink, '/')).'-category.php';
+
+				/** Fetching post of the category */
 				
-				if($categoryPost=mysqli_query($connection, "SELECT link_url, post_image, post_title, meta_description FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON post_id=meta_relation_id WHERE post_category='{$category_id}' AND link_status=200 AND link_type = 'post' AND post_status=1 ORDER BY link_modified DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT)) {
+				if($categoryPost=mysqli_query($connection, "SELECT link_url, post_image, post_title, meta_description FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON post_id=meta_relation_id WHERE post_category='{$category_id}' AND link_status=200 AND link_type = 'post' AND post_status=1 ORDER BY link_published DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT)) {
 
 					if(mysqli_num_rows($categoryPost)!=0) {
 						while($categoryPostData=mysqli_fetch_assoc($categoryPost)) {
@@ -40,39 +42,34 @@
 						}
 					}
 				}
+				
 
 				if(file_exists($category_path)) {
 
+					/** Use custome template of this category */
+					
 					require_once $category_path;
 
 				} else {
 
-					if(file_exists($category_path)) {
+					/** Use parent category template */
 
-						/** Use custome template of this category */
-						
-						require_once $category_path;
-	
+					if(file_exists(USER_VIEW_PATH.'category.php')) {
+
+						require_once USER_VIEW_PATH.'category.php';
+
 					} else {
-	
-						/** Use parent category template */
-	
-						if(file_exists(USER_VIEW_PATH.'category.php')) {
-	
-							require_once USER_VIEW_PATH.'category.php';
-	
-						} else {
-	
-							echo '<h1>Unable to find the template path</h1>';
-	
-						}
-	
+
+						echo '<h1>Unable to find the template path</h1>';
+
 					}
 
 				}
 
 
 			} else {
+				echo 'i m here';
+				exit();
 
 				/** Add Error page  */
 

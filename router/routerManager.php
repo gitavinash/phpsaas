@@ -1,12 +1,4 @@
 <?php
-	
-	/* check if local file is available in theme or not */
-
-	if(file_exists(USER_VIEW_PATH.$urlStructure[0].'.php')) {
-
-		require_once USER_VIEW_PATH.$urlStructure[0].'.php';
-
-	} else {
 
 		/* Search url in link table  */
 
@@ -28,23 +20,11 @@
 
 			} else {
 				
-				include_once ERROR_404;
+				/** Check Pagination */
+
+				echo BASE_URL;
 
 			}
-
-		} else {
-
-			/** Add physical file */
-			
-			$physicalFile=$_SERVER['DOCUMENT_ROOT'].$urlStructure[0].'.php';
-			
-			if(file_exists($physicalFile)) {
-
-				require_once $physicalFile;
-
-			}
-
-		}
 
 	}
 

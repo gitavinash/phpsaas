@@ -55,8 +55,8 @@
 
 	/* Dashboard URL Management */
 
-	define('ADMIN_ACTIVE_URL', str_replace('/dashboard', '', (str_replace('', '', $_SERVER['REQUEST_URI'])))); // echo complete url show on the url bar
-	define('ADMIN_QUERY_URL', str_replace('/dashboard', '', $_SERVER['QUERY_STRING'])); // echo only query string of the url
+	define('ADMIN_ACTIVE_URL', str_replace('/dashboard', '', (str_replace('', '', ACTIVE_URL)))); // echo complete url show on the url bar
+	define('ADMIN_QUERY_URL', str_replace('/dashboard', '', QUERY_URL)); // echo only query string of the url
 	define('ADMIN_BASE_URL', str_replace('/dashboard', '', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?')))); // return only the actual url and remove query string
 	define('API_BASE_URL', str_replace('/api', '', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?')))); // return only the actual url and remove query string
 
