@@ -1,30 +1,30 @@
 <?php
 
-		/* Search url in link table  */
+	/* Search url in link table  */
 
-		if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='".BASE_URL."'")) {
+	if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='".BASE_URL."' AND link_site_id='".SITE_ID."'")) {
 
-			if(mysqli_num_rows($checkUrl)!=0) {
+		if(mysqli_num_rows($checkUrl)!=0) {
 
-				extract(mysqli_fetch_assoc($checkUrl));
+			extract(mysqli_fetch_assoc($checkUrl));
 
-				if(file_exists(ROUTER.$link_type.'.php')) {
+			if(file_exists(ROUTER.$link_type.'.php')) {
 
-					require_once ROUTER.$link_type.'.php';
-
-				} else {
-
-					echo ROUTER.$link_type.'.php';
-
-				}
+				require_once ROUTER.$link_type.'.php';
 
 			} else {
-				
-				/** Check Pagination */
 
-				echo BASE_URL;
+				echo 'Undefined request found';
 
 			}
+
+		} else {
+				
+			/** Check Pagination */
+
+			require_once ERROR_404;
+
+		}
 
 	}
 

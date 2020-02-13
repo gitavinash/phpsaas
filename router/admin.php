@@ -4,10 +4,6 @@
 
 	require_once LOGIN_CHECK;
 
-	/* include admin functions.php */
-
-	require_once APP_MODULES.'functions.php';
-
 	/* url router for admin dashboard */
 
 	$urlStructure=explode('/', rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'));
@@ -16,7 +12,7 @@
 
 		default:
 		
-			include_once ADMIN_VIEW_PATH.'index.php';
+			include_once ADMIN_PATH.'index.php';
 			break;
 			
 	}

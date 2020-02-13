@@ -39,7 +39,7 @@
 		exit();
 
 	} else {
-
+		
 		/** Redirect non end slash url to slash url */
 
 		if(substr(BASE_URL , -1)!='/') {
@@ -65,7 +65,7 @@
 				break;
 
 			case 'login' :
-				require_once USER_VIEW_PATH.'login.php';
+				require_once 'login.php';
 				break;
 
 			case 'logout' :
@@ -99,7 +99,7 @@
 				break;
 
 			case 'redirect' :
-				include_once ROOT.'/redirect.php';
+				require_once ROOT.'/redirect.php';
 				break;
 			
 			case (preg_match('/sitemap.xml/', $urlStructure[0]) ? true : false) :
@@ -113,5 +113,7 @@
 		}
 
 	}
+
+	mysqli_close($connection);
 
 	exit();

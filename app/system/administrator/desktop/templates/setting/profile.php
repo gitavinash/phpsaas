@@ -51,7 +51,7 @@
                             <input type="hidden" name="action" value="profile" >
                             <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
                             <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-                            <input type="submit" id="updateProfile" class="submitBtn btn btn-green" value="Update Profile" >
+                            <input type="submit" id="updateProfile" class="btn btn-green" value="Update Profile" >
                         </div>
                     </form>
                 </div>

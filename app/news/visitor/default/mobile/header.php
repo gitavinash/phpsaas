@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="hi_IN">
+
+    <head>
+    	<base href="<?php echo SITE_URL ?>/" >
+        <meta charset="utf-8">
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="dns-prefetch" href="//www.googletagservices.com">
+        <link rel="dns-prefetch" href="//www.googletagmanager.com">
+        <link rel="dns-prefetch" href="//www.youtube.com">
+        <link rel="dns-prefetch" href="//d1uck549nef0ok.cloudfront.net">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="fb:pages" content="1779174612300730" />
+        <link rel="icon" href="<?php echo USER_IMAGES ?>favicon.png">
+        <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
+        <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
+        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" >
+        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" >
+        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" >
+        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" >
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" >
+        
+        <!-- SEO -->
+
+        <meta name="theme-color" content="#D01F28">
+        <meta name='robots' content='index, follow' />
+        <meta name='title' content='<?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : $post_title ) : SITE_NAME ) ?>' />
+        <meta name="description" content="<?php echo ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ) ?>" >
+        <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
+        <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
+
+        <!-- Facebook, Google & Pinterest -->
+		
+        <meta property="og:locale" content="hi_IN" />
+		<meta property="og:type" content="article" />
+        <meta property="og:title" content="<?php echo ((isset($fb_title)) ? (($fb_title!='') ? $fb_title : $meta_title ) : SITE_NAME ) ?>" />
+        <meta property="og:description" content="<?php echo ((isset($fb_desc)) ? (($fb_desc!='') ? $fb_desc : $meta_description ) : SITE_DESC ) ?>" />
+        <meta property="og:url" content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
+        <meta property="og:image" content="<?php echo ((isset($fb_image)) ? SITE_URL.(($fb_image!='') ? $fb_image : $post_image ) : SITE_URL.((isset($post_image)) ? $post_image : USER_IMAGES.'logo-main.png' ) ) ?>" />
+        <meta property="og:site_name" content="Punjab Kesari" />
+        <meta property="fb:admins" content="1779174612300730" />
+        <meta property="fb:app_id" content="1078178022375029" />
+        <?php
+        
+        if(isset($link_type)) {
+
+            if($link_type=='post') { ?>
+
+                <meta property="article:published_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_published)) ?>" />
+                <meta property="article:modified_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_modified)) ?>" />
+                <meta property="article:section" content="<?php echo $category_title ?>" />
+                <meta property="article:tag" content="<?php echo $tagName ?>" />
+
+            <?php
+            }
+
+        }
+
+        ?>
+
+        <!-- Twitter Card data -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@PunjabKesariCom">
+        <meta name="twitter:title" content="<?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : $post_title ) : SITE_NAME ) ?>">
+        <meta name="twitter:description" content="<?php echo ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ) ?>">
+        <meta name="twitter:creator" content="@PunjabKesariCom">
+        <meta name="twitter:image" content="<?php echo ((isset($post_image)) ? SITE_URL.(($post_image!='') ? $post_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>">
+        <meta name="twitter:url" content="<?php echo SITE_URL.BASE_URL ?>">
+
+        <!-- Adx -->
+
+        <script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
+        <script>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        </script>
+
+        <script>
+        googletag.cmd.push(function() {
+        var mapping = googletag.sizeMapping().
+        addSize([800,90], [728, 90]).
+        addSize([700,90], [468, 60]).
+        addSize([0, 0], [300, 250]).
+        build();
+            googletag.defineSlot('/1009127/RW_PunjabKesari_728x90', [728, 90], 'div-gpt-ad-1549609719157-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.defineSlot('/1009127/RW_PunjabKesari_300x250', [300, 250], 'div-gpt-ad-1549554871716-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_1', [728, 90], 'div-gpt-ad-1549975705782-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_2', [728, 90], 'div-gpt-ad-1549975808942-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_3', [728, 90], 'div-gpt-ad-1549975922100-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_4', [728, 90], 'div-gpt-ad-1549976009867-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_5', [728, 90], 'div-gpt-ad-1549976105111-0').defineSizeMapping(mapping).addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+        </script>
+
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0&appId=1687095354928063&autoLogAppEvents=1"></script>
+
+        <?php
+        
+        if($link_type!='category' && $link_type!='tag') {
+
+            if(BASE_URL=='/') { ?>
+                <link rel="amphtml" href="<?php echo SITE_URL ?>/amp/"/>
+                <link rel="alternate" media="only screen and (max-width: 640px)" href="<?php echo SITE_URL ?>"/>
+            <?php
+            } else {
+                
+                    ?>
+                    <link rel="amphtml" href="<?php echo SITE_URL ?>/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id; ?>/amp"/>
+                    <link rel="alternate" media="only screen and (max-width: 640px)" href="<?php echo SITE_URL ?>/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id; ?>"/>
+                <?php
+
+            } ?>
+
+            <?php
+
+        }
+        
+        ?>
+
+        <?php
+            
+            if(isset($link_type)) {
+                
+                if($link_type=='post') { ?>
+                    
+                    <!-- News Schema -->
+
+                    <script type="application/ld+json">
+                        {
+                            "@context": "https://schema.org",
+                            "@type": "NewsArticle",
+                            "mainEntityOfPage":{
+                            "@type":"WebPage",
+                            "@id":"<?php echo SITE_URL.BASE_URL ?>"
+                            },
+                            "headline": "<?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : $post_title ) : SITE_NAME ) ?>",
+                            "image": {
+                            "@type": "ImageObject",
+                            "url": "<?php echo ((isset($post_image)) ? SITE_URL.(($post_image!='') ? $post_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>",
+                            "height": 800,
+                            "width": 800
+                            },
+                            "datePublished": "<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_published)) ?>",
+                            "dateModified": "<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_modified)) ?>",
+                            "author": {
+                            "@type": "Person",
+                            "name": "<?php echo $profile_display_name ?>"
+                            },
+                            "publisher": {
+                            "@type": "Organization",
+                            "name": "<?php echo SITE_NAME ?>",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "<?php echo USER_IMAGES ?>logo-main.png",
+                                "width": 240,
+                                "height": 35
+                            }
+                            },
+                            "keywords": ["<?php echo $tagName ?>"],
+                            "articleSection": "<?php echo $category_title ?>",
+                            "description": "<?php echo str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC )); ?>"
+                        }
+                    </script>
+
+                    <!-- Taboola Code -->
+
+                    <script type="text/javascript">
+                        window._taboola = window._taboola || [];
+                        _taboola.push({article:'auto'});
+                        !function (e, f, u, i) {
+                            if (!document.getElementById(i)){
+                            e.async = 1;
+                            e.src = u;
+                            e.id = i;
+                            f.parentNode.insertBefore(e, f);
+                            }
+                        }(document.createElement('script'),
+                        document.getElementsByTagName('script')[0],
+                        '//cdn.taboola.com/libtrc/punjabkesaripublishersprivatelimited/loader.js',
+                        'tb_loader_script');
+                        if(window.performance && typeof window.performance.mark == 'function')
+                            {window.performance.mark('tbl_ic');}
+                    </script>
+        
+                    <?php
+                }
+
+            }
+
+        ?>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-10313152-1"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-10313152-1');
+        </script>
+
+        <script src="https://cdn.rwadx.com/prod-global-351532.js" async></script> 
+
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154787764-1"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-154787764-1');
+        </script>
+
+    </head>
+
+    <body>
+        
+        <?php
+
+            /** Show menu bar only for login users */
+
+            if(isset($_COOKIE['user_data'])) {
+                if($urlStructure[0]!='dashboard') { ?>
+                    <div class="dashboard-bar english">
+                        <ul class='left-menu'>
+                            <li><a href="dashboard/"><i class='fas fa-tachometer-alt'></i><?php echo SITE_NAME ?></a></li>
+                            <?php
+                                if((isset($link_type)) ? $link_type=='page' || $link_type=='post' : '' ) { ?>
+                                    <li><a href="dashboard/<?php echo $link_type ?>/?type=edit&editor=true&<?php echo $link_type ?>_id=<?php echo $link_relation_id ?>"><i class='fas fa-pencil-alt'></i>Edit <?php echo ucwords($link_type); ?></a></li>
+                                <?php
+                                }
+                            ?>
+                            <li>
+                                <form action="/search/" method="GET">
+                                    <input type="text" class="header-search" name="q" placeholder="Search..." >
+                                </form>
+                            </li>
+                        </ul>
+                        <ul class='right-menu'>
+                            <li><a href="logout/"><i class='fas fa-sign-out-alt'></i>Log Out</a></li>
+                        </ul>
+                    </div>
+                <?php
+                }
+            }
+        ?>
+
+        <header>
+            <div class="header">
+                <div class="logo">
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt=""></a>
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li><a href=""><i class="far fa-bell"></i></a></li>
+                        <li><a href=""><i class="fas fa-bell"></i></a></li>
+                        <li><a href=""><i class="fas fa-bell-slash"></i></a></li>
+                        <li><a href=""><i class="fas fa-bars"></i></a></li>
+                    </ul>
+                    <div class="menu-box">
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a href="/category/india-news/">देश</a>
+                                    <ul>
+                                        <li><a href="/category/delhi-ncr/">दिल्ली</a></li>
+                                        <li><a href="/category/uttar-pradesh/">उत्तर प्रदेश</a></li>
+                                        <li><a href="/category/haryana-news/">हरियाणा</a></li>
+                                        <li><a href="/category/rajasthan-news/">राजस्‍थान</a></li>
+                                        <li><a href="/category/jammu-and-kashmir/">जम्मू-कश्मीर</a></li>
+                                        <li><a href="/category/punjab-news/">पंजाब</a></li>
+                                        <li><a href="/category/bihar-news/">बिहार</a></li>
+                                        <li><a href="/category/other-states/">अन्य राज्य</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="/category/world-news/">विदेश</a></li>
+                                <li><a href="/category/bollywood-kesari/">बॉलीवुड</a></li>
+                                <li><a href="/category/sports-news/">खेल</a></li>
+                                <li><a href="/category/editorial/">संपादकीय</a></li>
+                                <li><a href="/category/business-news/">व्यापार</a></li>
+                                <li><a href="/category/horoscope/">भविष्यफल</a></li>
+                                <li><a href="/category/social-news/">दिलचस्प खबरें</a></li>
+                                <li><a href="http://epaper.punjabkesari.com" target="_blank" class="english">Old E-PAPER</a></li>
+                                <li><a href="http://mpaper.punjabkesari.com" target="_blank" class="english">New E-PAPER</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+
+            <section class="header-ad-box">
+            
+                <div id='div-gpt-ad-1549609719157-0'>
+                <script>
+                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549609719157-0'); });
+                </script>
+                </div>
+
+            </section>
+        <?php
+        
+            exit();
+
+        ?>

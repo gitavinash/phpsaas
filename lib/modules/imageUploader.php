@@ -11,7 +11,7 @@
 			if($imageValue['error']==0) {
 
 				$validFileExtension = array( 'png', 'gif', 'jpg', 'jpeg' );
-				$validFileType = array('image/png', 'image/gif', 'image/jpeg');
+				$validFileType = array(PNG_IMAGE, GIF_IMAGE, JPG_IMAGE, JPEG_IMAGE);
 
 				$filename=strtolower(str_replace("'", "_", str_replace('-', '_', str_replace(' ', '_', $imageValue['name']))));
 				$filetype=$imageValue['type'];
@@ -21,69 +21,116 @@
 				if(in_array($fileExtension, $validFileExtension)) {
 					if(in_array($filetype, $validFileType)) {
 
+						list($imageWidth, $imageHeight) = getimagesize($imageValue['tmp_name']);
+
+						/* Default upload path directory of image */
+
 						$uploadPath=ROOT.'/upload/'.date('Y/m/');
+						$uploadFile=$uploadPath.time().'_'.strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename));
+						$uploadMediaPath=str_replace(ROOT, '', $uploadFile);
+						$uploadMediaLink='/attachment'.str_replace('.'.$fileExtension, '', $uploadMediaPath).'/';
+						$uploadFileName=ucwords(preg_replace('/[_]+/', ' ',str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
+
+						/** Original Image variables */
+						
+						$originalUploadDir=$uploadPath.'original/';
+						$originalUploadFile=$originalUploadDir.str_replace($uploadPath, '', $uploadFile);
+
+						/** Thumbnail Image variables */
+
+						$thumbnailUploadDir=$uploadPath.'thumbnail/';
+						$thumbnailUploadFile=$thumbnailUploadDir.str_replace($uploadPath, '', $uploadFile);
 
 						if(!is_dir($uploadPath)) {
+
 							mkdir($uploadPath, 0755, true);
-						}
 
-						/** Original File Upload Path */
-						
-						$originalUploadPath=$uploadPath.'original_'.time().'_'.str_replace(' ', '_', strtolower($filename));
-						
-						/** Compress File upload path */
+							/* Creating original image directory inside default upload directory */
 
-						$uploadPath=$uploadPath.time().'_'.str_replace(' ', '_', strtolower($filename));
+							mkdir($originalUploadDir, 0755, true);
 
-						/** Default Directory and Path setup */
+							/* Creating thumbnail image directory inside default upload directory */
 
-						$uploadFile=str_replace('-', '_',str_replace('.', ' ',str_replace('_', ' ', str_replace('.'.$fileExtension, '', $filename))));
-						$uploadURL=str_replace(ROOT, '', $uploadPath);
-						$link=str_replace(' ', '_', '/attachment/'.time().'_'.strtolower($uploadFile).'/');
-
-						/** Compressing Images */
-
-						$imageInfo=getimagesize($imageValue['tmp_name']);
-
-						if ($imageInfo['mime'] == 'image/jpeg' || $imageInfo['mime'] == 'image/jpg') {
-						
-							$compressImage=imagecreatefromjpeg($imageValue['tmp_name']);
-							imagejpeg($compressImage, $uploadPath, 60);
-
-						} else if ($imageInfo['mime'] == 'image/gif') {
-							
-							$compressImage = imagecreatefromgif($_FILES['upload']['tmp_name']);
-							//imagegif($compressImage, $uploadPath, 60);
-							$originalUploadPath=$uploadPath;
-
-						} else if ($imageInfo['mime'] == 'image/png') {
-							
-							$compressImage = imagecreatefrompng($_FILES['upload']['tmp_name']);
-							imagejpeg($compressImage, $uploadPath, 60);
-							$originalUploadPath=$uploadPath;
+							mkdir($thumbnailUploadDir, 0755, true);
 
 						}
 
-						if(move_uploaded_file($imageValue['tmp_name'], $originalUploadPath)) {
+						/** Compressing Images Process Start Here */
+
+						switch($filetype) {
+
+							case PNG_IMAGE :
+								
+								/** Compressing PNG Image and save it */
+
+								$compressImage=imagecreatefrompng($imageValue['tmp_name']);
+								imagejpeg($compressImage, $uploadFile, IMAGE_COMPRESSION_QUALITY);
+								
+								/** Creating image thumbnail */
+								
+								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, $imageWidth, $imageHeight);
+								imagejpeg($imageSize, $thumbnailUploadFile, 100);
+								break;
+
+							case GIF_IMAGE :
+								
+								/** Compressing GIF/Animation Image and save it */
+
+								$compressImage=imagecreatefromgif($imageValue['tmp_name']);
+								imagegif($compressImage, $uploadFile, IMAGE_COMPRESSION_QUALITY);
+								
+								/** Creating image thumbnail */
+								
+								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, $imageWidth, $imageHeight);
+								imagegif($imageSize, $thumbnailUploadFile, 100);
+								break;
+
+							default	:
+								
+								/** Compressing Other Images mainly JPG or JPEG and save it */
+
+								$compressImage=imagecreatefromjpeg($imageValue['tmp_name']);
+								imagejpeg($compressImage, $uploadFile, IMAGE_COMPRESSION_QUALITY);
+								
+								/** Creating image thumbnail */
+								
+								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, $imageWidth, $imageHeight);
+								imagejpeg($imageSize, $thumbnailUploadFile, 100);
+								break;
+
+						}
+
+						imagedestroy($imageSize);
+
+						if(move_uploaded_file($imageValue['tmp_name'], $originalUploadFile)) {
 
 							mysqli_query($connection, 'START TRANSACTION');
 
-							$insertPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadURL}', '{$uploadFile}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
+							$insertPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadMediaPath}', '{$uploadFileName}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
 							$mediaID=mysqli_insert_id($connection);
 
-							$createLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$link}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
+							$createLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
 							if($insertPost && $createLink) {
 								mysqli_query($connection, 'COMMIT');
+							} else {
+								//echo mysqli_error($connection);
+								//exit();
 							}
 
+						} else {
+							echo 'file not upload';
+							exit();
 						}
 
 					}
 
 				}
 
-				$image[$imageName]=$uploadURL;
-				$image[$imageName.'_url']=$link;
+				$image[$imageName]=$uploadMediaPath;
+				$image[$imageName.'_url']=$uploadMediaLink;
 
 			}
 

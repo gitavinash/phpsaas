@@ -1,16 +1,12 @@
 <?php
 
-	/** Including database connection file */
-
-	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/connection.php';
-
     /** Check this domain is register or not */
 
     if($checkDomain=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site WHERE site_domain='".SITE_DOMAIN."'")) {
-        
         if(mysqli_num_rows($checkDomain)==0) {
-            
-            require_once 'checkInstallation.php';
+
+            echo SITE_DOMAIN.' is not register with us';
+            exit();
 
         } else {
 
@@ -18,14 +14,11 @@
 
             extract(mysqli_fetch_assoc($checkDomain));
 
-            require_once 'siteStatus.php';
+            if($site_status!=1) {
+                echo 'Your Site has been expire';
+                exit();
+            }
 
         }
 
-    } else {
-
-        /** Import Database */
-
-        require_once $_SERVER['DOCUMENT_ROOT'].'/lib/install/import-database.php';
-
-    }
+    }        

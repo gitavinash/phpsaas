@@ -1,30 +1,27 @@
 <?php
 
-	/** Check site status */
+	/** Including database connection file */
 
-	if($site_status!=1) {
+	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/connection.php';
 
-		/** Currently Website is not active */
+	/** This script run only when Request method is not POST */
 
-		echo 'Website is not active';
-		exit();
+	if($_SERVER['REQUEST_METHOD']!='POST') {
 
-	}
+		if(sizeof(explode('.', SITE_DOMAIN))==2) {
 
-	if($site_expire_date<date('Y-m-d')) {
-
-		/** Website is Expired */
-
-		echo 'Website is expire';
-		exit();
-
-	}
-
-	/** Installation step complete webpage */
-
-	if(ACTIVE_URL=='/install/?step=2') {
+			require_once 'checkMainDomain.php';
 		
-		require_once $_SERVER['DOCUMENT_ROOT'].'lib/install/step-2.php';
-		exit();
+		} else {
+
+			require_once 'checkSubDomain.php';
+			
+		}
+
+	} else {
+
+		require_once 'getDomainData.php';
 
 	}
+
+?>

@@ -21,49 +21,61 @@
 
 	/* Installation Directory  */
 
-	define('INSTALLATION_VIEW_DIR', ROOT.'/lib/install/');
-	define('INSTALLATION_VIEW_PATH', ROOT.INSTALLATION_VIEW_DIR);
-	define('INSTALLATION_STYLESHEET', SITE_DOMAIN.INSTALLATION_VIEW_DIR.'assets/css/');
-	define('INSTALLATION_JS', SITE_DOMAIN.INSTALLATION_VIEW_DIR.'assets/js/');
-	define('INSTALLATION_IMAGES', SITE_DOMAIN.INSTALLATION_VIEW_DIR.'assets/images/');
-	define('INSTALLATION_PLUGINS', SITE_DOMAIN.INSTALLATION_VIEW_DIR.'assets/plugins/');
+	define('INSTALLATION_DIR', ROOT.'/lib/install/');
+	define('INSTALLATION_PATH', ROOT.INSTALLATION_DIR);
+	define('INSTALLATION_STYLESHEET', SITE_DOMAIN.INSTALLATION_DIR.'assets/css/');
+	define('INSTALLATION_JS', SITE_DOMAIN.INSTALLATION_DIR.'assets/js/');
+	define('INSTALLATION_IMAGES', SITE_DOMAIN.INSTALLATION_DIR.'assets/images/');
+	define('INSTALLATION_PLUGINS', SITE_DOMAIN.INSTALLATION_DIR.'assets/plugins/');
+
+	/** Defauly System Directory Managment */
+
+	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_VERSION.'/');
+	define('SYSTEM_LOGIN', ROOT.'/app/system/administrator/'.SITE_VERSION.'/login.php');
+	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
+	define('SYSTEM_URL', SITE_URL.SYSTEM_DIR);
+	define('SYSTEM_STYLESHEET', SYSTEM_URL.'assets/css/');
+	define('SYSTEM_JS', SYSTEM_URL.'assets/js/');
+	define('SYSTEM_IMAGES', SYSTEM_URL.'assets/images/');
+	define('SYSTEM_PLUGINS', SYSTEM_URL.'assets/plugins/');	
 
 	/* Administrator and login member user directory managment */
 
-	define('ADMIN_VIEW_DIR', '/app/'.USER_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
-	define('ADMIN_VIEW_PATH', ROOT.ADMIN_VIEW_DIR);
-	define('ADMIN_VIEW_URL', SITE_URL.ADMIN_VIEW_DIR);
-	define('ADMIN_STYLESHEET', ADMIN_VIEW_URL.'assets/css/');
-	define('ADMIN_JS', ADMIN_VIEW_URL.'assets/js/');
-	define('ADMIN_IMAGES', ADMIN_VIEW_URL.'assets/images/');
-	define('ADMIN_PLUGINS', ADMIN_VIEW_URL.'assets/plugins/');	
+	define('ADMIN_DIR', '/app/'.USER_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
+	define('ADMIN_PATH', ROOT.ADMIN_DIR);
+	define('ADMIN_URL', SITE_URL.ADMIN_DIR);
+	define('ADMIN_STYLESHEET', ADMIN_URL.'assets/css/');
+	define('ADMIN_JS', ADMIN_URL.'assets/js/');
+	define('ADMIN_IMAGES', ADMIN_URL.'assets/images/');
+	define('ADMIN_PLUGINS', ADMIN_URL.'assets/plugins/');	
 
 	/* visitor directory managment */
 
-	define('USER_VIEW_DIR', '/app/'.SITE_APP.'/visitor/'.SITE_THEME.'/'.SITE_VERSION.'/');
-	define('USER_VIEW_PATH', ROOT.USER_VIEW_DIR);
-	define('USER_VIEW_URL', SITE_URL.USER_VIEW_DIR);
-	define('USER_STYLESHEET', USER_VIEW_URL.'assets/css/');
-	define('USER_JS', USER_VIEW_URL.'assets/js/');
-	define('USER_IMAGES', USER_VIEW_URL.'assets/images/');
-	define('USER_PLUGINS', USER_VIEW_URL.'assets/plugins/');
+	define('USER_DIR', '/app/'.SITE_APP.'/visitor/'.SITE_THEME.'/'.SITE_VERSION.'/');
+	define('USER_PATH', ROOT.USER_DIR);
+	define('USER_URL', SITE_URL.USER_DIR);
+	define('USER_STYLESHEET', USER_URL.'assets/css/');
+	define('USER_JS', USER_URL.'assets/js/');
+	define('USER_IMAGES', USER_URL.'assets/images/');
+	define('USER_PLUGINS', USER_URL.'assets/plugins/');
 
 	/** Cache Directory Managment */
 
-	define('CACHE_PATH', ROOT.'/cache/');
-
-
-	/* Default HTTP Error pages path of visitor */
-
-	define('ERROR_403', USER_VIEW_PATH.'403.php');
-	define('ERROR_404', USER_VIEW_PATH.'404.php');
-	define('ERROR_502', USER_VIEW_PATH.'502.php');
+	define('CACHE_PATH', ROOT.'/cache/'.SITE_DOMAIN);
+	define('CACHE_FILE', CACHE_PATH.'/'.str_replace('/', '-', rtrim(ltrim(ACTIVE_URL, '/'), '/')).'.html');
+	define('CACHE_TIME', ((isset($cache_time)) ? $cache_time : 24 )*3600); // Default caching time is 24 hours
 
 	/* Default HTTP Error pages path of visitor */
 
-	define('ADMIN_ERROR_403', ADMIN_VIEW_PATH.'403.php');
-	define('ADMIN_ERROR_404', ADMIN_VIEW_PATH.'404.php');
-	define('ADMIN_ERROR_502', ADMIN_VIEW_PATH.'502.php');
+	define('ERROR_403', USER_PATH.'403.php');
+	define('ERROR_404', USER_PATH.'404.php');
+	define('ERROR_502', USER_PATH.'502.php');
+
+	/* Default HTTP Error pages path of visitor */
+
+	define('ADMIN_ERROR_403', ADMIN_PATH.'403.php');
+	define('ADMIN_ERROR_404', ADMIN_PATH.'404.php');
+	define('ADMIN_ERROR_502', ADMIN_PATH.'502.php');
 
 	/* Default site identity files */
 

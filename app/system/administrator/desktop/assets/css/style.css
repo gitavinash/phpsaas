@@ -210,7 +210,7 @@ nav.side-nav ul li.active:after {
     position: absolute;
     pointer-events: none;
     border-right-color: #f1f1f1;
-	margin-top: 11px
+    margin-top: 11px;
 }
 
 /* Bottom menu on active menu */

@@ -27,7 +27,7 @@
 
                                 /** Check category template is avilable or not */
 
-                                $checkCategoryTemplate=USER_VIEW_PATH.strtolower($link_type).'-media.php';
+                                $checkCategoryTemplate=USER_PATH.strtolower($link_type).'-media.php';
 
                                 if(file_exists($checkCategoryTemplate)) {
 
@@ -39,7 +39,7 @@
 
                                     /** Display content in default template */
 
-                                    require_once USER_VIEW_PATH.'media.php';
+                                    require_once USER_PATH.'media.php';
 
                                 }
 

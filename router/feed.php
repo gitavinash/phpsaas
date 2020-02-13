@@ -8,21 +8,13 @@
 
 	if($feedURL!='/') {
 
-		switch($urlStructure[1]) {
+		if(file_exists($feedPath.$urlStructure[1].'.php')) {
 
-			case 'instant-article' : require_once $feedPath.'instant-article.php';
-									 break;
+			require_once $feedPath.$urlStructure[1].'.php';
 
-			default : 	if(file_exists($feedPath.$urlStructure[1].'.php')) {
+		} else {
 
-							require_once $feedPath.$urlStructure[1].'.php';
-
-						} else {
-
-							require_once $feedPath.'single-default.php';
-
-						}
-					  	break;
+			require_once $feedPath.'single-default.php';
 
 		}
 

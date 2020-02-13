@@ -17,18 +17,6 @@
 				header("Content-type: application/json; charset=utf-8");
 				$includeFile = MODULES.$secure['type'].'.php';
 				break;
-			
-			case 'install' :
-				$includeFile = MODULES.$secure['type'].'.php';
-				break;
-			
-			case 'setting' :
-				$includeFile = MODULES.$secure['type'].'.php';
-				break;
-			
-			case 'support' :
-				$includeFile = MODULES.$secure['type'].'.php';
-				break;
 
 			case 'draft' :
 				if(isset($secure['post_id'])) {
@@ -40,7 +28,17 @@
 				break;
 
 			default:
-				$includeFile = APP_MODULES.$secure['type'].'.php';
+
+				if(file_exists(MODULES.$secure['type'].'.php')) {
+
+					$includeFile=MODULES.$secure['type'].'.php';
+
+				} else {
+
+					$includeFile = APP_MODULES.$secure['type'].'.php';
+
+				}
+
 				break;
 		}
 
@@ -53,8 +51,8 @@
 				call_user_func($secure['action'], $connection, $secure);
 
 			} else {
-				
-				echo '<h1>Undefine function</h1>';
+
+				echo '<h1>Undefine function '.$secure['type'].' -> '.$secure['action'].' </h1>';
 
 			}
 

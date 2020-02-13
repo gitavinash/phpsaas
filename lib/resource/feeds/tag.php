@@ -1,8 +1,8 @@
 <?php
 
-	$tag_name=str_replace('-', ' ', $urlStructure[2]);
+	$tag_title=str_replace('-', ' ', $urlStructure[2]);
 	
-    if($tagList=mysqli_query($connection, "SELECT link_id, link_url, link_published, link_modified, post_id, post_image, post_title, post_description, post_category, category_title, post_owner_id, post_type, meta_title, meta_description, meta_canonical, meta_keyword, meta_robots, meta_geo_position, meta_geo_place_name, meta_geo_region, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc,  profile_display_name, profile_image FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_category INNER JOIN ".TABLE_PREFIX."profile ON profile_id=post_owner_id INNER JOIN ".TABLE_PREFIX."user ON profile_owner_id=user_id INNER JOIN ".TABLE_PREFIX."tag ON tag_relation_id=post_id WHERE link_type='post' AND tag_type='post' AND tag_name='{$tag_name}' ORDER BY link_modified DESC LIMIT 0, 10")) {
+    if($tagList=mysqli_query($connection, "SELECT link_id, link_status, link_url, link_published, link_modified, news_id, news_title, news_image, news_description, meta_description FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."news ON tag_relation_id=news_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE tag_title LIKE '%{$tag_title}%' AND link_type='news' GROUP BY tag_relation_id ORDER BY tag_id DESC LIMIT 0, ".FEED_LIMIT)) {
 
         if(mysqli_num_rows($tagList)!=0) { ?>
 
@@ -28,14 +28,14 @@
             
             $i=1;
 
-            while($tagPostData=mysqli_fetch_assoc($tagList)) {
+            while($tagnewsData=mysqli_fetch_assoc($tagList)) {
 
-                extract($tagPostData);
+                extract($tagnewsData);
 
                 if($i==1) { ?>
 
                     <channel>
-						<title><?php echo $tag_name ?></title>
+						<title><?php echo $tag_title ?></title>
 						<atom:link href="<?php echo SITE_URL.'/feed/tag/'.$urlStructure[2] ?>/" rel="self" type="application/rss+xml" />
 						<link><?php echo SITE_URL ?></link>
 						<description><?php echo SITE_DESC ?></description>
@@ -51,19 +51,19 @@
 
                 <item>
 					<Articleid><?php echo $link_id; ?></Articleid>
-					<title><![CDATA[<?php echo $post_title; ?>]]></title>
+					<title><![CDATA[<?php echo $news_title; ?>]]></title>
 					<link><?php echo SITE_URL.$link_url; ?></link>
-					<thumbimage><![CDATA[<?php echo SITE_URL.$post_image; ?>]]></thumbimage>
-					<fullimage><![CDATA[<?php echo SITE_URL.$post_image; ?>]]></fullimage>
+					<thumbimage><![CDATA[<?php echo SITE_URL.$news_image; ?>]]></thumbimage>
+					<fullimage><![CDATA[<?php echo SITE_URL.$news_image; ?>]]></fullimage>
 					<pubDate><?php echo date('r', strtotime('+5 hour +30 minutes', strtotime($link_published))) ?></pubDate>
 					<modifiedDate><?php echo date('r', strtotime('+5 hour +30 minutes',strtotime($link_modified))) ?></modifiedDate>
-					<description><![CDATA[<?php echo str_replace('src="', 'src="'.SITE_URL.'', html_entity_decode($post_description)); ?>]]></description>
+					<description><![CDATA[<?php echo str_replace('src="', 'src="'.SITE_URL.'', html_entity_decode($news_description)); ?>]]></description>
 					<authorname><?php echo $profile_display_name ?></authorname>
 					<excerpt><![CDATA[<?php echo $meta_description; ?>]]></excerpt>
 					<tags>
 						<?php
 
-							$tagsList=mysqli_query($connection, "SELECT GROUP_CONCAT(tag_name) as tags FROM isw_tag WHERE tag_relation_id={$post_id}");
+							$tagsList=mysqli_query($connection, "SELECT GROUP_CONCAT(tag_title) as tags FROM ".TABLE_PREFIX."tag WHERE tag_relation_id={$news_id}");
 							extract(mysqli_fetch_assoc($tagsList));
 							echo $tags;
 
@@ -79,8 +79,10 @@
 
             echo '</channel></rss>';
 
-        } else {
-
         }
+
+	} else {
+
+		echo mysqli_error($connection);
 
 	}

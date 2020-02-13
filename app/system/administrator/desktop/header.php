@@ -22,7 +22,7 @@
 		<header>
 			<div class="left-side">
 				<ul>
-					<!-- <li><div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div></li> -->
+					<li><div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div></li>
 				</ul>
 			</div>
 			<div class="right-side">
@@ -48,30 +48,68 @@
 						<div class="side-menu">
 							<ul>
 								<li><a href="app.php?type=list"><i class="fas fa-list"></i>  All Apps</a></li>
-								<li><a href="app.php?type=add"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
+								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
 								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i>  My Apps</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="app.php?type=list"><i class="fas fa-list"></i>  All Apps</a></li>
-								<li><a href="app.php?type=add"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
+								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
 								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i>  My Apps</a></li>
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/customize/') ? 'class="active"' : '' ) ?> >
-						<a href="website.php?type=theme"><i class="fas fa-globe-americas"></i> Website</a>
+					<li <?php echo ((ADMIN_BASE_URL=='/post/') ? 'class="active"' : '' ) ?> >
+						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="website.php?type=add"><i class="fas fa-plus"></i> Add New Website</a></li>
-								<li><a href="website.php?type=list"><i class="fas fa-palette"></i> All Websites</a></li>
+								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All Posts</a></li>
+								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="post.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
+								<li><a href="post.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="website.php?type=add"><i class="fas fa-plus"></i> Add New Website</a></li>
-								<li><a href="website.php?type=list"><i class="fas fa-palette"></i> All Websites</a></li>
+								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All Posts</a></li>
+								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="post.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
+								<li><a href="post.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
+						<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
+								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
+								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/product/') ? 'class="active"' : '' ) ?> >
+						<a href="product.php?type=list"><i class="fas fa-cubes"></i> Product</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All Products</a></li>
+								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="product.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
+								<li><a href="product.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="product.php?type=product&status=all"><i class="fas fa-list"></i> All Products</a></li>
+								<li><a href="product.php?type=product&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="product.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
+								<li><a href="product.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
 							</ul>
 						</div>
 					</li>
@@ -93,6 +131,22 @@
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
 								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i>  Videos</a></li>
 								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i>  Documents</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/comments/') ? 'class="active"' : '' ) ?> ><a href="comments.php"><i class="fas fa-comments"></i> Comments</a></li>
+					<li <?php echo ((ADMIN_BASE_URL=='/data/') ? 'class="active"' : '' ) ?> >
+						<a href="data.php?type=import"><i class="fas fa-database"></i> Transfer Data</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="data.php?type=import"><i class="fas fa-upload"></i> Import Data</a></li>
+								<li><a href="data.php?type=export"><i class="fas fa-download"></i> Export Data</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="data.php?type=import"><i class="fas fa-upload"></i> Import Data</a></li>
+								<li><a href="data.php?type=export"><i class="fas fa-download"></i> Export Data</a></li>
 							</ul>
 						</div>
 					</li>
@@ -164,16 +218,14 @@
 						<a href="customize.php?type=theme"><i class="fas fa-paint-roller"></i> Customize</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="customize.php?type=add_theme"><i class="fas fa-plus"></i> Add New Theme</a></li>
-								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i> Theme</a></li>
-								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i> Menu</a></li>
+								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
+								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="customize.php?type=add_theme"><i class="fas fa-plus"></i> Add New Theme</a></li>
-								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i> Theme</a></li>
-								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i> Menu</a></li>
+								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
+								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
 							</ul>
 						</div>
 					</li>

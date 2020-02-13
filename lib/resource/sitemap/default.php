@@ -1,7 +1,7 @@
 <?php
 
     echo "<?xml version='1.0' encoding='UTF-8'?><?xml-stylesheet type='text/xsl' href='".str_replace(ROOT, '', RESOURCE)."sitemap/style.xsl' ?>
-<sitemapindex xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>";
+<sitemapindex xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd' xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>";
     
     if($linkType=mysqli_query($connection, "SELECT COUNT(link_type) as total, link_type, link_published FROM ".TABLE_PREFIX."link GROUP BY link_type ORDER BY link_modified DESC")) {
 

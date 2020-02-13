@@ -3,15 +3,13 @@
 	/* login module */
 
 	function login($connection, $data) {
-
-		global $table_prefix;
 		
 		$status=404;
 		$msg='Invalid Username';
 
 		extract($data);
 
-		if($checkUser=mysqli_query($connection, "SELECT user_password, user_salt_key, user_status, user_type, profile_display_name, profile_image FROM ".TABLE_PREFIX."user, ".TABLE_PREFIX."profile WHERE user_email='{$email}' AND user_id=profile_owner_id LIMIT 1")) {
+		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type, site_app, profile_display_name, profile_image FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id WHERE user_email='{$email}' AND site_id=".SITE_ID." LIMIT 1")) {
 
 			if(mysqli_num_rows($checkUser)!=0) {
 
@@ -21,10 +19,15 @@
 					
 					if($user_status==1) {
 
+						ob_start();
+
 						setcookie('user_name', base64_encode($profile_display_name), time()+30*24*60*60, '/');
 						setcookie('user_image', base64_encode($profile_image), time()+30*24*60*60, '/');
-						setcookie('user_type', base64_encode($user_type), time()+30*24*60*60, '/');
 						setcookie('user_data', base64_encode($user_salt_key), time()+30*24*60*60, '/');
+						setcookie('user_type', base64_encode($user_type), time()+30*24*60*60, '/');
+						setcookie('user_app', base64_encode($site_app), time()+30*24*60*60, '/');
+
+						ob_end_flush();
 
 						$status=200;
 						$msg='Login Successfully';

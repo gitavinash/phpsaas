@@ -9,7 +9,7 @@
 	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
 	define('DB_USER', 'root');		// database username ex :- root
 	define('DB_PASS', '');		// datapase user password :- 12345
-	define('DB_NAME', 'isw_cms');		// database name ex :- cms_db
+	define('DB_NAME', 'punjabkesari');		// database name ex :- cms_db
 
 	/* database table prefix */
 
@@ -28,9 +28,6 @@
 
 	define('IP', $_SERVER['REMOTE_ADDR']);
 
-	/** OTP and Verification Code Expire Time in Minutes */
-
-	define('TIME_LIMIT', '60');
 
 	#############################################################################################
 	############################  DO NOT CHANGE CODE BELOW THIS LINE  ###########################
@@ -43,7 +40,7 @@
 	define('SITE_URL', HTTP_PROTOCOL.$_SERVER['HTTP_HOST']); // return site domain without protocol
 	define('MAIN_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -2, 3, true))); // show only the actual domain like :- example.com
 	define('SUB_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -3, 1, true))); // show only the actual domain like :- example.com
-	
+
 	if(isset($_SERVER['REDIRECT_URL'])) {
 
 		define('ACTIVE_URL', (str_replace('', '', $_SERVER['REDIRECT_URL']))); // echo complete url show on the url bar
@@ -53,7 +50,7 @@
 		define('ACTIVE_URL', (str_replace('', '', $_SERVER['REQUEST_URI']))); // echo complete url show on the url bar
 
 	}
-	
+
 	define('QUERY_URL', htmlspecialchars_decode($_SERVER['QUERY_STRING'])); // echo only query string of the url
 	define('BASE_URL', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?'))); // return only the actual url and remove query string
 

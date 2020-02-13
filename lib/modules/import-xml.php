@@ -138,7 +138,7 @@
 
             for($j=0; $j<sizeof($tags); $j++) {
 
-                $insertTags=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_name, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tags[$j]}', '{$postID}', '{$website_user_id}', '{$website_id}', 'post')");
+                $insertTags=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tags[$j]}', '{$postID}', '{$website_user_id}', '{$website_id}', 'post')");
 
             }
 

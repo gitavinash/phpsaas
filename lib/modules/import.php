@@ -181,7 +181,7 @@
                         $tags=explode(',', $tags);
 
                         for($i=0; $i<sizeof($tags); $i++) {
-                            $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_name, tag_relation_id, tag_owner_id, tag_site_id) VALUES('{$tags[$i]}', '{$postID}', '".USER_ID."', '".SITE_ID."')");
+                            $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id) VALUES('{$tags[$i]}', '{$postID}', '".USER_ID."', '".SITE_ID."')");
                         }
 
                         if($insertMedia && $insertMediaUrl && $insertPost && $linkData && $metaData && $updateCategoryData && $tagData ) {

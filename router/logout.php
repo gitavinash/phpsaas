@@ -12,9 +12,9 @@
 	    }
 	}
 
-	if(file_exists(USER_VIEW_PATH.'logout.php')) {
+	if(file_exists(USER_PATH.'logout.php')) {
 
-		include_once USER_VIEW_PATH.'logout.php';
+		include_once USER_PATH.'logout.php';
 
 	} else {
 

@@ -37,7 +37,7 @@
                 $message='<h1>Invalid request</h1>';
             }
 
-            require_once USER_VIEW_PATH.'email.php';
+            require_once USER_PATH.'email.php';
 
         } else {
 
@@ -60,13 +60,13 @@
 
             if(mysqli_num_rows($checkUser)!=0) {
 
-                require_once USER_VIEW_PATH.'update-password.php';
+                require_once USER_PATH.'update-password.php';
 
             } else {
 
                 $message='Something is wrong';
 
-                require_once USER_VIEW_PATH.'verify.php';
+                require_once USER_PATH.'verify.php';
 
             }
 

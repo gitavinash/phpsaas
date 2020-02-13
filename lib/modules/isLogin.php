@@ -9,8 +9,9 @@
 
 		$user_salt_key=base64_decode($_COOKIE['user_data']);
 
-		if($checkUserIsReal=mysqli_query($connection, "SELECT site_id, site_name, site_description, user_id, user_status, user_type, user_app FROM ".TABLE_PREFIX."user, ".TABLE_PREFIX."site WHERE user_salt_key='{$user_salt_key}' AND (site_owner_id=user_id OR site_owner_id=user_parent_id) LIMIT 1")) {
+		if($checkUserIsReal=mysqli_query($connection, "SELECT user_id, user_type, user_status, site_app FROM ".TABLE_PREFIX."site_access INNER JOIN ".TABLE_PREFIX."user ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_access_site_id=site_id WHERE site_access_site_id=".SITE_ID." AND user_salt_key='{$user_salt_key}'")) {
 			if(mysqli_num_rows($checkUserIsReal)!=0) {
+
 				extract(mysqli_fetch_assoc($checkUserIsReal));
 
 				/** Define new constant variable */
@@ -20,7 +21,8 @@
 				/** Define new cookie for logged in user */
 
 				if(!isset($_COOKIE['user_app'])) {
-					setcookie('user_app', base64_encode($user_type.CREDIT.$user_app), time()+30*24*60*60, '/');
+
+					setcookie('user_app', base64_encode($site_app), time()+30*24*60*60, '/');
 					header("Location: /login/");
 					exit();
 				}

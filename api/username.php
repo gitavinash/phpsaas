@@ -1,7 +1,5 @@
 <?php
 
-    include_once MODULES.'isLogin.php';
-
     /** Check username is available or not */
 
     if(isset($_GET['username'])) {
@@ -11,14 +9,13 @@
         $status=206;
         $msg='';
 
-        if($checkUsername=mysqli_query($connection, "SELECT user_username FROM ".TABLE_PREFIX."user WHERE user_username='{$username}'")) {
+        if($checkUsername=mysqli_query($connection, "SELECT user_username FROM ".TABLE_PREFIX."user WHERE user_username='{$username}' AND user_id!='".USER_ID."'")) {
 
             if(mysqli_num_rows($checkUsername)==0) {
 
                 /** Return status 200 is username is availabel */
                 
                 $status=200;
-
             } else {
 
                 $msg='Not Found';

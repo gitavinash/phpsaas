@@ -3,13 +3,13 @@
     echo "<rss version='2.0'
             xmlns:content='http://purl.org/rss/1.0/modules/content/'>";
                 
-                if($postData=mysqli_query($connection, "SELECT post_id, profile_display_name, link_url, link_published, link_modified, post_image, post_title, post_description, category_title, meta_description FROM isw_post INNER JOIN isw_link ON post_id=link_relation_id INNER JOIN isw_meta ON meta_relation_id=post_id INNER JOIN isw_profile ON profile_id=link_owner_id INNER JOIN isw_category ON post_category=category_id WHERE link_type='post' AND category_type='post' ORDER BY link_modified DESC LIMIT 0, 10")) {
+                if($newsData=mysqli_query($connection, "SELECT news_id, profile_display_name, link_url, link_published, link_modified, news_image, news_title, news_description, category_title, meta_description FROM isw_news INNER JOIN isw_link ON news_id=link_relation_id INNER JOIN isw_meta ON meta_relation_id=news_id INNER JOIN isw_profile ON profile_id=link_owner_id INNER JOIN isw_category ON news_category=category_id WHERE link_type='news' AND category_type='news' ORDER BY link_modified DESC LIMIT 0, 10")) {
                     
                     /* Article feed section */
 
                     $i=1;
                     
-                    while($postListData=mysqli_fetch_assoc($postData)) { extract($postListData);
+                    while($newsListData=mysqli_fetch_assoc($newsData)) { extract($newsListData);
 
                         if($i==1) { ?>
 
@@ -18,14 +18,14 @@
                             <link><?php echo SITE_URL ?></link>
                             <description><![CDATA[<?php echo SITE_DESC ?>]]></description>
                             <language>hi_IN</language>
-                            <lastBuildDate><?php echo date('D, M d, Y H:i A', strtotime('+5 hour +30 minutes', strtotime($postListData['link_published']))) ?></lastBuildDate>
+                            <lastBuildDate><?php echo date('Y-m-dTH:i:sZ', strtotime('+5 hour +30 minutes', strtotime($newsListData['link_published']))) ?></lastBuildDate>
                         <?php
                         } ?>
 
                         <item>
-                            <title><![CDATA[<?php echo $post_title ?>]]></title>
+                            <title><![CDATA[<?php echo $news_title ?>]]></title>
                             <link><?php echo SITE_URL.$link_url ?></link>
-                            <guid><?php echo $post_id ?></guid>
+                            <guid><?php echo $news_id ?></guid>
                             <pubDate><?php echo date('Y-m-dTH:i:sZ', strtotime($link_published)); ?></pubDate>
                             <author><?php echo $profile_display_name ?></author>
                             <description><![CDATA[<?php echo $meta_description ?>]]></description>
@@ -45,7 +45,7 @@
                                             <!-- Header part of Instant Article Page -->
 
                                             <header>
-                                                <figure><img src="<?php echo SITE_URL.$post_image ?>"></figure><h1><?php echo $post_title ?></h1>          
+                                                <figure><img src="<?php echo SITE_URL.$news_image ?>"></figure><h1><?php echo $news_title ?></h1>          
                                                 <time class="op-published" datetime="<?php echo date('Y-m-dTH:i:s+00:00', strtotime($link_published)); ?>"><?php echo date('M dS, H:ia', strtotime($link_published)); ?></time>
                                                 <time class="op-modified" datetime="<?php echo date('Y-m-dTH:i:s+00:00', strtotime($link_modified)); ?>"><?php echo date('M dS, H:ia', strtotime($link_modified)); ?></time>                     
                                                 <h3 class="op-kicker"><?php echo $category_title ?></h3>
@@ -57,7 +57,7 @@
 
                                             <?php
                                                 
-                                                $bodyContent=str_replace('<div style="text-align: justify;">', "<p>", str_replace('</div><div style="text-align: justify;">', "</p><p>", html_entity_decode($post_description)));
+                                                $bodyContent=str_replace('<div style="text-align: justify;">', "<p>", str_replace('</div><div style="text-align: justify;">', "</p><p>", html_entity_decode($news_description)));
                                                 $bodyContent=str_replace('<img src="', '<img src="'.SITE_URL, str_replace('<p><br></p>', '', str_replace('</div>', '</p>', str_replace('<div>', '<p>', $bodyContent))));
 
                                                 $dom = new DOMDocument();

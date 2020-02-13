@@ -4,7 +4,7 @@
 
         /** Show draft only for login user */
 
-        $checkCategoryTemplate=USER_VIEW_PATH.strtolower($category_title).'-post.php';
+        $checkCategoryTemplate=USER_PATH.strtolower($category_title).'-'.$link_type.'.php';
 
         if(file_exists($checkCategoryTemplate)) {
 
@@ -16,7 +16,7 @@
 
             /** Display content in default template */
 
-            require_once USER_VIEW_PATH.'post.php';
+            require_once USER_PATH.$link_type.'.php';
 
         }
 

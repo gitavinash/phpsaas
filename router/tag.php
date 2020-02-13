@@ -7,19 +7,19 @@
 	if(is_numeric($currentPage)) {
 
 		/** Remove page no from url */
-		$tag_name=str_replace('-', ' ', $urlStructure[1]);
+		$tag_title=str_replace('-', ' ', $urlStructure[1]);
 		$currentPage=str_replace('-', ' ', $urlStructure[2]);
 
 	} else {
 		
-        $tag_name=str_replace('-', ' ', $urlStructure[1]);
+        $tag_title=str_replace('-', ' ', $urlStructure[1]);
         $currentPage=0;
 
     }
 
     $postFrom=(($currentPage==0) ? 0 : $currentPage*PER_PAGE_LIMIT );
 
-    if($tagList=mysqli_query($connection, "SELECT DISTINCT(link_relation_id), link_status, link_url, post_image, post_title, meta_description FROM ".TABLE_PREFIX."tag, ".TABLE_PREFIX."link, ".TABLE_PREFIX."post, ".TABLE_PREFIX."meta WHERE tag_name='{$tag_name}' AND link_relation_id=post_id AND link_relation_id=tag_relation_id AND tag_type='post' AND link_type='post' AND tag_relation_id=post_id AND post_id=meta_relation_id AND link_status=200 ORDER BY link_published DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT)) {
+    if($tagList=mysqli_query($connection, "SELECT DISTINCT(link_relation_id), link_type, link_status, link_url, ".TABLE_PREFIX."news.news_image, news_title, meta_description FROM ".TABLE_PREFIX."tag, ".TABLE_PREFIX."link, ".TABLE_PREFIX."news, ".TABLE_PREFIX."meta WHERE tag_title='bjp' AND link_relation_id=news_id AND link_relation_id=tag_relation_id AND tag_relation_id=news_id AND news_id=meta_relation_id AND link_status=200 ORDER BY link_published DESC LIMIT 0, 35")) {
 
         if(mysqli_num_rows($tagList)!=0) {
 
@@ -29,7 +29,7 @@
 
             }
 
-            $tag_path=USER_VIEW_PATH.$urlStructure[1].'-tag.php';
+            $tag_path=USER_PATH.$urlStructure[1].'-tag.php';
 
             /** Include Tag view template */
 
@@ -42,9 +42,9 @@
                 $link_type='tag';
                 $link_url=BASE_URL;
 
-                if(file_exists(USER_VIEW_PATH.'tag.php')) {
+                if(file_exists(USER_PATH.'tag.php')) {
 
-                    require_once USER_VIEW_PATH.'tag.php';
+                    require_once USER_PATH.'tag.php';
 
                 } else {
 
@@ -58,12 +58,11 @@
 
             if(file_exists(ERROR_404)) {
 
-                echo 'Page Not Found';
-                //require_once ERROR_404;
+                require_once ERROR_404;
 
             } else {
 
-                echo $tag_name;
+                echo $tag_title;
                 exit();
 
                 echo '<h1>Unable to find the Error page template path</h1>';
