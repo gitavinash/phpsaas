@@ -6,7 +6,7 @@
 
 	/* database connection setting */
 
-	define('DB_HOST', '68.183.245.95');		// database hostname ex :- hostname
+	define('DB_HOST', '68.183.245.95:3307');		// database hostname ex :- hostname
 	define('DB_USER', 'isw_avinash');		// database username ex :- root
 	define('DB_PASS', 'fBkAr_q7mXbgNSx5n$X8xpxqkEv#%A9X');		// datapase user password :- 12345
 	define('DB_NAME', 'app_master');		// database name ex :- cms_db
