@@ -279,6 +279,18 @@ if(BASE_URL=='/') { ?>
   gtag('config', 'UA-154787764-1');
 </script>
 
+<!-- Global site tag (gtag.js) - Google Analytics ( Punjab Kesari Desktop ) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154787764-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154787764-2');
+</script>
+
+
+
 
     </head>
 

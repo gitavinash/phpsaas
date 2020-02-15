@@ -74,11 +74,18 @@
             ?>
         </div>
 
+        <!-- Composite Start -->
+<div id="M531126ScriptRootC812430">
+</div>
+<script src="https://jsc.mgid.com/p/u/punjabkesari.com.812430.js" async>
+</script>
+<!-- Composite End -->
+
         <div class="comment">
             <div class="fb-comments" data-href="<?php echo SITE_URL.ACTIVE_URL ?>" data-width="100%" data-numposts="5"></div>
         </div>
 
-        <div class="taboola">
+        <!-- <div class="taboola">
             <div id="taboola-below-article-thumbnails"></div>
             <script type="text/javascript">
             window._taboola = window._taboola || [];
@@ -89,7 +96,7 @@
                 target_type: 'mix'
             });
             </script>
-        </div>
+        </div> -->
 
     </div>
 

@@ -7,8 +7,8 @@
 		if(mysqli_num_rows($checkInstallation)==0) {
 
 			/** Redirect to Installation step 1 url */
-					
-			if(ACTIVE_URL!='/install/?step=1') {
+			
+			if($_SERVER['REQUEST_URI']!='/install/?step=1') {
 				header("Location: /install/?step=1", TRUE, 301);
 				exit();
 			}
@@ -33,12 +33,6 @@
 
 					}
 
-				} else {
-
-					/** Check Domain */
-
-					require_once 'checkDomain.php';
-						
 				}
 
 			}
@@ -51,7 +45,7 @@
 
 				/** Redirect to Installation step 2 url */
 						
-				if(ACTIVE_URL!='/install/?step=2') {
+				if($_SERVER['REQUEST_URI']!='/install/?step=2') {
 
 					header("Location: /install/?step=2", TRUE, 301);
 					exit();

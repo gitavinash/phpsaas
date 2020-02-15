@@ -4,7 +4,7 @@
 
 	function website ($connection, $data) {
 
-		global $table_prefix;
+		$expireDate=date('Y-m-d', strtotime('+10 years'));
 
 		if($checkUser=mysqli_query($connection, "SELECT user_email FROM ".TABLE_PREFIX."user WHERE user_email='{$data['email']}'")) {
 			if(mysqli_num_rows($checkUser)!=0) {
@@ -39,17 +39,22 @@
 
 		/* Insert data into user table */
 
-		$insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_type, user_reg_time, user_reg_ip) VALUES('administrator', '{$data['email']}', '{$password}', '$saltKey', 'administrator', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
+		$insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_app, user_type, user_reg_time, user_reg_ip) VALUES('administrator', '{$data['email']}', '{$password}', '$saltKey', 'system', 'administrator', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
 		$userID=mysqli_insert_id($connection);
 
-		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_domain, site_name, site_description, site_indexing, site_status) VALUES('{$userID}', '".SITE_DOMAIN."', '{$data['site_name']}', '{$data['site_desc']}', '{$index}', 0)");
+		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_domain, site_url, site_name, site_description, site_app, site_indexing, site_expire_date, site_status) VALUES('{$userID}', '".SITE_DOMAIN."', '".SITE_DOMAIN."', '{$data['site_name']}', '{$data['site_desc']}', 'system', '{$index}', '{$expireDate}', 1)");
+		$siteID=mysqli_insert_id($connection);
+
+		$insertSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_status) VALUES('{$siteID}', '{$userID}', 1)");
+
+		$insertSiteSetting=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_setting(site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height) VALUES(10, 10, 10, 60, 223, 96)");
 
 		$insertProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '', '', '', '{$data['site_name']}', '{$data['email']}')");
 
-		if($insertUser && $insertSite && $insertProfile) {
+		if($insertUser && $insertSite && $insertSiteAccess && $insertSiteSetting && $insertProfile) {
 
 			mysqli_query($connection, 'COMMIT');
-			header("Location: /install/?step=2");
+			header("Location: /install/?step=3");
 			exit();
 
 		} else {

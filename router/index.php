@@ -60,6 +60,10 @@
 
 		switch ($urlStructure[0]) {
 
+			case 'install' :
+				require_once 'install.php';
+				break;
+
 			case 'dashboard' :
 				require_once 'admin.php';
 				break;

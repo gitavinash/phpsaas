@@ -21,12 +21,11 @@
 
 	/* Installation Directory  */
 
-	define('INSTALLATION_DIR', ROOT.'/lib/install/');
-	define('INSTALLATION_PATH', ROOT.INSTALLATION_DIR);
-	define('INSTALLATION_STYLESHEET', SITE_DOMAIN.INSTALLATION_DIR.'assets/css/');
-	define('INSTALLATION_JS', SITE_DOMAIN.INSTALLATION_DIR.'assets/js/');
-	define('INSTALLATION_IMAGES', SITE_DOMAIN.INSTALLATION_DIR.'assets/images/');
-	define('INSTALLATION_PLUGINS', SITE_DOMAIN.INSTALLATION_DIR.'assets/plugins/');
+	define('INSTALLATION_PATH', ROOT.'/lib/install/');
+	define('INSTALLATION_STYLESHEET', SITE_DOMAIN.INSTALLATION_PATH.'assets/css/');
+	define('INSTALLATION_JS', SITE_DOMAIN.INSTALLATION_PATH.'assets/js/');
+	define('INSTALLATION_IMAGES', SITE_DOMAIN.INSTALLATION_PATH.'assets/images/');
+	define('INSTALLATION_PLUGINS', SITE_DOMAIN.INSTALLATION_PATH.'assets/plugins/');
 
 	/** Defauly System Directory Managment */
 

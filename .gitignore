@@ -1,5 +1,6 @@
 .vscode/
 upload/
+logs/
 *.DS_Store
 node_modules
 custom.log

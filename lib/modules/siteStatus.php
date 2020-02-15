@@ -18,10 +18,6 @@
 			
 		}
 
-	} else {
-
-		require_once 'getDomainData.php';
-
 	}
 
 ?>
