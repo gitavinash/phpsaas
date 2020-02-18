@@ -20,9 +20,9 @@
 
 				/** Define new cookie for logged in user */
 
-				if(!isset($_COOKIE['user_app'])) {
+				if(!isset($_COOKIE['site_app'])) {
 
-					setcookie('user_app', base64_encode($site_app), time()+30*24*60*60, '/');
+					setcookie('site_app', base64_encode($site_app), time()+30*24*60*60, '/');
 					header("Location: /login/");
 					exit();
 				}

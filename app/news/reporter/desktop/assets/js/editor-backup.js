@@ -1,9 +1,3 @@
-/*
- * WYSIWYG EDITOR BASED ON JQUERY RTE
- */
-
-// define the rte light plugin
-
 (function ($) {
 
     if (typeof $.fn.rte === "undefined") {
@@ -34,7 +28,7 @@
 
                     // Mozilla needs this to display caret
                     if ($.trim(content) === '') {
-                        content = '<br />';
+                        content = '';
                     }
 
                     // already created? show/hide
@@ -60,7 +54,7 @@
 
                     textarea.after(iframe);
 
-                    var doc = "<html><head>" + "</head><body style='float:left; width: 100%'>" + content + "</body></html>";
+                    var doc = "<html><head> <style type='text/css'>body {float: left; width: 100%; word-break: break-word; padding: 7px 10px; margin: 0 auto; box-sizing: border-box;} img {float: left; width: 100% !important;} p {float: left; width: 100% !important; box-sizing: border-box;} div {float: left; width: 100% !important; box-sizing: border-box;} </style> " + "</head><body>" + content + "</body></html>";
                     tryEnableDesignMode(doc, function () {
                         $("#toolbar-" + element_id).remove();
                         textarea.before(toolbar());
@@ -120,13 +114,14 @@
                     var tb = $("\
                         <div class='editor-menu' id='toolbar-" + element_id + "'>\
                             <select class='form-control heading'>\
-                            <option value='p'>P</option>\
-                            <option value='h1'>H1</option>\
-                            <option value='h2'>H2</option>\
-                            <option value='h3'>H3</option>\
-                            <option value='h4'>H4</option>\
-                            <option value='h5'>H5</option>\
-                            <option value='h6'>H6</option>\
+                                <option value=''>Heading</option>\
+                                <option value='p'>P</option>\
+                                <option value='h1'>H1</option>\
+                                <option value='h2'>H2</option>\
+                                <option value='h3'>H3</option>\
+                                <option value='h4'>H4</option>\
+                                <option value='h5'>H5</option>\
+                                <option value='h6'>H6</option>\
                             </select>\
                             <a class='editor-btn bold'><i class='fas fa-bold'></i></a>\
                             <a class='editor-btn italic'><i class='fas fa-italic'></i></a>\
@@ -174,7 +169,7 @@
                                                 <input type='hidden' name='action' value='singleUpload' />\
                                             </div>\
                                         </form>\
-                                        <div class='notice'><strong>only these file formats are supported:</strong> .zip, .png, .jpg, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></div>\
+                                        <div class='notice'><strong>only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></div>\
                                     </div>\
                                 </div>\
                                 <div class='close-window'><i class='fa fa-times'></i></div>\
@@ -326,12 +321,12 @@
 
                     $('.image', tb).click(function () {
                         $('.imgBrowser').show();
-                        imageList('image');
                     });
 
                     // img browser pop up box
                     
                     $('.library', tb).click(function() {
+                        imageList('image');
                         $('.library').addClass('active');
                         $('.upload').removeClass('active');
                         $('.libraryBox').css(
@@ -390,6 +385,9 @@
                                     insertImage(data.msg);
                                     $('.imgBrowser').hide();
                                 }
+                            },
+                            error: function(data) {
+                                console.log(data)
                             }
                         });
                     });
@@ -399,10 +397,6 @@
 
                     $(iframe).parents('form').submit(function () {
                         disableDesignMode(true);
-                    });
-
-                    $('#imageBox_2').click(function() {
-                        console.log('dfdf');
                     });
 
                     return tb;
@@ -438,7 +432,7 @@
                             }
                         },
                         error: function(data) {
-                            console.log('error in this function');
+                            console.log('Error while fetching images');
                         }
                     });
                 }
@@ -478,11 +472,101 @@
                         }
                         node = range.commonAncestorContainer;
                     }
+
                     return node;
                 }
 
                 // enable design mode now
                 enableDesignMode();
+
+                // publish all post where editor is enable
+
+                $('#publishPost').click(function() {
+                    disableDesignMode();
+                    $('#publishPost').hide();
+		            var postTitle = $('#title').val();
+		            var data = new FormData(document.getElementById('formData'));
+		            data.append('type', 'publish');
+		            $.ajax({
+			            type: 'POST',
+			            data: data,
+			            processData: false,
+			            contentType: false,
+			            dataType: 'JSON',
+			            encrypt: 'multipart/form-data',
+			            success: function(data) {
+				            if(data.status==200) {
+					            alert(data.msg);
+					            window.location.href=data.redirect;
+				            } else {
+					            alert(data.msg);
+                            }
+                            $('#updatePost').show();
+			            },
+			            error: function(data) {
+				            console.log(data);
+			            }
+		            });
+                });
+
+                // Update all post where editor is enable
+
+                $('#updatePost').click(function() {
+                    disableDesignMode();
+                    $('#updatePost').hide();
+                    var postTitle = $('#title').val();
+                    var data = new FormData(document.getElementById('formData'));
+                    data.append('type', 'update');
+                    $.ajax({
+                        type: 'POST',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        encrypt: 'multipart/form-data',
+                        success: function(data) {
+                            if(data.status==200) {
+                                alert(data.msg);
+                                window.location.href=data.redirect;
+                            } else {
+                                alert(data.msg);
+                            }
+                            $('#updatePost').show();
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                });
+
+                // Update all category and tag where editor is enable
+
+                $('#updateTaxonomy').click(function() {
+                    disableDesignMode();
+                    $('#updateTaxonomy').hide();
+                    var postTitle = $('#title').val();
+                    var data = new FormData(document.getElementById('formData'));
+                    data.append('type', 'update');
+                    $.ajax({
+                        type: 'POST',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        encrypt: 'multipart/form-data',
+                        success: function(data) {
+                            if(data.status==200) {
+                                alert(data.msg);
+                            } else {
+                                alert(data.msg);
+                            }
+                            $('#updateTaxonomy').show();
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                });
 
             }); //return this.each
 

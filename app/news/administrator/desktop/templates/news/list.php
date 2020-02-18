@@ -21,6 +21,8 @@
 				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All <?php echo $postType ?></option>
 				<option value="206" <?php echo (($_GET['status']=='206') ? 'selected' : '' ) ?> >Drafts <?php echo $postType ?></option>
 				<option value="200" <?php echo (($_GET['status']=='200') ? 'selected' : '' ) ?>  >Published <?php echo $postType ?></option>
+				<option value="201" <?php echo (($_GET['status']=='201') ? 'selected' : '' ) ?> >Repoters <?php echo $postType ?></option>
+				<option value="202" <?php echo (($_GET['status']=='202') ? 'selected' : '' ) ?>  >Interns <?php echo $postType ?></option>
 			</select>
 			<select name="category" class="form-control">
 				<option value="all">Select Category</option>
@@ -109,11 +111,11 @@
 				$totalnews=ceil($totalnews/10);
 
 				if($startFrom==0) { ?>
-					<li><a href='{$postType}/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=1'>Next</a></li>
+					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=1'>Next</a></li>
 				<?php
 				} else { ?>
-					<li><a href='{$postType}/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage-1; ?>'>Back</a></li>
-					<li><a href='{$postType}/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage+1; ?>'>Next</a></li>
+					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage-1; ?>'>Back</a></li>
+					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage+1; ?>'>Next</a></li>
 				<?php
 				}
 

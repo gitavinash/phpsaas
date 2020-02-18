@@ -18,13 +18,12 @@
 	define('SITE_NAME', ((isset($site_name)) ? $site_name : CREDIT ));
 	define('SITE_DESC', ((isset($site_description)) ? $site_description : '' ));
 	define('SITE_TAGS', ((isset($site_keyword)) ? $site_keyword : '' ));
-	define('SITE_APP', ((isset($site_app)) ? $site_app : 'news' )); // deafult all for visitors
+	define('SITE_APP', ((isset($site_app)) ? $site_app : 'system' )); // deafult all for visitors
 	define('SITE_THEME', ((isset($site_theme)) ? $site_theme : 'default' ));	// default theme of website for visitor
 
 	/** Use when user is logged in */
 
-	define('USER_TYPE', ((isset($_COOKIE['user_type'])) ? base64_decode($_COOKIE['user_type']) : 'administrator' ));	// directory of logged in user
-	define('USER_APP', ((isset($_COOKIE['user_app'])) ? base64_decode($_COOKIE['user_app']) : '' )); // user type of logged in user
+	define('USER_TYPE', ((isset($_COOKIE['user_type'])) ? base64_decode($_COOKIE['user_type']) : 'visitor' ));	// directory of logged in user
 	define('PROFILE_DISPLAY_NAME',((isset($_COOKIE['user_name'])) ? base64_decode($_COOKIE['user_name']) : SITE_NAME ));	// Logged n user display name
 	define('PROFILE_IMAGE',((isset($_COOKIE['user_image'])) ? SITE_URL.base64_decode($_COOKIE['user_image']) : '' ));	// Logged in profile picture
 

@@ -114,13 +114,14 @@
                     var tb = $("\
                         <div class='editor-menu' id='toolbar-" + element_id + "'>\
                             <select class='form-control heading'>\
-                            <option value='p'>P</option>\
-                            <option value='h1'>H1</option>\
-                            <option value='h2'>H2</option>\
-                            <option value='h3'>H3</option>\
-                            <option value='h4'>H4</option>\
-                            <option value='h5'>H5</option>\
-                            <option value='h6'>H6</option>\
+                                <option value=''>Heading</option>\
+                                <option value='p'>P</option>\
+                                <option value='h1'>H1</option>\
+                                <option value='h2'>H2</option>\
+                                <option value='h3'>H3</option>\
+                                <option value='h4'>H4</option>\
+                                <option value='h5'>H5</option>\
+                                <option value='h6'>H6</option>\
                             </select>\
                             <a class='editor-btn bold'><i class='fas fa-bold'></i></a>\
                             <a class='editor-btn italic'><i class='fas fa-italic'></i></a>\
@@ -368,8 +369,20 @@
 
                     // image uploader
 
-                    $('#uploadFile', tb).change(function() {
-                        var formData = new FormData($("#uploadFile"));
+                    $('#uploadFile', tb).change(function(e) {
+
+                        var file = e.target.files[0];
+                        var imageType = /image.*/;
+
+                        if (!file.type.match(imageType)) return;
+
+                        var form_data = new FormData();
+                        form_data.append('file', file);
+
+                        for (var key of form_data.entries()) {
+                            console.log(key);
+                        }
+
                         $.ajax({
                             type: 'POST',
                             data : new FormData(this),
@@ -396,10 +409,6 @@
 
                     $(iframe).parents('form').submit(function () {
                         disableDesignMode(true);
-                    });
-
-                    $('#imageBox_2').click(function() {
-                        console.log('dfdf');
                     });
 
                     return tb;
@@ -475,6 +484,7 @@
                         }
                         node = range.commonAncestorContainer;
                     }
+
                     return node;
                 }
 
@@ -485,6 +495,7 @@
 
                 $('#publishPost').click(function() {
                     disableDesignMode();
+                    $('#publishPost').hide();
 		            var postTitle = $('#title').val();
 		            var data = new FormData(document.getElementById('formData'));
 		            data.append('type', 'publish');
@@ -501,10 +512,12 @@
 					            window.location.href=data.redirect;
 				            } else {
 					            alert(data.msg);
-				            }
+                            }
+                            $('#publishPost').show();
 			            },
 			            error: function(data) {
-				            console.log(data);
+                            console.log(data);
+                            $('#publishPost').show();
 			            }
 		            });
                 });
@@ -513,6 +526,7 @@
 
                 $('#updatePost').click(function() {
                     disableDesignMode();
+                    $('#updatePost').hide();
                     var postTitle = $('#title').val();
                     var data = new FormData(document.getElementById('formData'));
                     data.append('type', 'update');
@@ -530,6 +544,37 @@
                             } else {
                                 alert(data.msg);
                             }
+                            $('#updatePost').show();
+                        },
+                        error: function(data) {
+                            console.log(data);
+                            $('#updatePost').show();
+                        }
+                    });
+                });
+
+                // Update all category and tag where editor is enable
+
+                $('#updateTaxonomy').click(function() {
+                    disableDesignMode();
+                    $('#updateTaxonomy').hide();
+                    var postTitle = $('#title').val();
+                    var data = new FormData(document.getElementById('formData'));
+                    data.append('type', 'update');
+                    $.ajax({
+                        type: 'POST',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        encrypt: 'multipart/form-data',
+                        success: function(data) {
+                            if(data.status==200) {
+                                alert(data.msg);
+                            } else {
+                                alert(data.msg);
+                            }
+                            $('#updateTaxonomy').show();
                         },
                         error: function(data) {
                             console.log(data);

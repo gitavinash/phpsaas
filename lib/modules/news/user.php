@@ -42,7 +42,7 @@
 
         mysqli_query($connection, "START TRANSACTION");
         
-        $addUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_site_id, user_parent_id, user_username, user_email, user_password, user_salt_key, user_app, user_type, user_status, user_reg_time, user_reg_ip) VALUES('{$website_id}', '{$website_user_id}', '{$username}', '{$email}', '{$dbPassword}', '{$saltKey}', '".USER_APP."', '{$user_type}', 1, NOW(), '".IP."')");
+        $addUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_site_id, user_parent_id, user_username, user_email, user_password, user_salt_key, user_type, user_status, user_reg_time, user_reg_ip) VALUES('{$website_id}', '{$website_user_id}', '{$username}', '{$email}', '{$dbPassword}', '{$saltKey}', '{$user_type}', 1, NOW(), '".IP."')");
         
         $newUserId=mysqli_insert_id($connection);
         

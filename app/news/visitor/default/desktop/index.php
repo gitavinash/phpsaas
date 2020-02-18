@@ -128,7 +128,7 @@
 
                         <?php
 
-                        if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=14 ORDER BY link_id DESC LIMIT 0, 5")) {
+                        if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=14 ORDER BY link_id DESC LIMIT 0, 1")) {
                             if(mysqli_num_rows($categoryNews)!=0) {
                                 while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     

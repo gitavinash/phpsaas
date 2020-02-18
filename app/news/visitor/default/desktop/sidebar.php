@@ -1,7 +1,11 @@
     
     <div class="ad-box-300">
-        <!-- You plus -->
-        <div id="yp_widget"></div>
+        <!-- /21704298696/REC_300_250_ad_unit -->
+        <div id='div-gpt-ad-1581925731733-0' style='width: 300px; height: 250px;'>
+        <script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1581925731733-0'); });
+        </script>
+        </div>
     </div>
 
     <div class="trending-box">

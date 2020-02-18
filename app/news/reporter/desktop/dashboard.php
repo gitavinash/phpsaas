@@ -1,5 +1,5 @@
 <?php
 
-	echo "dashboard page";
+	print_r($_SESSION);
 
 ?>

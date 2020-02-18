@@ -99,9 +99,10 @@ strong {
 
 .right-side ul li .profile-img {
 	float: right;
-	width: auto;
+	width: 40px;
 	height: 40px;
 	margin: 3px 10px 3px 0px;
+	overflow: hidden;
 }
 
 .right-side ul li .profile-img img {
@@ -471,9 +472,11 @@ main .container {
 }
 
 .box-2 {
-	float: left;
-	width: 50%;
-	margin: 20px 0px;
+    float: left;
+    width: 50%;
+    margin: 20px 0px;
+    box-sizing: border-box;
+    padding-right: 20px;
 }
 
 .box-1 {
@@ -566,6 +569,14 @@ textarea.form-control {
 	float: left;
 	font-size: 14px;
 	margin-bottom: 5px;
+}
+
+.form-group label span {
+	background: none;
+    padding: 0;
+    font-size: 11px;
+    margin-left: 10px;
+    color: red;
 }
 
 .form-group input[type='radio'] {
@@ -692,7 +703,7 @@ textarea.form-control {
     font-size: 14px;
     background: #fff;
     border: 1px solid #e6e6e6;
-    width: 50px;
+    width: 85px;
     height: 28px;
     padding:0;
 }
@@ -1003,7 +1014,8 @@ li.imageBox img {
 .tagList span {
 	position: relative;
     float: left;
-    background: #00609E;
+	background: #00609E;
+	height: 16px;
     color: #fff;
     margin-right: 10px;
     padding: 2px 15px 2px 10px;
@@ -1245,7 +1257,6 @@ ul.tabs li.active {
 .category .category-list {
 	float: right;
 	width: 600px;
-	background: #fff;
 }
 
 .page-not-found {
@@ -1363,4 +1374,54 @@ ul.tabs li.active {
 
 .right {
 	float: right !important;
+}
+
+/** Pagination **/
+
+.pagination-box {
+	float: left;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.pagination-box .pagination {
+	float: left;
+	width: 100%;
+}
+
+.pagination-box ul.pagination {
+	float: left;
+	width: 100%;
+	padding: 0;
+	margin: 20px 0px;
+	list-style: none;
+}
+
+.pagination-box .pagination li {
+	float: left;
+	width: auto;
+	background: #e4e4e4;
+	color: #333;
+	border-right: 1px solid #f5f5f5;
+    padding: 5px 10px;
+}
+
+.pagination-box .pagination li:first-child {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	background: #fff;
+	color: #333;
+}
+
+.pagination-box .pagination li:last-child {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border: none;
+	background: #fff;
+	color: #333;
+}
+
+.pagination-box .pagination li a {
+	text-decoration: none;
+	color: inherit;
 }

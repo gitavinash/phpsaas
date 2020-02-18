@@ -213,7 +213,6 @@
       user_email varchar(191) NOT NULL,
       user_password varchar(191) NOT NULL,
       user_salt_key varchar(191) NOT NULL,
-      user_app varchar(50) NOT NULL,
       user_type varchar(20) NOT NULL,
       user_status int(1) NOT NULL DEFAULT 0,
       user_reg_time datetime NOT NULL,

@@ -43,18 +43,18 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-					<li <?php echo ((ADMIN_BASE_URL=='/post/') ? 'class="active"' : '' ) ?> >
-						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
+					<li <?php echo ((ADMIN_BASE_URL=='/news/') ? 'class="active"' : '' ) ?> >
+						<a href="news.php?type=list&status=all"><i class="fas fa-newspaper"></i> News</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All Posts</a></li>
-								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All News</a></li>
+								<li><a href="news.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All Posts</a></li>
-								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All News</a></li>
+								<li><a href="news.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
 							</ul>
 						</div>
 					</li>
@@ -79,19 +79,33 @@
 							</ul>
 						</div>
 					</li>
-					<!-- <li <?php echo ((ADMIN_BASE_URL=='/comments/') ? 'class="active"' : '' ) ?> ><a href="comments.php"><i class="fas fa-comments"></i> Comments</a></li> -->
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
-						<a href="settings.php?type=website"><i class="fas fa-cog"></i> Settings</a>
+						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="setting.php?type=website"><i class="fas fa-globe"></i>  Website</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="setting.php?type=website"><i class="fas fa-globe"></i>  Website</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
+							</ul>
+						</div>
+					</li>
+					<!-- <li <?php echo ((ADMIN_BASE_URL=='/customize/') ? 'class="active"' : '' ) ?> >
+						<a href="customize.php?type=theme"><i class="fas fa-paint-roller"></i> Customize</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
+								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
+								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
 							</ul>
 						</div>
 					</li>
@@ -112,7 +126,7 @@
 								<li><a href="support.php?type=history"><i class="fas fa-history"></i> Ticket History</a></li>
 							</ul>
 						</div>
-					</li>
+					</li> -->
 				</ul>
 			</nav>
 		</aside>

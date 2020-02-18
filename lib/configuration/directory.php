@@ -7,7 +7,7 @@
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
 
-	define('APP_MODULES', ROOT.'/lib/modules/'.USER_APP.'/');
+	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');
 	define('SITE_STATUS', MODULES.'siteStatus.php');
 	define('APP_DIR', ROOT.'/app/');
@@ -17,7 +17,7 @@
 
 	define('SEND_EMAIL', CONFIG.'mail/send_email.php');
 	define('EMAIL_TEMPLATE', RESOURCE.'email/');
-	define('APP_EMAIL_TEMPLATE', RESOURCE.'email/'.USER_APP.'/');
+	define('APP_EMAIL_TEMPLATE', RESOURCE.'email/'.SITE_APP.'/');
 
 	/* Installation Directory  */
 
@@ -30,7 +30,7 @@
 	/** Defauly System Directory Managment */
 
 	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_VERSION.'/');
-	define('SYSTEM_LOGIN', ROOT.'/app/system/administrator/'.SITE_VERSION.'/login.php');
+	define('SYSTEM_LOGIN', ROOT.SYSTEM_DIR.'login.php');
 	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
 	define('SYSTEM_URL', SITE_URL.SYSTEM_DIR);
 	define('SYSTEM_STYLESHEET', SYSTEM_URL.'assets/css/');
@@ -40,7 +40,7 @@
 
 	/* Administrator and login member user directory managment */
 
-	define('ADMIN_DIR', '/app/'.USER_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
+	define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
 	define('ADMIN_PATH', ROOT.ADMIN_DIR);
 	define('ADMIN_URL', SITE_URL.ADMIN_DIR);
 	define('ADMIN_STYLESHEET', ADMIN_URL.'assets/css/');

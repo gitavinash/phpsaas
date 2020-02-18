@@ -8,11 +8,6 @@
 
             extract(mysqli_fetch_assoc($checkInstallation));
 
-        } else {
-
-            echo 'Unable to verify this request';
-            exit();
-
         }
     
     }

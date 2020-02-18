@@ -37,7 +37,15 @@
                 $message='<h1>Invalid request</h1>';
             }
 
-            require_once USER_PATH.'email.php';
+            if( file_exists(SYSTEM_PATH.'email.php')) {
+
+                require_once SYSTEM_PATH.'email.php';
+
+            } else {
+                
+                require_once USER_PATH.'email.php';
+
+            }
 
         } else {
 

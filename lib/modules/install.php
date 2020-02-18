@@ -39,7 +39,7 @@
 
 		/* Insert data into user table */
 
-		$insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_app, user_type, user_reg_time, user_reg_ip) VALUES('administrator', '{$data['email']}', '{$password}', '$saltKey', 'system', 'administrator', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
+		$insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_type, user_reg_time, user_reg_ip) VALUES('administrator', '{$data['email']}', '{$password}', '$saltKey', 'administrator', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
 		$userID=mysqli_insert_id($connection);
 
 		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_domain, site_url, site_name, site_description, site_app, site_indexing, site_expire_date, site_status) VALUES('{$userID}', '".SITE_DOMAIN."', '".SITE_DOMAIN."', '{$data['site_name']}', '{$data['site_desc']}', 'system', '{$index}', '{$expireDate}', 1)");
@@ -78,7 +78,7 @@
 
 			mysqli_query($connection, "START TRANSACTION");
 
-			$updateUser=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."user SET user_app='{$data['site_app']}', user_status=1, user_act_time=NOW() WHERE user_id='{$data['user_id']}'");
+			$updateUser=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."user SET user_status=1, user_act_time=NOW() WHERE user_id='{$data['user_id']}'");
 			$updateSite=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_status=1, site_lang='{$data['site_lang']}', site_app='{$data['site_app']}', site_theme='{$theme}', site_expire_date='{$expire_date}' WHERE site_owner_id='{$data['user_id']}'");
 
 			if($updateUser && $updateSite) {

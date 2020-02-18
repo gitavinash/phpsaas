@@ -50,9 +50,12 @@
 
 					mysqli_query($connection, "START TRANSACTION");
 
+					$post_status=0;
+
 					if(USER_TYPE=='reporter') {
-						$post_status=0;
-						$link_status=206;
+						$link_status=202;
+					} else if(USER_TYPE=='reporter') {
+						$link_status=201;
 					} else {
 						$post_status=1;
 						$link_status=200;
@@ -98,7 +101,10 @@
 						$redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.$postID;
 
 					} else {
-						
+
+						echo $addNewPost.' && '.$linkData.' && '.$metaData.' && '.$increaseCategoryCount.' && '.$tagData;
+						exit();
+
 						mysqli_query($connection, "ROLLBACK");
 
 					}

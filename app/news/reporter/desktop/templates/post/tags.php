@@ -1,1 +1,0 @@
-<h2><?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> Tags</h2>

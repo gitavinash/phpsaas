@@ -25,7 +25,7 @@
 						setcookie('user_image', base64_encode($profile_image), time()+30*24*60*60, '/');
 						setcookie('user_data', base64_encode($user_salt_key), time()+30*24*60*60, '/');
 						setcookie('user_type', base64_encode($user_type), time()+30*24*60*60, '/');
-						setcookie('user_app', base64_encode($site_app), time()+30*24*60*60, '/');
+						setcookie('site_app', base64_encode($site_app), time()+30*24*60*60, '/');
 
 						ob_end_flush();
 
@@ -49,6 +49,7 @@
 				}
 
 			}
+	
 
 		}
 

@@ -289,7 +289,15 @@ if(BASE_URL=='/') { ?>
   gtag('config', 'UA-154787764-2');
 </script>
 
-
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/21704298696/REC_300_250_ad_unit', [300, 250], 'div-gpt-ad-1581925731733-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
 
 
     </head>
