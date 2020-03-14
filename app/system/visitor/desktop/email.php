@@ -1,3 +1,4 @@
+
 <?php
 
   if(isset($_COOKIE['isLogin'])) {
@@ -71,9 +72,9 @@
 			<div class="container">
 				<div class="row justify-content-md-center">
 					<div class="col-12 col-md-4">
-                        <!-- <form action="" method="POST" >
+                        <form action="" method="POST" >
                             <p><?php echo $message ?> <a href="/login/">click here to login</a></p>
-                        </form> -->
+                        </form>
 					</div>
 				</div>
 			</div>
