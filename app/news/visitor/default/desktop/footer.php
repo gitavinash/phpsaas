@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="credit">
-                    &copy Copyright 2007 - <?php echo date('Y'); ?> <a href="">Punjab Kesari Delhi</a>
+                    &copy Copyright 2007 - <?php echo date('Y'); ?> <a href="">ITS Soft World</a>
                 </div>
             </div>
         </footer>
