@@ -95,8 +95,11 @@
                     }, 500);
                     return false;
                 }
+                
+                /** Disable Design Mode and show only html code */
 
                 function disableDesignMode(submit) {
+
                     var content = $(iframe).contents().find("body").html();
 
                     if ($(iframe).is(":visible")) {
@@ -107,6 +110,7 @@
                         textarea.show();
                         $(iframe).hide();
                     }
+
                 }
 
                 // create toolbar and bind events to it's elements

@@ -369,8 +369,20 @@
 
                     // image uploader
 
-                    $('#uploadFile', tb).change(function() {
-                        var formData = new FormData($("#uploadFile"));
+                    $('#uploadFile', tb).change(function(e) {
+
+                        var file = e.target.files[0];
+                        var imageType = /image.*/;
+
+                        if (!file.type.match(imageType)) return;
+
+                        var form_data = new FormData();
+                        form_data.append('file', file);
+
+                        for (var key of form_data.entries()) {
+                            console.log(key);
+                        }
+
                         $.ajax({
                             type: 'POST',
                             data : new FormData(this),
@@ -501,10 +513,11 @@
 				            } else {
 					            alert(data.msg);
                             }
-                            $('#updatePost').show();
+                            $('#publishPost').show();
 			            },
 			            error: function(data) {
-				            console.log(data);
+                            console.log(data);
+                            $('#publishPost').show();
 			            }
 		            });
                 });
@@ -535,6 +548,7 @@
                         },
                         error: function(data) {
                             console.log(data);
+                            $('#updatePost').show();
                         }
                     });
                 });

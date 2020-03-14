@@ -9,18 +9,6 @@
         require_once 'lib/modules/device.php';
         $deviceType=new Device();
 
-        // if($deviceType->isMobile()) {
-
-        // 	define('SITE_VERSION', 'mobile');
-
-        // } else {
-
-        // 	define('SITE_VERSION', 'desktop');
-
-        // }
-
-        define('SITE_VERSION', 'desktop');
-
         /** Including router index file  */
 
         require_once 'router/index.php';

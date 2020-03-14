@@ -73,8 +73,6 @@
 					$linkData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', '{$postType}', '{$featurePost}', '{$website_user_id}', '".SITE_ID."', NOW() ,NOW())");
 					$metaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$postID}', '{$meta_title}', '{$postType}', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 
-					$increaseCategoryCount=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."category SET category_total_count=category_total_count+1 WHERE category_id='{$category}'");
-
 					/* Insert tags into tag table */
 
 					if($tags!='') {
@@ -93,7 +91,7 @@
 
 					}
 
-					if($addNewPost && $linkData && $metaData && $increaseCategoryCount && $tagData) {
+					if($addNewPost && $linkData && $metaData && $tagData) {
 						mysqli_query($connection, "COMMIT");
 
 						$status=200;

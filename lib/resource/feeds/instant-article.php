@@ -18,7 +18,7 @@
                             <link><?php echo SITE_URL ?></link>
                             <description><![CDATA[<?php echo SITE_DESC ?>]]></description>
                             <language>hi_IN</language>
-                            <lastBuildDate><?php echo date('Y-m-dTH:i:sZ', strtotime('+5 hour +30 minutes', strtotime($newsListData['link_published']))) ?></lastBuildDate>
+                            <lastBuildDate><?php echo date('Y-m-dTH:i:sZ', strtotime($newsListData['link_published'])) ?></lastBuildDate>
                         <?php
                         } ?>
 

@@ -4,8 +4,6 @@
 	
 	header("Content-type: application/json; charset=utf-8");
 
-	$urlStructure=explode('/', rtrim(ltrim(API_BASE_URL, '/'), '/'));
-
 	switch ($urlStructure[0]) {
 
 		case 'secure' :
@@ -17,7 +15,17 @@
 		
 		default:
 
-			include_once API.$urlStructure[0].'.php';
+			/** Check API request file in system app directory */
+
+			if(file_exists(API.SITE_APP.'/'.end($urlStructure).'.php')) {
+
+				require_once API.SITE_APP.'/'.end($urlStructure).'.php';
+
+			} else {
+
+				require_once API.end($urlStructure).'.php';
+
+			}
 			break;
 			
 	}

@@ -37,7 +37,7 @@
 							<atom:link href="<?php echo SITE_URL ?>" rel="self" type="application/rss+xml" />
 							<link><?php echo SITE_URL ?></link>
 							<description><?php echo SITE_DESC ?></description>
-							<lastBuildDate><?php echo date('r', strtotime('+5 hour +30 minutes', strtotime($newsData['link_published']))) ?></lastBuildDate>
+							<lastBuildDate><?php echo date('r', strtotime($newsData['link_published'])) ?></lastBuildDate>
 							<language>hi</language>
 							<sy:updatePeriod>hourly</sy:updatePeriod>
 							<sy:updateFrequency>1</sy:updateFrequency>

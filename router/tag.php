@@ -17,9 +17,9 @@
 
     }
 
-    $postFrom=(($currentPage==0) ? 0 : $currentPage*PER_PAGE_LIMIT );
+    $searchTag=mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
 
-    if($tagList=mysqli_query($connection, "SELECT DISTINCT(link_relation_id), link_type, link_status, link_url, ".TABLE_PREFIX."news.news_image, news_title, meta_description FROM ".TABLE_PREFIX."tag, ".TABLE_PREFIX."link, ".TABLE_PREFIX."news, ".TABLE_PREFIX."meta WHERE tag_title='bjp' AND link_relation_id=news_id AND link_relation_id=tag_relation_id AND tag_relation_id=news_id AND news_id=meta_relation_id AND link_status=200 ORDER BY link_published DESC LIMIT 0, 35")) {
+    if($tagList=mysqli_query($connection, "SELECT DISTINCT(link_relation_id), tag_title, link_type, link_status, link_url, ".TABLE_PREFIX."news.news_image, news_title, meta_description FROM ".TABLE_PREFIX."tag, ".TABLE_PREFIX."link, ".TABLE_PREFIX."news, ".TABLE_PREFIX."meta WHERE tag_title LIKE '%{$searchTag}%' AND link_relation_id=news_id AND link_relation_id=tag_relation_id AND tag_relation_id=news_id AND news_id=meta_relation_id AND link_status=200 AND tag_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, 35")) {
 
         if(mysqli_num_rows($tagList)!=0) {
 

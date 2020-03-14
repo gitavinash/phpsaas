@@ -1,6 +1,6 @@
 <?php
 
-	header( 'Content-Type: text/html; charset=utf-8' );
+	header('Content-Type: text/html; charset=utf-8');
 
 	/** Check website domain status */
 
@@ -52,69 +52,75 @@
 
 	}
 
-	if($urlStructure[0]=='') {
+	/** Actual Base URL */
 
-		require_once 'homepage.php';
+	$url=BASE_URL;
 
-	} else {
+	switch ($urlStructure[0]) {
 
-		switch ($urlStructure[0]) {
+		case '' :
+			require_once 'homepage.php';
+			break;
 
-			case 'install' :
-				require_once 'install.php';
-				break;
+		case 'api' :
+			require_once 'api.php';
+			break;
 
-			case 'dashboard' :
-				require_once 'admin.php';
-				break;
+		case 'amp' :
+			require_once 'amp.php';
+			break;
 
-			case 'login' :
-				require_once 'login.php';
-				break;
+		case 'install' :
+			require_once 'install.php';
+			break;
 
-			case 'logout' :
-				require_once 'logout.php';
-				break;
+		/** For Dashboard activity process */
+
+		case 'dashboard' :
+			require_once 'admin.php';
+			break;
+
+		case 'logout' :
+			require_once 'logout.php';
+			break;
 
 			/** For all type of verification process */
 		
-			case 'verify' :
-				require_once 'verify.php';
-				break;
+		case 'verify' :
+			require_once 'verify.php';
+			break;
 
-			case 'email' :
-				require_once 'email.php';
-				break;
+		case 'email' :
+			require_once 'email.php';
+			break;
 
-			case 'search' :
-				require_once 'search.php';
-				break;
+		case 'search' :
+			require_once 'search.php';
+			break;
 
-			case 'tag' :
-				require_once 'tag.php';
-				break;
+		case 'tag' :
+			require_once 'tag.php';
+			break;
 
-			case 'category' :
-				require_once 'category.php';
-				break;
+		case 'category' :
+			require_once 'category.php';
+			break;
 
-			case 'feed' :
-				require_once 'feed.php';
-				break;
+		case 'feed' :
+			require_once 'feed.php';
+			break;
 
-			case 'redirect' :
-				require_once ROOT.'/redirect.php';
-				break;
+		case 'redirect' :
+			require_once ROOT.'/redirect.php';
+			break;
 			
-			case (preg_match('/sitemap.xml/', $urlStructure[0]) ? true : false) :
-				require_once 'sitemap.php';
-				break;
+		case 'sitemap' :
+			require_once 'sitemap.php';
+			break;
 			
-			default : 
-				require_once ROUTER.'cache.php';
-				break;
-
-		}
+		default :
+			require_once ROUTER.'cache.php';
+			break;
 
 	}
 

@@ -37,13 +37,13 @@
                 $message='<h1>Invalid request</h1>';
             }
 
-            if( file_exists(SYSTEM_PATH.'email.php')) {
+            if(file_exists(USER_PATH.'email.php')) {
 
-                require_once SYSTEM_PATH.'email.php';
+                require_once USER_PATH.'email.php';
 
             } else {
                 
-                require_once USER_PATH.'email.php';
+                require_once SYSTEM_PATH.'email.php';
 
             }
 
@@ -68,13 +68,29 @@
 
             if(mysqli_num_rows($checkUser)!=0) {
 
-                require_once USER_PATH.'update-password.php';
+                if(file_exists(USER_PATH.'update-password.php')) {
+
+                    require_once USER_PATH.'update-password.php';
+    
+                } else {
+                    
+                    require_once SYSTEM_PATH.'update-password.php';
+    
+                }
 
             } else {
 
                 $message='Something is wrong';
 
-                require_once USER_PATH.'verify.php';
+                if(file_exists(USER_PATH.'verify.php')) {
+
+                    require_once USER_PATH.'verify.php';
+    
+                } else {
+                    
+                    require_once SYSTEM_PATH.'verify.php';
+    
+                }
 
             }
 

@@ -7,18 +7,18 @@
 	if(is_numeric($currentPage)) {
 
 		/** Remove page no from url */
-		$categoryURL=str_replace($currentPage.'/', '', BASE_URL);
+		$categoryURL=str_replace($currentPage.'/', '', $url);
 
 	} else {
 		
 		$currentPage=1;
-		$categoryURL=BASE_URL;
+		$categoryURL=$url;
 
 	}
 
 	$postFrom=(($currentPage==0) ? 0 : ($currentPage-1)*PER_PAGE_LIMIT );
 
-	if($checkUrl=mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_type, category_total_count, link_id, link_url as categoryLink, link_status, link_type, link_relation_id, link_site_id, link_published, link_modified, meta_title, meta_description, meta_keyword, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc, GROUP_CONCAT(DISTINCT tag_title SEPARATOR ', ') as tagName FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."tag WHERE category_id=link_relation_id AND  category_id=meta_relation_id AND category_id=tag_relation_id AND link_url='{$categoryURL}' AND link_type='category' AND meta_type='category' AND tag_type='category' AND category_site_id=link_site_id")) {
+	if($checkUrl=mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_type, link_id, link_url as categoryLink, link_status, link_type, link_relation_id, link_site_id, link_published, link_modified, meta_title, meta_description, meta_keyword, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc, GROUP_CONCAT(DISTINCT tag_title SEPARATOR ', ') as tagName FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."tag WHERE category_id=link_relation_id AND  category_id=meta_relation_id AND category_id=tag_relation_id AND link_url='{$categoryURL}' AND link_type='category' AND meta_type='category' AND tag_type='category' AND category_site_id=link_site_id")) {
 
 		if(mysqli_num_rows($checkUrl)!=0) {
 

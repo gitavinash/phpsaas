@@ -1,18 +1,28 @@
 <?php
 
-	if(isset($urlStructure[1])) {
+	/* Actual url of AMP Version */
 
-		/* Actual url of AMP Version */
+	$url=str_replace('/amp', '', BASE_URL);
 
-		$url=str_replace('/amp', '', BASE_URL);
+	$urlStructure=explode('/', rtrim(ltrim(str_replace('', '', $url), '/'), '/'));
 
-		echo 'i am AMP version';
+	switch($urlStructure[0]) {
 
-	} else {
+		case '' :
+			require_once 'homepage.php';
+			break;
 
-		/* Redirect to homepage of site version */
+		case 'tag' :
+			require_once 'tag.php';
+			break;
 
-		header("Location: ".SITE_DOMAIN, TRUE, 301);
+		case 'category' :
+			require_once 'category.php';
+			break;
+		
+		default :
+			require_once ROUTER.'cache.php';
+			break;
 
 	}
 

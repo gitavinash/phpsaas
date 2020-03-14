@@ -54,7 +54,7 @@
 
                     textarea.after(iframe);
 
-                    var doc = "<html><head> <style type='text/css'>body {float: left; width: 100%; word-break: break-word; padding: 7px 10px; margin: 0 auto; box-sizing: border-box;} img {float: left; width: 100% !important;} p {float: left; width: 100% !important; box-sizing: border-box;} div {float: left; width: 100% !important; box-sizing: border-box;} </style> " + "</head><body>" + content + "</body></html>";
+                    var doc = content;
                     tryEnableDesignMode(doc, function () {
                         $("#toolbar-" + element_id).remove();
                         textarea.before(toolbar());
@@ -96,7 +96,10 @@
                     return false;
                 }
 
+                /** Disable Design Mode and show only html code */
+
                 function disableDesignMode(submit) {
+
                     var content = $(iframe).contents().find("body").html();
 
                     if ($(iframe).is(":visible")) {
@@ -107,6 +110,7 @@
                         textarea.show();
                         $(iframe).hide();
                     }
+
                 }
 
                 // create toolbar and bind events to it's elements
@@ -408,7 +412,10 @@
                     // Detect Paste to link
 
                     $(iframe).parents('form').submit(function () {
-                        disableDesignMode(true);
+
+                        disableDesignMode();
+
+
                     });
 
                     return tb;

@@ -64,7 +64,7 @@
 					<div class="col-12 col-md-4">
 						<form action="" method="POST" >
 							<h1>Installation <span>Installation Complete</span></h1>
-                            <p>Installation process in now complete and you <strong>Ready to Rock</strong></p>
+                            <p>The installation process is now complete and verification mail has been sent to your email kindly verify your email.</p>
 						</form>
 					</div>
 				</div>
@@ -74,13 +74,3 @@
 
 	</body>
 </html>
-
-<?php
-
-    header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
-    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-    header("Cache-Control: post-check=0, pre-check=0", false);
-    header("Pragma: no-cache");
-
-?>

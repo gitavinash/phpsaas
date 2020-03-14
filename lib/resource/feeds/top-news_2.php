@@ -39,7 +39,7 @@
 						<atom:link href="<?php echo SITE_URL.'/feed/tag/'.$urlStructure[2] ?>/" rel="self" type="application/rss+xml" />
 						<link><?php echo SITE_URL ?></link>
 						<description><?php echo SITE_DESC ?></description>
-						<lastBuildDate><?php echo date('r', strtotime('+5 hour +30 minutes', strtotime($link_published))) ?></lastBuildDate>
+						<lastBuildDate><?php echo date('r', strtotime($link_published)) ?></lastBuildDate>
 						<language>hi_IN</language>
 						<sy:updatePeriod>hourly</sy:updatePeriod>
 						<sy:updateFrequency>1</sy:updateFrequency>
@@ -55,8 +55,8 @@
 					<link><?php echo SITE_URL.$link_url; ?></link>
 					<thumbimage><![CDATA[<?php echo SITE_URL.$news_image; ?>]]></thumbimage>
 					<fullimage><![CDATA[<?php echo SITE_URL.$news_image; ?>]]></fullimage>
-					<pubDate><?php echo date('r', strtotime('+5 hour +30 minutes', strtotime($link_published))) ?></pubDate>
-					<modifiedDate><?php echo date('r', strtotime('+5 hour +30 minutes',strtotime($link_modified))) ?></modifiedDate>
+					<pubDate><?php echo date('r', strtotime($link_published)) ?></pubDate>
+					<modifiedDate><?php echo date('r', strtotime($link_modified)) ?></modifiedDate>
 					<description><![CDATA[<?php echo str_replace('src="', 'src="'.SITE_URL.'', html_entity_decode($news_description)); ?>]]></description>
 					<authorname><?php echo $profile_display_name ?></authorname>
 					<excerpt><![CDATA[<?php echo $meta_description; ?>]]></excerpt>

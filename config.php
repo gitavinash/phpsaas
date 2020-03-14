@@ -41,17 +41,18 @@
 	define('MAIN_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -2, 3, true))); // show only the actual domain like :- example.com
 	define('SUB_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -3, 1, true))); // show only the actual domain like :- example.com
 
+	define('QUERY_URL', htmlspecialchars_decode($_SERVER['QUERY_STRING'])); // echo only query string of the url
+
 	if(isset($_SERVER['REDIRECT_URL'])) {
 
-		define('ACTIVE_URL', (str_replace('', '', $_SERVER['REDIRECT_URL']))); // echo complete url show on the url bar
+		define('ACTIVE_URL', ($_SERVER['REDIRECT_URL']).((QUERY_URL)!='' ? '?'.QUERY_URL : '' )); // echo complete url show on the url bar
 
 	} else {
 
-		define('ACTIVE_URL', (str_replace('', '', $_SERVER['REQUEST_URI']))); // echo complete url show on the url bar
+		define('ACTIVE_URL', ($_SERVER['REQUEST_URI'])); // echo complete url show on the url bar
 
 	}
 
-	define('QUERY_URL', htmlspecialchars_decode($_SERVER['QUERY_STRING'])); // echo only query string of the url
 	define('BASE_URL', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?'))); // return only the actual url and remove query string
 
 	/** Redirect www url to non www url */

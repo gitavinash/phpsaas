@@ -1,28 +1,52 @@
 <?php
 
-	/* Search url in link table  */
+	$themeAuthenticationFile=USER_PATH.$urlStructure[0].'.php';
 
-	if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='".BASE_URL."' AND link_site_id='".SITE_ID."'")) {
+	if(file_exists($themeAuthenticationFile)) {
 
-		if(mysqli_num_rows($checkUrl)!=0) {
+		/** Theme page */
 
-			extract(mysqli_fetch_assoc($checkUrl));
+		require_once $authenticationFile;
 
-			if(file_exists(ROUTER.$link_type.'.php')) {
+	} else {
 
-				require_once ROUTER.$link_type.'.php';
+		/** System default theme file */
 
-			} else {
+		$systemAuthenticationFile=SYSTEM_PATH.$urlStructure[0].'.php';
 
-				echo 'Undefined request found';
+		if(file_exists($systemAuthenticationFile)) {
 
-			}
+			require_once $systemAuthenticationFile;
 
 		} else {
-				
-			/** Check Pagination */
 
-			require_once ERROR_404;
+			/* Search url in link table  */
+
+			if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+
+				if(mysqli_num_rows($checkUrl)!=0) {
+
+					extract(mysqli_fetch_assoc($checkUrl));
+
+					if(file_exists(ROUTER.$link_type.'.php')) {
+
+						require_once ROUTER.$link_type.'.php';
+
+					} else {
+
+						echo 'Undefined request found';
+
+					}
+
+				} else {
+						
+					/** Check Pagination */
+
+					require_once ERROR_404;
+
+				}
+
+			}
 
 		}
 

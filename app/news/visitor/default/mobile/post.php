@@ -18,7 +18,7 @@
         <div class='post-info'>
             <div class="author-img"><img src="<?php echo (($profile_image=='') ? USER_IMAGES.'default-profile.png' : $profile_image ); ?>" alt="<?php echo $profile_display_name ?>"></div>
             <div class="author-name"><p><?php echo $profile_display_name; ?></p></div>
-            <div class="post-update"><p><strong>Updated </strong> <?php echo date('D, dS M Y h:i A T', strtotime('+5 hour +30 minutes', strtotime($link_modified))) ?></p></div>
+            <div class="post-update"><p><strong>Updated </strong> <?php echo date('D, dS M Y h:i A T', strtotime($link_modified)) ?></p></div>
             <div class="post-share">
                 <div class="social-link">
                     <a href="https://www.facebook.com/sharer.php?u=<?php echo SITE_URL.BASE_URL ?>" target='_blank' ><i class="fab fa-facebook-square"></i></a>

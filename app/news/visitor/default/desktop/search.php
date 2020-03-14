@@ -15,11 +15,11 @@
                                 echo "<div class='slider'>
                                     <a href='{$searchPost[$i]['link_url']}'>
                                         <div class='img-box'>
-                                            <img src='{$searchPost[$i]['post_image']}' alt=''>
+                                            <img src='{$searchPost[$i]['news_image']}' alt=''>
                                         </div>
                                         <div class='text-box'>
                                             <!-- <p class='skew'><span>".ucwords($keyword)."</span></p> -->
-                                            <h1>{$searchPost[$i]['post_title']}</h1>
+                                            <h1>{$searchPost[$i]['news_title']}</h1>
                                         </div>
                                         <div class='summery-box'>
                                             <p>{$searchPost[$i]['meta_description']}</p>
@@ -40,7 +40,7 @@
                                 
                                 if(isset($searchPost[$i])) {
 
-                                    echo "<a href='{$searchPost[$i]['link_url']}' title='{$searchPost[$i]['post_title']}'><h2>{$searchPost[$i]['post_title']}</h2></a>";
+                                    echo "<a href='{$searchPost[$i]['link_url']}' title='{$searchPost[$i]['news_title']}'><h2>{$searchPost[$i]['news_title']}</h2></a>";
 
                                 }
 
@@ -73,8 +73,8 @@
                         if(isset($searchPost[$i])) {
 
                             echo "<div class='category-post'>
-                                    <img src='{$searchPost[$i]['post_image']}' alt=''>
-                                    <a href='{$searchPost[$i]['link_url']}'><h3>{$searchPost[$i]['post_title']}</h3></a>
+                                    <img src='{$searchPost[$i]['news_image']}' alt=''>
+                                    <a href='{$searchPost[$i]['link_url']}'><h3>{$searchPost[$i]['news_title']}</h3></a>
                                 </div>";
 
                         }

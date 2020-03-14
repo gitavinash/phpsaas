@@ -6,6 +6,7 @@
 	define('MODULES', ROOT.'/lib/modules/');
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
+	define('SCHEMA_DATA', RESOURCE.'structured_data/');
 
 	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');
@@ -30,7 +31,6 @@
 	/** Defauly System Directory Managment */
 
 	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_VERSION.'/');
-	define('SYSTEM_LOGIN', ROOT.SYSTEM_DIR.'login.php');
 	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
 	define('SYSTEM_URL', SITE_URL.SYSTEM_DIR);
 	define('SYSTEM_STYLESHEET', SYSTEM_URL.'assets/css/');

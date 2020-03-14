@@ -12,7 +12,17 @@
 
     } else {
 
-        include_once ERROR_404;
+        $installingFile=INSTALLATION_PATH.$installingStep.'.php';
+        
+        if(file_exists($installingFile)) {
+
+            require_once $installingFile;
+
+        } else {
+
+            include_once ERROR_404;
+
+        }
 
     }
 	

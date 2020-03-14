@@ -11,6 +11,22 @@
 
 	$urlStructure=explode('/', rtrim(ltrim(ACTIVE_URL, '/'), '/'));
 
+	/** Defining Site Version  */
+
+	switch($urlStructure[0]) {
+
+		case 'amp' : 	define('SITE_VERSION', 'amp');
+						break;
+
+		default : 	if($deviceType->isMobile()) {
+						define('SITE_VERSION', 'mobile');
+					} else {
+						define('SITE_VERSION', 'desktop');
+					}
+					break;
+
+	}
+
 	/** Define website default name and description according to domain */
 
 	define('SITE_ID', ((isset($site_id)) ? $site_id : 0 ));
@@ -47,7 +63,7 @@
 
 	/** Sitemap and Feed Configuration */
 
-	define('SITEMAP_LIMIT', ((isset($site_sitemap_limit)) ? $site_sitemap_limit : 10 )); // total links show on sitemap
+	define('SITEMAP_LIMIT', ((isset($site_sitemap_limit)) ? $site_sitemap_limit : 1000 )); // total links show on sitemap
 	define('PER_PAGE_LIMIT', ((isset($site_pagination_limit)) ? $site_pagination_limit : 10 )); // Per Page Pagination limit
 	define('FEED_LIMIT', ((isset($site_feed_limit)) ? $site_feed_limit : 10 )); // total links show on feeds
 

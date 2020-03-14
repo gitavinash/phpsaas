@@ -50,7 +50,7 @@
         
         if(isset($link_type)) {
 
-            if($link_type=='post') { ?>
+            if($link_type=='news') { ?>
 
                 <meta property="article:published_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_published)) ?>" />
                 <meta property="article:modified_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_modified)) ?>" />
@@ -187,49 +187,22 @@ if(BASE_URL=='/') { ?>
         ?>
 
         <?php
+
+            $schemaData=SCHEMA_DATA.((isset($link_type)) ? $link_type : 'homepage' ).'.php';
+
+            if(file_exists($schemaData)) {
+
+                require_once $schemaData;
+
+            }
             
             if(isset($link_type)) {
                 
-                if($link_type=='post') { ?>
+                if($link_type=='news') { ?>
                     
                     <!-- News Schema -->
 
-                    <script type="application/ld+json">
-                        {
-                            "@context": "https://schema.org",
-                            "@type": "NewsArticle",
-                            "mainEntityOfPage":{
-                            "@type":"WebPage",
-                            "@id":"<?php echo SITE_URL.BASE_URL ?>"
-                            },
-                            "headline": "<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>",
-                            "image": {
-                            "@type": "ImageObject",
-                            "url": "<?php echo ((isset($news_image)) ? SITE_URL.(($news_image!='') ? $news_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>",
-                            "height": 800,
-                            "width": 800
-                            },
-                            "datePublished": "<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_published)) ?>",
-                            "dateModified": "<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_modified)) ?>",
-                            "author": {
-                            "@type": "Person",
-                            "name": "<?php echo $profile_display_name ?>"
-                            },
-                            "publisher": {
-                            "@type": "Organization",
-                            "name": "<?php echo SITE_NAME ?>",
-                            "logo": {
-                                "@type": "ImageObject",
-                                "url": "<?php echo USER_IMAGES ?>logo-main.png",
-                                "width": 240,
-                                "height": 35
-                            }
-                            },
-                            "keywords": ["<?php echo preg_replace('~[^\p{M}\w\s,]+~u', '', $tagName) ?>"],
-                            "articleSection": "<?php echo $category_title ?>",
-                            "description": "<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>"
-                        }
-                    </script>
+                    
 
                     <!-- Taboola Code -->
 
@@ -299,6 +272,16 @@ if(BASE_URL=='/') { ?>
   });
 </script>
 
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/21704298696/REC_728x90', [728, 90], 'div-gpt-ad-1582615224176-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
+
 
     </head>
 
@@ -314,8 +297,8 @@ if(BASE_URL=='/') { ?>
                         <ul class='left-menu'>
                             <li><a href="dashboard/"><i class='fas fa-tachometer-alt'></i><?php echo SITE_NAME ?></a></li>
                             <?php
-                                if((isset($link_type)) ? $link_type=='page' || $link_type=='post' : '' ) { ?>
-                                    <li><a href="dashboard/<?php echo $link_type ?>/?type=edit&editor=true&<?php echo $link_type ?>_id=<?php echo $link_relation_id ?>"><i class='fas fa-pencil-alt'></i>Edit <?php echo ucwords($link_type); ?></a></li>
+                                if((isset($link_type)) ? $link_type=='page' || $link_type=='news' : '' ) { ?>
+                                    <li><a href="dashboard/<?php echo $link_type ?>/?type=edit&editor=true&id=<?php echo $link_relation_id ?>"><i class='fas fa-pencil-alt'></i>Edit <?php echo ucwords($link_type); ?></a></li>
                                 <?php
                                 }
                             ?>
@@ -411,9 +394,16 @@ if(BASE_URL=='/') { ?>
 
             <section class="header-ad-box">
             
-                <div id='div-gpt-ad-1549609719157-0'>
+                <!-- <div id='div-gpt-ad-1549609719157-0'>
                 <script>
                 googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549609719157-0'); });
+                </script>
+                </div> -->
+
+                <!-- /21704298696/REC_728x90 -->
+                <div id='div-gpt-ad-1582615224176-0' style='width: 728px; height: 90px;'>
+                <script>
+                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1582615224176-0'); });
                 </script>
                 </div>
 

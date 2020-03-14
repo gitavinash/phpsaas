@@ -27,6 +27,22 @@
 
                                 // ob_start();
 
+                                /** Convert html content according to specific site version like : AMP */
+
+                                $formatConverter=MODULES.SITE_APP.'/'.SITE_VERSION.'-converter.php';
+
+                                if(file_exists($formatConverter)) {
+
+                                    require_once $formatConverter;
+
+                                } else {
+
+                                    /** Load Default html content converter */
+
+                                    require_once MODULES.SITE_VERSION.'-converter.php';
+
+                                }
+
                                 /** Check category template is avilable or not */
 
                                 $categoryTemplate=USER_PATH.strtolower($category_title).'-news.php';

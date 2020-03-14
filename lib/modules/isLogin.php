@@ -28,7 +28,7 @@
 				}
 
 				if($user_status!=1) {
-					header("Location: /logout/");
+					header("Location: /install/?step=verify_account");
 					exit();
 				}
 

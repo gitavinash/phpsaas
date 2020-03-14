@@ -1,5 +1,15 @@
 $(document).ready(function() {
 	
+	function popUpMessage(msg) {
+		Swal.fire({
+			position: 'top-end',
+			type: success,
+			title: msg,
+			showConfirmButton: false,
+			timer: 1500
+		})
+	}
+
 	/* login form */
 
 	$('#loginBtn').on('click', function(event) {
@@ -12,7 +22,7 @@ $(document).ready(function() {
 				if(data.status==200) {
 					window.location.href='//'+document.domain+data.url;
 				} else {
-					alert(data.msg);
+					popUpMessage(data.msg);
 				}
 			},
 			error: function(data) {

@@ -11,7 +11,7 @@
     <div class="main">
         <h1><?php echo $media_title; ?></h1>
         <div class='post-info'>
-            <p><strong>Updated </strong> <?php echo date('D, dS M Y h:i A T', strtotime('+5 hour +30 minutes', strtotime($link_modified))) ?></p>
+            <p><strong>Updated </strong> <?php echo date('D, dS M Y h:i A T', strtotime($link_modified)) ?></p>
         </div>
         <div class="feature-img">
             <img src="//<?php echo SITE_DOMAIN.$media_url ?>" alt="">

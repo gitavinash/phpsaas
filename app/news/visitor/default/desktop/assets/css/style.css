@@ -922,6 +922,14 @@ a.tags {
     border-bottom: 1px solid #ff4c4c;
 }
 
+.main .content h2 a::before {
+    float: left;
+    content: "ये भी पढ़ें:";
+    padding-right: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: 700;
+}
+
 .main .content h3 {
 	float: left;
 	width: 100%;
@@ -986,6 +994,17 @@ a.tags {
     font-size: 12px;
     font-weight: 400;
 	font-family: 'Eczar', serif;
+}
+
+.in-article-ad-box {
+	text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+    float: right;
+	width: 100%;
+	min-height: 90px;
+	background: rgb(226, 226, 226);
+	margin: 0px 10px;
 }
 
 footer .contact-box {

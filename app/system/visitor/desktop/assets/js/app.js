@@ -1,5 +1,14 @@
 $(document).ready(function() {
 	
+	function popUpMessage(msg, status) {
+		Swal.fire({
+			type: status,
+			title: msg,
+			showConfirmButton: false,
+			timer: 1000
+		  })
+	}
+
 	/* login form */
 
 	$('#loginBtn').on('click', function(event) {
@@ -12,7 +21,7 @@ $(document).ready(function() {
 				if(data.status==200) {
 					window.location.href='//'+document.domain+data.url;
 				} else {
-					alert(data.msg);
+					popUpMessage(data.msg, 'error');
 				}
 			},
 			error: function(data) {
@@ -33,7 +42,7 @@ $(document).ready(function() {
 				if(data.status==200){
 					window.location.href='//'+document.domain+data.url;
 				} else {
-					alert(data.msg);
+					popUpMessage(data.msg, 'error');
 				}
 			},
 			error: function(data) {
@@ -56,13 +65,13 @@ $(document).ready(function() {
 					$('.beforeClick').hide();
 					$('.afterClick').show();
 					$('#statusMsg').text(data.msg);
-					console.log(data.msg);
+					popUpMessage(data.msg, 'success');
 				} else {
-					alert(data.msg);
+					popUpMessage(data.msg, 'error');
 				}
 			},
 			error: function(data) {
-				console.log(data);
+				popUpMessage(data.msg, 'error');
 			}
 		})
 	});
@@ -81,11 +90,11 @@ $(document).ready(function() {
 					$('.afterClick').show();
 					$('#statusMsg').text(data.msg);
 				} else {
-					alert(data.msg);
+					popUpMessage(data.msg, 'error');
 				}
 			},
 			error: function(data) {
-				console.log(data);
+				popUpMessage(data.msg, 'error');
 			}
 		})
 	});

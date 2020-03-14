@@ -9,15 +9,17 @@
 
 		extract($data);
 
-		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type, site_app, profile_display_name, profile_image FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id WHERE user_email='{$email}' AND site_id=".SITE_ID." LIMIT 1")) {
+		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type, site_app, profile_display_name, profile_image, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id WHERE user_email='{$email}' AND site_id=".SITE_ID." LIMIT 1")) {
 
 			if(mysqli_num_rows($checkUser)!=0) {
 
 				extract(mysqli_fetch_assoc($checkUser));
 
 				if($user_password==hash('sha256', $user_salt_key.$pass)) {
+
+					/** User has access of this site */
 					
-					if($user_status==1) {
+					if($site_access_status==1) {
 
 						ob_start();
 
@@ -34,10 +36,17 @@
 
 					} else {
 
-						include_once EMAIL_TEMPLATE.'user-verification.php';
+						if($user_status==0) {
 
-						$status=403;
-						$msg='Please verify your account';
+							include_once EMAIL_TEMPLATE.'user-verification.php';
+
+							$status=403;
+							$msg='Please verify your account';
+
+						}
+
+
+						$msg='Invalid Access';
 
 					}
 
@@ -95,12 +104,12 @@
 
 			/* Insert into user table */
 
-			$createUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(email, pass, key, type, reg_time, reg_ip) VALUES('{$email}', '{$password}', '{$saltKey}', 'admin' ,NOW(), '{$_SERVER['REMOTE_ADDR']}')");
+			$createUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(email, pass, key, type, reg_time, reg_ip) VALUES('{$email}', '{$password}', '{$saltKey}', 'enquiry' ,NOW(), '{$_SERVER['REMOTE_ADDR']}')");
 			$userID=mysqli_insert_id($connection);
 
 			/* Create profile of user */
 
-			$createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_id, first_name, last_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$email}')");
+			$createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_id, profile_first_name, profile_last_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$email}')");
 
 			if($createUser && $createProfile) {
 
@@ -110,6 +119,9 @@
 				$msg=$password;
 					
 			} else {
+
+				echo mysqli_error($connection);
+
 				mysqli_query($connection, "ROLLBACK");
 				$status=500;
 				$msg='error while trying to register';
