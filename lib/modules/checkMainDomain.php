@@ -6,32 +6,44 @@
 
 		if(mysqli_num_rows($checkInstallation)==0) {
 
-			/** Redirect to Installation step 1 url */
+			if($checkInstallationAnyWebsite=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site INNER JOIN ".TABLE_PREFIX."site_setting ON site_setting_id=site_id")) {
+
+				if(mysqli_num_rows($checkInstallationAnyWebsite)==0) {
+
+					/** Redirect to Installation step 1 url */
 			
-			if($_SERVER['REQUEST_URI']!='/install/?step=1') {
-				header("Location: /install/?step=1", TRUE, 301);
-				exit();
-			}
-
-			/** Installtion step 1 */
-
-			if($checkDomain=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site")) {
-
-				if(mysqli_num_rows($checkDomain)==0) {
-
-					/* Include installation file */
-					$installFile1=$_SERVER['DOCUMENT_ROOT'].'/lib/install/step-1.php';
-
-					if(file_exists($installFile1)) {
-				
-						require_once $installFile1;
+					if($_SERVER['REQUEST_URI']!='/install/?step=1') {
+						header("Location: /install/?step=1", TRUE, 301);
 						exit();
+					}
 
-					} else {
-								
-						echo 'Unable to find installation files on server';
+					/** Installtion step 1 */
+
+					if($checkDomain=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site")) {
+
+						if(mysqli_num_rows($checkDomain)==0) {
+
+							/* Include installation file */
+							$installFile1=$_SERVER['DOCUMENT_ROOT'].'/lib/install/step-1.php';
+
+							if(file_exists($installFile1)) {
+						
+								require_once $installFile1;
+								exit();
+
+							} else {
+										
+								echo 'Unable to find installation files on server';
+
+							}
+
+						}
 
 					}
+
+				} else {
+
+					require_once $_SERVER['DOCUMENT_ROOT'].'app/system/visitor/default/desktop/domain-not-found.php';
 
 				}
 
@@ -40,7 +52,6 @@
 		} else {
 
 			extract(mysqli_fetch_assoc($checkInstallation));
-			print_r(mysqli_fetch_assoc($checkInstallation));
 
 			if($site_status==0) {
 
