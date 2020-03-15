@@ -6,7 +6,7 @@
 
 		/** Theme page */
 
-		require_once $authenticationFile;
+		require_once $themeAuthenticationFile;
 
 	} else {
 
