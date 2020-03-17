@@ -23,6 +23,8 @@
 
 						list($imageWidth, $imageHeight) = getimagesize($imageValue['tmp_name']);
 
+						$regenerateImageHeight=($imageHeight/$imageWidth)*IMAGE_THUMBNAIL_HEIGHT;
+
 						/* Default upload path directory of image */
 
 						$uploadPath=ROOT.'/upload/'.date('Y/m/');
@@ -64,13 +66,13 @@
 								/** Compressing PNG Image and save it */
 
 								$compressImage=imagecreatefrompng($imageValue['tmp_name']);
-								imagejpeg($compressImage, $uploadFile, IMAGE_COMPRESSION_QUALITY);
+								imagepng($compressImage, $uploadFile, 9);
 								
 								/** Creating image thumbnail */
 								
-								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT);
-								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, $imageWidth, $imageHeight);
-								imagejpeg($imageSize, $thumbnailUploadFile, 100);
+								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
+								imagepng($imageSize, $thumbnailUploadFile, 9);
 								break;
 
 							case GIF_IMAGE :
@@ -82,8 +84,8 @@
 								
 								/** Creating image thumbnail */
 								
-								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT);
-								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, $imageWidth, $imageHeight);
+								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
 								imagegif($imageSize, $thumbnailUploadFile, 100);
 								break;
 
@@ -96,8 +98,8 @@
 								
 								/** Creating image thumbnail */
 								
-								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT);
-								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, $imageWidth, $imageHeight);
+								$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
 								imagejpeg($imageSize, $thumbnailUploadFile, 100);
 								break;
 

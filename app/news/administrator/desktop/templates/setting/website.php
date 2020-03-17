@@ -59,8 +59,8 @@
                             <input type="submit" id="updateWebsite" class="btn btn-green" value="Update Website" >
                         </div>
                     </div>
-                    <div class='box-2'>
-                        Hello
+                    <div class='box-2' style='float: left; width: 250px; margin-left: 50px;' >
+                        
                     </div>
                 </form>
             </div>

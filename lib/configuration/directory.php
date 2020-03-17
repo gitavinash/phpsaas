@@ -30,7 +30,7 @@
 
 	/** Defauly System Directory Managment */
 
-	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_THEME.'/'.SITE_VERSION.'/');
+	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_VERSION.'/');
 	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
 	define('SYSTEM_URL', SITE_URL.SYSTEM_DIR);
 	define('SYSTEM_STYLESHEET', SYSTEM_URL.'assets/css/');
@@ -75,10 +75,3 @@
 	define('ADMIN_ERROR_403', ADMIN_PATH.'403.php');
 	define('ADMIN_ERROR_404', ADMIN_PATH.'404.php');
 	define('ADMIN_ERROR_502', ADMIN_PATH.'502.php');
-
-	/* Default site identity files */
-
-	define('SITE_ICON', ((isset($_COOKIE['SITE_ICON'])) ? base64_decode($_COOKIE['SITE_ICON']) : ADMIN_IMAGES.'favicon.png' ));	
-	define('SITE_LOGO', ((isset($_COOKIE['SITE_LOGO'])) ? base64_decode($_COOKIE['SITE_LOGO']) : ADMIN_IMAGES.'logo.png' ));
-
-?>

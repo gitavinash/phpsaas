@@ -122,20 +122,9 @@
                     $uploadPath=$uploadPath.time().'_'.str_replace(' ', '_', strtolower($filename));
 					$uploadFile=str_replace('-', '_',str_replace('.', ' ',str_replace('_', ' ', str_replace('.'.$fileExtension, '', $filename))));
 					$uploadURL=str_replace(ROOT, '', $uploadPath);
-					$link=str_replace(' ', '_', '/attachment/'.time().'_'.strtolower($uploadFile).'/');
-                    
-                    $imageInfo=getimagesize($_FILES['featureImage']['tmp_name']);
+                    $link=str_replace(' ', '_', '/attachment/'.time().'_'.strtolower($uploadFile).'/');
 
-                    if ($imageInfo['mime'] == 'image/jpeg' || $imageInfo['mime'] == 'image/jpg') 
-                        $image = imagecreatefromjpeg($_FILES['featureImage']['tmp_name']);
-
-                    elseif ($imageInfo['mime'] == 'image/gif') 
-                        $image = imagecreatefromgif($_FILES['featureImage']['tmp_name']);
-
-                    elseif ($imageInfo['mime'] == 'image/png') 
-                        $image = imagecreatefrompng($_FILES['featureImage']['tmp_name']);
-
-                    if(imagejpeg($image, $uploadPath, 60)) {
+                    if(move_uploaded_file($_FILES['featureImage']['tmp_name'], $uploadPath)) {
 
                         /** Insert into Database */
 
@@ -158,13 +147,13 @@
                         } else {
                             
                             mysqli_query($connection, 'ROLLBACK');
-                            header("Location: /dashboard/setting/?type=profile&msg=Error while uploading photo&error=success");
+                            header("Location: /dashboard/setting/?type=profile&msg=Error while uploading photo&error=error");
                             
                         }
 
                     } else {
 
-                        header("Location: /dashboard/setting/?type=profile&msg=Photo is not uploading&error=success");
+                        header("Location: /dashboard/setting/?type=profile&msg=Photo is not uploading&error=error");
 
                     }
 

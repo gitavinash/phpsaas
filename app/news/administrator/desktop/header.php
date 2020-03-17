@@ -22,7 +22,7 @@
 		<header>
 			<div class="left-side">
 				<ul>
-					<li><div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div></li>
+					<li><div class="logo"><a href="index.php"><img src="<?php echo ADMIN_IMAGES ?>logo.png" alt=""></a></div></li>
 				</ul>
 			</div>
 			<div class="right-side">
