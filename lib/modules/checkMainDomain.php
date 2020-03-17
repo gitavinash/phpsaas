@@ -42,8 +42,9 @@
 					}
 
 				} else {
-
+					
 					require_once $_SERVER['DOCUMENT_ROOT'].'app/system/visitor/default/desktop/domain-not-found.php';
+					exit();
 
 				}
 

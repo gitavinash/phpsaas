@@ -1,5 +1,7 @@
 <?php
 
+    require_once MODULES.'isLogin.php';
+
     function add($connection, $data) {
 
         extract($data);
@@ -21,8 +23,7 @@
         }
 
         /** Generate automatic password of 8 chatracter */
-        //$password=substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789!@#$%&()_+=-<>/?'), 0, 8);
-        $password='12345678';
+        $password=substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789!@#$%&()_+=-<>/?'), 0, 8);
 
         /** Generating salt key of the user */
         $saltKey=hash('sha256', uniqid(mt_rand(), true).$data['email'].substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12).time());
@@ -42,13 +43,15 @@
 
         mysqli_query($connection, "START TRANSACTION");
         
-        $addUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_site_id, user_parent_id, user_username, user_email, user_password, user_salt_key, user_type, user_status, user_reg_time, user_reg_ip) VALUES('{$website_id}', '{$website_user_id}', '{$username}', '{$email}', '{$dbPassword}', '{$saltKey}', '{$user_type}', 1, NOW(), '".IP."')");
+        $addUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_parent_id, user_username, user_email, user_password, user_salt_key, user_type, user_status, user_reg_time, user_reg_ip) VALUES(".USER_ID.", '{$username}', '{$email}', '{$dbPassword}', '{$saltKey}', '{$user_type}', 1, NOW(), '".IP."')");
         
         $newUserId=mysqli_insert_id($connection);
         
         $createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$newUserId}', '{$first_name}', '{$last_name}', '".$first_name.' '.$last_name."', '{$mobile}', '{$email}')");
 
-        if($addUser && $createProfile) {
+        $userSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_status) VALUES(".SITE_ID.", '{$newUserId}', 1)");
+
+        if($addUser && $createProfile && $userSiteAccess) {
 
             /** Add all data into database */
 

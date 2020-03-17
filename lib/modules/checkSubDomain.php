@@ -10,14 +10,14 @@
 
         } else {
 
-            require_once $_SERVER['DOCUMENT_ROOT'].'/app/system/visitor/'.SITE_VERSION.'/domain-not-found.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/app/system/visitor/default/desktop/domain-not-found.php';
             exit();
 
         }
     
     } else {
 
-        require_once $_SERVER['DOCUMENT_ROOT'].'/app/system/visitor/'.SITE_VERSION.'/verify-domain.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/app/system/visitor/default/desktop/verify-domain.php';
         exit();
 
     }

@@ -1,33 +1,15 @@
+<?php
+
+	$status=mysqli_real_escape_string($connection, (isset($_GET['status'])) ? $_GET['status'] : 0 );
+
+?>
+
 <h2>All <?php echo ucwords($postType.'s') ?></h2>
-<!--
+
 <div class="options-bar">
-	<div class="left-box">
-		<form method="GET">
-			<input type="hidden" name="type" value="<?php echo $_GET['type']; ?>" >
-			<select class="form-control" name="status" id="changeStatus" >
-				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All <?php echo $postType ?></option>
-				<option value="0" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Drafts <?php echo $postType ?></option>
-				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Published <?php echo $postType ?></option>
-			</select>
-			<select name="category" class="form-control">
-				<option value="all">Select Category</option>
-				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_name FROM ".TABLE_PREFIX."category WHERE category_site_id='".SITE_ID."'")) {
-						while($category=mysqli_fetch_assoc($categoryList)) { ?>
-							<option value="<?php echo $category['category_id']; ?>" <?php echo (($category['category_id']==$categoryID) ? 'selected' : '' ) ?>  > <?php echo ucwords($category['category_name']); ?></option>
-						<?php
-						}
-					}
-				?>
-			</select>
-			<input type="submit" class="btn" value="Filter" >
-		</form>
-	</div>
-	<div class="right-box">
-		
-	</div>
+	
 </div>
--->
+
 <table id="table">
 	<thead>
 		<tr>
@@ -40,7 +22,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT profile_display_name, user_id, user_email, user_type FROM itssoftworld_profile, itssoftworld_user WHERE profile_owner_id=user_id AND user_parent_id='".USER_ID."'")) {
+			if($dataList=mysqli_query($connection, "SELECT profile_display_name, user_id, user_email, user_type FROM ".TABLE_PREFIX."profile, ".TABLE_PREFIX."user WHERE profile_owner_id=user_id AND user_parent_id='".USER_ID."'")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>

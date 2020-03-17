@@ -100,9 +100,6 @@
 
 					} else {
 
-						echo $addNewPost.' && '.$linkData.' && '.$metaData.' && '.$increaseCategoryCount.' && '.$tagData;
-						exit();
-
 						mysqli_query($connection, "ROLLBACK");
 
 					}
