@@ -19,8 +19,7 @@
 
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" >
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" >
-        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" >
-        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" >
+        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>daterangepicker/daterangepicker.css" >
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700&display=swap" rel="stylesheet">
         
         <!-- SEO -->
