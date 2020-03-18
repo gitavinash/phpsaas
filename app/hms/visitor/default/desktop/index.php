@@ -4,7 +4,17 @@
 
 ?>
 
-
+<section>
+	<div class="slider">
+		<div class="booking">
+			<div class="inner-box">
+				<form method="post">
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
 
 <?php
 

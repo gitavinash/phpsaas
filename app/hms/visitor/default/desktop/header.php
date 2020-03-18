@@ -6,6 +6,9 @@
         <meta charset="utf-8">
 
         <!-- Prefetch DNS -->
+
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?php echo SITE_ICON ?>">
@@ -18,8 +21,7 @@
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" >
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" >
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.css">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700&display=swap" rel="stylesheet">
         
         <!-- SEO -->
 
@@ -98,3 +100,28 @@
         ?>
 
         <header>
+            <section class="padding-tb-10 box-shadow-d8d8d8" >
+                <div class="inner-box">
+                    <div class="logo-box">
+                        <div class="logo">
+                            <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> logo">
+                        </div>
+                    </div>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="/login/"><img src="<?php echo USER_IMAGES ?>icon/user.png" alt="<?php echo SITE_NAME ?>"> Login / Signup</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-404397" >
+                <div class="inner-box">
+                    <div class="menu">
+                        <ul>
+                            <li><a href="#">Delhi</a></li>
+                            <li><a href="#">Shimla</a></li>
+                            <li><a href="#">Manali</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
