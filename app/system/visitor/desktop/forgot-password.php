@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" value="index" >
-        <link rel="icon" href="https://punjabkesari.com/wp-content/uploads/2018/05/cropped-favicon-1-192x192.png">
+        <link rel="icon" href="<?php echo SITE_ICON ?>">
         <title>Forgot Password | <?php echo SITE_NAME ?></title>
         <link rel="canonical" href="http://www.shaktipedia.com/durga-chalisa/" />
         <meta name="theme-color" content="#FE6F06">

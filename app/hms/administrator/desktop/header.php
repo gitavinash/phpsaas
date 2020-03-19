@@ -66,14 +66,14 @@
 							<ul>
 								<li><a href="hotel.php?type=list&status=all"><i class="fas fa-list"></i> All Hotel</a></li>
 								<li><a href="hotel.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-								<li><a href="hotel.php?type=category"><i class="fas fa-map-marker-alt"></i> Location</a></li>
+								<li><a href="hotel.php?type=location"><i class="fas fa-map-marker-alt"></i> Location</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="hotel.php?type=list&status=all"><i class="fas fa-list"></i> All Hotel</a></li>
 								<li><a href="hotel.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-								<li><a href="hotel.php?type=category"><i class="fas fa-map-marker-alt"></i> Location</a></li>
+								<li><a href="hotel.php?type=location"><i class="fas fa-map-marker-alt"></i> Location</a></li>
 							</ul>
 						</div>
 					</li>

@@ -75,3 +75,8 @@
 	define('ADMIN_ERROR_403', ADMIN_PATH.'403.php');
 	define('ADMIN_ERROR_404', ADMIN_PATH.'404.php');
 	define('ADMIN_ERROR_502', ADMIN_PATH.'502.php');
+
+	/** Site Logo and Icon */
+
+	define('SITE_ICON', ((isset($site_icon)) ? $site_icon : ADMIN_IMAGES.'favicon.png' ));
+	define('SITE_LOGO', ((isset($site_logo)) ? $site_logo : ADMIN_IMAGES.'logo.png' ));

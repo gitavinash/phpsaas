@@ -77,7 +77,7 @@
 				<tbody>
 					<?php
 
-						if($dataList=mysqli_query($connection, "SELECT category_id, category_description, category_title, category_total_count, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND link_type='category' AND category_type='{$postType}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
+						if($dataList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND link_type='category' AND category_type='{$postType}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
 							if(mysqli_num_rows($dataList)!=0) {
 								while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 									<tr>

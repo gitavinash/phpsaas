@@ -23,7 +23,7 @@
 				$categoryURL='/';
 			}
 
-			$url=strtolower('/category'.$categoryURL.str_replace(' ', '-', str_replace(array(',', '/', '?', '#', '@', '!', '$', '%', '^', '&', '*', '(', ')', '{', '}', '[', ']', '.', '"', "'", ':', ';'), '', ltrim(rtrim($url, '/'), '/'))).'/');
+			$url=strtolower('/'.$postType.$categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url).'/');
 
 			if($checkURL=mysqli_query($connection, "SELECT link_url FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
 
@@ -103,11 +103,7 @@
 				$categoryURL='/';
 			}
 
-			$url=strtolower('/category'.$categoryURL.str_replace(' ', '-', str_replace(array(',', '/', '?', '#', '@', '!', '$', '%', '^', '&', '*', '(', ')', '{', '}', '[', ']', '.', '"', "'", ':', ';'), '', ltrim(rtrim($url, '/'), '/'))).'/');
-
-			echo $url;
-
-			exit();
+			$url=strtolower('/'.$postType.$categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url).'/');
 
 			mysqli_query($connection, 'START TRANSACTION');
 

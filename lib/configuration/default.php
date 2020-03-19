@@ -34,8 +34,6 @@
 	define('SITE_ID', ((isset($site_id)) ? $site_id : 0 ));
 	define('SITE_LANG', ((isset($site_lang)) ? $site_lang : 'en' ));
 	define('SITE_NAME', ((isset($site_name)) ? $site_name : CREDIT ));
-	define('SITE_ICON', ((isset($site_icon)) ? $site_icon : ADMIN_IMAGES.'favicon.png' ));
-	define('SITE_LOGO', ((isset($site_logo)) ? $site_logo : ADMIN_IMAGES.'logo.png' ));
 	define('SITE_DESC', ((isset($site_description)) ? $site_description : '' ));
 	define('SITE_TAGS', ((isset($site_keyword)) ? $site_keyword : '' ));
 	define('SITE_APP', ((isset($site_app)) ? $site_app : 'system' )); // deafult all for visitors
