@@ -39,7 +39,89 @@
 <section>
 	<div class="inner-box">
 		<div class="destination-list">
-			
+			<h2>Popular Destinations</h2>
+			<div class="left-box">
+				<div class="destination">
+					<div class="img">
+						<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+					</div>
+					<div class="text">
+						<h3>Manali <span>10 Hotels</span></h3>
+					</div>
+				</div>
+			</div>
+			<div class="right-box">
+				<div class="destination">
+					<div class="img">
+						<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+					</div>
+					<div class="text">
+						<h3>Shimla <span>10 Hotels</span></h3>
+					</div>
+				</div>
+				<div class="destination">
+					<div class="img">
+						<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+					</div>
+					<div class="text">
+						<h3>Jailsalmer <span>10 Hotels</span></h3>
+					</div>
+				</div>
+				<div class="destination">
+					<div class="img">
+						<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+					</div>
+					<div class="text">
+						<h3>Rishikesh <span>10 Hotels</span></h3>
+					</div>
+				</div>
+				<div class="destination">
+					<div class="img">
+						<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+					</div>
+					<div class="text">
+						<h3>Jim Corbett <span>10 Hotels</span></h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="bg-404397">
+	<div class="inner-box">
+		<h2 class="c-fff" >Popular Hotels</h2>
+		<div class="hotel-list">
+			<div class="img">
+				<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+			</div>
+			<div class="text">
+				<h3>Jim Corbett <span>10 Hotels</span></h3>
+			</div>
+		</div>
+		<div class="hotel-list">
+			<div class="img">
+				<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+			</div>
+			<div class="text">
+				<h3>Jim Corbett <span>10 Hotels</span></h3>
+			</div>
+		</div>
+		<div class="hotel-list">
+			<div class="img">
+				<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+			</div>
+			<div class="text">
+				<h3>Jim Corbett <span>10 Hotels</span></h3>
+			</div>
+		</div>
+		<div class="hotel-list">
+			<div class="img">
+				<img src="<?php echo USER_IMAGES ?>manali-hidimba-devi-temple.jpg" alt="">
+			</div>
+			<div class="text">
+				<h3>Jim Corbett <span>10 Hotels</span></h3>
+			</div>
 		</div>
 	</div>
 </section>
