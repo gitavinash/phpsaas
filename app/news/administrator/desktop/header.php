@@ -14,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>style.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>all.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_PLUGINS ?>sweetalert/sweetalert2.min.css">
+        <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_PLUGINS ?>daterangepicker/daterangepicker.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
 	</head>
 	
@@ -67,7 +68,22 @@
 								<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All News</a></li>
 								<li><a href="news.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
 								<li><a href="news.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
-								<li><a href="news.php?type=tag"><i class="fas fa-tags"></i> Tags</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All News</a></li>
+								<li><a href="news.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="news.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/live/') ? 'class="active"' : '' ) ?> >
+						<a href="news.php?type=list&status=all"><i class="far fa-dot-circle"></i> Live</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="live.php?type=list&status=all"><i class="fas fa-list"></i> All Lives</a></li>
+								<li><a href="live.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">

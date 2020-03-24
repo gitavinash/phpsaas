@@ -87,8 +87,17 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-				<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
+				<div class="publishGroup">
+					<input type="button" class="publishPost btn btn-green btn-block" value="Publish <?php echo ucwords($postType) ?> ">
+					<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
+					<input type="button" id="scheduleBtn" class="btn btn-blue btn-block" value="Schedule News">
+				</div>
+				<div class="scheduleGroup" style="display: none;" >
+					<input type="button" class="publishPost btn btn-green btn-block" value="Publish <?php echo ucwords($postType) ?> ">
+					<span style="float: left; font-size: 12px; color: #333; margin-bottom: 5px;" >Change date and time</span>
+					<input type="text" name="scheduleTime" class="form-control inside-shadow datetimepicker" style="margin-bottom: 10px" value="<?php echo date('m/d/Y h:i A') ?>" placeholder="Click here to select time" >
+					<input type="button" id="schedulePost" class="btn btn-green btn-block" value="Schedule News">
+				</div>
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="draft" >
@@ -97,19 +106,21 @@
 			</div>
 			<div class="form-group">
 				<h2>Fearure News</h2>
-				<div class="action-box inside-shadow">
-					<input type="checkbox" value="1" name='featurePost' > Mark as Feature News
+				<div class="action-box inside-shadow" style="padding-bottom: 10px" >
+					<input type="checkbox" value="1" name='featurePost' > Mark as Feature <?php echo ucwords($postType) ?>
 				</div>
 			</div>
 			<h2>Categories</h2>
 			<div class="action-box height-200 inside-shadow">
 				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_id ASC")) {
+						$i=1;
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
-								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
+								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($i==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
 							</div>
 						<?php
+						$i++;
 						}
 					}
 				?>

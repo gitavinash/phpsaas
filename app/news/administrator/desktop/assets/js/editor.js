@@ -503,9 +503,9 @@
 
                 // publish all post where editor is enable
 
-                $('#publishPost').click(function() {
+                $('.publishPost').click(function() {
                     disableDesignMode();
-                    $('#publishPost').hide();
+                    $('.publishPost').hide();
 		            var postTitle = $('#title').val();
 		            var data = new FormData(document.getElementById('formData'));
 		            data.append('type', 'publish');
@@ -523,11 +523,11 @@
 				            } else {
 					            alert(data.msg);
                             }
-                            $('#publishPost').show();
+                            $('.publishPost').show();
 			            },
 			            error: function(data) {
                             console.log(data);
-                            $('#publishPost').show();
+                            $('.publishPost').show();
 			            }
 		            });
                 });
@@ -590,6 +590,37 @@
                             console.log(data);
                         }
                     });
+                });
+
+                // Schedule all post where editor is enable
+
+                $('#schedulePost').click(function() {
+                    disableDesignMode();
+                    $('#publishGroup').hide();
+		            var postTitle = $('#title').val();
+		            var data = new FormData(document.getElementById('formData'));
+		            data.append('type', 'schedule');
+		            $.ajax({
+			            type: 'POST',
+			            data: data,
+			            processData: false,
+			            contentType: false,
+			            dataType: 'JSON',
+			            encrypt: 'multipart/form-data',
+			            success: function(data) {
+				            if(data.status==200) {
+					            alert(data.msg);
+					            window.location.href=data.redirect;
+				            } else {
+					            alert(data.msg);
+                            }
+                            $('#publishGroup').show();
+			            },
+			            error: function(data) {
+                            console.log(data);
+                            $('#publishGroup').show();
+			            }
+		            });
                 });
 
             }); //return this.each

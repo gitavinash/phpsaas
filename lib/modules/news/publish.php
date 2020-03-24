@@ -53,9 +53,9 @@
 					$post_status=0;
 
 					if(USER_TYPE=='reporter') {
-						$link_status=202;
-					} else if(USER_TYPE=='reporter') {
 						$link_status=201;
+					} else if(USER_TYPE=='reporter') {
+						$link_status=203;
 					} else {
 						$post_status=1;
 						$link_status=200;

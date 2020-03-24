@@ -1,4 +1,3 @@
-
 <?php
 
   if(isset($_COOKIE['isLogin'])) {
@@ -17,7 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" value="noindex" >
         <title>Verification | <?php echo SITE_NAME ?></title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="/lib/install/assets/css/bootstrap.min.css" >
         <style>
         	body {
         		background: #f9f9f9;
@@ -73,6 +72,7 @@
 				<div class="row justify-content-md-center">
 					<div class="col-12 col-md-4">
                         <form action="" method="POST" >
+							<a href="//itssoftworld.com" target="_blank" ><img src="/lib/install/assets/images/logo.png" alt="ITS Soft World" style="float: left; width: 100%; padding: 0px 40px; margin-bottom: 50px" ></a>
                             <p><?php echo $message ?> <a href="/login/">click here to login</a></p>
                         </form>
 					</div>

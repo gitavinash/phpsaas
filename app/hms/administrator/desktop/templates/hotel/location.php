@@ -1,6 +1,8 @@
 <?php
 
 	$categoryID=mysqli_real_escape_string($connection, ((isset($_GET['category_id'])) ? $_GET['category_id'] : 0 ));
+	$type=mysqli_real_escape_string($connection, ((isset($_GET['type'])) ? $_GET['type'] : 'category' ));
+
 	if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND category_id='{$categoryID}' AND link_type='category' AND category_type='location' AND link_status=200")) {
 		if(mysqli_num_rows($categoryData)!=0) {
 			extract(mysqli_fetch_assoc($categoryData));
@@ -83,7 +85,7 @@
 										<td>
 											<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&post_id=<?php echo $category_id; ?>" ><?php echo $category_title ?></a></p>
 											<div class="hover">
-												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo $category_id; ?>&taxonomy=category" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
+												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo $category_id; ?>&taxonomy=<?php echo $type ?>" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
 												<a href="<?php echo $postType ?>.php?type=location&category_id=<?php echo $category_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 												<?php
 													if($category_id!=1) { ?>

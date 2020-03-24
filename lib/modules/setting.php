@@ -141,6 +141,8 @@
 
                         if($insertMedia && $createLink && $updateProfile) {
 
+                            setcookie('user_image', base64_encode($uploadURL), time()+30*24*60*60, '/');
+
                             mysqli_query($connection, 'COMMIT');
                             header("Location: /dashboard/setting/?type=profile&msg=Profile photo update successfully&error=success");
 
@@ -184,7 +186,7 @@
                     $status=200;
                     $msg='Website update successfully';
 
-                    header("Location: /dashboard/setting/?type=website&msg=Website update successfully");
+                    header("Location: /dashboard/setting/?type=website&msg=Website update successfully&error=success");
 
                 }
 

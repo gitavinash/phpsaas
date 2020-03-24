@@ -70,8 +70,7 @@
 			<table id="table">
 				<thead>
 					<tr>
-						<th style='width: 200px;'>Title</th>
-						<th style='width: 50px'>Count</th>
+						<th style='width: 200px;'><?php echo ucwords($_GET['type']) ?> Title</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -95,7 +94,6 @@
 												<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 											</div>
 										</td>
-										<td><?php echo $category_total_count; ?></td>
 									</tr>
 								<?php
 								}

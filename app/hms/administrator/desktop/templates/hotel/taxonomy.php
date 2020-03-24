@@ -1,16 +1,21 @@
 <?php
 
     $taxonomy_id=mysqli_real_escape_string($connection, $_GET['id']);
-	$taxonomyType=mysqli_real_escape_string($connection, $_GET['taxonomy']);
-    
-	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."{$taxonomyType}, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE ".(($taxonomyType!='tag') ? "link_type='{$taxonomyType}' AND" : '' )." link_relation_id={$taxonomyType}_id AND meta_relation_id={$taxonomyType}_id AND {$taxonomyType}_id='{$taxonomy_id}' AND link_status!=301 AND {$taxonomyType}_type='{$postType}' AND meta_type='{$taxonomyType}' LIMIT 1")) {
+	echo $taxonomyType=mysqli_real_escape_string($connection, $_GET['taxonomy']);
+	$tableName=(($taxonomyType=='tag') ? 'tag' : 'category' );
+	exit();
+	echo "SELECT * FROM ".TABLE_PREFIX."{$tableName}, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE ".(($tableName!='tag') ? "link_type='{$tableName}' AND" : '' )." link_relation_id={$tableName}_id AND meta_relation_id={$tableName}_id AND {$tableName}_id='{$taxonomy_id}' AND link_status!=301 AND {$tableName}_type='{$postType}' AND meta_type='{$tableName}' LIMIT 1";
+	exit();
+
+	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."{$tableName}, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE ".(($tableName!='tag') ? "link_type='{$tableName}' AND" : '' )." link_relation_id={$tableName}_id AND meta_relation_id={$tableName}_id AND {$tableName}_id='{$taxonomy_id}' AND link_status!=301 AND {$tableName}_type='{$postType}' AND meta_type='{$tableName}' LIMIT 1")) {
+		
 		if(mysqli_num_rows($postDetails)!=0) {
 
 			extract(mysqli_fetch_assoc($postDetails));
 
 		} else {
 
-			if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."{$taxonomyType} WHERE {$taxonomyType}_id='{$taxonomy_id}'"));
+			if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."{$tableName} WHERE {$tableName}_id='{$taxonomy_id}'"));
 
 			if(mysqli_num_rows($postDetails)!=0) {
 
@@ -36,7 +41,7 @@
 
 				<script type="text/javascript">
 					alert('Invalid action found');
-					window.location.href='dashboard/<?php echo $postType ?>/?type=<?php echo $taxonomyType ?>';
+					window.location.href='dashboard/<?php echo $postType ?>/?type=<?php echo $tableName ?>';
 				</script>
 
 			<?php
@@ -46,13 +51,13 @@
 	}
 
 ?>
-<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords($taxonomyType); ?> <span><a href="<?php echo $postType ?>/?type=<?php echo $taxonomyType; ?>" class='btn btn-blue btn-sm'>Add New</a></span></h2>
+<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords($tableName); ?> <span><a href="<?php echo $postType ?>/?type=<?php echo $tableName; ?>" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 <div class="form-box">
 	<form method="POST" id="formData" enctype="multipart/form-data" >
 		<div class="left-box">
 			<div class="form-group">
-				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo ${$taxonomyType.'_title'} ?>" required="" >
+				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo ${$tableName.'_title'} ?>" required="" >
 			</div>
 			<div class="form-group">
 				<div class="url">
@@ -60,12 +65,12 @@
 						$url=explode('/', ltrim(rtrim($link_url, '/'), '/'));
 					?>
 					<p><strong>Permalink</strong></p><p><span><?php echo SITE_DOMAIN.'/...'; ?>/</span></p>
-					<input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url" <?php echo (($taxonomyType=='tag') ? 'readonly' : '') ?> >
+					<input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url" <?php echo (($tableName=='tag') ? 'readonly' : '') ?> >
 					<input type="hidden" name='oldURL' value='<?php echo $link_url ?>' >
 				</div>
 			</div>
 			<div class="form-group fullscreen-editor">
-				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode(${$taxonomyType.'_description'}); ?></textarea>
+				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode(${$tableName.'_description'}); ?></textarea>
 			</div>
 			<section>
 				<h3>Advance Options for digital marketing</h3>
@@ -137,18 +142,18 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updateTaxonomy" class="btn btn-green btn-block" value="Update <?php echo ucwords($taxonomyType) ?>">
+				<input type="button" id="updateTaxonomy" class="btn btn-green btn-block" value="Update <?php echo ucwords($tableName) ?>">
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="draft" >
 				<input type="hidden" name="postType" value="<?php echo $taxonomyType ?>" >
 				<input type="hidden" name="taxonomy_id" value="<?php echo $taxonomy_id ?>" >
 				<input type="hidden" name="action" value="taxonomy" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live <?php echo ucwords($taxonomyType); ?></a>
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live <?php echo ucwords($tableName); ?></a>
 			</div>
 			<?php
 			
-			if($taxonomyType!='tag') { ?>
+			if($tableName!='tag') { ?>
 
 				<h2>Tags</h2>
 				<?php
@@ -180,14 +185,14 @@
 			?>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group upload-btn" style="display: <?php echo ((${$taxonomyType.'_image'}!='') ? 'none' : 'block') ?>;">
+			<div class="form-group upload-btn" style="display: <?php echo ((${$tableName.'_image'}!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
-				<input type="hidden" name="oldFeatureImage" value="<?php echo ${$taxonomyType.'_image'}; ?>">
+				<input type="hidden" name="oldFeatureImage" value="<?php echo ${$tableName.'_image'}; ?>">
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview action-box" style="display: <?php echo ((${$taxonomyType.'_image'}!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.${$taxonomyType.'_image'} ?>" id="previewImage" alt="">
+			<div class="img-preview action-box" style="display: <?php echo ((${$tableName.'_image'}!='') ? 'block' : 'none') ?>;">
+				<img src="//<?php echo SITE_DOMAIN.${$tableName.'_image'} ?>" id="previewImage" alt="">
 				<p id="changeImage" class="changeImage" >Remove feature image</p>
 			</div>
 		</div>
