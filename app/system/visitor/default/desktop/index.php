@@ -10,7 +10,7 @@
          -->
     <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-messaging.js"></script>
-    <script src="<?php USER_JS ?>firebase.js"></script>
+    <script src="<?php echo USER_JS ?>firebase.js"></script>
 
 
     <body>
