@@ -4,6 +4,9 @@
 
 	if(file_exists($themeAuthenticationFile)) {
 
+		echo 'i m here';
+		exit();
+
 		/** Theme page */
 
 		require_once $themeAuthenticationFile;
