@@ -20,6 +20,8 @@
 
 		} else {
 
+			echo $systemAuthenticationFile.' -> '.$themeAuthenticationFile;
+
 			/* Search url in link table  */
 
 			if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
