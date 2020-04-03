@@ -31,14 +31,6 @@
 	}
 
 	/** Check Physical file is exist or not in theme */
-
-	$themeFile=USER_PATH.$urlStructure[0];
-
-	if(file_exists($themeFile)) {
-
-		require_once $themeFile;
-
-	}
 	
 	/** Redirect all double slash url request to single slash */
 

@@ -1,13 +1,24 @@
 <?php
 
-	if(file_exists(USER_PATH.'index.php')) {
 
-		require_once USER_PATH.'index.php';
+	$themeFile=USER_PATH.$urlStructure[0];
+
+	if(file_exists($themeFile)) {
+
+		require_once $themeFile;
 
 	} else {
 
-		echo '<h1>'.SITE_VERSION.' theme not found</h1>';
+		if(file_exists(USER_PATH.'index.php')) {
+
+			require_once USER_PATH.'index.php';
+
+		} else {
+
+			echo '<h1>'.SITE_VERSION.' theme not found</h1>';
+
+		}
 
 	}
-
+	
 	exit();
