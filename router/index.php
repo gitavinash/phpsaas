@@ -29,8 +29,6 @@
 		exit();
 
 	}
-
-	/** Check Physical file is exist or not in theme */
 	
 	/** Redirect all double slash url request to single slash */
 
