@@ -42,17 +42,7 @@
 						
 					/** Check Pagination */
 
-					$themeFile=USER_PATH.$urlStructure[0];
-
-					if(file_exists($themeFile)) {
-
-						require_once $themeFile;
-
-					} else {
-
-						require_once ERROR_404;
-
-					}
+					require_once ERROR_404;
 
 				}
 
