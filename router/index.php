@@ -37,7 +37,6 @@
 	if(file_exists($themeFile)) {
 
 		require_once $themeFile;
-		exit();
 
 	}
 	
