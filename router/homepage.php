@@ -1,11 +1,14 @@
 <?php
 
+	if($urlStructure[0]!='') {
 
-	$themeFile=USER_PATH.$urlStructure[0];
+		$themeFile=USER_PATH.$urlStructure[0];
 
-	if(file_exists($themeFile)) {
+		if(file_exists($themeFile)) {
 
-		require_once $themeFile;
+			require_once $themeFile;
+
+		}
 
 	} else {
 
@@ -20,5 +23,5 @@
 		}
 
 	}
-	
+
 	exit();
