@@ -4,9 +4,6 @@
 
 	if(file_exists($themeAuthenticationFile)) {
 
-		echo 'i m here';
-		exit();
-
 		/** Theme page */
 
 		require_once $themeAuthenticationFile;
@@ -47,7 +44,17 @@
 						
 					/** Check Pagination */
 
-					require_once ERROR_404;
+					$themeFile=USER_PATH.$urlStructure[0];
+
+					if(file_exists($themeFile)) {
+
+						require_once $themeFile;
+
+					} else {
+
+						require_once ERROR_404;
+
+					}
 
 				}
 
