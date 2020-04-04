@@ -9,7 +9,7 @@
 	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
 	define('DB_USER', 'root');		// database username ex :- root
 	define('DB_PASS', '');		// datapase user password :- 12345
-	define('DB_NAME', 'new_isw_one');		// database name ex :- cms_db
+	define('DB_NAME', 'punjabkesari');		// database name ex :- cms_db
 
 	/* database table prefix */
 
@@ -52,7 +52,7 @@
 		define('ACTIVE_URL', ($_SERVER['REQUEST_URI'])); // echo complete url show on the url bar
 
 	}
-
+	define('ACTIVE_URL_NON_QUERY', str_replace('?'.QUERY_URL, '', ACTIVE_URL));
 	define('BASE_URL', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?'))); // return only the actual url and remove query string
 
 	/** Redirect www url to non www url */
