@@ -11,7 +11,7 @@
 
 	/** Use for url rounting in router index.php */
 
-	$urlStructure=explode('/', rtrim(ltrim(ACTIVE_URL, '/'), '/'));
+	$urlStructure=explode('/', rtrim(ltrim(ACTIVE_URL_NON_QUERY, '/'), '/'));
 
 	/** Defining Site Version  */
 

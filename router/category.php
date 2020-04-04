@@ -31,7 +31,7 @@
 				$category_path=USER_PATH.str_replace('/category/', '', rtrim($categoryLink, '/')).'-category.php';
 
 				/** Fetching post of the category */
-				
+
 				if($categoryPost=mysqli_query($connection, "SELECT link_url, {$category_type}_image, {$category_type}_title, meta_description FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."{$category_type} ON link_relation_id={$category_type}_id INNER JOIN ".TABLE_PREFIX."meta ON {$category_type}_id=meta_relation_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY link_published DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT)) {
 
 					if(mysqli_num_rows($categoryPost)!=0) {

@@ -7,6 +7,8 @@
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
 	define('SCHEMA_DATA', RESOURCE.'structured_data/');
+	define('NOTIFICATION', RESOURCE.'notification/index.php');
+	// define('NOTIFICATION', str_replace(ROOT, '', RESOURCE.'notification/'));
 
 	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');

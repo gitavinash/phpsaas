@@ -71,7 +71,7 @@
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><?php echo ${$postType.'_title'}.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><?php echo ${$postType.'_title'}.(($link_status!='200') ? (($link_status=='206') ? '<strong> — Draft </strong>' : '<strong> — Auto Draft </strong>' ) : '' ); ?></a></p>
 								<div class="hover">
 									<a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 									<a href="delete.php?type=<?php echo $postType ?>&id=<?php echo ${$postType.'_id'}; ?>" onclick="return confirm('Are you sure you want to delete this <?php echo $postType ?>?');" ><i class="fas fa-trash"></i> Delete</a>

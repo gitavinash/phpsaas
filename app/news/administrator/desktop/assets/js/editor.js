@@ -33,6 +33,7 @@
 
                     // already created? show/hide
                     if (iframe) {
+                        //console.log("already created");
                         textarea.hide();
                         $(iframe).contents().find("body").html(content);
                         $(iframe).show();
@@ -53,11 +54,11 @@
 
                     textarea.after(iframe);
 
-                    var doc = content;
-
+                    var doc = "<html><head> <style type='text/css'>body {float: left; width: 100%; word-break: break-word; padding: 7px 10px; margin: 0 auto; box-sizing: border-box;} img {float: left; width: 100% !important;} p {float: left; width: 100% !important; box-sizing: border-box;} div {float: left; width: 100% !important; box-sizing: border-box;} </style> " + "</head><body>" + content + "</body></html>";
                     tryEnableDesignMode(doc, function () {
                         $("#toolbar-" + element_id).remove();
                         textarea.before(toolbar());
+                        // hide textarea
                         textarea.hide();
 
                     });
@@ -94,16 +95,12 @@
                     }, 500);
                     return false;
                 }
-
+                
                 /** Disable Design Mode and show only html code */
 
                 function disableDesignMode(submit) {
 
                     var content = $(iframe).contents().find("body").html();
-
-                    /** This line is working with update post */
-
-                    // var content = $('textarea.editor').val();
 
                     if ($(iframe).is(":visible")) {
                         textarea.val(content);
@@ -415,10 +412,7 @@
                     // Detect Paste to link
 
                     $(iframe).parents('form').submit(function () {
-
-                        disableDesignMode();
-
-
+                        disableDesignMode(true);
                     });
 
                     return tb;
@@ -505,7 +499,7 @@
 
                 $('.publishPost').click(function() {
                     disableDesignMode();
-                    $('.publishPost').hide();
+                    $('#publishPost').hide();
 		            var postTitle = $('#title').val();
 		            var data = new FormData(document.getElementById('formData'));
 		            data.append('type', 'publish');
@@ -523,18 +517,18 @@
 				            } else {
 					            alert(data.msg);
                             }
-                            $('.publishPost').show();
+                            $('#publishPost').show();
 			            },
 			            error: function(data) {
                             console.log(data);
-                            $('.publishPost').show();
+                            $('#publishPost').show();
 			            }
 		            });
                 });
 
                 // Update all post where editor is enable
 
-                $('#updatePost').click(function() {
+                $('.updatePost').click(function() {
                     disableDesignMode();
                     $('#updatePost').hide();
                     var postTitle = $('#title').val();
@@ -590,37 +584,6 @@
                             console.log(data);
                         }
                     });
-                });
-
-                // Schedule all post where editor is enable
-
-                $('#schedulePost').click(function() {
-                    disableDesignMode();
-                    $('#publishGroup').hide();
-		            var postTitle = $('#title').val();
-		            var data = new FormData(document.getElementById('formData'));
-		            data.append('type', 'schedule');
-		            $.ajax({
-			            type: 'POST',
-			            data: data,
-			            processData: false,
-			            contentType: false,
-			            dataType: 'JSON',
-			            encrypt: 'multipart/form-data',
-			            success: function(data) {
-				            if(data.status==200) {
-					            alert(data.msg);
-					            window.location.href=data.redirect;
-				            } else {
-					            alert(data.msg);
-                            }
-                            $('#publishGroup').show();
-			            },
-			            error: function(data) {
-                            console.log(data);
-                            $('#publishGroup').show();
-			            }
-		            });
                 });
 
             }); //return this.each

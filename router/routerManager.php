@@ -14,6 +14,9 @@
 
 		$systemAuthenticationFile=SYSTEM_PATH.$urlStructure[0].'.php';
 
+		echo $systemAuthenticationFile;
+		exit();
+
 		if(file_exists($systemAuthenticationFile)) {
 
 			require_once $systemAuthenticationFile;

@@ -15,7 +15,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>all.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_PLUGINS ?>sweetalert/sweetalert2.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_PLUGINS ?>daterangepicker/daterangepicker.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
 	</head>
 	
 	<body>
