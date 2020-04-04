@@ -11,7 +11,7 @@
         </footer>
         <?php
         
-            require_once NOTIFICATION;
+            require_once NOTIFICATION.'index.php';
 
         ?>
     </body>

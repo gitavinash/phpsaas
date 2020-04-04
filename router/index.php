@@ -60,12 +60,8 @@
 
 		case '' :
 			require_once 'homepage.php';
-			break;
-
-		case 'firebase-messaging-sw.js' :
-			require_once NOTIFICATION.'firebase-messaging-sw.js';
-			break;
-
+			break;	
+			
 		case 'api' :
 			require_once 'api.php';
 			break;
