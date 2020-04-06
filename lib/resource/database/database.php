@@ -32,6 +32,33 @@
   ########################################################################################################################
 
 
+  /* Device Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."device (
+      device_id bigint(20) NOT NULL,
+      device_site_id bigint(20) NOT NULL,
+      device_token varchar(255) NOT NULL,
+      device_type varchar(20) NOT NULL,
+      device_os varchar(20) NOT NULL,
+      device_browser varchar(20) NOT NULL,
+      device_status int(11) NOT NULL,
+      device_registration timestamp NOT NULL DEFAULT current_timestamp()
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
+    ADD PRIMARY KEY (device_id),
+    ADD UNIQUE KEY device_token (device_token) USING HASH,
+    ADD KEY device_site_id (device_site_id),
+    ADD KEY device_status (device_status),
+    ADD KEY device_type (device_type),
+    ADD KEY device_os (device_os),
+    ADD KEY device_browser (device_browser),
+    ADD KEY device_registration (device_registration),
+    ADD KEY device_list (device_site_id,device_type,device_os,device_status) USING BTREE");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
+    MODIFY device_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   /* Directory Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."directory(
@@ -123,6 +150,33 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."media
     MODIFY media_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  /* Notification Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."notification (
+      notification_id int(11) NOT NULL,
+      notification_site_id bigint(20) NOT NULL,
+      notification_icon varchar(255) NOT NULL,
+      notification_title varchar(255) NOT NULL,
+      notification_image varchar(255) NOT NULL,
+      notification_description varchar(255) NOT NULL,
+      notification_link varchar(255) NOT NULL,
+      notification_type varchar(20) NOT NULL,
+      notification_sent bigint(20) NOT NULL,
+      notification_droped bigint(20) NOT NULL,
+      notification_status int(1) NOT NULL,
+      notification_time datetime NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."notification
+    ADD PRIMARY KEY (notification_id),
+    ADD KEY notification_site_id (notification_site_id),
+    ADD KEY notification_status (notification_status),
+    ADD KEY notification_time (notification_time),
+    ADD KEY notification_list (notification_site_id,notification_type,notification_status,notification_time) USING BTREE");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."notification
+    MODIFY notification_id int(11) NOT NULL AUTO_INCREMENT");
+
   /* Profile Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."profile(
@@ -183,7 +237,7 @@
       site_access_site_id bigint(20) NOT NULL,
       site_access_user_id bigint(20) NOT NULL,
       site_access_status int(1) NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_access
     ADD PRIMARY KEY (site_access_id),
@@ -197,16 +251,18 @@
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_setting(
       site_setting_id bigint(20) NOT NULL,
+      site_custom_domain int(1) NOT NULL,
       site_pagination_limit bigint(20) NOT NULL,
       site_sitemap_limit bigint(20) NOT NULL,
       site_feed_limit bigint(20) NOT NULL,
       site_image_quality bigint(20) NOT NULL,
       site_thumbnail_width varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
       site_thumbnail_height varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
-    ADD PRIMARY KEY (site_setting_id)");
+    ADD PRIMARY KEY (site_setting_id),
+    ADD KEY site_custom_domain (site_custom_domain)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     MODIFY site_setting_id bigint(20) NOT NULL AUTO_INCREMENT");
@@ -479,7 +535,7 @@
     ADD KEY election_year (election_year)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."election
-    MODIFY election_id bigint(20) NOT NULL AUTO_INCREMENT;");
+    MODIFY election_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   /* Party Table */
 

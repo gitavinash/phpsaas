@@ -60,7 +60,7 @@
 
 		case '' :
 			require_once 'homepage.php';
-			break;	
+			break;
 			
 		case 'api' :
 			require_once 'api.php';
