@@ -1210,3 +1210,72 @@ ul.breadcrumb li:last-child a {
 .fa-thumbtack {
 	color: #37E278;
 }
+
+.covid-19-box {
+	float: left;
+	width: 100%;
+	background: #D01F29;
+	color: #fff;
+	border-radius: 4px;
+}
+
+.covid-19-box h1 {
+    float: left;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    padding: 5px 20px;
+    margin: 0 auto;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.covid-19-box h1 span {
+	float: right;
+	font-size: 14px;
+	line-height: 38px;
+}
+
+.covid-19-box .status-box {
+	float: left;
+	width: 25%;
+	box-sizing: border-box;
+	text-align: center;
+	position: relative;
+}
+
+.covid-19-box .status-box p {
+	float: left;
+	width: 80%;
+	font-weight: 600;
+	padding: 10px 0px;
+	margin: 0% 10% 10px 10%;
+	border-radius: 4px;
+}
+
+.covid-19-box .status-box p span {
+	float: left;
+	width: 100%;
+	margin: 0 auto;
+	padding: 10px 0px;
+	font-size: 48px;
+}
+
+.bg-white {
+	background: #fff;
+	color: #D01F29;
+}
+
+.bg-warning {
+	background: #FFC300;
+	color: #A07513;
+}
+
+.bg-death {
+	background: #900C3F;
+}
+
+.bg-green {
+	background: #61FF33;
+	color: #1E3F15;
+}

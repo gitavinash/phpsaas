@@ -61,6 +61,10 @@
 		case '' :
 			require_once 'homepage.php';
 			break;
+
+		case 'repair-database' :
+			require_once RESOURCE.'database/database.php';
+			break;
 			
 		case 'api' :
 			require_once 'api.php';

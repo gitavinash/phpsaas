@@ -393,6 +393,22 @@ if(BASE_URL=='/') { ?>
         <main>
 
             <section class="header-ad-box">
+
+                <div class="covid-19-box">
+                    <h1>भारत में कोरोना के आँकड़े <strong class="english" >#GharBaithoNaIndia</strong><span class="english">Last Update : <strong id="lastUpdate" ></strong></span></h1>
+                    <div class="status-box">
+                        <p class="bg-white" >कोरोना की पुष्टि<span id="confirmedCases" class="english" ></span></p>
+                    </div>
+                    <div class="status-box">
+                        <p class="bg-warning" >इलाज चल रहा है<span id="activeCases" class="english" ></span></p>
+                    </div>
+                    <div class="status-box">
+                        <p class="bg-green" >ठीक हो चुके<span id="recoveredCases" class="english" ></span></p>
+                    </div>
+                    <div class="status-box">
+                        <p class="bg-death" >मृत लोग<span id="deathCases" class="english" ></span></p>
+                    </div>
+                </div>
             
                 <!-- <div id='div-gpt-ad-1549609719157-0'>
                 <script>

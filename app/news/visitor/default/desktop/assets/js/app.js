@@ -90,4 +90,29 @@ $(document).ready(function() {
 		})
 	});
 
+	/** Event Box */
+
+	/** Covid 19 Box */
+
+	$.ajax({
+		url: 'https://api.covid19india.org/data.json',
+		success : function(data) {
+			
+			var covidData = data.cases_time_series;
+			var dataLenght = covidData.length;
+			var latestData=covidData[dataLenght-1];
+			
+			$('#confirmedCases').text(latestData.totalconfirmed);
+			$('#activeCases').text(latestData.totalconfirmed-latestData.totalrecovered-latestData.totaldeceased);
+			$('#recoveredCases').text(latestData.totalrecovered);
+			$('#deathCases').text(latestData.totaldeceased);
+			$('#lastUpdate').text(latestData.date + ' 2020');
+
+		},
+		error :function() {
+			console.log('Error while fetching cobid data');
+		},
+
+	})
+
 });

@@ -60,7 +60,9 @@
         </footer>
         
         <script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.3.1.slim.min.js"></script>
+        <script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.min.js"></script>
         <script type="text/javascript" src="<?php echo USER_PLUGINS ?>slick/slick.min.js"></script>
+        <script type="text/javascript" src="<?php echo USER_JS ?>app.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.js"></script>
 
 
