@@ -14,7 +14,11 @@
 
 	/** Convert all secure request key from secure to original */
 
-	extract($secure);
+	if(isset($secure)) {
+
+		extract($secure);
+		
+	}
 
 	switch ($urlStructure[1]) {
 
@@ -28,6 +32,11 @@
 		case 'notification' :
 
 			require_once API.'notification/'.$urlStructure[2].'.php';
+			break;
+		
+		case 'update-database' :
+
+			require_once RESOURCE.'database/repair-database.php';
 			break;
 			
 		default:
