@@ -74,9 +74,9 @@
     CHANGE link_id link_id bigint(20) NOT NULL AUTO_INCREMENT,
     CHANGE link_url link_url varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE link_relation_id link_relation_id bigint(20) NOT NULL,
-    CHANGE link_status link_status int(3) NOT NULL,
+    CHANGE link_status link_status int(3) NOT NULL DEFAULT 404,
     CHANGE link_type link_type varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'post',
-    CHANGE link_is_featured link_is_featured int(1) NOT NULL,
+    CHANGE link_is_featured link_is_featured int(1) NOT NULL DEFAULT 0,
     CHANGE link_owner_id link_owner_id bigint(20) NOT NULL,
     CHANGE link_site_id link_site_id bigint(20) NOT NULL,
     CHANGE link_creation link_creation datetime NOT NULL,
@@ -96,6 +96,9 @@
     CHANGE media_site_id media_site_id bigint(20) NOT NULL");
 
   /* Meta Table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
+    ADD KEY meta_type (meta_type)");
 
   $metaTable=mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
     CHANGE meta_id meta_id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -148,6 +151,9 @@
 
   /* Site Table */
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."
+    CHANGE site_keyword site_keyword LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
   $siteTable=mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
     CHANGE site_id site_id bigint(20) NOT NULL AUTO_INCREMENT,
     CHANGE site_owner_id site_owner_id bigint(20) NOT NULL,
@@ -158,7 +164,6 @@
     CHANGE site_logo site_logo varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE site_name site_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE site_description site_description varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE site_keyword site_keyword LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE site_app site_app varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'cms',
     CHANGE site_theme site_theme varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default',
     CHANGE site_indexing site_indexing int(1) NOT NULL,
@@ -186,7 +191,10 @@
     CHANGE site_feed_limit site_feed_limit bigint(20) NOT NULL,
     CHANGE site_image_quality site_image_quality bigint(20) NOT NULL,
     CHANGE site_thumbnail_width site_thumbnail_width varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE site_thumbnail_height site_thumbnail_height varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+    CHANGE site_thumbnail_height site_thumbnail_height varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    ADD site_ads_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    ADD site_mainfest_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    ADD site_robots_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   /* Tag Table */
 
@@ -228,18 +236,7 @@
   /* Post Table */
 
   $postTable=mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post
-    CHANGE post_id post_id bigint(20) NOT NULL AUTO_INCREMENT,
-    CHANGE post_parent_id post_parent_id bigint(20) NOT NULL,
-    CHANGE post_image post_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE post_thumbnail post_thumbnail varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE post_title post_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE post_description post_description LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE post_highlight post_highlight LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE post_category post_category bigint(20) NOT NULL,
-    CHANGE post_owner_id post_owner_id bigint(20) NOT NULL,
-    CHANGE post_status post_status int(1) NOT NULL,
-    CHANGE post_type post_type varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'post',
-    CHANGE post_time post_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+    CHANGE post_id post_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   ########################################################################################################################
   ##                                                                                                                    ##
@@ -360,6 +357,11 @@
 
       $status=200;
       $msg='Database has been updated successfully';
+
+  } else {
+
+    echo $postTable.' && '.$newsTable.' && '.$alliancePartyTable.' && '.$candidateTable.' && '.$constituencyTable.' && '.$electionTable.' && '.$partyTable.' && '.$resultTable.' && '.$resultSummaryTable;
+    exit();
 
   }
 

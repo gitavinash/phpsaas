@@ -107,6 +107,9 @@ $(document).ready(function() {
 			$('#recoveredCases').text(latestData.totalrecovered);
 			$('#deathCases').text(latestData.totaldeceased);
 			$('#lastUpdate').text(latestData.date + ' 2020');
+			$('#dailyCases').text('+' + latestData.dailyconfirmed);
+			$('#dailyRecovery').text('+' + latestData.dailyrecovered);
+			$('#dailyDeath').text('+' + latestData.dailydeceased);
 
 		},
 		error :function() {

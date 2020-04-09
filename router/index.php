@@ -42,12 +42,16 @@
 		
 		/** Redirect non end slash url to slash url */
 
-		if(substr(BASE_URL , -1)!='/') {
-			
-			$redirectURL=BASE_URL.'/';
-			header("Location: $redirectURL", TRUE, 301);
-			exit();
-			
+		if (!strpos(BASE_URL, ".") !== false) {
+
+			if(substr(BASE_URL , -1)!='/') {
+				
+				$redirectURL=BASE_URL.'/';
+				header("Location: $redirectURL", TRUE, 301);
+				exit();
+				
+			}
+
 		}
 
 	}

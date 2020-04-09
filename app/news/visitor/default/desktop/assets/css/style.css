@@ -1247,6 +1247,7 @@ ul.breadcrumb li:last-child a {
 .covid-19-box .status-box p {
 	float: left;
 	width: 80%;
+	height: 100px;
 	font-weight: 600;
 	padding: 10px 0px;
 	margin: 0% 10% 10px 10%;
@@ -1257,8 +1258,15 @@ ul.breadcrumb li:last-child a {
 	float: left;
 	width: 100%;
 	margin: 0 auto;
-	padding: 10px 0px;
+	padding: 0px;
 	font-size: 48px;
+}
+
+.covid-19-box .status-box .dailyNumber {
+	font-size: 16px;
+	padding: 0px;
+	margin: 0 auto;
+	color: #008c00;
 }
 
 .bg-white {
@@ -1268,7 +1276,7 @@ ul.breadcrumb li:last-child a {
 
 .bg-warning {
 	background: #FFC300;
-	color: #A07513;
+	color: #000;
 }
 
 .bg-death {

@@ -14,9 +14,6 @@
 
 		$systemAuthenticationFile=SYSTEM_PATH.$urlStructure[0].'.php';
 
-		echo $systemAuthenticationFile;
-		exit();
-
 		if(file_exists($systemAuthenticationFile)) {
 
 			require_once $systemAuthenticationFile;
@@ -45,7 +42,7 @@
 						
 					/** Check Pagination */
 
-					require_once ERROR_404;
+					require_once 'pagination.php';
 
 				}
 

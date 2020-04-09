@@ -336,10 +336,6 @@ if(BASE_URL=='/') { ?>
 
                         }
                     }
-                } else {
-                    echo mysqli_error($connection);
-                    exit();
-
                 }
 
                 echo "<marquee>";
@@ -397,16 +393,16 @@ if(BASE_URL=='/') { ?>
                 <div class="covid-19-box">
                     <h1>भारत में कोरोना के आँकड़े <strong class="english" >#GharBaithoNaIndia</strong><span class="english">Last Update : <strong id="lastUpdate" ></strong></span></h1>
                     <div class="status-box">
-                        <p class="bg-white" >कोरोना की पुष्टि<span id="confirmedCases" class="english" ></span></p>
+                        <p class="bg-white" >कोरोना की पुष्टि<span id="confirmedCases" class="english" ></span><span id="dailyCases" class="english dailyNumber" ></span></p>
                     </div>
                     <div class="status-box">
                         <p class="bg-warning" >इलाज चल रहा है<span id="activeCases" class="english" ></span></p>
                     </div>
                     <div class="status-box">
-                        <p class="bg-green" >ठीक हो चुके<span id="recoveredCases" class="english" ></span></p>
+                        <p class="bg-green" >ठीक हो चुके<span id="recoveredCases" class="english" ></span><span id="dailyRecovery" class="english dailyNumber" style="color: #000" ></span></p>
                     </div>
                     <div class="status-box">
-                        <p class="bg-death" >मृत लोग<span id="deathCases" class="english" ></span></p>
+                        <p class="bg-death" >मृत लोग<span id="deathCases" class="english" ></span><span id="dailyDeath" class="english dailyNumber" style="color: #fff" ></span></p>
                     </div>
                 </div>
             
