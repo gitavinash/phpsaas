@@ -23,5 +23,3 @@
 		require_once 'getDomainData.php';
 
 	}
-
-?>

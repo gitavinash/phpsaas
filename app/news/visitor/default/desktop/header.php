@@ -391,7 +391,7 @@ if(BASE_URL=='/') { ?>
             <section class="header-ad-box">
 
                 <div class="covid-19-box">
-                    <h1>भारत में कोरोना के आँकड़े <strong class="english" >#GharBaithoNaIndia</strong><span class="english">Last Update : <strong id="lastUpdate" ></strong></span></h1>
+                    <h1>भारत में कोरोना के आँकड़े <strong class="english" >#GharBaithoNaIndia</strong><span class="english">Source : <strong id="lastUpdate" ><a href="https://www.mohfw.gov.in/" target="_blank" title="Ministry of Health and Family Welfare" style="text-decoration: none; letter-spacing: 1px; color: #fff" >Ministry of Health and Family Welfare</a></strong></span></h1>
                     <div class="status-box">
                         <p class="bg-white" >कोरोना की पुष्टि<span id="confirmedCases" class="english" ></span><span id="dailyCases" class="english dailyNumber" ></span></p>
                     </div>

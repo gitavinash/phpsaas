@@ -64,6 +64,7 @@
         <script type="text/javascript" src="<?php echo USER_PLUGINS ?>slick/slick.min.js"></script>
         <script type="text/javascript" src="<?php echo USER_JS ?>app.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.js"></script>
+        <?php require_once NOTIFICATION.'index.php'; ?>
 
 
         <script type="text/javascript">

@@ -29,17 +29,11 @@
 
                                 /** Convert html content according to specific site version like : AMP */
 
-                                $formatConverter=MODULES.SITE_APP.'/'.SITE_VERSION.'-converter.php';
+                                $formatConverter=RESOURCE.'converter/'.SITE_VERSION.'.php';
 
                                 if(file_exists($formatConverter)) {
 
                                     require_once $formatConverter;
-
-                                } else {
-
-                                    /** Load Default html content converter */
-
-                                    require_once MODULES.SITE_VERSION.'-converter.php';
 
                                 }
 

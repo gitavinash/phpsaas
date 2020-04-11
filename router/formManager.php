@@ -5,17 +5,19 @@
 		foreach($_POST as $key => $value) {
 			$secure[$key]=mysqli_real_escape_string($connection, $value);
 		}
-		
-		switch ($secure['type']) {
 
-			case 'api':
-				header("Content-type: application/json; charset=utf-8");
-				$includeFile = ROOT.'/api/'.$secure['action'].'.php';
-				break;
+		extract($secure);
+
+		switch ($type) {
 			
+			case 'api' :
+				header("Content-type: application/json; charset=utf-8");
+				$includeFile = API.$action.'/'.$key.'.php';
+			break;
+
 			case 'authentication' :
 				header("Content-type: application/json; charset=utf-8");
-				$includeFile = MODULES.$secure['type'].'.php';
+				$includeFile = MODULES.$type.'.php';
 				break;
 
 			case 'draft' :
@@ -24,18 +26,18 @@
 				} else {
 					$secure['action']='add';
 				}
-				$includeFile = APP_MODULES.$secure['type'].'.php';
+				$includeFile = APP_MODULES.$type.'.php';
 				break;
 
 			default:
 
-				if(file_exists(MODULES.$secure['type'].'.php')) {
+				if(file_exists(MODULES.$type.'.php')) {
 
-					$includeFile=MODULES.$secure['type'].'.php';
+					$includeFile=MODULES.$type.'.php';
 
 				} else {
 
-					$includeFile = APP_MODULES.$secure['type'].'.php';
+					$includeFile = APP_MODULES.$type.'.php';
 
 				}
 
@@ -46,13 +48,17 @@
 
 			require_once $includeFile;
 
-			if(function_exists($secure['action'])) {
+			if($type!='api') {
 
-				call_user_func($secure['action'], $connection, $secure);
+				if(function_exists($secure['action'])) {
 
-			} else {
-
-				echo '<h1>Undefine function '.$secure['type'].' -> '.$secure['action'].' </h1>';
+					call_user_func($secure['action'], $connection, $secure);
+	
+				} else {
+	
+					echo '<h1>Undefine function '.$type.' -> '.$secure['action'].' </h1>';
+	
+				}
 
 			}
 

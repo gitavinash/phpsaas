@@ -95,21 +95,25 @@ $(document).ready(function() {
 	/** Covid 19 Box */
 
 	$.ajax({
-		url: 'https://api.covid19india.org/data.json',
+		url: 'https://api.apify.com/v2/datasets/58a4VXwBBF0HtxuQa/items?format=json&clean=1',
 		success : function(data) {
 			
-			var covidData = data.cases_time_series;
+			var covidData = data;
 			var dataLenght = covidData.length;
+			var previousData=covidData[dataLenght-2];
 			var latestData=covidData[dataLenght-1];
+
+			var growthCases=latestData.totalCases - previousData.totalCases;
+			var growthRecovery=latestData.recovered - previousData.recovered;
+			var growthDeath=latestData.deaths - previousData.deaths;
 			
-			$('#confirmedCases').text(latestData.totalconfirmed);
-			$('#activeCases').text(latestData.totalconfirmed-latestData.totalrecovered-latestData.totaldeceased);
-			$('#recoveredCases').text(latestData.totalrecovered);
-			$('#deathCases').text(latestData.totaldeceased);
-			$('#lastUpdate').text(latestData.date + ' 2020');
-			$('#dailyCases').text('+' + latestData.dailyconfirmed);
-			$('#dailyRecovery').text('+' + latestData.dailyrecovered);
-			$('#dailyDeath').text('+' + latestData.dailydeceased);
+			$('#confirmedCases').text(latestData.totalCases);
+			$('#activeCases').text(latestData.activeCases);
+			$('#recoveredCases').text(latestData.recovered);
+			$('#deathCases').text(latestData.deaths);
+			$('#dailyCases').text('+ ' + growthCases);
+			$('#dailyRecovery').text('+ ' + growthRecovery);
+			$('#dailyDeath').text('+ ' + growthDeath);
 
 		},
 		error :function() {

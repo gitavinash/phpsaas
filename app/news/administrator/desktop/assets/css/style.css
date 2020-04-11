@@ -485,6 +485,13 @@ main .container {
 	margin: 20px 0px;
 }
 
+.main-box {
+	background: #fff;
+	border: 1px solid #eaeaea;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
 .form-box {
 	float: left;
 	width: 98%;
@@ -660,11 +667,6 @@ textarea.form-control {
 	outline: none;
 	border: none;
 	box-sizing: border-box;
-}
-
-.editor img {
-	float: left;
-	width: 100% !important;
 }
 
 .setFullScreen {
@@ -1019,8 +1021,7 @@ li.imageBox img {
 .tagList span {
 	position: relative;
     float: left;
-	background: #00609E;
-	height: 16px;
+    background: #00609E;
     color: #fff;
     margin-right: 10px;
     padding: 2px 15px 2px 10px;
@@ -1063,6 +1064,69 @@ li.imageBox img {
 }
 
 /* Tabs */
+
+.fix-box {
+    float: left;
+    width: 250px;
+	padding-right: 0px;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.fix-box h3 {
+	float: left;
+	width: 100%;
+	padding: 5px 10px;
+	box-sizing: border-box;
+}
+
+ul.menu-creator {
+	float: left;
+	width: 100%;
+	list-style: none;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	padding: 0;
+	height: 250px !important;
+	overflow: auto;
+	padding-right: 5px;
+	box-sizing: border-box;
+}
+
+ul.menu-creator li {
+    float: left;
+    width: 100%;
+    padding: 5px 10px;
+    background: #e8e8e8;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #e2e2e2;
+}
+
+ul.menu-creator li:last-child {
+	margin-bottom: 0;
+}
+
+::-webkit-scrollbar {
+	width: 3px;
+}
+  
+  /* Track */
+
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+  
+  /* Handle */
+::-webkit-scrollbar-thumb {
+	background: #3386FF;
+}
+  
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
 
 section {
 	float: left;
@@ -1262,6 +1326,7 @@ ul.tabs li.active {
 .category .category-list {
 	float: right;
 	width: 600px;
+	background: #fff;
 }
 
 .page-not-found {
@@ -1431,64 +1496,80 @@ ul.tabs li.active {
 	color: inherit;
 }
 
-.work-report {
+.configMenu {
 	float: left;
-	width: 250px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.configMenu ul {
+	float: left;
+	width: 100%;
+	margin: 0 auto;
+	padding: 0px;
+	list-style: none;
+}
+
+.configMenu li {
+	float: left;
+	margin: 0 auto;
+    background: #b7b7b7;
+    border: 1px solid #333;
+    padding: 7px 20px;
+    margin-right: 0px;
+	color: #000;
+	cursor: pointer;
+	border-bottom: none;
+}
+
+.configMenu li:first-child {
+    border-top-left-radius: 4px;
+}
+
+.configMenu li:last-child {
+    border-top-right-radius: 4px;
+}
+
+.configMenu li.active {
+	background: #fff;
+	color: #000;
+	border: 1px solid #d2d2d2;
+	border-bottom: none;
+}
+
+.configBody {
+	float: left;
+	width: 100%;
+	padding: 10px;
+	margin: 0 auto;
+    background: #fff;
+    box-sizing: border-box;
+	border: 1px solid #d2d2d2;
+	border-top: none;
+}
+
+.configBody h3 {
+	padding-top: 10px;
+	font-weight: 600;
+}
+
+.configBody textarea {
+	float: left;
+	width: 100%;
+	height: 400px;
+	background: #f7f7f7;
 	box-sizing: border-box;
-	padding: 0px 10px;
-	margin-bottom: 20px;
-}
-
-.work-report .username {
-	float: left;
-	width: 100%;
-	background: green;
-	font-size: 24px;
-	color: #fff;
-	padding: 5px 0px;
-	text-align: center;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-.work-report .publish {
-	float: left;
-	width: 100%;
-	font-size: 48px;
-	color: #333;
-	background: #fff;
-	text-align: center;
-    padding: 0px 5px;
-    box-sizing: border-box;
-	border-bottom-left-radius: 4px;
-}
-
-.work-report .publish span {
+	border: 1px solid #ececec;
+	outline: none;
+	padding: 10px;
 	font-size: 14px;
-    float: left;
-    width: 100%;
-    padding: 5px 0px;
-    color: #585858;
-    font-weight: 300;
+	margin-bottom: 15px;
 }
 
-.work-report .draft {
-	float: left;
-	width: 50%;
-	font-size: 48px;
-	color: #333;
-	background: #fff;
-	text-align: center;
-    padding: 0px 5px;
-    box-sizing: border-box;
-	border-bottom-right-radius: 4px;
+.configBody form textarea {
+	height: 150px;
 }
 
-.work-report .draft span {
-	font-size: 14px;
-    float: left;
-    width: 100%;
-    padding: 5px 0px;
-    color: #585858;
-    font-weight: 300;
+.configBody form .box-2 {
+	margin: 0 auto;
 }

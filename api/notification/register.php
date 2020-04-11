@@ -10,7 +10,7 @@
                 $msg='Device is registered successfully';
 
             } else {
-
+                
                 $msg='Something is wrong while registering new device';
 
             }

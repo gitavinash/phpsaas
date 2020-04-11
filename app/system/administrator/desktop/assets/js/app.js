@@ -100,4 +100,128 @@ $(document).ready(function() {
 		})
 	});
 
+
+	/** Website Configuration */
+
+	$('#pos1').click(function() {
+
+		$('#pos1').addClass('active');
+		$('#pos1Box').css('display', 'block');
+
+		$('#pos2').removeClass('active');
+		$('#pos2Box').hide();
+
+		$('#pos3').removeClass('active');
+		$('#pos3Box').hide();
+
+		$('#pos4').removeClass('active');
+		$('#pos4Box').hide();
+
+	});
+
+	$('#pos2').click(function() {
+
+		$('#pos2').addClass('active');
+		$('#pos2Box').css('display', 'block');
+
+		$('#pos1').removeClass('active');
+		$('#pos1Box').hide();
+
+		$('#pos3').removeClass('active');
+		$('#pos3Box').hide();
+
+		$('#pos4').removeClass('active');
+		$('#pos4Box').hide();
+
+	});
+
+	$('#pos3').click(function() {
+
+		$('#pos3').addClass('active');
+		$('#pos3Box').css('display', 'block');
+
+		$('#pos1').removeClass('active');
+		$('#pos1Box').hide();
+
+		$('#pos2').removeClass('active');
+		$('#pos2Box').hide();
+
+		$('#pos4').removeClass('active');
+		$('#pos4Box').hide();
+
+	});
+
+	$('#pos4').click(function() {
+
+		$('#pos4').addClass('active');
+		$('#pos4Box').css('display', 'block');
+
+		$('#pos1').removeClass('active');
+		$('#pos1Box').hide();
+
+		$('#pos2').removeClass('active');
+		$('#pos2Box').hide();
+
+		$('#pos3').removeClass('active');
+		$('#pos3Box').hide();
+
+	});
+
+	$('#adsTXT').click(function() {
+		
+		$.ajax({
+			type: 'POST',
+			data: {
+				type : 'api',
+				action : 'setting',
+				key : 'ads',
+				data : $('#ads_txt').val()
+			},
+			success: function(data) {
+				simplePopUp('success', 'success', data.msg)
+			}, error : function(data) {
+				simplePopUp('error', 'Error', data.msg)
+			}
+		})
+
+	});
+
+	$('#robotsTXT').click(function() {
+		
+		$.ajax({
+			type: 'POST',
+			data: {
+				type : 'api',
+				action : 'setting',
+				key : 'robots',
+				data : $('#robots_txt').val()
+			},
+			success: function(data) {
+				simplePopUp('success', 'success', data.msg)
+			}, error : function(data) {
+				simplePopUp('error', 'Error', data.msg)
+			}
+		})
+
+	});
+
+	$('#mainfestJSON').click(function() {
+		
+		$.ajax({
+			type: 'POST',
+			data: {
+				type : 'api',
+				action : 'setting',
+				key : 'mainfest',
+				data : $('#mainfest_json').val()
+			},
+			success: function(data) {
+				simplePopUp('success', 'success', data.msg)
+			}, error : function(data) {
+				simplePopUp('error', 'Error', data.msg)
+			}
+		})
+
+	});
+
 });
