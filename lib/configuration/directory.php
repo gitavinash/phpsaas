@@ -6,9 +6,12 @@
 	define('MODULES', ROOT.'/lib/modules/');
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
-	define('SCHEMA_DATA', RESOURCE.'structured_data/');
+	define('SCHEMA_DATA', RESOURCE.'schema/');
 	define('NOTIFICATION', RESOURCE.'notification/');
-	// define('NOTIFICATION', str_replace(ROOT, '', RESOURCE.'notification/'));
+	define('JS_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'js/'));
+	define('CSS_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'css/'));
+	define('IMG_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'img/'));
+	define('PLUGIN_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'plugin/'));
 
 	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');

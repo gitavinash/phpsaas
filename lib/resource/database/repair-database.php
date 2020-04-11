@@ -182,7 +182,10 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     ADD KEY site_custom_domain (site_custom_domain),
-    ADD site_custom_domain int(1) NOT NULL AFTER site_setting_id");
+    ADD site_custom_domain int(1) NOT NULL AFTER site_setting_id,
+    ADD site_ads_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    ADD site_mainfest_json LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    ADD site_robots_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   $siteSettingTable=mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     CHANGE site_setting_id site_setting_id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -191,10 +194,7 @@
     CHANGE site_feed_limit site_feed_limit bigint(20) NOT NULL,
     CHANGE site_image_quality site_image_quality bigint(20) NOT NULL,
     CHANGE site_thumbnail_width site_thumbnail_width varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    CHANGE site_thumbnail_height site_thumbnail_height varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    ADD site_ads_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    ADD site_mainfest_json LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    ADD site_robots_txt LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+    CHANGE site_thumbnail_height site_thumbnail_height varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   /* Tag Table */
 

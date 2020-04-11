@@ -25,7 +25,6 @@
 		case 'secure' :
 
 			/* for secure api request */
-
 			require_once LOGIN_CHECK;
 			break;
 		

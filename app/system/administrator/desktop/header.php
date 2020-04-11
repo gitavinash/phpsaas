@@ -14,7 +14,6 @@
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>style.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>all.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_PLUGINS ?>sweetalert/sweetalert2.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
 	</head>
 	
 	<body>
@@ -60,59 +59,6 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/post/') ? 'class="active"' : '' ) ?> >
-						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All Posts</a></li>
-								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-								<li><a href="post.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
-								<li><a href="post.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All Posts</a></li>
-								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-								<li><a href="post.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
-								<li><a href="post.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
-						<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
-								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
-								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/product/') ? 'class="active"' : '' ) ?> >
-						<a href="product.php?type=list"><i class="fas fa-cubes"></i> Product</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All Products</a></li>
-								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-								<li><a href="product.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
-								<li><a href="product.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="product.php?type=product&status=all"><i class="fas fa-list"></i> All Products</a></li>
-								<li><a href="product.php?type=product&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
-								<li><a href="product.php?type=category"><i class="fas fa-folder-plus"></i> Categories</a></li>
-								<li><a href="product.php?type=tags"><i class="fas fa-tags"></i> Tags</a></li>
-							</ul>
-						</div>
-					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/media/') ? 'class="active"' : '' ) ?> >
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
@@ -134,7 +80,6 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/comments/') ? 'class="active"' : '' ) ?> ><a href="comments.php"><i class="fas fa-comments"></i> Comments</a></li>
 					<li <?php echo ((ADMIN_BASE_URL=='/data/') ? 'class="active"' : '' ) ?> >
 						<a href="data.php?type=import"><i class="fas fa-database"></i> Transfer Data</a>
 						<div class="side-menu">
@@ -200,7 +145,7 @@
 						<div class="side-menu">
 							<ul>
 								<li><a href="setting.php?type=website"><i class="fas fa-globe"></i>  Website</a></li>
-								<li><a href="setting.php?type=social"><i class="fas fa-hashtag"></i>  Social</a></li>
+								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
 							</ul>
@@ -208,7 +153,7 @@
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="setting.php?type=website"><i class="fas fa-globe"></i>  Website</a></li>
-								<li><a href="setting.php?type=social"><i class="fas fa-hashtag"></i>  Social</a></li>
+								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
 							</ul>
