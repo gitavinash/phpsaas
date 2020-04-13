@@ -47,7 +47,7 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
     ADD PRIMARY KEY (device_id),
-    ADD UNIQUE KEY device_token (device_token) USING HASH,
+    ADD INDEX device_token (device_token) USING HASH,
     ADD KEY device_site_id (device_site_id),
     ADD KEY device_status (device_status),
     ADD KEY device_type (device_type),
@@ -151,6 +151,7 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
     ADD PRIMARY KEY (meta_id),
+    ADD INDEX (meta_type),
     ADD INDEX (meta_relation_id)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
@@ -354,7 +355,6 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
     MODIFY category_id bigint(20) NOT NULL AUTO_INCREMENT");
-
 
   /* Post Table */
 
