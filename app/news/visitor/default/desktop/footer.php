@@ -59,58 +59,11 @@
             </div>
         </footer>
         
-        <script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.3.1.slim.min.js"></script>
-        <script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.min.js"></script>
+        <?php require_once NOTIFICATION.'index.php'; ?>
         <script type="text/javascript" src="<?php echo USER_PLUGINS ?>slick/slick.min.js"></script>
         <script type="text/javascript" src="<?php echo USER_JS ?>app.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.js"></script>
-        <?php require_once NOTIFICATION.'index.php'; ?>
-
-
-        <script type="text/javascript">
-        
-            /* Slick slider */
-
-            /* top news slider */
-
-            $('.homepage-slider').slick({
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                autoplay: true,
-                speed: 1500,
-                nextArrow: "<div class='right-arrow'><i class='fa fa-arrow-right'></i></div>",
-                prevArrow: "<div class='left-arrow'><i class='fa fa-arrow-left'></i></div>"
-            });
-
-            // /* feature slider */
-
-            // $('.feature-slider').slick({
-            //     infinite: true,
-            //     slidesToShow: 1,
-            //     slidesToScroll: 1,
-            //     autoplay: false,
-            //     speed: 1500,
-            //     nextArrow: "<div class='right-arrow'><i class='fa fa-arrow-right'></i></div>",
-            //     prevArrow: "<div class='left-arrow'><i class='fa fa-arrow-left'></i></div>"
-            // });
-
-            /* bollywood news slider */
-
-            $('.entertainment-slider').slick({
-                infinite: true,
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                autoplay: true,
-                speed: 1500,
-                nextArrow: "<div class='right-arrow'><i class='fa fa-arrow-right'></i></div>",
-                prevArrow: "<div class='left-arrow'><i class='fa fa-arrow-left'></i></div>"
-            });
-          
-        </script>        <!-- You Plus -->
-
-<script type="text/javascript"> !function(t,e){var n=e.createElement("script"),o=e.getElementsByTagName("script")[0];n.async=!0,n.src="https://d1uck549nef0ok.cloudfront.net/youplus.opinion.in.js?v="+Date.now().toString(),n.charset="UTF-8",n.type="text/javascript",o.parentNode.insertBefore(n,o)}(window,document); </script>
-
+        <script type="text/javascript" src="<?php echo USER_JS ?>script.js"></script>
 
     </body>
 

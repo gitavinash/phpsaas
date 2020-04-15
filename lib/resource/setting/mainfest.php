@@ -4,5 +4,5 @@
 
     header("Content-type: application/json; charset=utf-8");
 
-    echo json_encode($site_mainfest_json, TRUE);
+    echo json_decode($site_mainfest_json, TRUE);
     exit();

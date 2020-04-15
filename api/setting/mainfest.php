@@ -1,6 +1,6 @@
 <?php
 
-    if($updateFile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_mainfest_json='{$data}' WHERE site_setting_id=".SITE_ID)) {
+    if($updateFile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_mainfest_json='".json_encode($data)."' WHERE site_setting_id=".SITE_ID)) {
 
         $status=200;
         $msg='Mainfest.json file update successfully';

@@ -115,7 +115,7 @@
 
             <h3>Manage mainfest.json file</h3>
             <form>
-                <textarea name="mainfest_json" id="mainfest_json" ><?php echo $site_mainfest_json; ?></textarea>
+                <textarea name="mainfest_json" id="mainfest_json" ><?php echo json_decode($site_mainfest_json); ?></textarea>
                 <input type="button" id="mainfestJSON" class="btn btn-green" value="Update File" >
             </form>
             

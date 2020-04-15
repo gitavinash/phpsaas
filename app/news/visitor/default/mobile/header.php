@@ -12,6 +12,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="fb:pages" content="1779174612300730" />
+        <link rel="manifest" href="/mainfest.json">
         <link rel="icon" href="<?php echo USER_IMAGES ?>favicon.png">
         <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
         <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
@@ -118,9 +119,9 @@
                 </div>
                 <div class="other-option">
                     <ul>
-                        <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
-                        <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/search.png" alt=""></i></a></li>
-                        <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/bars.png" alt=""></i></a></li>
+                        <li><a href="//mpaper.punjabkesari.com"><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
+                        <li id="search" ><a href="#"><img src="<?php echo USER_IMAGES ?>icons/search.png" alt=""></i></a></li>
+                        <li id="menu"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/bars.png" alt=""></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -150,6 +151,67 @@
                         <li><a href="/category/social-news/">दिलचस्प खबरें</a></li>
                     </ul>
                 </nav>
+            </div>
+            <div class="full-screen-menu" style="display: none" >
+                <div class="header">
+                    <div class="logo">
+                        <a href="/"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt=""></a>
+                    </div>
+                    <div class="other-option">
+                        <ul>
+                            <li><a href="https://play.google.com/store/apps/details?id=com.punjab.kesari" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/play-store.png" alt=""></i></a></li>
+                            <li><a href="https://itunes.apple.com/in/app/hindi-news-by-punjab-kesari/id1420361527" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/apple-store.png" alt="" style="margin-top: 6px" ></i></a></li>
+                            <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
+                            <li id="closeMenu"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/close.png" alt=""></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu-links">
+                    <ul class="menu-list" >
+                        <li><a href="/" class="active" >होम</a></li>
+                        <li>
+                            <a href="/category/india-news/">देश</a>
+                            <ul>
+                                <li><a href="/category/delhi-ncr/">दिल्ली</a></li>
+                                <li><a href="/category/uttar-pradesh/">उत्तर प्रदेश</a></li>
+                                <li><a href="/category/haryana-news/">हरियाणा</a></li>
+                                <li><a href="/category/rajasthan-news/">राजस्‍थान</a></li>
+                                <li><a href="/category/jammu-and-kashmir/">जम्मू-कश्मीर</a></li>
+                                <li><a href="/category/punjab-news/">पंजाब</a></li>
+                                <li><a href="/category/bihar-news/">बिहार</a></li>
+                                <li><a href="/category/other-states/">अन्य राज्य</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/category/world-news/">विदेश</a></li>
+                        <li><a href="/category/bollywood-kesari/">बॉलीवुड</a></li>
+                        <li><a href="/category/sports-news/">खेल</a></li>
+                        <li><a href="/category/editorial/">संपादकीय</a></li>
+                        <li><a href="/category/business-news/">व्यापार</a></li>
+                        <li><a href="/category/horoscope/">भविष्यफल</a></li>
+                        <li><a href="/category/social-news/">दिलचस्प खबरें</a></li>
+                    </ul>
+                </div>
+                <div class="trending-tags">
+                </div>
+            </div>
+            <div class="search-box" style="display: none" >
+                <div class="header">
+                    <div class="logo">
+                        <a href="/"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt=""></a>
+                    </div>
+                    <div class="other-option">
+                        <ul>
+                            <li><a href="https://play.google.com/store/apps/details?id=com.punjab.kesari" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/play-store.png" alt=""></i></a></li>
+                            <li><a href="https://itunes.apple.com/in/app/hindi-news-by-punjab-kesari/id1420361527" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/apple-store.png" alt="" style="margin-top: 6px" ></i></a></li>
+                            <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
+                            <li id="closeSearch"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/close.png" alt=""></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <form action="/search/" >
+                    <input type="text" id="searchBar" class="form-control inside-shadow" name="q" placeholder="Search News here..." >
+                    <input type="submit" name="search" class="btn btn-block btn-green" style="margin-top: 5px" value="Search News" >
+                </form>
             </div>
         </header>
 
