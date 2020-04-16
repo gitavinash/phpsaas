@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="credit">
-                    &copy Copyright 2007 - <?php echo date('Y'); ?> <a href="">ITS Soft World</a>
+                    &copy Copyright 2007 - <?php echo date('Y'); ?> <a href=""><?php echo SITE_NAME ?></a>
                 </div>
             </div>
         </footer>

@@ -44,13 +44,6 @@
 
             <section class="header-ad-box">
             
-                <!-- /1009127/RW_PunjabKesari_300x250 -->
-                <div id='div-gpt-ad-1549554871716-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549554871716-0'); });
-                </script>
-                </div>
-            
             </section>
 
             <!-- main news -->
@@ -100,14 +93,7 @@
             </section>
 
             <section class="header-ad-box">
-                
-                <!-- /1009127/RW_PunjabKesari_Resp_1 -->
-                <div id='div-gpt-ad-1549975705782-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549975705782-0'); });
-                </script>
-                </div>
-                
+                                
             </section>
 
             <!-- top news youtube -->
@@ -161,13 +147,6 @@
 
             <section class="header-ad-box">
             
-                <!-- /1009127/RW_PunjabKesari_Resp_2 -->
-                <div id='div-gpt-ad-1549975808942-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549975808942-0'); });
-                </script>
-                </div>
-            
             </section>
             <!-- main news -->
 
@@ -197,17 +176,7 @@
 
                     </div>
                     <div class="ad-box">
-                        <script type="text/javascript"><!--
-                            google_ad_client = "ca-pub-6070398767421094";
-                            /* PK.COM_300X250 */
-                            google_ad_slot = "PK.COM_300X250";
-                            google_ad_width = 300;
-                            google_ad_height = 250;
-                            //-->
-                            </script>
-                            <script type="text/javascript"
-                            src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-                        </script>
+                        
                     </div>
                 </div>
             </section>
@@ -261,14 +230,7 @@
 
 
             <section class="header-ad-box">
-                
-                <!-- /1009127/RW_PunjabKesari_Resp_3 -->
-                <div id='div-gpt-ad-1549975922100-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549975922100-0'); });
-                </script>
-                </div>
-            
+
             </section>
 
             <!-- main news -->
@@ -321,13 +283,6 @@
 
             <section class="header-ad-box">
             
-                <!-- /1009127/RW_PunjabKesari_Resp_4 -->
-                <div id='div-gpt-ad-1549976009867-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549976009867-0'); });
-                </script>
-                </div>
-            
             </section>
 
             <!-- main news -->
@@ -379,14 +334,7 @@
             </section>
             
             <section class="header-ad-box">
-                
-                <!-- /1009127/RW_PunjabKesari_Resp_5 -->
-                <div id='div-gpt-ad-1549976105111-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549976105111-0'); });
-                </script>
-                </div>
-            
+                         
             </section>
 
             <!-- main news -->

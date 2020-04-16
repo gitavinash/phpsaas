@@ -210,7 +210,7 @@
                 </div>
                 <form action="/search/" >
                     <input type="text" id="searchBar" class="form-control inside-shadow" name="q" placeholder="Search News here..." >
-                    <input type="submit" name="search" class="btn btn-block btn-green" style="margin-top: 5px" value="Search News" >
+                    <input type="submit" class="btn btn-block btn-green" style="margin-top: 5px" value="Search News" >
                 </form>
             </div>
         </header>

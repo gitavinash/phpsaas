@@ -21,10 +21,10 @@
         <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
         <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" >
-        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" >
-        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" >
-        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" >
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" >
+        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" async >
+        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" async >
+        <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" async >
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" async >
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.css">
         
         <!-- SEO -->
@@ -74,118 +74,7 @@
         <meta name="twitter:image" content="<?php echo ((isset($news_image)) ? SITE_URL.(($news_image!='') ? $news_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>">
         <meta name="twitter:url" content="<?php echo SITE_URL.BASE_URL ?>">
 
-        <!-- Adx -->
-
-        <script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
-        <script>
-        var googletag = googletag || {};
-        googletag.cmd = googletag.cmd || [];
-        </script>
-
-        <script>
-        googletag.cmd.push(function() {
-        var mapping = googletag.sizeMapping().
-        addSize([800,90], [728, 90]).
-        addSize([700,90], [468, 60]).
-        addSize([0, 0], [300, 250]).
-        build();
-            googletag.defineSlot('/1009127/RW_PunjabKesari_728x90', [728, 90], 'div-gpt-ad-1549609719157-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.defineSlot('/1009127/RW_PunjabKesari_300x250', [300, 250], 'div-gpt-ad-1549554871716-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_1', [728, 90], 'div-gpt-ad-1549975705782-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_2', [728, 90], 'div-gpt-ad-1549975808942-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_3', [728, 90], 'div-gpt-ad-1549975922100-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_4', [728, 90], 'div-gpt-ad-1549976009867-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.defineSlot('/1009127/RW_PunjabKesari_Resp_5', [728, 90], 'div-gpt-ad-1549976105111-0').defineSizeMapping(mapping).addService(googletag.pubads());
-            googletag.pubads().enableSingleRequest();
-            googletag.enableServices();
-        });
-        </script>
-
-        <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0&appId=1687095354928063&autoLogAppEvents=1"></script>
-
-        <?php
-        
-        if(isset($link_type)) {
-
-            if($link_type!='category' && $link_type!='tag') {
-
-                if(BASE_URL=='/') { ?>
-                    <link rel="amphtml" href="https://m.punjabkesari.com/amp"/>
-                    <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.punjabkesari.com"/>
-                <?php
-                } else {
-                    
-                        ?>
-                        <link rel="amphtml" href="https://m.punjabkesari.com/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id; ?>/amp"/>
-                        <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.punjabkesari.com/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id; ?>"/>
-                    <?php
-    
-                } ?>
-    
-                <!-- Readwhere redirection code -->
-    
-                <script type='text/javascript'>
-                    if ((navigator.userAgent.match(/(iphone)|(ipod)|(ipad)|(android)|(blackberry)|(windows phone)|(symbian)/i))){
-    
-                        <?php
-                        
-                        if(BASE_URL=='/') { ?>
-                            var request_uri = 'https://m.punjabkesari.com/  ';
-                        <?php
-                        } else { ?>
-                            var request_uri = 'https://m.punjabkesari.com/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id ?><?php echo ((QUERY_URL=='') ? '' : '?'.QUERY_URL ) ?>';
-                        <?php
-                        }
-    
-                        ?>
-    
-                        top.location.href= request_uri;
-                    }
-                </script>
-    
-                <?php
-    
-            }
-
-        } else {
-
-if(BASE_URL=='/') { ?>
-                    <link rel="amphtml" href="https://m.punjabkesari.com/amp"/>
-                    <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.punjabkesari.com"/>
-                <?php
-                } else {
-                    
-                        ?>
-                        <link rel="amphtml" href="https://m.punjabkesari.com/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id; ?>/amp"/>
-                        <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.punjabkesari.com/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id; ?>"/>
-                    <?php
-    
-                } ?>
-
-            <script type='text/javascript'>
-                                if ((navigator.userAgent.match(/(iphone)|(ipod)|(ipad)|(android)|(blackberry)|(windows phone)|(symbian)/i))){
-                
-                                    <?php
-                                    
-                                    if(BASE_URL=='/') { ?>
-                                        var request_uri = 'https://m.punjabkesari.com/  ';
-                                    <?php
-                                    } else { ?>
-                                        var request_uri = 'https://m.punjabkesari.com/article/<?php $currentLink=explode('/', rtrim(ltrim(BASE_URL, '/'), '/')); echo end($currentLink); ?>/<?php echo $link_id ?><?php echo ((QUERY_URL=='') ? '' : '?'.QUERY_URL ) ?>';
-                                    <?php
-                                    }
-                
-                                    ?>
-                
-                                    top.location.href= request_uri;
-                                }
-                            </script>
-            
-                        <?php
-                        }
-        
-        ?>
+        <link rel="amphtml" href="<?php echo SITE_URL.'/amp'.BASE_URL ?>" >
 
         <?php
 
@@ -196,93 +85,8 @@ if(BASE_URL=='/') { ?>
                 require_once $schemaData;
 
             }
-            
-            if(isset($link_type)) {
-                
-                if($link_type=='news') { ?>
-                    
-                    <!-- News Schema -->
-
-                    
-
-                    <!-- Taboola Code -->
-
-                    <script type="text/javascript">
-                        window._taboola = window._taboola || [];
-                        _taboola.push({article:'auto'});
-                        !function (e, f, u, i) {
-                            if (!document.getElementById(i)){
-                            e.async = 1;
-                            e.src = u;
-                            e.id = i;
-                            f.parentNode.insertBefore(e, f);
-                            }
-                        }(document.createElement('script'),
-                        document.getElementsByTagName('script')[0],
-                        '//cdn.taboola.com/libtrc/punjabkesaripublishersprivatelimited/loader.js',
-                        'tb_loader_script');
-                        if(window.performance && typeof window.performance.mark == 'function')
-                            {window.performance.mark('tbl_ic');}
-                    </script>
-        
-                    <?php
-                }
-
-            }
 
         ?>
-
-        <!-- Global site tag (gtag.js) - Google Analytics ( Punjab Kesari Old ) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-10313152-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-10313152-1');
-</script>
-
-
-<!-- Global site tag (gtag.js) - Google Analytics ( Punjab Kesari Desktop ) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154787764-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-154787764-1');
-</script>
-
-<!-- Global site tag (gtag.js) - Google Analytics ( Punjab Kesari Desktop ) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154787764-2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-154787764-2');
-</script>
-
-<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-<script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/21704298696/REC_300_250_ad_unit', [300, 250], 'div-gpt-ad-1581925731733-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-  });
-</script>
-
-<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-<script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/21704298696/REC_728x90', [728, 90], 'div-gpt-ad-1582615224176-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-  });
-</script>
-
 
     </head>
 
@@ -405,19 +209,6 @@ if(BASE_URL=='/') { ?>
                     <div class="status-box">
                         <p class="bg-death" >मृत लोग<span id="deathCases" class="english" ></span><span id="dailyDeath" class="english dailyNumber" style="color: #fff" ></span></p>
                     </div>
-                </div>
-            
-                <!-- <div id='div-gpt-ad-1549609719157-0'>
-                <script>
-                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1549609719157-0'); });
-                </script>
-                </div> -->
-
-                <!-- /21704298696/REC_728x90 -->
-                <div id='div-gpt-ad-1582615224176-0' style='width: 728px; height: 90px;'>
-                <script>
-                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1582615224176-0'); });
-                </script>
                 </div>
 
             </section>
