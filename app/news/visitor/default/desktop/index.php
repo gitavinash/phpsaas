@@ -11,7 +11,7 @@
                         for($i=0; $i < 5 ; $i++) {
                             echo "<div class='slider'>
                                 <div class='img-box'>
-                                    <a href='{$topNewsPost[$i]['link_url']}' data-href='{$topNewsPost[$i]['news_image']}' class='progressive replace'>
+                                    <a href='{$topNewsPost[$i]['link_url']}' data-href='{$topNewsPost[$i]['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$topNewsPost[$i]['news_title']}'>
                                     </a>
                                 </div>
@@ -52,12 +52,12 @@
                 <div class="title"><h2>देश</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=3 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=3 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                 
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -74,12 +74,12 @@
                 <div class="title"><h2>विदेश</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=11 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=11 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                 
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -114,13 +114,13 @@
 
                         <?php
 
-                        if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=14 ORDER BY link_id DESC LIMIT 0, 1")) {
+                        if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=14 ORDER BY link_published DESC LIMIT 0, 1")) {
                             if(mysqli_num_rows($categoryNews)!=0) {
                                 while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                     echo "<a href='{$categoryNewsData['link_url']}'><div class='slider'>
                                     <div class='img-box'>
-                                        <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                        <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                             <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                         </a>
                                     </div>
@@ -157,12 +157,12 @@
 
                         <?php
 
-                        if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=18 ORDER BY link_id DESC LIMIT 0, 5")) {
+                        if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=18 ORDER BY link_published DESC LIMIT 0, 5")) {
                             if(mysqli_num_rows($categoryNews)!=0) {
                                 while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                     echo "<div class='category-post'>
-                                        <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                        <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                             <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                         </a>
                                         <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -188,12 +188,12 @@
 
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=12 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=12 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -210,12 +210,12 @@
             <section>
                 <div class="title"><h2>दिल्ली – एन. सी. आर.</h2></div>
                 <?php
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=4 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=4 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -239,12 +239,12 @@
                 <div class="title"><h2>उत्तर प्रदेश</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=5 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=5 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -263,12 +263,12 @@
                 <div class="title"><h2>हरियाणा</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=16 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=16 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -291,12 +291,12 @@
                 <div class="title"><h2>राजस्‍थान</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=6 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=6 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -315,12 +315,12 @@
                 <div class="title"><h2>जम्मू-कश्मीर</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=7 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=7 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -343,12 +343,12 @@
                 <div class="title"><h2>पंजाब</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=8 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=8 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['link_url']}' data-href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>
@@ -367,12 +367,12 @@
                 <div class="title"><h2>व्यापार</h2></div>
                 <?php
 
-                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=13 ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($categoryNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link  FORCE INDEX (link_filter) ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_category=13 ORDER BY link_published DESC LIMIT 0, 5")) {
                         if(mysqli_num_rows($categoryNews)!=0) {
                             while($categoryNewsData=mysqli_fetch_assoc($categoryNews)) {
                                     
                                 echo "<div class='category-post'>
-                                    <a href='{$categoryNewsData['news_image']}' class='progressive replace'>
+                                    <a href='{$categoryNewsData['news_thumbnail']}' class='progressive replace'>
                                         <img src='/upload/preview.jpg' class='preview' alt='{$categoryNewsData['news_title']}'>
                                     </a>
                                     <a href='{$categoryNewsData['link_url']}'><h3>{$categoryNewsData['news_title']}</h3></a>

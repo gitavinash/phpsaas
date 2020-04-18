@@ -21,9 +21,9 @@
         } else {
 
             include_once ERROR_404;
+            exit();
 
         }
 
     }
 	
-	exit();

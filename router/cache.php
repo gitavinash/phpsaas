@@ -1,24 +1,23 @@
 <?php
 
     
-    // $cacheFilePath=CACHE_PATH.'/';
+    $cacheFilePath=CACHE_PATH.'/';
 
-    // if(!is_dir($cacheFilePath)) {
+    if(!is_dir($cacheFilePath)) {
 
-    //     /** Creating cache directory */
+        /** Creating cache directory */
 
-    //     mkdir($cacheFilePath, 0755, true);
+        mkdir($cacheFilePath, 0755, true);
 
-    // }
+    }
 
-    // if(file_exists(CACHE_FILE)) {
+    if(file_exists(CACHE_FILE)) {
 
-    //     include_once CACHE_FILE;
+        include_once CACHE_FILE;
+        exit();
 
-    // } else {
+    } else {
 
         require_once 'routerManager.php';
 
-    //}
-
-    exit();
+    }

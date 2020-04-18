@@ -95,6 +95,6 @@
 
     } else {
 
-        echo mysql_error($connection);
+        echo mysqli_error($connection);
 
     }

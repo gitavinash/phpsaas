@@ -43,6 +43,13 @@
 						$thumbnailUploadDir=$uploadPath.'thumbnail/';
 						$thumbnailUploadFile=$thumbnailUploadDir.str_replace($uploadPath, '', $uploadFile);
 
+						if($imageName=="featureImage") {
+
+							$thumbnailImage=str_replace(ROOT, '', $thumbnailUploadFile);
+							
+						}
+
+
 						if(!is_dir($uploadPath)) {
 
 							mkdir($uploadPath, 0755, true);
@@ -115,16 +122,13 @@
 							$mediaID=mysqli_insert_id($connection);
 
 							$createLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
+
 							if($insertPost && $createLink) {
+								
 								mysqli_query($connection, 'COMMIT');
-							} else {
-								//echo mysqli_error($connection);
-								//exit();
+
 							}
 
-						} else {
-							echo 'file not upload';
-							exit();
 						}
 
 					}

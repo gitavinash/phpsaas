@@ -133,7 +133,7 @@
 
                 <?php
 
-                if($topNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."news ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON news_id=meta_relation_id WHERE link_status=200 AND link_is_featured=1 AND link_type='news' AND link_site_id=".SITE_ID." AND news_status=1 ORDER BY link_modified DESC LIMIT 0, 20")) {
+                if($topNews=mysqli_query($connection, "SELECT link_url, news_image, news_thumbnail, news_title, meta_description FROM ".TABLE_PREFIX."link FORCE INDEX (link_filter) INNER JOIN ".TABLE_PREFIX."news ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON news_id=meta_relation_id WHERE link_status=200 AND link_is_featured=1 AND link_type='news' AND link_site_id=".SITE_ID." AND news_status=1 AND meta_type='news' ORDER BY link_published DESC LIMIT 0, 20")) {
                     if(mysqli_num_rows($topNews)!=0) {
                         while($topNewsData=mysqli_fetch_assoc($topNews)) {
 

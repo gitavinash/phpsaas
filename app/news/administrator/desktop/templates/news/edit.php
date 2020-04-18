@@ -186,6 +186,7 @@
 			<div class="form-group upload-btn" style="display: <?php echo ((${$postType.'_image'}!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
 				<input type="hidden" name="oldFeatureImage" value="<?php echo ${$postType.'_image'} ?>">
+				<input type="hidden" name="oldThumbnailImage" value="<?php echo ${$postType.'_thumbnail'} ?>">
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>

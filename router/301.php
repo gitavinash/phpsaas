@@ -7,6 +7,7 @@
             extract(mysqli_fetch_assoc($linkStatus));
 
             header("Location: {$link_url}");
+            exit();
 
         } else {
 
@@ -15,5 +16,3 @@
         }
 
     }
-
-    exit();

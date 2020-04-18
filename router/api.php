@@ -32,30 +32,26 @@
 
 			require_once RESOURCE.'database/repair-database.php';
 			break;
+
+		case 'notification' :
+			require_once API.'notification/'.end($urlStructure).'.php';
+			break;
 			
 		default:
 
 			/** Check API request file in system app directory */
 
-			if(file_exists(API.$urlStructure[1].'/'.$urlStructure[2].'.php')) {
+			$systemAPI=API.end($urlStructure).'.php';
+			
+			if(file_exists($systemAPI)) {
 
-				require_once API.$urlStructure[1].'/'.$urlStructure[2].'.php';
+				require_once $systemAPI;
 
 			} else {
 
-				if(file_exists(API.SITE_APP.'/'.end($urlStructure).'.php')) {
-
-					require_once API.SITE_APP.'/'.end($urlStructure).'.php';
-
-				} else {
-
-					require_once API.end($urlStructure).'.php';
-
-				}
+				require_once API.SITE_APP.'/'.end($urlStructure).'.php';
 
 			}
 			break;
 			
 	}
-	
-	exit();

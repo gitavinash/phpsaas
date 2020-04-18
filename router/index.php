@@ -123,8 +123,24 @@
 			break;
 			
 		default :
+
+			/** Check Cache is available or not */
+
 			require_once ROUTER.'cache.php';
 			break;
+
+	}
+
+	if(DEVELOPMENT_MODE==TRUE) {
+
+		// Display Script End time
+		$scriptEndTime = microtime(true);
+
+		//dividing with 60 will give the execution time in minutes other wise seconds
+		$execution_time = ($scriptEndTime - $scriptStartTime)/60;
+
+		//execution time of the script
+		echo '<b>Total Execution Time:</b> '.$execution_time.' Mins';
 
 	}
 

@@ -49,5 +49,3 @@
         echo "Something is wrong";
 
     }
-
-    exit();

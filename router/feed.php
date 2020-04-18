@@ -25,5 +25,3 @@
 		require_once RESOURCE.'feeds/default.php';
 
 	}
-	
-	exit();

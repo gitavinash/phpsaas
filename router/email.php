@@ -11,5 +11,3 @@
 		include_once $fileName;
 
 	}
-
-	exit();

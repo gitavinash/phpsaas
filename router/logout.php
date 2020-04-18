@@ -19,7 +19,6 @@
 	} else {
 
 		header("Location: /login/?logout=true");
+		exit();
 
 	}
-
-	exit();

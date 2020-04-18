@@ -67,7 +67,7 @@
 
 					/* Insert data into link table */
 
-					$addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$title}', '{$description}', '{$category}', '{$website_user_id}', '{$post_status}', '{$postType}')");
+					$addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_thumbnail, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '{$website_user_id}', '{$post_status}', '{$postType}')");
 					$postID=mysqli_insert_id($connection);
 
 					$linkData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', '{$postType}', '{$featurePost}', '{$website_user_id}', '".SITE_ID."', NOW() ,NOW())");

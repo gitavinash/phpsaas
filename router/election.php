@@ -21,5 +21,3 @@
 		header("Location: ".SITE_DOMAIN, TRUE, 301);
 
 	}
-
-	exit();

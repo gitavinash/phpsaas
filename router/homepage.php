@@ -9,5 +9,3 @@
 		echo '<h1>'.SITE_VERSION.' theme not found</h1>';
 
 	}
-
-	exit();

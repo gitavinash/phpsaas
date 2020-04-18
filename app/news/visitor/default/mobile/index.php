@@ -8,7 +8,7 @@
         <div class="homepageSlider">
             <?php
 
-                if($topNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, category_title FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."news ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."category ON news_category=category_id WHERE link_status=200 AND link_is_featured=1 AND link_type='news' AND link_site_id=1 AND news_status=1 ORDER BY link_modified DESC LIMIT 0, 5")) {
+                if($topNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, category_title FROM ".TABLE_PREFIX."link FORCE INDEX (link_filter) INNER JOIN ".TABLE_PREFIX."news ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."category ON news_category=category_id WHERE link_status=200 AND link_is_featured=1 AND link_type='news' AND link_site_id=1 AND news_status=1 ORDER BY link_published DESC LIMIT 0, 5")) {
                     if(mysqli_num_rows($topNews)!=0) {
                         while($topNewsData=mysqli_fetch_assoc($topNews)) {
 
@@ -27,7 +27,7 @@
                         <a href='{$topNewsPost[$i]['link_url']}'>
                             <div class='slider'>
                                 <div class='img-box'>
-                                    <img src='{$topNewsPost[$i]['news_image']}' alt='{$topNewsPost[$i]['news_title']}'>
+                                    <img src='{$topNewsPost[$i]['news_thumbnail']}' alt='{$topNewsPost[$i]['news_title']}'>
                                 </div>
                                 <div class='text-box'>
                                     <h1>{$topNewsPost[$i]['news_title']}</h1>
@@ -50,7 +50,7 @@
         <div class="categoryBox">
             <?php
 
-                if($recentNews=mysqli_query($connection, "SELECT link_url, news_image, news_title, category_title FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."news ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."category ON news_category=category_id WHERE link_status=200 AND link_type='news' AND link_site_id=1 AND news_status=1 ORDER BY link_modified DESC LIMIT 0, 15")) {
+                if($recentNews=mysqli_query($connection, "SELECT link_url, news_thumbnail, news_title, category_title FROM ".TABLE_PREFIX."link FORCE INDEX (link_filter) INNER JOIN ".TABLE_PREFIX."news ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."category ON news_category=category_id WHERE link_status=200 AND link_type='news' AND link_site_id=1 AND news_status=1 ORDER BY link_modified DESC LIMIT 0, 15")) {
                     
                     if(mysqli_num_rows($recentNews)!=0) {
 
@@ -71,7 +71,7 @@
                                             if($i==2) {
                                                 echo "<span><img src='".USER_IMAGES."live-icon.gif' class='live' /></span>";
                                             }
-                                            echo "<img src='{$news_image}' class='preview' alt='{$news_title}'>
+                                            echo "<img src='{$news_thumbnail}' class='preview' alt='{$news_title}'>
                                         </div>
                                     </a>
                                 </div>";

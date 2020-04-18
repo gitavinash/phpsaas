@@ -24,9 +24,7 @@
                                 require_once ROUTER.$link_status.'.php';
 
                             } else {
-
-                                // ob_start();
-
+                                
                                 /** Convert html content according to specific site version like : AMP */
 
                                 $formatConverter=RESOURCE.'converter/'.SITE_VERSION.'.php';
@@ -55,11 +53,6 @@
 
                                 }
 
-                                // $cached = fopen(CACHE_FILE, 'w');
-                                // fwrite($cached, ob_get_contents());
-                                // fclose($cached);
-                                // ob_end_flush(); // Send the output to the browser
-
                             }
 
                         } else {
@@ -72,5 +65,3 @@
                     break;
 
     }
-
-    exit();

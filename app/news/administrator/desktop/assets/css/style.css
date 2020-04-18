@@ -286,7 +286,6 @@ main {
 main .container {
 	float: left;
     width: 100%;
-    padding-right: 20px;
     box-sizing: border-box;
 }
 
@@ -494,14 +493,18 @@ main .container {
 
 .form-box {
 	float: left;
-	width: 98%;
+	width: 100%;
 	margin: 20px 0px;
-	margin-right: 2%;
+}
+
+.form-box form {
+	float: left;
+	width: 100%;
 }
 
 .form-box .left-box {
     float: left;
-    width: 750px;
+    width: 785px;
     padding-right: 18px;
 }
 
@@ -522,7 +525,8 @@ main .container {
     padding: 10px 10px 0px 10px;
     border-radius: 4px;
     box-sizing: border-box;
-    margin-bottom: 20px;
+	margin-bottom: 20px;
+	overflow-x: overlay;
 }
 
 .form-box .right-box .action-box .form-group {

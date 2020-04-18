@@ -25,5 +25,3 @@
         require_once ERROR_403;
 
     }
-
-    exit();

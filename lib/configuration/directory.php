@@ -65,7 +65,7 @@
 
 	/** Cache Directory Managment */
 
-	define('CACHE_PATH', ROOT.'/cache/'.SITE_DOMAIN);
+	define('CACHE_PATH', ROOT.'/cache/'.SITE_DOMAIN.'/'.SITE_VERSION);
 	define('CACHE_FILE', CACHE_PATH.'/'.str_replace('/', '-', rtrim(ltrim(ACTIVE_URL, '/'), '/')).'.html');
 	define('CACHE_TIME', ((isset($cache_time)) ? $cache_time : 24 )*3600); // Default caching time is 24 hours
 

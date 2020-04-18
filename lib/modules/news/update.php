@@ -21,6 +21,7 @@
 			extract($image);
 
 			$featureImage=(((isset($featureImage)) ? $featureImage : $oldFeatureImage ));
+			$thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $oldThumbnailImage ));
 			$facebookImage=(((isset($facebookImage)) ? $facebookImage : $oldFacebookImage ));
 			$twitterImage=(((isset($twitterImage)) ? $twitterImage : $oldTwitterImage ));
 
@@ -83,7 +84,7 @@
 
 		/** Update post table */
 
-		$updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."news SET news_image='{$featureImage}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_status='1' WHERE news_id='{$post_id}'");
+		$updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}' news_title='{$title}', news_description='{$description}', news_category='{$category}', news_status='1' WHERE news_id='{$post_id}'");
 
 		/** Update meta table */
 
