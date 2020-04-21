@@ -1,5 +1,7 @@
 <?php
 
+    $scriptStartTime = microtime(true);
+
     header( 'Content-Type: text/html; charset=utf-8' ); 
 
     if(file_exists('router/index.php')) {

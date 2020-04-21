@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css">
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400&display=swap" rel="stylesheet">
 
 <script src="https://cdn.rwadx.com/prod-global-351532.js" async></script>
 

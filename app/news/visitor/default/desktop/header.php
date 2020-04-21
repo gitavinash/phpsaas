@@ -20,11 +20,11 @@
         <link rel="icon" href="<?php echo USER_IMAGES ?>favicon.png">
         <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
         <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
-        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" >
+        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css" >
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" async >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" async >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" async >
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" async >
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400&display=swap&display=swap" async >
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.css">
         
         <!-- SEO -->

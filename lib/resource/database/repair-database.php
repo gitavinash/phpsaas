@@ -50,8 +50,8 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
       ADD PRIMARY KEY (enquiry_id),
-      ADD INDEX (enquiry_type),
-      ADD INDEX (enquiry_time)");
+      ADD INDEX enquiry_type (enquiry_type),
+      ADD INDEX enquiry_time (enquiry_time)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     CHANGE enquiry_id enquiry_id bigint(20) NOT NULL AUTO_INCREMENT");
@@ -61,6 +61,17 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link
     CHANGE link_url link_url varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE link_status link_status int(3) NOT NULL DEFAULT 404");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link
+    DROP INDEX link_status,
+    DROP INDEX link_type,
+    DROP INDEX link_published,
+    DROP INDEX link_relation_id,
+    DROP INDEX link_site_id,
+    DROP INDEX link_owner_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link
+    ADD INDEX link_filter (link_relation_id, link_status, link_type, link_site_id, link_published)");
 
   /* Media Table */
   
@@ -195,7 +206,7 @@
   ########################################################################################################################
 
 
-
+  
 
 
   ########################################################################################################################
@@ -204,10 +215,22 @@
   ##                                                                                                                    ##
   ########################################################################################################################
 
-  /* Alliance Party Table */
+  
+
+  
+
+  ########################################################################################################################
+  ##                                                                                                                    ##
+  ##                                     Create View Table for all API's                                                ##
+  ##                                                                                                                    ##
+  ########################################################################################################################
+
+
+
+
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."alliance_party
-    CHANGE alliance_year alliance_year year(4) NOT NULL");
+  CHANGE alliance_year alliance_year year(4) NOT NULL");
 
   $result = array(
     'status' => 200,

@@ -8,10 +8,15 @@
 	define('RESOURCE', ROOT.'/lib/resource/');
 	define('SCHEMA_DATA', RESOURCE.'schema/');
 	define('NOTIFICATION', RESOURCE.'notification/');
-	define('JS_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'js/'));
-	define('CSS_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'css/'));
-	define('IMG_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'img/'));
-	define('PLUGIN_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE.'plugin/'));
+	define('UI_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE).'ui/');
+	define('JS_LIBRARY', UI_LIBRARY.'js/');
+	define('CSS_LIBRARY', UI_LIBRARY.'css/');
+	define('IMG_LIBRARY', UI_LIBRARY.'img/');
+	define('PLUGIN_LIBRARY', UI_LIBRARY.'plugin/');
+
+	/** Default Service Worker */
+
+	define('SERVICE_WORKER', RESOURCE.'service-worker/sw.min.js');
 
 	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');

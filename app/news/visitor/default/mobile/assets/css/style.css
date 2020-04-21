@@ -333,7 +333,8 @@ header .other-option ul li img {
     height: 100vh;
     box-sizing: border-box;
     padding: 10px;
-    background: #ffffff;
+	background: #ffffff;
+	overflow: scroll;
 }
 
 .full-screen-menu .header {
@@ -444,7 +445,6 @@ main {
 	position: relative;
     float: left;
     width: 100%;
-    margin-top: -91px;
     padding: 0%;
     border-radius: 4px;
     box-sizing: border-box;

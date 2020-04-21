@@ -137,10 +137,10 @@
 		$scriptEndTime = microtime(true);
 
 		//dividing with 60 will give the execution time in minutes other wise seconds
-		$execution_time = ($scriptEndTime - $scriptStartTime)/60;
+		$execution_time = $scriptEndTime - $scriptStartTime;
 
 		//execution time of the script
-		echo '<b>Total Execution Time:</b> '.$execution_time.' Mins';
+		echo '<b>Total Execution Time:</b> '.$execution_time.' Seconds';
 
 	}
 

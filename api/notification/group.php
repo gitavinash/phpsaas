@@ -6,7 +6,7 @@
         
         if(mysqli_num_rows($checkGroupToken)==0) {
 
-            $group_name=((!isset($group_name)) ? SITE_DOMAIN.'_general' : SITE_DOMAIN.'_'.$group_name);
+            $group_name=((!isset($group_name)) ? SITE_DOMAIN.'_general_test' : SITE_DOMAIN.'_'.$group_name);
 
             // Create New Notification Group
 

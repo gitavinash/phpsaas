@@ -8,19 +8,24 @@
         <link rel="dns-prefetch" href="//www.googletagservices.com">
         <link rel="dns-prefetch" href="//www.googletagmanager.com">
         <link rel="dns-prefetch" href="//www.youtube.com">
+        <link rel="dns-prefetch" href="//www.gstatic.com">
         <link rel="dns-prefetch" href="//d1uck549nef0ok.cloudfront.net">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="fb:pages" content="1779174612300730" />
+        <!-- PWA Start -->
         <link rel="manifest" href="/mainfest.json">
+        <link rel="apple-touch-icon" href="/upload/isw-logo.png">
+        <meta name="apple-mobile-web-app-status-bar" content="#D01F29">
+        <meta name="theme-color" content="#D01F29">
+        <!-- PWA end -->
         <link rel="icon" href="<?php echo USER_IMAGES ?>favicon.png">
         <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
         <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
-        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" >
-        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" >
+        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css" >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" >
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400" >
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400&display=swap" >
         
         <!-- SEO -->
 
@@ -115,13 +120,13 @@
         <header>
             <div class="header">
                 <div class="logo">
-                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt=""></a>
+                    <a href="/" title="<?php echo SITE_NAME ?>"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt="<?php SITE_NAME ?>"  title="<?php echo SITE_NAME.' Official Logo' ?>" ></a>
                 </div>
                 <div class="other-option">
                     <ul>
-                        <li><a href="//mpaper.punjabkesari.com"><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
-                        <li id="search" ><a href="#"><img src="<?php echo USER_IMAGES ?>icons/search.png" alt=""></i></a></li>
-                        <li id="menu"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/bars.png" alt=""></i></a></li>
+                        <li><a href="http://mpaper.punjabkesari.com" title="<?php echo SITE_NAME.' Newspaper' ?>"><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt="<?php echo SITE_NAME ?> Newspaper" ></i></a></li>
+                        <li id="search" ><a href="#" title="<?php echo SITE_NAME ?>"><img src="<?php echo USER_IMAGES ?>icons/search.png" alt="<?php echo SITE_NAME ?>"></i></a></li>
+                        <li id="menu"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/bars.png" alt="<?php echo SITE_NAME ?>"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -159,9 +164,8 @@
                     </div>
                     <div class="other-option">
                         <ul>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.punjab.kesari" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/play-store.png" alt=""></i></a></li>
-                            <li><a href="https://itunes.apple.com/in/app/hindi-news-by-punjab-kesari/id1420361527" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/apple-store.png" alt="" style="margin-top: 6px" ></i></a></li>
-                            <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
+                            <li><a href="https://play.google.com/store/apps/details?id=com.punjab.kesari" rel="noreferrer" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/play-store.png" alt=""></i></a></li>
+                            <li><a href="https://itunes.apple.com/in/app/hindi-news-by-punjab-kesari/id1420361527" rel="noreferrer" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/apple-store.png" alt="" style="margin-top: 6px" ></i></a></li>
                             <li id="closeMenu"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/close.png" alt=""></i></a></li>
                         </ul>
                     </div>
@@ -197,14 +201,13 @@
             <div class="search-box" style="display: none" >
                 <div class="header">
                     <div class="logo">
-                        <a href="/"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt=""></a>
+                        <a href="/" title="<?php echo SITE_NAME.' Official Logo' ?>"><img src="<?php echo USER_IMAGES ?>logo-main.png" alt=""></a>
                     </div>
                     <div class="other-option">
                         <ul>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.punjab.kesari" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/play-store.png" alt=""></i></a></li>
-                            <li><a href="https://itunes.apple.com/in/app/hindi-news-by-punjab-kesari/id1420361527" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/apple-store.png" alt="" style="margin-top: 6px" ></i></a></li>
-                            <li><a href=""><img src="<?php echo USER_IMAGES ?>icons/newspaper.png" alt=""></i></a></li>
-                            <li id="closeSearch"><a href="#"><img src="<?php echo USER_IMAGES ?>icons/close.png" alt=""></i></a></li>
+                            <li><a href="https://play.google.com/store/apps/details?id=com.punjab.kesari" title="<?php echo SITE_NAME.' Android App' ?>" rel="noreferrer" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/play-store.png" alt=""></i></a></li>
+                            <li><a href="https://itunes.apple.com/in/app/hindi-news-by-punjab-kesari/id1420361527" title="<?php echo SITE_NAME.' iOS App' ?>" rel="noreferrer" target="_blank" ><img src="<?php echo USER_IMAGES ?>icons/apple-store.png" alt="" style="margin-top: 6px" ></i></a></li>
+                            <li id="closeSearch"><a href="#" title="Close menu" ><img src="<?php echo USER_IMAGES ?>icons/close.png" alt="close Menu"></i></a></li>
                         </ul>
                     </div>
                 </div>

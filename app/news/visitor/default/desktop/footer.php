@@ -19,7 +19,7 @@
                     </div>
                     <h3>Trending Topics</h3>
                     <?php
-                        if($tagList=mysqli_query($connection, "SELECT tag_title, COUNT(*) AS tag FROM ".TABLE_PREFIX."tag WHERE tag_title!='' GROUP BY tag_title ORDER BY tag DESC LIMIT 0, 20")) {
+                        if($tagList=mysqli_query($connection, "SELECT tag_title, COUNT(*) AS tag FROM ".TABLE_PREFIX."tag WHERE tag_title!='' AND tag_time BETWEEN '".date('Y-m-d', strtotime('-7 Days'))."' AND '".date('Y-m-d')."' GROUP BY tag_title ORDER BY tag DESC LIMIT 0, 20")) {
                             while($tags=mysqli_fetch_assoc($tagList)) {
                                 echo "<a href='tag/".strtolower(str_replace(' ', '-',$tags['tag_title']))."/' class='tags'>{$tags['tag_title']}</a>";
                             }
@@ -61,9 +61,9 @@
         
         <?php require_once NOTIFICATION.'index.php'; ?>
         <script type="text/javascript" src="<?php echo USER_PLUGINS ?>slick/slick.min.js"></script>
-        <script type="text/javascript" src="<?php echo USER_JS ?>app.js"></script>
+        <script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.js"></script>
-        <script type="text/javascript" src="<?php echo USER_JS ?>script.js"></script>
+        <script type="text/javascript" src="<?php echo USER_JS ?>script.min.js"></script>
 
     </body>
 
