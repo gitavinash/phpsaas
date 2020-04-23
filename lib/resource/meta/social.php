@@ -1,0 +1,37 @@
+<!-- Facebook, Google & Pinterest -->
+		
+<meta property="og:locale" content="hi_IN" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($fb_title)) ? (($fb_title!='') ? $fb_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
+<meta property="og:description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" />
+<meta property="og:url" content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
+<meta property="og:image" content="<?php echo ((isset($fb_image)) ? SITE_URL.(($fb_image!='') ? $fb_image : $news_image ) : SITE_URL.((isset($news_image)) ? $news_image : USER_IMAGES.'logo-main.png' ) ) ?>" />
+<meta property="og:site_name" content="<?php echo SITE_NAME ?>" />
+<meta property="fb:admins" content="1779174612300730" />
+<meta property="fb:app_id" content="1078178022375029" />
+<?php
+
+    if(isset($link_type)) {
+
+        if(file_exists(META_DIR.'social-media/'.$link_type.'.php')) {
+
+            require_once META_DIR.'social-media/'.$link_type.'.php';
+
+        } else {
+
+            exit();
+
+        }
+
+    }
+
+?>
+
+<!-- Twitter Card data -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PunjabKesariCom">
+<meta name="twitter:title" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($tw_title)) ? (($tw_title!='') ? $tw_title : SITE_NAME ) : SITE_NAME ))))) ?>">
+<meta name="twitter:description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($tw_desc)) ? (($tw_desc!='') ? $tw_desc : SITE_DESC ) : SITE_DESC ))))) ?>">
+<meta name="twitter:creator" content="@PunjabKesariCom">
+<meta name="twitter:image" content="<?php echo ((isset($news_image)) ? SITE_URL.(($news_image!='') ? $news_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>">
+<meta name="twitter:url" content="<?php echo SITE_URL.BASE_URL ?>">

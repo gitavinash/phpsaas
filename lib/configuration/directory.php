@@ -6,8 +6,16 @@
 	define('MODULES', ROOT.'/lib/modules/');
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
-	define('SCHEMA_DATA', RESOURCE.'schema/');
 	define('NOTIFICATION', RESOURCE.'notification/');
+	
+	/** Meta and Structure Data Resource */
+	
+	define('META_DIR', RESOURCE.'meta/');
+	define('DEFAULT_META', META_DIR.'index.php');
+	define('SCHEMA_DATA', RESOURCE.'schema/');
+
+	/** Defualt UI Resource */
+
 	define('UI_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE).'ui/');
 	define('JS_LIBRARY', UI_LIBRARY.'js/');
 	define('CSS_LIBRARY', UI_LIBRARY.'css/');

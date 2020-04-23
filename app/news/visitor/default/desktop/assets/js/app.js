@@ -117,7 +117,7 @@ $(document).ready(function() {
 
 		},
 		error :function() {
-			console.log('Error while fetching cobid data');
+			console.log('Error while fetching covid data');
 		},
 
 	})

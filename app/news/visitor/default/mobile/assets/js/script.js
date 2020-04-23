@@ -2,19 +2,23 @@ $(document).ready(function(e){
 
     $('#menu').click(function(e) {
         $('.full-screen-menu').css('display', 'block');
+        e.preventDefault();
     });
 
     $('#closeMenu').click(function(e) {
         $('.full-screen-menu').css('display', 'none');
+        e.preventDefault();
     })
 
     $('#search').click(function(e) {
         $('.search-box').css('display', 'block');
         $('#searchBar').focus();
+        e.preventDefault();
     });
 
     $('#closeSearch').click(function(e) {
         $('.search-box').css('display', 'none');
+        e.preventDefault();
     })
 
     /* Homepage slider */

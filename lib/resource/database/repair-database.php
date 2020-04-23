@@ -174,6 +174,21 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     ADD KEY site_custom_domain (site_custom_domain)");
 
+  mysqli_query($connection, "ALTER TABLE isw_site_setting
+    ADD site_theme_color VARCHAR(100) NOT NULL AFTER site_robots_txt");
+
+  mysqli_query($connection, "ALTER TABLE isw_site_setting
+    ADD site_ga_id VARCHAR(100) NOT NULL AFTER site_robots_txt");
+
+  mysqli_query($connection, "ALTER TABLE isw_site_setting
+    ADD site_fb_id VARCHAR(100) NOT NULL AFTER site_ga_id");
+
+  mysqli_query($connection, "ALTER TABLE isw_site_setting
+    ADD site_app_id VARCHAR(100) NOT NULL AFTER site_fb_id");
+
+  mysqli_query($connection, "ALTER TABLE isw_site_setting
+    ADD site_tw_id VARCHAR(100) NOT NULL AFTER site_fb_id");
+
   /* Tag Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."tag

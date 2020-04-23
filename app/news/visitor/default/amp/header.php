@@ -8,53 +8,8 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>">
     <link rel="preload" as="script" href="https://cdn.ampproject.org/v0.js">
-        
-    <!-- SEO -->
-
-    <meta name="theme-color" content="#D01F28">
-    <meta name="robots" content="index, follow" />
-    <meta name="title" content="<?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : $post_title ) : SITE_NAME ) ?>" />
-    <meta name="description" content="<?php echo ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ) ?>" >
-    <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
-    <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
-
-    <!-- Facebook, Google & Pinterest -->
-		
-    <meta property="og:locale" content="hi_IN" />
-	<meta property="og:type" content="article" />
-    <meta property="og:title" content="<?php echo ((isset($fb_title)) ? (($fb_title!='') ? $fb_title : $meta_title ) : SITE_NAME ) ?>" />
-    <meta property="og:description" content="<?php echo ((isset($fb_desc)) ? (($fb_desc!='') ? $fb_desc : $meta_description ) : SITE_DESC ) ?>" />
-    <meta property="og:url" content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
-    <meta property="og:image" content="<?php echo ((isset($fb_image)) ? SITE_URL.(($fb_image!='') ? $fb_image : $post_image ) : SITE_URL.((isset($post_image)) ? $post_image : USER_IMAGES.'logo-main.png' ) ) ?>" />
-    <meta property="og:site_name" content="<?php echo SITE_NAME ?>" />
-    <meta property="fb:admins" content="1779174612300730" />
-    <meta property="fb:app_id" content="1078178022375029" />
-    <?php
-        
-        if(isset($link_type)) {
-
-            if($link_type=='post') { ?>
-
-                <meta property="article:published_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_published)) ?>" />
-                <meta property="article:modified_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_modified)) ?>" />
-                <meta property="article:section" content="<?php echo $category_title ?>" />
-                <meta property="article:tag" content="<?php echo $tagName ?>" />
-
-            <?php
-            }
-
-        }
-
-    ?>
-
-    <!-- Twitter Card data -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@PunjabKesariCom">
-    <meta name="twitter:title" content="<?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : $post_title ) : SITE_NAME ) ?>">
-    <meta name="twitter:description" content="<?php echo ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ) ?>">
-    <meta name="twitter:creator" content="@PunjabKesariCom">
-    <meta name="twitter:image" content="<?php echo ((isset($post_image)) ? SITE_URL.(($post_image!='') ? $post_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>">
-    <meta name="twitter:url" content="<?php echo SITE_URL.BASE_URL ?>">
+  
+    <?php require_once DEFAULT_META; ?>
 
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>

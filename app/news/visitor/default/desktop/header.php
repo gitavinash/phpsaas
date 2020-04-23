@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hi_IN">
+<html lang="<?php echo SITE_LANG ?>">
 
     <head>
     	<base href="<?php echo SITE_URL ?>/" >
@@ -15,78 +15,15 @@
         <link rel="dns-prefetch" href="//cdn.jsdelivr.net/">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="fb:pages" content="1779174612300730" />
-        <link rel="manifest" href="/mainfest.json">
-        <link rel="icon" href="<?php echo USER_IMAGES ?>favicon.png">
-        <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
-        <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
+        
+        <?php require_once DEFAULT_META; ?>
+        
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css" >
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>all.min.css" async >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick.min.css" async >
         <link rel="stylesheet" href="<?php echo USER_PLUGINS ?>slick/slick-theme.min.css" async >
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Eczar:400,500,700|Fira+Sans+Condensed:300,400&display=swap&display=swap" async >
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.css">
-        
-        <!-- SEO -->
-
-        <meta name="theme-color" content="#D01F28">
-        <meta name='robots' content='index, follow' />
-        <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
-        <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" >
-        <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
-        <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
-
-        <!-- Facebook, Google & Pinterest -->
-		
-        <meta property="og:locale" content="hi_IN" />
-		<meta property="og:type" content="article" />
-        <meta property="og:title" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($fb_title)) ? (($fb_title!='') ? $fb_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
-        <meta property="og:description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" />
-        <meta property="og:url" content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
-        <meta property="og:image" content="<?php echo ((isset($fb_image)) ? SITE_URL.(($fb_image!='') ? $fb_image : $news_image ) : SITE_URL.((isset($news_image)) ? $news_image : USER_IMAGES.'logo-main.png' ) ) ?>" />
-        <meta property="og:site_name" content="Punjab Kesari" />
-        <meta property="fb:admins" content="1779174612300730" />
-        <meta property="fb:app_id" content="1078178022375029" />
-        <?php
-        
-        if(isset($link_type)) {
-
-            if($link_type=='news') { ?>
-
-                <meta property="article:published_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_published)) ?>" />
-                <meta property="article:modified_time" content="<?php echo date('Y-m-d\TH:i:s+05:30', strtotime($link_modified)) ?>" />
-                <meta property="article:section" content="<?php echo $category_title ?>" />
-                <meta property="article:tag" content="<?php echo $tagName ?>" />
-
-            <?php
-            }
-
-        }
-
-        ?>
-
-        <!-- Twitter Card data -->
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@PunjabKesariCom">
-        <meta name="twitter:title" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($tw_title)) ? (($tw_title!='') ? $tw_title : SITE_NAME ) : SITE_NAME ))))) ?>">
-        <meta name="twitter:description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($tw_desc)) ? (($tw_desc!='') ? $tw_desc : SITE_DESC ) : SITE_DESC ))))) ?>">
-        <meta name="twitter:creator" content="@PunjabKesariCom">
-        <meta name="twitter:image" content="<?php echo ((isset($news_image)) ? SITE_URL.(($news_image!='') ? $news_image : '' ) : USER_IMAGES.'logo-main.png' ) ?>">
-        <meta name="twitter:url" content="<?php echo SITE_URL.BASE_URL ?>">
-
-        <link rel="amphtml" href="<?php echo SITE_URL.'/amp'.BASE_URL ?>" >
-
-        <?php
-
-            $schemaData=SCHEMA_DATA.((isset($link_type)) ? $link_type : 'homepage' ).'.php';
-
-            if(file_exists($schemaData)) {
-
-                require_once $schemaData;
-
-            }
-
-        ?>
 
     </head>
 
