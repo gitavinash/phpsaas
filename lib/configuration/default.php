@@ -83,3 +83,11 @@
 
 	define('NOTIFICATION_KEY', 'AAAAjm__7wg:APA91bE09Yzo6K0GidEpDzpkbTRdWpkAcjXSwi3mL7gasl4ZMi0tkpBUhFzSFdBORh-SWDsgWo-OU7xO3epzU7b85zBSku8LIQWfnjJkUTK-ngp-WRjJIE9sUdd4yjf1cjwlkRFwJkns');
 	define('NOTIFICATION_SENDER', '611764399880');
+
+	/** Site Settings Configuration */
+
+	define('SITE_THEME_COLOR', ((isset($site_theme_color)) ? $site_theme_color : '' ));
+	define('GA_ID', ((isset($site_ga_id)) ? $site_ga_id : '' ));
+	define('FB_PAGE_ID', ((isset($site_fb_id)) ? $site_fb_id : '' ));
+	define('FB_APP_ID', ((isset($site_fb_app_id)) ? $site_fb_app_id : '' ));
+	define('TWITTER_ID', ((isset($site_tw_id)) ? $site_tw_id : '' ));

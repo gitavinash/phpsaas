@@ -19,7 +19,9 @@
   "telephone": "( 33 1) 42 68 53 00",
   "logo" : "<?php echo SITE_LOGO ?>",
   "sameAS" : [
-  	"<?php echo SITE_URL ?>"
+  	"<?php echo SITE_URL ?>",
+    "https://facebook.com<?php echo FB_PAGE_ID ?>",
+    "https://twitter.com<?php echo TWITTER_ID ?>"
   ]
 }
 </script>
