@@ -14,4 +14,11 @@
 
     /** Structure data json format */
 
-    require_once $schemaData=SCHEMA_DATA.((isset($link_type)) ? $link_type : 'organization' ).'.php';
+
+    $defaultSchemaData=SCHEMA_DATA.((isset($link_type)) ? $link_type : 'organization' ).'.php';
+
+    if(file_exists($defaultSchemaData)) {
+
+        require_once $defaultSchemaData;
+
+    }

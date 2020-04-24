@@ -17,10 +17,6 @@
 
             require_once META_DIR.'social-media/'.$link_type.'.php';
 
-        } else {
-
-            exit();
-
         }
 
     }
