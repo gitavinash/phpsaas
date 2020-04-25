@@ -38,17 +38,12 @@
 							<label>Select website language</label>
 							<select name="site_lang" class="form-control inside-shadow" required >
 								<option value="">Language list</option>
-								<option value="hi_IN" <?php echo (($site_lang=='hi_IN') ? 'selected' : '' ) ?> >हिंदी</option>
-								<option value="en" <?php echo (($site_lang=='en') ? 'selected' : '' ) ?>  >English (United States)</option>
-								<option value="en_AU" <?php echo (($site_lang=='en_AU') ? 'selected' : '' ) ?>  >English (Australia)</option>
-								<option value="en_AU" <?php echo (($site_lang=='en_AU') ? 'selected' : '' ) ?>  >English (South Africa)</option>
-								<option value="en_CA" <?php echo (($site_lang=='en_CA') ? 'selected' : '' ) ?>  >English (Canada)</option>
-								<option value="en_GB" <?php echo (($site_lang=='en_GB') ? 'selected' : '' ) ?>  >English (UK)</option>
-								<option value="en_NZ" <?php echo (($site_lang=='en_NZ') ? 'selected' : '' ) ?>  >English (New Zealand)</option>
+								<option value="hi" <?php echo (($site_lang=='hi') ? 'selected' : '' ) ?> >हिंदी</option>
+								<option value="en" <?php echo (($site_lang=='en') ? 'selected' : '' ) ?>  >English</option>
 							</select>
 						</div>
 						<div class="form-check" style="margin-bottom: 20px;">
-						    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_indexing==1) ? 'checked' : '' ) ?> >
+						    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_index==1) ? 'checked' : '' ) ?> >
 						    <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
 						</div>
                         <div class="form-group">

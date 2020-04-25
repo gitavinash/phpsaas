@@ -8,7 +8,7 @@
 			</div>
 			<div class="form-group">
 				<div class="url">
-					<p><strong>Permalink</strong></p><p><span><?php echo SITE_DOMAIN ?>/</span></p>
+					<p><strong>Permalink:- </strong></p><p><span><?php echo SITE_DOMAIN ?>/</span></p>
 					<input type="text" id="url" class="form-control" name="url" >
 				</div>
 			</div>
@@ -48,13 +48,13 @@
 					</div>
 				</div>
 				<div class="fb" style="display: none;">
-					<div class="facebook-image" style="display: none;">
-						<div class="img"><img src="" id="facebook-image" alt=""></div>
+					<div class="facebookPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -66,13 +66,13 @@
 					</div>
 				</div>
 				<div class="tw" style="display: none;">
-					<div class="twitter-image" style="display: none;">
-						<div class="img"><img src="" id="twitter-image" alt=""></div>
+					<div class="twitterPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox">
 						<span>Set Twitter feature image</span>
-						<input type='file' id="twImage" name='twitterImage' />
+						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
@@ -135,14 +135,14 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group upload-btn">
+			<div class="form-group featureImageUploadBox">
 				<span>Set Feature Image</span>
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview action-box" style="display: none;">
-				<img src="#" id="previewImage" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
+			<div class="featureImagePreviewBox action-box" style="display: none;">
+				<img src="#" id="featureImagePath" alt="">
+				<p id="featureChangeImage" class="changeImage" >Remove feature image</p>
 			</div>
 		</div>
 	</form>

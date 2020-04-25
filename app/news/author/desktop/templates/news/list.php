@@ -21,6 +21,8 @@
 				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All <?php echo $postType ?></option>
 				<option value="206" <?php echo (($_GET['status']=='206') ? 'selected' : '' ) ?> >Drafts <?php echo $postType ?></option>
 				<option value="200" <?php echo (($_GET['status']=='200') ? 'selected' : '' ) ?>  >Published <?php echo $postType ?></option>
+				<option value="201" <?php echo (($_GET['status']=='201') ? 'selected' : '' ) ?> >Repoters <?php echo $postType ?></option>
+				<option value="202" <?php echo (($_GET['status']=='202') ? 'selected' : '' ) ?>  >Interns <?php echo $postType ?></option>
 			</select>
 			<select name="category" class="form-control">
 				<option value="all">Select Category</option>
@@ -69,20 +71,10 @@
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="news.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><?php echo ${$postType.'_title'}.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><?php echo ${$postType.'_title'}.(($link_status!='200') ? (($link_status=='206') ? '<strong> — Draft </strong>' : '<strong> — Auto Draft </strong>' ) : '' ); ?></a></p>
 								<div class="hover">
-									<?php
-									
-										if(${$postType.'_owner_id'}==USER_ID) { ?>
-
-											<a href="news.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-											<a href="delete.php?type=<?php echo $postType ?>&id=<?php echo ${$postType.'_id'}; ?>" onclick="return confirm('Are you sure you want to delete this <?php echo $postType ?>?');" ><i class="fas fa-trash"></i> Delete</a>
-
-										<?php
-										}
-
-									?>
-									<a href="news.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="delete.php?type=<?php echo $postType ?>&id=<?php echo ${$postType.'_id'}; ?>" onclick="return confirm('Are you sure you want to delete this <?php echo $postType ?>?');" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>
@@ -94,7 +86,7 @@
 					}
 				} else { ?>
 					<tr>
-						<td colspan="4">No News Found</td>
+						<td colspan="4">No {$postType} Found</td>
 					</tr>
 				<?php
 				}
@@ -119,11 +111,11 @@
 				$totalnews=ceil($totalnews/10);
 
 				if($startFrom==0) { ?>
-					<li><a href='news/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=1'>Next</a></li>
+					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=1'>Next</a></li>
 				<?php
 				} else { ?>
-					<li><a href='news/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage-1; ?>'>Back</a></li>
-					<li><a href='news/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage+1; ?>'>Next</a></li>
+					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage-1; ?>'>Back</a></li>
+					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage+1; ?>'>Next</a></li>
 				<?php
 				}
 

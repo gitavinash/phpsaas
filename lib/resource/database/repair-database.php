@@ -73,6 +73,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link
     ADD INDEX link_filter (link_relation_id, link_status, link_type, link_site_id, link_published)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link
+  ADD COLUMN link_index varchar(20) NOT NULL AFTER link_is_featured");
+
   /* Media Table */
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."media
@@ -157,6 +160,9 @@
     CHANGE site_name site_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE site_description site_description LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE site_keyword site_keyword varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    CHANGE site_indexing site_index varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   /** Site Setting Table */
 

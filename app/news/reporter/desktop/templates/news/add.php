@@ -8,7 +8,7 @@
 			</div>
 			<div class="form-group">
 				<div class="url">
-					<p><strong>Permalink</strong></p><p><span><?php echo SITE_DOMAIN ?>/</span></p>
+					<p><strong>Permalink:- </strong></p><p><span><?php echo SITE_DOMAIN ?>/</span></p>
 					<input type="text" id="url" class="form-control" name="url" >
 				</div>
 			</div>
@@ -48,13 +48,13 @@
 					</div>
 				</div>
 				<div class="fb" style="display: none;">
-					<div class="facebook-image" style="display: none;">
-						<div class="img"><img src="" id="facebook-image" alt=""></div>
+					<div class="facebookPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -66,13 +66,13 @@
 					</div>
 				</div>
 				<div class="tw" style="display: none;">
-					<div class="twitter-image" style="display: none;">
-						<div class="img"><img src="" id="twitter-image" alt=""></div>
+					<div class="twitterPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox">
 						<span>Set Twitter feature image</span>
-						<input type='file' id="twImage" name='twitterImage' />
+						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
@@ -87,29 +87,41 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Send for Review">
-				<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
+				<div class="publishGroup">
+					<input type="button" class="publishPost btn btn-green btn-block" value="Publish <?php echo ucwords($postType) ?> ">
+					<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
+					<input type="button" id="scheduleBtn" class="btn btn-blue btn-block" value="Schedule News">
+				</div>
+				<div class="scheduleGroup" style="display: none;" >
+					<input type="button" class="publishPost btn btn-green btn-block" value="Publish <?php echo ucwords($postType) ?> ">
+					<span style="float: left; font-size: 12px; color: #333; margin-bottom: 5px;" >Change date and time</span>
+					<input type="text" name="scheduleTime" class="form-control inside-shadow datetimepicker" style="margin-bottom: 10px" value="<?php echo date('m/d/Y h:i A') ?>" placeholder="Click here to select time" >
+					<input type="button" id="schedulePost" class="btn btn-green btn-block" value="Schedule News">
+				</div>
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="draft" >
+				<input type="hidden" name="postID" value="" >
 				<input type="hidden" name="postType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 			</div>
 			<div class="form-group">
 				<h2>Fearure News</h2>
-				<div class="action-box inside-shadow">
-					<input type="checkbox" value="1" name='featurePost' > Mark as Feature News
+				<div class="action-box inside-shadow" style="padding-bottom: 10px" >
+					<input type="checkbox" value="1" name='featurePost' > Mark as Feature <?php echo ucwords($postType) ?>
 				</div>
 			</div>
 			<h2>Categories</h2>
 			<div class="action-box height-200 inside-shadow">
 				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_id ASC")) {
+						$i=1;
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
-								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
+								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($i==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
 							</div>
 						<?php
+						$i++;
 						}
 					}
 				?>
@@ -123,14 +135,14 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group upload-btn">
+			<div class="form-group featureImageUploadBox">
 				<span>Set Feature Image</span>
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview action-box" style="display: none;">
-				<img src="#" id="previewImage" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
+			<div class="featureImagePreviewBox action-box" style="display: none;">
+				<img src="#" id="featureImagePath" alt="">
+				<p id="featureChangeImage" class="changeImage" >Remove feature image</p>
 			</div>
 		</div>
 	</form>

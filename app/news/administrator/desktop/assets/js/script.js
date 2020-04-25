@@ -16,6 +16,79 @@ $(document).ready(function() {
 		})
 	}
 
+	/** Image Preview Section */
+
+	// Image Preview Default Function
+
+	function imagePreview(input, imageName) {
+		if (input.files && input.files[0]) {
+		  	var reader = new FileReader();
+		  	reader.onload = function(e) {
+				$('.' + imageName + 'PreviewBox').show();
+				$('#' + imageName + 'Path').attr('src', e.target.result);
+				$('.' + imageName + 'UploadBox').hide();
+
+				/** Only for feature image */
+
+				if(imageName=='featureImage') {
+
+					if($('#facebookPath').attr('src')=='') {
+						$('.facebookPreviewBox').show();
+						$('#facebookPath').attr('src', e.target.result);
+						$('.facebookUploadBox').hide();
+					}
+	
+					if($('#twitterPath').attr('src')=='') {
+						$('.twitterPreviewBox').show();
+						$('#twitterPath').attr('src', e.target.result);
+						$('.twitterUploadBox').hide();
+					}
+
+				}
+
+		  	}
+		  	reader.readAsDataURL(input.files[0]); // convert to base64 string
+		}
+	}
+
+	// Image Replace Default Function
+
+	function imageReplace(idName) {
+		console.log(idName);
+		$('.' + idName + 'PreviewBox').hide();
+		$('#' + idName + 'Path').attr('src', '');
+		$('.' + idName + 'UploadBox').show();
+	}
+
+	// change image action
+
+	$('#featureImage').change(function() {
+		imagePreview(this, 'featureImage');
+	});
+
+	$('#facebookImage').change(function() {
+		imagePreview(this, 'facebook');
+	});
+
+	$('#twitterImage').change(function() {
+		imagePreview(this, 'twitter');
+	});
+
+	// replace image actions
+
+	$('#featureChangeImage').click(function() {
+		console.log('i m here');
+		imageReplace('featureImage');
+	})
+
+	$('#facebookChangeImage').click(function() {
+		imageReplace('facebook');
+	})
+
+	$('#twitterChangeImage').click(function() {
+		imageReplace('twitter');
+	})
+
 	/* Calling Media API */
 
 	var fullpath = window.location.pathname;
@@ -153,40 +226,6 @@ $(document).ready(function() {
 		}
 	}
 
-	// Feature Image 
-	
-	$('#featureImage').change(function() {
-		if (this.files && this.files[0]) {
-			var showImage = new FileReader();
-			showImage.onload = function(e) {
-				$('.upload-btn').hide();
-				$('.img-preview').show();
-				$('#previewImage').attr('src', e.target.result);
-
-				if($('#facebook-image').attr('src')=='') {
-					$('.facebook-image').show();
-					$('#facebook-image').attr('src', e.target.result);
-					$('.facebookUploadBox').hide();
-				}
-
-				if($('#twitter-image').attr('src')=='') {
-					$('.twitter-image').show();
-					$('#twitter-image').attr('src', e.target.result);
-					$('.twitterUploadBox').hide();
-				}
-
-				
-			}
-			showImage.readAsDataURL(this.files[0]);
-		}
-	});
-
-	$('#changeImage').click(function() {
-		$('.upload-btn').show();
-		$('.img-preview').hide();
-		$('#featureImage').val();
-	});
-
 	/* Tabs */
 
 	$('#seo').click(function() {
@@ -214,44 +253,6 @@ $(document).ready(function() {
 		$('#seo').removeClass('active');
 		$('.fb').hide();
 		$('#fb').removeClass('active');
-	});
-
-	/* Facebook sharing image */
-
-	$('#facebookChangeImage').click(function() {
-		$('.facebook-image').hide();
-		$('.facebookUploadBox').show();
-	});
-
-	$('#fbImage').change(function() {
-		$('.facebookUploadBox').hide();
-		if (this.files && this.files[0]) {
-			var showImage = new FileReader();
-			showImage.onload = function(e) {
-				$('.facebook-image').show();
-				$('#facebook-image').attr('src', e.target.result);
-			}
-			showImage.readAsDataURL(this.files[0]);
-		}
-	});
-
-	/* Twitter sharing image */
-
-	$('#twitterChangeImage').click(function() {
-		$('.twitter-image').hide();
-		$('.twitterUploadBox').show();
-	});
-
-	$('#twImage').change(function() {
-		$('.twitterUploadBox').hide();
-		if (this.files && this.files[0]) {
-			var showImage = new FileReader();
-			showImage.onload = function(e) {
-				$('.twitter-image').show();
-				$('#twitter-image').attr('src', e.target.result);
-			}
-			showImage.readAsDataURL(this.files[0]);
-		}
 	});
 
 	/* align title */
@@ -601,6 +602,10 @@ $(document).ready(function() {
 	$('#pageButton').click(function() {
 		$('#pageBox').show();
 		$('#categoryBox').hide();
+	});
+
+	$("#siteLogo").change(function() {
+		readURL(this, '#siteLogoPreview');
 	});
 
 });

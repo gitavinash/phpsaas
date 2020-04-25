@@ -1,7 +1,7 @@
 <?php
 
 	$categoryID=mysqli_real_escape_string($connection, ((isset($_GET['category_id'])) ? $_GET['category_id'] : 0 ));
-	if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND category_id='{$categoryID}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
+	if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND category_id='{$categoryID}' AND link_type='category' AND category_type='{$postType}' AND link_status=200 AND link_site_id=".SITE_ID)) {
 		if(mysqli_num_rows($categoryData)!=0) {
 			extract(mysqli_fetch_assoc($categoryData));
 		} else {
@@ -70,8 +70,7 @@
 			<table id="table">
 				<thead>
 					<tr>
-						<th style='width: 200px;'>Title</th>
-						<th style='width: 50px'>Count</th>
+						<th style='width: 200px;'><?php echo ucwords($_GET['type']) ?> Title</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -95,7 +94,6 @@
 												<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 											</div>
 										</td>
-										<td><?php echo $category_total_count; ?></td>
 									</tr>
 								<?php
 								}

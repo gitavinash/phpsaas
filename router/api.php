@@ -49,7 +49,18 @@
 
 			} else {
 
-				require_once API.SITE_APP.'/'.end($urlStructure).'.php';
+				$defaultAPI=API.SITE_APP.'/'.end($urlStructure).'.php';
+
+				if(file_exists($defaultAPI)) {
+
+					require_once $defaultAPI;
+
+				} else {
+					
+					header('Content-Type: text/html; charset=utf-8');
+					require_once ERROR_404;
+
+				}
 
 			}
 			break;

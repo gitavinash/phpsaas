@@ -48,7 +48,7 @@
 							</select>
 						</div>
 						<div class="form-check" style="margin-bottom: 20px;">
-						    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_indexing==1) ? 'checked' : '' ) ?> >
+						    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_index==1) ? 'checked' : '' ) ?> >
 						    <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
 						</div>
                         <div class="form-group">

@@ -76,6 +76,10 @@
 	define('USER_IMAGES', USER_URL.'assets/images/');
 	define('USER_PLUGINS', USER_URL.'assets/plugins/');
 
+	/** Specific AMP Feature */
+
+	define('STATUS', RESOURCE.'/amp/stories.php');
+
 	/** Cache Directory Managment */
 
 	define('CACHE_PATH', ROOT.'/cache/'.SITE_DOMAIN.'/'.SITE_VERSION);

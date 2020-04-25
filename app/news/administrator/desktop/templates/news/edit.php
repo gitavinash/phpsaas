@@ -69,9 +69,9 @@
 					</div>
 				</div>
 				<div class="fb" style="display: none;">
-					<div class="facebook-image" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
+					<div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
 						<input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
-						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebook-image" alt=""></div>
+						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
@@ -88,9 +88,9 @@
 					</div>
 				</div>
 				<div class="tw" style="display: none;">
-					<div class="twitter-image" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+					<div class="twitterPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
 						<input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
-						<div class="img"><img src="<?php echo $tw_img ?>" id="twitter-image" alt=""></div>
+						<div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
@@ -183,16 +183,16 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group upload-btn" style="display: <?php echo ((${$postType.'_image'}!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox" style="display: <?php echo ((${$postType.'_image'}!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
 				<input type="hidden" name="oldFeatureImage" value="<?php echo ${$postType.'_image'} ?>">
 				<input type="hidden" name="oldThumbnailImage" value="<?php echo ${$postType.'_thumbnail'} ?>">
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview action-box" style="display: <?php echo ((${$postType.'_image'}!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.${$postType.'_image'} ?>" id="previewImage" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
+			<div class="featureImagePreviewBox action-box" style="display: <?php echo ((${$postType.'_image'}!='') ? 'block' : 'none') ?>;">
+				<img src="//<?php echo SITE_DOMAIN.${$postType.'_image'} ?>" id="featureImagePath" alt="">
+				<p id="featureChangeImage" class="changeImage" >Remove feature image</p>
 			</div>
 		</div>
 	</form>

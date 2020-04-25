@@ -70,6 +70,10 @@
 			require_once 'api.php';
 			break;
 
+		case 'status' :
+			require_once STATUS;
+			break;
+
 		case 'amp' :
 			require_once 'amp.php';
 			break;

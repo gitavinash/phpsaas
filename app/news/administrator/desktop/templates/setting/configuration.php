@@ -43,11 +43,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>About Website</label>
-                                    <textarea name="description" class="form-control inside-shadow" placeholder="About Website ( Recommendation Max 170 Characters )" ><?php echo $site_description ?></textarea>
+                                    <textarea name="description" style="height: 100px;" class="form-control inside-shadow" placeholder="About Website ( Recommendation Max 170 Characters )" ><?php echo $site_description ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Website Keywords ( Use , to seprate Keywords )</label>
-                                    <textarea name="keyword" class="form-control inside-shadow" placeholder="Website Keywords ( Use , to seprate Keywords )" ><?php echo $site_keyword ?></textarea>
+                                    <textarea name="keyword" style="height: 100px;" class="form-control inside-shadow" placeholder="Website Keywords ( Use , to seprate Keywords )" ><?php echo $site_keyword ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Select website language</label>
@@ -63,7 +63,7 @@
                                     </select>
                                 </div>
                                 <div class="form-check" style="margin-bottom: 20px;">
-                                    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_indexing==1) ? 'checked' : '' ) ?> >
+                                    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_index==1) ? 'checked' : '' ) ?> >
                                     <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
                                 </div>
                                 <div class="form-group">
@@ -75,7 +75,10 @@
                                 </div>
                             </div>
                             <div class='box-2'>
-                                Hello
+                            <form runat="server">
+                                <input type='file' name="site_logo" id="siteLogo" />
+                                <img id="siteLogoPreview" src="#" alt="Logo" />
+                            </form>
                             </div>
                         </form>
                     </div>

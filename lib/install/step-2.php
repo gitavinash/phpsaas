@@ -71,13 +71,8 @@
 								<label>Select website language</label>
 								<select name="site_lang" class="form-control" required >
 									<option value="">Language list</option>
-									<option value="hi_IN" >हिंदी</option>
-									<option value="en" >English (United States)</option>
-									<option value="en_AU" >English (Australia)</option>
-									<option value="en_ZA" >English (South Africa)</option>
-									<option value="en_CA" >English (Canada)</option>
-									<option value="en_GB" >English (UK)</option>
-									<option value="en_NZ" >English (New Zealand)</option>
+									<option value="hi" >हिंदी</option>
+									<option value="en" >English</option>
 								</select>
 							</div>
 							
