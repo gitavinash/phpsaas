@@ -64,7 +64,10 @@
 	define('ADMIN_STYLESHEET', ADMIN_URL.'assets/css/');
 	define('ADMIN_JS', ADMIN_URL.'assets/js/');
 	define('ADMIN_IMAGES', ADMIN_URL.'assets/images/');
-	define('ADMIN_PLUGINS', ADMIN_URL.'assets/plugins/');	
+	define('ADMIN_PLUGINS', ADMIN_URL.'assets/plugins/');
+
+	define('ADMIN_GLOBAL_CSS', CSS_LIBRARY.SITE_APP.'/'.SITE_VERSION.'/');
+	define('ADMIN_GLOBAL_JS', JS_LIBRARY.SITE_APP.'/'.SITE_VERSION.'/');
 
 	/* visitor directory managment */
 

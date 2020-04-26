@@ -11,7 +11,7 @@
 		<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/moment.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.all.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js" type="text/javascript" ></script>
-		<script src="<?php echo ADMIN_JS ?>script.min.js"></script>
+		<script src="<?php echo ADMIN_GLOBAL_JS ?>script.min.js"></script>
 		
 		
 
@@ -24,20 +24,6 @@
 					<script type='text/javascript'>
 						$(window).bind('beforeunload', function(){
 							return 'Are you sure you want to leave?';
-						});
-					</script>
-
-					<script type="text/javascript">
-						$('.datetimepicker').daterangepicker({
-							"singleDatePicker": true,
-							"timePicker": true,
-							"applyButtonClasses": "btn-green",
-							"cancelButtonClasses": "btn-red",
-							"minDate" : "<?php echo date('m/d/Y'); ?>",
-							"startDate" : "<?php echo date('m/d/Y H:i A'); ?>",
-							locale: {
-            					format: 'MM/DD/YYYY hh:mm A'
-							},
 						});
 					</script>
 
