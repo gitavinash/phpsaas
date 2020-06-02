@@ -84,7 +84,7 @@
 
 		/** Update post table */
 
-		$updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}' news_title='{$title}', news_description='{$description}', news_category='{$category}', news_status='1' WHERE news_id='{$post_id}'");
+		$updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_status='1' WHERE news_id='{$post_id}'");
 
 		/** Update meta table */
 
@@ -121,7 +121,7 @@
 			$redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.$post_id;
 
 		} else {
-
+			
 			mysqli_query($connection, 'ROLLBACK');
 
 		}

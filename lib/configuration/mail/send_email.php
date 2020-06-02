@@ -10,7 +10,7 @@
 	$mail->SMTPAuth = true;
 
 	if(SMTP_SSL=='true') {
-		$mail->SMTPSecure = 'ssl';
+		$mail->SMTPSecure = 'tls';
 	}
 
 

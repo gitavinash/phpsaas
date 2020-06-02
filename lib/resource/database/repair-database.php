@@ -1,5 +1,37 @@
 <?php
 
+  /** Analytics Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."analytics(
+    analytics_id bigint(20) NOT NULL,
+    analytics_link_id bigint(20) NOT NULL,
+    analytics_site_id bigint(20) NOT NULL,
+    analytics_session_id varchar(255) NOT NULL,
+    analytics_mode varchar(100) NOT NULL,
+    analytics_device varchar(255) NOT NULL,
+    analytics_os varchar(255) NOT NULL,
+    analytics_browser varchar(255) NOT NULL,
+    analytics_country varchar(255) NOT NULL,
+    analytics_state varchar(255) NOT NULL,
+    analytics_city varchar(255) NOT NULL,
+    analytics_source varchar(255) NOT NULL,
+    analytics_medium varchar(255) NOT NULL,
+    analytics_campaign varchar(255) NOT NULL,
+    analytics_time timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD PRIMARY KEY (analytics_id),
+    ADD KEY analytics_link_id (analytics_link_id),
+    ADD KEY analytics_site_id (analytics_site_id),
+    ADD KEY analytics_time (analytics_time)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD KEY analytics_session_id (analytics_session_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    MODIFY analytics_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   /** Category Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
@@ -15,6 +47,18 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
     ADD COLUMN device_user_id BIGINT(20) NOT NULL AFTER device_site_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
+    ADD COLUMN device_country varchar(255) NOT NULL AFTER device_browser");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
+    ADD COLUMN device_state varchar(255) NOT NULL AFTER device_country");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
+    ADD COLUMN device_city varchar(255) NOT NULL AFTER device_state");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
+    ADD INDEX device_user_id (device_user_id)");
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."device
     ADD INDEX device_user_id (device_user_id)");

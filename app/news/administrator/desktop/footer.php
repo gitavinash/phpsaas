@@ -7,11 +7,11 @@
 		</footer>
 		
         <?php require_once NOTIFICATION.'index.php'; ?>
-		<script src='<?php echo JS_LIBRARY ?>editor.js' type='text/javascript' ></script>
+		<script src='<?php echo EDITOR ?>' type='text/javascript' ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/moment.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.all.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js" type="text/javascript" ></script>
-		<script src="<?php echo ADMIN_GLOBAL_JS ?>script.min.js"></script>
+		<script src="<?php echo ADMIN_JS ?>script.min.js"></script>
 		
 		
 

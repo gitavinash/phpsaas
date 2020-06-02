@@ -99,7 +99,7 @@
 						$redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.$postID;
 
 					} else {
-
+						
 						mysqli_query($connection, "ROLLBACK");
 
 					}

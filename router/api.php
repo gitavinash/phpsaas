@@ -23,13 +23,11 @@
 	switch ($urlStructure[1]) {
 
 		case 'secure' :
-
 			/* for secure api request */
 			require_once LOGIN_CHECK;
 			break;
 
 		case 'update-database' :
-
 			require_once RESOURCE.'database/repair-database.php';
 			break;
 
@@ -49,14 +47,16 @@
 
 			} else {
 
-				$defaultAPI=API.SITE_APP.'/'.end($urlStructure).'.php';
+				// Check Application API Request
 
-				if(file_exists($defaultAPI)) {
+				$appAPI=API.SITE_APP.'/'.end($urlStructure).'.php';
 
-					require_once $defaultAPI;
+				if(file_exists($appAPI)) {
+
+					require_once $appAPI;
 
 				} else {
-					
+
 					header('Content-Type: text/html; charset=utf-8');
 					require_once ERROR_404;
 

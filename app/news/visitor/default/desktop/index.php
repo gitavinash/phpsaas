@@ -103,7 +103,7 @@
                 <div class="youtube-box">
                     <div class="top-video">
                     <h2>आज की बड़ी ख़बरें</h2>
-                    <iframe width="712" height="400" src="https://www.youtube.com/embed/7qNAMWg1Mu4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe width="712" height="400" src="https://www.youtube.com/embed/videoseries?list=PLCOr-iqrewR8B8yihmWYLgYMHyWVg2f3I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
 
                 <div class="feature-box">

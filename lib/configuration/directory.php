@@ -21,12 +21,14 @@
 	define('CSS_LIBRARY', UI_LIBRARY.'css/');
 	define('IMG_LIBRARY', UI_LIBRARY.'img/');
 	define('PLUGIN_LIBRARY', UI_LIBRARY.'plugin/');
+	define('EDITOR', PLUGIN_LIBRARY.'editor/editor.min.js');
 
 	/** Default Service Worker */
 
 	define('SERVICE_WORKER', RESOURCE.'service-worker/sw.min.js');
 
 	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
+	define('IMAGE_UPLOADER', MODULES.'imageUploader.php');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');
 	define('SITE_STATUS', MODULES.'siteStatus.php');
 	define('APP_DIR', ROOT.'/app/');
@@ -61,13 +63,9 @@
 	define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
 	define('ADMIN_PATH', ROOT.ADMIN_DIR);
 	define('ADMIN_URL', SITE_URL.ADMIN_DIR);
-	define('ADMIN_STYLESHEET', ADMIN_URL.'assets/css/');
-	define('ADMIN_JS', ADMIN_URL.'assets/js/');
-	define('ADMIN_IMAGES', ADMIN_URL.'assets/images/');
-	define('ADMIN_PLUGINS', ADMIN_URL.'assets/plugins/');
-
-	define('ADMIN_GLOBAL_CSS', CSS_LIBRARY.SITE_APP.'/'.SITE_VERSION.'/');
-	define('ADMIN_GLOBAL_JS', JS_LIBRARY.SITE_APP.'/'.SITE_VERSION.'/');
+	define('ADMIN_STYLESHEET', CSS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+	define('ADMIN_JS', JS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+	define('ADMIN_IMAGES', IMG_LIBRARY.SITE_APP.'/'.SITE_VERSION.'/');
 
 	/* visitor directory managment */
 
@@ -103,5 +101,5 @@
 
 	/** Site Logo and Icon */
 
-	define('SITE_ICON', ((isset($site_icon)) ? $site_icon : ADMIN_IMAGES.'favicon.png' ));
-	define('SITE_LOGO', ((isset($site_logo)) ? $site_logo : ADMIN_IMAGES.'logo.png' ));
+	define('SITE_ICON', ((isset($site_icon)) ? (($site_icon=='') ? IMG_LIBRARY.'favicon.png' : $site_icon ) : IMG_LIBRARY.'favicon.png' ));
+	define('SITE_LOGO', ((isset($site_logo)) ? (($site_logo=='') ? IMG_LIBRARY.'logo.png' : $site_logo )  : IMG_LIBRARY.'logo.png' ));

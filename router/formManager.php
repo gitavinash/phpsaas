@@ -12,8 +12,8 @@
 			
 			case 'api' :
 				header("Content-type: application/json; charset=utf-8");
-				$includeFile = API.$action.'/'.$key.'.php';
-			break;
+				$includeFile = API.$action.'/'.$siteAction.'.php';
+				break;
 
 			case 'authentication' :
 				header("Content-type: application/json; charset=utf-8");

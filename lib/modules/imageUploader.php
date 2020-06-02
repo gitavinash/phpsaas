@@ -23,8 +23,6 @@
 
 						list($imageWidth, $imageHeight) = getimagesize($imageValue['tmp_name']);
 
-						$regenerateImageHeight=($imageHeight/$imageWidth)*IMAGE_THUMBNAIL_HEIGHT;
-
 						/* Default upload path directory of image */
 
 						$uploadPath=ROOT.'/upload/'.date('Y/m/');
@@ -46,7 +44,14 @@
 						if($imageName=="featureImage") {
 
 							$thumbnailImage=str_replace(ROOT, '', $thumbnailUploadFile);
+							$regenerateImageWidth=IMAGE_THUMBNAIL_WIDTH;
+							$regenerateImageHeight=IMAGE_THUMBNAIL_HEIGHT;
 							
+						} else {
+
+							$regenerateImageWidth=IMAGE_THUMBNAIL_WIDTH;
+							$regenerateImageHeight=($imageHeight/$imageWidth)*IMAGE_THUMBNAIL_HEIGHT;
+
 						}
 
 
@@ -127,7 +132,16 @@
 								
 								mysqli_query($connection, 'COMMIT');
 
+							} else {
+
+								mysqli_error($connection);
+								mysqli_query($connection, 'ROLLBACK');
+
 							}
+
+						} else {
+
+							echo 'Unable to move file';
 
 						}
 

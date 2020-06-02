@@ -23,11 +23,11 @@
         <title>Login | <?php echo SITE_NAME ?></title>
         <link rel="canonical" href="http://www.shaktipedia.com/durga-chalisa/" />
         <meta name="theme-color" content="#FE6F06">
-        <link rel="stylesheet" href="<?php echo SYSTEM_STYLESHEET ?>bootstrap.min.css">
-        <link rel="stylesheet" href="<?php echo SYSTEM_STYLESHEET ?>login.css">
-        <link rel="stylesheet" href="<?php echo SYSTEM_STYLESHEET ?>all.min.css" >
-        <link rel="stylesheet" href="<?php echo SYSTEM_PLUGINS ?>sweetalert/sweetalert2.min.css" >
-        <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,700" rel="stylesheet">
+        <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
+        <link rel="stylesheet" href="<?php echo SYSTEM_STYLESHEET ?>login.min.css">
+        <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css" >
+        <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.min.css" >
+        <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,700&display=swap" rel="stylesheet">
     </head>
 
     <body>
@@ -55,12 +55,12 @@
                        <p class="center-link">Don't have an Account? <a href="register/" class="center-link">Join Now</a></p>
                      </div> -->
                </form>
-               <p class="footer">By joining <?php echo SITE_NAME ?>, you agree to our <a href="terms-and-services/" title="Terms of Service">Terms of Service</a> and <a href="privacy-policy/" title="Privacy Policy">Privacy Policy</a></p>
+               <p class="footer">By joining <?php echo CREDIT ?>, you agree to our <a href="terms-and-services/" title="Terms of Service">Terms of Service</a> and <a href="privacy-policy/" title="Privacy Policy">Privacy Policy</a></p>
            </div>
        </section>
 
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-       <script src="<?php echo SYSTEM_PLUGINS ?>sweetalert/sweetalert2.all.min.js"></script>
+       <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
+       <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.all.min.js"></script>
        <script src="<?php echo SYSTEM_JS ?>app.js"></script>
 
     </body>

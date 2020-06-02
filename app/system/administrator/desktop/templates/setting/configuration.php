@@ -43,11 +43,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>About Website</label>
-                                    <textarea name="description" class="form-control inside-shadow" placeholder="About Website ( Recommendation Max 170 Characters )" ><?php echo $site_description ?></textarea>
+                                    <textarea name="description" style="height: 100px;" class="form-control inside-shadow" placeholder="About Website ( Recommendation Max 170 Characters )" ><?php echo $site_description ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Website Keywords ( Use , to seprate Keywords )</label>
-                                    <textarea name="keyword" class="form-control inside-shadow" placeholder="Website Keywords ( Use , to seprate Keywords )" ><?php echo $site_keyword ?></textarea>
+                                    <textarea name="keyword" style="height: 100px;" class="form-control inside-shadow" placeholder="Website Keywords ( Use , to seprate Keywords )" ><?php echo $site_keyword ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Select website language</label>
@@ -75,7 +75,32 @@
                                 </div>
                             </div>
                             <div class='box-2'>
-                                Hello
+                            <form id="websiteLogo" enctype="multipart/form-data" >
+                                <h3>Website Logo</h3>
+                                <div class="siteLogoPreviewBox" style="display: none;">
+                                    <div class="img"><img src="" id="siteLogoPath" alt=""></div>
+                                    <input type="button" id="updateSiteLogo" class="btn btn-green btn-sm"  value="Update Website Logo" >
+                                    <input type="button" id="siteLogoChangeImage" name="updateSiteLogo" class="btn btn-red btn-sm" value="Change Site Logo" >
+                                </div>
+                                <div class="siteLogoUploadBox" id="siteLogo" >
+                                    <span>Add Website logo</span>
+                                    <input type='file' id="siteLogoImage" name='siteLogo' />
+                                    <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
+                                </div>
+                            </form>
+                            <form method="POST" enctype="multipart/form-data" >
+                                <h3>Website Icon</h3>
+                                <div class="siteIconPreviewBox" style="display: none;">
+                                    <div class="img"><img src="" id="siteIconPath" alt=""></div>
+                                    <input type="button" id="updateSiteIcon" class="btn btn-green btn-sm"  value="Update Website Icon" >
+                                    <input type="button" id="siteIconChangeImage" name="updateSiteIcon" class="btn btn-red btn-sm" value="Change Site Icon" >
+                                </div>
+                                <div class="siteIconUploadBox">
+                                    <span>Add Website Icon</span>
+                                    <input type='file' id="siteIconImage" name='siteIcon' />
+                                    <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif ( Recommend Size : 512x512 )</p>
+                                </div>
+                            </form>
                             </div>
                         </form>
                     </div>
@@ -115,7 +140,7 @@
 
             <h3>Manage mainfest.json file</h3>
             <form>
-                <textarea name="mainfest_json" id="mainfest_json" ><?php echo $site_mainfest_json; ?></textarea>
+                <textarea name="mainfest_json" id="mainfest_json" ><?php echo json_decode($site_mainfest_json); ?></textarea>
                 <input type="button" id="mainfestJSON" class="btn btn-green" value="Update File" >
             </form>
             

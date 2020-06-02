@@ -27,7 +27,7 @@
 
                     <div class="form-box" style="margin: 0 auto" >
                         <h3>Manage Website Basic Configurations</h3>
-                        <form method="POST" id="websiteData" >
+                        <form method="POST" id="websiteData" enctype="multipart/form-data" >
                             <div class="box-2">
                                 <div class="form-group">
                                     <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
@@ -75,32 +75,37 @@
                                 </div>
                             </div>
                             <div class='box-2'>
-                            <form runat="server">
-                                <h3>Website Logo</h3>
-                                <div class="siteLogoPreviewBox" style="display: none;">
-                                    <div class="img"><img src="" id="siteLogoPath" alt=""></div>
-                                    <input type="button" name="updateSiteLogo" class="btn btn-green btn-sm"  value="Update Website Logo" >
-                                    <input type="button" id="siteLogoChangeImage" name="updateSiteLogo" class="btn btn-red btn-sm" value="Change Site Logo" >
-                                </div>
-                                <div class="siteLogoUploadBox">
-                                    <span>Add Website logo</span>
-                                    <input type='file' id="siteLogoImage" name='siteLogo' />
-                                    <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
-                                </div>
-                            </form>
-                            <form runat="server">
-                                <h3>Website Icon</h3>
-                                <div class="siteIconPreviewBox" style="display: none;">
-                                    <div class="img"><img src="" id="siteIconPath" alt=""></div>
-                                    <input type="button" name="updateSiteIcon" class="btn btn-green btn-sm"  value="Update Website Icon" >
-                                    <input type="button" id="siteIconChangeImage" name="updateSiteIcon" class="btn btn-red btn-sm" value="Change Site Icon" >
-                                </div>
-                                <div class="siteIconUploadBox">
-                                    <span>Add Website Icon</span>
-                                    <input type='file' id="siteIconImage" name='siteIcon' />
-                                    <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif ( Recommend Size : 512x512 )</p>
-                                </div>
-                            </form>
+                                <form id="updateSiteLogoForm" >
+                                    <h3>Website Logo</h3>
+                                    <div class="siteLogoPreviewBox" style="display: <?php echo (($site_logo=='') ? 'none' : 'block' ) ?>;">
+                                        <div class="img"><img src="<?php echo $site_logo ?>" id="siteLogoPath" alt=""></div>
+                                        <input type="hidden" name="type" value="api" >
+                                        <input type="hidden" name="action" value="logo" >
+                                        <input type="button" id="updateSiteLogo" class="btn btn-green btn-sm"  value="Update Website Logo" >
+                                        <input type="button" id="siteLogoChangeImage" name="updateSiteLogo" class="btn btn-red btn-sm" value="Change Site Logo" >
+                                    </div>
+                                    <div class="siteLogoUploadBox" id="siteLogo" style="display: <?php echo (($site_logo!='') ? 'none' : 'block' ) ?>;">
+                                        <span>Add Website logo</span>
+                                        <input type='file' id="siteLogoImage" name='siteLogo' />
+                                        <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
+                                    </div>
+                                </form>
+                                <form id="updateSiteIconForm" >
+                                    <h3>Website Icon</h3>
+                                    <div class="siteIconPreviewBox" style="display: <?php echo (($site_icon=='') ? 'none' : 'block' ) ?>;">
+                                        <div class="img"><img src="<?php echo $site_icon ?>" id="siteIconPath" alt=""></div>
+                                        <input type="button" id="updateSiteIcon" class="btn btn-green btn-sm"  value="Update Website Icon" >
+                                        <input type="button" id="siteIconChangeImage" name="updateSiteIcon" class="btn btn-red btn-sm" value="Change Site Icon" >
+                                    </div>
+                                    <div class="siteIconUploadBox" style="display: <?php echo (($site_icon!='') ? 'none' : 'block' ) ?>;">
+                                        <span>Add Website Icon</span>
+                                        <input type='file' id="siteIconImage" name='siteIcon' />
+                                        <input type="hidden" name="type" value="api" >
+                                        <input type="hidden" name="action" value="setting" >
+                                        <input type="hidden" name="siteAction" value="site_icon" >
+                                        <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif ( Recommend Size : 512x512 )</p>
+                                    </div>
+                                </form>
                             </div>
                         </form>
                     </div>
@@ -117,7 +122,7 @@
             <!-- Ads.txt section -->
             
             <h3>Manage ads.txt file</h3>
-            <form>
+            <form enctype="multipart/form-data" >
                 <textarea name="ads_txt" id="ads_txt" ><?php echo $site_ads_txt; ?></textarea>
                 <input type="button" id="adsTXT" class="btn btn-green" value="Update File" >
             </form>
@@ -128,7 +133,7 @@
             <!-- Robots.txt section -->
 
             <h3>Manage robots.txt file</h3>
-            <form>
+            <form enctype="multipart/form-data" >
                 <textarea name="robots_txt" id="robots_txt" ><?php echo $site_robots_txt; ?></textarea>
                 <input type="button" id="robotsTXT" class="btn btn-green" value="Update File" >
             </form>
@@ -139,7 +144,7 @@
             <!-- Mainfest.json section -->
 
             <h3>Manage mainfest.json file</h3>
-            <form>
+            <form enctype="multipart/form-data" >
                 <textarea name="mainfest_json" id="mainfest_json" ><?php echo json_decode($site_mainfest_json); ?></textarea>
                 <input type="button" id="mainfestJSON" class="btn btn-green" value="Update File" >
             </form>

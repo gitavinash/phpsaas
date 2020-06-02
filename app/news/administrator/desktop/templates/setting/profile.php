@@ -56,28 +56,22 @@
                     </form>
                 </div>
                 <div class="box-2" style="float: left; width: 250px; margin-left: 50px;" >
-                    <form method="POST" id="profileData" enctype="multipart/form-data"  >
+                    <form id="updateProfilePhotoForm" >
                         <div class="form-group">
-                            <label style="float:left; width: 100%; margin-bottom: 20px" >Update Profile Picture</label>
-                            <div class="form-group upload-btn" style="float:left; display: <?php echo (($profile_image!='') ? 'none' : 'block') ?>; width: 250px; height: 250px;">
-                                <span>Set Feature Image</span>
-                                <input type="hidden" name="oldFeatureImage" value="<?php echo $profile_image ?>">
-                                <input type="file" id="featureImage" name="featureImage">
-                                <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
+                            <h3>Profile Picture</h3>
+                            <div class="profilePreviewBox" style="display: <?php echo (($profile_image!='') ? 'block' : 'none') ?>;">
+                                <div class="img"><img src="//<?php echo SITE_DOMAIN.$profile_image ?>" id="profilePath" alt=""></div>
+                                <input type="hidden" name="type" value="api" >
+                                <input type="hidden" name="action" value="setting" >
+                                <input type="hidden" name="siteAction" value="profile_picture" >
+                                <input type="button" id="updateProfilePhoto" class="btn btn-green btn-sm" style="display: none" value="Update Profile Picture" >
+                                <input type="button" id="profileChangeImage" name="updateprofile" class="btn btn-red btn-sm" value="Change Profile Picture" >
                             </div>
-                            <div class="img-preview action-box" style="display: <?php echo (($profile_image!='') ? 'block' : 'none') ?>;">
-                                <div style="float:left; background: #fff; width: 250px; height: 250px; position:relative;">
-                                    <img src="//<?php echo SITE_DOMAIN.$profile_image ?>" style="position:absolute;top:0;bottom:0;margin:auto;" id="previewImage" alt="">
-                                </div>
-                                <p id="changeImage" class="changeImage" >Remove feature image</p>
+                            <div class="profileUploadBox" style="display: <?php echo (($profile_image!='') ? 'none' : 'block') ?>;">
+                                <span>Add Profile Picture</span>
+                                <input type='file' id="profileImage" name='profile' />
+                                <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif ( Recommend Size : 512x512 )</p>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" name="type" value="<?php echo $postType ?>" >
-                            <input type="hidden" name="action" value="profilePicture" >
-                            <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-                            <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-                            <input type="submit" id="updateProfile" class="btn btn-green" value="Update Profile Picture" >
                         </div>
                     </form>
                 </div>
