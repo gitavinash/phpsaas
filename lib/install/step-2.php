@@ -40,6 +40,19 @@
         		color: #555;
 			    text-align: center;
         	}
+            p {
+                float: left;
+                width: 100%;
+                text-align: center;
+                padding-top: 50px
+            }
+            p strong {
+                float: left;
+                width: 100%;
+                text-align: center;
+                font-size: 24px;
+                padding: 20px 0px
+            }
         </style>
 	</head>
 	<body>
@@ -51,37 +64,8 @@
 					<div class="col-12 col-md-4">
 						<form action="" method="POST" >
 							<a href="//itssoftworld.com" target="_blank" ><img src="/lib/install/assets/images/logo.png" alt="ITS Soft World" style="float: left; width: 100%; padding: 0px 40px; margin-bottom: 50px" ></a>
-							<h1>Installation <span>Application Configuration</span></h1>
-
-							<div class="form-group">
-								<label>Select Application</label>
-								<select name="site_app" class="form-control" required >
-									<option value="">Application list</option>
-									<?php
-										if($appList=mysqli_query($connection, "SELECT directory_name, directory_path FROM ".TABLE_PREFIX."directory WHERE directory_status=1 AND directory_type='app'")) {
-											while($app=mysqli_fetch_assoc($appList)) {
-												echo "<option value='{$app['directory_path']}'>{$app['directory_name']}</option>";
-											}
-										}
-									?>
-								</select>
-							</div>
-
-							<div class="form-group">
-								<label>Select website language</label>
-								<select name="site_lang" class="form-control" required >
-									<option value="">Language list</option>
-									<option value="hi" >हिंदी</option>
-									<option value="en" >English</option>
-								</select>
-							</div>
-							
-							<div class="form-group" style="float:left; margin-top: 20px">
-								<input type="hidden" name="type" value="install" >
-								<input type="hidden" name="user_id" value="<?php echo $site_owner_id; ?>" >
-								<input type="hidden" name="action" value="application" >
-								<input type="submit" class="btn btn-success" value="Install Now" >
-							</div>
+							<h1>Installation <span>Installation Complete</span></h1>
+                            <p>The installation process is now complete and verification mail has been sent to your email kindly verify your email.</p>
 						</form>
 					</div>
 				</div>

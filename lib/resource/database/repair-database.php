@@ -32,6 +32,29 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
     MODIFY analytics_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  /** App Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."app(
+    app_id bigint(20) NOT NULL,
+    app_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    app_description varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    app_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    app_path varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'directory name of the app',
+    app_status int(1) NOT NULL,
+    app_launch_time timestamp NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
+    ADD PRIMARY KEY (app_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
+    ADD UNIQUE(app_path);");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
+    MODIFY app_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_title, app_description, app_path, app_status, app_launch_time) VALUES('System', 'All in One Control Panel for SaaS Application', 'system', 1, NOW())");
+
   /** Category Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
@@ -157,6 +180,29 @@
     ADD INDEX (notification_owner_id),
     ADD INDEX (notification_group_key)");
 
+  
+  /** Package Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."package(
+    package_id bigint(20) NOT NULL,
+    package_app_id bigint(20) NOT NULL,
+    package_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    package_description varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    package_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    package_price varchar(6) NOT NULL,
+    package_status int(1) NOT NULL,
+    package_launch_time timestamp NOT NULL,
+    package_update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."package
+    ADD PRIMARY KEY (package_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."package
+    MODIFY package_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_app_id, package_title, package_price, package_status, package_launch_time) VALUES(1, 'System Default Package', 0, 1, NOW())");
+
   /* Page Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."page(
@@ -206,7 +252,44 @@
     CHANGE site_keyword site_keyword varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    CHANGE site_app site_app bigint(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    ADD INDEX site_app (site_app)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    CHANGE site_theme site_theme bigint(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    ADD INDEX site_theme (site_theme)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
     CHANGE site_indexing site_index varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
+  /** Site App Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_app(
+    site_app_id bigint(20) NOT NULL,
+    site_app_app_id bigint(20) NOT NULL,
+    site_app_site_id bigint(20) NOT NULL,
+    site_app_user_id bigint(20) NOT NULL COMMENT 'User id that has installed the app',
+    site_app_package_id bigint(20) NOT NULL,
+    site_app_activation_time date NOT NULL,
+    site_app_expiry_time date NOT NULL,
+    site_app_status int(1) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD PRIMARY KEY (site_app_id),
+    ADD KEY site_app_app_id (site_app_app_id),
+    ADD KEY site_app_user_id (site_app_user_id),
+    ADD KEY site_app_site_id (site_app_site_id),
+    ADD KEY site_app_package_id (site_app_package_id)
+    ADD KEY site_app_expiry_time (site_app_expiry_time)
+    ADD KEY site_app_status (site_app_status)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    MODIFY site_app_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   /** Site Setting Table */
 
@@ -247,6 +330,30 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."tag
     CHANGE tag_title tag_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
+  /** Theme Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."theme(
+    theme_id bigint(20) NOT NULL,
+    theme_app_id bigint(20) NOT NULL,
+    theme_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    theme_description varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    theme_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    theme_path varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'directory name of the theme',
+    theme_version varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    theme_status int(1) NOT NULL,
+    theme_publish_time timestamp NOT NULL,
+    theme_update_time timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."theme
+    ADD PRIMARY KEY (theme_id),
+    ADD INDEX (theme_app_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."theme
+    MODIFY theme_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_app_id, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 'default', '1.0', 1, NOW(), NOW())");
+
   /* User Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
@@ -285,6 +392,9 @@
 
   
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."alliance_party
+    CHANGE alliance_year alliance_year year(4) NOT NULL");
+
   
 
   ########################################################################################################################
@@ -294,11 +404,6 @@
   ########################################################################################################################
 
 
-
-
-
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."alliance_party
-  CHANGE alliance_year alliance_year year(4) NOT NULL");
 
   $result = array(
     'status' => 200,

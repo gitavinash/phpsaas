@@ -35,6 +35,16 @@
 		$enc_password=hash('sha256', $saltKey.$password);
 		$index=((isset($site_index)) ? $site_index : 0 );
 
+		/** Check is there any app in app table */
+
+		if($appDetails=$checkApp=mysqli_query($connection, "SELECT app_id as appID, theme_id as themeID, package_id as packageID FROM ".TABLE_PREFIX."app INNER JOIN ".TABLE_PREFIX."theme ON app_id=theme_app_id INNER JOIN ".TABLE_PREFIX."package ON package_app_id=app_id WHERE app_path='system'")) {
+			if(mysqli_num_rows($appDetails)!=0) {
+				extract(mysqli_fetch_assoc($appDetails));
+			}
+		} else {
+			echo mysqli_error($connection);
+		}
+
 		/* insert site profile into database */
 
 		mysqli_query($connection, "START TRANSACTION");
@@ -44,8 +54,10 @@
 		$insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_type, user_reg_time, user_reg_ip) VALUES('administrator', '{$email}', '{$enc_password}', '$saltKey', 'administrator', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
 		$userID=mysqli_insert_id($connection);
 
-		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_domain, site_url, site_name, site_description, site_app, site_indexing, site_expire_date, site_status) VALUES('{$userID}', '".SITE_DOMAIN."', '".SITE_DOMAIN."', '{$site_name}', '{$site_desc}', 'system', '{$index}', '{$expireDate}', 1)");
+		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_lang, site_domain, site_url, site_name, site_description, site_app, site_theme, site_index, site_expire_date, site_status) VALUES('{$userID}', '{$site_lang}', '".SITE_DOMAIN."', '".SITE_DOMAIN."', '{$site_name}', '{$site_desc}', '{$appID}', '{$themeID}', '{$index}', '{$expireDate}', 1)");
 		$siteID=mysqli_insert_id($connection);
+
+		$insertSiteApp=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_app(site_app_app_id, site_app_site_id, site_app_user_id, site_app_package_id, site_app_activation_time, site_app_expiry_time, site_app_status) VALUES('{$appID}', '{$siteID}', '{$userID}', '{$packageID}', NOW(), '{$expireDate}', 1)");
 
 		$insertSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_status) VALUES('{$siteID}', '{$userID}', 1)");
 
@@ -53,7 +65,7 @@
 
 		$insertProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '', '', '', '{$site_name}', '{$email}')");
 
-		if($insertUser && $insertSite && $insertSiteAccess && $insertSiteSetting && $insertProfile) {
+		if($insertUser && $insertSite && $insertSiteApp && $insertSiteAccess && $insertSiteSetting && $insertProfile) {
 
 			mysqli_query($connection, 'COMMIT');
 
@@ -63,10 +75,11 @@
 
 			require_once EMAIL_TEMPLATE.'add-new-user.php';
 
-			header("Location: /install/?step=3");
+			header("Location: /install/?step=2");
 			exit();
 
 		} else {
+
 			echo mysqli_error($connection);
 			mysqli_query($connection, 'ROLLBACK');
 			exit();

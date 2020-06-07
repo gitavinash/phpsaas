@@ -68,14 +68,19 @@
 								<label>Password</label>
 								<input type="password" class="form-control" name="password" >
 							</div>
-							<div class="form-check">
-							    <input type="checkbox" name="site_index" value="1" class="form-check-input" id="exampleCheck1" checked >
-							    <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
+							<div class="form-group">
+								<label>Language</label>
+								<select name="site_lang" class="form-control" required >
+									<option value="">Salect language</option>
+									<option value="en" selected >English</option>
+									<option value="hi" >हिंदी</option>
+								</select>
 							</div>
 							<div class="form-group" style="float:left; margin-top: 20px">
+								<input type="hidden" name="site_index" value="noindex, nofollow" >
 								<input type="hidden" name="type" value="install" >
 								<input type="hidden" name="action" value="website" >
-								<input type="submit" class="btn btn-success" value="Next Step" >
+								<input type="submit" class="btn btn-success" value="Install Now" >
 							</div>
 						</form>
 					</div>
