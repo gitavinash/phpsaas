@@ -386,7 +386,7 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."theme
     MODIFY theme_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_app_id, 'theme_title', theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 'Default Administration Theme', 'Dedicated theme to sysmtem administration only', 'default', '1.0', 1, NOW(), NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_app_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 'Default Administration Theme', 'Dedicated theme to sysmtem administration only', 'default', '1.0', 1, NOW(), NOW())");
 
   /* User Table */
 
