@@ -2,6 +2,9 @@
 
 	/** Check software is already install or not */
 
+	// echo "SELECT * FROM ".TABLE_PREFIX."site INNER JOIN ".TABLE_PREFIX."site_setting ON site_setting_id=site_id INNER JOIN ".TABLE_PREFIX."app ON site_app_id=app_id WHERE site_domain='".SITE_DOMAIN."'";
+	// exit();
+
 	if($checkInstallation=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site INNER JOIN ".TABLE_PREFIX."site_setting ON site_setting_id=site_id WHERE site_domain='".SITE_DOMAIN."'")) {
 
 		if(mysqli_num_rows($checkInstallation)==0) {
