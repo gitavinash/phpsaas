@@ -8,7 +8,7 @@
 
   /* News Article Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."news(
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."news_article(
     news_id bigint(20) NOT NULL,
     news_parent_id bigint(20) NOT NULL,
     news_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -23,12 +23,12 @@
     news_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news_article
     ADD PRIMARY KEY (news_id),
     ADD KEY news_category (news_category),
     ADD INDEX (news_type)");
 
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news_article
     MODIFY news_id bigint(20) NOT NULL AUTO_INCREMENT");
 
     
@@ -39,11 +39,11 @@
   ########################################################################################################################  
 
 
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news_article
     ADD INDEX news_parent_id (news_parent_id)");
   
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news_article
     ADD INDEX news_owner_id (news_owner_id)");
     
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news_article
     ADD INDEX news_time (news_time)");
