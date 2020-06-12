@@ -51,7 +51,7 @@
                        <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required />
                      </div>
                      <div class="form-group" >
-                      <input type="hidden" name="type" value="authentication" >
+                      <input type="hidden" name="type" value="auth" >
                       <input type="hidden" name="action" value="register" >
                       <input type="submit" id="registerBtn" class="btn btn-block btn-success" value="Register Now">
                      </div>

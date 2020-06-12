@@ -15,9 +15,9 @@
 				$includeFile = API.$action.'/'.$siteAction.'.php';
 				break;
 
-			case 'authentication' :
+			case 'auth' :
 				header("Content-type: application/json; charset=utf-8");
-				$includeFile = MODULES.$type.'.php';
+				$includeFile = API.$type.'/'.$action.'.php';
 				break;
 
 			case 'draft' :

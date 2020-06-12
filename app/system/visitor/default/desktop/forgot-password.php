@@ -36,8 +36,8 @@
                       <input type="email" class="form-control" placeholder="Email address" name="email" >
                     </div>
                     <div class="form-group">
-                      <input type="hidden" name="type" value="authentication" >
-                      <input type="hidden" name="action" value="forgotPassword" >
+                      <input type="hidden" name="type" value="auth" >
+                      <input type="hidden" name="action" value="forgot-password" >
                       <input type="submit" id="forgotPassword" class="btn btn-block btn-success" value="Send Instructions">
                     </div>
                     <!-- <div class="form-group">

@@ -20,7 +20,7 @@
 		exit();
 
 	}
-
+	
 	/** Manage All POST method request */
 
 	if($_SERVER['REQUEST_METHOD']=="POST") {

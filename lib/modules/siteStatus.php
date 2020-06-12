@@ -8,7 +8,8 @@
 
 	if($_SERVER['REQUEST_METHOD']!='POST') {
 
-		if(sizeof(explode('.', SITE_DOMAIN))==2) {
+
+		if(SITE_DOMAIN==MAIN_DOMAIN) {
 
 			require_once 'checkMainDomain.php';
 		

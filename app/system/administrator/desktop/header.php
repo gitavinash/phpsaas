@@ -82,18 +82,18 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/data/') ? 'class="active"' : '' ) ?> >
-						<a href="data.php?type=import"><i class="fas fa-database"></i> Transfer Data</a>
+					<li <?php echo ((ADMIN_BASE_URL=='/client/') ? 'class="active"' : '' ) ?> >
+						<a href="client.php?type=list"><i class="fas fa-users"></i> Client</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="data.php?type=import"><i class="fas fa-upload"></i> Import Data</a></li>
-								<li><a href="data.php?type=export"><i class="fas fa-download"></i> Export Data</a></li>
+								<li><a href="client.php?type=add"><i class="fas fa-plus"></i>  Add New Client</a></li>
+								<li><a href="client.php?type=list"><i class="fas fa-list"></i>  All Clients</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="data.php?type=import"><i class="fas fa-upload"></i> Import Data</a></li>
-								<li><a href="data.php?type=export"><i class="fas fa-download"></i> Export Data</a></li>
+								<li><a href="client.php?type=add"><i class="fas fa-plus"></i>  Add New Client</a></li>
+								<li><a href="client.php?type=list"><i class="fas fa-list"></i>  All Clients</a></li>
 							</ul>
 						</div>
 					</li>

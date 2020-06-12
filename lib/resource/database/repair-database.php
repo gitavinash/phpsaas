@@ -37,7 +37,7 @@
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."app(
     app_id bigint(20) NOT NULL,
     app_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    app_description varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    app_description LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     app_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     app_path varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'directory name of the app',
     app_status int(1) NOT NULL,
@@ -53,7 +53,10 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
     MODIFY app_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_title, app_description, app_path, app_status, app_launch_time) VALUES('System', 'All in One Control Panel for SaaS Application', 'system', 1, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(1, 'System', 'All in One Control Panel for SaaS Application', 'system', 1, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(2, 'Content Management System', 'Best suite for blogging website', 'cms', 1, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(3, 'News Management System', 'Best suite for news publishers', 'nms', 1, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(4, 'Customer Relationship Management', 'Best suite all kind of bussiness', 'crm', 1, NOW())");
 
   /** Category Table */
 
@@ -296,7 +299,7 @@
   /** Site Access Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_access
-    ADD COLUMN site_access_type varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user type table user access type code' AFTER site_access_user_id ");
+    ADD COLUMN site_access_type varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user type table user access type code' AFTER site_access_user_id ");
 
   /** Site App Table */
 

@@ -40,8 +40,8 @@
                         <input type="password" class="form-control" placeholder="Confirm passowrd" name="cnf_pass" required >
                       </div>
                       <div class="form-group">
-                        <input type="hidden" name="type" value="authentication" >
-                        <input type="hidden" name="action" value="updatePassword" >
+                        <input type="hidden" name="type" value="auth" >
+                        <input type="hidden" name="action" value="update-password" >
                         <input type="hidden" name="transaction" value="<?php echo $_GET['transaction'] ?>" >
                         <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>" >
                         <input type="submit" id="updatePassword" class="btn btn-block btn-success" value="Change Password">

@@ -46,7 +46,7 @@
                        <a href="forgot-password/" class="link">Forgot Password?</a>
                      </div>
                      <div class="form-group">
-                      <input type="hidden" name="type" value="authentication" >
+                      <input type="hidden" name="type" value="auth" >
                       <input type="hidden" name="action" value="login" >
                       <input type="hidden" name="url" value="<?php echo $redirectUrl ?>" >
                       <input type="submit" id="loginBtn" class="btn btn-block btn-success" value="Log In">
@@ -61,7 +61,7 @@
 
        <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
        <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.all.min.js"></script>
-       <script src="<?php echo SYSTEM_JS ?>app.js"></script>
+       <script src="<?php echo SYSTEM_JS ?>app.min.js"></script>
 
     </body>
 
