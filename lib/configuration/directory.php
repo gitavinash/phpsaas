@@ -17,10 +17,15 @@
 	/** Defualt UI Resource */
 
 	define('UI_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE).'ui/');
+	define('APP_LIBRARY', 'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 	define('JS_LIBRARY', UI_LIBRARY.'js/');
+	define('APP_JS_LIBRARY', JS_LIBRARY.APP_LIBRARY);
 	define('CSS_LIBRARY', UI_LIBRARY.'css/');
+	define('APP_CSS_LIBRARY', CSS_LIBRARY.APP_LIBRARY);
 	define('IMG_LIBRARY', UI_LIBRARY.'img/');
+	define('APP_IMG_LIBRARY', IMG_LIBRARY.APP_LIBRARY);
 	define('PLUGIN_LIBRARY', UI_LIBRARY.'plugin/');
+	define('APP_PLUGIN_LIBRARY', PLUGIN_LIBRARY.APP_LIBRARY);
 	define('EDITOR', PLUGIN_LIBRARY.'editor/editor.min.js');
 
 	/** Default Service Worker */
@@ -52,11 +57,6 @@
 
 	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_THEME.'/'.SITE_VERSION.'/');
 	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
-	define('SYSTEM_URL', SITE_URL.SYSTEM_DIR);
-	define('SYSTEM_STYLESHEET', SYSTEM_URL.'assets/css/');
-	define('SYSTEM_JS', SYSTEM_URL.'assets/js/');
-	define('SYSTEM_IMAGES', SYSTEM_URL.'assets/images/');
-	define('SYSTEM_PLUGINS', SYSTEM_URL.'assets/plugins/');	
 
 	/* Administrator and login member user directory managment */
 

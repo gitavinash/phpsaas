@@ -59,7 +59,7 @@
 	define('SMTP_PORT', '587'); // PORT id of their email server like :- 587, 465
 	define('SMTP_USERNAME', 'avinash@itssoftworld.com'); // email user like :- contact@punjabkesari.com
 	define('SMTP_PASSWORD', 'Ng7n1T0KZJkEF9z3'); // password of the email
-	define('SMTP_EMAIL', 'donotreply@punjabkesari.com'); // Which email is display to receiver end like :- donotreply@punjabkesari.com
+	define('SMTP_EMAIL', 'donotreply@isw.one'); // Which email is display to receiver end like :- donotreply@punjabkesari.com
 	define('SMTP_NAME', 'ITS Soft World'); // Show Name on email :- ITS Soft World, Avinash Kumar
 	define('REPLY_EMAIL', 'ITS Soft World'); // Reply email where user can send a reply mail like :- contact@punjabkesari.com
 

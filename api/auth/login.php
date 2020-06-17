@@ -4,9 +4,12 @@
 
 	function login($connection, $data) {
 
-        extract($data);
+		extract($data);
+		
+		// echo "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type WHERE user_email='{$email}' AND site_id=".SITE_ID." LIMIT 1";
+		// exit();
 
-		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type WHERE user_email='{$email}' AND site_id=".SITE_ID." LIMIT 1")) {
+		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type WHERE user_email='{$email}' LIMIT 1")) {
 
 			if(mysqli_num_rows($checkUser)!=0) {
 
@@ -28,7 +31,7 @@
 
 						ob_end_flush();
 
-						$status=200;
+						$status='success';
 						$msg='Login Successfully';
 
 					} else {
@@ -47,6 +50,7 @@
 
 				} else {
 
+					$status='error';
 					$msg='Invalid Password';
 
 				}
@@ -57,11 +61,11 @@
         }
         
 		$return=array(
-			'status' => ((isset($status)) ? $status : 206 ),
+			'status' => ((isset($status)) ? $status : 'error' ),
 			'msg' => ((isset($msg)) ? $msg : 'Invalid Username' ),
 			'url' => ((isset($url)) ? $url : '#' )
 		);
 
-		echo json_encode($return);
+		echo json_encode($return, TRUE);
     
     }

@@ -22,7 +22,7 @@
 
 	/* Error Reporting */
 
-	define('DEVELOPMENT_MODE', true); // Error reporting true to show error or false to hide error
+	define('DEVELOPMENT_MODE', false); // Error reporting true to show error or false to hide error
 
 	/** User IP Address */
 

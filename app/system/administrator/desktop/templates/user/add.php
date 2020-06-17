@@ -1,7 +1,7 @@
 <h2>Add New <?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?></h2>
 
 <div class="form-box">
-	<form method="POST" id="formData" enctype="multipart/form-data" >
+	<form method="POST" id="registerFormData" enctype="multipart/form-data" >
         <div class="box-2">
             <div class="form-group">
                 <label>First Name*</label>
@@ -35,7 +35,7 @@
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="user" >
 				<input type="hidden" name="action" value="add" >
-                <input type="submit" class="btn btn-green" value="Add User">
+                <input type="submit" id="registerBtn" class="btn btn-green" value="Add User">
             </div>
         </div>
 	</form>

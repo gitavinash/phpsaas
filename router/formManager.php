@@ -55,7 +55,7 @@
 					call_user_func($secure['action'], $connection, $secure);
 	
 				} else {
-	
+					echo $includeFile;
 					echo '<h1>Undefine function '.$type.' -> '.$secure['action'].' </h1>';
 	
 				}

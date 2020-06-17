@@ -47,6 +47,10 @@ h1 span {
 	color: #949494;
 }
 
+h1 span strong {
+	color: #2d2d2d;
+}
+
 a.link {
 	float: left;
 	width: 100%;
