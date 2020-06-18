@@ -5,16 +5,6 @@
     header("Location: /dashboard/");
     exit();
 
-  } else {
-
-    if(isset($_COOKIE['site_app'])) {
-
-      /** Redirect to website setup url to those users who has not complete his setup */
-
-      require_once MODULES.'isLogin.php';
-
-    }
-
   }
 
   $redirectUrl=((isset($_GET['url'])) ? mysqli_escape_real_string($connection, $_GET['url']) : '/dashboard/' );

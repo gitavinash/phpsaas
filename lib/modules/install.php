@@ -80,10 +80,6 @@
 
 		} else {
 
-			echo $insertUser.' && '.$insertSite.' && '.$insertSiteApp.' && '.$insertSiteAccess.' && '.$insertSiteSetting.' && '.$insertProfile;
-			exit();
-
-			echo mysqli_error($connection);
 			mysqli_query($connection, 'ROLLBACK');
 			exit();
 
