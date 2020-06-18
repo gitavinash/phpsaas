@@ -7,13 +7,13 @@
                <form id="register" method='POST' >
                      <h1>Register<span>Get your free account now</span></h1>
                      <div class="form-group">
-                       <input type="text" name="first_name*" id="first_name" placeholder="First name" class="form-control" autofocus required />
+                       <input type="text" name="first_name" id="first_name" placeholder="First name*" class="form-control" autofocus required />
                      </div>
                      <div class="form-group">
-                       <input type="text" name="last_name*" id="last_name" placeholder="Last name" class="form-control" required />
+                       <input type="text" name="last_name" id="last_name" placeholder="Last name*" class="form-control" required />
                      </div>
                      <div class="form-group">
-                       <input type="text" name="mobile*" id="mobile" placeholder="Mobile no" class="form-control" required />
+                       <input type="text" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control" required />
                      </div>
                      <div class="form-group">
                        <input type="email" class="form-control" id="email" placeholder="Email address*" name="email" required />

@@ -5,7 +5,7 @@
 	function register($connection, $data) {
 
         extract($data);
-
+        
         if($checkEmail=mysqli_query($connection, "SELECT user_email FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
 
             if(mysqli_num_rows($checkEmail)==0) {
