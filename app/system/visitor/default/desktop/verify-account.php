@@ -12,7 +12,7 @@
 				extract(mysqli_fetch_assoc($checkEmail));
 
 				if($user_status==1) {
-					$msg='This email is already verified';
+					$msg="This email is already verified <a href='/login/'>Click here to login</a>";
 				} else {
 					$showError=TRUE;
 				}
@@ -55,8 +55,7 @@
 					 
 					?>
 				
-				</form>	
-				<p class="footer">By joining <?php echo CREDIT ?>, you agree to our <a href="terms-and-services/" title="Terms of Service">Terms of Service</a> and <a href="privacy-policy/" title="Privacy Policy">Privacy Policy</a></p>
+				</form>
 			</div>
 <?php
 

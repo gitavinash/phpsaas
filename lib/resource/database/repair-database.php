@@ -53,10 +53,18 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
     MODIFY app_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
+    ADD COLUMN app_visiblity INT(1) NOT NULL DEFAULT 1 AFTER app_stutus");
+
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(1, 'System', 'All in One Control Panel for SaaS Application', 'system', 1, NOW())");
+
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(2, 'Content Management System', 'Best suite for blogging website', 'cms', 1, NOW())");
+
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(3, 'News Management System', 'Best suite for news publishers', 'nms', 1, NOW())");
+
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(4, 'Customer Relationship Management', 'Best suite all kind of bussiness', 'crm', 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(5, 'The Doctor Zone', 'Customized App for Bharani Clinic', 'doctorzone', 1, 0, NOW())");
 
   /** Category Table */
 
@@ -213,7 +221,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."package
     MODIFY package_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(1, 'System Default Package', 0, 0, 1, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(1, 1, 'System Default Package', 0, 0, 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(2, 2, 'Default Package', 0, 0, 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(3, 3, 'Default Package', 0, 0, 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(4, 4, 'Default Package', 0, 0, 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(5, 5, 'Default Package', 0, 0, 1, NOW())");
 
   /* Page Table */
 
@@ -389,7 +405,18 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."theme
     MODIFY theme_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_app_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 'Default Administration Theme', 'Dedicated theme to sysmtem administration only', 'default', '1.0', 1, NOW(), NOW())");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."theme
+    ADD COLUMN theme_package_id INT(1) NOT NULL DEFAULT 0 AFTER theme_app_id");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 1, 1, 'Default Administration Theme', 'Dedicated theme to sysmtem administration only', 'default', '1.0', 1, NOW(), NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(2, 2, 2, 'Default Theme', 'Default theme of Blog Website', 'default', '1.0', 1, NOW(), NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(3, 3, 3, 'Default Theme', 'Default theme of News website', 'default', '1.0', 1, NOW(), NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(4, 4, 4, 'Default Theme', 'Default theme of CRM', 'default', '1.0', 1, NOW(), NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(5, 5, 5, 'Default Theme', 'Default theme of The Doctor Zone', 'default', '1.0', 1, NOW(), NOW())");
 
   /* User Table */
 

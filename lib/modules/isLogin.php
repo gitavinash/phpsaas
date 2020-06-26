@@ -14,9 +14,10 @@
 
 				extract(mysqli_fetch_assoc($checkUserIsReal));
 
+				$encryptEmail=base64_encode($user_email);
+
 				if($user_status!=1) {
 					
-					$encryptEmail=base64_encode($user_email);
 					header("Location: /verify-account/?email={$encryptEmail}");
 					exit();
 
@@ -44,7 +45,7 @@
 
 							if($site_access_type='administrator') {
 								
-								header("Location: /website-setup.php");
+								header("Location: /website-setup.php?setup_id={$encryptEmail}");
 								exit();
 
 							} else {

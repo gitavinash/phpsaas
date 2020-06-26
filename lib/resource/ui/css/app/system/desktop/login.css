@@ -30,6 +30,11 @@ form {
 	margin: 0px 20px;
 }
 
+label {
+	font-size: 12px;
+	color: #949494;
+}
+
 h1 {
 	float: left;
 	width: 100%;

@@ -36,8 +36,8 @@
 	define('SITE_NAME', ((isset($site_name)) ? $site_name : CREDIT ));
 	define('SITE_DESC', ((isset($site_description)) ? $site_description : '' ));
 	define('SITE_TAGS', ((isset($site_keyword)) ? $site_keyword : '' ));
-	define('SITE_APP', ((isset($site_app)) ? $site_app : 'system' )); // deafult all for visitors
-	define('SITE_THEME', ((isset($site_theme)) ? $site_theme : 'default' ));	// default theme of website for visitor
+	define('SITE_APP', ((isset($app_path)) ? $app_path : 'system' )); // deafult all for visitors
+	define('SITE_THEME', ((isset($theme_path)) ? $theme_path : 'default' ));	// default theme of website for visitor
 
 	/** Use when user is logged in */
 

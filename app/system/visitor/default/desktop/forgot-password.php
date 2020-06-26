@@ -23,7 +23,6 @@
                     <p id='statusMsg'></p>
                   </div>
                </form>
-               <p class="footer">By joining ITS Soft World, you agree to our <a href="terms-and-services/" title="Terms of Service">Terms of Service</a> and <a href="privacy-policy/" title="Privacy Policy">Privacy Policy</a></p>
            </div>
 <?php
 
