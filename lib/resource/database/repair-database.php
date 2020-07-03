@@ -54,7 +54,7 @@
     MODIFY app_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
-    ADD COLUMN app_visiblity INT(1) NOT NULL DEFAULT 1 AFTER app_stutus");
+    ADD COLUMN app_visiblity INT(1) NOT NULL DEFAULT 1 AFTER app_status");
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(1, 'System', 'All in One Control Panel for SaaS Application', 'system', 1, NOW())");
 
@@ -64,7 +64,11 @@
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(4, 'Customer Relationship Management', 'Best suite all kind of bussiness', 'crm', 1, NOW())");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(5, 'The Doctor Zone', 'Customized App for Bharani Clinic', 'doctorzone', 1, 0, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(5, 'The Doctor Zone', 'Customized App for Bharani Clinic', 'doctorzone', 1, 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(6, 'Tarot By Sid', 'Customized App for Tarot by Sid', 'tarotbysid', 1, 1, NOW())");
+
+  mysqli_query($connection, "UPDATE ".TABLE_PREFIX."app SET app_visiblity=0 WHERE app_path='system'");
 
   /** Category Table */
 

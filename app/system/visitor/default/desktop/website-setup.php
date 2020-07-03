@@ -3,14 +3,14 @@
   // Setup id is refer to email of the user
 
   if(!isset($_GET['setup_id'])) {
-    echo "Something is wrong. <a href='/logout/'>Click here to try again</a>";
+    echo "Something is wrong1. <a href='/logout/'>Click here to try again</a>";
     exit();
   }
 
   // check setup has some value
 
   if($_GET['setup_id']=='') {
-    echo "Something is wrong. <a href='/logout/'>Click here to try again</a>";
+    echo "Something is wrong2. <a href='/logout/'>Click here to try again</a>";
     exit();
   }
 
@@ -35,20 +35,20 @@
 
 ?>
            <div class="form-box">
-               <form id="websiteSetup" method='POST' >
+               <form id="websiteSetup" >
                      <h1>Website Setup<span>Finish your website setup</span></h1>
                      <div class="form-group username">
                        <label for="username">Username*</label>
-                       <input type="text" class="form-control" id="username" placeholder="Username*" name="username" value="<?php echo $user_username ?>" autofocus required >
+                       <input type="text" class="form-control" id="username" placeholder="Username*" name="username" value="<?php echo $user_username ?>" readonly >
                      </div>
                      <div class="form-group">
-                       <label for="domain" >Domain</label>
-                       <input type="text" class="form-control" id="domain" placeholder="Domain*" name="domain" required >
+                       <label for="domain" >Domain*</label>
+                       <input type="text" class="form-control" id="domain" placeholder="Domain*" name="domain" autofocus required >
                      </div>
                      <div class="form-group">
-                       <label for="app">Application</label>
+                       <label for="app">Application*</label>
                        <select name="app" class="form-control" id="app">
-                         <option value="">Select Application</option>
+                         <option value="">Select Application*</option>
                          <?php
                           if($appList=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."app WHERE app_status=1 AND app_visiblity=1")) {
                             if(mysqli_num_rows($appList)!=0) {
@@ -61,10 +61,10 @@
                        </select>
                      </div>
                      <div class="form-group">
-                      <input type="hidden" name="type" value="website" >
-                      <input type="hidden" name="action" value="setup" >
-                      <input type="hidden" name="url" value="<?php echo $redirectUrl ?>" >
-                      <input type="submit" id="loginBtn" class="btn btn-block btn-success" value="Finish Setup">
+                      <input type="hidden" name="type" value="setting" >
+                      <input type="hidden" name="action" value="website_setup" >
+                      <input type="hidden" name="username" value="<?php echo $user_username ?>" >
+                      <input type="submit" id="websiteSetupBtn" class="btn btn-block btn-success" value="Finish Setup">
                      </div>
                </form>
            </div>

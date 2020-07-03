@@ -4,7 +4,7 @@
 
 ?>
            <div class="form-box">
-               <form id="forgot" method="POST" >
+               <form id="forgot">
                   <h1>Forgot your password?<span>We'll email you instructions on how to reset it</span></h1>
                   <div class="beforeClick">
                     <div class="form-group">

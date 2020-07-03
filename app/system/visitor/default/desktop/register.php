@@ -4,7 +4,7 @@
 
 ?>
            <div class="form-box">
-               <form id="register" method='POST' >
+               <form id="register">
                      <h1>Register<span>Get your free account now</span></h1>
                      <div class="form-group">
                        <input type="text" name="first_name" id="first_name" placeholder="First name*" class="form-control" autofocus required />

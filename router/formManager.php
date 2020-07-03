@@ -2,69 +2,45 @@
 
 	if($_SERVER['REQUEST_METHOD']=='POST') {
 
+		header("Content-type: application/json; charset=utf-8");
+
 		foreach($_POST as $key => $value) {
 			$secure[$key]=mysqli_real_escape_string($connection, $value);
 		}
 
 		extract($secure);
 
-		switch ($type) {
-			
-			case 'api' :
-				header("Content-type: application/json; charset=utf-8");
-				$includeFile = API.$action.'/'.$siteAction.'.php';
-				break;
+		/** Default API Request */
 
-			case 'auth' :
-				header("Content-type: application/json; charset=utf-8");
-				$includeFile = API.$type.'/'.$action.'.php';
-				break;
+		$apiCall=API_MODULES.$type.'/'.$action.'.php';
 
-			case 'draft' :
-				if(isset($secure['post_id'])) {
-					$secure['action']='update';
-				} else {
-					$secure['action']='add';
-				}
-				$includeFile = APP_MODULES.$type.'.php';
-				break;
+		if(!file_exists($apiCall)) {
 
-			default:
+			/** Website APP Api Request */
 
-				if(file_exists(MODULES.$type.'.php')) {
+			$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
 
-					$includeFile=MODULES.$type.'.php';
-
-				} else {
-
-					$includeFile = APP_MODULES.$type.'.php';
-
-				}
-
-				break;
 		}
+		
+		if(file_exists($apiCall)) {
 
-		if(file_exists($includeFile)) {
+			/** Call the API */
 
-			require_once $includeFile;
+			require_once $apiCall;
 
-			if($type!='api') {
+			if(function_exists($action)) {
 
-				if(function_exists($secure['action'])) {
+				call_user_func($action, $connection, $secure);
 
-					call_user_func($secure['action'], $connection, $secure);
-	
-				} else {
-					echo $includeFile;
-					echo '<h1>Undefine function '.$type.' -> '.$secure['action'].' </h1>';
-	
-				}
+			} else {
+				
+				echo '<h1>Undefine function '.$type.' -> '.$action.' </h1>';
 
 			}
 
 		} else {
 
-			echo 'Unable to find current request method -> '.$includeFile;
+			echo "Unable to find current request method -> ".$apiCall;
 
 		}
 

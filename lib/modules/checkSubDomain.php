@@ -7,7 +7,6 @@
 		if(mysqli_num_rows($checkInstallation)!=0) {
 
             extract(mysqli_fetch_assoc($checkInstallation));
-            // exit();
 
         } else {
 

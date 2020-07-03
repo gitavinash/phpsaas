@@ -4,7 +4,7 @@
 
 ?>
            <div class="form-box">
-               <form id="login" method='POST' >
+               <form id="login" >
                      <h1>Login<span>Sign in your account</span></h1>
                      <div class="form-group">
                        <input type="email" class="form-control" id="email" placeholder="Email address*" name="email" autofocus required >

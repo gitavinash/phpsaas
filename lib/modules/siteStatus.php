@@ -8,7 +8,6 @@
 
 	if($_SERVER['REQUEST_METHOD']!='POST') {
 
-
 		if(SITE_DOMAIN==MAIN_DOMAIN) {
 
 			require_once 'checkMainDomain.php';

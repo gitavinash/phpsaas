@@ -5,8 +5,8 @@
     if(file_exists($filename)) {
 
         require_once $filename;
-
-        header("Location: /install/?step=1", TRUE, 301);
+        header("Refresh:0");
+        exit();
 
     } else {
 

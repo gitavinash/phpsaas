@@ -2,16 +2,18 @@
 
 	/* Set up default system application */
 
-	function website ($connection, $data) {
+	function website($connection, $data) {
 
 		extract($data);
 
 		$expireDate=date('Y-m-d', strtotime('+10 years'));
 
 		if($checkUser=mysqli_query($connection, "SELECT user_email FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
-			if(mysqli_num_rows($checkUser)!=0) {
+            
+            if(mysqli_num_rows($checkUser)!=0) {
 
-				header("Location /?msg=email is already register.");
+                $status='warning';
+                $msg='This email is already register.';
 				exit();
 
 			}
@@ -20,7 +22,8 @@
 
 				if(mysqli_num_rows($checkDomain)!=0) {
 
-					header("Location /?msg=domain is already register.");
+                    $status='warning';
+                    $msg='domain is already register.';
 					exit();
 
 				}
@@ -75,14 +78,24 @@
 
 			require_once EMAIL_TEMPLATE.'add-new-user.php';
 
-			header("Location: /install/?step=2");
-			exit();
+            $status='success';
+            $msg='Website is now ready to use';
+            $url='/login/';
 
 		} else {
 
+            $status='error';
+            $msg='Unable to process the installation request';
 			mysqli_query($connection, 'ROLLBACK');
-			exit();
 
-		}
+        }
+        
+        $result=array(
+            'status' => ((isset($status)) ? $status : 'error' ),
+            'msg' => ((isset($msg)) ? $msg : 'Something is wrong while setup your website' ),
+            'url' => ((isset($url)) ? $url : '#' )
+        );
+
+        echo json_encode($result, TRUE);
 
 	}

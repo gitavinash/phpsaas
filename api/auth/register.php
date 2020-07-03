@@ -68,7 +68,7 @@
                             
                             $status='success';
                             $msg='You are successfully registered';
-                            $url='/website-setup.php';
+                            $url='/website-setup.php?setup_id='.base64_encode($email);
 
 
                         } else {

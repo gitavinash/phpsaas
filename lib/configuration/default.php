@@ -6,7 +6,7 @@
 	/** Developers Credit */
 
 	define('CREDIT', 'ITS Soft World');
-	define('CREDIT_MAIL', 'avinash@itssoftword.com');
+	define('CREDIT_MAIL', 'avinash@isw.one');
 	define('CREDIT_URL', 'http://www.itssoftworld.com');
 
 	/** Use for url rounting in router index.php */

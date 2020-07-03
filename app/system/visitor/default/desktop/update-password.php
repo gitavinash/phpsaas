@@ -4,7 +4,7 @@
 
 ?>
            <div class="form-box">
-               <form id="update" method="POST" >
+               <form id="update" >
                      <h1>Update your password.<span>Change password of <strong><?php echo base64_decode($_GET['email']); ?></strong></span></h1>
                      <div class="beforeClick">
                       <div class="form-group">

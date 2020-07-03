@@ -4,6 +4,7 @@
 
 	define('CONFIG', ROOT.'/lib/configuration/');
 	define('MODULES', ROOT.'/lib/modules/');
+	define('API_MODULES', ROOT.'/api/');
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
 	define('NOTIFICATION', RESOURCE.'notification/');
@@ -32,13 +33,17 @@
 
 	define('SERVICE_WORKER', RESOURCE.'service-worker/sw.min.js');
 
+	/** System default and usefull modules */
+
 	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
 	define('IMAGE_UPLOADER', MODULES.'imageUploader.php');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');
 	define('SITE_STATUS', MODULES.'siteStatus.php');
-	define('APP_DIR', ROOT.'/app/');
-	define('API', ROOT.'/api/');
 
+	/** API Directory */
+
+	define('API_APP_MODULES', API_MODULES.SITE_APP.'/');
+	
 	/* Email Directory Configuration */
 
 	define('SEND_EMAIL', CONFIG.'mail/send_email.php');
