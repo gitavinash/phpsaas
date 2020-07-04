@@ -29,7 +29,7 @@
 			<div class="right-side">
 				<ul>
 					<li>
-						<a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong> <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE!='') ? PROFILE_IMAGE : ADMIN_IMAGES.'default-profile.png' ); ?>" alt=""></div></a>
+						<a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong> <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE!='') ? PROFILE_IMAGE : IMG_LIBRARY.'default-profile.png' ); ?>" alt=""></div></a>
 						<ul>
 							<li><a href="setting.php?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
 							<li><a href="setting.php?type=password"><i class="fas fa-key"></i> Change Password</a></li>

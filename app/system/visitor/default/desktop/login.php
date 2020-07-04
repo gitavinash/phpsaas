@@ -10,7 +10,7 @@
                        <input type="email" class="form-control" id="email" placeholder="Email address*" name="email" autofocus required >
                      </div>
                      <div class="form-group">
-                       <input type="password" class="form-control" id="password" placeholder="Password*" name="pass" required >
+                       <input type="password" class="form-control" id="pass" placeholder="Password*" name="pass" required >
                      </div>
                      <div class="form-group">
                        <a href="forgot-password/" class="link">Forgot Password?</a>

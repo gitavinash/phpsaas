@@ -1,0 +1,40 @@
+$(document).ready(function(e){
+
+    $('#menu').click(function(e) {
+        $('.full-screen-menu').css('display', 'block');
+        e.preventDefault();
+    });
+
+    $('#closeMenu').click(function(e) {
+        $('.full-screen-menu').css('display', 'none');
+        e.preventDefault();
+    })
+
+    $('#search').click(function(e) {
+        $('.search-box').css('display', 'block');
+        $('#searchBar').focus();
+        e.preventDefault();
+    });
+
+    $('#closeSearch').click(function(e) {
+        $('.search-box').css('display', 'none');
+        e.preventDefault();
+    })
+
+    /* Homepage slider */
+
+    $('.homepageSlider').slick({
+        infinite: true,
+        autoplay: true,
+        speed: 1500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: false,
+        prevArrow: false
+    });
+
+    /** PWA Script */
+
+    
+
+});

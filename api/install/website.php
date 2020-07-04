@@ -60,11 +60,11 @@
 		$insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_lang, site_domain, site_url, site_name, site_description, site_app_id, site_theme_id, site_index, site_expire_date, site_status) VALUES('{$userID}', '{$site_lang}', '".SITE_DOMAIN."', '".SITE_DOMAIN."', '{$site_name}', '{$site_desc}', '{$appID}', '{$themeID}', '{$index}', '{$expireDate}', 1)");
 		$siteID=mysqli_insert_id($connection);
 
-		$insertSiteApp=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_app(site_app_app_id, site_app_site_id, site_app_user_id, site_app_package_id, site_app_activation_time, site_app_expiry_time, site_app_status) VALUES('{$appID}', '{$siteID}', '{$userID}', '{$packageID}', NOW(), '{$expireDate}', 1)");
+		$insertSiteApp=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_app(site_app_app_id, site_app_site_id, site_app_user_id, site_app_package_id, site_app_activation_time, site_app_expiry_date, site_app_status) VALUES('{$appID}', '{$siteID}', '{$userID}', '{$packageID}', NOW(), '{$expireDate}', 1)");
 
 		$insertSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', 'administrator', 1)");
 
-		$insertSiteSetting=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_setting(site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height) VALUES(10, 10, 10, 60, 223, 96)");
+		$insertSiteSetting=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_setting(site_custom_domain, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height) VALUES(1, 10, 10, 10, 60, 223, 96)");
 
 		$insertProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '', '', '', '{$site_name}', '{$email}')");
 
@@ -83,6 +83,8 @@
             $url='/login/';
 
 		} else {
+
+			echo $insertUser.' && '.$insertSite.' && '.$insertSiteApp.' && '.$insertSiteAccess.' && '.$insertSiteSetting.' && '.$insertProfile;
 
             $status='error';
             $msg='Unable to process the installation request';

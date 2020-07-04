@@ -341,12 +341,27 @@
     ADD KEY site_app_user_id (site_app_user_id),
     ADD KEY site_app_site_id (site_app_site_id),
     ADD KEY site_app_theme_id (site_app_theme_id),
-    ADD KEY site_app_package_id (site_app_package_id)
-    ADD KEY site_app_expiry_time (site_app_expiry_time)
+    ADD KEY site_app_package_id (site_app_package_id),
+    ADD KEY site_app_expiry_time (site_app_expiry_time),
     ADD KEY site_app_status (site_app_status)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
     MODIFY site_app_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    CHANGE site_app_activation_time site_app_activation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    CHANGE site_app_expiry_time site_app_expiry_date DATE NOT NULL;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    DROP INDEX site_app_expiry_time");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD KEY site_app_expiry_date (site_app_expiry_date)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD KEY site_app_activation_time (site_app_activation_time)");
 
   /** Site Setting Table */
 
@@ -412,15 +427,7 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."theme
     ADD COLUMN theme_package_id INT(1) NOT NULL DEFAULT 0 AFTER theme_app_id");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 1, 1, 'Default Administration Theme', 'Dedicated theme to sysmtem administration only', 'default', '1.0', 1, NOW(), NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(2, 2, 2, 'Default Theme', 'Default theme of Blog Website', 'default', '1.0', 1, NOW(), NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(3, 3, 3, 'Default Theme', 'Default theme of News website', 'default', '1.0', 1, NOW(), NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(4, 4, 4, 'Default Theme', 'Default theme of CRM', 'default', '1.0', 1, NOW(), NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(5, 5, 5, 'Default Theme', 'Default theme of The Doctor Zone', 'default', '1.0', 1, NOW(), NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."theme(theme_id, theme_app_id, theme_package_id, theme_title, theme_description, theme_path, theme_version, theme_status, theme_publish_time, theme_update_time) VALUES(1, 1, 1, 'Default App Theme', 'Dedicated default theme for every application', 'default', '1.0', 1, NOW(), NOW())");
 
   /* User Table */
 

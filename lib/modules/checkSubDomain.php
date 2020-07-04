@@ -8,6 +8,13 @@
 
             extract(mysqli_fetch_assoc($checkInstallation));
 
+            if($site_custom_domain==1) {
+
+                header("Location: http://{$site_domain}", TRUE, 301);
+                exit();
+
+            }
+
         } else {
 
             require_once $_SERVER['DOCUMENT_ROOT'].'/app/system/visitor/default/desktop/domain-not-found.php';

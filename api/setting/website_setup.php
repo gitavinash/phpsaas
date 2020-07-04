@@ -6,7 +6,10 @@
 
         extract($data);
 
-        $checkUser=mysqli_query($connection, "SELECT user_id FROM ".TABLE_PREFIX."user WHERE user_username='{$username}'");
+		$expireDate=date('Y-m-d', strtotime('+1 years'));
+        $theme=((isset($theme)) ? $theme : 1 );
+        $package=((isset($package)) ? $package : 1 );
+        $checkUser=mysqli_query($connection, "SELECT user_id, site_id FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."site ON site_owner_id=user_id WHERE user_username='{$username}'");
     
         if(mysqli_num_rows($checkUser)!=0) {
 
@@ -16,20 +19,30 @@
 
             if(mysqli_num_rows($checkDomain)==0) {
 
-                if($updateSite=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_domain='{$domain}' WHERE site_owner_id='{$user_id}'")) {
+                mysqli_query($connection, "START TRANSACTION");
+
+                $updateSite=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_domain='{$domain}', site_app_id='{$app}', site_theme_id=1, site_status=1, site_expire_date='{$expireDate}' WHERE site_id='{$site_id}'");
+
+                $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_custom_domain=1 WHERE site_setting_id='{$site_id}'");
+
+                $updateSiteApp=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_app SET site_app_app_id='{$app}', site_app_site_id='{$site_id}', site_app_user_id='{$user_id}',  site_app_theme_id='{$theme}', site_app_package_id={$package}, site_app_expiry_date='{$expireDate}' WHERE site_app_id='{$site_id}'");
+
+                if($updateSite && $updateSiteSetting && $updateSiteApp) {
 
                     $status='success';
                     $msg='Website setup is successfully completed';
-                    $url='/dashboard/';
+                    $url='/login/';
+
+                    mysqli_query($connection, "COMMIT");
 
                 } else {
 
                     $status='error';
                     $msg='System is unable to complete the task';
 
-                }
+                    mysqli_query($connection, "ROLLBACK");
 
-                
+                }
 
             } else {
 
