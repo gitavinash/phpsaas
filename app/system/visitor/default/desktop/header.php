@@ -22,7 +22,7 @@
         <meta name="robots" value="index" >
         <link rel="icon" href="<?php echo SITE_ICON ?>">
         <title><?php echo ucwords(str_replace('/', '', str_replace('-', ' ', str_replace('/', ' ', BASE_URL)))).' | '.SITE_NAME ?></title>
-        <link rel="canonical" href="http://www.shaktipedia.com/durga-chalisa/" />
+        <link rel="canonical" href="<?php echo SITE_URL.ACTIVE_URL ?>" />
         <meta name="theme-color" content="#FE6F06">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css" >
