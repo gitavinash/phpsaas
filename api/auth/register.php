@@ -36,7 +36,7 @@
                         }
 
 
-                        $siteURL=$username.'.isw.local';
+                        $siteURL=$username.SITE_DOMAIN;
 
                         mysqli_query($connection, "START TRANSACTION");
 
