@@ -23,7 +23,7 @@
         <link rel="icon" href="<?php echo SITE_ICON ?>">
         <title><?php echo ucwords(str_replace('/', '', str_replace('-', ' ', str_replace('/', ' ', BASE_URL)))).' | '.SITE_NAME ?></title>
         <link rel="canonical" href="<?php echo SITE_IRL.ACTIVE_URL ?>" />
-        <meta name="theme-color" content="#FE6F06">
+        <meta name="theme-color" content="#26ABDF">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css" >
         <link rel="stylesheet" href="<?php echo APP_CSS_LIBRARY ?>login.min.css">
