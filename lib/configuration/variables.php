@@ -6,12 +6,12 @@
         "description": "%SITE_DESC%",
         "icons": [
             {
-                "src": "%SITE_LOGO%",
+                "src": "%SITE_ICON%",
                 "type": "image/png",
                 "sizes": "192x192"
             },
             {
-                "src": "%SITE_LOGO%",
+                "src": "%SITE_ICON%",
                 "type": "image/png",
                 "sizes": "512x512"
             }
