@@ -14,7 +14,7 @@
 
 						if(mysqli_num_rows($checkDomain)==0) {
 							
-							$websiteIntallationFile=ROOT.'/app/install/website-install.php';
+							$websiteIntallationFile=ROOT.'/app/install/website.php';
 
 							if(file_exists($websiteIntallationFile)) {
 								

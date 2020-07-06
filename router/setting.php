@@ -1,5 +1,7 @@
 <?php
 
+    /** Showing all view of settings related url like mainfest, ads.txt and robots.txt */
+
     $fileName=explode('.', $urlStructure[0]);
 
     $settingPath=RESOURCE.'setting/'.$fileName[0].'.php';

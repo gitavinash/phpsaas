@@ -316,6 +316,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
     CHANGE site_indexing site_index varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    CHANGE site_index site_index VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'noindex, nofollow'");
+
   /** Site Access Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_access

@@ -2,7 +2,7 @@
 
 	/* Set up default system application */
 
-	function website_setup($connection, $data) {
+	function domain($connection, $data) {
 
         extract($data);
 

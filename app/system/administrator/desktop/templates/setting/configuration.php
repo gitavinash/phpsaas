@@ -3,14 +3,14 @@
 <div class="form-box">
 	<div class="configMenu">
         <ul>
-            <li id="pos1" class="active" >General</li>
-            <li id="pos2">Ads.txt</li>
-            <li id="pos3">Robots.txt</li>
-            <li id="pos4">Mainfest.json</li>
+            <li id="configurationBtn" class="active" >General</li>
+            <li id="adsTab">Ads.txt</li>
+            <li id="robotsTab">Robots.txt</li>
+            <li id="mainfestTab">Mainfest.json</li>
         </ul>
     </div>
     <div class="configBody">
-        <div id="pos1Box">
+        <div id="configurationTabBox" >
             
             <!-- General Configuration section -->
 
@@ -26,55 +26,71 @@
                     ?>
 
                     <div class="form-box" style="margin: 0 auto" >
-                        <h3>Manage Website Basic Configurations</h3>
-                        <form method="POST" id="websiteData" >
-                            <div class="box-2">
+                        <div class="box-2">
+                            <h3>Manage Website Basic Configurations</h3>
+                            <form id="websiteData" >
+                                <?php
+                                
+                                if($site_domain!='') { ?>
+                                    <div class="form-group">
+                                        <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
+                                        <input type="text" name="site_domain" value='<?php echo $site_domain ?>' class="form-control inside-shadow" placeholder="Website Domain" readonly >
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label>Actual Website URL*</label>
+                                        <input type="text" name="site_url" value='<?php echo (($site_url=='') ? $site_domain : $site_url ) ?>' class="form-control inside-shadow" placeholder="Website URL" readonly >
+                                    </div> -->
+                                <?php
+                                } else { ?>
+                                    <div class="form-group">
+                                        <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
+                                        <input type="text" name="site_domain" value='<?php echo $site_domain ?>' class="form-control inside-shadow" placeholder="Website Domain" readonly >
+                                    </div>
+                                <?php
+                                }
+
+                                ?>
                                 <div class="form-group">
-                                    <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
-                                    <input type="text" name="site_domain" value='<?php echo HTTP_PROTOCOL.$site_domain ?>' class="form-control inside-shadow" placeholder="Website Domain" <?php echo (($user_id==1) ? 'readonly' : '' ) ?> >
+                                    <label>Website Name*</label>
+                                    <input type="text" id="websiteName" value="<?php echo $site_name; ?>" name="site_name" class="form-control inside-shadow" placeholder="First Name" required >
                                 </div>
                                 <div class="form-group">
-                                    <label>Actual Website URL</label>
-                                    <input type="text" name="site_url" value='<?php echo HTTP_PROTOCOL.(($site_url=='') ? $site_domain : $site_url ) ?>' class="form-control inside-shadow" placeholder="Website URL" <?php echo (($user_id==1) ? 'readonly' : '' ) ?> >
-                                </div>
-                                <div class="form-group">
-                                    <label>Website Name</label>
-                                    <input type="text" value="<?php echo $site_name; ?>" name="name" class="form-control inside-shadow" placeholder="First Name" required >
-                                </div>
-                                <div class="form-group">
-                                    <label>About Website</label>
-                                    <textarea name="description" style="height: 100px;" class="form-control inside-shadow" placeholder="About Website ( Recommendation Max 170 Characters )" ><?php echo $site_description ?></textarea>
+                                    <label>About Website*</label>
+                                    <textarea name="site_description" id="websiteDescription" style="height: 100px; background: none" class="form-control inside-shadow" placeholder="About Website ( Recommendation Max 170 Characters )" ><?php echo $site_description ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Website Keywords ( Use , to seprate Keywords )</label>
-                                    <textarea name="keyword" style="height: 100px;" class="form-control inside-shadow" placeholder="Website Keywords ( Use , to seprate Keywords )" ><?php echo $site_keyword ?></textarea>
+                                    <textarea name="site_keyword" id="websiteKeyword" style="height: 100px; background: none" class="form-control inside-shadow" placeholder="Website Keywords ( Use , to seprate Keywords )" ><?php echo $site_keyword ?></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label>Select website language</label>
-                                    <select name="site_lang" class="form-control inside-shadow" required >
-                                        <option value="">Language list</option>
+                                    <label>Website Theme Color</label>
+                                    <div id="color-drop">
+                                        <input type="color" name="site_theme" value="<?php echo ((SITE_THEME_COLOUR!='') ? SITE_THEME_COLOUR : '#26ABDF') ?>" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Select website language*</label>
+                                    <select name="site_lang" id="siteLang" class="form-control inside-shadow" required >
+                                        <option value="">Select Language</option>
                                         <option value="hi_IN" <?php echo (($site_lang=='hi_IN') ? 'selected' : '' ) ?> >हिंदी</option>
-                                        <option value="en" <?php echo (($site_lang=='en') ? 'selected' : '' ) ?>  >English (United States)</option>
-                                        <option value="en_AU" <?php echo (($site_lang=='en_AU') ? 'selected' : '' ) ?>  >English (Australia)</option>
-                                        <option value="en_AU" <?php echo (($site_lang=='en_AU') ? 'selected' : '' ) ?>  >English (South Africa)</option>
-                                        <option value="en_CA" <?php echo (($site_lang=='en_CA') ? 'selected' : '' ) ?>  >English (Canada)</option>
-                                        <option value="en_GB" <?php echo (($site_lang=='en_GB') ? 'selected' : '' ) ?>  >English (UK)</option>
-                                        <option value="en_NZ" <?php echo (($site_lang=='en_NZ') ? 'selected' : '' ) ?>  >English (New Zealand)</option>
+                                        <option value="en" <?php echo (($site_lang=='en') ? 'selected' : '' ) ?>  >English</option>
                                     </select>
                                 </div>
                                 <div class="form-check" style="margin-bottom: 20px;">
-                                    <input type="checkbox" name="site_index" value="1" class="form-check-input" <?php echo (($site_index==1) ? 'checked' : '' ) ?> >
+                                    <input type="checkbox" name="site_index" value="noindex, nofollow" class="form-check-input" <?php echo (($site_index!='') ? 'checked' : '' ) ?> >
                                     <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="hidden" name="type" value="<?php echo $postType ?>" >
-                                    <input type="hidden" name="action" value="website" >
+                                    <input type="hidden" name="type" value="setting" >
+                                    <input type="hidden" name="action" value="configuration" >
                                     <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
                                     <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
                                     <input type="submit" id="updateWebsite" class="btn btn-green" value="Update Website" >
                                 </div>
-                            </div>
-                            <div class='box-2'>
+                            </form>
+                        </div>
+
+                        <div class='box-2'>
                             <form id="websiteLogo" enctype="multipart/form-data" >
                                 <h3>Website Logo</h3>
                                 <div class="siteLogoPreviewBox" style="display: none;">
@@ -88,7 +104,7 @@
                                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
                                 </div>
                             </form>
-                            <form method="POST" enctype="multipart/form-data" >
+                            <form id="websiteIcon" enctype="multipart/form-data" >
                                 <h3>Website Icon</h3>
                                 <div class="siteIconPreviewBox" style="display: none;">
                                     <div class="img"><img src="" id="siteIconPath" alt=""></div>
@@ -101,9 +117,10 @@
                                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif ( Recommend Size : 512x512 )</p>
                                 </div>
                             </form>
-                            </div>
-                        </form>
+                        </div>
+
                     </div>
+
 
             <?php
             }
@@ -112,36 +129,52 @@
         ?>
             
         </div>
-        <div id="pos2Box" style="display: none" >
+        <div id="adsTabBox" style="display: none" >
 
             <!-- Ads.txt section -->
             
             <h3>Manage ads.txt file</h3>
+            <p style="font-size: 14px;" ><span>Authorized Digital Seller (abbreviated as Ads.txt) is a list of all partners (including publishers) authorized to sell digital inventory. To know more <a href="https://clearcode.cc/blog/ads-txt/" title="" target="_blank" style="text-decoration: none" >Click Here</a></span></p>
             <form>
                 <textarea name="ads_txt" id="ads_txt" ><?php echo $site_ads_txt; ?></textarea>
-                <input type="button" id="adsTXT" class="btn btn-green" value="Update File" >
+                <input type="button" id="updateAdsTxt" class="btn btn-green" value="Update File" >
             </form>
 
         </div>
-        <div id="pos3Box" style="display: none" >
+        <div id="robotsTabBox" style="display: none" >
             
             <!-- Robots.txt section -->
 
             <h3>Manage robots.txt file</h3>
+            <p style="font-size: 14px;" ><span>A <strong>robots.txt</strong> file tells search engine crawlers which pages or files the crawler can or can't request from your site. Know more about robots.txt specifications. <a href="https://developers.google.com/search/reference/robots_txt" target="_blank" style="text-decoration: none" >Click Here</a></span></p>
             <form>
                 <textarea name="robots_txt" id="robots_txt" ><?php echo $site_robots_txt; ?></textarea>
-                <input type="button" id="robotsTXT" class="btn btn-green" value="Update File" >
+                <input type="button" id="updateRobotTxt" class="btn btn-green" value="Update File" >
             </form>
             
         </div>
-        <div id="pos4Box" style="display: none" >
+        <div id="mainfestTabBox" style="display: none" >
             
             <!-- Mainfest.json section -->
 
             <h3>Manage mainfest.json file</h3>
+            <p style="font-size: 14px; color: red" ><span>Please do not touch this section if you dont have knowledge about <strong>Mainfest.json</strong>.</span> <span style="color: #333" >Please use this link to check your code validation <a href="https://jsonlint.com/" target="_blank" style="text-decoration: none" >Click Here</a></span></p>
             <form>
-                <textarea name="mainfest_json" id="mainfest_json" ><?php echo json_decode($site_mainfest_json); ?></textarea>
-                <input type="button" id="mainfestJSON" class="btn btn-green" value="Update File" >
+                
+                <?php
+                
+                    if($site_mainfest_json=='') {
+
+                        /** Default mainfest.json */
+
+                        $site_mainfest_json=DEFAULT_MAINFEST_JSON;
+
+                    }
+
+                ?>
+
+                <textarea name="mainfest_json" id="mainfest_json" ><?php echo json_decode($site_mainfest_json, TRUE); ?></textarea>
+                <input type="button" id="updateMainfestJson" class="btn btn-green" value="Update File" >
             </form>
             
         </div>
