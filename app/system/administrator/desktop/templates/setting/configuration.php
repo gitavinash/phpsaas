@@ -91,32 +91,39 @@
                         </div>
 
                         <div class='box-2'>
-                            <form id="websiteLogo" enctype="multipart/form-data" >
+
+                            <form id="updateSiteLogoForm">
                                 <h3>Website Logo</h3>
-                                <div class="siteLogoPreviewBox" style="display: none;">
-                                    <div class="img"><img src="" id="siteLogoPath" alt=""></div>
-                                    <input type="button" id="updateSiteLogo" class="btn btn-green btn-sm"  value="Update Website Logo" >
+                                <div class="siteLogoPreviewBox" style="display: <?php echo ((SITE_LOGO!='') ? 'block' : 'none' ) ?>;" >
+                                    <div class="img"><img src="<?php echo ((SITE_LOGO!='') ? SITE_LOGO : '' ) ?>" id="siteLogoPath" alt=""></div>
+                                    <input type="hidden" name="type" value="setting" >
+                                    <input type="hidden" name="action" value="logo" >
+                                    <input type="button" id="updateSiteLogo" class="btn btn-green btn-sm" style="display:none" value="Update Website Logo" >
                                     <input type="button" id="siteLogoChangeImage" name="updateSiteLogo" class="btn btn-red btn-sm" value="Change Site Logo" >
                                 </div>
-                                <div class="siteLogoUploadBox" id="siteLogo" >
+                                <div class="siteLogoUploadBox" id="siteLogo" style="display: <?php echo ((SITE_LOGO=='') ? 'block' : 'none' ) ?>;" >
                                     <span>Add Website logo</span>
                                     <input type='file' id="siteLogoImage" name='siteLogo' />
                                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
                                 </div>
                             </form>
-                            <form id="websiteIcon" enctype="multipart/form-data" >
+
+                            <form id="updateSiteIconForm">
                                 <h3>Website Icon</h3>
-                                <div class="siteIconPreviewBox" style="display: none;">
-                                    <div class="img"><img src="" id="siteIconPath" alt=""></div>
-                                    <input type="button" id="updateSiteIcon" class="btn btn-green btn-sm"  value="Update Website Icon" >
+                                <div class="siteIconPreviewBox" style="display: <?php echo ((SITE_ICON!='') ? 'block' : 'none' ) ?>;" >
+                                    <div class="img"><img src="<?php echo ((SITE_ICON!='') ? SITE_ICON : '' ) ?>" id="siteIconPath" alt=""></div>
+                                    <input type="hidden" name="type" value="setting" >
+                                    <input type="hidden" name="action" value="icon" >
+                                    <input type="button" id="updateSiteIcon" class="btn btn-green btn-sm"  value="Update Website Icon" style="display:none" >
                                     <input type="button" id="siteIconChangeImage" name="updateSiteIcon" class="btn btn-red btn-sm" value="Change Site Icon" >
                                 </div>
-                                <div class="siteIconUploadBox">
+                                <div class="siteIconUploadBox" style="display: <?php echo ((SITE_ICON=='') ? 'block' : 'none' ) ?>;" >
                                     <span>Add Website Icon</span>
                                     <input type='file' id="siteIconImage" name='siteIcon' />
                                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif ( Recommend Size : 512x512 )</p>
                                 </div>
                             </form>
+
                         </div>
 
                     </div>

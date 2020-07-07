@@ -1,35 +1,41 @@
 <?php
 
-    require_once LOGIN_CHECK;
+    function logo($connection, $logo) {
 
-    require_once IMAGE_UPLOADER;
+        require_once LOGIN_CHECK;
 
-    extract($image);
+        require_once IMAGE_UPLOADER;
 
-    if($checkSiteAccess=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site_access WHERE site_access_site_id=".SITE_ID." AND site_access_user_id=".USER_ID."")) {
+        extract($image);
 
-        if(mysqli_num_rows($checkSiteAccess)==1) {
+        if($checkSiteAccess=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site_access WHERE site_access_site_id=".SITE_ID." AND site_access_user_id=".USER_ID."")) {
 
-            if($updateSiteIcon=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_logo='{$siteLogo}' WHERE site_id=".SITE_ID)) {
-                $status=200;
-                $msg='Site Icon Updated Successfully';
+            if(mysqli_num_rows($checkSiteAccess)==1) {
+
+                $siteLogo=SITE_URL.$siteLogo;
+
+                if($updateSiteIcon=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_logo='{$siteLogo}' WHERE site_id=".SITE_ID)) {
+                    $status='success';
+                    $msg='Site Icon Updated Successfully';
+                }
+
+            } else {
+
+                echo 'You do not have access permission';
+
             }
 
         } else {
 
-            echo 'You do not have access permission';
+            echo mysqli_error($connection);
 
         }
 
-    } else {
+        $result=array(
+            'status' => $status=((isset($status)) ? $status : 'error' ),
+            'msg' => $msg=((isset($msg)) ? $msg : 'Something is wrong while updating site icon' ),
+        );
 
-        echo mysqli_error($connection);
+        echo json_encode($result, TRUE);
 
     }
-
-    $result=array(
-        'status' => $status=((isset($status)) ? $status : 206 ),
-        'msg' => $msg=((isset($msg)) ? $msg : 'Something is wrong while updating site icon' ),
-    );
-
-    echo json_encode($result, TRUE);

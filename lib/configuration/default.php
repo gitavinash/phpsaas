@@ -43,7 +43,7 @@
 
 	define('USER_TYPE', ((isset($_COOKIE['user_type'])) ? base64_decode($_COOKIE['user_type']) : 'visitor' ));	// directory of logged in user
 	define('PROFILE_DISPLAY_NAME',((isset($_COOKIE['user_name'])) ? base64_decode($_COOKIE['user_name']) : SITE_NAME ));	// Logged n user display name
-	define('PROFILE_IMAGE',((isset($_COOKIE['user_image'])) ? SITE_URL.base64_decode($_COOKIE['user_image']) : '' ));	// Logged in profile picture
+	define('PROFILE_IMAGE',((isset($_COOKIE['user_image'])) ? base64_decode($_COOKIE['user_image']) : '' ));	// Logged in profile picture
 
 	/* Dashboard URL Management */
 

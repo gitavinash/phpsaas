@@ -5,7 +5,6 @@
     function updatePassword($connection, $data) {
 
         extract($data);
-        global $table_prefix;
 
         if($pass=='' || $cnf_pass=='') {
 

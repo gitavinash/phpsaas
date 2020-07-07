@@ -1,8 +1,8 @@
 <?php
 
-    require_once LOGIN_CHECK;
-
     function configuration($connection, $data) {
+
+        require_once LOGIN_CHECK;
 
         extract($data);
 

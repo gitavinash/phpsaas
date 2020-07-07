@@ -5,7 +5,6 @@
 	function forgotPassword($connection, $data) {
 
 		extract($data);
-		global $table_prefix;
 
 		if($checkUser=mysqli_query($connection, "SELECT user_salt_key, user_id FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
 

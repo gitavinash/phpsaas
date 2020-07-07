@@ -1,8 +1,8 @@
 <?php
 
-    require_once LOGIN_CHECK;
-
     function mainfest($connection, $data) {
+        
+        require_once LOGIN_CHECK;
 
         extract($data);
 
