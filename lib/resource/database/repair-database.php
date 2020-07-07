@@ -64,7 +64,7 @@
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(4, 'Customer Relationship Management', 'Best suite all kind of bussiness', 'crm', 1, NOW())");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(5, 'The Doctor Zone', 'Customized App for Bharani Clinic', 'doctorzone', 1, 1, NOW())");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(5, 'The Doctor Zone', 'Customized App for Bharani Clinic', 'thedoctorzone', 1, 1, NOW())");
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(6, 'Tarot By Sid', 'Customized App for Tarot by Sid', 'tarotbysid', 1, 1, NOW())");
 
