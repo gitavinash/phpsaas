@@ -65,7 +65,7 @@
                                 <div class="form-group">
                                     <label>Website Theme Color</label>
                                     <div id="color-drop">
-                                        <input type="color" name="site_theme" value="<?php echo ((SITE_THEME_COLOUR!='') ? SITE_THEME_COLOUR : '#26ABDF') ?>" >
+                                        <input type="color" name="site_theme" value="<?php echo SITE_THEME_COLOUR ?>" >
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="form-check" style="margin-bottom: 20px;">
                                     <input type="checkbox" name="site_index" value="noindex, nofollow" class="form-check-input" <?php echo (($site_index!='') ? 'checked' : '' ) ?> >
-                                    <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
+                                    <label class="form-check-label" >Allow Search Engine to index site</label>
                                 </div>
                                 <div class="form-group">
                                     <input type="hidden" name="type" value="setting" >

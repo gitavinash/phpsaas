@@ -86,7 +86,7 @@
 
 	/** Site Settings Configuration */
 
-	define('SITE_THEME_COLOUR', ((isset($site_theme_color)) ? $site_theme_color : '' ));
+	define('SITE_THEME_COLOUR', ((isset($site_theme_color)) ? $site_theme_color : '#00b7ff' ));
 	define('GA_ID', ((isset($site_ga_id)) ? $site_ga_id : '' ));
 	define('FB_PAGE_ID', ((isset($site_fb_id)) ? $site_fb_id : '' ));
 	define('FB_APP_ID', ((isset($site_fb_app_id)) ? $site_fb_app_id : '' ));
