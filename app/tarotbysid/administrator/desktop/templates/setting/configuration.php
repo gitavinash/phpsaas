@@ -65,7 +65,7 @@
                                 <div class="form-group">
                                     <label>Website Theme Color</label>
                                     <div id="color-drop">
-                                        <input type="color" name="site_theme" value="<?php echo ((SITE_THEME_COLOUR!='') ? SITE_THEME_COLOUR : '#26ABDF') ?>" >
+                                        <input type="color" name="site_theme" value="<?php echo SITE_THEME_COLOUR ?>" >
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="form-check" style="margin-bottom: 20px;">
                                     <input type="checkbox" name="site_index" value="noindex, nofollow" class="form-check-input" <?php echo (($site_index!='') ? 'checked' : '' ) ?> >
-                                    <label class="form-check-label" for="exampleCheck1" >Allow Search Engine to index site</label>
+                                    <label class="form-check-label" >Allow Search Engine to index site</label>
                                 </div>
                                 <div class="form-group">
                                     <input type="hidden" name="type" value="setting" >
@@ -155,7 +155,7 @@
             <h3>Manage robots.txt file</h3>
             <p style="font-size: 14px;" ><span>A <strong>robots.txt</strong> file tells search engine crawlers which pages or files the crawler can or can't request from your site. Know more about robots.txt specifications. <a href="https://developers.google.com/search/reference/robots_txt" target="_blank" style="text-decoration: none" >Click Here</a></span></p>
             <form>
-                <textarea name="robots_txt" id="robots_txt" ><?php echo $site_robots_txt; ?></textarea>
+                <textarea name="robots_txt" id="robots_txt" ><?php echo (($site_robots_txt!='') ? $site_robots_txt : DEFAULT_ROBOTS_TXT ); ?></textarea>
                 <input type="button" id="updateRobotTxt" class="btn btn-green" value="Update File" >
             </form>
             
