@@ -5,33 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
       <link rel="shortcut icon" href="https://www.biddytarot.com/wp-content/uploads/BT-BiddyTarotLogo-@2x.png" />
       <title>Learn Tarot Blog | Biddy Tarot</title>
-      <meta name="description" content="Learn to read Tarot at the Biddy Tarot blog, with posts on Tarot reading techniques, Tarot spreads, Tarot experts, deck reviews and more." />
-      <meta name="robots" content="index, follow" />
-      <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-      <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-      <link rel="canonical" href="https://www.biddytarot.com/blog/" />
-      <link rel="next" href="https://www.biddytarot.com/blog/page/2/" />
-      <meta property="og:locale" content="en_US" />
-      <meta property="og:type" content="article" />
-      <meta property="og:title" content="Learn Tarot Blog | Biddy Tarot" />
-      <meta property="og:description" content="Learn to read Tarot at the Biddy Tarot blog, with posts on Tarot reading techniques, Tarot spreads, Tarot experts, deck reviews and more." />
-      <meta property="og:url" content="https://www.biddytarot.com/blog/" />
-      <meta property="og:site_name" content="Biddy Tarot" />
-      <meta property="og:image" content="https://www.biddytarot.com/wp-content/uploads/2019/04/SM-image.jpg" />
-      <meta property="og:image:width" content="1500" />
-      <meta property="og:image:height" content="750" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@BiddyTarot" />
-      <script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.biddytarot.com/#organization","name":"Biddy Tarot","url":"https://www.biddytarot.com/","sameAs":["https://www.facebook.com/BiddyTarot/","https://www.instagram.com/BiddyTarot/","https://www.youtube.com/user/biddytarot","https://www.pinterest.com/BiddyTarot/","https://twitter.com/BiddyTarot"],"logo":{"@type":"ImageObject","@id":"https://www.biddytarot.com/#logo","inLanguage":"en-US","url":"https://www.biddytarot.com/wp-content/uploads/2018/01/logo-main.png","width":700,"height":160,"caption":"Biddy Tarot"},"image":{"@id":"https://www.biddytarot.com/#logo"}},{"@type":"WebSite","@id":"https://www.biddytarot.com/#website","url":"https://www.biddytarot.com/","name":"Biddy Tarot","description":"Learn to read Tarot from the heart, not the book","publisher":{"@id":"https://www.biddytarot.com/#organization"},"potentialAction":[{"@type":"SearchAction","target":"https://www.biddytarot.com/?s={search_term_string}","query-input":"required name=search_term_string"}],"inLanguage":"en-US"},{"@type":"CollectionPage","@id":"https://www.biddytarot.com/blog/#webpage","url":"https://www.biddytarot.com/blog/","name":"Learn Tarot Blog | Biddy Tarot","isPartOf":{"@id":"https://www.biddytarot.com/#website"},"datePublished":"2011-12-12T12:01:57+00:00","dateModified":"2019-09-05T15:14:08+00:00","description":"Learn to read Tarot at the Biddy Tarot blog, with posts on Tarot reading techniques, Tarot spreads, Tarot experts, deck reviews and more.","inLanguage":"en-US"}]}</script> 
-      <link rel='dns-prefetch' href='//stackpath.bootstrapcdn.com' />
-      <link rel='dns-prefetch' href='//fonts.googleapis.com' />
-      <link rel='dns-prefetch' href='//s.w.org' />
-      <link rel="alternate" type="application/rss+xml" title="Biddy Tarot &raquo; Feed" href="https://www.biddytarot.com/feed/" />
-      <link rel="alternate" type="application/rss+xml" title="Biddy Tarot &raquo; Comments Feed" href="https://www.biddytarot.com/comments/feed/" />
-      <script type="text/javascript">window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.biddytarot.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.4.2"}};
-         /*! This file is auto-generated */
-         !function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
-      </script> 
+
       <style type="text/css">img.wp-smiley,
          img.emoji {
          display: inline !important;
@@ -46,30 +20,31 @@
          }
       </style>
       <link rel='stylesheet' id='fa-cdn-css' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.2' type='text/css' media='all' />
-      <link rel='stylesheet' id='biddy-icons-css' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/BiddyTarotIcons/css/BiddyTarotIcons.css?ver=1.5.1.9.6' type='text/css' media='all' />
-      <link rel='stylesheet' id='early-css' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/early.css?ver=1.5.1.9.6' type='text/css' media='all' />
-      <link rel='stylesheet' id='wp-block-library-css' href='https://www.biddytarot.com/wp-includes/css/dist/block-library/style.min.css?ver=5.4.2' type='text/css' media='all' />
-      <link rel='stylesheet' id='wpcdt-public-css-css' href='https://www.biddytarot.com/wp-content/plugins/countdown-timer-ultimate-pro/assets/css/wpcdt-public-style.css?ver=1.3' type='text/css' media='all' />
+      <link rel='stylesheet' id='biddy-icons-css' href='css/BiddyTarotIcons.css?ver=1.5.1.9.6' type='text/css' media='all' />
+      <link rel='stylesheet' id='early-css' href='css/early.css?ver=1.5.1.9.6' type='text/css' media='all' />
+      <link rel='stylesheet' id='wp-block-library-css' href='css/style.min.css?ver=5.4.2' type='text/css' media='all' />
+      <link rel='stylesheet' id='wpcdt-public-css-css' href='css/wpcdt-public-style.css?ver=1.3' type='text/css' media='all' />
       <link rel='stylesheet' id='g_bt-fonts-css' href='https://fonts.googleapis.com/css?family=Montserrat:300,600,700,800' type='text/css' media='all' />
-      <link rel='stylesheet' id='legacy-css' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/bt_16-styles.css?ver=1.5.1.9.6' type='text/css' media='all' />
-      <link rel='stylesheet' id='salient-grid-system-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/grid-system.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='main-styles-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/style.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='nectar-header-secondary-nav-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/header/header-secondary-nav.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='fancyBox-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/plugins/jquery.fancybox.css?ver=3.3.1' type='text/css' media='all' />
-      <link rel='stylesheet' id='responsive-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/responsive.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='select2-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/plugins/select2.css?ver=6.2' type='text/css' media='all' />
-      <link rel='stylesheet' id='salient-child-style-css' href='https://www.biddytarot.com/wp-content/themes/bt_18/style.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='skin-material-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/skin-material.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='nectar-portfolio-css' href='https://www.biddytarot.com/wp-content/plugins/salient-core/css/fallback/portfolio.css?ver=1.6' type='text/css' media='all' />
-      <link rel='stylesheet' id='js_composer_front-css' href='https://www.biddytarot.com/wp-content/plugins/js_composer_salient/assets/css/js_composer.min.css?ver=6.2.0' type='text/css' media='all' />
-      <link rel='stylesheet' id='styleguide-css' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/styleguide.css?ver=1.5.1.9.6' type='text/css' media='all' />
-      <link rel='stylesheet' id='dynamic-css-css' href='https://www.biddytarot.com/wp-content/themes/salient/css/salient-dynamic-styles.css?ver=77308' type='text/css' media='all' />
+      <link rel='stylesheet' id='legacy-css' href='css/bt_16-styles.css?ver=1.5.1.9.6' type='text/css' media='all' />
+      <link rel='stylesheet' id='salient-grid-system-css' href='css/grid-system.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='main-styles-css' href='css/style.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='nectar-header-secondary-nav-css' href='css/header-secondary-nav.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='fancyBox-css' href='css/jquery.fancybox.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='responsive-css' href='css/responsive.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='select2-css' href='css/select2.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='salient-child-style-css' href='css/bt_18_style.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='skin-material-css' href='css/skin-material.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='nectar-portfolio-css' href='css/portfolio.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='js_composer_front-css' href='css/js_composer.min.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='styleguide-css' href='css/styleguide.css' type='text/css' media='all' />
+      <link rel='stylesheet' id='dynamic-css-css' href='css/salient-dynamic-styles.css' type='text/css' media='all' />
+
       <style id='dynamic-css-inline-css' type='text/css'>@media only screen and (min-width:1000px){body #ajax-content-wrap.no-scroll{min-height:calc(100vh - 142px);height:calc(100vh - 142px)!important;}}@media only screen and (min-width:1000px){#page-header-wrap.fullscreen-header,#page-header-wrap.fullscreen-header #page-header-bg,html:not(.nectar-box-roll-loaded) .nectar-box-roll > #page-header-bg.fullscreen-header,.nectar_fullscreen_zoom_recent_projects,#nectar_fullscreen_rows:not(.afterLoaded) > div{height:calc(100vh - 141px);}.wpb_row.vc_row-o-full-height.top-level,.wpb_row.vc_row-o-full-height.top-level > .col.span_12{min-height:calc(100vh - 141px);}html:not(.nectar-box-roll-loaded) .nectar-box-roll > #page-header-bg.fullscreen-header{top:142px;}.nectar-slider-wrap[data-fullscreen="true"]:not(.loaded),.nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container{height:calc(100vh - 140px)!important;}.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded),.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container{height:calc(100vh - 140px - 32px)!important;}}#nectar_fullscreen_rows{background-color:;}</style>
-      <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/itro-popup/scripts/itro-scripts.js?ver=5.4.2'></script> 
-      <link rel='https://api.w.org/' href='https://www.biddytarot.com/wp-json/' />
-      <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.biddytarot.com/xmlrpc.php?rsd" />
-      <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.biddytarot.com/wp-includes/wlwmanifest.xml" />
-      <meta name="generator" content="WordPress 5.4.2" />
+
+      <script type='text/javascript' src='js/jquery.js?ver=1.12.4-wp'></script>
+      <script type='text/javascript' src='js/jquery-migrate.min.js?ver=1.4.1'></script>
+      <script type='text/javascript' src='js/itro-scripts.js?ver=5.4.2'></script> 
+
       <style type="text/css" media="screen">.g { margin:0px; padding:0px; overflow:hidden; line-height:1; zoom:1; }
          .g img { height:auto; }
          .g-col { position:relative; float:left; }
@@ -94,21 +69,8 @@
          (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
          })(window,document.documentElement,'async-hide','dataLayer',4000,
          {'GTM-PDXKHNW':true});
-      </script> <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-         
-         ga('create', 'UA-12507634-1', 'auto');
-         ga('require', 'GTM-PDXKHNW');
-         ga('send', 'pageview');
       </script> 
-      <meta name="generator" content="Powered by WPBakery Page Builder - drag and drop page builder for WordPress." />
-      <style type="text/css" id="thrive-default-styles"></style>
-      <link rel="icon" href="https://www.biddytarot.com/wp-content/uploads/2015/11/cropped-icon-teal-copy-1-250x250.png" sizes="32x32" />
-      <link rel="icon" href="https://www.biddytarot.com/wp-content/uploads/2015/11/cropped-icon-teal-copy-1-250x250.png" sizes="192x192" />
-      <link rel="apple-touch-icon" href="https://www.biddytarot.com/wp-content/uploads/2015/11/cropped-icon-teal-copy-1-250x250.png" />
-      <meta name="msapplication-TileImage" content="https://www.biddytarot.com/wp-content/uploads/2015/11/cropped-icon-teal-copy-1-480x480.png" />
+      
       <noscript>
          <style>.wpb_animate_when_almost_visible { opacity: 1; }</style>
       </noscript>
@@ -968,193 +930,38 @@
                mobile-enabled	"><i class="fa fa-angle-up"></i></a>
          </div>
       </div>
-      <!-- <style type='text/css'>powerpress_links, p.powerpress_links, .powerpress_links_mp3 {
-         display:none; }
-      </style>
-      <style>/* POP-UP */
-         #age_button_area
-         {
-         padding-top:10px;
-         position: relative;
-         width: 100%;
-         bottom: 5px;
-         padding-top:5px;
-         }
-         #ageEnterButton
-         {
-         border-color:;
-         background:;
-         color: ;
-         }
-         #ageLeaveButton
-         {
-         border-color:;
-         background:;
-         color: ;
-         }
-         #popup_content
-         {
-         overflow-y:hidden;    	overflow-x: auto;
-         height: 100%;
-         width:100%;
-         }
-         #itro_popup
-         {
-         visibility: hidden;
-         opacity: 0;
-         position: fixed;
-         background-image: ;
-         background-repeat: no-repeat;
-         background-position: center center;
-         margin: 0 auto;
-         left:1px;
-         right:1px;
-         z-index: 2147483647 !important;
-         top:40px;border: solid;border-color:#FFFFFF;    	border-radius: 8px;
-         border-width: 3px;
-         width: 480px;
-         height: auto;
-         background-color: #FFFFFF;
-         }
-         #close_cross
-         {
-         cursor:pointer; 
-         width:20px; 
-         position:absolute; 
-         top:-22px; 
-         right:-22px;
-         }
-         #popup_countdown 
-         {
-         color: #582564;
-         width: 100%;
-         padding-top: 0px ;
-         padding-bottom:0px ;
-         background-color: #FFFFFF;
-         height: 0px ;
-         overflow: hidden;
-         position:absolute;
-         bottom:0px;
-         left:0px;
-         border-bottom-left:8px;
-         border-bottom-right:8px;
-         }
-         #itro_opaco{
-         display: none;
-         position:fixed;
-         background-color:  #FFFFFF;
-         font-size: 10px;
-         font-family: Verdana;
-         top: 100px;    
-         width: 100%;
-         height: 100%;
-         z-index: 2147483646 !important;
-         left: 0px ;
-         right: 0px;
-         top: 0px;
-         bottom: 0px;
-         opacity: 0.80 ;
-         filter:alpha(opacity = 80); /* For IE8 and earlier */
-         }
-         /* label under the popup used to close it for mobile devices */
-         #ipp_mobile_close_tab{
-         display: none;
-         border:none;
-         position: absolute;
-         padding: 5px;
-         width: 80px;
-         text-align: center;
-         left: 1px;
-         right: 1px;
-         margin: auto;
-         background-color: #FFFFFF        }
-         #ipp_mobile_close_txt{
-         font-weight: bold;
-         cursor: pointer;
-         }
-         /* RESPONSIVE CSS */
-         @media screen and (max-width: 780px)
-         {
-         #itro_popup{
-         max-width: 470px;
-         }
-         #close_cross{
-         display: none;
-         }
-         #ipp_mobile_close_tab{
-         display: block;
-         }
-         }
-         @media screen and (max-width: 480px){
-         #itro_popup{
-         max-width: 300px
-         }
-         }
-      </style> -->
-     <!--  <div id="itro_popup">
-         <img id="close_cross" src="https://www.biddytarot.com/wp-content/plugins/itro-popup/images/close-icon-white-border.png" alt="CLOSE" title="CLOSE" onclick="itro_exit_anim();">
-         <div id="popup_content"> <a href="https://www.biddytarot.com/tarot-card-keywords-printable/"> <img class="phonehide alignnone size-full" src="https://www.biddytarot.com/wp-content/uploads/2020/05/BT-ReferenceGuide-Popup.jpg" alt="" width="800" height="475" /> <img class="phoneshow alignnone size-full" src="https://www.biddytarot.com/wp-content/uploads/2020/05/Mobile-Tarot-Card-Meanings-Reference-Guide.jpg" alt="" width="100%" height="auto" /> </a></div>
-         <div id="ipp_mobile_close_tab"> <span id="ipp_mobile_close_txt" onclick="itro_exit_anim();">CLOSE</span></div>
-      </div>
-      <div id="itro_opaco" onclick="itro_exit_anim();"></div>
-      <script type="text/javascript">/* init var */
-         itro_cookie_expiration = 168;
-         itro_is_preview = false;/* pass true if is the preview page. used for cookie control via js due W3 total cache or similar */
-         auto_margin = "";
-         
-         /* invert the color of the mobile close tab label text */
-         jQuery('#ipp_mobile_close_txt').css({color: itro_invert_color(itro_rgb2hex(jQuery('#itro_popup').css('border-bottom-color'))) });
-         itro_age_restriction = false;				document.onkeydown = function(event) 
-         			{
-         				event = event || window.event;
-         				var key = event.keyCode;
-         				if(key==27)
-         				{
-         					jQuery("#itro_popup").fadeOut(function() {jQuery("#itro_opaco").fadeOut();});
-         				} 
-         			}; 				var delay = 10+1 ;
-         			interval_id_delay = setInterval(function(){popup_delay(auto_margin);},1000);
-      </script> <script type="text/html" id="wpb-modifications"></script><script type='text/javascript'>/*  */
-         var click_object = {"ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php"};
-         /*  */
-      </script> -->
-
-       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/adrotate-pro/library/jquery.adrotate.clicktracker.js'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/jquery.easing.js?ver=1.3'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/jquery.mousewheel.js?ver=3.1.13'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/priority.js?ver=12.1.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/transit.js?ver=0.9.9'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/waypoints.js?ver=4.0.1'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/imagesLoaded.min.js?ver=4.1.4'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/hoverintent.js?ver=1.9'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/jquery.fancybox.min.js?ver=3.3.1'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/superfish.js?ver=1.4.8'></script> <script type='text/javascript'>/*  */
-         var nectarLove = {"ajaxurl":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","postID":"57659","rooturl":"https:\/\/www.biddytarot.com","disqusComments":"false","loveNonce":"8fd7aba835","mapApiKey":""};
-         /*  */
-      </script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/init.js?ver=12.1.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/isotope.min.js?ver=7.6'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/elements/nectar-blog.js?ver=12.1.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/js_composer_salient/assets/lib/bower/flexslider/jquery.flexslider-min.js?ver=6.2.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/salient-core/js/third-party/touchswipe.min.js?ver=1.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/select2.min.js?ver=3.5.2'></script> <script type='text/javascript'>/*  */
+   <!-- 
+       <script type='text/javascript' src='js/jquery.adrotate.clicktracker.js'></script> -->
+        <script type='text/javascript' src='js/jquery.easing.js?ver=1.3'></script> 
+        <script type='text/javascript' src='js/jquery.mousewheel.js?ver=3.1.13'></script>
+        <script type='text/javascript' src='js/priority.js?ver=12.1.0'></script> 
+        <script type='text/javascript' src='js/transit.js?ver=0.9.9'></script> 
+        <script type='text/javascript' src='js/waypoints.js?ver=4.0.1'></script>
+        <script type='text/javascript' src='js/imagesLoaded.min.js?ver=4.1.4'></script>
+         <script type='text/javascript' src='js/hoverintent.js?ver=1.9'></script>
+          <script type='text/javascript' src='js/jquery.fancybox.min.js?ver=3.3.1'></script>
+           <script type='text/javascript' src='js/superfish.js?ver=1.4.8'></script> 
+          <script type='text/javascript' src='js/init.js?ver=12.1.0'></script> 
+          <script type='text/javascript' src='js/isotope.min.js?ver=7.6'></script> 
+          <script type='text/javascript' src='js/nectar-blog.js?ver=12.1.0'></script> 
+          <script type='text/javascript' src='js/jquery.flexslider-min.js?ver=6.2.0'></script>
+          <script type='text/javascript' src='js/touchswipe.min.js?ver=1.0'></script>
+           <script type='text/javascript' src='js/select2.min.js?ver=3.5.2'></script>
+           <!-- <script type='text/javascript'>/*  */
          var tve_dash_front = {"ajaxurl":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","force_ajax_send":"1","is_crawler":""};
          /*  */
-      </script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/thrive-quiz-builder/thrive-dashboard/js/dist/frontend.min.js?ver=2.2.17'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/wp-embed.min.js?ver=5.4.2'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/js_composer_salient/assets/js/dist/js_composer_front.min.js?ver=6.2.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/bt_18/js/more.js?ver=1.5.1.9.6'></script> <script type="text/javascript">var tcb_post_lists=JSON.parse('[]');</script><script type="text/javascript">if ( !window.TL_Const ) {var TL_Const={"security":"19c25a3bd1","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":{"http_referrer":"https:\/\/www.biddytarot.com\/contact-faq\/"},"current_screen":{"screen_type":2,"screen_id":0},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]};} else {ThriveGlobal.$j.extend(true, TL_Const, {"security":"19c25a3bd1","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":{"http_referrer":"https:\/\/www.biddytarot.com\/contact-faq\/"},"current_screen":{"screen_type":2,"screen_id":0},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]})} /* */</script> <script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5afa0dc58ee14d0011069a72&product=inline-share-buttons' async='async'></script> <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-         n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-         t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-         document,'script','https://connect.facebook.net/en_US/fbevents.js');
-         
-         fbq('init', '342033679332480');
-         fbq('track', "PageView");
-      </script> 
-      <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=342033679332480&ev=PageView&noscript=1"/></noscript>
-      <script data-cfasync="false" src='https://optassets.ontraport.com/tracking.js' type='text/javascript' async='true' onload='_mri="23279",_mr_domain="biddytarot.ontraport.com",mrtracking();'></script> <script type="text/javascript" defer="defer" src="https://extend.vimeocdn.com/ga/72277431.js"></script> 
+      </script>  -->
+      <script type='text/javascript' src='js/frontend.min.js?ver=2.2.17'></script>
+       <script type='text/javascript' src='js/wp-embed.min.js?ver=5.4.2'></script> 
+       <script type='text/javascript' src='js/js_composer_front.min.js?ver=6.2.0'></script> 
+       <script type='text/javascript' src='js/more.js?ver=1.5.1.9.6'></script> 
+       <!-- <script type="text/javascript">var tcb_post_lists=JSON.parse('[]');</script> -->
+
+  <!--     <script type="text/javascript">if ( !window.TL_Const ) {var TL_Const={"security":"19c25a3bd1","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":{"http_referrer":"https:\/\/www.biddytarot.com\/contact-faq\/"},"current_screen":{"screen_type":2,"screen_id":0},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]};} else {ThriveGlobal.$j.extend(true, TL_Const, {"security":"19c25a3bd1","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":{"http_referrer":"https:\/\/www.biddytarot.com\/contact-faq\/"},"current_screen":{"screen_type":2,"screen_id":0},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]})} /* */</script> 
+ -->
+      <script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5afa0dc58ee14d0011069a72&product=inline-share-buttons' async='async'></script> 
+      
+      <script type="text/javascript" defer="defer" src="https://extend.vimeocdn.com/ga/72277431.js"></script> 
       <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
-      <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script> <script>window.addEventListener("load", function(){
-         window.cookieconsent.initialise({
-           "palette": {
-             "popup": {
-               "background": "#4d4d4d",
-               "text": "#fff"
-             },
-             "button": {
-               "background": "#287c7e",
-               "text": "#ffffff"
-             }
-           },
-           "content": {
-             "message": "This website uses cookies and Facebook pixel data to allow us to track our traffic and marketing efforts so that we may better serve you.",
-             "dismiss": "Got it!",
-             "href": "https://www.biddytarot.com/privacy-policy/"
-           }
-         })});
-      </script> 
-   </body>
+         </body>
 </html>

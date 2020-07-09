@@ -10,7 +10,7 @@
                         <div id="fws_5ef38833b6fbe" data-column-margin="default" data-midnight="dark" data-bg-mobile-hidden="true" class="wpb_row vc_row-fluid vc_row top-level full-width-content  vc_row-o-equal-height vc_row-flex  vc_row-o-content-middle standard_section btcpchallengeheader" style="padding-top: 0px; padding-bottom: 0px; ">
                            <div class="row-bg-wrap" data-bg-animation="none" data-bg-overlay="false">
                               <div class="inner-wrap using-image">
-                                 <div class="row-bg using-image" style="background-image: url(img/BT-ReferenceGuide-HeaderBG.jpg); background-position: right top; background-repeat: no-repeat; "></div>
+                                 <div class="row-bg using-image" style="background-image: url(<?php echo USER_IMAGES ?>homepage_slider.jpg); background-position: right top; background-repeat: no-repeat; "></div>
                               </div>
                               <div class="row-bg-overlay"></div>
                            </div>

@@ -81,7 +81,7 @@
                   <div class="row" id="copyright" data-layout="default">
                      <div class="container">
                         <div class="col span_5">
-                           <p> <a href="">Privacy and Terms</a>.  © 2020 Tarot. All Rights Reserved. All prices in USD. <br />Tarot card images courtesy of the <a href="https://www.everydaytarot.com/#deck">Everyday Tarot</a>, The Wild Unknown and Lumina Tarot.</p>
+                           <p><p>Copyright &copy; <?php echo date('Y'); ?> <span><?php echo SITE_NAME ?></span> | Design and Developed by <a href="<?php echo CREDIT_URL ?>" title="Web Developer in Delhi" ><?php echo CREDIT ?></a></p></p>
                         </div>
                         <div class="col span_7 col_last">
                            <ul class="social"></ul>
@@ -129,9 +129,10 @@
                            </ul>
                            <ul class="menu secondary-header-items"></ul>
                         </div>
+                        <!-- Header Menu -->
                         <div style="align-self: flex-end;">
                            <h2 class="center bold white"></h2>
-                           <p class="center bold white">We stand for Social Justice, Diversity and Equality - A Message from Brigit & Team Biddy</p>
+                           <p class="center bold white">Some Sticky Text will goes here</p>
                            <a class="center-col button green-bg" href="" target="_blank">Learn More</a>
                         </div>
                      </div>
@@ -296,35 +297,19 @@
          /*  */
       </script>
        <!-- <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/adrotate-pro/library/jquery.adrotate.clicktracker.js'></script> -->
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/jquery.easing.js?ver=1.3'></script> 
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/jquery.mousewheel.js?ver=3.1.13'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>priority.js?ver=12.1.0'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/transit.js?ver=0.9.9'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/waypoints.js?ver=4.0.1'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/imagesLoaded.min.js?ver=4.1.4'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/hoverintent.js?ver=1.9'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/jquery.fancybox.min.js?ver=3.3.1'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/touchswipe.min.js?ver=1.0'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/caroufredsel.min.js?ver=7.0.1'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/flickity.min.js?ver=2.2'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/superfish.js?ver=1.4.8'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>init.js?ver=12.1.0'></script>
-      <script type='text/javascript' src='<?php echo USER_JS ?>third-party/select2.min.js?ver=3.5.2'></script>
-      <!--  <script type='text/javascript'>/*  */
-         var tve_dash_front = {"ajaxurl":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","force_ajax_send":"1","is_crawler":""};
-         /*  */
-      </script> -->
-       <!-- <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/thrive-quiz-builder/thrive-dashboard/<?php echo USER_JS ?>dist/frontend.min.js?ver=2.2.17'></script> -->
-      <!--  <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/<?php echo USER_JS ?>wp-embed.min.js?ver=5.4.2'></script>
-        <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/js_composer_salient/assets/<?php echo USER_JS ?>dist/js_composer_front.min.js?ver=6.2.0'></script> -->
-         <!-- <script type="text/javascript">var tcb_post_lists=JSON.parse('[]');</script> -->
-
-      <!-- <script type="text/javascript">if ( !window.TL_Const ) {var TL_Const={"security":"939ced3d8a","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":[],"current_screen":{"screen_type":1,"screen_id":0},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]};} else {ThriveGlobal.$j.extend(true, TL_Const, {"security":"939ced3d8a","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":[],"current_screen":{"screen_type":1,"screen_id":0},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]})} /* */</script> -->
-       <!-- <script type='text/javascript' src='//platform-api.sharethis.com/<?php echo USER_JS ?>sharethis.js#property=5afa0dc58ee14d0011069a72&product=inline-share-buttons' async='async'></script> -->
-
-
-      <!-- <script data-cfasync="false" src='https://optassets.ontraport.com/tracking.js' type='text/javascript' async='true' onload='_mri="23279",_mr_domain="biddytarot.ontraport.com",mrtracking();'></script> <script type="text/javascript" defer="defer" src="https://extend.vimeocdn.com/ga/72277431.js"></script> 
-      <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
-   -->
+      <script type='text/javascript' src='<?php echo USER_JS ?>jquery.easing.js'></script> 
+      <script type='text/javascript' src='<?php echo USER_JS ?>jquery.mousewheel.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>priority.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>transit.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>waypoints.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>imagesLoaded.min.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>hoverintent.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>jquery.fancybox.min.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>touchswipe.min.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>caroufredsel.min.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>flickity.min.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>superfish.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>init.js'></script>
+      <script type='text/javascript' src='<?php echo USER_JS ?>select2.min.js'></script>
    </body>
 </html>

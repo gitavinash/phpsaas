@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-US" class="no-js">
    <head>
+    	<base href="<?php echo SITE_URL ?>/" >
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-      <link rel="shortcut icon" href="" />
-      <title>Tarot | Online Tarot Courses</title>
-      
+      <link rel="shortcut icon" href="<?php echo SITE_ICON ?>" />
+      <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?></title>
+      <link rel="canonical" href="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
      <!--  <link rel='dns-prefetch' href='//stackpath.bootstrapcdn.com' /> -->
   
      
@@ -45,7 +46,7 @@
       <link rel='stylesheet'  href='<?php echo USER_STYLESHEET ?>salient-dynamic-styles.css' type='text/css' media='all' />
       <!-- <style id='dynamic-css-inline-css' type='text/css'>@media only screen and (min-width:1000px){body #ajax-content-wrap.no-scroll{min-height:calc(100vh - 142px);height:calc(100vh - 142px)!important;}}@media only screen and (min-width:1000px){#page-header-wrap.fullscreen-header,#page-header-wrap.fullscreen-header #page-header-bg,html:not(.nectar-box-roll-loaded) .nectar-box-roll > #page-header-bg.fullscreen-header,.nectar_fullscreen_zoom_recent_projects,#nectar_fullscreen_rows:not(.afterLoaded) > div{height:calc(100vh - 141px);}.wpb_row.vc_row-o-full-height.top-level,.wpb_row.vc_row-o-full-height.top-level > .col.span_12{min-height:calc(100vh - 141px);}html:not(.nectar-box-roll-loaded) .nectar-box-roll > #page-header-bg.fullscreen-header{top:142px;}.nectar-slider-wrap[data-fullscreen="true"]:not(.loaded),.nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container{height:calc(100vh - 140px)!important;}.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded),.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container{height:calc(100vh - 140px - 32px)!important;}}#nectar_fullscreen_rows{background-color:;}@media only screen and (max-width:690px){.wpb_column.padding-6-percent_phone > .vc_column-inner{padding:calc(690px * 0.06);}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_75px > .divider{height:75px!important;}}@media only screen and (max-width:690px){.divider-wrap.height_phone_50px > .divider{height:50px!important;}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_50px > .divider{height:50px!important;}}@media only screen and (max-width:690px){.divider-wrap.height_phone_75px > .divider{height:75px!important;}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_515px > .divider{height:515px!important;}}@media only screen and (max-width:690px){.divider-wrap.height_phone_400px > .divider{height:400px!important;}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_100px > .divider{height:100px!important;}}</style>
        -->
-       <script type='text/javascript' src='<?php echo USER_JS ?>jquery.js'></script>
+       <?php require_once NOTIFICATION.'index.php'; ?>
        <script type='text/javascript' src='<?php echo USER_JS ?>jquery-migrate.min.js'></script>
        <script type='text/javascript' src='<?php echo USER_JS ?>itro-scripts.js'></script> 
 
@@ -68,20 +69,7 @@
       <script type="text/javascript">var root = document.getElementsByTagName( "html" )[0]; root.setAttribute( "class", "js" );</script>
       <style type="text/css" id="tve_global_variables">:root{--tcb-color-0:rgb(183, 155, 98);}</style>
       <style>.async-hide { opacity: 0 !important}</style>
-      <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
-         h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
-         (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
-         })(window,document.documentElement,'async-hide','dataLayer',4000,
-         {'GTM-PDXKHNW':true});
-      </script> <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-         
-         ga('create', 'UA-12507634-1', 'auto');
-         ga('require', 'GTM-PDXKHNW');
-         ga('send', 'pageview');
-      </script> 
+      
       <meta name="generator" content="Powered by WPBakery Page Builder - drag and drop page builder for WordPress." />
       <style type="text/css" id="thrive-default-styles"></style>
      
@@ -214,47 +202,24 @@
                      <div class="container">
                         <div class="row">
                            <div class="optin-bar-col optintext" style="width: 66%;">
-                              <p class=" bold padbot0 white">We stand for Social Justice, Diversity and Equality</p>
+                              <p class=" bold padbot0 white">Some Sticky Text will goes here</p>
                            </div>
                            <div class="optin-bar-col"> <a class="center-col button green-bg" href="" target="_blank">Learn More</a></div>
                         </div>
                      </div>
                   </div>
                </div>
-               <div id="search-outer" class="nectar">
-                  <div id="search">
-                     <div class="container">
-                        <div id="search-box">
-                           <div class="inner-wrap">
-                              <div class="col span_12">
-                                 <form role="search" action="https://www.biddytarot.com/" method="GET"> <input type="text" name="s" id="s" value="" placeholder="Search" /> <span>Hit enter to search or ESC to close</span></form>
-                              </div>
-                           </div>
-                        </div>
-                        <div id="close"><a href="#"> <span class="close-wrap"> <span class="close-line close-line1"></span> <span class="close-line close-line2"></span> </span> </a></div>
-                     </div>
-                  </div>
-               </div>
                <header id="top">
                   <div class="container">
                      <div class="row">
-                        <div class="col span_3"> <a id="logo" href="index.html" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false"> <img class="stnd default-logo dark-version" alt="Biddy Tarot" src="img/biddytarot-logotm.webp" /> </a></div>
+                        <div class="col span_3"> <a id="logo" href="/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false"> <img class="stnd default-logo dark-version" alt="Biddy Tarot" src="<?php echo SITE_LOGO ?>" /> </a></div>
                         <div class="col span_9 col_last">
-                           <a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span></a>
                            <div class="slide-out-widget-area-toggle mobile-icon slide-out-from-right" data-custom-color="false" data-icon-animation="simple-transform">
                               <div> <a href="#sidewidgetarea" aria-label="Navigation Menu" aria-expanded="false" class="closed"> <span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a></div>
                            </div>
                            <nav>
                               <ul class="sf-menu">
-                                 <li class="menu-item menu-item-has-children">
-                                    <a href="about.html">About</a>
-                                    <ul class="sub-menu">
-                                       <li class="menu-item "><a href="">Meet Brigit</a></li>
-                                       <li class="menu-item "><a href="">Careers</a></li>
-                                       <li class="menu-item "><a href="">Contact &#038; FAQ</a></li>
-                                    </ul>
-                                 </li>
-                                 <li class="menu-item"><a href="/btc-free-training">Free Training</a></li>
+                                 <li class="menu-item"><a href="/btc-free-training">Free Training</a></>
                                  <li class="menu-item"><a href="https://community.biddytarot.com/free-tarot-readings/">Free Reading</a></li>
                                  <li class="menu-item menu-item-has-children">
                                     <a href="/learn-tarot">Learn</a>
@@ -273,16 +238,9 @@
                                        <li id="menu-item-56492" class="menu-item"><a href="">Podcast</a></li>
                                     </ul>
                                  </li>
-                                 
-                                 
                                  <li class="menu-item"><a href="blog.html">Blog</a></li>
                                  <li class="menu-item"><a href="contact.html">Contact</a></li>
                                  <li class="menu-item"><a href="/login">Login</a></li>
-                              </ul>
-                              <ul class="buttons sf-menu" data-user-set-ocm="off">
-                                 <li id="search-btn">
-                                    <div><a href="#searchbox"><span class="icon-salient-search" aria-hidden="true"></span></a></div>
-                                 </li>
                               </ul>
                            </nav>
                         </div>
