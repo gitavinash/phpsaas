@@ -23,30 +23,35 @@
          }
       </style>
       <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.2' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/BiddyTarotIcons.css?ver=1.5.1.9.6' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/early.css?ver=1.5.1.9.6' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/style.min.css?ver=5.4.2' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/wpcdt-public-style.css?ver=1.3' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/BiddyTarotIcons/css/BiddyTarotIcons.css?ver=1.5.1.9.6' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/early.css?ver=1.5.1.9.6' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-includes/css/dist/block-library/style.min.css?ver=5.4.2' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/plugins/countdown-timer-ultimate-pro/assets/css/wpcdt-public-style.css?ver=1.3' type='text/css' media='all' />
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat:300,600,700,800' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/bt_16-styles.css' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/grid-system.css' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/bt_18/css/bt_16-styles.css' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/grid-system.css' type='text/css' media='all' />
       <link rel='stylesheet' href='css/style.css' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/header-secondary-nav.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/element-wpb-column-border.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/jquery.fancybox.css?ver=3.3.1' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/responsive.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/plugins/flickity.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/plugins/select2.css?ver=6.2' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/bt_18_style.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/skin-material.css?ver=12.1.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/js_composer_salient/assets/css/js_composer.min.css?ver=6.2.0' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/fallback/portfolio.css' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/header/header-secondary-nav.css?ver=12.1.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/elements/element-wpb-column-border.css?ver=12.1.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/plugins/jquery.fancybox.css?ver=3.3.1' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/responsive.css?ver=12.1.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/plugins/flickity.css?ver=12.1.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/plugins/select2.css?ver=6.2' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/bt_18/style.css?ver=12.1.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/themes/salient/css/skin-material.css?ver=12.1.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/plugins/js_composer_salient/assets/css/js_composer.min.css?ver=6.2.0' type='text/css' media='all' />
+      <link rel='stylesheet' href='https://www.biddytarot.com/wp-content/plugins/salient-core/css/fallback/portfolio.css' type='text/css' media='all' />
       <link rel='stylesheet' href='css/styleguide.css' type='text/css' media='all' />
-      <link rel='stylesheet' href='css/salient-dynamic-styles.css' type='text/css' media='all' />
-    
+      <link rel='stylesheet'  href='https://www.biddytarot.com/wp-content/themes/salient/css/salient-dynamic-styles.css' type='text/css' media='all' />
+      <!-- <style id='dynamic-css-inline-css' type='text/css'>@media only screen and (min-width:1000px){body #ajax-content-wrap.no-scroll{min-height:calc(100vh - 142px);height:calc(100vh - 142px)!important;}}@media only screen and (min-width:1000px){#page-header-wrap.fullscreen-header,#page-header-wrap.fullscreen-header #page-header-bg,html:not(.nectar-box-roll-loaded) .nectar-box-roll > #page-header-bg.fullscreen-header,.nectar_fullscreen_zoom_recent_projects,#nectar_fullscreen_rows:not(.afterLoaded) > div{height:calc(100vh - 141px);}.wpb_row.vc_row-o-full-height.top-level,.wpb_row.vc_row-o-full-height.top-level > .col.span_12{min-height:calc(100vh - 141px);}html:not(.nectar-box-roll-loaded) .nectar-box-roll > #page-header-bg.fullscreen-header{top:142px;}.nectar-slider-wrap[data-fullscreen="true"]:not(.loaded),.nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container{height:calc(100vh - 140px)!important;}.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded),.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container{height:calc(100vh - 140px - 32px)!important;}}#nectar_fullscreen_rows{background-color:;}@media only screen and (max-width:690px){.wpb_column.padding-6-percent_phone > .vc_column-inner{padding:calc(690px * 0.06);}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_75px > .divider{height:75px!important;}}@media only screen and (max-width:690px){.divider-wrap.height_phone_50px > .divider{height:50px!important;}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_50px > .divider{height:50px!important;}}@media only screen and (max-width:690px){.divider-wrap.height_phone_75px > .divider{height:75px!important;}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_515px > .divider{height:515px!important;}}@media only screen and (max-width:690px){.divider-wrap.height_phone_400px > .divider{height:400px!important;}}@media only screen and (max-width:999px){.divider-wrap.height_tablet_100px > .divider{height:100px!important;}}</style>
+       -->
        <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp'></script> 
 
-      
+       <!-- <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/itro-popup/scripts/itro-scripts.js?ver=5.4.2'></script> --> 
+
+      <!-- <link rel="alternate" type="application/json+oembed" href="https://www.biddytarot.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.biddytarot.com%2F" />
+      <link rel="alternate" type="text/xml+oembed" href="https://www.biddytarot.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.biddytarot.com%2F&#038;format=xml" /> -->
       <style type="text/css" media="screen">.g { margin:0px; padding:0px; overflow:hidden; line-height:1; zoom:1; }
          .g img { height:auto; }
          .g-col { position:relative; float:left; }
@@ -1277,7 +1282,7 @@
                         <div style="align-self: flex-end;">
                            <h2 class="center bold white"></h2>
                            <p class="center bold white">We stand for Social Justice, Diversity and Equality - A Message from Brigit & Team Biddy</p>
-                           <a class="center-col button green-bg" href="" target="_blank">Learn Mores</a>
+                           <a class="center-col button green-bg" href="" target="_blank">Learn More</a>
                         </div>
                      </div>
                      <div class="bottom-meta-wrap"></div>
@@ -1297,24 +1302,44 @@
       </script> 
 
       <!-- <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/adrotate-pro/library/jquery.adrotate.clicktracker.js'></script> -->
-       <script type='text/javascript' src='js/jquery.easing.js?ver=1.3'></script> 
-       <script type='text/javascript' src='js/jquery.mousewheel.js?ver=3.1.13'></script>
-       <script type='text/javascript' src='js/priority.js?ver=12.1.0'></script> 
-       <script type='text/javascript' src='js/third-party/transit.js?ver=0.9.9'></script> 
-       <script type='text/javascript' src='js/waypoints.js?ver=4.0.1'></script> 
-       <script type='text/javascript' src='js/imagesLoaded.min.js?ver=4.1.4'></script> 
-       <script type='text/javascript' src='js/hoverintent.js?ver=1.9'></script> 
-       <script type='text/javascript' src='js/third-party/jquery.fancybox.min.js?ver=3.3.1'></script> 
-       <script type='text/javascript' src='js/superfish.js?ver=1.4.8'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/jquery.easing.js?ver=1.3'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/jquery.mousewheel.js?ver=3.1.13'></script>
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/priority.js?ver=12.1.0'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/transit.js?ver=0.9.9'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/waypoints.js?ver=4.0.1'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/imagesLoaded.min.js?ver=4.1.4'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/hoverintent.js?ver=1.9'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/jquery.fancybox.min.js?ver=3.3.1'></script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/superfish.js?ver=1.4.8'></script> 
      <!--   <script type='text/javascript'>/*  */
          var nectarLove = {"ajaxurl":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","postID":"9715","rooturl":"https:\/\/www.biddytarot.com","disqusComments":"false","loveNonce":"8fd7aba835","mapApiKey":""};
          /*  */
       </script>  -->
-      <script type='text/javascript' src='js/init.js?ver=12.1.0'></script>
-      <script type='text/javascript' src='jsy/touchswipe.min.js?ver=1.0'></script>
-      <script type='text/javascript' src='js/select2.min.js?ver=3.5.2'></script>
-        <script type='text/javascript' src='js/core.min.js?ver=1.11.4'></script>
+      <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/init.js?ver=12.1.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/salient-core/js/third-party/touchswipe.min.js?ver=1.0'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/themes/salient/js/third-party/select2.min.js?ver=3.5.2'></script>
+      <!--  <script type='text/javascript'>/*  */
+         var tve_dash_front = {"ajaxurl":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","force_ajax_send":"1","is_crawler":""};
+         /*  */
+      </script> -->
+       <!-- <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/thrive-quiz-builder/thrive-dashboard/js/dist/frontend.min.js?ver=2.2.17'></script> -->
+        <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4'></script>
+<!-- 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/jquery/ui/datepicker.min.js?ver=1.11.4'></script> <script type='text/javascript'>jQuery(document).ready(function(jQuery){jQuery.datepicker.setDefaults({"closeText":"Close","currentText":"Today","monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nextText":"Next","prevText":"Previous","dayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"dayNamesShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"dayNamesMin":["S","M","T","W","T","F","S"],"dateFormat":"MM d, yy","firstDay":1,"isRTL":false});});</script> 
+       <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/gravityforms/js/datepicker.min.js?ver=2.4.18'>
+           -->
+       <!-- </script> <script type='text/javascript' src='https://www.biddytarot.com/wp-includes/js/wp-embed.min.js?ver=5.4.2'></script> <script type='text/javascript' src='https://www.biddytarot.com/wp-content/plugins/js_composer_salient/assets/js/dist/js_composer_front.min.js?ver=6.2.0'></script> -->
 
+       <!--  <script type="text/javascript">var tcb_post_lists=JSON.parse('[]');</script><script type="text/javascript">if ( !window.TL_Const ) {var TL_Const={"security":"19c25a3bd1","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":{"http_referrer":"https:\/\/www.biddytarot.com\/about\/"},"current_screen":{"screen_type":3,"screen_id":9715},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]};} else {ThriveGlobal.$j.extend(true, TL_Const, {"security":"19c25a3bd1","ajax_url":"https:\/\/www.biddytarot.com\/wp-admin\/admin-ajax.php","forms":[],"action_conversion":"tve_leads_ajax_conversion","action_impression":"tve_leads_ajax_impression","ajax_load":0,"custom_post_data":{"http_referrer":"https:\/\/www.biddytarot.com\/about\/"},"current_screen":{"screen_type":3,"screen_id":9715},"ignored_fields":["email","_captcha_size","_captcha_theme","_captcha_type","_submit_option","_use_captcha","g-recaptcha-response","__tcb_lg_fc","__tcb_lg_msg","_state","_form_type","_error_message_option","_back_url","_submit_option","url","_asset_group","_asset_option","mailchimp_optin"]})} /* */</script> --> 
+
+        <!--  <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+         n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+         t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+         document,'script','https://connect.facebook.net/en_US/fbevents.js');
+         
+         fbq('init', '342033679332480');
+         fbq('track', "PageView");
+      </script>  -->
+     <!--  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=342033679332480&ev=PageView&noscript=1"/></noscript> -->
       
    </body>
 </html>
