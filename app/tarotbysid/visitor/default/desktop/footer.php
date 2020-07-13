@@ -4,7 +4,7 @@
                      <div class="container">
                         <div class="triangle"></div>
                         <span> Got questions? Or can't find what you’re looking for? </span> <a class="nectar-button
-                           regular-button accent-color" data-color-override="false" href="/contact-faq/"> Contact Us </a>
+                           regular-button accent-color" data-color-override="false" href="/contact-us/"> Contact Us </a>
                      </div>
                   </div>
                   <div id="footer-widgets" data-cols="4">
