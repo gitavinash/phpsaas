@@ -235,6 +235,43 @@
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(5, 5, 'Default Package', 0, 0, 1, NOW())");
 
+  /** Package Features Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."package_feature(
+    package_feature_id bigint(20) NOT NULL,
+    package_feature_package_id bigint(20) NOT NULL,
+    package_feature_pwa int(1) NOT NULL,
+    package_feature_amp int(1) NOT NULL,
+    package_feature_android int(1) NOT NULL,
+    package_feature_ios int(1) NOT NULL,
+    package_feature_update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."package_feature
+    ADD PRIMARY KEY (package_feature_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."package_feature
+    ADD UNIQUE package_feature_package_id (package_feature_package_id),
+    ADD INDEX package_feature_pwa (package_feature_pwa),
+    ADD INDEX package_feature_amp (package_feature_amp),
+    ADD INDEX package_feature_android (package_feature_android),
+    ADD INDEX package_feature_ios (package_feature_ios)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."package_feature
+    MODIFY package_feature_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(1, 1, 1, 1, 1, 1, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(2, 2, 0, 0, 0, 0, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(3, 3, 0, 0, 0, 0, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(4, 4, 0, 0, 0, 0, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(5, 5, 0, 0, 0, 0, NOW())");
+
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(6, 6, 0, 0, 0, 0, NOW())");
+
   /* Page Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."page(
