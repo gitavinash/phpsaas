@@ -4,7 +4,6 @@
 
 ?>
 
-
 <img src="<?php echo USER_IMAGES ?>about-us/1.jpg" alt="" style="float:left; width: 100%;" >
 <img src="<?php echo USER_IMAGES ?>about-us/2.jpg" alt="" style="float:left; width: 100%;" >
 <img src="<?php echo USER_IMAGES ?>about-us/3.jpg" alt="" style="float:left; width: 100%;" >
