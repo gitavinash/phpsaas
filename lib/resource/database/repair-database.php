@@ -470,6 +470,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     ADD INDEX site_package_id (site_package_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
+    DROP site_package_id");
+
   /* Tag Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."tag
