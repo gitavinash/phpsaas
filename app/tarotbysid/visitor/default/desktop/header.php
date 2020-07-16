@@ -240,7 +240,7 @@
                <header id="top">
                   <div class="container">
                      <div class="row">
-                        <div class="col span_3"> <a id="logo" href="index.html" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false"> <img class="stnd default-logo dark-version" alt="Biddy Tarot" src="<?php echo SITE_LOGO ?>" /> </a></div>
+                        <div class="col span_3"> <a id="logo" href="/welcome/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false"> <img class="stnd default-logo dark-version" alt="Biddy Tarot" src="<?php echo SITE_LOGO ?>" /> </a></div>
                         <div class="col span_9 col_last">
                            <a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span></a>
                            <div class="slide-out-widget-area-toggle mobile-icon slide-out-from-right" data-custom-color="false" data-icon-animation="simple-transform">
@@ -248,7 +248,7 @@
                            </div>
                            <nav>
                               <ul class="sf-menu">
-                                 <li class="menu-item"><a href="/" title="<?php echo SITE_NAME ?>" >Home</a></li>
+                                 <li class="menu-item"><a href="/welcome/" title="<?php echo SITE_NAME ?>" >Home</a></li>
                                  <li class="menu-item"><a href="/about-us/" title="About Us" >About Us</a></li>
                                  <li class="menu-item"><a href="/our-services/" title="Our Services" >Our Services</a></li>
                                  <li class="menu-item"><a href="/blog/" title="<?php echo SITE_NAME.' Blog' ?>" >Blog</a></li>

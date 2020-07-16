@@ -16,11 +16,11 @@
                                  <div class="menu-2018-footer-3-container">
                                     <ul id="menu-2018-footer-3" class="menu">
                                        <li class="menu-item"><a href="">Tarot Basics</a></li>
-                                       <li><a href="/">Home</a></li>
-                                       <li><a href="/">About Us</a></li>
-                                       <li><a href="/">Our Services</a></li>
-                                       <li><a href="/">Blogs</a></li>
-                                       <li><a href="/">Contact Us</a></li>
+                                       <li><a href="/welcome/">Home</a></li>
+                                       <li><a href="/about-us/">About Us</a></li>
+                                       <li><a href="/our-services/">Our Services</a></li>
+                                       <li><a href="/blog/">Blogs</a></li>
+                                       <li><a href="/contact-us/">Contact Us</a></li>
                                     </ul>
                                  </div>
                               </div>
@@ -86,7 +86,7 @@
                         <div class="off-canvas-menu-container mobile-only">
                            <ul class="menu">
                               
-                           <li class="menu-item"><a href="/" title="<?php echo SITE_NAME ?>" >Home</a></li>
+                           <li class="menu-item"><a href="/welcome/" title="<?php echo SITE_NAME ?>" >Home</a></li>
                               <li class="menu-item"><a href="/about-us/" title="About Us" >About Us</a></li>
                               <li class="menu-item"><a href="/our-services/" title="Our Services" >Our Services</a></li>
                               <li class="menu-item"><a href="/blog/" title="<?php echo SITE_NAME.' Blog' ?>" >Blog</a></li>

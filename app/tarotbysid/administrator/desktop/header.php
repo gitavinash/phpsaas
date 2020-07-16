@@ -44,20 +44,18 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-					<li <?php echo ((ADMIN_BASE_URL=='/app/') ? 'class="active"' : '' ) ?> >
-						<a href="app.php?type=list"><i class="fas fa-box-open"></i> Apps</a>
+					<li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
+						<a href="page.php?type=list"><i class="fas fa-box-open"></i> Page</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="app.php?type=list"><i class="fas fa-list"></i>  All Apps</a></li>
-								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
-								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i>  My Apps</a></li>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
+								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="app.php?type=list"><i class="fas fa-list"></i>  All Apps</a></li>
-								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
-								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i>  My Apps</a></li>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
+								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
 							</ul>
 						</div>
 					</li>
@@ -82,66 +80,6 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/client/') ? 'class="active"' : '' ) ?> >
-						<a href="client.php?type=list"><i class="fas fa-users"></i> Client</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="client.php?type=add"><i class="fas fa-plus"></i>  Add New Client</a></li>
-								<li><a href="client.php?type=list"><i class="fas fa-list"></i>  All Clients</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="client.php?type=add"><i class="fas fa-plus"></i>  Add New Client</a></li>
-								<li><a href="client.php?type=list"><i class="fas fa-list"></i>  All Clients</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/user/') ? 'class="active"' : '' ) ?> >
-						<a href="user.php?type=list"><i class="fas fa-users"></i> Users</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="user.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
-								<li><a href="user.php?type=list"><i class="fas fa-list"></i>  All Users</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="user.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
-								<li><a href="user.php?type=list"><i class="fas fa-list"></i>  All Users</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/analytics/') ? 'class="active"' : '' ) ?> >
-						<a href="analytics.php?type=report"><i class="fas fa-chart-line"></i> Analytics</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="analytics.php?type=realtime"><i class="fas fa-clock"></i>  Real Time</a></li>
-								<li><a href="analytics.php?type=source"><i class="fas fa-filter"></i>  Traffic Source</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="analytics.php?type=realtime"><i class="fas fa-clock"></i>  Real Time</a></li>
-								<li><a href="analytics.php?type=source"><i class="fas fa-filter"></i>  Traffic Source</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/webmaster/') ? 'class="active"' : '' ) ?> >
-						<a href="webmaster.php?type=configure"><i class="fas fa-tools"></i> Webmaster</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="webmaster.php?type=configure"><i class="fas fa-wrench"></i>  Configure</a></li>
-								<li><a href="webmaster.php?type=sitemap"><i class="fas fa-sitemap"></i>  Submit Sitemap</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="webmaster.php?type=configure"><i class="fas fa-wrench"></i>  Configure</a></li>
-								<li><a href="webmaster.php?type=sitemap"><i class="fas fa-sitemap"></i>  Submit Sitemap</a></li>
-							</ul>
-						</div>
-					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
@@ -158,39 +96,6 @@
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/customize/') ? 'class="active"' : '' ) ?> >
-						<a href="customize.php?type=theme"><i class="fas fa-paint-roller"></i> Customize</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
-								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
-								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
-							</ul>
-						</div>
-					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/help/') ? 'class="active"' : '' ) ?> ><a href="help.php"><i class="fas fa-question-circle"></i> Help</a></li>
-					<li <?php echo ((ADMIN_BASE_URL=='/support/') ? 'class="active"' : '' ) ?> >
-						<a href="support.php?type=create"><i class="fas fa-life-ring"></i> Support</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="support.php.php?type=create"><i class="fas fa-ticket-alt"></i> Create Ticket</a></li>
-								<li><a href="support.php?type=status"><i class="fas fa-search"></i> Check Ticket Status</a></li>
-								<li><a href="support.php?type=history"><i class="fas fa-history"></i> Ticket History</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="support.php.php?type=create"><i class="fas fa-ticket-alt"></i> Create Ticket</a></li>
-								<li><a href="support.php?type=status"><i class="fas fa-search"></i> Check Ticket Status</a></li>
-								<li><a href="support.php?type=history"><i class="fas fa-history"></i> Ticket History</a></li>
 							</ul>
 						</div>
 					</li>
