@@ -76,7 +76,7 @@
 
 
 	$adminDirectory='/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/';
-
+	
 	if(is_dir($adminDirectory)) {
 
 		/** specific device theme or version of request for visitor website */
@@ -87,7 +87,7 @@
 
 		/** define other version to only desktop theme for visitor website */
 
-		define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
+		define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/desktop/');
 
 	}
 
