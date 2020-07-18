@@ -63,18 +63,58 @@
 	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_THEME.'/'.SITE_VERSION.'/');
 	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
 
-	/* Administrator and login member user directory managment */
+	/* Default logged in member user directory managment */
 
-	define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
+	define('DEFAULT_ADMIN_DIR', '/app/default/'.USER_TYPE.'/'.SITE_VERSION.'/');
+	define('DEFAULT_ADMIN_PATH', ROOT.DEFAULT_ADMIN_DIR);
+	define('DEFAULT_ADMIN_URL', SITE_URL.DEFAULT_ADMIN_DIR);
+	define('DEFAULT_ADMIN_STYLESHEET', CSS_LIBRARY.'app/default/'.SITE_VERSION.'/');
+	define('DEFAULT_ADMIN_JS', JS_LIBRARY.'app/default/'.SITE_VERSION.'/');
+	define('DEFAULT_ADMIN_IMAGES', IMG_LIBRARY.'app/default/'.SITE_VERSION.'/');
+
+	/* App logged in member user directory managment */
+
+
+	$adminDirectory='/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/';
+
+	if(is_dir($adminDirectory)) {
+
+		/** specific device theme or version of request for visitor website */
+
+		define('ADMIN_DIR', $adminDirectory);
+
+	} else {
+
+		/** define other version to only desktop theme for visitor website */
+
+		define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
+
+	}
+
 	define('ADMIN_PATH', ROOT.ADMIN_DIR);
 	define('ADMIN_URL', SITE_URL.ADMIN_DIR);
 	define('ADMIN_STYLESHEET', CSS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 	define('ADMIN_JS', JS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
-	define('ADMIN_IMAGES', IMG_LIBRARY.SITE_APP.'/'.SITE_VERSION.'/');
+	define('ADMIN_IMAGES', IMG_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 
-	/* visitor directory managment */
+	/* Visitor directory managment */
 
-	define('USER_DIR', '/app/'.SITE_APP.'/visitor/'.SITE_THEME.'/'.SITE_VERSION.'/');
+	$userDirectory='/app/'.SITE_APP.'/visitor/'.SITE_THEME.'/'.SITE_VERSION.'/';
+
+	if(is_dir($userDirectory)) {
+
+		/** specific device theme or version of request for visitor website */
+
+		define('USER_DIR', $userDirectory);
+
+	} else {
+
+		/** define other version to only desktop theme for visitor website */
+
+		define('USER_DIR', '/app/'.SITE_APP.'/visitor/'.SITE_THEME.'/desktop/');
+
+	}
+
 	define('USER_PATH', ROOT.USER_DIR);
 	define('USER_URL', SITE_URL.USER_DIR);
 	define('USER_STYLESHEET', USER_URL.'assets/css/');
