@@ -2,15 +2,24 @@
 
 	include_once 'header.php';
 
-	$includeFile=ADMIN_PATH.((isset($_GET['type'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['type']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
+	$includeDefaultFile=DEFAULT_ADMIN_PATH.((isset($_GET['type'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['type']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
+	$includeAppFile=ADMIN_PATH.((isset($_GET['type'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['type']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
+	
+	if(file_exists($includeAppFile)) {
 
-	if(file_exists($includeFile)) {
-
-		include_once $includeFile;
+		include_once $includeAppFile;
 
 	} else {
 
-		include_once ADMIN_ERROR_404;
+		if(file_exists($includeDefaultFile)) {
+
+			include_once $includeDefaultFile;
+
+		} else {
+
+			include_once ADMIN_ERROR_404;
+
+		}
 		
 	}
 
