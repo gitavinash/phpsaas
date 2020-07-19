@@ -51,41 +51,26 @@
       <script type='text/javascript' src='<?php echo USER_JS ?>jquery-migrate.min.js'></script>
       <script type='text/javascript' src='<?php echo USER_JS ?>itro-scripts.js'></script> 
 
-      <style type="text/css" media="screen">.g { margin:0px; padding:0px; overflow:hidden; line-height:1; zoom:1; }
-         .g img { height:auto; }
-         .g-col { position:relative; float:left; }
-         .g-col:first-child { margin-left: 0; }
-         .g-col:last-child { margin-right: 0; }
-         .g-25 { min-width:0px; max-width:250px; float:right; clear:right; }
-         .b-25 { margin:50px 0px 0px 0px; }
-         .g-26 { min-width:0px; max-width:250px; float:right; clear:right; }
-         .b-26 { margin:50px 0px 0px 0px; }
-         .g-30 {  margin: 0 auto; }
-         @media only screen and (max-width: 480px) {
-         .g-col, .g-dyn, .g-single { width:100%; margin-left:0; margin-right:0; }
+      <style type="text/css">
+         .isw-row {
+            float:left;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
          }
-         .ajdg_bnnrwidgets, .ajdg_grpwidgets { overflow:hidden; padding:0; }
-         .5ec83d878c6bd, .5ec83d878c7e5 { overflow:hidden; padding:0; }
+         .isw-col {
+            float: left;
+            width: 50%;
+            margin: 0 auto;
+            padding: 0;
+         }
+         .isw-col-full-size {
+            float: left;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+         }
       </style>
-      <script type="text/javascript">var root = document.getElementsByTagName( "html" )[0]; root.setAttribute( "class", "js" );</script>
-      <style type="text/css" id="tve_global_variables">:root{--tcb-color-0:rgb(183, 155, 98);}</style>
-      <style>.async-hide { opacity: 0 !important}</style>
-      <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
-         h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
-         (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
-         })(window,document.documentElement,'async-hide','dataLayer',4000,
-         {'GTM-PDXKHNW':true});
-      </script> <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-         
-         ga('create', 'UA-12507634-1', 'auto');
-         ga('require', 'GTM-PDXKHNW');
-         ga('send', 'pageview');
-      </script> 
-      <meta name="generator" content="Powered by WPBakery Page Builder - drag and drop page builder for WordPress." />
-      <style type="text/css" id="thrive-default-styles"></style>
      
       <style type="text/css" data-type="vc_custom-css">.nectar-flickity.nectar-carousel.nectar-carousel:not(.masonry) .flickity-viewport {
          margin-top: 25px !important;
@@ -240,7 +225,7 @@
                <header id="top">
                   <div class="container">
                      <div class="row">
-                        <div class="col span_3"> <a id="logo" href="/welcome/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false"> <img class="stnd default-logo dark-version" alt="Biddy Tarot" src="<?php echo SITE_LOGO ?>" /> </a></div>
+                        <div class="col span_3"> <a id="logo" href="/welcome/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false"> <img class="stnd default-logo dark-version" alt="Biddy Tarot" src="<?php echo SITE_LOGO ?>" style="height: 60px !important; width: auto" /> </a></div>
                         <div class="col span_9 col_last">
                            <a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span></a>
                            <div class="slide-out-widget-area-toggle mobile-icon slide-out-from-right" data-custom-color="false" data-icon-animation="simple-transform">

@@ -95,24 +95,6 @@
 				<input type="hidden" name="postType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 			</div>
-			<h2>Tags</h2>
-			<div class="action-box inside-shadow">
-				<div class="form-group">
-					<input type="text" class='tags' />
-					<input type="hidden" id='tags' name="tags" value='' >
-				</div>
-			</div>
-			<div class="tagList" style="display: none;"></div>
-			<h2>Feature Image</h2>
-			<div class="form-group upload-btn">
-				<span>Set Feature Image</span>
-				<input type="file" id="featureImage" name="featureImage">
-				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
-			</div>
-			<div class="img-preview action-box" style="display: none;">
-				<img src="#" id="previewImage" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
-			</div>
 		</div>
 	</form>
 </div>
