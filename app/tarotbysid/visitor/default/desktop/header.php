@@ -70,6 +70,14 @@
             margin: 0 auto;
             padding: 0;
          }
+         @media only screen and (max-width: 600px) {
+            .isw-col {
+               float: left;
+               width: 100%;
+               margin: 0 auto;
+               padding: 0;
+            }
+         }
       </style>
      
       <style type="text/css" data-type="vc_custom-css">.nectar-flickity.nectar-carousel.nectar-carousel:not(.masonry) .flickity-viewport {
