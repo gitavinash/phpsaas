@@ -23,10 +23,10 @@
         <link rel="icon" href="<?php echo SITE_ICON ?>">
         <title><?php echo ucwords(str_replace('/', '', str_replace('-', ' ', str_replace('/', ' ', BASE_URL)))).' | '.SITE_NAME ?></title>
         <link rel="canonical" href="<?php echo SITE_URL.ACTIVE_URL ?>" />
-        <meta name="theme-color" content="#26ABDF">
+        <meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css" >
-        <link rel="stylesheet" href="<?php echo APP_CSS_LIBRARY ?>login.min.css">
+        <link rel="stylesheet" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>login.min.css">
         <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,700" rel="stylesheet">
     </head>
 

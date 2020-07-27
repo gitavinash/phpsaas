@@ -22,12 +22,16 @@
 
 	/* Error Reporting */
 
-	define('DEVELOPMENT_MODE', true); // Error reporting true to show error or false to hide error
+	define('DEVELOPMENT_MODE', false); // Error reporting true to show error or false to hide error
 
 	/** User IP Address */
 
 	define('IP', $_SERVER['REMOTE_ADDR']);
 
+	/** User Login Path */
+	
+	define('LOGIN_PATH', '/login/');
+	define('LOGOUT_PATH', '/logout/');
 
 	#############################################################################################
 	############################  DO NOT CHANGE CODE BELOW THIS LINE  ###########################

@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?php echo SITE_ICON ?>">
         <title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
-        <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin.min.css">
+        <link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert2.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">

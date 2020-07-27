@@ -1,1 +1,0 @@
-<h2 style="margin-bottom: 20px" >Daily Work Report</h2>

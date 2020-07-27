@@ -65,6 +65,10 @@
 		case '' :
 			require_once 'homepage.php';
 			break;
+
+		case str_replace('/', '', LOGIN_PATH) :
+			require_once 'login.php';
+			exit();
 			
 		case 'api' :
 			require_once 'api.php';
@@ -88,7 +92,7 @@
 			require_once 'admin.php';
 			break;
 
-		case 'logout' :
+		case str_replace('/', '', LOGOUT_PATH) :
 			require_once 'logout.php';
 			break;
 

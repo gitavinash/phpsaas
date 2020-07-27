@@ -462,9 +462,6 @@
     ADD site_tw_id VARCHAR(100) NOT NULL AFTER site_fb_app_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
-    DROP site_custom_domain");
-
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     ADD COLUMN site_package_id BIGINT(20) NOT NULL DEFAULT 1 AFTER site_setting_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting

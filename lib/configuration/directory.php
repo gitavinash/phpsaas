@@ -27,6 +27,9 @@
 	define('APP_IMG_LIBRARY', IMG_LIBRARY.APP_LIBRARY);
 	define('PLUGIN_LIBRARY', UI_LIBRARY.'plugin/');
 	define('APP_PLUGIN_LIBRARY', PLUGIN_LIBRARY.APP_LIBRARY);
+
+	/** Default jQuery Editor */
+
 	define('EDITOR', PLUGIN_LIBRARY.'editor/editor.min.js');
 
 	/** Default Service Worker */
@@ -61,7 +64,9 @@
 	/** Defauly System Directory Managment */
 
 	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_THEME.'/'.SITE_VERSION.'/');
+	define('SYSTEM_VISITOR_DIR', '/app/system/visitor/'.SITE_THEME.'/'.SITE_VERSION.'/');
 	define('SYSTEM_PATH', ROOT.SYSTEM_DIR);
+	define('SYSTEM_VISITOR_PATH', ROOT.SYSTEM_VISITOR_DIR);
 
 	/* Default logged in member user directory managment */
 
