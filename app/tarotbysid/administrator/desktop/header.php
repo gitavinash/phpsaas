@@ -44,8 +44,23 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+					<li <?php echo ((ADMIN_BASE_URL=='/service/') ? 'class="active"' : '' ) ?> >
+						<a href="service.php?type=list"><i class="fas fa-laptop-house"></i> Service</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="service.php?type=list&status=all"><i class="fas fa-list"></i>  All Services</a></li>
+								<li><a href="service.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Service</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="service.php?type=list&status=all"><i class="fas fa-list"></i>  All Services</a></li>
+								<li><a href="service.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Service</a></li>
+							</ul>
+						</div>
+					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
-						<a href="page.php?type=list"><i class="fas fa-box-open"></i> Page</a>
+						<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
