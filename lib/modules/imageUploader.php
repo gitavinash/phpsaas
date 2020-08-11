@@ -50,7 +50,7 @@
 						} else {
 
 							$regenerateImageWidth=IMAGE_THUMBNAIL_WIDTH;
-							$regenerateImageHeight=($imageHeight/$imageWidth)*IMAGE_THUMBNAIL_HEIGHT;
+							$regenerateImageHeight=($imageWidth/$imageHeight)*IMAGE_THUMBNAIL_HEIGHT;
 
 						}
 
