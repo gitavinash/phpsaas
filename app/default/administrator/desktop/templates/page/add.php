@@ -48,13 +48,13 @@
 					</div>
 				</div>
 				<div class="fb" style="display: none;">
-					<div class="facebook-image" style="display: none;">
-						<div class="img"><img src="" id="facebook-image" alt=""></div>
+					<div class="facebookPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -66,13 +66,13 @@
 					</div>
 				</div>
 				<div class="tw" style="display: none;">
-					<div class="twitter-image" style="display: none;">
-						<div class="img"><img src="" id="twitter-image" alt=""></div>
-						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
+					<div class="twitterPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="twitterPath" alt=""></div>
+						<p id="twitterChangeImage" class='changeImage' >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox">
-						<span>Set Twitter feature image</span>
-						<input type='file' id="twImage" name='twitterImage' />
+						<span>Set twitter feature image</span>
+						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
@@ -86,15 +86,24 @@
 			</section>
 		</div>
 		<div class="right-box">
+
 			<div class="action-box inside-shadow">
 				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-				<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
-				<input type="hidden" name="type" value="draft" >
-				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-				<input type="hidden" name="postType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="button" id="draftBtn"  class="btn btn-yellow btn-block" value="Save Draft">
+				<input type="hidden" name="type" value="<?php echo ltrim(rtrim(ADMIN_BASE_URL, '/'), '/') ?>" >
 			</div>
+
+			<h2>Feature Image</h2>
+			<div class="form-group featureImageUploadBox upload-btn">
+				<span>Set Feature Image</span>
+				<input type="file" id="featureImage" name="featureImage">
+				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></p>
+			</div>
+			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">
+				<img src="#" id="featureImagePath" alt="">
+				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
+			</div>
+
 		</div>
 	</form>
 </div>

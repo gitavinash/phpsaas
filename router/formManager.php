@@ -12,13 +12,13 @@
 
 		/** Default API Request */
 
-		$apiCall=API_MODULES.$type.'/'.$action.'.php';
+		$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
 
 		if(!file_exists($apiCall)) {
 
 			/** Website APP Api Request */
 
-			$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
+			$apiCall=API_MODULES.$type.'/'.$action.'.php';
 
 		}
 		
@@ -33,6 +33,8 @@
 				call_user_func($action, $connection, $secure);
 
 			} else {
+
+				echo $apiCall;
 				
 				echo '<h1>Undefine function '.$type.' -> '.$action.' </h1>';
 
