@@ -1,6 +1,6 @@
 <?php
 	
-	require_once MODULES.'isLogin.php';
+	require_once LOGIN_CHECK;
 
 	function singleUpload($connection) {
 

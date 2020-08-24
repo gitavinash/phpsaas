@@ -10,6 +10,7 @@
 		<script src='<?php echo PLUGIN_LIBRARY ?>editor/editor.js' type='text/javascript' ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.all.min.js" type="text/javascript" ></script>
 		<script src="<?php echo DEFAULT_ADMIN_JS ?>script.min.js"></script>
+		<script src="<?php echo ADMIN_JS ?>app.min.js"></script>
 
 		<?php
 		

@@ -32,28 +32,28 @@
 			break;
 
 		case 'notification' :
-			require_once API.'notification/'.end($urlStructure).'.php';
+			require_once API_MODULES.'notification/'.end($urlStructure).'.php';
 			break;
 			
 		default:
 
 			/** Check API request file in system app directory */
 
-			$systemAPI=API.end($urlStructure).'.php';
+			$appAPI=API_APP_MODULES.end($urlStructure).'.php';
 			
-			if(file_exists($systemAPI)) {
+			if(file_exists($appAPI)) {
 
-				require_once $systemAPI;
+				require_once $appAPI;
 
 			} else {
 
 				// Check Application API Request
 
-				$appAPI=API.SITE_APP.'/'.end($urlStructure).'.php';
+				$systemAPI=API_MODULES.end($urlStructure).'.php';
 
-				if(file_exists($appAPI)) {
+				if(file_exists($systemAPI)) {
 
-					require_once $appAPI;
+					require_once $systemAPI;
 
 				} else {
 

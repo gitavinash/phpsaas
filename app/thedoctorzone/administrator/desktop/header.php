@@ -44,7 +44,37 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-					<li <?php echo ((ADMIN_BASE_URL=='/Doctor/') ? 'class="active"' : '' ) ?> >
+					<li <?php echo ((ADMIN_BASE_URL=='/clinic/') ? 'class="active"' : '' ) ?> >
+						<a href="clinic.php?type=list"><i class="fas fa-h-square"></i> Clinic and Hostpital</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="clinic.php?type=list&status=all"><i class="fas fa-list"></i> All Clinic and Hostpital</a></li>
+								<li><a href="clinic.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="clinic.php?type=list&status=all"><i class="fas fa-list"></i> All Clinic and Hostpital</a></li>
+								<li><a href="clinic.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/lab/') ? 'class="active"' : '' ) ?> >
+						<a href="lab.php?type=list"><i class="fas fa-flask"></i> Labs</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="lab.php?type=list&status=all"><i class="fas fa-list"></i> All Labs</a></li>
+								<li><a href="lab.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New Lab</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="lab.php?type=list&status=all"><i class="fas fa-list"></i> All Labs</a></li>
+								<li><a href="lab.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New Lab</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/doctor/') ? 'class="active"' : '' ) ?> >
 						<a href="doctor.php?type=list"><i class="fas fa-user-md"></i> Doctor</a>
 						<div class="side-menu">
 							<ul>
