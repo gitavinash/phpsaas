@@ -1,5 +1,40 @@
 <?php
 
+  /** Address Table */ 
+
+  mysqli_query($connection, "CREATE TABLE isw_address (
+    address_id bigint(20) NOT NULL,
+    address_relation_id bigint(20) NOT NULL,
+    address_house_no varchar(255) NOT NULL,
+    address_area varchar(255) NOT NULL,
+    address_landmark varchar(255) NOT NULL,
+    address_city_id bigint(20) NOT NULL,
+    address_state_id bigint(20) NOT NULL,
+    address_county_id bigint(20) NOT NULL,
+    address_latitude varchar(10) NOT NULL,
+    address_longitude varchar(10) NOT NULL,
+    address_mobile varchar(20) NOT NULL,
+    address_alternate_mobile varchar(20) NOT NULL,
+    address_type varchar(20) NOT NULL,
+    address_relation_type varchar(20) NOT NULL,
+    address_status int(1) NOT NULL,
+    address_updated timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE isw_address
+    ADD PRIMARY KEY (address_id),
+    ADD KEY address_relation_id (address_relation_id),
+    ADD KEY address_county_id (address_county_id),
+    ADD KEY address_state_id (address_state_id),
+    ADD KEY address_city_id (address_city_id),
+    ADD KEY address_status (address_status),
+    ADD KEY address_type (address_type),
+    ADD KEY address_mobile (address_mobile),
+    ADD KEY address_relation_type (address_relation_type)");
+
+  mysqli_query($connection, "ALTER TABLE isw_address
+    MODIFY address_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   /** Analytics Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."analytics(
@@ -80,6 +115,32 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
     CHANGE category_type category_type varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
+  /** Company Table */
+  
+  mysqli_query($connection, "CREATE TABLE isw_company (
+    company_id bigint(20) NOT NULL,
+    company_site_id int(11) NOT NULL,
+    company_user_id int(11) NOT NULL,
+    company_title varchar(255) NOT NULL,
+    company_address_id bigint(20) NOT NULL,
+    company_gst varchar(20) NOT NULL,
+    company_cin varchar(20) NOT NULL,
+    company_type varchar(20) NOT NULL,
+    company_status int(1) NOT NULL,
+    company_update timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE isw_company
+    ADD PRIMARY KEY (company_id),
+    ADD KEY company_site_id (company_site_id),
+    ADD KEY company_user_id (company_user_id),
+    ADD KEY company_address_id (company_address_id),
+    ADD KEY company_type (company_type),
+    ADD KEY company_status (company_status)");
+
+  mysqli_query($connection, "ALTER TABLE isw_company
+    MODIFY company_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   /* Device Table */
 
@@ -326,6 +387,34 @@
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
     MODIFY page_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  /** Professional Table */
+
+  mysqli_query($connection, "CREATE TABLE isw_professional (
+    professional_id bigint(20) NOT NULL,
+    professional_site_id bigint(20) NOT NULL,
+    professional_user_id bigint(20) NOT NULL,
+    professional_company_id bigint(20) NOT NULL,
+    professional_title varchar(255) NOT NULL,
+    professional_description longtext NOT NULL,
+    professional_experience_in_year varchar(2) NOT NULL,
+    professional_experience_in_month varchar(2) NOT NULL,
+    professional_type varchar(20) NOT NULL,
+    professional_status int(1) NOT NULL,
+    professional_update timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE isw_professional
+    ADD PRIMARY KEY (professional_id),
+    ADD KEY professional_user_id (professional_user_id),
+    ADD KEY professional_company_id (professional_company_id),
+    ADD KEY professional_type (professional_type),
+    ADD KEY professional_status (professional_status),
+    ADD KEY professional_experience_in_year (professional_experience_in_year),
+    ADD KEY professional_site_id (professional_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE isw_professional
+    MODIFY professional_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   /* Profile Table */
 
