@@ -67,7 +67,7 @@
             </div>
             <div class="form-group" id="pinCodeBox" style="display: none" >
                 <label>Pin Code*</label>
-                <input type="number" id="pincode" class="form-control inside-shadow" placeholder="6 digit numeric Pin Code" >
+                <input type="number" id="pincode" name="pincode" class="form-control inside-shadow" placeholder="6 digit numeric Pin Code" >
             </div>
             <div class="form-group" >
                 <label>Select Building Type*</label>
