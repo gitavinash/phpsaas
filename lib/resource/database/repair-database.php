@@ -38,6 +38,30 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
     DROP address_relation_id");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    DROP address_relation_type");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD COLUMN address_pin_code varchar(9) NOT NULL AFTER address_county_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD INDEX address_pin_code (address_pin_code)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    CHANGE address_county_id address_country_id bigint(20)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD COLUMN address_site_id bigint(20) NOT NULL AFTER address_id");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD INDEX address_site_id (address_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD COLUMN address_user_id bigint(20) NOT NULL AFTER address_site_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD INDEX address_user_id (address_user_id)");
+
   /** Analytics Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."analytics(
@@ -144,6 +168,9 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."company
     MODIFY company_id bigint(20) NOT NULL AUTO_INCREMENT");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."company
+    MODIFY company_address_id bigint(20) NOT NULL AFTER company_user_id");
 
   /* Device Table */
 
