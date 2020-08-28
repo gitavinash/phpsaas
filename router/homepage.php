@@ -6,6 +6,15 @@
 
 	} else {
 
-		echo '<h1>'.SITE_VERSION.' theme not found</h1>';
+		if(DEVELOPMENT_MODE==false) {
+		
+			echo '<h1>'.SITE_VERSION.' theme not found</h1>';
+		
+		} else {
+
+			echo USER_PATH;
+
+		}
+		
 
 	}
