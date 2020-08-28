@@ -42,66 +42,45 @@
 <table id="table">
 	<thead>
 		<tr>
-			<!-- <th style="width: 50px"></th> -->
+			<th>S No.</th>
 			<th>Clinic / Hospital Name</th>
-			<th style="width: 150px">Address</th>
-			<th style="width: 100px">Pin Code</th>
+			<th>Address</th>
+			<th style="width: 70px">Pin Code</th>
+			<th style="width: 100px"></th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT company_id, company_title, address_house_no, address_area, address_landmark, city_name, country_name, state_name ")) {
-				if(mysqli_num_rows($dataList)!=0) {
-					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
-						<tr>
+			if($clincInfo=mysqli_query($connection, "SELECT company_id, company_title, address_house_no, address_area, address_landmark, address_pin_code, city_name, state_name, country_name FROM ".TABLE_PREFIX."company INNER JOIN ".TABLE_PREFIX."address ON address_id=company_address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON address_state_id=state_id INNER JOIN ".TABLE_PREFIX."country ON country_id=address_country_id WHERE company_type='clinic' AND company_status=1")) {
+
+				if(mysqli_num_rows($clincInfo)!=0) {
+
+					$i=1;
+
+					while($clincData=mysqli_fetch_assoc($clincInfo)) {
+
+						extract($clincData);
+
+						echo "<tr>
+							<td>{$i}</td>
+							<td>{$company_title}</td>
+							<td>{$address_house_no}, {$address_area}, {$address_landmark}, {$city_name}, {$state_name}, {$country_name}</td>
+							<td>{$address_pin_code}</td>
 							<td>
-								<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><?php echo ${$postType.'_title'}.(($link_status!='200') ? (($link_status=='206') ? '<strong> — Draft </strong>' : '<strong> — Auto Draft </strong>' ) : '' ); ?></a></p>
-								<div class="hover">
-									<a href="<?php echo $postType ?>.php?type=edit&editor=true&id=<?php echo ${$postType.'_id'}; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="delete.php?type=<?php echo $postType ?>&id=<?php echo ${$postType.'_id'}; ?>" onclick="return confirm('Are you sure you want to delete this <?php echo $postType ?>?');" ><i class="fas fa-trash"></i> Delete</a>
-									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
-								</div>
+								<a href='clinic/?type=edit&id={$company_id}' class='btn btn-blue btn-sm' >Edit</a>
+								<a href='clinic/?type=delete&id={$company_id}' class='btn btn-red btn-sm' >Delete</a>
 							</td>
-							<td><?php echo $profile_display_name; ?></td>
-							<td><?php echo $category_title ?></td>
-							<td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
-						</tr>
-					<?php
+						</tr>";
+
+						$i++;
+
 					}
-				} else { ?>
-					<tr>
-						<td colspan="4">No {$postType} Found</td>
-					</tr>
-				<?php
-				}
-			}
-			
-		?>
-	</tbody>
-</table>
 
-<div class="pagination-box">
-	<ul class="pagination">
-		<?php
-		
-		$currentPage=mysqli_real_escape_string($connection, (isset($_GET['page']) ? $_GET['page'] : 0 ));
+				} else {
 
-		if($totalnews=mysqli_query($connection, "SELECT count({$postType}_id) as totalnews FROM ".TABLE_PREFIX."{$postType}, ".TABLE_PREFIX."link WHERE {$postType}_type='{$postType}' AND link_relation_id={$postType}_id AND link_type='{$postType}' {$categoryFilter} {$authorFilter} {$statusFilter}")) {
-			
-			if(mysqli_num_rows($totalnews)!=0) {
-					
-				extract(mysqli_fetch_assoc($totalnews));
+					echo "<tr><td colspan='5'>No Information Found</td></tr>";
 
-				$totalnews=ceil($totalnews/10);
-
-				if($startFrom==0) { ?>
-					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=1'>Next</a></li>
-				<?php
-				} else { ?>
-					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage-1; ?>'>Back</a></li>
-					<li><a href='<?php echo  $postType ?>/?type=list&status=<?php echo $status ?>&category=<?php echo $categoryID ?>&author=<?php echo $authorID; ?>&page=<?php echo $currentPage+1; ?>'>Next</a></li>
-				<?php
 				}
 
 			} else {
@@ -109,8 +88,6 @@
 				echo mysqli_error($connection);
 
 			}
-
-		}
 
 		?>
 	</ul>

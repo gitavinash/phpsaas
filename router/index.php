@@ -28,6 +28,18 @@
 		require_once 'formManager.php';
 		exit();
 
+	} else {
+
+		/** Secure all GET mathod parameters */
+
+		foreach($_GET as $key => $value) {
+
+			$secure[$key]=mysqli_real_escape_string($connection, $value);
+
+		}
+
+		((isset($secure)) ? extract($secure) : '' );
+
 	}
 	
 	/** Redirect all double slash url request to single slash */

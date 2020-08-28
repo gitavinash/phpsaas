@@ -49,13 +49,13 @@
 						<div class="side-menu">
 							<ul>
 								<li><a href="clinic.php?type=list&status=all"><i class="fas fa-list"></i> All Clinic and Hostpital</a></li>
-								<li><a href="clinic.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="clinic.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="clinic.php?type=list&status=all"><i class="fas fa-list"></i> All Clinic and Hostpital</a></li>
-								<li><a href="clinic.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="clinic.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
 							</ul>
 						</div>
 					</li>
@@ -64,13 +64,13 @@
 						<div class="side-menu">
 							<ul>
 								<li><a href="lab.php?type=list&status=all"><i class="fas fa-list"></i> All Labs</a></li>
-								<li><a href="lab.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New Lab</a></li>
+								<li><a href="lab.php?type=add"><i class="fas fa-plus"></i> Add New Lab</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="lab.php?type=list&status=all"><i class="fas fa-list"></i> All Labs</a></li>
-								<li><a href="lab.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New Lab</a></li>
+								<li><a href="lab.php?type=add"><i class="fas fa-plus"></i> Add New Lab</a></li>
 							</ul>
 						</div>
 					</li>

@@ -2,7 +2,7 @@
 
 <div class="form-box">
 
-    <form id="addNewBuilding">
+    <form id="publishForm" >
         <div class="box-2">
             <div class="form-group">
                 <label>Clinic/Hospital Name*</label>
@@ -80,7 +80,7 @@
             <div class="form-group">
 				<input type="hidden" name="type" value="clinic" >
 				<input type="hidden" name="action" value="add" >
-                <input type="submit" id="addClinic" value='Add New Clinic' class='btn btn-green'>
+                <input type="submit" id="publishBtn" value='Add New Clinic' class='btn btn-green'>
             </div>
         </div>
     </form>
