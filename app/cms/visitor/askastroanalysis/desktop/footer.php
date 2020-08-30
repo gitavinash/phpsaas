@@ -2,7 +2,7 @@
     <footer>
         <section>
             <div class="contact-us">
-                <img src="images/logo.png" alt="">
+                <img src="<?php echo USER_IMAGES ?>logo.png" alt="">
                 <p><span><i class="fas fa-map-marker-alt"></i></span></p>
             </div>
         </section>
