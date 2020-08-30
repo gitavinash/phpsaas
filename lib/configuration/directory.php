@@ -61,6 +61,10 @@
 	define('INSTALLATION_IMAGES', SITE_DOMAIN.INSTALLATION_PATH.'assets/images/');
 	define('INSTALLATION_PLUGINS', SITE_DOMAIN.INSTALLATION_PATH.'assets/plugins/');
 
+	/** Default Visitor Paths */
+
+	define('DEFAULT_VISITOR_PATH', ROOT.'/app/system/'.USER_TYPE.'/default/'.SITE_VERSION.'/');
+
 	/** Defauly System Directory Managment */
 
 	define('SYSTEM_DIR', '/app/system/'.USER_TYPE.'/'.SITE_THEME.'/'.SITE_VERSION.'/');

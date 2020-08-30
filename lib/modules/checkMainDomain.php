@@ -29,7 +29,7 @@
 					
 						} else {
 
-							echo "Installation is not complete please contact to system administrator";
+							echo SITE_DOMAIN.' is not registed with us';
 							exit();
 
 						}

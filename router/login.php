@@ -6,9 +6,13 @@
 
         require_once $themeLoginFile;
 
-    } else {
+    } else if(file_exists(SYSTEM_VISITOR_PATH.'login.php')) {
 
         require_once SYSTEM_VISITOR_PATH.'login.php';
+
+    } else {
+
+        require_once DEFAULT_VISITOR_PATH.'login.php';
 
     }
     
