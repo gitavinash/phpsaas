@@ -46,7 +46,8 @@
     </div>
     <div class="bhagwat-geeta-right-box">
         <h2>About Bhagwat Geeta</h2>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo, minus. Eligendi temporibus voluptates, neque doloremque id tempore culpa quisquam enim, adipisci animi numquam quos nisi odit magnam laudantium corrupti? Debitis facere ex, ab perspiciatis consectetur error modi nisi excepturi similique quam, et magnam voluptate eveniet, minima itaque obcaecati aut alias non aspernatur reiciendis inventore amet quis eaque? Unde sapiente vitae quia incidunt quisquam laboriosam consequuntur ex minus dolores maxime quibusdam atque sit fugiat non ab eum animi id reprehenderit cupiditate temporibus, velit vel magni. Quis unde animi blanditiis nobis porro quia, dolore a aspernatur eaque perferendis eveniet</p>
+        <p>गीता एक दार्शनिक ग्रंथ है। गीता के वक्ता ने दार्शनिक समस्याओं को इतनी सरलता से सुलझाया है कि आज उन्हें समझने में सर्वसाधारणजन समर्थ हो सका है। प्रमाणभूत प्रस्थानत्रयी में गीता का अग्रस्थान है, गीताशास्त्र  हिंदू-वाङ्ग्मय का सर्वश्रेष्ठ निर्णायक ग्रंथ है; क्योंकि गीता ने समतावाद तथा मनुष्यमात्र के समानाधिकारों की घोषणा करके ऊँचनीच के भेदभाव को मिटाने का प्रशंसनीय कार्य किया है। स्त्री, वैश्य तथा शूद्रों पर लगे प्रतिबंधों को हटाकर सबको एक ही प्रगतिपथ पर लाने का श्रेय भी गीता को ही मिला है।</p>
+        <p>गीता संसारभर का आदर्श ग्रंथ है। गीता ईश्वरीय-वाणी है। ईश्वरीय ज्ञान ही जीव-स्वरूपगत अविद्या आदि दोषों के मिटाने की क्षमता रखता है। सांसारिक संताप, पापविनाशिनी ब्रह्मवाणी ही निर्वाणपद प्रदायिनी मानी गयी है। यह ‘सरल हिंदी गीता’ श्रीजयकृष्णी धर्म के सिद्धांतों के आधार पर विशेषरूप से लिखी गयी है, अतः इसका पंथीय जनता समुचित लाभ उठायेगी, ऐसी हमें आशा है।</p>
         <a href="#" class="live-btn" >Free Download</a>
     </div>
 </section>
