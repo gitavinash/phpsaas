@@ -7,6 +7,7 @@
         <script type="text/javascript" >
             $(document).ready(function(e) {
                 $('.news-slider').slick({
+                    arrows: false,
                     autoplay: true,
                     autoplaySpeed: 2000,
                     infinite: true,
