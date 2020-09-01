@@ -223,7 +223,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="head-1">
-							<h2>Stories To Share Our Client</h2>
+							<h2>Stories To Share</h2>
 							<h5>Want to be featured here? Share your story at care@vedicvtals.com</h5>
 						</div>
 					</div>
