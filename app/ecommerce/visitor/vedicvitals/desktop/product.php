@@ -22,20 +22,20 @@
 					<div class="col-md-6" style="padding-bottom: 0;">
 						<div class="galery-carousel">
 							<div class="carousel carousel-main" data-flickity>
-							  <div class="carousel-cell"><img src="image/pro1.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro5.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro3.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro4.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro5.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro1.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro3.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro4.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
 							</div>
 
 							<div class="carousel carousel-nav"
 							  data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
-							  <div class="carousel-cell"><img src="image/pro1.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro5.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro3.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro4.jpg"></div>
-							  <div class="carousel-cell"><img src="image/pro5.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro1.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro3.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro4.jpg"></div>
+							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
 							</div>
 						</div>
 
@@ -98,7 +98,8 @@
 		</section>
 		<!-- section global platform end -->
 
-		<!-- comparison start -->
+		<!-- comparison start
+		
 		<section class="section-content ">
 			<div class="container">
 				<div class="row">
@@ -128,7 +129,8 @@
 				</div>
 			</div>
 		</section>
-		<!-- comparison end -->
+		
+		comparison end -->
 
 		<section class="section-content prodct-fiz">
 			<div class="container">
@@ -137,7 +139,7 @@
 						<div class="fiz-box">
 							<h3>From</h3>
 							<h2>leaves<br>to liquid.</h2>
-							<img src="image/product/Ingredients.png" width="100%" class="py-3">
+							<img src="<?php echo USER_IMAGES ?>product/Ingredients.png" width="100%" class="py-3">
 							<h4>17 organic ingredients</h4>
 						</div>
 					</div>
@@ -187,22 +189,22 @@
 					</div>
 
 					<div class="col-md-3 col-6 text-center">
-						<img src="image/product/icon_one.png" width="150">
+						<img src="<?php echo USER_IMAGES ?>product/icon_one.png" width="150">
 						<h3 class="text-dark py-2">Sugar Free</h3>
 					</div>
 
 					<div class="col-md-3 col-6 text-center">
-						<img src="image/product/icon_two.png" width="150">
+						<img src="<?php echo USER_IMAGES ?>product/icon_two.png" width="150">
 						<h3 class="text-dark py-2">100% Ayurvedic</h3>
 					</div>
 
 					<div class="col-md-3 col-6 text-center">
-						<img src="image/product/icon_three.png" width="150">
+						<img src="<?php echo USER_IMAGES ?>product/icon_three.png" width="150">
 						<h3 class="text-dark py-2">100% Organic</h3>
 					</div>
 
 					<div class="col-md-3 col-6 text-center">
-						<img src="image/product/icon_four.png" width="150">
+						<img src="<?php echo USER_IMAGES ?>product/icon_four.png" width="150">
 						<h3 class="text-dark py-2">Clenses and Balances</h3>
 					</div>
 
@@ -234,7 +236,7 @@
 			<div class="container-fluid" style="padding: 0;" >
 				<div class="row" >
 					<div class="col-md-12">
-						<img src="image/product/Bottom-Setup.jpg" width="100%">
+						<img src="<?php echo USER_IMAGES ?>product/Bottom-Setup.jpg" width="100%">
 					</div>
 				</div>
 			</div>

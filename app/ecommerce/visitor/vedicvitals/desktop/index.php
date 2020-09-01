@@ -11,11 +11,6 @@
 					<div class="card-ban">
 						<div class="carousel"  data-flickity='{ "autoPlay": true, "wrapAround": true,"pageDots": false }'>
 							<div class="carousel-cell-2">
-								<!-- <div class="cont-carousel">
-									<h4>Start here for</h4>
-									<h2>Beauty</h2>
-									<h4>essential</h4>
-								</div> -->
 								<img src="<?php echo USER_IMAGES ?>slider1.jpg">
 							</div>
 							<div class="carousel-cell-2">
