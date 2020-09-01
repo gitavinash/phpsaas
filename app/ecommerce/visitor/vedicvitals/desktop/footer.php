@@ -126,6 +126,8 @@
 		<!-- sections end -->
 
 		<!-- script start -->
+
+		<?php echo NOTIFICATION.'index.php' ?>
 	
 		<script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.slim.min.js"></script>
 		<script type="text/javascript" src="<?php echo USER_JS ?>comaprison-slider.js"></script>
