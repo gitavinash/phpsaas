@@ -19,7 +19,10 @@
                 <div class="signup w-100">
                     <form id="otpForm" >
                         <input type="number" id="mobile" name="mobile" placeholder="Mobile No." class="form-control mb-4 w-100">
-                        <button id="sendOTP" class="btn dark-blue w-100 text-white">Continue with Mobile</button>
+                        <input type="hidden" name="type" value="authentication" >
+                        <input type="hidden" name="action" value="sendOTP" >
+                        <!-- <input type="submit" id="sendOTP" class="btn dark-blue w-100 text-white" value="Continue with Mobile" > -->
+                        <button id="sendOTP" class="btn dark-blue w-100 text-white" >Continue with Mobile</button>
                     </form>
                 </div>
         

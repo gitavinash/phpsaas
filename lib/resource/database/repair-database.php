@@ -294,6 +294,28 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."notification
     ADD INDEX (notification_owner_id),
     ADD INDEX (notification_group_key)");
+
+  /** OTP Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."otp (
+    otp_id bigint(20) NOT NULL,
+    otp_user_id bigint(20) NOT NULL,
+    otp_site_id varchar(10) NOT NULL,
+    otp_mode varchar(10) NOT NULL,
+    otp_code varchar(10) NOT NULL,
+    otp_status int(1) NOT NULL,
+    otp_time timestamp NOT NULL DEFAULT current_timestamp(),
+    otp_expire datetime NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."otp
+    ADD PRIMARY KEY (otp_id),
+    ADD KEY otp_user_id (otp_user_id),
+    ADD KEY otp_site_id (otp_site_id),
+    ADD KEY otp_mode (otp_mode)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."otp
+    MODIFY otp_id bigint(20) NOT NULL AUTO_INCREMENT");
   
   /** Package Table */
 
@@ -451,6 +473,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     CHANGE profile_email profile_email varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE profile_alt_email profile_alt_email varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    ADD INDEX(profile_mobile)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    ADD COLUMN profile_mobile_status INT(1) NOT NULL AFTER profile_mobile");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    ADD COLUMN profile_email_status INT(1) NOT NULL AFTER profile_email");
 
   /* Site Table */
 
@@ -630,6 +661,11 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
     DROP user_type");
+
+  /** Adding new column of mobile number */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
+    ADD COLUMN user_mobile VARCHAR(25) NOT NULL AFTER user_email");
 
   /** User Type table */
 
