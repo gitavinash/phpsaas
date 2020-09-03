@@ -662,6 +662,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
     DROP user_type");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
+    ADD UNIQUE(user_mobile)");
+
   /** Adding new column of mobile number */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
