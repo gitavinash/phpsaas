@@ -688,7 +688,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user_type
   MODIFY user_type_id int(11) NOT NULL AUTO_INCREMENT");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(1, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(1, 1, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(2, 2, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(3, 3, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(4, 4, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(5, 5, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(6, 6, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(7, 7, 'System Administrator', 'administrator', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(8, 5, 'Doctor', 'doctor', 1)");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(9, 5, 'Member or Patient', 'member', 1)");
  
 
   ########################################################################################################################

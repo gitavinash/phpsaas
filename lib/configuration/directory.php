@@ -18,7 +18,19 @@
 	/** Defualt UI Resource */
 
 	define('UI_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE).'ui/');
-	define('APP_LIBRARY', 'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+
+	if(!is_dir('app/'.SITE_APP.'/'.SITE_VERSION.'/')) {
+
+		/** Set default app library to desktop version */
+
+		define('APP_LIBRARY', 'app/'.SITE_APP.'/desktop/');
+
+	} else {
+
+		define('APP_LIBRARY', 'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+
+	}
+
 	define('JS_LIBRARY', UI_LIBRARY.'js/');
 	define('APP_JS_LIBRARY', JS_LIBRARY.APP_LIBRARY);
 	define('CSS_LIBRARY', UI_LIBRARY.'css/');
@@ -49,9 +61,15 @@
 	
 	/* Email Directory Configuration */
 
-	define('SEND_EMAIL', CONFIG.'mail/send_email.php');
+	define('SEND_EMAIL', CONFIG.'mail/send-email.php');
 	define('EMAIL_TEMPLATE', RESOURCE.'email/');
-	define('APP_EMAIL_TEMPLATE', RESOURCE.'email/'.SITE_APP.'/');
+	define('APP_EMAIL_TEMPLATE', EMAIL_TEMPLATE.SITE_APP.'/');
+	
+	/* SMS Directory Configuration */
+
+	define('SEND_SMS', CONFIG.'sms/send-sms.php');
+	define('SMS_TEMPLATE', RESOURCE.'sms/');
+	define('APP_SMS_TEMPLATE', SMS_TEMPLATE.SITE_APP.'/');
 
 	/* Installation Directory  */
 
