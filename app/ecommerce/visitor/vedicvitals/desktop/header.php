@@ -75,13 +75,13 @@
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Our Products
 									      </a>
 									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="product.php">Product 1</a>
-									        <a class="dropdown-item" href="product.php">Product 2</a>
-									        <a class="dropdown-item" href="product.php">Product 3</a>
-									        <a class="dropdown-item" href="product.php">Product 4</a>
+									        <a class="dropdown-item" href="product.php">Immunity Vitals</a>
+									        <a class="dropdown-item" href="product.php">Tar Free</a>
+									        <a class="dropdown-item" href="product.php">Gyno Vitals</a>
+									        <a class="dropdown-item" href="product.php">V-Liver Vitals</a>
 									      </div>
 									  </li>
-									  <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
+									  <li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>
 									  <li class="nav-item"><a class="nav-link" target="_blank" href="https://vedicvitals.ordr.live/">Track Order</a></li>
 									  <li class="nav-item"><a class="nav-link" href="contact.php">Contact Us</a></li>
 									</ul>

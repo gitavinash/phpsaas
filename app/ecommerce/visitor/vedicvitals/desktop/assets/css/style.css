@@ -940,11 +940,12 @@ a.del-b:hover {
     background-size: cover;
 }
 .head-1 p {
-    width: 70%;
+    width: 100%;
     margin: 0px auto;
     text-align: justify;
     color: #333;
     line-height: 28px;
+    padding-bottom: 20px;
 }
 /*
 .carousel-cell-3.is-selected {
@@ -1146,6 +1147,7 @@ section.blog-sectn {
     margin-top: 4px;
     border-top: 1px solid #e0e0e0;
     padding-top: 16px;
+    margin-bottom: 20px;
 }
 .social-2 i {
     color: #333;
@@ -1759,6 +1761,11 @@ section.section-content.who-sectn {
 .who-1 h4 {
     font-size: 2em;
     margin-bottom: 30px;
+}
+.who-1 p {
+    line-height: 32px;
+    font-size: 16px;
+    margin-top: 12px;
 }
 .lazy-bx {
     width: 100%;
@@ -3623,10 +3630,6 @@ ul.ingredients li {
     width: 150%;
 }
 
-.about-us {
-    padding: 50px 50px 100px 0px;
-}
-
 .about-us-img {
     padding: 150px 0px 0px 0px;
 }
@@ -3649,4 +3652,8 @@ ul.ingredients li {
         padding: 0px
     }
 
+}
+
+.fa-heart {
+    color: #F91100;
 }

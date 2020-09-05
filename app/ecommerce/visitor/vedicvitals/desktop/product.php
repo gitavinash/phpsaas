@@ -14,7 +14,7 @@
 							  <ol class="breadcrumb">
 							    <li class="breadcrumb-item"><a href="#">Home</a></li>
 							    <li class="breadcrumb-item"><a href="#">Product</a></li>
-							    <li class="breadcrumb-item active" aria-current="page">product name</li>
+							    <li class="breadcrumb-item active" aria-current="page">Immunity Vitals</li>
 							  </ol>
 							</nav>
 						</div>
@@ -85,10 +85,10 @@
 							<!-- grab deal end -->
 
 							<div class="social-2"> <span>Share </span>
-								<a href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-instagram" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+								<a href=""><i class="fab fa-facebook-square" aria-hidden="true"></i></a>
+								<a href=""><i class="fab fa-twitter-square" aria-hidden="true"></i></a>
+								<a href=""><i class="fab fa-instagram" aria-hidden="true"></i></a>
+								<a href=""><i class="fab fa-linkedin" aria-hidden="true"></i></a>
 							</div>
 						</div>
 					</div>
@@ -179,7 +179,7 @@
 						<hr color="#ccc">
 						<div class="sec-1">
 							<div class="grad-head">
-								<p class="product-fact" ><span><i class="fa fa-quote-left"></i></span>Approximately two-thirds of india's rural people, Who compromise 70 Percent of the indian population, use Ayurveda for their primary health care needs.<span><i class="fa fa-quote-right"></i></span></p>
+								<p class="product-fact" ><span><i class="fa fa-quote-left"></i></span>Approximately two third of India’s rural population, who comprises 70% of the Indian population, use Ayurveda for their primary health care needs<span><i class="fa fa-quote-right"></i></span></p>
 							</div>
 						</div>
 					</div>
@@ -199,13 +199,13 @@
 					</div>
 
 					<div class="col-md-3 col-6 text-center">
-						<img src="<?php echo USER_IMAGES ?>product/icon_three.png" width="150">
-						<h3 class="text-dark py-2">100% Organic</h3>
+						<img src="<?php echo USER_IMAGES ?>product/non-gmo-icon.png" width="150">
+						<h3 class="text-dark py-2">Non-GMO</h3>
 					</div>
 
 					<div class="col-md-3 col-6 text-center">
 						<img src="<?php echo USER_IMAGES ?>product/icon_four.png" width="150">
-						<h3 class="text-dark py-2">Clenses and Balances</h3>
+						<h3 class="text-dark py-2">Balances Body</h3>
 					</div>
 
 
@@ -220,10 +220,10 @@
 					<div class="col-md-12">
 						<div class="sec-2">
 							<div class="who-1">
-								<h2 class="pb-3 pt-0">Who should consume ?</h2>
+								<h2 class="pb-3 pt-0">Who Should Consume?</h2>
 							</div>
 							<div class="who-1">
-								<p>Gyno Vitals is a perfect blend of 100% natural herbs suitable for all women who are facing irregular menstruation cycles/ periods or bear heavy pain during the menstrual cycle.</p>
+								<p><strong>Gyno Vitals</strong> is a perfect blend of 100% natural herbs suitable for all women who are facing irregular menstruation cycles/ periods or bear heavy pain during the menstrual cycle.</p>
 							</div>
 						</div>
 					</div>
@@ -241,26 +241,6 @@
 				</div>
 			</div>
 		</section>
-
-
-
-		
-		<!-- stay conect -->
-		<section class="section-content socl-box">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="social-1"> <span>Stay Connected </span>
-								<a href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-instagram" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
-							</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- stay conect end -->
 <?php
 
 	require_once 'footer.php';

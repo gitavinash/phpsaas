@@ -1,3 +1,17 @@
+<!-- stay conect -->
+		<section class="section-content socl-box">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="social-1"> <span>Stay Connected </span>
+							<a href="//facebook.com/vedicvitals/"><i class="fab fa-facebook-square" aria-hidden="true"></i></a>
+							<a href="//instagram.com/vedicvitals/"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+							<a href="//twitter.com/vedicvitals/"><i class="fab fa-twitter-square" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
 		<footer>
 			<div class="top-section-footer">
@@ -8,7 +22,7 @@
 								<h3>Quick Links</h3>
 								<ul class="list-unstyled">
 									<li><a href="#">Home</a></li>
-									<li><a href="#">Abouts Us</a></li>
+									<li><a href="#">Our Story</a></li>
 									<li><a href="#">Contact Us</a></li>
 					            </ul>
 							</div>
@@ -30,7 +44,6 @@
 							<div class="fot-box">	
 								<h3>Information</h3>
 								<ul class="list-unstyled">
-									<li><a href="#">Terms & Condition</a></li>
 									<li><a href="#">Privacy Policy</a></li>
 									<li><a href="#">Disclaimer</a></li>
 									<li><a href="#">Return Policy</a></li>
@@ -42,8 +55,9 @@
 						<div class="col-md-3 col-6">
 							<div class="fot-box">
 								<h3>Contact Us</h3>
-								<p>2405, Block C, DLF Phase 1, Gurgaon</p>
-								<p>info@vedicvital.com</p>
+								<p>622-A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI - 110051, India</p>
+								<p>care@vedicvitals.com</p>
+								<p>+91 9310142836</p>
 
 								<section class="hideOnMobile" >
 									<div class="container-fluid">
@@ -115,7 +129,7 @@
 					<div class="row">																	
 						<div class="col-md-12 col-12">
 							<div class="footer-btm">
-								<p>© 2020 . All Rights Reserved</p>
+								<p>&copy; All rights reserved by Vedic Vitals<br />Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi">ITS Soft World</a> in India</p>
 							</div>
 						</div>
 					</div>
@@ -127,7 +141,7 @@
 
 		<!-- script start -->
 
-		<?php echo NOTIFICATION.'index.php' ?>
+		<?php include_once NOTIFICATION.'index.php' ?>
 	
 		<script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.slim.min.js"></script>
 		<script type="text/javascript" src="<?php echo USER_JS ?>comaprison-slider.js"></script>

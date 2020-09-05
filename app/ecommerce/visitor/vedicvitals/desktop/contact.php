@@ -10,7 +10,7 @@
 				<div class="row">
 					<div class="card-ban">
 						<div class="baner-single">
-							<img src="https://26zr682s5m7730zgrtj0stqr-wpengine.netdna-ssl.com/wp-content/uploads/2020/06/Imunoherb-Web-Banner.jpg">
+							<img src="<?php echo USER_IMAGES ?>slider1.jpg">
 						</div>
 					</div>
 				</div>
@@ -30,9 +30,9 @@
 					<div class="col-md-6">
 						<div class="contct-info">
 							<ul>
-								<li><i class="fa fa-home" aria-hidden="true"></i> 2405, Block C, DLF Phase 1<br> Gurgaon, Haryana , 122001</li>
-								<li><i class="fa fa-phone" aria-hidden="true"></i> 7858968589 <br>8459658785</li>
-								<li><i class="fa fa-envelope-o" aria-hidden="true"></i> @domainname.com</li>
+								<li><i class="fa fa-home" aria-hidden="true"></i> 622-A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI - 110051, India</li>
+								<li><i class="fa fa-phone-alt" aria-hidden="true"></i> +91 9310142836</li>
+								<li><i class="fa fa-envelope" aria-hidden="true"></i> care@vedicvitals.com</li>
 							</ul>
 						</div>
 					</div>
