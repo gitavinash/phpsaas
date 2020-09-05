@@ -45,7 +45,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="web-detail">
-								<p>Use Code: NOFAT20 & Enjoy <span>Flat 20% OFF</span> on Beat Fat Combo Pack</p>
+								<p>Free Shipping on all prepaid orders</p>
 								<!-- <p><span class="material-icons">email</span></p> -->
 							</div>
 							
@@ -75,10 +75,10 @@
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Our Products
 									      </a>
 									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="product.php">Immunity Vitals</a>
-									        <a class="dropdown-item" href="product.php">Tar Free</a>
-									        <a class="dropdown-item" href="product.php">Gyno Vitals</a>
-									        <a class="dropdown-item" href="product.php">V-Liver Vitals</a>
+									        <a class="dropdown-item" href="/immunity-vitals/">Immunity Vitals</a>
+									        <a class="dropdown-item" href="/tar-free/">Tar Free</a>
+									        <a class="dropdown-item" href="/gyno-vitals/">Gyno Vitals</a>
+									        <a class="dropdown-item" href="/v-liver-vitals/">V-Liver Vitals</a>
 									      </div>
 									  </li>
 									  <li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>

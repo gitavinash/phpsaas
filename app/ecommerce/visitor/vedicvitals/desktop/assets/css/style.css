@@ -3673,3 +3673,15 @@ ul.ingredients li {
 .fa-heart {
     color: #F91100;
 }
+
+.fa-circle {
+    font-size: 8px;
+    line-height: 24px !important;
+    margin-right: 10px;
+    color: #333;
+    float: left;
+}
+
+.product-feature {
+    list-style: list;
+}
