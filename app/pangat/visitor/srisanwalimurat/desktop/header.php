@@ -23,7 +23,7 @@
             </ul>
             <div class="mobile-menu">
                 <h1><a href="">Sri Sanwali Murat</a></h1>
-                <div class="menu-box" id="menu-box" ><img src="<?php echo USER_IMAGES ?>menu-icon.png" alt=""></div>
+                <div class="menu-box" id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt=""></div>
             </div>
         </header>
         <main>
