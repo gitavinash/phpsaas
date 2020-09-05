@@ -77,22 +77,6 @@
 			</div>
 		</section>
 
-		<!-- stay conect -->
-		<section class="section-content socl-box">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="social-1"> <span>Stay Connected </span>
-								<a href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-instagram" aria-hidden="true"></i></a>
-								<a href=""><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
-							</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- stay conect end -->
 <?php
 
 	require_once 'footer.php';
