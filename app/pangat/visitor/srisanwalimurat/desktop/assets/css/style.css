@@ -270,7 +270,7 @@ section h1 {
         width: 100%;
         text-decoration: none;
         color: #000;
-        font-size: 2em;
+        font-size: 28px;
         text-align: center;
         padding: 20px 0px;
         box-sizing: border-box;
@@ -280,7 +280,24 @@ section h1 {
         float: right;
         width: 20%;
         box-sizing: border-box;
-        padding: 2em 4em;
+        padding: 25px 20px;
+    }
+
+    .mobile-menu .menu-box img {
+        height: 32px;
+    }
+
+    section {
+        float: left;
+        width: 100%;
+        padding: 0px 10px;
+        box-sizing: border-box;
+    }
+
+    .calender-info p span {
+        float: left;
+        width: 100%;
+        box-sizing: border-box;
     }
 
 }

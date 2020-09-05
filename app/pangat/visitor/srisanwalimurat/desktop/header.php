@@ -1,5 +1,7 @@
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title><?php echo SITE_NAME ?></title>
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
