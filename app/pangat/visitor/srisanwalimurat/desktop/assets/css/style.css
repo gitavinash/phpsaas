@@ -147,6 +147,7 @@ section h1 {
     float: left;
     width: 100%;
     box-sizing: border-box;
+    display: block;
 }
 
 .booking-slot h2 {
@@ -243,6 +244,126 @@ section h1 {
     pointer-events: fill;
     cursor: pointer;
     color: #fff;
+}
+
+.form {
+    float: left;
+    width: 100%;
+    background: #fff;
+    padding: 0px 10px;
+    box-sizing: border-box;
+}
+
+.form-control {
+	float: left;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 7px 10px;
+	border: none;
+	outline: none;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+textarea.form-control {
+	resize: none;
+	height: 100px;
+}
+
+.inside-shadow {
+	position: relative;
+	box-shadow: inset 0px 0px 2px 0px #9c9c9c;
+}
+
+.form-group {
+	float: left;
+	width: 100%;
+	margin: 0px 0px 10px 0px;
+}
+
+.form-group span {
+	background: #00609E;
+	padding: 10px 30px;
+	border-radius: 4px;
+	color: #fff;
+}
+
+.form-group label {
+	float: left;
+	font-size: 14px;
+	margin-bottom: 5px;
+}
+
+.form-group label span {
+	background: none;
+    padding: 0;
+    font-size: 11px;
+    margin-left: 10px;
+    color: red;
+}
+
+.btn {
+	text-decoration: none !important;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    outline: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.btn:last-child {
+	margin-right: 0px;
+}
+
+.btn-block {
+    box-sizing: border-box;
+	width: 100%;
+}
+
+.btn-red {
+	background: #dc3545;
+	color: #fff;
+	border: #dc3545;
+}
+
+.btn-green {
+	background: #28a745;
+	color: #fff;
+	border: #28a745;
+
+}
+
+.btn-yellow {
+	background: #ffc107;
+	color: #fff;
+	border: #ffc107;
+
+}
+
+.btn-blue {
+	background: #006CD1;
+	color: #fff;
+	border: #006CD1;
+
+}
+
+.btn-sm {
+	font-size: 12px;
+	letter-spacing: 1px;
+	padding: 2px 7px;
 }
 
 @media (orientation: portrait) {

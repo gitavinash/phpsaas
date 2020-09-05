@@ -6,8 +6,6 @@
         <title><?php echo SITE_NAME ?></title>
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
-        <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.css">
-        <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick-theme.css">
     </head>
     <body>
         <header>
