@@ -7,9 +7,10 @@
 <section>
     <h1>Book Pangat Online</h1>
     <div class="booking-form">
-        <h2>Select Date for Pangat</h2>
-        <div class="booking-calender"></div>
-        <div class="booking-slot">
+        <h2 id="booking-calender-title" >Select Date for Pangat</h2>
+        <div class="booking-calender">
+        </div>
+        <div class="booking-slot" style="display:none" >
             <h2>Select Time for Pangat</h2>
             <p class='green' >Breakfast</p>
             <p class='green' >Lunch</p>

@@ -12,17 +12,17 @@ p, li, ul, h1, h2, h3, h4, h5, h6 {
 }
 
 .red {
-    background: red;
+    background: #a90000;
     color: #fff;
 }
 
 .yellow {
-    background: #FFF275;
+    background: #fbe800;
     color: #000;
 }
 
 .green {
-    background: green;
+    background: #1D741D;
     color: #fff;
 }
 
@@ -107,6 +107,10 @@ ul.menu li a {
     letter-spacing: 1px;
     font-size: 16px;
     line-height: 70px;
+}
+
+.mobile-menu {
+    display: none;
 }
 
 main {
@@ -222,14 +226,61 @@ section h1 {
 }
 
 .clndr-table .past {
-    background: red !important;
+    background: #a90000 !important;
     pointer-events:none !important;
     color: #fff;
 }
 
 .clndr-table .day {
-    background: green;
+    background: #1d741d;
     pointer-events: fill;
     cursor: pointer;
     color: #fff;
+}
+
+.clndr-table .next-month {
+    background: #1B8000;
+    pointer-events: fill;
+    cursor: pointer;
+    color: #fff;
+}
+
+@media (orientation: portrait) {
+    
+    .desktop {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: block;
+        float: left;
+        width: 100%;
+        box-sizing: border-box;
+        border-bottom: 1px solid #efefef;
+    }
+
+    .mobile-menu h1 {
+        float: left;
+        width: 80%;
+        text-align: center;
+    }
+
+    .mobile-menu h1 a {
+        float: left;
+        width: 100%;
+        text-decoration: none;
+        color: #000;
+        font-size: 2em;
+        text-align: center;
+        padding: 20px 0px;
+        box-sizing: border-box;
+    }
+
+    .mobile-menu .menu-box {
+        float: right;
+        width: 20%;
+        box-sizing: border-box;
+        padding: 2em 4em;
+    }
+
 }

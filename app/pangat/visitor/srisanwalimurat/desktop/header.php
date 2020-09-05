@@ -8,7 +8,7 @@
     </head>
     <body>
         <header>
-            <ul class="menu">
+            <ul class="menu desktop">
                 <li><a href="" >Publication</a></li>
                 <li><a href="">Gallery</a></li>
                 <li><a href="">Events</a></li>
@@ -18,5 +18,9 @@
                 <li><a href="//pangat.<?php echo SITE_DOMAIN ?>" style="color: #fff">Request For Pangat</a></li>
                 <!-- <li><a href="">Account</a></li> -->
             </ul>
+            <div class="mobile-menu">
+                <h1><a href="">Sri Sanwali Murat</a></h1>
+                <div class="menu-box" id="menu-box" ><img src="<?php echo USER_IMAGES ?>menu-icon.png" alt=""></div>
+            </div>
         </header>
         <main>
