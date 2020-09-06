@@ -440,6 +440,8 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
     MODIFY page_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  /** Panga */
+
   /** Professional Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."professional (
@@ -727,7 +729,7 @@
   ##                                                                                                                    ##
   ########################################################################################################################
 
-
+  require_once 'pangat-database.php';
 
   $result = array(
     'status' => 200,

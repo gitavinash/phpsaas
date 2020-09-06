@@ -12,17 +12,17 @@ p, li, ul, h1, h2, h3, h4, h5, h6 {
 }
 
 .red {
-    background: #a90000;
+    background: #D87764;
     color: #fff;
 }
 
 .yellow {
-    background: #fbe800;
+    background: #FEF1CE;
     color: #000;
 }
 
 .green {
-    background: #1D741D;
+    background: #6BA74F;
     color: #fff;
 }
 
@@ -37,7 +37,7 @@ button.slick-next.slick-arrow {
 section {
     display: block;
     margin: 0 auto;
-    width: 700px;
+    width: 800px;
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -143,30 +143,52 @@ section h1 {
     color: #946E3E;
 }
 
-.booking-slot {
+.calender {
     float: left;
     width: 100%;
+    padding: 0;
+    margin: 0 auto;
     box-sizing: border-box;
-    display: block;
 }
 
-.booking-slot h2 {
+.calender .heading {
+    float: left;
+    width: 100%;
+}
+
+.calender .heading h2 {
     float: left;
     width: 100%;
     text-align: center;
-    padding: 10px 0px;
-    box-sizing: border-box;
-    color: #946E3E;
-}
-
-.booking-slot p {
-    float: left;
-    width: 100%;
-    text-align: center;
-    padding: 10px 0px;
-    box-sizing: border-box;
-    font-size: 24px;
     font-weight: 400;
+    color: #000;
+    font-size: 24px;
+}
+
+.calender .date-list {
+    float: left;
+    width: 114px;
+    box-sizing: border-box;
+}
+
+.calender .date-list .date {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    padding: 10px 10px;
+    color: #946E3E;
+    box-sizing: border-box;
+}
+
+.calender .date-list .bookPangat {
+    float: left;
+    width: 100%;
+    padding: 5px 10px;
+    text-align: left;
+    font-weight: 300;
+    color: #fff;
+    box-sizing: border-box;
 }
 
 .calender-info {
@@ -182,68 +204,6 @@ section h1 {
     min-width: 120px;
     font-weight: 300 !important;
     letter-spacing: 1px;
-}
-
-.clndr-controls {
-    float: left;
-    width: 100%;
-    padding: 5px 0px;
-    box-sizing: border-box;
-}
-
-.clndr-control-button {
-    float: left;
-    width: 20%;
-    text-align: center;
-    font-size: 18px;
-}
-
-.month {
-    float: left;
-    width: 60%;
-    text-align: center;
-    font-size: 24px;
-    color: #946E3E;
-}
-
-.clndr-table {
-    float: left;
-    width: 100%;
-}
-
-.clndr-table thead {
-    text-align: center;
-    background: #946E3E;
-    color: #fff;
-}
-
-.clndr-table tbody {
-    text-align: center;
-}
-
-.clndr-table td {
-    padding: 20px 10px;
-    box-sizing: border-box;
-}
-
-.clndr-table .past {
-    background: #a90000 !important;
-    pointer-events:none !important;
-    color: #fff;
-}
-
-.clndr-table .day {
-    background: #1d741d;
-    pointer-events: fill;
-    cursor: pointer;
-    color: #fff;
-}
-
-.clndr-table .next-month {
-    background: #1B8000;
-    pointer-events: fill;
-    cursor: pointer;
-    color: #fff;
 }
 
 .form {
@@ -366,6 +326,11 @@ textarea.form-control {
 	padding: 2px 7px;
 }
 
+.page-not-found {
+    float: left;
+    width: 100%;
+}
+
 @media (orientation: portrait) {
     
     .desktop {
@@ -418,6 +383,12 @@ textarea.form-control {
     .calender-info p span {
         float: left;
         width: 100%;
+        box-sizing: border-box;
+    }
+
+    .calender .date-list {
+        float: left;
+        width: 88px;
         box-sizing: border-box;
     }
 
