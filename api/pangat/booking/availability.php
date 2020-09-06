@@ -29,7 +29,7 @@
             $status=200;
             $msg='Data fetch successfully';
             $response[]=array(
-                'date' => date('D, dS M', strtotime($calenderDate)),
+                'date' => date('D, d M', strtotime($calenderDate)),
                 'bookingAllowed' => $bookingAllowed,
                 'breakfast' => $breakfast,
                 'lunch' => $lunch,

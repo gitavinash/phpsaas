@@ -579,6 +579,23 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
     ADD KEY site_app_activation_time (site_app_activation_time)");
 
+  /** Site Configuration Table ( for SMS, E-Mail, Payment Gateway and other things ) */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_configuration (
+    site_configuration_id bigint(20) NOT NULL,
+    site_configuration_site_id bigint(20) NOT NULL,
+    site_configuration_name varchar(255) NOT NULL,
+    site_configuration_value longtext NOT NULL,
+    site_configuration_status int(1) NOT NULL,
+    site_configuration_update timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    ADD PRIMARY KEY (site_configuration_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    MODIFY site_configuration_id bigint(20) NOT NULL AUTO_INCREMENT");
+ 
   /** Site Setting Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting

@@ -176,7 +176,7 @@ section h1 {
     width: 100%;
     text-align: center;
     font-size: 16px;
-    padding: 10px 10px;
+    padding: 10px 0px;
     color: #946E3E;
     box-sizing: border-box;
 }
@@ -388,7 +388,7 @@ textarea.form-control {
 
     .calender .date-list {
         float: left;
-        width: 88px;
+        width: 25%;
         box-sizing: border-box;
     }
 
