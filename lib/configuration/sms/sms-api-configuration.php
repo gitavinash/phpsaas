@@ -13,6 +13,7 @@
             break;
 
         default :
+            $smsURL="https://api.msg91.com/api/sendhttp.php?authkey={$sms_auth_key}&mobiles={$mobile}&country=91&message={$message}&sender={$sms_sender}&route={$sms_route}";
             break;
 
     }

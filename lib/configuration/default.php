@@ -52,17 +52,6 @@
 	define('ADMIN_BASE_URL', str_replace('/dashboard', '', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?')))); // return only the actual url and remove query string
 	define('API_BASE_URL', str_replace('/api', '', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?')))); // return only the actual url and remove query string
 
-	/* Email Server setup configuration */
-
-	define('SMTP_HOST', 'smtp-relay.sendinblue.com'); // host address of email server like :- mail.isw.one
-	define('SMTP_SSL', 'false'); // is email server is using ssl if yes then change to true
-	define('SMTP_PORT', '587'); // PORT id of their email server like :- 587, 465
-	define('SMTP_USERNAME', 'avinash@itssoftworld.com'); // email user like :- contact@isw.one
-	define('SMTP_PASSWORD', 'Ng7n1T0KZJkEF9z3'); // password of the email
-	define('SMTP_EMAIL', 'donotreply@isw.one'); // Which email is display to receiver end like :- donotreply@isw.one
-	define('SMTP_NAME', 'ITS Soft World'); // Show Name on email :- ITS Soft World, Avinash Kumar
-	define('REPLY_EMAIL', 'ITS Soft World'); // Reply email where user can send a reply mail like :- contact@isw.one
-
 	/** Sitemap and Feed Configuration */
 
 	define('SITEMAP_LIMIT', ((isset($site_sitemap_limit)) ? $site_sitemap_limit : 1000 )); // total links show on sitemap
