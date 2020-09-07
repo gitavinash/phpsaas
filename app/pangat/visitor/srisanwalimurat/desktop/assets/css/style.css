@@ -126,10 +126,25 @@ section h1 {
     box-sizing: border-box;
 }
 
+section h3 {
+    float: left;
+    width: 100%;
+    padding: 10px 0px 0px 0px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+section h3 span {
+    float: left;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 300;
+}
+
 .booking-form {
     float: left;
     width: 100%;
-    margin: 50px 0px;
+    margin: 10px 0px;
     border: 1px solid #333;
     box-sizing: border-box;
 }
@@ -388,8 +403,23 @@ textarea.form-control {
 
     .calender .date-list {
         float: left;
-        width: 25%;
+        width: 20%;
         box-sizing: border-box;
+    }
+
+    .calender-info {
+        float: left;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .calender-info p {
+        float: left;
+        width: 33.33%;        
+    }
+
+    .calender-info p span {
+        padding: 5px 5px;
     }
 
 }

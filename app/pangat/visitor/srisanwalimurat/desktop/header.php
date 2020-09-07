@@ -20,7 +20,7 @@
                 <!-- <li><a href="">Account</a></li> -->
             </ul>
             <div class="mobile-menu">
-                <h1><a href="">Sri Sanwali Murat</a></h1>
+                <h1><a href="">Sri Sanwali Murat Pangat</a></h1>
                 <div class="menu-box" id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt=""></div>
             </div>
         </header>

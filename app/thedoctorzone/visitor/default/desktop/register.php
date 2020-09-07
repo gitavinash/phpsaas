@@ -18,8 +18,15 @@
     
                 <div class="signup w-100">
                     <form id="otpForm" >
-                        <input type="number" id="mobile" name="mobile" placeholder="Mobile No." class="form-control mb-4 w-100" autofocus >
-                        <input type="hidden" name="register_id" value="" >
+                        <input type="text" id="name" name="name" placeholder="Full Name" class="form-control mb-4 w-100" autofocus >
+                        <input type="email" id="email" name="email" placeholder="Email" class="form-control mb-4 w-100" >
+                        <select name="gender" class="form-control mb-4 w-100" id="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="male">Female</option>
+                        </select>
+                        <input type="text" id="dob" name="dob" placeholder="Date of birth" class="form-control mb-4 w-100" >
+                        <input type="hidden" name="mobile" value="<?php echo $mobile ?>" >
                         <input type="hidden" name="type" value="authentication" >
                         <input type="hidden" name="action" value="register" >
                         <button id="register" class="btn dark-blue w-100 text-white" >Continue with Mobile</button>

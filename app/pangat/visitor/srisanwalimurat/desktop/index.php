@@ -7,7 +7,7 @@
 ?>
 
 <section>
-    <h1>Book Pangat Online</h1>
+    <!-- <h3>September 2020 ><span>Choose a date below to place a request for pangat</span></h3> -->
     <div class="booking-form">
         <div class="calender">
         </div>
