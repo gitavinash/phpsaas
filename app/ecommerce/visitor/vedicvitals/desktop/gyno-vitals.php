@@ -22,20 +22,17 @@
 					<div class="col-md-6" style="padding-bottom: 0;">
 						<div class="galery-carousel">
 							<div class="carousel carousel-main" data-flickity>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro1.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro3.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro4.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
+								<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/1.jpg"></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/2.jpg"></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/3.jpg"></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/4.jpg"></div>
 							</div>
 
-							<div class="carousel carousel-nav"
-							  data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro1.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro3.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro4.jpg"></div>
-							  <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>pro5.jpg"></div>
+							<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
+								<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/1.jpg"></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/2.jpg"></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/3.jpg"></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/4.jpg"></div>
 							</div>
 						</div>
 
