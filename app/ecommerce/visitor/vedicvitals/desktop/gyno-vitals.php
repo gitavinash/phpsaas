@@ -14,7 +14,7 @@
 							  <ol class="breadcrumb">
 							    <li class="breadcrumb-item"><a href="#">Home</a></li>
 							    <li class="breadcrumb-item"><a href="#">Product</a></li>
-							    <li class="breadcrumb-item active" aria-current="page">Immunity Vitals</li>
+							    <li class="breadcrumb-item active" aria-current="page">Gyno Vitals</li>
 							  </ol>
 							</nav>
 						</div>
