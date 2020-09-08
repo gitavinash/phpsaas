@@ -185,7 +185,6 @@ section h3 span {
     float: left;
     width: 100%;
     margin: 10px 0px;
-    border: 1px solid #333;
     box-sizing: border-box;
 }
 
@@ -203,7 +202,22 @@ section h3 span {
     width: 100%;
     padding: 0;
     margin: 0 auto;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
     box-sizing: border-box;
+}
+
+.calender h4 {
+    float: right;
+    text-align:right;
+    width: 100%;
+    margin-top: -40px;
+}
+
+.calender h4 a {
+    text-decoration: none;
+    color: #333;
 }
 
 .calender .heading {

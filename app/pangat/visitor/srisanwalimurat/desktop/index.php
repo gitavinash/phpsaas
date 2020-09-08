@@ -9,6 +9,7 @@
 <section>
     <!-- <h3>September 2020 ><span>Choose a date below to place a request for pangat</span></h3> -->
     <div class="booking-form">
+        <h3>Select Date and Time<span>Choose a date below to place a request for pangat</span></h3>
         <div class="calender">
         </div>
         <div class="calender-info">
