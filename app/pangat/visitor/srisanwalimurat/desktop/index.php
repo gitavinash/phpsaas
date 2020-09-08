@@ -31,10 +31,23 @@
                 <input type="number" name="mobile" class="form-control inside-shadow" id="mobile" placeholder="Mobile Number" >
             </div>
             <div class="form-group">
-                <input type="checkbox" name="self" id="self" > I will be there in pangat.
+                <textarea name="details" id="details" class="form-control inside-shadow" placeholder="Add on details ( if any )" ></textarea>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="self" id="selfCheckin" > I will be there in pangat.
             </div>
             <input type="submit" class="btn btn-green" value="Submit" id="pangatBookBtn" >
         </form>
+    </div>
+    <div class="statusMsg" id="thankYou" style="display: none" >
+        <h2>Thank You</h2>
+        <p>Your request for pangat had been received successfully</p>
+        <p><a href="//srisanwalimurat.com/">Go to homepage</a></p>
+    </div>
+    <div class="statusMsg" id="error" style="display: none" >
+        <h2>Error</h2>
+        <p>Something is wrong while sending your request to server</p>
+        <p><a href="/">Try Again</a></p>
     </div>
 </section>
 

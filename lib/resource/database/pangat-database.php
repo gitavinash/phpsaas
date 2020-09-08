@@ -41,6 +41,11 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."booking
     MODIFY booking_id int(255) NOT NULL AUTO_INCREMENT");
 
+  /** Change column booking_patient_type to booking_for */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."booking
+    CHANGE booking_patient_type booking_for VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'self'");
+
   /** Pangat Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."pangat (

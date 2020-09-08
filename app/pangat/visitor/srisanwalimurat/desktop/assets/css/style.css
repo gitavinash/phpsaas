@@ -287,7 +287,7 @@ section h3 span {
 	float: left;
 	width: 100%;
 	box-sizing: border-box;
-	padding: 7px 10px;
+	padding: 10px 10px;
 	border: none;
 	outline: none;
     font-size: 16px;
@@ -409,6 +409,31 @@ textarea.form-control {
 
 .form h2 {
     padding-bottom: 20px
+}
+
+.statusMsg {
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
+.statusMsg h2 {
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 100px 0px 20px 0px
+}
+
+.statusMsg p {
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 0px 0px 10px 0px;
+}
+
+.statusMsg p a {
+    text-decoration: none;
+    color: #946E3E;
 }
 
 @media (orientation: portrait) {
