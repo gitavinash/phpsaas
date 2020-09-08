@@ -4,7 +4,7 @@
         
         extract($data);
 
-        $availablityDate=((isset($date)) ? date('m', strtotime($date)) : date('m'));
+        $availablityDate=((isset($date)) ? date('M', strtotime($date)) : date('M'));
 
         for($i=0; $i<=date('t'); $i++) {
 
@@ -30,6 +30,7 @@
             $msg='Data fetch successfully';
             $response[]=array(
                 'date' => date('D, d', strtotime($calenderDate)),
+                'full_date' => date('d-m-Y', strtotime($calenderDate)),
                 'bookingAllowed' => $bookingAllowed,
                 'breakfast' => $breakfast,
                 'lunch' => $lunch,
