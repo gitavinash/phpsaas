@@ -32,9 +32,6 @@
 
 					if(!isset($_COOKIE['site_app'])) {
 
-						echo 'i m here';
-						exit();
-
 						setcookie('site_app', base64_encode($site_app), time()+30*24*60*60, '/');
 						header("Location: /login/");
 						exit();
@@ -46,7 +43,6 @@
 						if($site_status!=1) {
 
 							if($site_access_type=='administrator') {
-
 
 								/** if user type is Administrator Redirect to website setup page */
 									
