@@ -44,18 +44,16 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-					<li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
-						<a href="page.php?type=list"><i class="fas fa-box-open"></i> Page</a>
+					<li <?php echo ((ADMIN_BASE_URL=='/enquiry/') ? 'class="active"' : '' ) ?> >
+						<a href="enquiry.php?type=list"><i class="fas fa-filter"></i> Enquiry</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
-								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquirys</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
-								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquirys</a></li>
 							</ul>
 						</div>
 					</li>
