@@ -70,7 +70,7 @@
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav justify-content-center menu-ul">
 									  
-									  <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+									  <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
 									  <li class="nav-item dropdown">
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Our Products
 									      </a>
@@ -83,7 +83,7 @@
 									  </li>
 									  <li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>
 									  <li class="nav-item"><a class="nav-link" target="_blank" href="https://vedicvitals.ordr.live/">Track Order</a></li>
-									  <li class="nav-item"><a class="nav-link" href="contact.php">Contact Us</a></li>
+									  <li class="nav-item"><a class="nav-link" href="/contact-us/">Contact Us</a></li>
 									</ul>
 
 								<div class="search-pro">

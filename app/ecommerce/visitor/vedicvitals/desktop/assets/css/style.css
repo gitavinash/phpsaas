@@ -167,7 +167,7 @@ button:focus{
   color:red;
   float: right;
   text-indent: -10000px;
-  background-image: url(../image/search.jpg);
+  background-image: url('//vedicvitals.com/app/ecommerce/visitor/vedicvitals/desktop/assets/images/search.jpg');
   border: none;
   position: absolute;
   top: -2px;
@@ -3645,6 +3645,12 @@ ul.ingredients li {
     padding: 150px 0px 0px 0px;
 }
 
+ol {
+    float: left;
+    width: 100%;
+    text-align: left;
+}
+
 @media only screen and (max-width: 600px) {
 
     .about-us-img {
@@ -3661,6 +3667,29 @@ ul.ingredients li {
 
     .about-us {
         padding: 0px
+    }
+    
+    .product-feature {
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    .product-highlight {
+        box-sizing: border-box;
+    }
+
+    .product-highlight img {
+        width: 96%;
+        margin-bottom: 20px;
+    }
+
+    .product-highlight-top {
+        box-sizing: border-box;
+    }
+
+    .product-highlight-top img {
+        width: 96%;
+        margin-bottom: 20px;
     }
 
 }

@@ -21,9 +21,9 @@
 							<div class="fot-box">	
 								<h3>Quick Links</h3>
 								<ul class="list-unstyled">
-									<li><a href="#">Home</a></li>
-									<li><a href="#">Our Story</a></li>
-									<li><a href="#">Contact Us</a></li>
+									<li><a href="/">Home</a></li>
+									<li><a href="/our-story/">Our Story</a></li>
+									<li><a href="/contact-us/">Contact Us</a></li>
 					            </ul>
 							</div>
 						</div>
@@ -32,10 +32,10 @@
 							<div class="fot-box">	
 								<h3>Products</h3>
 								<ul class="list-unstyled">
-									<li><a href="#">Immunity Vitals</a></li>
-									<li><a href="#">Tar Free</a></li>
-									<li><a href="#">Gyno Vitals</a></li>
-									<li><a href="#">V-Liver Vitals</a></li>
+									<li><a href="/immunity-vitals/">Immunity Vitals</a></li>
+									<li><a href="/tar-free/">Tar Free</a></li>
+									<li><a href="/gyno-vitals/">Gyno Vitals</a></li>
+									<li><a href="/v-liver-vitals/">V-Liver Vitals</a></li>
 					            </ul>
 							</div>
 						</div>
@@ -44,10 +44,10 @@
 							<div class="fot-box">	
 								<h3>Information</h3>
 								<ul class="list-unstyled">
-									<li><a href="#">Privacy Policy</a></li>
-									<li><a href="#">Disclaimer</a></li>
-									<li><a href="#">Return Policy</a></li>
-									<li><a href="#">Terms of Use</a></li>
+									<li><a href="/privacy-policy/">Privacy Policy</a></li>
+									<li><a href="/disclaimer/">Disclaimer</a></li>
+									<li><a href="/return-policy/">Return Policy</a></li>
+									<li><a href="/terms-of-use/">Terms of Use</a></li>
 					            </ul>
 							</div>
 						</div>
