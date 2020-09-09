@@ -747,6 +747,7 @@
   ########################################################################################################################
 
   require_once 'pangat-database.php';
+  require_once 'ecommerce-database.php';
 
   $result = array(
     'status' => 200,
