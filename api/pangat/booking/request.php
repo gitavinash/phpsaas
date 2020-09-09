@@ -39,7 +39,7 @@
         $result = array(
             'status' => ((isset($status)) ? $status : 'error' ),
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-            'availablity' => ((isset($response)) ? $response : '' )
+            'mobile' => ((isset($mobile)) ? $mobile : '' )
         );
     
         echo json_encode($result, TRUE);

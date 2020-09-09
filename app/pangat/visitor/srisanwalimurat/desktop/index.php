@@ -12,6 +12,7 @@
         <h3>Select Date and Time<span>Choose a date below to place a request for pangat</span></h3>
         <div class="calender">
         </div>
+        <div class="calenderNote">Note: In case of any issue, please call ​Mandir ​at 011-2367</div>
         <div class="calender-info">
             <p><span class="red">Not available</span></p>
             <p><span class="yellow">Request received</span></p>
@@ -19,6 +20,7 @@
         </div>
     </div>
     <div class="form" style="display:none" >
+        <p id="bookingSlotInfo"></p>
         <h2>Enter Details</h2>
         <form id="enquiryForm" >
             <div class="form-group">
@@ -47,7 +49,7 @@
     </div>
     <div class="statusMsg" id="thankYou" style="display: none" >
         <h2>Thank You</h2>
-        <p>Your request for pangat had been received successfully</p>
+        <p>Your request has been taken. You will be informed on the number - <span id="mobilenumber"></span></p>
         <p><a href="//srisanwalimurat.com/">Go to homepage</a></p>
     </div>
     <div class="statusMsg" id="error" style="display: none" >
