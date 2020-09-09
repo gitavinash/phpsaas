@@ -7,10 +7,10 @@
 		<meta name="" content="">
 		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
 		<!-- css -->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<script src="https://use.fontawesome.com/393c79d8c8.js"></script>
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
+		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
 
 	</head>
 	<body>
@@ -24,10 +24,10 @@
 
 							<div class="check-head mob-check">
 								<div class="logo">
-									<a href="index.html" ><img src="image/logo.png" class="logo-mb"></a>
+									<a href="/" ><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
 								</div>
 							</div>
-							<div class="brdcrum check-bread dn-l mb-10">
+							<!-- <div class="brdcrum check-bread dn-l mb-10">
 								<nav aria-label="breadcrumb">
 								  <ol class="breadcrumb">
 								    <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -35,20 +35,20 @@
 								    <li class="breadcrumb-item active" aria-current="page">product name</li>
 								  </ol>
 								</nav>
-							</div>
+							</div> -->
 
 							<div class="prodcut-list-cart">
 								<img src="image/pro5.jpg">
 								<h3>Imunoherb: Vital Immunity Booster Capsules – Pack of Three</h3>
 								<div class="price-new">
-									<span><i class="fa fa-inr" aria-hidden="true"></i> 1500.00</span>
+									<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> 1500.00</span>
 								</div>
 							</div>
 							<div class="prodcut-list-cart">
 								<img src="image/pro1.jpg">
 								<h3>Immunity Booster Capsules – Pack of Three</h3>
 								<div class="price-new">
-									<span><i class="fa fa-inr" aria-hidden="true"></i> 600.00</span>
+									<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
 								</div>
 							</div>
 
@@ -66,7 +66,7 @@
 							<div class="sub-totl">
 								<div class="sub1">
 									<span class="spn-lft">Subtotal</span>
-									<span class="spn-rgt rt-t"><i class="fa fa-inr" aria-hidden="true"></i> 600.00</span>
+									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
@@ -78,7 +78,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 										<span class="ship-ad">Including Rs. 348.10 in taxes</span></span>
-									<span class="spn-rgt-1 man-t"><i class="fa fa-inr" aria-hidden="true"></i> 600.00</span>
+									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
 								</div>
 							</div>
 
@@ -87,15 +87,15 @@
 						<div class="main-left">
 							<div class="check-head dn-s">
 								<div class="logo">
-									<a href="index.html" ><img src="image/logo.png" class="logo-mb"></a>
+									<a href="/" ><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
 								</div>
 							</div>
 							<div class="brdcrum check-bread dn-s">
 								<nav aria-label="breadcrumb">
 								  <ol class="breadcrumb">
-								    <li class="breadcrumb-item"><a href="#">Home</a></li>
+								    <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
 								    <li class="breadcrumb-item"><a href="#">Product</a></li>
-								    <li class="breadcrumb-item active" aria-current="page">product name</li>
+								    <li class="breadcrumb-item active" aria-current="page">product name</li> -->
 								  </ol>
 								</nav>
 							</div>
@@ -139,8 +139,25 @@
 								    </div>
 								    <div class="form-group col-md-4">
 								      <select id="inputState" class="form-control">
-								        <option selected>Choose State...</option>
-								        <option>...</option>
+								        <option selected>Choose State</option>
+										<?php
+										
+										if($checkState=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."state WHERE state_country_id='101'")) {
+
+											if(mysqli_num_rows($checkState)!=0) {
+
+												while($stateData=mysqli_fetch_assoc($checkState)) {
+
+													extract($stateData);
+													echo "<option value='{$state_id}'>{$state_name}</option>";
+
+												}
+
+											}
+
+										}
+
+										?>
 								      </select>
 								    </div>
 								    <div class="form-group col-md-2">
@@ -172,10 +189,10 @@
 
 							<div class="check-footer">
 								<ul>
-									<li><a href="">Refund policy</a></li>
-									<li><a href="">Shipping policy</a></li>
-									<li><a href="">Privacy policy</a></li>
-									<li><a href="">Terms of service</a></li>
+									<li><a href="/return-policy/">Return policy</a></li>
+									<li><a href="/disclaimer/">Disclaimer</a></li>
+									<li><a href="/privacy-policy/">Privacy policy</a></li>
+									<li><a href="/terms-of-use/">Terms of use</a></li>
 								</ul>
 							</div>
 						</div>
@@ -186,14 +203,14 @@
 								<img src="image/pro5.jpg">
 								<h3>Imunoherb: Vital Immunity Booster Capsules – Pack of Three</h3>
 								<div class="price-new">
-									<span><i class="fa fa-inr" aria-hidden="true"></i> 1500.00</span>
+									<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> 1500.00</span>
 								</div>
 							</div>
 							<div class="prodcut-list-cart">
 								<img src="image/pro1.jpg">
 								<h3>Immunity Booster Capsules – Pack of Three</h3>
 								<div class="price-new">
-									<span><i class="fa fa-inr" aria-hidden="true"></i> 600.00</span>
+									<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
 								</div>
 							</div>
 
@@ -203,7 +220,7 @@
 									    <input type="text" readonly class="form-control" id="" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
-								  		<button type="submit" class="btn">Apply</button>
+								  		<button type="submit" id="checkCoupon" class="btn">Apply</button>
 								  	</div>
 								</form>
 							</div>
@@ -211,7 +228,7 @@
 							<div class="sub-totl">
 								<div class="sub1">
 									<span class="spn-lft">Subtotal</span>
-									<span class="spn-rgt rt-t"><i class="fa fa-inr" aria-hidden="true"></i> 600.00</span>
+									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
@@ -223,7 +240,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 										<span class="ship-ad">Including Rs. 348.10 in taxes</span></span>
-									<span class="spn-rgt-1 man-t"><i class="fa fa-inr" aria-hidden="true"></i> 600.00</span>
+									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
 								</div>
 							</div>
 
@@ -235,8 +252,8 @@
 		<!-- section global platform end -->
 
 		<!-- script start -->
-		<script src="js/jquery-3.4.1.slim.min.js" ></script>
-		<script src="js/bootstrap.min.js"></script>
+		<?php echo require_once NOTIFICATION.'index.php' ?>
+		<script src="<?php echo APP_JS_LIBRARY ?>app.min.js" ></script>
 		<!-- script end -->
 
 		

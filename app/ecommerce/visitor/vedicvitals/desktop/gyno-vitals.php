@@ -66,7 +66,7 @@
 
 							
 							<div class="cart-box">
-								<a href="checkout-detail.html" class="cart-ad-btn">Add to Cart</a>
+								<a href="#" class="cart-ad-btn" >Add to Cart</a>
 								
 							</div>
 

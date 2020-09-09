@@ -144,54 +144,31 @@
 		<?php include_once NOTIFICATION.'index.php' ?>
 	
 		<script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.slim.min.js"></script>
-		<script type="text/javascript" src="<?php echo USER_JS ?>comaprison-slider.js"></script>
-		<script type="text/javascript" src="<?php echo USER_JS ?>twentytwenty-slider.js"></script>
+		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>comaprison-slider.js"></script> -->
+		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>twentytwenty-slider.js"></script> -->
 		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
-		<!-- script end -->
-
-		<!-- wish list start -->
-		<script type="text/javascript">
-			$('.icon-wishlist').on('click', function(){
-			  $(this).toggleClass('in-wishlist');
-			});
-		</script>
-
-		<!-- click js popup -->
-		<script type="text/javascript">
-			function show_project(theId){
-				document.getElementById(theId).style.display = "inline";
-			}
-
-			function hide_project(theId){
-				document.getElementById(theId).style.display = "none";
-			}
-		</script>
-
-		<div class="popup" id="popup-1">
+		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
+	
+		<div class="popup" id="addToCardPopUp" style="display:none" >
 			<div class="description-pop">
 		        <h4>JUST ADDED TO YOUR CART</h4>
-		        <div class="links-pop">
-		        	<a href="" onclick="hide_project('popup-1')"><i class="fa fa-times" aria-hidden="true"></i></a>
+		        <div class="links-pop" id="closeAddToCartPopUp">
+		        	<a href="#" ><i class="fa fa-times" aria-hidden="true"></i></a>
 		     	</div>
 	      	</div>
 		    <div class="img-pop">
-			    <img src="https://26zr682s5m7730zgrtj0stqr-wpengine.netdna-ssl.com/wp-content/uploads/2020/05/Herbocleanse-PLUS-200ml_Back-300x300.jpg">
+			    <img src="" id="productImg" >
 			    <div class="prod-name">
-			      	<h5>Lipoherb: Ayurvedic Medicine for Healthy Weight Management – Pack of Three</h5>
+			      	<h5 id="productName" ></h5>
 			    </div>
-			    <span>
-			    	Qty : 1
-			    </span>
+			    <span id="productQty" ></span>
 		    </div>
 		    <div class="cart-duc">
-		      	<a href="" class="del-b"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-		      	<a href="" class="buy-b">Proceed to Checkout</a>
+		      	<a href="#" class="del-b remove-cart-btn" id="removeFromCart" ><i class="fas fa-trash" aria-hidden="true"></i></a>
+		      	<a href="/checkout/" class="buy-b cart-ad-btn">Proceed to Checkout</a>
 		    </div>
 	    </div>
-
-	    <!-- popup end -->
-	
 	
 	</body>
 </html>
