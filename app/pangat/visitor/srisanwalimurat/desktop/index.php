@@ -34,8 +34,11 @@
                 <input type="number" name="mobile" class="form-control inside-shadow" id="mobile" placeholder="Mobile Number*" >
             </div>
             <div class="form-group">
-                <textarea name="details" id="details" class="form-control inside-shadow" placeholder="Add on details ( if any )" ></textarea>
+                <input type="number" name="guest" class="form-control inside-shadow" id="guest" placeholder="Guest*" >
             </div>
+            <!-- <div class="form-group">
+                <textarea name="details" id="details" class="form-control inside-shadow" placeholder="Add on details ( if any )" ></textarea>
+            </div> -->
             <div class="form-group">
                 <input type="checkbox" name="self" id="selfCheckin" > I will be there in pangat.
             </div>

@@ -26,12 +26,14 @@
 <table id="table">
 	<thead>
 		<tr>
-			<th style="width: 50px">S No.</th>
-			<th style="width: 300px" >Bookind Date</th>
-			<th>Bookind Time</th>
-			<th>Bookind Name</th>
-			<th>Bookind Mobile</th>
-			<th>Bookind Details</th>
+			<th>Booking Time</th>
+			<th>Booked Date</th>
+			<th>Booked Slot</th>
+			<th>Name</th>
+			<th>Mobile</th>
+			<th>Coming?</th>
+			<th>Guest?</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -40,24 +42,23 @@
 			if($dataList=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."booking INNER JOIN ".TABLE_PREFIX."enquiry ON enquiry_id=booking_enquiry_id ORDER BY enquiry_id DESC")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
-						$i=1;
+						
 						while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 							<tr>
-								<td><?php echo $i; ?></td>
-								<td>
-									<p><a href="enquiry.php?type=view&enquiry_id=<?php echo $enquiry_id; ?>" ><?php echo date('d-m-Y', strtotime($booking_date)) ?></a></p>
-									<div class="hover">
-										<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>"><i class="fas fa-check-circle"></i> Confirm</a>
-										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>"><i class="fas fa-times-circle"></i> Reject</a>
-									</div>
-								</td>
+								<td><?php echo date('d-m-Y', strtotime($enquiry_time)) ?></td>
+								<td><?php echo date('d-m-Y', strtotime($booking_date)) ?></td>
 								<td><?php echo $booking_time; ?></td>
 								<td><?php echo $enquiry_first_name.' '.$enquiry_last_name; ?></td>
 								<td><?php echo $enquiry_mobile; ?></td>
 								<td><?php echo $booking_details; ?></td>
+								<td><?php echo $enquiry_query; ?></td>
+								<td>
+									<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirm</a>
+									<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+								</td>
 							</tr>
 						<?php
-						$i++;
+						
 						}
 					}
 			}

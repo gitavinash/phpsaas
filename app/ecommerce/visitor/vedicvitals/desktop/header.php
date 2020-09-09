@@ -31,6 +31,12 @@
 
 		gtag('config', 'UA-176806223-1');
 		</script>
+		
+		<!-- Pixel Code for https://socialproof.zaperp.com/ -->
+
+		<script async src="https://socialproof.zaperp.com/pixel/b8d4b3a5e4abe7b606dac596510cfc02"></script>
+
+		<!-- END Pixel Code -->
 
 	</head>
 	<body>
