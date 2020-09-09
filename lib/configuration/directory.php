@@ -81,7 +81,7 @@
 
 	/** Default Visitor Paths */
 
-	define('DEFAULT_VISITOR_PATH', ROOT.'/app/system/'.USER_TYPE.'/default/'.SITE_VERSION.'/');
+	define('DEFAULT_VISITOR_PATH', ROOT.'/app/system/visitor/default/'.SITE_VERSION.'/');
 
 	/** Defauly System Directory Managment */
 
