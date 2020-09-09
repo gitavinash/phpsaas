@@ -702,13 +702,13 @@ section.section-content.cloth-card {
     height: 320px;
 }
 .stry-img1{
-    background-image: url('//vedicvitals.com/app/ecommerce/visitor/vedicvitals/desktop/assets/images/hitesh-arora.png');
+    background-image: url('//vedicvitals.com/app/ecommerce/visitor/vedicvitals/desktop/assets/images/testimonials/hitesh-arora.png');
 }
 .stry-img2{
-    background-image: url(https://img8.hkrtcdn.com/9046/normal_904597_o.png);
+    background-image: url('//vedicvitals.com/app/ecommerce/visitor/vedicvitals/desktop/assets/images/testimonials/rahul-kapoor.png');
 }
 .stry-img3{
-    background-image: url(https://img10.hkrtcdn.com/9046/normal_904599_o.png);
+    background-image: url('//vedicvitals.com/app/ecommerce/visitor/vedicvitals/desktop/assets/images/testimonials/rajat-naulakha.png');
 }
 .story {
     background: #8ccb03;
@@ -3621,21 +3621,16 @@ ul.ingredients li {
 
 .product-highlight {
     width: 100%;
-    height: 200px;
-    padding: 0px 10px;
-    overflow: hidden;
     box-sizing: border-box;
 }
 
 .product-highlight img {
     float: left;
-    width: 150%;
+    width: 100%;
 }
 
 .product-highlight-top {
     width: 100%;
-    height: 200px;
-    padding: 0px 10px;
     margin-top: 10px;
     overflow: hidden;
     box-sizing: border-box;
@@ -3643,7 +3638,7 @@ ul.ingredients li {
 
 .product-highlight-top img {
     float: left;
-    width: 150%;
+    width: 100%;
 }
 
 .about-us-img {

@@ -39,7 +39,7 @@
 	</div>
 
 	<div class="col-md-4 bg-white">
-		<img src="<?php echo USER_IMAGES ?>Icons-3.jpg" class="w-100" alt="">
+		<img src="<?php echo USER_IMAGES ?>our-story.png" class="w-100" alt="">
 	</div>
 	<div class="col-md-8 story-con bg-white">
 		<p>We live in a country of 1.35 billion people where basic health & sanitation is still a big problem.</p>
@@ -122,92 +122,38 @@
 				</div>
 			</div>
 		</section>
-		<!-- story end -->
-
-		<!-- <section class="section-content cloth-card" >
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Why Vedic Vitals</h2>
-						</div>
-					</div>
-
-					<div class="col-md-3 col-6">
-						<a href="" class="card-link">
-							<div class="acce-card">
-								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>gol1.png">
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="col-md-3 col-6 ">
-						<a href="" class="card-link">
-							<div class="acce-card">
-								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>gol2.png">
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="col-md-3 col-6">
-						<a href="" class="card-link">
-							<div class="acce-card">
-								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>gol3.png">
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="col-md-3 col-6">
-						<a href="" class="card-link">
-							<div class="acce-card">
-								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>gol4.png">
-								</div>
-							</div>
-						</a>
-					</div>
-					
-				</div>
-			</div>
-		</section> -->
-
+		
 		<section class="section-content prodct-section">
 
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 col-12 ">
 						<div class="product-feature">
-							<img src="https://www.pngjoy.com/pngm/311/5855538_vertical-banner-advertising-png-download.png" alt="">
+							<img src="<?php echo USER_IMAGES ?>product/feature.jpg" alt="">
 						</div>
 					</div>
 					<div class="col-md-8 col-12">
 						<div class="row">
-							<div class="col-md-7 col-12" style="padding: 0px" >
+							<div class="col-md-6 col-12" style="padding: 0px" >
 								<div class="product-highlight">
-									<img src="https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg" alt="">
+									<a href="/gyno-vitals/"><img src="<?php echo USER_IMAGES ?>product/gyno.png" alt=""></a>
 								</div>
 							</div>
-							<div class="col-md-5 col-12" style="padding: 0px">
+							<div class="col-md-6 col-12" style="padding: 0px">
 								<div class="product-highlight">
-									<img src="https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg" alt="">
+									<a href="/immunity-vitals/"><img src="<?php echo USER_IMAGES ?>product/immunity.png" alt=""></a>
 								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-5 col-12" style="padding: 0px">
+							<div class="col-md-6 col-12" style="padding: 0px">
 								<div class="product-highlight-top">
-									<img src="https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg" alt="">
+									<a href="/tar-free/"><img src="<?php echo USER_IMAGES ?>product/tar.png" alt=""></a>
 								</div>
 							</div>
-							<div class="col-md-7 col-12" style="padding: 0px">
+							<div class="col-md-6 col-12" style="padding: 0px">
 								<div class="product-highlight-top">
-									<img src="https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg" alt="">
+									<a href="/v-liver-vitals/"><img src="<?php echo USER_IMAGES ?>product/v-liver.png" alt=""></a>
 								</div>
 							</div>
 						</div>
@@ -233,10 +179,10 @@
 							<div class="story-box stry-img1">
 							</div>
 							<div class="story">
-								<h2>Akanksha Suri</h2>
-								<span>Homemaker</span>
+								<h2>Hitesh Arora</h2>
+								<span>Engineer</span>
 								<hr class="bar-h">
-								<p>"I stay busy all day managing household chores and kids. Multivitamins and Omega-3 give me the energy I need to get through the day."</p>
+								<p>"Vedic Vitals has turned like a hero to my life. Tailor-made health supplements help us maintain daily hygiene and keeps us fit. "</p>
 							</div>
 						</div>
 					</div>
@@ -246,10 +192,10 @@
 							<div class="story-box stry-img2">
 							</div>
 							<div class="story">
-								<h2>Akanksha Suri</h2>
-								<span>Homemaker</span>
+								<h2>Rahul Kapoor</h2>
+								<span>Model</span>
 								<hr class="bar-h">
-								<p>"I stay busy all day managing household chores and kids. Multivitamins and Omega-3 give me the energy I need to get through the day."</p>
+								<p>"Tar-Free from Vedic Vitals is like a blessing! I was unable to sleep due to chest congestion. Now it feels light & healthy."</p>
 							</div>
 						</div>
 					</div>
@@ -259,10 +205,10 @@
 							<div class="story-box stry-img3">
 							</div>
 							<div class="story">
-								<h2>Akanksha Suri</h2>
-								<span>Homemaker</span>
+								<h2>Rajat Naulakha</h2>
+								<span>Business Owner</span>
 								<hr class="bar-h">
-								<p>"I stay busy all day managing household chores and kids. Multivitamins and Omega-3 give me the energy I need to get through the day."</p>
+								<p>"In hard time of COVID, Immunity Vitals helped us maintain a high level of energy and fight against harmful bacteria."</p>
 							</div>
 						</div>
 					</div>

@@ -30,7 +30,7 @@
 				<div class="row">
 					<div class="col-12 col-md-4">
 						<div class="about-us-img">
-							<img src="https://static.wixstatic.com/media/fd940d_b6d21d76d9024fddbb2f1661f31f77d7~mv2.gif" alt="">
+							<img src="<?php echo USER_IMAGES ?>our-story.png" class="w-100" alt="" >
 						</div>
 					</div>
 					<div class="col-12 col-md-8">
