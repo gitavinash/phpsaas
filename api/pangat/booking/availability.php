@@ -41,11 +41,11 @@
 
                             if($booking_time=='lunch') {
 
-                                $lunch=$booking_status.'i m here';
+                                $lunch=$booking_status;
 
                             } else {
 
-                                $lunch='2'.'why im here -> '.$booking_time;
+                                $lunch=2;
 
                             }
 
