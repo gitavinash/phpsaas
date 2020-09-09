@@ -47,7 +47,6 @@
 								<td>
 									<p><a href="enquiry.php?type=view&enquiry_id=<?php echo $enquiry_id; ?>" ><?php echo date('d-m-Y', strtotime($booking_date)) ?></a></p>
 									<div class="hover">
-										<!-- <a href="enquiry.php?type=view&editor=true&enquiry_id=<?php echo $enquiry_id; ?>" ><i class="fas fa-eye"></i> View</a> -->
 										<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>"><i class="fas fa-check-circle"></i> Confirm</a>
 										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>"><i class="fas fa-times-circle"></i> Reject</a>
 									</div>
