@@ -7,10 +7,10 @@
 		<meta name="" content="">
 		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
 		<!-- css -->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<script src="https://use.fontawesome.com/393c79d8c8.js"></script>
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
+		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
 
 	</head>
 	<body>

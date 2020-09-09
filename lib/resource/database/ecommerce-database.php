@@ -42,3 +42,8 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     ADD cart_currency VARCHAR(5) NOT NULL DEFAULT 'INR' AFTER cart_product_qty");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart ADD cart_session_id VARCHAR(255) NOT NULL AFTER cart_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD INDEX cart_session_id (cart_session_id)");

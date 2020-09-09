@@ -4,15 +4,14 @@
         
         extract($data);
 
-        if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_site_id, cart_product_id, cart_product_qty, cart_price, cart_status, cart_generated) VALUES(".SITE_ID.", '{$id}', '{$quantity}', '{$price}', 0, NOW())")) {
+        if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_product_id, cart_product_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".SITE_ID.", '{$id}', '{$quantity}', '{$price}', 0, NOW())")) {
 
             $status=200;
             $msg='Product add to card is successful';
 
         } else {
 
-            // $msg='Something is wrong while performing add to cart';
-            $msg=mysqli_error($connection);
+            $msg='Something is wrong while performing add to cart';
 
         }
 
