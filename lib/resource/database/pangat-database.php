@@ -51,6 +51,11 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."booking
     CHANGE booking_time booking_time VARCHAR(10) NOT NULL");
 
+  /** Add new column for emquiry id */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."booking
+    ADD booking_enquiry_id BIGINT NOT NULL AFTER booking_user_id, ADD INDEX (booking_enquiry_id)");
+
   /** Pangat Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."pangat (

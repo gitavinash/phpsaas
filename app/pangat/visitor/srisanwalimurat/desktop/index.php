@@ -22,13 +22,16 @@
         <h2>Enter Details</h2>
         <form id="enquiryForm" >
             <div class="form-group">
-                <input type="text" name="name" class="form-control inside-shadow" id="name" placeholder="Full Name" >
+                <input type="text" name="first_name" class="form-control inside-shadow" id="first_name" placeholder="First Name*" >
             </div>
             <div class="form-group">
-                <input type="email" name="email" class="form-control inside-shadow" id="email" placeholder="Email" >
+                <input type="text" name="last_name" class="form-control inside-shadow" id="last_name" placeholder="Last Name" >
             </div>
             <div class="form-group">
-                <input type="number" name="mobile" class="form-control inside-shadow" id="mobile" placeholder="Mobile Number" >
+                <input type="email" name="email" class="form-control inside-shadow" id="email" placeholder="Email*" >
+            </div>
+            <div class="form-group">
+                <input type="number" name="mobile" class="form-control inside-shadow" id="mobile" placeholder="Mobile Number*" >
             </div>
             <div class="form-group">
                 <textarea name="details" id="details" class="form-control inside-shadow" placeholder="Add on details ( if any )" ></textarea>

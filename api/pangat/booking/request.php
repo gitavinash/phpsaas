@@ -10,16 +10,25 @@
 
         }
 
+        mysqli_query($connection, "START TRANSACTION");
+
         $bookingDate=date('Y-m-d', strtotime($bookingDate));
 
-        if(mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."booking(booking_site_id, booking_date, booking_time, booking_service, booking_details, booking_type, booking_status) VALUES(".SITE_ID.", '{$bookingDate}', '{$bookingTime}', 'pangat', '{$details}', 'pangat', 0)")) {
+        $newEnquiry=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry(enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_type, enquiry_status) VALUES('{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$details}', 'pangat', 0)");
+        $enquiryID=mysqli_insert_id($connection);
+
+        $newBooking=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."booking(booking_site_id, booking_enquiry_id, booking_date, booking_time, booking_service, booking_details, booking_type, booking_status) VALUES(".SITE_ID.", '{$enquiryID}', '{$bookingDate}', '{$bookingTime}', 'pangat', '{$details}', 'pangat', 0)");
+
+        if($newEnquiry && $newBooking) {
 
             $status=200;
             $msg='Pangat request received successfully';
+            mysqli_query($connection, "COMMIT");
 
         } else {
 
             $msg='Somthing is wrong while trying to book pangat';
+            mysqli_query($connection, "ROLLBACK");
 
         }
 
