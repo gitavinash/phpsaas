@@ -94,6 +94,30 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
     MODIFY analytics_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD analytics_link_url VARCHAR(255) NOT NULL AFTER analytics_link_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD analytics_user_id BIGINT NOT NULL AFTER analytics_site_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    CHANGE analytics_mode analytics_site_version VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD analytics_ip VARCHAR(20) NOT NULL AFTER analytics_device");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD INDEX analytics_ip (analytics_ip)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD INDEX analytics_site_version (analytics_site_version)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD INDEX analytics_user_id (analytics_user_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD INDEX analytics_link_url (analytics_link_url)");
+
   /** App Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."app(

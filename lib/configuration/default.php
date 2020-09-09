@@ -3,6 +3,19 @@
 	session_start();
 	date_default_timezone_set($time_zone);
 
+	/** Browser current active session id */
+
+	if(!isset($_SESSION['active_session_id'])) {
+
+		$_SESSION['active_session_id']=hash('sha256', uniqid(mt_rand(), true).substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 100).time());
+		define('SESSION_ID', $_SESSION['active_session_id']);
+
+	} else {
+
+		define('SESSION_ID', $_SESSION['active_session_id']);
+
+	}
+
 	/** Developers Credit */
 
 	define('CREDIT', 'ITS Soft World');
