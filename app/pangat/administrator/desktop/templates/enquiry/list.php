@@ -45,7 +45,7 @@
 						
 						while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 							<tr>
-								<td><?php echo date('d-m-Y', strtotime($enquiry_time)) ?></td>
+								<td><?php echo date('d-m-Y h:i A', strtotime($enquiry_time)) ?></td>
 								<td><?php echo date('d-m-Y', strtotime($booking_date)) ?></td>
 								<td><?php echo $booking_time; ?></td>
 								<td><?php echo $enquiry_first_name.' '.$enquiry_last_name; ?></td>
