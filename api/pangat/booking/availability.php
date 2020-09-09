@@ -1,5 +1,14 @@
 <?php
 
+    /**
+     * 
+     * Availability status
+     * 
+     * 0 -> Request received but booking not confirmed
+     * 1 -> Slot not available
+     * 2 -> Slot available
+    */
+
     function availability($connection, $data) {
         
         extract($data);
@@ -10,19 +19,69 @@
 
             $calenderDate=date('Y-m-d', strtotime("+{$i} days", strtotime($availablityDate)));
 
-            if($checkDateAvailablity=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."booking")) {
+            if(date('Y-m-d')<=$calenderDate) {
 
-                if(mysqli_num_rows($checkDateAvailablity)!=0) {
+                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}'")) {
 
+                    if(mysqli_num_rows($checkDateAvailablity)!=0) {
+    
+                        while($pangatStatus=mysqli_fetch_assoc($checkDateAvailablity)) {
 
-                } else {
+                            extract($pangatStatus);
 
-                    $bookingAllowed=1;
-                    $breakfast=1;
-                    $lunch=1;
-                    $dinner=1;
+                            if($booking_time=='breakfast') {
 
+                                $breakfast=$booking_status;
+
+                            } else {
+
+                                $breakfast=2;
+
+                            }
+
+                            if($booking_time=='lunch') {
+
+                                $lunch=$booking_status.'i m here';
+
+                            } else {
+
+                                $lunch='2'.'why im here -> '.$booking_time;
+
+                            }
+
+                            if($booking_time=='dinner') {
+
+                                $dinner=$booking_status;
+
+                            } else {
+
+                                $lunch=2;
+
+                            }
+
+                            if($breakfast==1 && $lunch==1 && $dinner==1) {
+                                $bookingAllowed=0;
+                            }
+
+                        }
+
+                    } else {
+    
+                        $bookingAllowed=2;
+                        $breakfast=2;
+                        $lunch=2;
+                        $dinner=2;
+    
+                    }
+    
                 }
+
+            } else {
+
+                $bookingAllowed=1;
+                $breakfast=1;
+                $lunch=1;
+                $dinner=1;
 
             }
 

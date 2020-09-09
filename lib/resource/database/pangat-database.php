@@ -45,6 +45,11 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."booking
     CHANGE booking_patient_type booking_for VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'self'");
+  
+  // Change booking time slot data type
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."booking
+    CHANGE booking_time booking_time VARCHAR(10) NOT NULL");
 
   /** Pangat Table */
 

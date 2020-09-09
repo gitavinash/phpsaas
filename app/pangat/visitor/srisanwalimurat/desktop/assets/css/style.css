@@ -18,7 +18,7 @@ p, li, ul, h1, h2, h3, h4, h5, h6 {
 
 .yellow {
     background: #FEF1CE;
-    color: #000;
+    color: #000 !important;
 }
 
 .green {
@@ -434,6 +434,10 @@ textarea.form-control {
 .statusMsg p a {
     text-decoration: none;
     color: #946E3E;
+}
+
+.bookingForm {
+    cursor: pointer;
 }
 
 @media (orientation: portrait) {
