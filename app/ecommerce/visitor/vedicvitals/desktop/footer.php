@@ -143,12 +143,12 @@
 
 		<?php include_once NOTIFICATION.'index.php' ?>
 	
-		<script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.slim.min.js"></script>
+		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
+		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.slim.min.js"></script> -->
 		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>comaprison-slider.js"></script> -->
 		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>twentytwenty-slider.js"></script> -->
 		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
-		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
 	
 		<div class="popup" id="addToCardPopUp" style="display:none" >
 			<div class="description-pop">
@@ -158,11 +158,11 @@
 		     	</div>
 	      	</div>
 		    <div class="img-pop">
-			    <img src="" id="productImg" >
+			    <img src="" id="selectedImg" >
 			    <div class="prod-name">
-			      	<h5 id="productName" ></h5>
+			      	<h5 id="selectedName" ></h5>
 			    </div>
-			    <span id="productQty" ></span>
+			    <span id="selectedQty" ></span>
 		    </div>
 		    <div class="cart-duc">
 		      	<a href="#" class="del-b remove-cart-btn" id="removeFromCart" ><i class="fas fa-trash" aria-hidden="true"></i></a>

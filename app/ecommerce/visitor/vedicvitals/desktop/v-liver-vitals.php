@@ -61,14 +61,14 @@
 									<div class="quant-bx">
 										Quantity :
 										<select id="qty" >
-											<option value="volvo">1</option>
-											<option value="saab">2</option>
-											<option value="opel">3</option>
+											<option value="4_1_327" >1</option>
+											<option value="4_2_589" >2</option>
+											<option value="4_3_834" >3</option>
 										</select> 
 									</div>
 								</div>
 								<div class="cart-box">
-									<a href="#" id="checkout" class="cart-ad-btn" >Add to Cart</a>
+									<a href="#" id="addToCart" class="cart-ad-btn" >Add to Cart</a>
 								</div>
 							</form>
 

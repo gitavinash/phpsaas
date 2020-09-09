@@ -53,22 +53,21 @@
 							<br>
 							<p>Note:- Gyno Vitals should not be consumed during pregnancy. </p>
 							
-							<div class="quantaty">
-
-								<div class="quant-bx">
-									Quantity : <select id="cars" name="carlist" form="carform">
-									  		<option value="volvo">1</option>
-									  		<option value="saab">2</option>
-									  		<option value="opel">3</option>
+							<form action="qtyForm" >
+								<div class="quantaty">
+									<div class="quant-bx">
+										Quantity :
+										<select id="qty" >
+											<option value="3_1_348" >1</option>
+											<option value="3_2_627" >2</option>
+											<option value="3_3_888" >3</option>
 										</select> 
+									</div>
 								</div>
-							</div>
-
-							
-							<div class="cart-box">
-								<a href="#" class="cart-ad-btn" >Add to Cart</a>
-								
-							</div>
+								<div class="cart-box">
+									<a href="#" id="addToCart" class="cart-ad-btn" >Add to Cart</a>
+								</div>
+							</form>
 
 							<!-- grab deal start -->
 							<div class="grab-deal">

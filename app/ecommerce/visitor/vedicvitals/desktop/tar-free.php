@@ -62,9 +62,9 @@
 									<div class="quant-bx">
 										Quantity :
 										<select id="qty" >
-											<option value="1_345" >1</option>
-											<option value="2_621" >2</option>
-											<option value="3_880" >3</option>
+											<option value="2_1_345" >1</option>
+											<option value="2_2_621" >2</option>
+											<option value="2_3_880" >3</option>
 										</select> 
 									</div>
 								</div>

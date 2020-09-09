@@ -41,7 +41,7 @@
 						<div class="prod-detail">
 							<h5 class="stock">In Stock</h5>
 							<!-- <h5 class="outStock">Out of Stock</h5> -->
-							<h2>Immunity Vitals</h2>
+							<h2 id="productName" >Immunity Vitals</h2>
 							<p class="catag-lbel">Categories : <span> Health Product</span></p>
 							<p class="pro-info">Immunity Vitals help in developing respiratory health along with a robust immune system. Immunity Vitals is an extraordinary formulation that uses super herbs, known to Boost Immunity, Promote Respiratory health, decrease inflammation and remove the symptoms of a weak Immune System.</p>
 
@@ -58,14 +58,14 @@
 									<div class="quant-bx">
 										Quantity :
 										<select id="qty" >
-											<option value="volvo">1</option>
-											<option value="saab">2</option>
-											<option value="opel">3</option>
+											<option value="1_1_369" >1</option>
+											<option value="1_2_664" >2</option>
+											<option value="1_3_941" >3</option>
 										</select> 
 									</div>
 								</div>
 								<div class="cart-box">
-									<a href="#" id="checkout" class="cart-ad-btn" >Add to Cart</a>
+									<a href="#" id="addToCart" class="cart-ad-btn" >Add to Cart</a>
 								</div>
 							</form>
 

@@ -34,3 +34,11 @@
   ##                                    Update E-Commerce Applications Database Table                                    ##
   ##                                                                                                                    ##
   ########################################################################################################################  
+
+  /** Update cart table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD cart_price VARCHAR(10) NOT NULL AFTER cart_product_qty");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD cart_currency VARCHAR(5) NOT NULL DEFAULT 'INR' AFTER cart_product_qty");
