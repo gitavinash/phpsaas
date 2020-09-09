@@ -129,7 +129,7 @@
 				<div class="row">
 					<div class="col-md-4 col-12 ">
 						<div class="product-feature">
-							<img src="<?php echo USER_IMAGES ?>product/feature.jpg" alt="">
+							<img src="<?php echo USER_IMAGES ?>product/feature.png" alt="">
 						</div>
 					</div>
 					<div class="col-md-8 col-12">
