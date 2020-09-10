@@ -6,7 +6,7 @@
 
 			/** Show cart items */
 
-			
+			include_once 'cart-items.php';			
 
 		} else {
 
