@@ -37,13 +37,85 @@
 								</nav>
 							</div> -->
 
-							<div class="copn-div">
+							<?php
+							
+								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."'")) {
+
+									if(mysqli_num_rows($checkCart)!=0) {
+
+										$totalPrice=0;
+
+										while($cartData=mysqli_fetch_assoc($checkCart)) {
+
+											extract($cartData);
+											
+											switch($cart_product_id) {
+
+												case 1 :
+													$productName='Immunity Vitals';
+													$productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/immunity-vitals/1.jpg';
+													break;
+
+												case 2 :
+													$productName='Tar Free';
+													$productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/tar-free/1.jpg';
+													break;
+
+												case 3 :
+													$productName='Gyno Vitals';
+													$productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/gyno-vitals/1.jpg';
+													break;
+
+												case 4 :
+													$productName='V Liver Vitals';
+													$productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/v-liver-vitals/1.jpg';
+													break;
+
+												default :
+													$productName='';
+													$productImage='';
+													break;
+
+											}
+
+											$totalPrice=$totalPrice+$cart_price;
+
+											?>
+
+												<div class="prodcut-list-cart">
+													<img src="<?php echo $productImage ?>">
+													<h3><?php echo $productName; ?> – Pack of <?php echo $cart_product_qty ?></h3>
+													<div class="price-new">
+														<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
+													</div>
+												</div>
+
+
+											<?php
+
+										}
+
+									} else {
+
+										?>
+										<div class="prodcut-list-cart">
+											<h3>Empty Cart</h3>
+										</div>
+										<?php
+
+									}
+
+								}
+
+							?>
+
+<div class="copn-div">
 								<form class="form-row">
 								  	<div class="form-group col-md-8 cod-ap">
 									    <input type="text" readonly class="form-control" id="" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
-								  		<button type="submit" class="btn">Apply</button>
+								  		<button type="submit" id="checkCoupon" class="btn">Apply</button>
 								  	</div>
 								</form>
 							</div>
@@ -51,7 +123,7 @@
 							<div class="sub-totl">
 								<div class="sub1">
 									<span class="spn-lft">Subtotal</span>
-									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
+									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
@@ -62,8 +134,8 @@
 							<div class="sub-tot2">
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
-										<span class="ship-ad">Including Rs. 348.10 in taxes</span></span>
-									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> 600.00</span>
+									<span class="ship-ad">Including GST</span></span>
+									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
 								</div>
 							</div>
 
