@@ -3391,6 +3391,34 @@ text-align: center;
 
 }
 
+.continue-shopping {
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 100px 20px;
+    box-sizing: border-box;
+}
+
+.continue-shopping h1 {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.continue-shopping h1 span {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 300;
+    color: #a7a7a7;
+    padding: 20px 0px;
+    box-sizing: border-box;
+}
+
 
 @media only screen and (min-width: 320px) and (max-width: 768px){
 
