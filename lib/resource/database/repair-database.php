@@ -174,6 +174,9 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city ADD city_status INT(1) NOT NULL DEFAULT '1' AFTER city_state_id");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city
+    ADD INDEX city_state_id (city_state_id)");
+
   /** Country Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."country ADD country_status INT(1) NOT NULL DEFAULT '1'");
