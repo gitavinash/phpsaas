@@ -112,12 +112,12 @@
 									    <tr>
 									      <th scope="row">Contact</th>
 									      <td>puneet@gmail.com</td>
-									      <td><a href="checkout-detail.html">Change</a></td>
+									      <!-- <td><a href="/checkout/">Change</a></td> -->
 									    </tr>
 									    <tr>
 									      <th scope="row">Ship to</th>
-									      <td>122001 gurgaon HR, India</td>
-									      <td><a href="checkout-detail.html">Change</a></td>
+									      <td id="shiipingAddress" >122001 gurgaon HR, India</td>
+									      <!-- <td><a href="checkout-detail.htm">Change</a></td> -->
 									    </tr>
 									  </tbody>
 									</table>
@@ -150,6 +150,7 @@
 								  		<a href="payment-method.html" class="btn shi-btn">Continue Payment</a>
 									</div>
 								</div>
+								
 							</form>
 							<!-- form end -->
 

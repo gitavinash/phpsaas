@@ -102,7 +102,7 @@
 							<div class="copn-div">
 								<form class="form-row">
 								  	<div class="form-group col-md-8 cod-ap">
-									    <input type="text" class="form-control" id="" placeholder="Discount Code">
+									    <input type="text" class="form-control couponCode" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
 									  	<button type="submit" id="checkCoupon" class="btn">Apply</button>
@@ -117,7 +117,7 @@
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
-									<span class="spn-rgt ship-rt">Calculate at next step</span>
+									<span class="spn-rgt ship-rt shippingCharge">Free</span>
 								</div>
 							</div>
 
@@ -125,7 +125,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 										<span class="ship-ad">Including GST</span></span>
-									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+									<span class="spn-rgt-1 man-t totalAmount"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
 								</div>
 							</div>
 
@@ -152,12 +152,12 @@
 								<div class="form-row">
 								    <div class="form-group col-md-12">
 								      <label class="labl-head">Contact information</label>
-								      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+								      <input type="email" name="email" class="form-control" id="inputEmail4" placeholder="Email">
 								    </div>
 								</div>
 								<div class="form-group">
 								    <div class="form-check">
-								      <input class="form-check-input" type="checkbox" id="gridCheck">
+								      <input class="form-check-input" name="emailUpdate" type="checkbox" id="gridCheck">
 								      <label class="form-check-label" for="gridCheck">
 								        Keep me up to date on news and exclusive offers
 								      </label>
@@ -168,24 +168,27 @@
 										<label class="labl-head">Shipping Address</label>
 									</div>
 								    <div class="form-group col-md-6">
-								      <input type="text" class="form-control" id="" placeholder="First name">
+								      <input type="text" name="first_name" class="form-control" id="" placeholder="First name">
 								    </div>
 								    <div class="form-group col-md-6">
-								      <input type="text" class="form-control" id="" placeholder="Last name">
+								      <input type="text" name="last_name" class="form-control" id="" placeholder="Last name">
 								    </div>
 								</div>
 								<div class="form-group">
-								    <input type="text" class="form-control" id="inputAddress" placeholder="Address">
+								    <input type="text" name="house_no" class="form-control" id="inputAddress" placeholder="Flat, House no., Building, Company, Apartment">
 								</div>
 								<div class="form-group">
-								    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+								    <input type="text" name="area" class="form-control" id="inputAddress2" placeholder="Area, Colony, Street, Sector, Village">
+								</div>
+								<div class="form-group">
+								    <input type="text" name="landmark" class="form-control" id="inputAddress2" placeholder="Landmark">
 								</div>
 								<div class="form-row">
 								    <div class="form-group col-md-6">
-								      <input type="text" class="form-control" id="inputCity" placeholder="City">
+								      <input type="text" name="city" class="form-control" id="inputCity" placeholder="City">
 								    </div>
 								    <div class="form-group col-md-4">
-								      <select id="inputState" class="form-control">
+								      <select id="inputState" name="state" class="form-control">
 								        <option selected>Choose State</option>
 										<?php
 										
@@ -208,27 +211,89 @@
 								      </select>
 								    </div>
 								    <div class="form-group col-md-2">
-								      <input type="text" class="form-control" id="inputZip" placeholder="Zip">
+								      <input type="text" class="form-control" name="pincode" id="inputZip" placeholder="Zip">
 								    </div>
 								</div>
 								<div class="form-group">
-								    <input type="tel" class="form-control" id="" placeholder="Contact number">
+								    <input type="tel" class="form-control" name="mobile" id="mobile" placeholder="Contact number" require >
 								</div>
-								<div class="form-group">
+								<!-- <div class="form-group">
 								    <div class="form-check">
-								      <input class="form-check-input" type="checkbox" id="gridCheck">
+								      <input class="form-check-input" name type="checkbox" id="gridCheck">
 								      <label class="form-check-label" for="gridCheck">Save this information for next time</label>
 								    </div>
-								</div>
+								</div> -->
 								<div class="form-row actn-box">
 									<div class="form-group col-md-6">
 									</div>
 									<div class="form-group col-md-6">
-								  		<a href="checkout-shipping.html" class="btn shi-btn">Continue Shipping</a>
+										<input type="hidden" name="country" value='101' >
+								  		<a href="#" id="continueShipping" class="btn shi-btn">Continue Shipping</a>
 									</div>
 								</div>
 							</form>
 							<!-- form end -->
+
+							<!-- Payment Gateway or Shipping Confirmation -->
+
+							<form class="shipping-box" style="display: none" >
+
+								<div class="form-row">
+								    <div class="form-group col-md-12">
+								      <label class="labl-head">Contact information</label>
+								    </div>
+								    <table class="table ship-table">
+									
+									  <tbody>
+									    <tr>
+									      <th scope="row">Contact</th>
+									      <td id='shippingName' ></td>
+									      <!-- <td><a href="checkout-detail.html">Change</a></td> -->
+									    </tr>
+									    <tr>
+									      <th scope="row">Ship to</th>
+									      <td id='shippingAddress' ></td>
+									      <!-- <td><a href="checkout-detail.html">Change</a></td> -->
+									    </tr>
+									  </tbody>
+									</table>
+								</div>
+								
+								<div class="form-row">
+									<div class="form-group col-md-12">
+										<label class="labl-head">Shipping Method</label>
+									</div>
+								    <table class="table ship-table ship-mth">
+									
+									  <tbody>
+									    <tr>
+									      <td>
+									      	<input class="form-check-input" id="online" type="radio" name="paymentMode" value="online" checked >
+									      </td>
+									      <th scope="row">Prepaid Shipping</th>
+									      <td><span>Free</span></td>
+									    </tr>
+									    <tr>
+									      <td>
+									      	<input class="form-check-input" id="cod" type="radio" name="paymentMode" value="cash" >
+									      </td>
+									      <th scope="row">Cash on Delivery ( Cash handling Charges )</th>
+									      <td><span><i class="fas fa-rupee-sign"></i> 50/-</span></td>
+									    </tr>
+									  </tbody>
+									</table>
+								</div>
+
+								<div class="form-row actn-box">
+									<div class="form-group col-md-6">
+										<a href='#' id='backToCheckout' class="retn"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Information</a>
+									</div>
+									<div class="form-group col-md-6">
+								  		<a href='#' id="continueToPayment" class="btn shi-btn">Continue Payment</a>
+									</div>
+								</div>
+
+							</form>
 
 							<!-- footer-link -->
 
@@ -316,7 +381,7 @@
 							<div class="copn-div">
 								<form class="form-row">
 								  	<div class="form-group col-md-8 cod-ap">
-									    <input type="text" class="form-control" id="" placeholder="Discount Code">
+									    <input type="text" class="form-control couponCode" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
 								  		<button type="submit" id="checkCoupon" class="btn">Apply</button>
@@ -331,7 +396,7 @@
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
-									<span class="spn-rgt ship-rt">Calculate at next step</span>
+									<span class="spn-rgt ship-rt" id="shippingCharge" >Free</span>
 								</div>
 							</div>
 
@@ -339,7 +404,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 									<span class="ship-ad">Including GST</span></span>
-									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+									<span class="spn-rgt-1 man-t totalAmount" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
 								</div>
 							</div>
 

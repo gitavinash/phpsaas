@@ -45,7 +45,7 @@
 							<h2>Tar Free</h2>
 							<p class="catag-lbel">Categories : <span> Health Product</span></p>
 							<p class="pro-info">Let your lungs breathe again by flushing out tar accumulated in your lungs Naturally without any side effects.</p>
-							<p class="pro-info">No-Tar is a scientific ayurvedic formulation backed with high quality herbs to detox your lungs from the tar accumulated by consumption of tobacco & pollution.</p>
+							<p class="pro-info">Tar Free is a scientific ayurvedic formulation backed with high quality herbs to detox your lungs from the tar accumulated by consumption of tobacco & pollution.</p>
 
 							<ul>
 								<li><i class="fas fa-circle"></i> Removes harmful toxins from lungs responsible for lung cancer.</li>

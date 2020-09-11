@@ -62,6 +62,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
     ADD INDEX address_user_id (address_user_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."address
+    ADD address_name VARCHAR(255) NOT NULL AFTER address_user_id");
+
   /** Analytics Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."analytics(
@@ -134,7 +137,7 @@
     ADD PRIMARY KEY (app_id)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
-    ADD UNIQUE(app_path);");
+    ADD UNIQUE app_path (app_path);");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
     MODIFY app_id bigint(20) NOT NULL AUTO_INCREMENT");
@@ -166,6 +169,14 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
     CHANGE category_type category_type varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
+  /** City Table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city ADD city_status INT(1) NOT NULL DEFAULT '1' AFTER city_state_id");
+
+  /** Country Table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."country ADD country_status INT(1) NOT NULL DEFAULT '1'");
 
   /** Company Table */
   
@@ -501,7 +512,7 @@
     CHANGE profile_alt_email profile_alt_email varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
-    ADD INDEX(profile_mobile)");
+    ADD INDEX profile_mobile (profile_mobile)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     ADD COLUMN profile_mobile_status INT(1) NOT NULL AFTER profile_mobile");
@@ -662,6 +673,10 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     DROP site_package_id");
+
+  /** State Table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."state ADD state_status INT(1) NOT NULL DEFAULT '1' AFTER state_country_id");
 
   /* Tag Table */
 
