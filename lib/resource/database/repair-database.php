@@ -179,7 +179,8 @@
 
   /** Country Table */
 
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."country ADD country_status INT(1) NOT NULL DEFAULT '1'");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."country
+    ADD country_status INT(1) NOT NULL DEFAULT '1'");
 
   /** Company Table */
   
@@ -679,7 +680,12 @@
 
   /** State Table */
 
-  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."state ADD state_status INT(1) NOT NULL DEFAULT '1' AFTER state_country_id");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."state
+  
+    ADD state_status INT(1) NOT NULL DEFAULT '1' AFTER state_country_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city
+    ADD INDEX state_country_id (state_country_id)");
 
   /* Tag Table */
 
