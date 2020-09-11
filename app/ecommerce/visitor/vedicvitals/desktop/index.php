@@ -43,26 +43,10 @@
 	</div>
 	<div class="col-md-8 story-con bg-white">
 		<p>We live in a country of 1.35 billion people where basic health & sanitation is still a big problem.</p>
- 
-<p>		Today consumption of tobacco, liquor, fast food and exposure to pollution is a common part of our daily life. This unhealthy lifestyle has further impacted on our body and became the root cause of many health problems. 
-</p>			
-
-<p>		But we can't just sit and let this happen. Allopathy medicines are doing a great job by curing the patients from diseases and working as steroids for fast recovery, but the harsh fact is, these medicines have certain side effects which impacts our organs. 
-</p>
-
-<p>On the contrary, Ayurveda - Ancient Age Science for Healing helps in prevention as well as cure of health problems. Ayurveda uses natural herbs for preparing remedies which are safe to consume and does not leave any side effect on the human body. 
-</p>			
-
-<p>		Vedic Vitals, a modern age Ayurvedic Company follows the ideology of ”Prevention is better than cure”. 
-</p>
-
-
-<p>		Vedic Vitals is in early days to prepare for war by providing preventive measures against health problems caused by unhealthy lifestyle. 
-</p>
-
-
-<p>		Our vision is to impact 50 million Indian citizens by the year 2025 with the aim to provide a healthy lifestyle. 
-</p>
+		<p>Today consumption of tobacco, liquor, fast food and exposure to pollution is a common part of our daily life. This unhealthy lifestyle has further impacted on our body and became the root cause of many health problems.</p>
+		<p>Ayurveda - Ancient Age Science for Healing helps in prevention as well as cure of health problems. Ayurveda uses natural herbs for preparing remedies which are safe to consume and does not leave any side effect on the human body.</p>
+		<p>Vedic Vitals, a modern age Ayurvedic Company follows the ideology of ”Prevention is better than cure”.</p>
+		<p>Our vision is to impact 50 million Indian citizens by the year 2025 with the aim to provide a healthy lifestyle. </p>
 	</div>
 </div>
 		
