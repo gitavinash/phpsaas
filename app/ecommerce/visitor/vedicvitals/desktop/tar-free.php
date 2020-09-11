@@ -21,7 +21,7 @@
 					</div>
 					<div class="col-md-6" style="padding-bottom: 0;">
 						<div class="galery-carousel">
-							<div class="carousel carousel-main" data-flickity>
+							<div class="carousel carousel-main" data-flickity={imagesLoaded: true}>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/1.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/2.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/3.jpg"></div>

@@ -143,12 +143,9 @@
 
 		<?php include_once NOTIFICATION.'index.php' ?>
 	
-		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
-		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>jquery-3.4.1.slim.min.js"></script> -->
-		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>comaprison-slider.js"></script> -->
-		<!-- <script type="text/javascript" src="<?php echo USER_JS ?>twentytwenty-slider.js"></script> -->
-		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
+		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
 	
 		<div class="popup" id="addToCardPopUp" style="display:none" >
 			<div class="description-pop">

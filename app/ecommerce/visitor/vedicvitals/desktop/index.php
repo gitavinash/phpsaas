@@ -9,7 +9,7 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="card-ban">
-						<div class="carousel"  data-flickity='{ "autoPlay": true, "wrapAround": true,"pageDots": false }'>
+						<div class="carousel"  data-flickity='{ "autoPlay": true, "wrapAround": true, "imagesLoaded": true, "pageDots": false }'>
 							<div class="carousel-cell-2">
 								<img src="<?php echo USER_IMAGES ?>slider1.jpg">
 							</div>
