@@ -27,6 +27,36 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     MODIFY cart_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  
+  /** Order Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."order (
+    order_id bigint(20) NOT NULL,
+    order_site_id bigint(20) NOT NULL,
+    order_user_id bigint(20) NOT NULL,
+    order_cart_id bigint(20) NOT NULL,
+    order_address_id bigint(20) NOT NULL,
+    order_product_id varchar(255) NOT NULL,
+    order_product_qty varchar(255) NOT NULL,
+    order_product_price varchar(255) NOT NULL,
+    order_currency varchar(4) NOT NULL DEFAULT 'INR',
+    order_total_price varchar(10) NOT NULL,
+    order_status int(1) NOT NULL,
+    order_payment_mode varchar(10) NOT NULL,
+    order_generate timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    order_update timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    ADD PRIMARY KEY (order_id),
+    ADD KEY order_site_id (order_site_id),
+    ADD KEY order_user_id (order_user_id),
+    ADD KEY order_cart_id (order_cart_id),
+    ADD KEY order_address_id (order_address_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    MODIFY order_id bigint(20) NOT NULL AUTO_INCREMENT");
   
   
   ########################################################################################################################
@@ -47,3 +77,8 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     ADD INDEX cart_session_id (cart_session_id)");
+
+  /** Update order table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    ADD order_coupon VARCHAR(20) NOT NULL AFTER order_total_price");

@@ -2,8 +2,7 @@
 
     function generate($connection, $data) {
 
-        // extract($data);
-        print_r($data);
+        extract($data);
 
         /** Get Product from cart */
 
@@ -11,7 +10,29 @@
 
             if(mysqli_num_rows($checkCart)!=0) {
 
-                print_r(mysqli_fetch_assoc($checkCart));
+                extract(mysqli_fetch_assoc($checkCart));
+                
+                if($addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_product_id, order_product_qty, order_product_price, order_total_price, order_coupon, order_status, order_payment_mode, order_generate) VALUES(".SITE_ID.", '{$product}', '{$quantity}', '{$price}', '{$totalPrice}', '{$coupon}', 0, '{$paymentMode}', NOW())")) {
+
+                    $status=200;
+                    $msg='Redirect to payment mode';
+                    $orderID=base64_encode(mysqli_insert_id($connection));
+                    if($paymentMode=='cod') {
+
+                        $url='/thank-you/?order_id='.$orderID;
+
+                    } else {
+
+                        $url='/payment/generate/?id='.$orderID.'&type=order';
+
+                    }
+
+                } else {
+
+                    // echo mysqli_error($connection);
+                    echo "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_product_id, order_product_qty, order_product_price, order_total_price, order_coupon, order_status, order_payment_mode, order_generate) VALUES(".SITE_ID.", '{$product}', '{$quantity}', '{$price}', '{$totalPrice}', '{$coupon}', 0, '{$paymentMode}', NOW()";
+
+                }
 
             } else {
 
@@ -23,7 +44,8 @@
 
         $result = array(
             'status' => ((isset($status)) ? $status : 'error' ),
-            'msg' => ((isset($msg)) ? $msg : 'Invalid response' )
+            'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
+            'url' => ((isset($url)) ? $url : '#' )
         );
     
         echo json_encode($result, TRUE);

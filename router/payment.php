@@ -5,6 +5,9 @@
 
     define('PAYMENT_GATEWAY', RESOURCE.'payment/'.$paymentGateway.'/'.$paymentGatewayAction.'.php');
 
+    echo PAYMENT_GATEWAY;
+    exit();
+
     /** Check payment gateway modules is available or not */
 
     if(file_exists(PAYMENT_GATEWAY)) {

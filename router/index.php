@@ -142,6 +142,10 @@
 			require_once 'sitemap.php';
 			break;
 			
+		case 'payment' :
+			require_once 'payment.php';
+			break;
+			
 		default :
 
 			/** Check Cache is available or not */
