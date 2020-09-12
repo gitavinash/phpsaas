@@ -87,7 +87,7 @@
 
                 $addNewAddress=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."address(address_site_id, address_user_id, address_name, address_house_no, address_area, address_landmark, address_city_id, address_state_id, address_country_id, address_pin_code, address_mobile, address_type, address_status) VALUES(".SITE_ID.", '{$user_id}', '{$display_name}', '{$house_no}', '{$area}', '{$landmark}', '{$city_id}', '{$state}', '{$country}', '{$pincode}', '{$mobileNumber}', 'home', 1)");
 
-                $updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_user_id='{$user_id}' WHERE cart_session_id='".SESSION_ID."' AND cart_site_id='".SITE_ID."'");
+                $updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_user_id='{$user_id}', cart_status=1 WHERE cart_session_id='".SESSION_ID."' AND cart_site_id='".SITE_ID."'");
 
                 if($addUser && $addUserProfile && $addUserSiteAccess && $addNewAddress && $updateCart) {
 

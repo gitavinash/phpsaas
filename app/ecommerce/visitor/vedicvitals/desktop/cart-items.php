@@ -105,7 +105,7 @@
 									    <input type="text" class="form-control couponCode" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
-									  	<button type="submit" id="checkCoupon" class="btn">Apply</button>
+									  	<button type="submit" class="checkCoupon btn">Apply</button>
 								  	</div>
 								</form>
 							</div>
@@ -384,7 +384,7 @@
 									    <input type="text" class="form-control couponCode" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
-								  		<button type="submit" id="checkCoupon" class="btn">Apply</button>
+								  		<button type="submit" class="checkCoupon btn">Apply</button>
 								  	</div>
 								</form>
 							</div>

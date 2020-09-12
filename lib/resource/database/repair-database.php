@@ -687,6 +687,29 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city
     ADD INDEX state_country_id (state_country_id)");
 
+  /** Subscription Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."subscription (
+    subscription_id bigint(20) NOT NULL,
+    subscription_site_id bigint(20) NOT NULL,
+    subscription_user_id bigint(20) NOT NULL,
+    subscription_mode varchar(10) NOT NULL,
+    subscription_type varchar(10) NOT NULL,
+    subscription_status int(1) NOT NULL DEFAULT 1,
+    subscription_time timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."subscription
+    ADD PRIMARY KEY (subscription_id),
+    ADD KEY subscription_site_id (subscription_site_id),
+    ADD KEY subscription_user_id (subscription_user_id),
+    ADD KEY subscription_mode (subscription_mode),
+    ADD KEY subscription_status (subscription_status),
+    ADD KEY subscription_type (subscription_type)");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."subscription
+    MODIFY subscription_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   /* Tag Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."tag
