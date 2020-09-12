@@ -1,54 +1,35 @@
 <?php
 
-    $paymentGateway=((isset($urlStructure[1])) ? $urlStructure[1] : DEFAULT_PAYMENT_GATEWAY );
-    $paymentGatewayAction=((isset($urlStructure[2])) ? $urlStructure[2] : 'generate' );
+    if($checkPaymentGateway=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".SITE_ID." AND site_configuration_name LIKE 'pg_%' AND site_configuration_status=1")) {
 
-    define('PAYMENT_GATEWAY', RESOURCE.'payment/'.$paymentGateway.'/'.$paymentGatewayAction.'.php');
+        if(mysqli_num_rows($checkPaymentGateway)!=0) {
 
-    echo PAYMENT_GATEWAY;
-    exit();
+            while($paymentGatewayData=mysqli_fetch_assoc($checkPaymentGateway)) {
+            
+                extract($paymentGatewayData);
+                $configuration[$site_configuration_name]=$site_configuration_value;
+                
+            }
+    
+            extract($configuration);
 
-    /** Check payment gateway modules is available or not */
+            $pgFile = PAYMENT_GATEWAY.$pg_name.'/'.((isset($urlStructure[1])) ? $urlStructure[1] : 'generate' ).'.php';
 
-    if(file_exists(PAYMENT_GATEWAY)) {
+            if(file_exists($pgFile)) {
 
-        if($paymentGatewayAction=='generate') {
+                require_once $pgFile;
 
-            /** fetch transaction data from database */
+            } else {
 
-            $transactionID=mysqli_real_escape_string($connection, base64_decode($_GET['request']));
-
-            if($checkTransaction=mysqli_query($connection, "SELECT * FROM {$table_prefix}transaction WHERE transaction_id='{$transactionID}' AND transaction_gateway='{$paymentGateway}'")) {
-
-                if(mysqli_num_rows($checkTransaction)!=0) {
-
-                    extract(mysqli_fetch_assoc($checkTransaction));
-
-                    if($transaction_status!=0) {
-
-                        /** If transaction is already initial before then stop here */
-
-                        echo 'This payment link is broken or not valid';
-                        exit();
-
-                    }
-
-                } else {
-
-                    echo 'Unable to found this payment request';
-
-                }
+                echo 'Something is wrong while calling payment gateway function';
 
             }
 
+        } else {
+
+            echo "Something is wrong please contact to system administrator";
+
         }
 
-        /** Include required payment gateway file */
-
-        require_once PAYMENT_GATEWAY;
-
-    } else {
-
-        echo "Something is wrong";
-
     }
+    exit();

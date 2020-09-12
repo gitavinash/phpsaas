@@ -1,6 +1,6 @@
 <?php
 
-	if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."'")) {
+	if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=0")) {
 
 		if(mysqli_num_rows($checkCart)!=0) { 
 

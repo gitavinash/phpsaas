@@ -57,6 +57,39 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     MODIFY order_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  /** Transaction Table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."transaction (
+    transaction_id bigint(11) NOT NULL,
+    transaction_site_id bigint(20) NOT NULL,
+    transaction_user_id bigint(20) NOT NULL,
+    transaction_order_id varchar(100) NOT NULL,
+    transaction_method varchar(10) NOT NULL,
+    transaction_gateway varchar(10) NOT NULL,
+    transaction_reference_id varchar(100) NOT NULL,
+    transaction_payment_id varchar(100) NOT NULL,
+    transaction_payment_mode varchar(10) NOT NULL,
+    transaction_currency varchar(4) NOT NULL,
+    transaction_amount varchar(10) NOT NULL,
+    transaction_type varchar(100) NOT NULL,
+    transaction_status int(1) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
+    ADD PRIMARY KEY (transaction_id),
+    ADD KEY transaction_order_id (transaction_order_id),
+    ADD KEY transaction_method (transaction_method),
+    ADD KEY transaction_site_id (transaction_site_id),
+    ADD KEY transaction_user_id (transaction_user_id),
+    ADD KEY transaction_reference_id (transaction_reference_id),
+    ADD KEY transaction_payment_id (transaction_payment_id),
+    ADD KEY transaction_payment_mode (transaction_payment_mode),
+    ADD KEY transaction_type (transaction_type),
+    ADD KEY transaction_gateway (transaction_gateway)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
+    MODIFY transaction_id bigint(11) NOT NULL AUTO_INCREMENT");
   
   
   ########################################################################################################################
@@ -82,3 +115,12 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     ADD order_coupon VARCHAR(20) NOT NULL AFTER order_total_price");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    CHANGE order_cart_id order_cart_session_id BIGINT(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    CHANGE order_cart_session_id order_cart_session_id VARCHAR(255) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    ADD order_delivery_charges VARCHAR(3) NOT NULL AFTER order_currency");

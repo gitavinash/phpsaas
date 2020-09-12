@@ -327,6 +327,9 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."user
     MODIFY user_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFX."user
+    CHANGE user_act_time user_act_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP");
  
 
   ########################################################################################################################

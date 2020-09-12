@@ -15,7 +15,7 @@
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
 
 	</head>
 	<body>
@@ -35,7 +35,7 @@
 
 							<?php
 								
-								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."'")) {
+								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=0")) {
 
 									if(mysqli_num_rows($checkCart)!=0) {
 
@@ -312,7 +312,7 @@
 
 							<?php
 							
-								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."'")) {
+								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=0")) {
 
 									if(mysqli_num_rows($checkCart)!=0) {
 

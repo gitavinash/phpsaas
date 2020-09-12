@@ -855,9 +855,12 @@ p.review ,.rate , .quantity {
 }
 .img-pop span {
     width: 40px;
-    float: left;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 18px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    line-height: 50px;
+    font-weight: 600;
 }
 .cart-duc {
     width: 100%;
@@ -916,8 +919,12 @@ a.del-b:hover {
           color: #000
         }
         .prod-name h5 {
-    font-size: 14px;
-    margin-top: 5px;
+            font-size: 18px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            padding: 5px 10px;
+            line-height: 32px;
+            font-weight: 600;
 }
 
         /*.links-pop a{
@@ -2983,18 +2990,20 @@ a.retn {
     margin-right: 10px;
 }
 .prodcut-list-cart h3 {
-    font-size: 14px;
+    font-size: 18px;
     width: calc(100% - 200px);
     float: left;
+    line-height: 24px;
+    font-weight: 600;
 }
 .price-new{
-    width: 70px;
+    width: 100px;
     float: right;
     margin-left: 10px;
     text-align: right;
 }
 .prodcut-list-cart span {
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 700
 }
 .copn-div {

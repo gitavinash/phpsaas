@@ -7,6 +7,7 @@
 	define('API_MODULES', ROOT.'/api/');
 	define('ROUTER', ROOT.'/router/');
 	define('RESOURCE', ROOT.'/lib/resource/');
+	define('PAYMENT_GATEWAY', RESOURCE.'payment-gateway/');
 	define('NOTIFICATION', RESOURCE.'notification/');
 	
 	/** Meta and Structure Data Resource */
@@ -100,7 +101,6 @@
 	define('DEFAULT_ADMIN_IMAGES', IMG_LIBRARY.'app/default/'.SITE_VERSION.'/');
 
 	/* App logged in member user directory managment */
-
 
 	$adminDirectory='/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/';
 	
