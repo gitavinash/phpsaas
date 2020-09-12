@@ -236,7 +236,7 @@
 
 							<!-- Payment Gateway or Shipping Confirmation -->
 
-							<form class="shipping-box" >
+							<form class="shipping-box" style="display: none" >
 
 								<div class="form-row">
 								    <div class="form-group col-md-12">
