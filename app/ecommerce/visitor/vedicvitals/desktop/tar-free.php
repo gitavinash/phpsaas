@@ -21,15 +21,14 @@
 					</div>
 					<div class="col-md-6" style="padding-bottom: 0;">
 						<div class="galery-carousel">
-							<div class="carousel carousel-main" data-flickity={imagesLoaded: true}>
+							<div class="carousel carousel-main" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "imagesLoaded": true, "pageDots": false }'>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/1.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/2.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/3.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/4.jpg"></div>
 							</div>
 
-							<div class="carousel carousel-nav"
-							  data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
+							<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "imagesLoaded": true, "pageDots": false }'>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/1.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/2.jpg"></div>
 							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/tar-free/3.jpg"></div>
