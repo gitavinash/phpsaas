@@ -113,11 +113,11 @@
 							<div class="sub-totl">
 								<div class="sub1">
 									<span class="spn-lft">Subtotal</span>
-									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="subTotal" ><?php echo $totalPrice ?></strong>.00</span>
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
-									<span class="spn-rgt ship-rt shippingCharge">Free</span>
+									<span class="spn-rgt ship-rt shippingCharge" >Calculated at next step</span>
 								</div>
 							</div>
 
@@ -125,7 +125,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 										<span class="ship-ad">Including GST</span></span>
-									<span class="spn-rgt-1 man-t totalAmount"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice2" ><?php echo $totalPrice ?></strong>.00</span>
 								</div>
 							</div>
 
@@ -236,7 +236,7 @@
 
 							<!-- Payment Gateway or Shipping Confirmation -->
 
-							<form class="shipping-box" style="display: none" >
+							<form class="shipping-box" >
 
 								<div class="form-row">
 								    <div class="form-group col-md-12">
@@ -277,7 +277,7 @@
 									      <td>
 									      	<input class="form-check-input" id="cod" type="radio" name="paymentMode" value="cash" >
 									      </td>
-									      <th scope="row">Cash on Delivery ( Cash handling Charges )</th>
+									      <th scope="row">COD ( Cash handling Charges )</th>
 									      <td><span><i class="fas fa-rupee-sign"></i> 50/-</span></td>
 									    </tr>
 									  </tbody>
@@ -396,7 +396,7 @@
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
-									<span class="spn-rgt ship-rt" id="shippingCharge" >Free</span>
+									<span class="spn-rgt ship-rt shippingCharge" >Calculated at next step</span>
 								</div>
 							</div>
 
@@ -404,7 +404,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 									<span class="ship-ad">Including GST</span></span>
-									<span class="spn-rgt-1 man-t totalAmount" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+									<span class="spn-rgt-1 man-t" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice" ><?php echo $totalPrice ?></strong>.00</span>
 								</div>
 							</div>
 
