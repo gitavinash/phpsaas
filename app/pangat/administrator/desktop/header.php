@@ -48,12 +48,12 @@
 						<a href="enquiry.php?type=list"><i class="fas fa-filter"></i> Enquiry</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquirys</a></li>
+								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquiries</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquirys</a></li>
+								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquiries</a></li>
 							</ul>
 						</div>
 					</li>
