@@ -49,8 +49,8 @@
 
                 } else {
 
-                    // echo 'Something is wrong while generation transaction status';
-                    echo mysqli_error($connection);
+                    echo 'Something is wrong while generation transaction status';
+                    // echo mysqli_error($connection);
 
                 }
 
