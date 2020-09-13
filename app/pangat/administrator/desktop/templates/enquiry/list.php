@@ -6,7 +6,7 @@
 	$selectedMonth=mysqli_real_escape_string($connection, ((isset($_GET['month'])) ? $_GET['month'] : '' ));
 	$monthStatus=(($selectedMonth=='') ? '' : "AND month(booking_date) = {$selectedMonth}" );
 
-	$selectedYear=mysqli_real_escape_string($connection, ((isset($_GET['year'])) ? $_GET['year'] : 0 ));
+	$selectedYear=mysqli_real_escape_string($connection, ((isset($_GET['year'])) ? $_GET['year'] : '' ));
 	$yearStatus=(($selectedYear=='') ? '' : "AND year(booking_date) = {$selectedYear}" );
 	
 ?>
