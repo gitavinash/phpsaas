@@ -1,7 +1,7 @@
 <?php
 
 	$postStatus=mysqli_real_escape_string($connection, $_GET['status']);
-	$postStatus=(($postStatus=='all') ? '' : "AND booking_status='{$postStatus}'" );
+	$postStatus=(($postStatus=='all') ? 'AND booking_status=0' : "AND booking_status='{$postStatus}'" );
 
 	$selectedMonth=mysqli_real_escape_string($connection, ((isset($_GET['month'])) ? $_GET['month'] : '' ));
 	$monthStatus=(($selectedMonth=='') ? '' : "AND month(booking_date) = {$selectedMonth}" );
@@ -10,7 +10,7 @@
 	$yearStatus=(($selectedYear=='') ? '' : "AND year(booking_date) = {$selectedYear}" );
 	
 ?>
-<h2>All <?php echo ucwords($postType.'s') ?></h2>
+<h2>All Enquiries</h2>
 <div class="options-bar">
 	<div class="left-box">
 		<form method="GET">
