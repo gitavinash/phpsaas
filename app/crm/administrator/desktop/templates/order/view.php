@@ -79,9 +79,8 @@
                             <div class="form-group">
                                 <input type="hidden" name="type" value="order" >
                                 <input type="hidden" name="action" value="update" >
-                                <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-                                <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-                                <!-- <input type="submit" id="updatePasswordBtn" value='Change Password' class='btn btn-green'> -->
+                                <input type="hidden" name="order_id" value="<?php echo SITE_ID ?>" >
+                                
                             </div>
                         </div>
                     </form>

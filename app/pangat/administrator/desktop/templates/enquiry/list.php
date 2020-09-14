@@ -82,8 +82,22 @@
 								<td><?php echo $booking_details; ?></td>
 								<td><?php echo $enquiry_query; ?></td>
 								<td>
-									<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>&date=<?php echo $booking_date ?>&time=<?php echo $booking_time ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirm</a>
-									<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+									<?php
+									
+									if($enquiry_status==1) { ?>
+
+										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+
+									<?php
+									} else { ?>
+	
+										<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>&date=<?php echo $booking_date ?>&time=<?php echo $booking_time ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirm</a>
+										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+
+									<?php
+									}
+
+									?>
 								</td>
 							</tr>
 						<?php
