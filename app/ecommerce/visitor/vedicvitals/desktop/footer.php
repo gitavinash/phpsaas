@@ -137,16 +137,6 @@
 			</div>
 		</footer>
 
-		<!-- sections end -->
-
-		<!-- script start -->
-
-		<?php include_once NOTIFICATION.'index.php' ?>
-	
-		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
-		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
-		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
-	
 		<div class="popup" id="addToCardPopUp" style="display:none" >
 			<div class="description-pop">
 		        <h4>JUST ADDED TO YOUR CART</h4>
@@ -166,6 +156,20 @@
 		      	<a href="/checkout/" class="buy-b cart-ad-btn">Proceed to Checkout</a>
 		    </div>
 	    </div>
+
+		<div class="whatsapp">
+			<a href="https://wa.me/919310142836?text=Hello"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
+		</div>
+
+		<!-- sections end -->
+
+		<!-- script start -->
+
+		<?php include_once NOTIFICATION.'index.php' ?>
+	
+		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
+		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
 	
 	</body>
 </html>
