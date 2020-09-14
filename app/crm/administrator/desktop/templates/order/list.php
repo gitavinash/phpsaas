@@ -1,7 +1,7 @@
 <?php
 
 	$orderStatus=mysqli_real_escape_string($connection, $_GET['status']);
-	$orderStatus=(($orderStatus=='all') ? '' : "AND order_status='{$orderStatus}'" );
+	$orderStatus=(($orderStatus=='all') ? '' : "WHERE order_status='{$orderStatus}'" );
 
 ?>
 <h2>All Orders</h2>
@@ -38,7 +38,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order {$orderStatus} ORDER BY order_id DESC")) {
+			if($dataList=mysqli_query($connection, "SELECT order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order {$orderStatus} ORDER BY order_id DESC")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
                         $i=1;
@@ -83,8 +83,7 @@
                                 <td><?php echo $order_status ?></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>
 								<td>
-									<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>&date=<?php echo $booking_date ?>&time=<?php echo $booking_time ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirm</a>
-									<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+									<a href="order.php?type=view&id=<?php echo $order_id; ?>" class="btn btn-sm btn-blue" ><i class="fas fa-eye"></i> View</a>
 								</td>
 							</tr>
 						<?php
