@@ -2,7 +2,7 @@
 
     if(isset($id)) {
 
-        if($checkOrder=mysqli_query($connection, "SELECT profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_product_price, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_name, address_pin_code, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_owner_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_payment_mode='cash'")) {
+        if($checkOrder=mysqli_query($connection, "SELECT profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_product_price, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_name, address_pin_code, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_owner_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_id='{$id}'")) {
 
             if(mysqli_num_rows($checkOrder)!=0) {
                 
