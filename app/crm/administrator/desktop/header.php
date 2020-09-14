@@ -44,16 +44,22 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-					<li <?php echo ((ADMIN_BASE_URL=='/enquiry/') ? 'class="active"' : '' ) ?> >
-						<a href="enquiry.php?type=list"><i class="fas fa-filter"></i> Enquiry</a>
+					<li <?php echo ((ADMIN_BASE_URL=='/order/') ? 'class="active"' : '' ) ?> >
+						<a href="order.php?type=list"><i class="fas fa-box-open"></i> Order</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquiries</a></li>
+								<li><a href="order.php?type=list&status=all"><i class="fas fa-list"></i>  All Order</a></li>
+								<li><a href="order.php?type=list&status=1"><i class="fas fa-check"></i>  Confirm Order</a></li>
+								<li><a href="order.php?type=list&status=0"><i class="fas fa-exclamation"></i>  Pending Order</a></li>
+								<li><a href="order.php?type=list&status=2"><i class="fas fa-times"></i>  Cancel Order</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquiries</a></li>
+								<li><a href="order.php?type=list&status=all"><i class="fas fa-list"></i>  All Order</a></li>
+								<li><a href="order.php?type=list&status=1"><i class="fas fa-check"></i>  Confirm Order</a></li>
+								<li><a href="order.php?type=list&status=0"><i class="fas fa-exclamation"></i>  Pending Order</a></li>
+								<li><a href="order.php?type=list&status=2"><i class="fas fa-times"></i>  Cancel Order</a></li>
 							</ul>
 						</div>
 					</li>
