@@ -39,7 +39,7 @@
                 
                 ?>
 
-                <h2>Change Password</h2>
+                <h2>Order Info</h2>
 
                 <div class="form-box">
                     <form id="updatePassword" >
