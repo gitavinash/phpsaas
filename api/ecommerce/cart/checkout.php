@@ -104,8 +104,9 @@
 
                 } else {
 
-                    $msg='Something is wrong while updating cart';
+                    // $msg='Something is wrong while updating cart';
                     // $msg=$addUser.' && '.$addUserProfile.' && '.$addUserSiteAccess.' && '.$addNewAddress.' && '.$updateCart;
+                    $msg=mysqli_error($connection);
                     mysqli_query($connection, "ROLLBACK");
 
                 }
