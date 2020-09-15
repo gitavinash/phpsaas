@@ -26,6 +26,9 @@
                 curl_close($ch); 
 
                 $response=json_decode($response, TRUE);
+
+                print_r($response);
+                exit();
                 
                 if($response['payment']['status']=='Credit') {
 
