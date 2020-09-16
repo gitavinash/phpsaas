@@ -14,7 +14,16 @@
 
                 $ch = curl_init();
 
-                curl_setopt($ch, CURLOPT_URL, "https://www.instamojo.com/api/1.1/payments/{$payment_id}/");
+                if(DEVELOPMENT_MODE==TRUE) {
+
+                    curl_setopt($ch, CURLOPT_URL, "https://test.instamojo.com/api/1.1/payments/{$payment_id}/");
+
+                } else {
+
+                    curl_setopt($ch, CURLOPT_URL, "https://www.instamojo.com/api/1.1/payments/{$payment_id}/");
+
+                }
+
                 curl_setopt($ch, CURLOPT_HEADER, FALSE);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
@@ -26,9 +35,7 @@
                 curl_close($ch); 
 
                 $response=json_decode($response, TRUE);
-
-                print_r($response);
-                exit();
+                extract($response);
                 
                 if($response['payment']['status']=='Credit') {
 
