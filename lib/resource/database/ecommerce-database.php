@@ -111,6 +111,11 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     ADD INDEX cart_session_id (cart_session_id)");
 
+  /** Update Transaction Table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
+    ADD transaction_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER transaction_status");
+
   /** Update order table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order

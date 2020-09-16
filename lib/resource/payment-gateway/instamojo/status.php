@@ -35,7 +35,6 @@
                 curl_close($ch); 
 
                 $response=json_decode($response, TRUE);
-                extract($response);
                 
                 if($response['payment']['status']=='Credit') {
 
@@ -47,7 +46,7 @@
 
                 }
 
-                if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_payment_id='{$payment_id}', transaction_payment_mode='{$billing_instrument}' {$status} WHERE transaction_reference_id='{$payment_request_id}'")) {
+                if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_payment_id='{$payment_id}', transaction_payment_mode='".strtolower($response['payment']['instrument_type'])."' {$status} WHERE transaction_reference_id='{$payment_request_id}'")) {
 
                     $transaction_order_id=base64_encode($transaction_order_id);
 

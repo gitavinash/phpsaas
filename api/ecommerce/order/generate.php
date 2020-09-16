@@ -34,7 +34,7 @@
                         $transaction_id=base64_encode(mysqli_insert_id($connection));
                         if($paymentMode=='cash') {
 
-                            $url='/thank-you/?order_id='.$transaction_id;
+                            $url='/thank-you/?id='.$transaction_id;
 
                         } else {
 

@@ -90,7 +90,7 @@
                 $addNewAddress=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."address(address_site_id, address_user_id, address_name, address_house_no, address_area, address_landmark, address_city_id, address_state_id, address_country_id, address_pin_code, address_mobile, address_type, address_status) VALUES(".SITE_ID.", '{$user_id}', '{$display_name}', '{$house_no}', '{$area}', '{$landmark}', '{$city_id}', '{$state}', '{$country}', '{$pincode}', '{$mobileNumber}', 'home', 1)");
                 $addressID=mysqli_insert_id($connection);
 
-                $updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_user_id='{$user_id}', cart_status=2 WHERE cart_session_id='".SESSION_ID."' AND cart_site_id='".SITE_ID."'");
+                $updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_user_id='{$user_id}', cart_status=2 WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND cart_site_id='".SITE_ID."'");
 
                 $addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_address_id, order_status, order_generate) VALUES(".SITE_ID.", '{$user_id}', '".SESSION_ID."', '{$addressID}', 0, NOW())");
                 $order_id=mysqli_insert_id($connection);
