@@ -207,7 +207,7 @@ section h3 span {
 .calender {
     float: left;
     width: 100%;
-    padding: 0;
+    padding: 10px 0px 0px 0px;
     margin: 0 auto;
     margin-top: 40px;
     margin-bottom: 20px;
@@ -217,9 +217,17 @@ section h3 span {
 
 .calender h4 {
     float: right;
-    text-align:right;
+    text-align: center;
     width: 100%;
     margin-top: -40px;
+}
+
+.calender #previousMonth {
+    float: left;
+}
+
+.calender #nextMonth {
+    float: right;
 }
 
 .calenderNote {
@@ -468,7 +476,6 @@ textarea.form-control {
         float: left;
         width: 100%;
         text-align: center;
-        padding: 25px 0px;
     }
 
     .mobile-menu {

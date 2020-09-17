@@ -14,6 +14,7 @@
         extract($data);
 
         $availablityDate=($date!='' ? date('01-M-Y', strtotime($date)) : date('01-M-Y'));
+
         for($i=0; $i<date('t'); $i++) {
 
             $calenderDate=date('Y-m-d', strtotime("+{$i} days", strtotime($availablityDate)));
@@ -72,37 +73,43 @@
                         $dinner=2;
     
                     }
+
+                    $availablityData[]=array(
+                        'full_date' => date('d-m-Y', strtotime($calenderDate)),
+                        'short_date' => date('D, d', strtotime($calenderDate)),
+                        'bookingAllowed' => $bookingAllowed,
+                        'breakfast' => $breakfast,
+                        'lunch' => $lunch,
+                        'dinner' => $dinner
+                    );
     
                 }
 
             } else {
 
-                $bookingAllowed=1;
-                $breakfast=1;
-                $lunch=1;
-                $dinner=1;
+                $availablityData[]=array(
+                    'full_date' => date('d-m-Y', strtotime($calenderDate)),
+                    'short_date' => date('D, d', strtotime($calenderDate)),
+                    'bookingAllowed' => 1,
+                    'breakfast' => 1,
+                    'lunch' => 1,
+                    'dinner' => 1
+                );
 
             }
 
             $status=200;
             $msg='Data fetch successfully';
-            $response[]=array(
-                'date' => date('D, d', strtotime($calenderDate)),
-                'current_month' => date('F Y', strtotime($calenderDate)),
-                'next_month' => date('Y-m-01', strtotime("+1 month", strtotime($availablityDate))),
-                'full_date' => date('d-m-Y', strtotime($calenderDate)),
-                'bookingAllowed' => $bookingAllowed,
-                'breakfast' => $breakfast,
-                'lunch' => $lunch,
-                'dinner' => $dinner,
-            );
 
         }
     
         $result = array(
             'status' => ((isset($status)) ? $status : 'error' ),
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-            'availablity' => ((isset($response)) ? $response : '' )
+            'current_month' => date('F Y', strtotime($calenderDate)),
+            'previous_month' => ((date('d-m-Y', strtotime("-1 month", strtotime($availablityDate)))<date('01-m-Y')) ? '' : date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) ),
+            'next_month' => date('Y-m-01', strtotime("+1 month", strtotime($availablityDate))),
+            'availablity' => ((isset($availablityData)) ? $availablityData : '' )
         );
     
         echo json_encode($result, TRUE);
