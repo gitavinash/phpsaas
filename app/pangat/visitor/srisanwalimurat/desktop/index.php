@@ -10,6 +10,7 @@
     <!-- <h3>September 2020 ><span>Choose a date below to place a request for pangat</span></h3> -->
     <div class="booking-form">
         <h3>Select Date and Time<span>Choose a date below to place a request for pangat</span></h3>
+        <div class="loader"><img src="<?php echo IMG_LIBRARY ?>circle-loader.gif" alt=""></div>
         <div class="calender">
         </div>
         <div class="calenderNote">Note: In case of any issue, please call ​Mandir ​at 011-2367</div>

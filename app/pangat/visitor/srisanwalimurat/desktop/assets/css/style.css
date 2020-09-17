@@ -74,6 +74,13 @@ textarea.form-control {
 
 /** Form Stylesheet **/
 
+.loader {
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 100px 0px;
+}
+
 section {
     display: block;
     margin: 0 auto;
@@ -455,6 +462,13 @@ textarea.form-control {
     
     .desktop {
         display: none;
+    }
+
+    .loader {
+        float: left;
+        width: 100%;
+        text-align: center;
+        padding: 25px 0px;
     }
 
     .mobile-menu {

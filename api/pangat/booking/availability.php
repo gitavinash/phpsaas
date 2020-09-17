@@ -14,8 +14,7 @@
         extract($data);
 
         $availablityDate=($date!='' ? date('01-M-Y', strtotime($date)) : date('01-M-Y'));
-
-        for($i=0; $i<=date('t'); $i++) {
+        for($i=0; $i<date('t'); $i++) {
 
             $calenderDate=date('Y-m-d', strtotime("+{$i} days", strtotime($availablityDate)));
 
