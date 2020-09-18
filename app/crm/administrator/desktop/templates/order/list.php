@@ -26,13 +26,12 @@
 	<thead>
 		<tr>
 			<th>S No.</th>
-			<th>Product Name</th>
-			<th>Qty.</th>
-			<th>Total Cost</th>
+			<th>Order No.</th>
+			<th>Name</th>
+			<th>Date and Time</th>
 			<th>Payment Mode</th>
-			<th>Delivery Charges</th>
-			<th>Order Status</th>
-			<th>Order Time</th>
+			<th>Status</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -75,13 +74,11 @@
                             ?>
 							<tr>
                                 <td><?php echo $i ?></td>
+                                <td><?php echo 'OD'.date('Ymd-').$order_id ?></td>
                                 <td><?php echo $productName ?></td>
-                                <td><?php echo $order_product_qty ?></td>
-                                <td><i class="fas fa-rupee-sign"></i> <?php echo $order_product_price ?></td>
-                                <td><?php echo $order_payment_mode ?></td>
-                                <td><i class="fas fa-rupee-sign"></i> <?php echo $order_delivery_charges ?></td>
-                                <td><?php echo (($order_status==1) ? 'Confirm' : ((($order_status)==0) ? 'Pending' : 'Reject') ); ?></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>
+                                <td><?php echo $order_payment_mode ?></td>
+                                <td><?php echo (($order_status==1) ? 'Confirm' : ((($order_status)==0) ? 'Pending' : 'Reject') ); ?></td>
 								<td>
 									<a href="order.php?type=view&id=<?php echo $order_id; ?>" class="btn btn-sm btn-blue" ><i class="fas fa-eye"></i> View</a>
 								</td>
