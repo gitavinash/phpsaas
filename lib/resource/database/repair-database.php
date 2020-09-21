@@ -121,6 +121,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
     ADD INDEX analytics_link_url (analytics_link_url)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    CHANGE analytics_ip analytics_ip VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL");
+
   /** App Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."app(
