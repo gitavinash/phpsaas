@@ -129,3 +129,6 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     ADD order_delivery_charges VARCHAR(3) NOT NULL AFTER order_currency");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    CHANGE order_generate order_generate TIMESTAMP NOT NULL");

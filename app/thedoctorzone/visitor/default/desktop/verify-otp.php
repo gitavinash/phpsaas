@@ -43,7 +43,7 @@
         </div>
     </div>
     <?php include_once NOTIFICATION.'index.php' ?>
-    <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.all.min.js" ></script>
+    <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
     <script src="<?php echo APP_JS_LIBRARY ?>mobile-app.min.js" ></script>
 </body>
 </html>
