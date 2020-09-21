@@ -15,7 +15,7 @@
 
         $availablityDate=($date!='' ? date('01-M-Y', strtotime($date)) : date('01-M-Y'));
 
-        for($i=0; $i<date('t'); $i++) {
+        for($i=0; $i<date('t', strtotime($availablityDate)); $i++) {
 
             $calenderDate=date('Y-m-d', strtotime("+{$i} days", strtotime($availablityDate)));
 
@@ -45,7 +45,7 @@
 
                             } else {
 
-                                $lunch=2;
+                                $lunch=$booking_time;
 
                             }
 
@@ -55,12 +55,14 @@
 
                             } else {
 
-                                $lunch=2;
+                                $dinner=2;
 
                             }
 
                             if($breakfast==1 && $lunch==1 && $dinner==1) {
                                 $bookingAllowed=0;
+                            } else {
+                                $bookingAllowed=2;
                             }
 
                         }
@@ -107,11 +109,11 @@
             'status' => ((isset($status)) ? $status : 'error' ),
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
             'current_month' => date('F Y', strtotime($calenderDate)),
-            'previous_month' => ((date('d-m-Y', strtotime("-1 month", strtotime($availablityDate)))<date('01-m-Y')) ? '' : date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) ),
+            'previous_month' => ((date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) < date('Y-m-01')) ? '' : date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) ),
             'next_month' => date('Y-m-01', strtotime("+1 month", strtotime($availablityDate))),
             'availablity' => ((isset($availablityData)) ? $availablityData : '' )
         );
-    
+
         echo json_encode($result, TRUE);
 
     }
