@@ -269,7 +269,7 @@ p#bookingSlotInfo {
 .calender .date-list .date {
     float: left;
     width: 100%;
-    text-align: left;
+    text-align: center;
     font-size: 16px;
     padding: 10px 0px;
     color: #946E3E;
