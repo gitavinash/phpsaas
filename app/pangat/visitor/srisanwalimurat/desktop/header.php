@@ -17,7 +17,7 @@
                 <li class="logo"><h1><a href="">Sri Sanwali Murat</a></h1></li>
                 <li><a href="">Discourses</a></li>
                 <li><a href="">Bhajan/Aarti</a></li>
-                <li><a href="//pangat.<?php echo SITE_DOMAIN ?>" style="color: #fff">Request For Pangat</a></li>
+                <li><a href="<?php echo SITE_DOMAIN ?>" style="color: #fff">Request For Pangat</a></li>
                 <!-- <li><a href="">Account</a></li> -->
             </ul>
             <div class="mobile-menu">
