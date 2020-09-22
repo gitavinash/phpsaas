@@ -24,9 +24,9 @@
 			<select name="author" class="form-control">
 				<option value="all">Select Author</option>
 				<?php
-					if($authorList=mysqli_query($connection, "SELECT profile_owner_id, profile_display_name FROM ".TABLE_PREFIX."profile, ".TABLE_PREFIX."user WHERE user_id=profile_owner_id AND user_status=1 ORDER BY profile_display_name ASC")) {
+					if($authorList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name FROM ".TABLE_PREFIX."profile, ".TABLE_PREFIX."user WHERE user_id=profile_user_id AND user_status=1 ORDER BY profile_display_name ASC")) {
 						while($author=mysqli_fetch_assoc($authorList)) { ?>
-							<option value="<?php echo $author['profile_owner_id']; ?>" <?php echo (($author['profile_owner_id']==$authorID) ? 'selected' : '' ) ?>  > <?php echo ucwords($author['profile_display_name']); ?></option>
+							<option value="<?php echo $author['profile_user_id']; ?>" <?php echo (($author['profile_user_id']==$authorID) ? 'selected' : '' ) ?>  > <?php echo ucwords($author['profile_display_name']); ?></option>
 						<?php
 						}
 					}

@@ -47,7 +47,7 @@
         
         $newUserId=mysqli_insert_id($connection);
         
-        $createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$newUserId}', '{$first_name}', '{$last_name}', '".$first_name.' '.$last_name."', '{$mobile}', '{$email}')");
+        $createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$newUserId}', '{$first_name}', '{$last_name}', '".$first_name.' '.$last_name."', '{$mobile}', '{$email}')");
 
         $userSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_status) VALUES(".SITE_ID.", '{$newUserId}', 1)");
 

@@ -6,7 +6,7 @@
 
         $order_id=base64_decode($id);
         
-        if($checkOrder=mysqli_query($connection, "SELECT transaction_order_id, transaction_method, order_product_id, order_total_price, order_product_qty, profile_mobile, profile_email, profile_first_name, profile_last_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM isw_transaction INNER JOIN isw_profile ON transaction_user_id=profile_owner_id INNER JOIN isw_order ON transaction_order_id=order_id INNER JOIN isw_address ON address_id=order_address_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN isw_country ON country_id=address_country_id WHERE transaction_order_id='{$order_id}' AND transaction_site_id=".SITE_ID)) {
+        if($checkOrder=mysqli_query($connection, "SELECT transaction_order_id, transaction_method, order_product_id, order_total_price, order_product_qty, profile_mobile, profile_email, profile_first_name, profile_last_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM isw_transaction INNER JOIN isw_profile ON transaction_user_id=profile_user_id INNER JOIN isw_order ON transaction_order_id=order_id INNER JOIN isw_address ON address_id=order_address_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN isw_country ON country_id=address_country_id WHERE transaction_order_id='{$order_id}' AND transaction_site_id=".SITE_ID)) {
             
             if(mysqli_num_rows($checkOrder)!=0) {
 

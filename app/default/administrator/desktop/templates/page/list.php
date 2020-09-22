@@ -35,7 +35,7 @@
 	<tbody>
 		<?php
 
-				if($dataList=mysqli_query($connection, "SELECT page_id, page_title ,link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."page, ".TABLE_PREFIX."link, ".TABLE_PREFIX."profile WHERE page_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=page_id AND link_site_id='".SITE_ID."' AND profile_owner_id='".USER_ID."' $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+				if($dataList=mysqli_query($connection, "SELECT page_id, page_title ,link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."page, ".TABLE_PREFIX."link, ".TABLE_PREFIX."profile WHERE page_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=page_id AND link_site_id='".SITE_ID."' AND profile_user_id='".USER_ID."' $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>

@@ -63,7 +63,7 @@
 
         $updateUsername=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."user SET user_username='{$username}' WHERE user_id='{$website_user_id}'");
 
-        $updateProfile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$display_name}', profile_mobile='{$mobile}', profile_alt_mobile='{$alt_mobile}', profile_alt_email='{$alt_email}' WHERE profile_owner_id='{$website_user_id}'");
+        $updateProfile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$display_name}', profile_mobile='{$mobile}', profile_alt_mobile='{$alt_mobile}', profile_alt_email='{$alt_email}' WHERE profile_user_id='{$website_user_id}'");
 
         if($updateUsername && $updateProfile) {
 
@@ -137,7 +137,7 @@
 
                         $createLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$link}', '{$mediaID}', 200, 'media', '{$website_user_id}', '{$website_id}', NOW(), NOW(), NOW())");
 
-                        $updateProfile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_image='{$uploadURL}' WHERE profile_owner_id='{$website_user_id}'");
+                        $updateProfile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_image='{$uploadURL}' WHERE profile_user_id='{$website_user_id}'");
 
                         if($insertMedia && $createLink && $updateProfile) {
 

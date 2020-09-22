@@ -4,7 +4,7 @@
 
 	$feedURL=str_replace('feed/', '', BASE_URL);
 	
-	if($findnews=mysqli_query($connection, "SELECT news_id, news_image, news_title, news_description, news_category, category_title, news_owner_id, profile_display_name, profile_image, news_type, meta_title, meta_description, meta_canonical, meta_keyword, meta_robots, meta_geo_position, meta_geo_place_name, meta_geo_region, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc, link_id, link_status, link_type, link_published, link_modified, link_url FROM ".TABLE_PREFIX."link, ".TABLE_PREFIX."site, ".TABLE_PREFIX."news, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE link_status=200 AND link_site_id=site_id AND link_relation_id=news_id AND meta_relation_id=news_id AND news_category=category_id AND link_type='news' AND news_owner_id=profile_owner_id ORDER BY link_modified DESC LIMIT 0, 10")) {
+	if($findnews=mysqli_query($connection, "SELECT news_id, news_image, news_title, news_description, news_category, category_title, news_owner_id, profile_display_name, profile_image, news_type, meta_title, meta_description, meta_canonical, meta_keyword, meta_robots, meta_geo_position, meta_geo_place_name, meta_geo_region, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc, link_id, link_status, link_type, link_published, link_modified, link_url FROM ".TABLE_PREFIX."link, ".TABLE_PREFIX."site, ".TABLE_PREFIX."news, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE link_status=200 AND link_site_id=site_id AND link_relation_id=news_id AND meta_relation_id=news_id AND news_category=category_id AND link_type='news' AND news_owner_id=profile_user_id ORDER BY link_modified DESC LIMIT 0, 10")) {
 
 		if(mysqli_num_rows(($findnews))!=0) { ?>
 					

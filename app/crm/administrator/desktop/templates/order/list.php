@@ -4,7 +4,7 @@
 	$orderStatus=(($orderStatus=='all') ? '' : "WHERE order_status='{$orderStatus}'" );
 
 ?>
-<h2>All Orders</h2>
+<h2>All Leads</h2>
 <div class="options-bar">
 	<div class="left-box">
 		<form method="GET">
@@ -38,7 +38,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."profile ON profile_owner_id=order_user_id {$orderStatus} ORDER BY order_id DESC")) {
+			if($dataList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=order_user_id {$orderStatus} ORDER BY order_id DESC")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
                         $i=1;
@@ -76,8 +76,8 @@
 							<tr>
                                 <td><?php echo $i ?></td>
                                 <td><?php echo 'OD'.date('Ymd-').$order_id ?></td>
-                                <td><?php echo $profile_display_name ?></td>
-                                <td><?php echo $profile_mobile ?></td>
+                                <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_display_name ?></a></td>
+                                <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_mobile ?></a></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>
                                 <td><?php echo $order_payment_mode ?></td>
                                 <td><?php echo (($order_status==1) ? 'Confirm' : ((($order_status)==0) ? 'Pending' : 'Reject') ); ?></td>

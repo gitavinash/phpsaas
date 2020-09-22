@@ -14,7 +14,7 @@
 
                 $profile=SITE_URL.$profile;
 
-                if($updateSiteIcon=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_image='{$profile}' WHERE profile_owner_id=".USER_ID)) {
+                if($updateSiteIcon=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_image='{$profile}' WHERE profile_user_id=".USER_ID)) {
                     
                     $status='success';
                     $msg='Profile picture updated successfully';

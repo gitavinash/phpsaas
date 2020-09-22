@@ -527,6 +527,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     ADD COLUMN profile_email_status INT(1) NOT NULL AFTER profile_email");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+  CHANGE profile_owner_id profile_user_id BIGINT(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    DROP INDEX profile_owner_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    ADD INDEX profile_user_id (profile_user_id)");
+
   /* Site Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site

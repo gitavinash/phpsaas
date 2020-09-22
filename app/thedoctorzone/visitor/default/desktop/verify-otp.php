@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITE_NAME ?></title>
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
-    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert2.min.css">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
 </head>
 <body>

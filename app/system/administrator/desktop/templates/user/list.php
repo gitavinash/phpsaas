@@ -40,7 +40,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT profile_display_name, user_id, user_email, user_type FROM itssoftworld_profile, itssoftworld_user WHERE profile_owner_id=user_id AND user_parent_id='".USER_ID."'")) {
+			if($dataList=mysqli_query($connection, "SELECT profile_display_name, user_id, user_email, user_type FROM itssoftworld_profile, itssoftworld_user WHERE profile_user_id=user_id AND user_parent_id='".USER_ID."'")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>

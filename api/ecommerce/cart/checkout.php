@@ -62,7 +62,7 @@
                         $addUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobileNumber}', '{$enc_password}', '{$saltKey}', 0, NOW(), '".IP."')");
                         $user_id=mysqli_insert_id($connection);
 
-                        $addUserProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$user_id}', '{$first_name}', '{$last_name}', '{$display_name}', '{$mobileNumber}', '{$email}')");
+                        $addUserProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$user_id}', '{$first_name}', '{$last_name}', '{$display_name}', '{$mobileNumber}', '{$email}')");
 
                         $addUserSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(".SITE_ID.", '{$user_id}', 'member', 0)");
         

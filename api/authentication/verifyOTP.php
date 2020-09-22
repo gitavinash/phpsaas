@@ -20,7 +20,7 @@
 
                             if($updateOTP=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."otp SET otp_status=1 WHERE otp_id='{$otp_id}'")) {
                                 
-                                if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_owner_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type WHERE user_mobile='{$mobile}' AND site_access_site_id=".SITE_ID." LIMIT 1")) {
+                                if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_user_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type WHERE user_mobile='{$mobile}' AND site_access_site_id=".SITE_ID." LIMIT 1")) {
 
                                     if(mysqli_num_rows($checkUser)!=0) {
 

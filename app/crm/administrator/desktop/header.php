@@ -13,7 +13,7 @@
         <title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
         <link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert2.min.css">
+        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/datatables.min.css">
@@ -46,7 +46,7 @@
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 					<li <?php echo ((ADMIN_BASE_URL=='/order/') ? 'class="active"' : '' ) ?> >
-						<a href="order.php?type=list"><i class="fas fa-box-open"></i> Order</a>
+						<a href="order.php?type=list&status=all"><i class="fas fa-funnel-dollar"></i> Manage order</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="order.php?type=list&status=all"><i class="fas fa-list"></i>  All Order</a></li>
@@ -61,6 +61,21 @@
 								<li><a href="order.php?type=list&status=1"><i class="fas fa-check"></i>  Confirm Order</a></li>
 								<li><a href="order.php?type=list&status=0"><i class="fas fa-exclamation"></i>  Pending Order</a></li>
 								<li><a href="order.php?type=list&status=2"><i class="fas fa-times"></i>  Cancel Order</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/customer/') ? 'class="active"' : '' ) ?> >
+						<a href="customer.php?type=list&status=all"><i class="fas fa-users"></i> Manage Customer</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="customer.php?type=list&status=all"><i class="fas fa-list"></i>  All customer</a></li>
+								<li><a href="customer.php?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="customer.php?type=list&status=all"><i class="fas fa-list"></i>  All customer</a></li>
+								<li><a href="customer.php?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li>
 							</ul>
 						</div>
 					</li>

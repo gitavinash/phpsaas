@@ -202,7 +202,7 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     ADD PRIMARY KEY (profile_id),
-    ADD UNIQUE KEY profile_owner_id (profile_owner_id),
+    ADD UNIQUE KEY profile_user_id (profile_user_id),
     ADD UNIQUE KEY profile_email (profile_email)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile

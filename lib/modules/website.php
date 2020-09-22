@@ -66,7 +66,7 @@
             
         $newUserId=mysqli_insert_id($connection);
             
-        $createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_owner_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$newUserId}', '{$first_name}', '{$last_name}', '".$first_name.' '.$last_name."', '{$mobile}', '{$email}')");
+        $createProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$newUserId}', '{$first_name}', '{$last_name}', '".$first_name.' '.$last_name."', '{$mobile}', '{$email}')");
 
         $createNewWebsite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_lang, site_domain, site_url, site_name, site_app, site_indexing, site_status, site_expire_date) VALUES('{$newUserId}', 'en',  '".SITE_DOMAIN."', '{$site_url}', '{$website_title}', '{$app}', 1, 1, '{$expireDate}')");
 

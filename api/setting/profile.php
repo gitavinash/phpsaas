@@ -10,7 +10,7 @@
 
             mysqli_query($connection, "START TRANSACTION");
 
-            $updateProfile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$display_name}', profile_alt_email='{$alt_email}', profile_mobile='{$mobile}', profile_alt_mobile='{$alt_mobile}' WHERE profile_owner_id=".USER_ID);
+            $updateProfile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$display_name}', profile_alt_email='{$alt_email}', profile_mobile='{$mobile}', profile_alt_mobile='{$alt_mobile}' WHERE profile_user_id=".USER_ID);
 
             if($updateProfile) {
 
