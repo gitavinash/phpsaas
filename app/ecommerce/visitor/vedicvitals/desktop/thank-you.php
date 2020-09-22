@@ -86,9 +86,6 @@
                         $response = curl_exec($ch);
                         curl_close($ch);
 
-                        print_r($response);
-                        print_r($payload);
-
                     }
 
                     /** Update cart table */
