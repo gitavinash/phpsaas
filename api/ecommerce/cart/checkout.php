@@ -43,8 +43,6 @@
                 }
 
                 $mobile=str_replace('+91', '', ltrim($mobile, 0));
-                echo $mobileNumber;
-                exit();
 
                 if($checkUser=mysqli_query($connection, "SELECT user_id, user_mobile FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
 
