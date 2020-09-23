@@ -21,7 +21,7 @@
 
             if(date('Y-m-d')<=$calenderDate) {
 
-                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, GROUP_CONCAT(booking_time SEPARATOR ',') as booking_time, GROUP_CONCAT(booking_status SEPARATOR ',') as booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}'")) {
+                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}'")) {
 
                     if(mysqli_num_rows($checkDateAvailablity)!=0) {
     
@@ -29,22 +29,31 @@
 
                             extract($pangatStatus);
 
-                            $booking_time_slot=explode(',', $booking_time);
+                            if($booking_time=='breakfast') {
 
-                            if(sizeof($booking_time_slot)!=0) {
+                                $breakfast=intval($booking_status);
 
-                                for($i=0; $i<sizeof($booking_time_slot); $i++) {
+                            }
 
-                                    print_r($booking_time_slot);
+                            if($booking_time=='lunch') {
 
-                                }
+                                $lunch=intval($booking_status);
+
+                            }
+
+                            if($booking_time=='dinner') {
+
+                                $dinner=intval($booking_status);
+
+                            }
+
+                            if($breakfast==1 && $lunch==1 && $dinner==1) {
+                                
+                                $bookingAllowed=0;
 
                             } else {
-
+                                
                                 $bookingAllowed=2;
-                                $breakfast=2;
-                                $lunch=2;
-                                $dinner=2;
 
                             }
 
@@ -89,7 +98,7 @@
         }
     
         $result = array(
-            'status' => ((isset($status)) ? $status : 'error' ),
+            'status' => intval((isset($status)) ? $status : 'error' ),
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
             'current_month' => date('F Y', strtotime($calenderDate)),
             'previous_month' => ((date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) < date('Y-m-01')) ? '' : date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) ),
