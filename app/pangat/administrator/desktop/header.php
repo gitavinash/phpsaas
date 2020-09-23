@@ -45,7 +45,7 @@
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 					<li <?php echo ((ADMIN_BASE_URL=='/enquiry/') ? 'class="active"' : '' ) ?> >
-						<a href="enquiry.php?type=list"><i class="fas fa-filter"></i> Enquiry</a>
+						<a href="enquiry.php?type=list&status=all"><i class="fas fa-filter"></i> Enquiry</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i>  All enquiries</a></li>

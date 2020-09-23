@@ -69,7 +69,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."booking INNER JOIN ".TABLE_PREFIX."enquiry ON enquiry_id=booking_enquiry_id WHERE booking_date >= NOW() {$postStatus} {$monthStatus} {$yearStatus} ORDER BY booking_date, FIELD(booking_time, 'breakfats', 'lunch', 'dinner') DESC")) {
+			if($dataList=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."booking INNER JOIN ".TABLE_PREFIX."enquiry ON enquiry_id=booking_enquiry_id WHERE booking_date >= NOW() {$postStatus} {$monthStatus} {$yearStatus} AND booking_site_id=".APP_SITE_ID." ORDER BY booking_date, FIELD(booking_time, 'breakfats', 'lunch', 'dinner') DESC")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
 						

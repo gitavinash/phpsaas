@@ -280,6 +280,18 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     CHANGE enquiry_id enquiry_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  mysqli_query($connection, "ALTER TABLE isw_enquiry
+    ADD enquiry_site_id BIGINT NOT NULL AFTER enquiry_id");
+
+  mysqli_query($connection, "ALTER TABLE isw_enquiry
+    ADD INDEX enquiry_site_id (enquiry_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE isw_enquiry
+    ADD enquiry_user_id BIGINT NOT NULL AFTER enquiry_site_id");
+
+  mysqli_query($connection, "ALTER TABLE isw_enquiry
+    ADD INDEX enquiry_user_id (enquiry_user_id)");
+
   /* Link Table */
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link
@@ -629,6 +641,109 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
     ADD KEY site_app_activation_time (site_app_activation_time)");
+  
+  
+    mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    CHANGE site_app_id site_app_id BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'refer to site table site_id'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD INDEX site_app_app_id (site_app_app_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    CHANGE site_app_site_id site_app_site_id BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'refer to site table main site_id'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD INDEX site_app_site_id (site_app_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD INDEX site_app_user_id (site_app_user_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD INDEX site_app_theme_id (site_app_theme_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD INDEX site_app_package_id (site_app_package_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    ADD INDEX site_app_status (site_app_status)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    DROP site_app_theme_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    DROP site_app_app_id");
+
+  /** Rename site app table to site installation */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+    RENAME TO ".TABLE_PREFIX."site_installation");
+
+  mysqli_query($connection, "DROP TABLE ".TABLE_PREFIX."site_app");
+
+  /** Rename all site installation table column name site_app to site_installation */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_id site_installation_id BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'Refer as site table site id'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_site_id site_installation_site_id BIGINT(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_site_id;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_site_id site_installation_site_id BIGINT(20) NOT NULL COMMENT 'Refer as parent website of app website'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_site_id;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_site_id (site_installation_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_user_id site_installation_user_id BIGINT(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_user_id;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_user_id (site_installation_user_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_package_id site_installation_package_id BIGINT(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_package_id;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_package_id (site_installation_package_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_activation_time site_installation_activation_time DATE NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_activation_time;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_activation_time (site_installation_activation_time)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_expiry_date site_installation_expiry_date DATE NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_expiry_date;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_expiry_date (site_installation_expiry_date)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_app_status site_installation_status NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    DROP INDEX site_app_status;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_status (site_installation_status)");
 
   /** Site Configuration Table ( for SMS, E-Mail, Payment Gateway and other things ) */
 
