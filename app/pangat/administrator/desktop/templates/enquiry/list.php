@@ -82,7 +82,7 @@
 								<td><?php echo $enquiry_mobile; ?></td>
 								<td><?php echo $booking_details; ?></td>
 								<td><?php echo $enquiry_query; ?></td>
-								<td><?php echo (($enquiry_status==1) ? 'Confirm' : ((($enquiry_status)==0) ? 'Pending' : 'Reject') ); ?></td>
+								<td><?php echo (($enquiry_status==1) ? 'Confirm' : ((($enquiry_status)==0) ? 'Pending' : 'Cancel') ); ?></td>
 								<td>
 									<?php
 									
