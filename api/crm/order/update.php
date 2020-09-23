@@ -33,7 +33,7 @@
 
                 }
 
-                $updateAddress=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."address SET address_house_no='{$address_house_no}', address_area='{}', address_landmark='{$address_landmark}', address_city_id='{$city_id}', address_state_id='{$state}', address_pin_code='{$address_pin_code}', address_type='{$address_type}' WHERE address_id='{$address_id}'");
+                $updateAddress=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."address SET address_house_no='{$address_house_no}', address_area='{$address_area}', address_landmark='{$address_landmark}', address_city_id='{$city_id}', address_state_id='{$state}', address_pin_code='{$address_pin_code}', address_type='{$address_type}' WHERE address_id='{$address_id}'");
 
                 if($updateProfile && $updateAddress) {
 
