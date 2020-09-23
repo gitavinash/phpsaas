@@ -2,7 +2,7 @@
 
     if(isset($enquiry_id)) {
 
-        if($checkEnquiry=mysqli_query($connection, "SELECT booking_enquiry_id, enquiry_email as email, enquiry_mobile as mobile FROM isw_booking INNER JOIN isw_enquiry ON booking_enquiry_id=enquiry_id WHERE booking_enquiry_id={$enquiry_id}")) {
+        if($checkEnquiry=mysqli_query($connection, "SELECT booking_enquiry_id, booking_date, booking_time, enquiry_email as email, enquiry_mobile as mobile FROM isw_booking INNER JOIN isw_enquiry ON booking_enquiry_id=enquiry_id WHERE booking_enquiry_id={$enquiry_id}")) {
 
             if(mysqli_num_rows($checkEnquiry)!=0) {
 
@@ -14,7 +14,7 @@
 
                 $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=1 WHERE booking_enquiry_id='{$enquiry_id}'");
 
-                if($checkOtherBooking=mysqli_query($connection, "SELECT booking_enquiry_id FROM ".TABLE_PREFIX."booking WHERE booking_date='{$date}' AND booking_time='{$time}'")) {
+                if($checkOtherBooking=mysqli_query($connection, "SELECT booking_enquiry_id FROM ".TABLE_PREFIX."booking WHERE booking_date='{$date}' AND booking_time='{$time}' AND booking_id!='{$booking_enquiry_id}'")) {
 
                     if(mysqli_num_rows($checkOtherBooking)!=0) {
 
@@ -24,7 +24,7 @@
 
                             $updateOtherEnquiryStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status=2 WHERE enquiry_id='{$booking_enquiry_id}'");
 
-                            $updateOtherBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=2 WHERE booking_enquiry_id='{$booking_enquiry_id}'");
+                            $updateOtherBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=2 WHERE booking_id='{$booking_enquiry_id}'");
 
                         }
 
