@@ -22,9 +22,9 @@
 
                             extract($bookingData);
 
-                            $updateOtherEnquiryStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status=1 WHERE enquiry_id='{$booking_enquiry_id}'");
+                            $updateOtherEnquiryStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status=2 WHERE enquiry_id='{$booking_enquiry_id}'");
 
-                            $updateOtherBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=1 WHERE booking_enquiry_id='{$booking_enquiry_id}'");
+                            $updateOtherBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=2 WHERE booking_enquiry_id='{$booking_enquiry_id}'");
 
                         }
 
