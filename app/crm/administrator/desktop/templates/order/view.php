@@ -121,9 +121,9 @@
                                     <label>Address yype</label>
                                     <select name="address_type" class="form-control inside-shadow">
                                         <option value="">Select address type</option>
-                                        <option value="">Work</option>
-                                        <option value="">Office</option>
-                                        <option value="">Other</option>
+                                        <option value="home">Home</option>
+                                        <option value="work">Work</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
                             </div>
