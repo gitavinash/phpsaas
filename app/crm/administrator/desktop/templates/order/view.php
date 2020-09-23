@@ -2,7 +2,7 @@
 
     if(isset($id)) {
 
-        if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, user_mobile, user_email, order_product_id, order_product_qty, order_product_price, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_id='{$id}'")) {
+        if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, user_mobile, user_email, order_product_id, order_product_qty, order_product_price, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_id='{$id}'")) {
 
             if(mysqli_num_rows($checkOrder)!=0) {
                 
@@ -121,9 +121,9 @@
                                     <label>Address yype</label>
                                     <select name="address_type" class="form-control inside-shadow">
                                         <option value="">Select address type</option>
-                                        <option value="home">Home</option>
-                                        <option value="work">Work</option>
-                                        <option value="other">Other</option>
+                                        <option value="home" <?php echo (($address_type=='home') ? 'selected' : '' ) ?> >Home</option>
+                                        <option value="work" <?php echo (($address_type=='work') ? 'selected' : '' ) ?>>Work</option>
+                                        <option value="other" <?php echo (($address_type=='other') ? 'selected' : '' ) ?>>Other</option>
                                     </select>
                                 </div>
                             </div>

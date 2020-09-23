@@ -21,7 +21,7 @@
 
             if(date('Y-m-d')<=$calenderDate) {
 
-                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}'")) {
+                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, GROUP_CONCAT(booking_time SEPARATOR ',') as booking_time, GROUP_CONCAT(booking_status SEPARATOR ',') as booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}'")) {
 
                     if(mysqli_num_rows($checkDateAvailablity)!=0) {
     
@@ -29,40 +29,23 @@
 
                             extract($pangatStatus);
 
-                            if($booking_time=='breakfast') {
+                            $booking_time_slot=explode(',', $booking_time);
 
-                                $breakfast=$booking_status;
+                            if(sizeof($booking_time_slot)!=0) {
+
+                                for($i=0; $i<sizeof($booking_time_slot); $i++) {
+
+                                    print_r($booking_time_slot);
+
+                                }
 
                             } else {
 
+                                $bookingAllowed=2;
                                 $breakfast=2;
-
-                            }
-
-                            if($booking_time=='lunch') {
-
-                                $lunch=$booking_status;
-
-                            } else {
-
-                                $lunch=$booking_time;
-
-                            }
-
-                            if($booking_time=='dinner') {
-
-                                $dinner=$booking_status;
-
-                            } else {
-
+                                $lunch=2;
                                 $dinner=2;
 
-                            }
-
-                            if($breakfast==1 && $lunch==1 && $dinner==1) {
-                                $bookingAllowed=0;
-                            } else {
-                                $bookingAllowed=2;
                             }
 
                         }
