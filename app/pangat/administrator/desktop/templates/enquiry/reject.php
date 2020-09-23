@@ -8,7 +8,6 @@
 
         $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=2 WHERE booking_enquiry_id='{$enquiry_id}'");
 
-
         if($updateEnquiryStatus && $updateBookingStatus) {
 
             mysqli_query($connection, "COMMIT");
