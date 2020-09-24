@@ -75,7 +75,7 @@
                             ?>
 							<tr>
                                 <td><?php echo $i ?></td>
-                                <td><?php echo 'OD'.date('Ymd-').$order_id ?></td>
+                                <td><?php echo 'OD'.$order_id ?></td>
                                 <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_display_name ?></a></td>
                                 <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_mobile ?></a></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>

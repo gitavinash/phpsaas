@@ -12,7 +12,7 @@
 
                     extract(mysqli_fetch_assoc($checkOrder));
 
-                    if($checkOrder=mysqli_query($connection, "SELECT order_product_id, order_total_price, order_product_qty, profile_mobile, profile_email, profile_first_name, profile_last_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."profile ON transaction_user_id=profile_user_id INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."address ON address_id=order_address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id INNER JOIN isw_country ON country_id=address_country_id WHERE order_id='{$id}' AND order_site_id=".APP_SITE_ID)) {
+                    if($checkOrder=mysqli_query($connection, "SELECT order_product_id, order_total_price, order_product_qty, order_payment_mode, profile_mobile, profile_email, profile_first_name, profile_last_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."profile ON transaction_user_id=profile_user_id INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."address ON address_id=order_address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id INNER JOIN isw_country ON country_id=address_country_id WHERE order_id='{$id}' AND order_site_id=".APP_SITE_ID)) {
 
                         if(mysqli_num_rows($checkOrder)!=0) {
     
@@ -53,10 +53,13 @@
                             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                                 "NP-API-KEY: cc13f759563bd6a031e6d51c5e58950325aac6ea1558"
                             ));
-    
+
+                            $orderID='OD'.$order_id;
+                            $logisticOrderMode=(($order_payment_mode=='online') ? 'prepaid' : 'COD' );
+
                             $payload = Array(
-                                'order_number' => 'OD'.date('Ymd-').$order_id,
-                                'payment_method' => 'prepaid',
+                                'order_number' => $orderID,
+                                'payment_method' => $logisticOrderMode,
                                 'amount' => $order_total_price,
                                 'fname' => $profile_first_name,
                                 'lname' => $profile_last_name,
@@ -88,7 +91,11 @@
 
                                 /** Send SMS */
 
+                                include_once APP_SMS_TEMPLATE.$type.'/'.$action.'.php';
+                                
                                 /** Send Email */
+
+                                // include_once APP_EMAIL_TEMPLATE.$type.'/'.$action.'.php';
 
     
                             } else {
