@@ -1,6 +1,6 @@
 <?php
 
-    if($checkPaymentGateway=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".SITE_ID." AND site_configuration_name LIKE 'pg_%' AND site_configuration_status=1")) {
+    if($checkPaymentGateway=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".APP_SITE_ID." AND site_configuration_name LIKE 'pg_%' AND site_configuration_status=1")) {
 
         if(mysqli_num_rows($checkPaymentGateway)!=0) {
 

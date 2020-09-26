@@ -42,13 +42,13 @@
 
                         /* Insert data into user table */
 
-                        $insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_password, user_salt_key, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$enc_password}', '$saltKey', NOW(), '{$_SERVER['REMOTE_ADDR']}')");
+                        $insertUser=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user(user_username, user_email, user_mobile, user_password, user_salt_key, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', NOW(), '".IP."')");
                         $userID=mysqli_insert_id($connection);
 
                         $insertSite=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_url, site_status) VALUES('{$userID}', '{$siteURL}', 0)");
                         $siteID=mysqli_insert_id($connection);
 
-                        $insertSiteApp=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_app(site_app_status) VALUES(1)");
+                        $insertSiteApp=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_installation(site_installation_status) VALUES(1)");
 
                         $insertSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', 'administrator', 1)");
 
@@ -72,10 +72,6 @@
 
 
                         } else {
-
-                            echo "INSERT INTO ".TABLE_PREFIX."site(site_owner_id, site_status) VALUES('{$userID}', 0)";
-
-                            //echo $insertUser.' && '.$insertSite.' && '.$insertSiteApp.' && '.$insertSiteAccess.' && '.$insertSiteSetting.' && '.$insertProfile;
 
                             $status='error';
                             $msg='Something is wrong while trying to register';
