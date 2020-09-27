@@ -66,6 +66,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="text" name="email" class="form-control inside-shadow" value="<?php echo $user_email ?>" >
+                                </div>
+                                <div class="form-group">
                                     <label>Mobile No.</label>
                                     <input type="text" name="mobile" class="form-control inside-shadow" value="<?php echo $user_mobile ?>" >
                                 </div>
