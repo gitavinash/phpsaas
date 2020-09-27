@@ -2,7 +2,7 @@
 
 	include_once 'header.php';
 
-	$subject="Your Order OD{$order_id} is confirmed | Vedic Vitals";
+	$subject="Order Received | Vedic Vitals";
 
 	$email_body = "
 		
