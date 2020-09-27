@@ -30,7 +30,26 @@
 
 					<script type='text/javascript'>
 						$(document).ready( function () {
-							$('#table').DataTable();
+							$('#table').DataTable({
+								"createdRow": function(row, data, dataIndex) {
+								if (data[6] == "Confirm") {
+									$(row).css({
+										"background-color": "#9FFF33",
+										"color": "#333"
+									})
+								} else if (data[6] == "Cancel") {
+									$(row).css({
+										"background-color": "#C70039",
+										"color": "#333"
+									})
+								} else {
+									$(row).css({
+										"background-color": "#FFC300",
+										"color": "#333"
+									})
+								}
+							},
+							});
 						});
 					</script>
 
