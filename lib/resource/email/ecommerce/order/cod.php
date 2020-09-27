@@ -9,7 +9,7 @@
 		<table style='font-weight: normal;border-collapse: collapse;border: 0;margin: 0;padding: 0;font-family: Arial, sans-serif; width: 100%' >
 			<tr>
 				<td style='text-align: center'>
-					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Hi {$profile_last_name}</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Hi {$profile_first_name}</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Thanks for taking interest in ancient science of Ayurveda while ordering with Vedic Vitals.</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Your order for {$productName} {$order_product_qty} Qty is successfully received.</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'><strong>Silent Features About Your Product<strong></p>

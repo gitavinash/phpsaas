@@ -9,7 +9,7 @@
 		<table style='font-weight: normal;border-collapse: collapse;border: 0;margin: 0;padding: 0;font-family: Arial, sans-serif; width: 100%' >
 			<tr>
 				<td style='text-align: center'>
-					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Hi {$profile_last_name}</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Hi {$profile_first_name}</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Thanks for shopping with Vedic Vitals. Your order number OD{$order_id} has been successful received. Your order will reach you within next 5-7 days.</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Know some facts about our delivery system.</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>👉 Your order is packed in 3 layer packaging, which makes it spill proof & secure.</p>

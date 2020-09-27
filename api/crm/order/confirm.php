@@ -95,8 +95,7 @@
                                 
                                 /** Send Email */
 
-                                // include_once APP_EMAIL_TEMPLATE.$type.'/'.$action.'.php';
-
+                                include_once APP_EMAIL_TEMPLATE.$type.'/'.$action.'.php';
     
                             } else {
     
