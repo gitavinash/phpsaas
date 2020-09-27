@@ -11,41 +11,43 @@
             if(mysqli_num_rows($checkOrder)!=0) {
 
                 extract(mysqli_fetch_assoc($checkOrder));
+                
+                switch($order_product_id) {
+
+                    case 1 :
+                        $productName='Immunity Vitals';
+                        break;
+
+                    case 2 :
+                        $productName='Tar Free';
+                        break;
+
+                    case 3 :
+                        $productName='Gyno Vitals';
+                        break;
+
+                    case 4 :
+                        $productName='V Liver Vitals';
+                        break;
+
+                    default :
+                        $productName='Combile Product';
+                        break;
+
+                }
 
                 mysqli_query($connection, "START TRANSACTION");
 
-                $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
                 $updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_status=1 WHERE transaction_order_id='{$order_id}'");
 
-                if($updateOrder && $updateTransaction) {
+                if($updateTransaction) {
 
+                    
                     mysqli_query($connection, "COMMIT");
-
+                    
                     if($transaction_method=='online') {
 
-                        switch($order_product_id) {
-
-                            case 1 :
-                                $productName='Immunity Vitals';
-                                break;
-
-                            case 2 :
-                                $productName='Tar Free';
-                                break;
-
-                            case 3 :
-                                $productName='Gyno Vitals';
-                                break;
-
-                            case 4 :
-                                $productName='V Liver Vitals';
-                                break;
-
-                            default :
-                                $productName='Combile Product';
-                                break;
-
-                        }
+                        $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
 
                         /** Calling Numbus API */
 
@@ -86,26 +88,49 @@
                         $response = curl_exec($ch);
                         curl_close($ch);
                         
-                        /** */
+                        /** Send SMS */
 
-                        include_once APP_SMS_TEMPLATE.'order/create.php';
+                        require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+
+                        /** Send Email */
+
+                        require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
 
                     }
 
                     /** Update cart table */
 
-                    if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) {
+                    if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
 
-                        echo 'Something is wrong while updating cart';
-
-                    } ?>
-                    
-                    <section class='continue-shopping' >
-                        <h1>Thank You<span>Your order has been successfully received.</span></h1>
-                        <a href="/" class="btn btn-success" >Continue Shopping</a>
-                    </section>
+                        <section class='continue-shopping' >
+                            <h1>Error<span>Something is wrong while updating cart.</span></h1>
+                            <a href="/" class="btn btn-success" >Continue Shopping</a>
+                        </section>
 
                     <?php
+
+                    echo mysqli_error($connection);
+
+                    } else {
+                        
+                        /** Send SMS */
+
+                        require_once APP_SMS_TEMPLATE.'order/cod.php';
+
+                        /** Send Email */
+                        
+                        require_once APP_EMAIL_TEMPLATE.'order/cod.php';
+                        
+
+                        ?>
+                    
+                        <section class='continue-shopping' >
+                            <h1>Thank You<span>Your order number <strong>OD<?php echo $order_id; ?></strong> is successfully received. You may get a confirmation call in a while.</span></h1>
+                            <a href="/" class="btn btn-success" >Continue Shopping</a>
+                        </section>
+                        <?php
+                        
+                    }
 
                 } else {
 
@@ -113,7 +138,7 @@
 
                 }
 
-            } else { echo "SELECT transaction_order_id, transaction_method, order_product_id, order_total_price, order_product_qty, profile_mobile as mobile, profile_email, profile_first_name, profile_last_name, profile_display_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM isw_transaction INNER JOIN isw_profile ON transaction_user_id=profile_user_id INNER JOIN isw_order ON transaction_order_id=order_id INNER JOIN isw_address ON address_id=order_address_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN isw_country ON country_id=address_country_id WHERE transaction_order_id='{$order_id}' AND transaction_site_id=".APP_SITE_ID; ?>
+            } else { ?>
 
                 <section class='continue-shopping' >
                     <h1>Error<span>Something is wrong while generate a order request.</span></h1>

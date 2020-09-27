@@ -4,7 +4,7 @@
 
     if(isset($payment_request_id)) {
 
-        if($checkTransaction=mysqli_query($connection, "SELECT transaction_order_id FROM ".TABLE_PREFIX."transaction WHERE transaction_reference_id='{$payment_request_id}' AND transaction_site_id=".SITE_ID)) {
+        if($checkTransaction=mysqli_query($connection, "SELECT transaction_id FROM ".TABLE_PREFIX."transaction WHERE transaction_reference_id='{$payment_request_id}' AND transaction_site_id=".SITE_ID)) {
 
             if(mysqli_num_rows($checkTransaction)!=0) {
 
@@ -48,15 +48,15 @@
 
                 if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_payment_id='{$payment_id}', transaction_payment_mode='".strtolower($response['payment']['instrument_type'])."' {$status} WHERE transaction_reference_id='{$payment_request_id}'")) {
 
-                    $transaction_order_id=base64_encode($transaction_order_id);
+                    $transaction_id=base64_encode($transaction_id);
 
                     if($response['payment']['status']=='Credit') {
 
-                        header("Location: /thank-you/?id={$transaction_order_id}", TRUE, 301);
+                        header("Location: /thank-you/?id={$transaction_id}", TRUE, 301);
 
                     } else {
 
-                        header("Location: /payment-failed/?id={$transaction_order_id}", TRUE, 301);
+                        header("Location: /payment-failed/?id={$transaction_id}", TRUE, 301);
 
                     }
 

@@ -15,6 +15,29 @@
 			<div class="form-group fullscreen-editor">
 				<textarea name="description" class="editor inside-shadow" ></textarea>
 			</div>
+
+			<!-- Product description and other things -->
+
+			<section style="margin-bottom:20px" >
+				<h3>Product Details</h3>
+				<ul class='tabs'>
+					<li id="productGeneral" class='active' >General</li>
+					<li id="productInventory" >Inventory</li>
+					<li id="productShipping" >Shipping</li>
+					<li id="productAdditionalDetails" >Additional Details</li>
+				</ul>
+				<div class="productGeneral">
+				</div>
+				<div class="productInventory" style="display: none;">
+				</div>
+				<div class="productShipping" style="display: none;">
+				</div>
+				<div class="productAdditionalDetails" style="display: none;">
+				</div>
+			</section>
+
+			<!-- SEO & social media marketing -->
+
 			<section>
 				<h3>Advance Options for digital marketing</h3>
 				<ul class='tabs'>
@@ -84,6 +107,7 @@
 						</div>
 				</div>
 			</section>
+
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
