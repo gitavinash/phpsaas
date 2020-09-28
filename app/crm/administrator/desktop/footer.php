@@ -34,7 +34,7 @@
 								"createdRow": function(row, data, dataIndex) {
 								if (data[6] == "Confirm") {
 									$(row).css({
-										"background-color": "#9FFF33",
+										"background-color": "#FFFFFF",
 										"color": "#333"
 									})
 								} else if (data[6] == "Cancel") {
@@ -44,7 +44,7 @@
 									})
 								} else {
 									$(row).css({
-										"background-color": "#FFC300",
+										"background-color": "#C0C0C0",
 										"color": "#333"
 									})
 								}
