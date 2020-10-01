@@ -152,7 +152,7 @@
 			    <span id="selectedQty" ></span>
 		    </div>
 		    <div class="cart-duc">
-		      	<a href="#" class="del-b remove-cart-btn" id="removeFromCart" ><i class="fas fa-trash" aria-hidden="true"></i></a>
+		      	<!-- <a href="#" class="del-b remove-cart-btn removeFromCart" id="" ><i class="fas fa-trash" aria-hidden="true"></i></a> -->
 		      	<a href="/checkout/" class="buy-b cart-ad-btn">Proceed to Checkout</a>
 		    </div>
 	    </div>

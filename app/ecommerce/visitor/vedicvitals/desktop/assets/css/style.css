@@ -2996,6 +2996,16 @@ a.retn {
     line-height: 24px;
     font-weight: 600;
 }
+
+.prodcut-list-cart h3 a {
+    float: left;
+    width: 100%;
+    font-size: 11px !important;
+    color: red;
+    font-weight: 300;
+    line-height: 22px;
+    text-decoration: none;
+}
 .price-new{
     width: 100px;
     float: right;

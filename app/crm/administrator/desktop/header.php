@@ -79,6 +79,21 @@
 							</ul>
 						</div>
 					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/label/') ? 'class="active"' : '' ) ?> >
+						<a href="label.php?type=list&status=all"><i class="fas fa-tags"></i> Manage labels</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="label.php?type=list&status=all"><i class="fas fa-list"></i>  All labels</a></li>
+								<li><a href="label.php?type=add"><i class="fas fa-plus"></i>  Add new labels</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="label.php?type=list&status=all"><i class="fas fa-list"></i>  All labels</a></li>
+								<li><a href="label.php?type=add"><i class="fas fa-plus"></i>  Add new labels</a></li>
+							</ul>
+						</div>
+					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">

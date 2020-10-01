@@ -44,7 +44,7 @@
 									})
 								} else {
 									$(row).css({
-										"background-color": "#C0C0C0",
+										"background-color": "#E6E6FA",
 										"color": "#333"
 									})
 								}
