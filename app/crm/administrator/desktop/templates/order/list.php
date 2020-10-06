@@ -43,7 +43,9 @@
 					if(mysqli_num_rows($dataList)!=0) {
                         $i=1;
 						while($data=mysqli_fetch_assoc($dataList)) {
-                            extract($data);
+							
+							extract($data);
+							
                             switch($order_product_id) {
 
                                 case 1 :
@@ -69,9 +71,41 @@
                                 default :
                                     $productName='';
                                     $productImage='';
-                                    break;
+									break;
+							}
+															
+							switch($order_status) {
 
-                            }
+								case 0 :
+									$order_status='Pending';
+									break;
+
+								case 1 :
+									$order_status='Confirm';
+									break;
+
+								case 2 :
+									$order_status='Reject';
+									break;
+
+								case 3 :
+									$order_status='Cancel';
+									break;
+
+								case 4 :
+									$order_status='Waiting';
+									break;
+
+								case 5 :
+									$order_status='RTO';
+									break;
+
+								case 6 :
+									$order_status='Delivered';
+									break;
+
+							}
+
                             ?>
 							<tr>
                                 <td><?php echo $i ?></td>
@@ -80,7 +114,7 @@
                                 <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_mobile ?></a></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>
                                 <td><?php echo $order_payment_mode ?></td>
-                                <td><?php echo (($order_status==1) ? 'Confirm' : ((($order_status)==0) ? 'Pending' : 'Reject') ); ?></td>
+                                <td><?php echo $order_status ?></td>
 								<td>
 									<a href="order.php?type=view&id=<?php echo $order_id; ?>" class="btn btn-sm btn-blue" ><i class="fas fa-eye"></i> View</a>
 								</td>

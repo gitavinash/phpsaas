@@ -42,6 +42,11 @@
 										"background-color": "#C70039",
 										"color": "#333"
 									})
+								} else if (data[6] == "Delivered") {
+									$(row).css({
+										"background-color": "#FFFFFF",
+										"color": "#333"
+									})
 								} else {
 									$(row).css({
 										"background-color": "#E6E6FA",
