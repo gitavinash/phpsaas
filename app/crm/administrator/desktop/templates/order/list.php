@@ -14,10 +14,10 @@
 				<option value="0" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Pending <?php echo $postType ?></option>
 				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Confirm <?php echo $postType ?></option>
 				<option value="2" <?php echo (($_GET['status']=='2') ? 'selected' : '' ) ?>  >Reject <?php echo $postType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='3') ? 'selected' : '' ) ?>  >Cancel <?php echo $postType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='4') ? 'selected' : '' ) ?>  >Waiting <?php echo $postType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='5') ? 'selected' : '' ) ?>  >RTO <?php echo $postType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='6') ? 'selected' : '' ) ?>  >Delivered <?php echo $postType ?></option>
+				<option value="3" <?php echo (($_GET['status']=='3') ? 'selected' : '' ) ?>  >Cancel <?php echo $postType ?></option>
+				<option value="4" <?php echo (($_GET['status']=='4') ? 'selected' : '' ) ?>  >Waiting <?php echo $postType ?></option>
+				<option value="5" <?php echo (($_GET['status']=='5') ? 'selected' : '' ) ?>  >RTO <?php echo $postType ?></option>
+				<option value="6" <?php echo (($_GET['status']=='6') ? 'selected' : '' ) ?>  >Delivered <?php echo $postType ?></option>
 			</select>
 			<input type="submit" class="btn" value="Filter" >
 		</form>
