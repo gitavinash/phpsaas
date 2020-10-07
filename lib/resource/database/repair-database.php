@@ -944,6 +944,7 @@
   ##                                                                                                                    ##
   ########################################################################################################################
 
+  require_once 'cms-database.php';
   require_once 'pangat-database.php';
   require_once 'ecommerce-database.php';
 

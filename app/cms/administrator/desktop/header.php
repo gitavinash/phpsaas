@@ -59,7 +59,24 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/media/') ? 'class="active"' : '' ) ?> >
+					<li <?php echo ((ADMIN_BASE_URL=='/youtube/') ? 'class="active"' : '' ) ?> >
+						<a href="youtube.php?type=list&status=all"><i class="fab fa-youtube"></i> Video</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="youtube.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>
+								<li><a href="youtube.php?type=add"><i class="fas fa-plus"></i>  Add New video</a></li>
+								<li><a href="youtube.php?type=live"><i class="fas fa-video"></i>  Add New live video</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="youtube.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>
+								<li><a href="youtube.php?type=add"><i class="fas fa-plus"></i>  Add New video</a></li>
+								<li><a href="youtube.php?type=live"><i class="fas fa-video"></i>  Add New live video</a></li>
+							</ul>
+						</div>
+					</li>
+					<!-- <li <?php echo ((ADMIN_BASE_URL=='/media/') ? 'class="active"' : '' ) ?> >
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
 							<ul>
@@ -79,7 +96,7 @@
 								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i>  Documents</a></li>
 							</ul>
 						</div>
-					</li>
+					</li> -->
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
