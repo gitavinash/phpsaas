@@ -14,7 +14,25 @@
                 <a href="" class="live-btn" >Watch Live</a>
             </div> -->
             <div class="feature-video">
-                <iframe width="100%" height="415" src="https://www.youtube.com/embed/VGPyUwn3zKA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <?php
+                
+                    if($checkVideo=mysqli_query($connection, "SELECT link_url, video_title, video_description, video_type FROM ".TABLE_PREFIX."video INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=video_id WHERE video_status=1 AND link_type='video' ORDER BY link_published DESC LIMIT 1")) {
+
+                        if(mysqli_num_rows($checkVideo)!=0) {
+
+                            extract(mysqli_fetch_assoc($checkVideo));
+
+                            echo $video_description;
+
+                        } else {
+
+                            echo "<p>No video found</p>";
+
+                        }
+
+                    }
+
+                ?>
             </div>
         </div>
         <div class="news-section">

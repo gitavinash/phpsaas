@@ -195,6 +195,12 @@ main {
     box-sizing: border-box;
 }
 
+.main-right-box .main-right-box-left-section .feature-video iframe {
+    float: left;
+    width: 100% !important;
+    height: 400px !important;
+}
+
 .main-right-box .main-right-box-right-section {
     float: right;
     width: 50%;
