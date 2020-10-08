@@ -1,48 +1,46 @@
 <?php
 
-	$themeAuthenticationFile=USER_PATH.$urlStructure[0].'.php';
+	/* Search url in link table  */
 
-	if(file_exists($themeAuthenticationFile)) {
+	if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
 
-		/** Theme page */
+		if(mysqli_num_rows($checkUrl)!=0) {
 
-		require_once $themeAuthenticationFile;
+			extract(mysqli_fetch_assoc($checkUrl));
 
-	} else {
+			if(file_exists(ROUTER.$link_type.'.php')) {
 
-		/** System default theme file */
+				require_once ROUTER.$link_type.'.php';
 
-		$systemAuthenticationFile=SYSTEM_PATH.$urlStructure[0].'.php';
+			} else {
 
-		if(file_exists($systemAuthenticationFile)) {
+				echo 'Undefined request found';
 
-			require_once $systemAuthenticationFile;
+			}
 
 		} else {
+				
+			$themeAuthenticationFile=USER_PATH.$urlStructure[0].'.php';
 
-			/* Search url in link table  */
+			if(file_exists($themeAuthenticationFile)) {
 
-			if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+				/** Theme page */
 
-				if(mysqli_num_rows($checkUrl)!=0) {
+				require_once $themeAuthenticationFile;
 
-					extract(mysqli_fetch_assoc($checkUrl));
+			} else {
 
-					if(file_exists(ROUTER.$link_type.'.php')) {
+				/** System default theme file */
 
-						require_once ROUTER.$link_type.'.php';
+				if(file_exists($systemAuthenticationFile)) {
 
-					} else {
-
-						echo 'Undefined request found';
-
-					}
+					require_once $systemAuthenticationFile;
 
 				} else {
-						
-					/** Check Pagination */
 
-					require_once 'pagination.php';
+					/** Page Not Found */
+
+					require_once ERROR_404;
 
 				}
 

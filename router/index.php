@@ -130,6 +130,10 @@
 			require_once 'category.php';
 			break;
 
+		// case 'video' :
+		// 	require_once 'video.php';
+		// 	break;
+
 		case 'feed' :
 			require_once 'feed.php';
 			break;
@@ -149,7 +153,6 @@
 		default :
 
 			/** Check Cache is available or not */
-
 			require_once ROUTER.'cache.php';
 			break;
 

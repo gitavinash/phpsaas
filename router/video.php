@@ -25,7 +25,7 @@
 
                     } else {
 
-                        ob_start();
+                        // ob_start();
 
                         /** Check category template is avilable or not */
 
@@ -45,10 +45,10 @@
 
                         }
 
-                        $cached = fopen($cacheFileName, 'w');
-                        fwrite($cached, ob_get_contents());
-                        fclose($cached);
-                        ob_end_flush(); // Send the output to the browser
+                        // $cached = fopen($cacheFileName, 'w');
+                        // fwrite($cached, ob_get_contents());
+                        // fclose($cached);
+                        // ob_end_flush(); // Send the output to the browser
 
                     }
 
