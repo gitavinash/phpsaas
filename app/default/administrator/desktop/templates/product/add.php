@@ -168,7 +168,7 @@
 			<h2>Categories</h2>
 			<div class="action-box height-200 inside-shadow">
 				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200")) {
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."' AND link_site_id=".APP_SITE_ID)) {
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
 								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>

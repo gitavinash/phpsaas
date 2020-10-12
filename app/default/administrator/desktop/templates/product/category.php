@@ -33,7 +33,7 @@
 					<select name="category" class="form-control inside-shadow">
 						<option value="0">Select Parent Category</option>
 						<?php
-							if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".APP_SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$id}' AND link_status=200 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."'")) {
+							if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".APP_SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$id}' AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."'")) {
 								while($category=mysqli_fetch_assoc($categoryList)) { ?>
 										<option value="<?php echo $category['category_id'].'_'.str_replace(SITE_DOMAIN.'/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$category_parent_id) ? 'selected' : '' ) ?> > <?php echo ucwords($category['category_title']); ?></option>
 								<?php
