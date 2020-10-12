@@ -4,9 +4,7 @@
 
     function update($connection, $data) {
 
-        // extract($data);
-		print_r($data);
-		exit();
+        extract($data);
 
         if($name!='') {
 
@@ -33,19 +31,17 @@
 				$insertNewURL=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$categoryID}', 200, 'category', '".USER_ID."', '".SITE_ID."', NOW(), NOW())");
 
 				if($updateCategory && $redirectURL && $insertNewURL) {
+					
+					$status=200;
+					$msg='Category update successfully';
 					mysqli_query($connection, 'COMMIT');
-					$result = array(
-						'status' => 200,
-						'msg' => 'Category update successfully',
-						'categoryID' => $categoryID,
-						'postType' => $postType
-					);
+					
 				} else {
+					
+					$status='error';
+					$msg='Something is wrong when try to update category';
 					mysqli_query($connection, 'ROLLBACK');
-					$result = array(
-						'status' => 500,
-						'msg' => 'Something is wrong when try to update category'
-					);
+
 				}
 
 			} else {
@@ -55,19 +51,16 @@
 				$modifyTime=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_modified=NOW() WHERE link_relation_id='{$categoryID}' AND link_status=200 AND link_type='category' AND link_site_id=".SITE_ID);
 
 				if($updateCategory && $modifyTime) {
+					
+					$status=200;
+					$msg='Category update successfully';
 					mysqli_query($connection, 'COMMIT');
-					$result = array(
-						'status' => 200,
-						'msg' => 'Category update successfully',
-						'categoryID' => $categoryID,
-						'postType' => $postType
-					);
+					
 				} else {
 					mysqli_query($connection, 'ROLLBACK');
-					$result = array(
-						'status' => 500,
-						'msg' => 'Something is wrong when try to update category'
-					);
+					
+					$msg='Something is wrong when try to update category';
+
 				}
 
 			}
