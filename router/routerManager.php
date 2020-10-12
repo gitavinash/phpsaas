@@ -20,31 +20,7 @@
 
 		} else {
 				
-			$themeAuthenticationFile=USER_PATH.$urlStructure[0].'.php';
-
-			if(file_exists($themeAuthenticationFile)) {
-
-				/** Theme page */
-
-				require_once $themeAuthenticationFile;
-
-			} else {
-
-				/** System default theme file */
-
-				if(file_exists($systemAuthenticationFile)) {
-
-					require_once $systemAuthenticationFile;
-
-				} else {
-
-					/** Page Not Found */
-
-					require_once ERROR_404;
-
-				}
-
-			}
+			require_once 'pagination.php';
 
 		}
 
