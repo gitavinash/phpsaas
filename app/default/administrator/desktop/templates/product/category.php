@@ -1,7 +1,7 @@
 <?php
 
-	$categoryID=mysqli_real_escape_string($connection, ((isset($_GET['category_id'])) ? $_GET['category_id'] : 0 ));
-	if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND category_id='{$categoryID}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
+	$id=mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0 ));
+	if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND category_id='{$id}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
 		if(mysqli_num_rows($categoryData)!=0) {
 			extract(mysqli_fetch_assoc($categoryData));
 		} else {
@@ -13,16 +13,16 @@
 	}
 
 ?>
-<h2><?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> categories <?php echo ((isset($_GET['category_id'])) ? "<span><a href='post/?type=category' class='btn btn-blue btn-sm' >Add New</a></span>" : '' ) ?></h2>
+<h2><?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> categories <?php echo ((isset($_GET['id'])) ? "<span><a href='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."/?type=category' class='btn btn-blue btn-sm' >Add New</a></span>" : '' ) ?></h2>
 
 <div class="row">
 	<div class="category">
 		<div class="form-box">
 			<form method="POST" id="categoryData" onSubmit="submitCategory()" >
-				<h3><?php echo ((isset($_GET['category_id'])) ? 'Update' : 'Add New' ) ?> Category</h3>
+				<h3><?php echo ((isset($_GET['id'])) ? 'Update' : 'Add new' ) ?> category</h3>
 				<div class="form-group">
 					<label>Name</label>
-					<input type="text" name="name" <?php echo ((!isset($_GET['category_id'])) ? 'id="title"' : ''); ?> class="form-control inside-shadow" placeholder="Category name..." value="<?php echo $category_title; ?>" autofocus >
+					<input type="text" name="name" <?php echo ((!isset($_GET['id'])) ? 'id="title"' : ''); ?> class="form-control inside-shadow" placeholder="Category name..." value="<?php echo $category_title; ?>" autofocus >
 				</div>
 				<div class="form-group">
 					<label>Permalink</label>
@@ -33,7 +33,7 @@
 					<select name="category" class="form-control inside-shadow">
 						<option value="0">Select Parent Category</option>
 						<?php
-							if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$categoryID}' AND link_status=200 AND category_type='post'")) {
+							if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".APP_SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$id}' AND link_status=200 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."'")) {
 								while($category=mysqli_fetch_assoc($categoryList)) { ?>
 										<option value="<?php echo $category['category_id'].'_'.str_replace(SITE_DOMAIN.'/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$category_parent_id) ? 'selected' : '' ) ?> > <?php echo ucwords($category['category_title']); ?></option>
 								<?php
@@ -49,16 +49,16 @@
 				<div class="form-group">
 					<input type="hidden" name="type" value="category">
 					<?php
-						if(isset($_GET['category_id'])) {
+						if(isset($_GET['id'])) {
 							echo "<input type='hidden' name='oldURL' value='{$link_url}' >";
 						}
 					?>
-					<input type="hidden" name="postType" value="<?php echo $postType ?>">
+					<input type="hidden" name="postType" id="type" value="<?php echo $postType ?>">
 					<input type="hidden" name="action" value="publish">
-					<input type="hidden" name="categoryID" id="category_id" value="<?php echo $categoryID; ?>">
-					<input type="submit" id="submitCategory" class="btn btn-green" value="<?php echo (isset($_GET['category_id']) ? 'Update' : 'Add' ); ?> Category" >
+					<input type="hidden" name="categoryID" id="category_id" value="<?php echo $id; ?>">
+					<input type="submit" id="submitCategory" class="btn btn-green" value="<?php echo (isset($_GET['id']) ? 'Update' : 'Add' ); ?> Category" >
 					<?php
-					if(isset($_GET['category_id'])) {
+					if(isset($_GET['id'])) {
 						echo "<a href='' class='btn btn-blue'>Advance Edit</a>";
 					}
 					?>
@@ -84,10 +84,10 @@
 											<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&post_id=<?php echo $category_id; ?>" ><?php echo $category_title ?></a></p>
 											<div class="hover">
 												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo $category_id; ?>&taxonomy=category" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
-												<a href="<?php echo $postType ?>.php?type=category&category_id=<?php echo $category_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+												<a href="<?php echo $postType ?>.php?type=category&id=<?php echo $category_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 												<?php
 													if($category_id!=1) { ?>
-														<a href="delete.php?type=category&category_id=<?php echo $category_id; ?>"><i class="fas fa-trash"></i> Delete</a>
+														<a href="delete.php?type=category&id=<?php echo $category_id; ?>"><i class="fas fa-trash"></i> Delete</a>
 													<?php
 													}
 												?>

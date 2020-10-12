@@ -4,7 +4,9 @@
 
     function update($connection, $data) {
 
-        extract($data);
+        // extract($data);
+		print_r($data);
+		exit();
 
         if($name!='') {
 
