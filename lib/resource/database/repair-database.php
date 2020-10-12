@@ -173,6 +173,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
     CHANGE category_type category_type varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
+    CHANGE category_status category_status INT(1) NOT NULL DEFAULT '1'");
+
   /** City Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city ADD city_status INT(1) NOT NULL DEFAULT '1' AFTER city_state_id");
