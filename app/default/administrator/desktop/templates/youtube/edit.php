@@ -43,7 +43,7 @@
 					<li id="fb" >Facebook</li>
 					<li id="tw" >Twitter</li>
 				</ul>
-				<div class="seo">
+				<div class="seo generalTab">
 					<div class="form-group">
 						<label>Meta Title</label>
 						<input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title" class="form-control inside-shadow"  placeholder="Meta title" >
@@ -68,7 +68,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="fb" style="display: none;">
+				<div class="fb generalTab"  style="display: none;">
 					<div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
 						<input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
 						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
@@ -87,7 +87,7 @@
 						<textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description" ><?php echo $fb_desc ?></textarea>
 					</div>
 				</div>
-				<div class="tw" style="display: none;">
+				<div class="tw generalTab"  style="display: none;">
 					<div class="twitterPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
 						<input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
 						<div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
@@ -111,7 +111,7 @@
 		<div class="right-box">
 			<div class="action-box inside-shadow">
 				<input type="button" id="updatevideo" class="btn btn-green btn-block" value=" <?php echo (($video_status==1) ? 'Update ' : 'Publish ' ); ?>video">
-				<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
+				<input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft">
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="draft" >

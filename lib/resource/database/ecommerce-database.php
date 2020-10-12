@@ -28,6 +28,28 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     MODIFY cart_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  /** Inventory table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."inventory (
+    inventory_id bigint(20) NOT NULL,
+    inventory_product_id bigint(20) NOT NULL,
+    inventory_sku varchar(50) NOT NULL,
+    inventory_is_manage int(1) NOT NULL,
+    inventory_backorder int(1) NOT NULL,
+    inventory_stock_notice int(2) NOT NULL,
+    inventory_update timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD PRIMARY KEY (inventory_id),
+    ADD KEY inventory_product_id (inventory_product_id),
+    ADD KEY inventory_sku (inventory_sku),
+    ADD KEY inventory_stock_notice (inventory_stock_notice),
+    ADD KEY inventory_backorder (inventory_backorder),
+    ADD KEY inventory_is_manage (inventory_is_manage)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    MODIFY inventory_id bigint(20) NOT NULL AUTO_INCREMENT");
   
   /** Order Table */
 
@@ -57,6 +79,22 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     MODIFY order_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  /** Product table */
+
+  mysqli_query($connection, "");
+
+  mysqli_query($connection, "");
+
+  mysqli_query($connection, "");
+
+  /** Product meta table */
+
+  mysqli_query($connection, "");
+  
+  mysqli_query($connection, "");
+
+  mysqli_query($connection, "");
 
   /** Transaction Table */
 

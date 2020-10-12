@@ -24,15 +24,55 @@
 					<li id="productGeneral" class='active' >General</li>
 					<li id="productInventory" >Inventory</li>
 					<li id="productShipping" >Shipping</li>
+					<li id="productGallery" >Gallery</li>
 					<li id="productAdditionalDetails" >Additional Details</li>
 				</ul>
-				<div class="productGeneral">
+				<div class="productGeneral generalTab">
+					<div class="form-group">
+						<label>Regular price (₹)</label>
+						<input type="number" class="form-control inside-shadow" name="r_price" placeholder="Regular price" >
+					</div>
+					<div class="form-group">
+						<label>Sale price (₹)</label>
+						<input type="number" class="form-control inside-shadow" name="s_price" placeholder="Sale price" >
+					</div>
 				</div>
-				<div class="productInventory" style="display: none;">
+				<div class="productInventory generalTab" style="display: none;">
+					<div class="box-2">
+						<div class="form-group">
+							<label>SKU</label>
+							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
+						</div>
+					</div>
 				</div>
-				<div class="productShipping" style="display: none;">
+				<div class="productShipping generalTab" style="display: none;">
+					<div class="box-1">
+						<div class="form-group">
+							<label>Weight (kg)</label>
+							<input type="text" class="form-control inside-shadow" name="weight" placeholder="Weight" >
+						</div>
+					</div>
+					<label>Dimensions (cm)</label>
+					<div class="form-group">
+						<div class="box-3">
+							<label>Lenght</label>
+							<input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght" >
+						</div>
+						<div class="box-3">
+							<label>Width</label>
+							<input type="text" class="form-control inside-shadow" name="width" placeholder="Width" >
+						</div>
+						<div class="box-3">
+							<label>Height</label>
+							<input type="text" class="form-control inside-shadow" name="height" placeholder="Height" >
+						</div>
+					</div>
 				</div>
-				<div class="productAdditionalDetails" style="display: none;">
+				<div class="productGallery generalTab" style="display: none;">
+					<input type="file" id="gallery" class="galleryBtn" name="productGallery[]" multiple >					
+				</div>
+				<div class="productAdditionalDetails generalTab" style="display: none;">
+					
 				</div>
 			</section>
 
@@ -45,7 +85,7 @@
 					<li id="fb" >Facebook</li>
 					<li id="tw" >Twitter</li>
 				</ul>
-				<div class="seo">
+				<div class="seo generalTab">
 					<div class="form-group">
 						<label>Meta Title</label>
 						<input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow"  placeholder="Meta title" >
@@ -70,7 +110,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="fb" style="display: none;">
+				<div class="fb generalTab"  style="display: none;">
 					<div class="facebook-image" style="display: none;">
 						<div class="img"><img src="" id="facebook-image" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
@@ -88,7 +128,7 @@
 						<textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description" ></textarea>
 					</div>
 				</div>
-				<div class="tw" style="display: none;">
+				<div class="tw generalTab"  style="display: none;">
 					<div class="twitter-image" style="display: none;">
 						<div class="img"><img src="" id="twitter-image" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
@@ -104,7 +144,7 @@
 					<div class="form-group">
 						<label>Twitter Description</label>
 						<textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description" ></textarea>
-						</div>
+					</div>
 				</div>
 			</section>
 
@@ -112,12 +152,49 @@
 		<div class="right-box">
 			<div class="action-box inside-shadow">
 				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-				<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
+				<input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft">
 				<input type="hidden" name="type" value="draft" >
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="postType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+			</div>
+			<div class="form-group">
+				<h2>Fearure Post</h2>
+				<div class="action-box inside-shadow">
+					<input type="checkbox" value="1" name='featurePost' > Mark as feature product
+				</div>
+			</div>
+			<h2>Categories</h2>
+			<div class="action-box height-200 inside-shadow">
+				<?php
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200")) {
+						while($category=mysqli_fetch_assoc($categoryList)) { ?>
+							<div class="form-group">
+								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
+							</div>
+						<?php
+						}
+					}
+				?>
+			</div>
+			<h2>Tags</h2>
+			<div class="action-box inside-shadow">
+				<div class="form-group">
+					<input type="text" class='tags' />
+					<input type="hidden" id='tags' name="tags" value='' >
+				</div>
+			</div>
+			<div class="tagList" style="display: none;"></div>
+			<h2>Feature Image</h2>
+			<div class="form-group featureImageUploadBox upload-btn">
+				<span>Set Feature Image</span>
+				<input type="file" id="featureImage" name="featureImage">
+				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></p>
+			</div>
+			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">
+				<img src="#" id="featureImagePath" alt="">
+				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>

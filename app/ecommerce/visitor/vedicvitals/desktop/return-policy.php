@@ -54,7 +54,7 @@
 							<p><strong>QUESTIONS</strong></p>
 							<p>If you have any questions concerning our return policy, please contact us at:</p>
 							<p>+91 9717407923</p>
-							<p>care@vedicvitals@gmail.com</p>
+							<p>care@vedicvitals.com</p>
 						</div>
 					</div>
 				</div>

@@ -22,7 +22,7 @@
 					<li id="fb" >Facebook</li>
 					<li id="tw" >Twitter</li>
 				</ul>
-				<div class="seo">
+				<div class="seo generalTab">
 					<div class="form-group">
 						<label>Meta Title</label>
 						<input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow"  placeholder="Meta title" >
@@ -47,7 +47,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="fb" style="display: none;">
+				<div class="fb generalTab"  style="display: none;">
 					<div class="facebookPreviewBox" style="display: none;">
 						<div class="img"><img src="" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
@@ -65,7 +65,7 @@
 						<textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description" ></textarea>
 					</div>
 				</div>
-				<div class="tw" style="display: none;">
+				<div class="tw generalTab"  style="display: none;">
 					<div class="twitterPreviewBox" style="display: none;">
 						<div class="img"><img src="" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class='changeImage' >Remove twitter feature image</p>
