@@ -50,12 +50,14 @@
 							<ul>
 								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i>  All Product</a></li>
 								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Product</a></li>
+								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i>  All Product</a></li>
 								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Product</a></li>
+								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
 							</ul>
 						</div>
 					</li>
