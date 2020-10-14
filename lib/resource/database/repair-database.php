@@ -283,16 +283,16 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     CHANGE enquiry_id enquiry_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  mysqli_query($connection, "ALTER TABLE isw_enquiry
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     ADD enquiry_site_id BIGINT NOT NULL AFTER enquiry_id");
 
-  mysqli_query($connection, "ALTER TABLE isw_enquiry
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     ADD INDEX enquiry_site_id (enquiry_site_id)");
 
-  mysqli_query($connection, "ALTER TABLE isw_enquiry
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     ADD enquiry_user_id BIGINT NOT NULL AFTER enquiry_site_id");
 
-  mysqli_query($connection, "ALTER TABLE isw_enquiry
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     ADD INDEX enquiry_user_id (enquiry_user_id)");
 
   /* Link Table */
@@ -747,6 +747,11 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_status (site_installation_status)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation ADD site_installation_parent_site_id    BIGINT NOT NULL AFTER site_installation_site_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    ADD INDEX site_installation_parent_site_id (site_installation_parent_site_id)");
 
   /** Site Configuration Table ( for SMS, E-Mail, Payment Gateway and other things ) */
 

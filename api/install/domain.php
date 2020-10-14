@@ -25,7 +25,7 @@
 
                 $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_custom_domain=1 WHERE site_setting_id='{$site_id}'");
 
-                $updateSiteApp=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_installation SET site_installation_site_id='{$site_id}', site_installation_user_id='{$user_id}', site_installation_package_id={$package}, site_installation_expiry_date='{$expireDate}' WHERE site_installation_site_id='{$site_id}'");
+                $updateSiteApp=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_installation SET site_installation_parent_site_id='{$site_id}', site_installation_user_id='{$user_id}', site_installation_package_id={$package}, site_installation_expiry_date='{$expireDate}' WHERE site_installation_parent_site_id='{$site_id}'");
 
                 if($updateSite && $updateSiteSetting && $updateSiteApp) {
 
