@@ -82,7 +82,7 @@
                     
                     } else {
                     
-                        $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$taxonomyType}' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
+                        $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_is_featured='{$featurePost}', link_modified=NOW() WHERE link_relation_id='{$id}' AND link_type='{$taxonomyType}' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
                     
                     }
                     
