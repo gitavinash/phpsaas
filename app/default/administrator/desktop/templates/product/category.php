@@ -1,15 +1,23 @@
 <?php
 
 	$id=mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0 ));
-	if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND category_id='{$id}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
-		if(mysqli_num_rows($categoryData)!=0) {
-			extract(mysqli_fetch_assoc($categoryData));
-		} else {
-			$category_title='';
-			$category_description='';
-			$category_parent_id='';
-			$link_url='';
+	if($id!=0) {
+		
+		if($categoryData=mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND meta_relation_id=link_id AND category_id='{$id}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
+			
+			if(mysqli_num_rows($categoryData)!=0) {
+	
+				extract(mysqli_fetch_assoc($categoryData));
+				
+			}
+
 		}
+
+	} else {
+		$category_title='';
+		$category_description='';
+		$category_parent_id='';
+		$link_url='';
 	}
 
 ?>
@@ -59,7 +67,7 @@
 					<input type="submit" id="submitCategory" class="btn btn-green" value="<?php echo (isset($_GET['id']) ? 'Update' : 'Add' ); ?> Category" >
 					<?php
 					if(isset($_GET['id'])) {
-						echo "<a href='' class='btn btn-blue'>Advance Edit</a>";
+						echo "<a href='{$postType}.php?type=taxonomy&editor=true&id={$id}&taxonomy=category' class='btn btn-blue'>Advance Edit</a>";
 					}
 					?>
 				</div>
@@ -76,7 +84,7 @@
 				<tbody>
 					<?php
 
-						if($dataList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_id=link_relation_id AND link_type='category' AND category_type='{$postType}' AND category_site_id='".APP_SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
+						if($dataList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$postType}' AND category_site_id='".APP_SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
 							if(mysqli_num_rows($dataList)!=0) {
 								while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 									<tr>

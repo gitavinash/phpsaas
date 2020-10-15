@@ -176,6 +176,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
     CHANGE category_status category_status INT(1) NOT NULL DEFAULT '1'");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
+    ADD category_thumbnail VARCHAR(255) NOT NULL AFTER category_parent_id");
+
   /** City Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city ADD city_status INT(1) NOT NULL DEFAULT '1' AFTER city_state_id");

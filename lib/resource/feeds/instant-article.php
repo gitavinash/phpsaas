@@ -3,7 +3,7 @@
     echo "<rss version='2.0'
             xmlns:content='http://purl.org/rss/1.0/modules/content/'>";
                 
-                if($newsData=mysqli_query($connection, "SELECT news_id, profile_display_name, link_url, link_published, link_modified, news_image, news_title, news_description, category_title, meta_description FROM isw_news INNER JOIN isw_link ON news_id=link_relation_id INNER JOIN isw_meta ON meta_relation_id=news_id INNER JOIN isw_profile ON profile_id=link_owner_id INNER JOIN isw_category ON news_category=category_id WHERE link_type='news' AND category_type='news' ORDER BY link_modified DESC LIMIT 0, 10")) {
+                if($newsData=mysqli_query($connection, "SELECT news_id, profile_display_name, link_url, link_published, link_modified, news_image, news_title, news_description, category_title, meta_description FROM isw_news INNER JOIN isw_link ON news_id=link_relation_id INNER JOIN isw_meta ON meta_relation_id=link_id INNER JOIN isw_profile ON profile_id=link_owner_id INNER JOIN isw_category ON news_category=category_id WHERE link_type='news' AND category_type='news' ORDER BY link_modified DESC LIMIT 0, 10")) {
                     
                     /* Article feed section */
 

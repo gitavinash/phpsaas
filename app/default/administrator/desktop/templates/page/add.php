@@ -81,7 +81,7 @@
 					<div class="form-group">
 						<label>Twitter Description</label>
 						<textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description" ></textarea>
-						</div>
+					</div>
 				</div>
 			</section>
 		</div>
@@ -101,7 +101,7 @@
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">
 				<img src="#" id="featureImagePath" alt="">
-				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
+				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 
 		</div>

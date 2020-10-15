@@ -10,7 +10,7 @@
 
 			extract(mysqli_fetch_assoc($categoryData));
 
-			if($findnews=mysqli_query($connection, "SELECT link_id, link_url, link_published, link_modified, news_title, news_description, news_image, profile_image, profile_display_name, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."profile ON profile_id=news_owner_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE news_category={$category_id} AND link_type='news' AND link_status=200 ORDER BY link_modified DESC LIMIT 0, 10")) {
+			if($findnews=mysqli_query($connection, "SELECT link_id, link_url, link_published, link_modified, news_title, news_description, news_image, profile_image, profile_display_name, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."profile ON profile_id=news_owner_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE news_category={$category_id} AND link_type='news' AND link_status=200 ORDER BY link_modified DESC LIMIT 0, 10")) {
 
 				if(mysqli_num_rows(($findnews))!=0) { ?>
 					

@@ -19,7 +19,7 @@
 
     $searchTag=mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
 
-    if($tagList=mysqli_query($connection, "SELECT link_relation_id, tag_title, link_type, link_status, link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."news ON news_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id INNER JOIN ".TABLE_PREFIX."link FORCE INDEX (link_filter) ON link_relation_id=news_id WHERE tag_title LIKE '%{$searchTag}%' AND link_type='news' AND link_status=200 AND tag_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, ".PER_PAGE_LIMIT)) {
+    if($tagList=mysqli_query($connection, "SELECT link_relation_id, tag_title, link_type, link_status, link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."news ON news_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id INNER JOIN ".TABLE_PREFIX."link FORCE INDEX (link_filter) ON link_relation_id=news_id WHERE tag_title LIKE '%{$searchTag}%' AND link_type='news' AND link_status=200 AND tag_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, ".PER_PAGE_LIMIT)) {
 
         if(mysqli_num_rows($tagList)!=0) {
 

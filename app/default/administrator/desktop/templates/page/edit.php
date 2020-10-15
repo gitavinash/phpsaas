@@ -2,7 +2,7 @@
 	
     $page_id=mysqli_real_escape_string($connection, $_GET['page_id']);
     
-	if($pageDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."page, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='page' AND link_relation_id=page_id AND meta_relation_id=page_id AND page_id='{$page_id}' AND link_status!=301 AND link_type='page' LIMIT 1")) {
+	if($pageDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."page, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='page' AND link_relation_id=page_id AND meta_relation_id=link_id AND page_id='{$page_id}' AND link_status!=301 AND link_type='page' LIMIT 1")) {
 		if(mysqli_num_rows($pageDetails)!=0) {
 			extract(mysqli_fetch_assoc($pageDetails));
 		} else { exit(); ?>

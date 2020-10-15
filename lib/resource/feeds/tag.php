@@ -2,7 +2,7 @@
 
 	$tag_title=str_replace('-', ' ', $urlStructure[2]);
 	
-    if($tagList=mysqli_query($connection, "SELECT link_id, link_status, link_url, link_published, link_modified, news_id, news_title, news_image, news_description, meta_description FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."news ON tag_relation_id=news_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=news_id WHERE tag_title LIKE '%{$tag_title}%' AND link_type='news' GROUP BY tag_relation_id ORDER BY tag_id DESC LIMIT 0, ".FEED_LIMIT)) {
+    if($tagList=mysqli_query($connection, "SELECT link_id, link_status, link_url, link_published, link_modified, news_id, news_title, news_image, news_description, meta_description FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."news ON tag_relation_id=news_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE tag_title LIKE '%{$tag_title}%' AND link_type='news' GROUP BY tag_relation_id ORDER BY tag_id DESC LIMIT 0, ".FEED_LIMIT)) {
 
         if(mysqli_num_rows($tagList)!=0) { ?>
 

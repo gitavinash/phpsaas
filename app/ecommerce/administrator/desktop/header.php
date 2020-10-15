@@ -8,15 +8,15 @@
 		<base href="/dashboard/">
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="<?php echo SITE_ICON ?>">
-        <title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
-        <link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="<?php echo SITE_ICON ?>">
+    <title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
+    <link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
 	</head>
 	<body>
 		
@@ -48,14 +48,14 @@
 						<a href="product.php?type=list"><i class="fas fa-box-open"></i> Product</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i>  All Product</a></li>
+								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All Product</a></li>
 								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Product</a></li>
 								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i>  All Product</a></li>
+								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All Product</a></li>
 								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Product</a></li>
 								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
 							</ul>
@@ -65,13 +65,13 @@
 						<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
 								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i>  All Pages</a></li>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
 								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
 							</ul>
 						</div>
@@ -80,39 +80,82 @@
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="media.php?type=list"><i class="fas fa-list"></i>  All Media</a></li>
-								<li><a href="media.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
+								<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
+								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i>  Videos</a></li>
-								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i>  Documents</a></li>
+								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="media.php?type=list"><i class="fas fa-list"></i>  All Media</a></li>
-								<li><a href="media.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
+								<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
+								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i>  Videos</a></li>
-								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i>  Documents</a></li>
+								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 							</ul>
 						</div>
 					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
+						<a href="import.php?type=products"><i class="fas fa-upload"></i> Import</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="import.php?type=products"><i class="fas fa-cubes"></i> Products</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="import.php?type=products"><i class="fas fa-cubes"></i> Products</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/export/') ? 'class="active"' : '' ) ?> >
+						<a href="export.php?type=products"><i class="fas fa-download"></i> Export</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="export.php?type=products"><i class="fas fa-cubes"></i> Products</a></li>
+								<li><a href="export.php?type=users"><i class="fas fa-users"></i> Users</a></li>
+								<li><a href="export.php?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="export.php?type=products"><i class="fas fa-cubes"></i> Products</a></li>
+								<li><a href="export.php?type=users"><i class="fas fa-users"></i> Users</a></li>
+								<li><a href="export.php?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
+							</ul>
+						</div>
+					</li>
+					<!-- <li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
+						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Import</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+							</ul>
+						</div>
+					</li> -->
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i>  Menu</a></li>
-								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
-								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
-								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
+								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i>  Menu</a></li>
-								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
-								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
-								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
+								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
 							</ul>
 						</div>
 					</li>
