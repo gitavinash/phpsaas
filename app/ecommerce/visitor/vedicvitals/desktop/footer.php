@@ -169,6 +169,7 @@
 	
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<?php echo USER_JS ?>flickity.pkgd.min.js"></script>
+		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
 		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
 	
 	</body>

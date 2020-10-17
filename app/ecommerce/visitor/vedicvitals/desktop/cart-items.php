@@ -152,7 +152,7 @@
 								<div class="form-row">
 								    <div class="form-group col-md-12">
 								      <label class="labl-head">Contact information</label>
-								      <input type="email" name="email" class="form-control" id="inputEmail4" placeholder="Email">
+								      <input type="email" name="email" class="form-control" id="email" placeholder="Email">
 								    </div>
 								</div>
 								<div class="form-group">
@@ -417,6 +417,7 @@
 
 		<!-- script start -->
 		<?php echo require_once NOTIFICATION.'index.php' ?>
+		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
 		<script src="<?php echo APP_JS_LIBRARY ?>app.min.js" ></script>
 		<!-- script end -->
 

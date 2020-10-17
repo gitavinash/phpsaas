@@ -1,4 +1,4 @@
-<h2>Add New <?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?></h2>
+<h2>Add new <?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?></h2>
 
 <div class="form-box">
 	<form method="POST" id="formData" enctype="multipart/form-data" >
@@ -69,7 +69,7 @@
 					</div>
 				</div>
 				<div class="productGallery generalTab" style="display: none;">
-					<input type="file" id="gallery" class="galleryBtn" name="productGallery[]" multiple >					
+					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
 					
@@ -111,13 +111,13 @@
 					</div>
 				</div>
 				<div class="fb generalTab"  style="display: none;">
-					<div class="facebook-image" style="display: none;">
-						<div class="img"><img src="" id="facebook-image" alt=""></div>
+					<div class="facebookPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -129,13 +129,13 @@
 					</div>
 				</div>
 				<div class="tw generalTab"  style="display: none;">
-					<div class="twitter-image" style="display: none;">
-						<div class="img"><img src="" id="twitter-image" alt=""></div>
+					<div class="twitterPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox">
 						<span>Set Twitter feature image</span>
-						<input type='file' id="twImage" name='twitterImage' />
+						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
@@ -152,12 +152,9 @@
 		<div class="right-box">
 			<div class="action-box inside-shadow">
 				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-				<input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft">
-				<input type="hidden" name="type" value="draft" >
-				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-				<input type="hidden" name="postType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
+				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="hidden" name="action" value="publish" >
 			</div>
 			<div class="form-group">
 				<h2>Fearure Post</h2>
@@ -168,7 +165,7 @@
 			<h2>Categories</h2>
 			<div class="action-box height-200 inside-shadow">
 				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."' AND link_site_id=".APP_SITE_ID)) {
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_site_id='".SITE_ID."' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."' AND link_site_id=".SITE_ID)) {
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
 								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>

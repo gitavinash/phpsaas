@@ -59,8 +59,25 @@
 							</ul>
 						</div>
 					</li> -->
+					<li <?php echo ((ADMIN_BASE_URL=='/post/') ? 'class="active"' : '' ) ?> >
+						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+								<li><a href="post.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+								<li><a href="post.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+							</ul>
+						</div>
+					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/youtube/') ? 'class="active"' : '' ) ?> >
-						<a href="youtube.php?type=list&status=all"><i class="fab fa-youtube"></i> Video</a>
+						<a href="youtube.php?type=list&status=all"><i class="fab fa-youtube"></i> Youtube</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="youtube.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>

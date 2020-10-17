@@ -126,7 +126,7 @@
 			<?php
 				$tagpageID=((${$taxonomy.'_parent_id'}==0) ? $id : ${$taxonomy.'_parent_id'} );
 				
-				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagpageID}' AND tag_site_id='".SITE_ID."' AND tag_type='page'")) {
+				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$id}' AND tag_site_id='".SITE_ID."' AND tag_type='{$taxonomy}'")) {
 					if(mysqli_num_rows($tagList)!=0) {
 						while($tagsName=mysqli_fetch_assoc($tagList)) {
 							$tags[]=$tagsName['tag_title'];

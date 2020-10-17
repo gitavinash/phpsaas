@@ -69,14 +69,14 @@
 					</div>
 				</div>
 				<div class="fb generalTab"  style="display: none;">
-					<div class="facebook-image" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
+					<div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
 						<input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
-						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebook-image" alt=""></div>
+						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -88,14 +88,14 @@
 					</div>
 				</div>
 				<div class="tw generalTab"  style="display: none;">
-					<div class="twitter-image" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+					<div class="twitterPreviewBox" style="display: <?php echo (($tw_img=='') ? 'none' : 'block' ) ?>;">
 						<input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
-						<div class="img"><img src="<?php echo $tw_img ?>" id="twitter-image" alt=""></div>
+						<div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
 						<span>Set Twitter feature image</span>
-						<input type='file' id="twImage" name='twitterImage' />
+						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
@@ -104,7 +104,7 @@
 					<div class="form-group">
 						<label>Twitter Description</label>
 						<textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description" ><?php echo $tw_desc ?></textarea>
-						</div>
+					</div>
 				</div>
 			</section>
 		</div>
@@ -151,15 +151,15 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group upload-btn" style="display: <?php echo (($page_image!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($post_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
-				<input type="hidden" name="oldFeatureImage" value="<?php echo $page_image ?>">
+				<input type="hidden" name="oldFeatureImage" value="<?php echo $post_image ?>">
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview action-box" style="display: <?php echo (($page_image!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.$page_image ?>" id="previewImage" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
+			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($post_image!='') ? 'block' : 'none') ?>;">
+				<img src="//<?php echo SITE_DOMAIN.$post_image ?>" id="featureImagePath" alt="">
+				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>

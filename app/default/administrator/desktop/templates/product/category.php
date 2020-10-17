@@ -9,7 +9,14 @@
 	
 				extract(mysqli_fetch_assoc($categoryData));
 				
-			}
+			} else {
+
+				$category_title='';
+				$category_description='';
+				$category_parent_id='';
+				$link_url='';
+				
+			}		
 
 		}
 

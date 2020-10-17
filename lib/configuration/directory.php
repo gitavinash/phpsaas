@@ -175,3 +175,7 @@
 
 	define('SITE_ICON', ((isset($site_icon)) ? (($site_icon=='') ? IMG_LIBRARY.'favicon.png' : $site_icon ) : IMG_LIBRARY.'favicon.png' ));
 	define('SITE_LOGO', ((isset($site_logo)) ? (($site_logo=='') ? IMG_LIBRARY.'logo.png' : $site_logo )  : IMG_LIBRARY.'logo.png' ));
+
+	/** Editor */
+
+	define('EDITOR_CONTENT_FILTER', MODULES.'editor/content.php');
