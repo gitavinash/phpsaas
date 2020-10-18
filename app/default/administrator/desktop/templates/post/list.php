@@ -41,7 +41,7 @@
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="post.php?type=edit&editor=true&post=<?php echo $post_id; ?>" ><?php echo $post_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="post.php?type=edit&editor=true&id=<?php echo $post_id; ?>" ><?php echo $post_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
 									<a href="post.php?type=edit&editor=true&id=<?php echo $post_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 									<a href="post.php?type=post&id=<?php echo $post_id; ?>"><i class="fas fa-trash"></i> Delete</a>

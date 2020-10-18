@@ -17,12 +17,26 @@
                     </div>
                     <div class="col-1">
                         <h3>Latest Blogs</h3>
-                        <ul>
-                            <li><a href="#">Blog title 1</a></li>
-                            <li><a href="#">Blog title 2</a></li>
-                            <li><a href="#">Blog title 3</a></li>
-                            <li><a href="#">Blog title 4</a></li>
-                            <li><a href="#">Blog title 5</a></li>
+                        <ul class="latest-blog" >
+                        <?php
+            
+                            if($checkBlogs=mysqli_query($connection, "SELECT post_title, post_thumbnail, link_url FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE link_type='post' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND link_status=200 ORDER BY link_published DESC LIMIT 0, 3")) {
+
+                                if(mysqli_num_rows($checkBlogs)!=0) {
+
+                                    while($blogData=mysqli_fetch_assoc($checkBlogs)) {
+
+                                        extract($blogData);
+
+                                        echo "<li><a href='{$link_url}'>{$post_title}</a></li>";
+
+                                    }
+
+                                }
+
+                            }
+                        
+                        ?>
                         </ul>
                     </div>
                     <div class="col-1">

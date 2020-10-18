@@ -138,7 +138,7 @@
     </div>
 </section>
 
-<section class="testimonials" >
+<!-- <section class="testimonials" >
     <div class="container">
         <h2>Happy customer is equal to success!</h2>
         <div class="testimonial-slider">
@@ -162,36 +162,43 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <section id="blog" class="blog" >
     <div class="container">
         <h2>Blog</h2>
         <div class="blogSlider">
-            <div class="slide">
-                <div class="img">
-                    <img src="https://cdn4.wpbeginner.com/wp-content/uploads/2018/07/whatisblog.png" alt="">
-                </div>
-                <div class="text">
-                    <h3>What is Lorem Ipsum?</h3>
-                </div>
-            </div>
-            <div class="slide">
-                <div class="img">
-                    <img src="https://cdn4.wpbeginner.com/wp-content/uploads/2018/07/whatisblog.png" alt="">
-                </div>
-                <div class="text">
-                    <h3>What is Lorem Ipsum?</h3>
-                </div>
-            </div>
-            <div class="slide">
-                <div class="img">
-                    <img src="https://cdn4.wpbeginner.com/wp-content/uploads/2018/07/whatisblog.png" alt="">
-                </div>
-                <div class="text">
-                    <h3>What is Lorem Ipsum?</h3>
-                </div>
-            </div>
+
+            <?php
+            
+                if($checkBlogs=mysqli_query($connection, "SELECT post_title, post_thumbnail, link_url FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE link_type='post' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND link_status=200 ORDER BY link_published DESC LIMIT 0, 3")) {
+
+                    if(mysqli_num_rows($checkBlogs)!=0) {
+
+                        while($blogData=mysqli_fetch_assoc($checkBlogs)) {
+
+                            extract($blogData);
+
+                            echo "
+                            <a href='{$link_url}'>
+                                <div class='slide'>
+                                    <div class='img'>
+                                        <img src='{$post_thumbnail}' alt='{$post_title}' >
+                                    </div>
+                                    <div class='text'>
+                                        <h3>{$post_title}</h3>
+                                    </div>
+                                </div>
+                            </a>";
+
+                        }
+
+                    }
+
+                }
+            
+            ?>
+
         </div>
     </div>
 </section>

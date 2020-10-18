@@ -55,6 +55,7 @@ section {
 .col-1 {
     float: left;
     width: 25%;
+    padding: 0px 10px;
     box-sizing: border-box;
 }
 
@@ -614,6 +615,10 @@ footer a:hover {
 .contactus h3 {
     color: #fff;
     margin-bottom: 20px;
+}
+
+.latest-blog li {
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 600px) {
