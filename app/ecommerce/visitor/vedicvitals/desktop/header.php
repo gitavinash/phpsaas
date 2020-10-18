@@ -6,13 +6,22 @@
       	<link rel="shortcut icon" href=" ">
 		<meta name="" content="">
 		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
-		<title></title>
+		<title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
 		<!-- css -->
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>flickity.min.css">
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+		        
+        <!-- SEO -->
+
+        <meta name="theme-color" content="#D01F28">
+        <meta name='robots' content='index, follow' />
+        <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
+        <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" >
+        <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
+        <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
 
 		<!-- Google Tag Manager -->
 		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

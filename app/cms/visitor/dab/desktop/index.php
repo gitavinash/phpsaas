@@ -95,7 +95,7 @@
                 <div class="box-img"><img src="<?php echo USER_IMAGES ?>icon/service.png" alt=""></div><div class="box-text" ><p>Provide high standard of<strong>SERVICE</strong></p></div>
             </div>
             <div class="service-feature">
-                <div class="box-img"><img src="<?php echo USER_IMAGES ?>icon/trust.png" alt=""></div><div class="box-text" ><p>Promote<strong>Trust</strong></p></div>
+                <div class="box-img"><img src="<?php echo USER_IMAGES ?>icon/trust.png" alt=""></div><div class="box-text" ><p>Promote<strong>TRUST</strong></p></div>
             </div>
             <div class="service-feature">
                 <div class="box-img"><img src="<?php echo USER_IMAGES ?>icon/responsibilty.png" alt=""></div><div class="box-text" ><p>We take<strong>RESPONSIBILTY</strong></p></div>

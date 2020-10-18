@@ -28,7 +28,7 @@
                     <div class="col-1">
                         <h3>Contact Us</h3>
                         <p>E-96, Sector-41, Noida, UP-201303</p>
-                        <p>Email : dev@devarchitectsandbuilders.com</p>
+                        <p>Email : info@devarchitectsandbuilders.com</p>
                         <p>Mobile : +91-9311684511</p>
                     </div>
                     <div class="col-1">
