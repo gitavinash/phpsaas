@@ -29,10 +29,10 @@
 
 					mysqli_query($connection, "START TRANSACTION");
 
-					$addCategory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."category(category_parent_id, category_title, category_description, category_site_id, category_owner_id, category_type) VALUES('{$categoryParentID}', '{$name}', '{$description}', '".APP_SITE_ID."', '".USER_ID."', '{$postType}')");
+					$addCategory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."category(category_parent_id, category_title, category_description, category_site_id, category_owner_id, category_type) VALUES('{$categoryParentID}', '{$name}', '{$description}', '".SITE_ID."', '".USER_ID."', '{$postType}')");
 					$newCategoryID=mysqli_insert_id($connection);
 
-					$addLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$newCategoryID}', '200', 'category', '".USER_ID."', '".APP_SITE_ID."', NOW(), NOW())");
+					$addLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$newCategoryID}', '200', 'category', '".USER_ID."', '".SITE_ID."', NOW(), NOW())");
 					$linkID=mysqli_insert_id($connection);
 					$addMetaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_type) VALUES('{$linkID}', 'category')");
 
