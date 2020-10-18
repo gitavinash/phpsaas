@@ -1,6 +1,6 @@
 <?php
 	
-    $post_id=mysqli_real_escape_string($connection, $_GET['id']);
+	$post_id=mysqli_real_escape_string($connection, $_GET['id']);
     
 	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND link_type='post' LIMIT 1")) {
 		if(mysqli_num_rows($postDetails)!=0) {
@@ -122,7 +122,7 @@
 			<div class="form-group">
 				<h2>Fearure post</h2>
 				<div class="action-box inside-shadow">
-					<input type="checkbox" value="1" name='featurepost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature post
+					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature post
 				</div>
 			</div>
 			<h2>Categories</h2>

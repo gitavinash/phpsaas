@@ -36,7 +36,7 @@
 	<tbody>
 		<?php
 
-				if($dataList=mysqli_query($connection, "SELECT post_id, post_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE post_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND profile_user_id='".USER_ID."' $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+				if($dataList=mysqli_query($connection, "SELECT post_id, post_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE post_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND profile_user_id='".USER_ID."' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
