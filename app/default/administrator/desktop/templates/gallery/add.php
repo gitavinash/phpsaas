@@ -16,6 +16,66 @@
 				<textarea name="description" class="editor inside-shadow" ></textarea>
 			</div>
 
+			<!-- gallery description and other things -->
+
+			<section style="margin-bottom:20px" >
+				<h3>Gallery images</h3>
+				<ul class='tabs'>
+					<!-- <li id="productGeneral" class='active' >General</li>
+					<li id="productInventory" >Inventory</li>
+					<li id="productShipping" >Shipping</li> -->
+					<li id="productGallery" >Gallery</li>
+					<!-- <li id="productAdditionalDetails" >Additional Details</li> -->
+				</ul>
+				<!-- <div class="productGeneral generalTab">
+					<div class="form-group">
+						<label>Regular price (₹)</label>
+						<input type="number" class="form-control inside-shadow" name="r_price" placeholder="Regular price" >
+					</div>
+					<div class="form-group">
+						<label>Sale price (₹)</label>
+						<input type="number" class="form-control inside-shadow" name="s_price" placeholder="Sale price" >
+					</div>
+				</div>
+				<div class="productInventory generalTab" style="display: none;">
+					<div class="box-2">
+						<div class="form-group">
+							<label>SKU</label>
+							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
+						</div>
+					</div>
+				</div>
+				<div class="productShipping generalTab" style="display: none;">
+					<div class="box-1">
+						<div class="form-group">
+							<label>Weight (kg)</label>
+							<input type="text" class="form-control inside-shadow" name="weight" placeholder="Weight" >
+						</div>
+					</div>
+					<label>Dimensions (cm)</label>
+					<div class="form-group">
+						<div class="box-3">
+							<label>Lenght</label>
+							<input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght" >
+						</div>
+						<div class="box-3">
+							<label>Width</label>
+							<input type="text" class="form-control inside-shadow" name="width" placeholder="Width" >
+						</div>
+						<div class="box-3">
+							<label>Height</label>
+							<input type="text" class="form-control inside-shadow" name="height" placeholder="Height" >
+						</div>
+					</div>
+				</div> -->
+				<div class="productGallery generalTab">
+					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+				</div>
+				<!-- <div class="productAdditionalDetails generalTab" style="display: none;">
+					
+				</div> -->
+			</section>
+
 			<!-- SEO & social media marketing -->
 
 			<section>

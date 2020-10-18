@@ -6,6 +6,34 @@
   ##                                                                                                                    ##
   ########################################################################################################################
 
+  // Gallery table
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."gallery (
+    gallery_id bigint(20) NOT NULL,
+    gallery_parent_id bigint(20) NOT NULL,
+    gallery_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    gallery_thumbnail varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    gallery_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    gallery_description longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    gallery_image_list longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    gallery_category bigint(20) NOT NULL,
+    gallery_owner_id bigint(20) NOT NULL,
+    gallery_status int(1) NOT NULL,
+    gallery_type varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'gallery',
+    gallery_time timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."gallery
+    ADD PRIMARY KEY (gallery_id),
+    ADD KEY gallery_category (gallery_category),
+    ADD KEY gallery_type (gallery_type),
+    ADD KEY gallery_parent_id (gallery_parent_id),
+    ADD KEY gallery_owner_id (gallery_owner_id),
+    ADD KEY gallery_time (gallery_time)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."gallery
+    MODIFY gallery_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   // Video table
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."video (

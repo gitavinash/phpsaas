@@ -16,15 +16,7 @@
 
                     extract($image);
 
-                    if(isset($featurePost)) {
-                        
-                        $featurePost=1;
-
-                    } else {
-
-                        $featurePost=0;
-
-                    }
+                    $featurePost=((isset($featurePost)) ? 1 : 0 );
         
                     $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
                     $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));

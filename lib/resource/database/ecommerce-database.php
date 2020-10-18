@@ -80,21 +80,21 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     MODIFY order_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  /** Product table */
+  // /** Product table */
 
-  mysqli_query($connection, "");
+  // mysqli_query($connection, "");
 
-  mysqli_query($connection, "");
+  // mysqli_query($connection, "");
 
-  mysqli_query($connection, "");
+  // mysqli_query($connection, "");
 
-  /** Product meta table */
+  // /** Product meta table */
 
-  mysqli_query($connection, "");
+  // mysqli_query($connection, "");
   
-  mysqli_query($connection, "");
+  // mysqli_query($connection, "");
 
-  mysqli_query($connection, "");
+  // mysqli_query($connection, "");
 
   /** Transaction Table */
 

@@ -1,14 +1,12 @@
 <?php
-	
-	$post_id=mysqli_real_escape_string($connection, $_GET['id']);
     
-	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND link_type='post' LIMIT 1")) {
+	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."gallery, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='gallery' AND link_relation_id=gallery_id AND meta_relation_id=link_id AND gallery_id='{$id}' AND link_status!=301 AND link_type='gallery' LIMIT 1")) {
 		if(mysqli_num_rows($postDetails)!=0) {
 			extract(mysqli_fetch_assoc($postDetails));
 		} else { exit(); ?>
 			<script type="text/javascript">
 				alert('Invalid action found');
-				window.location.href='dashboard/post/?type=list&status=all';
+				window.location.href='dashboard/gallery/?type=list&status=all';
 			</script>
 		<?php
 		}
@@ -21,7 +19,7 @@
 	<form method="post" id="formData" enctype="multipart/form-data" >
 		<div class="left-box">
 			<div class="form-group">
-				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $post_title ?>" required="" >
+				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $gallery_title ?>" required="" >
 			</div>
 			<div class="form-group">
 				<div class="url">
@@ -34,8 +32,69 @@
 				</div>
 			</div>
 			<div class="form-group fullscreen-editor">
-				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode($post_description); ?></textarea>
+				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode($gallery_description); ?></textarea>
 			</div>
+
+			<!-- gallery description and other things -->
+
+			<section style="margin-bottom:20px" >
+				<h3>Gallery images</h3>
+				<ul class='tabs'>
+					<!-- <li id="productGeneral" class='active' >General</li>
+					<li id="productInventory" >Inventory</li>
+					<li id="productShipping" >Shipping</li> -->
+					<li id="productGallery" >Gallery</li>
+					<!-- <li id="productAdditionalDetails" >Additional Details</li> -->
+				</ul>
+				<!-- <div class="productGeneral generalTab">
+					<div class="form-group">
+						<label>Regular price (₹)</label>
+						<input type="number" class="form-control inside-shadow" name="r_price" placeholder="Regular price" >
+					</div>
+					<div class="form-group">
+						<label>Sale price (₹)</label>
+						<input type="number" class="form-control inside-shadow" name="s_price" placeholder="Sale price" >
+					</div>
+				</div>
+				<div class="productInventory generalTab" style="display: none;">
+					<div class="box-2">
+						<div class="form-group">
+							<label>SKU</label>
+							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
+						</div>
+					</div>
+				</div>
+				<div class="productShipping generalTab" style="display: none;">
+					<div class="box-1">
+						<div class="form-group">
+							<label>Weight (kg)</label>
+							<input type="text" class="form-control inside-shadow" name="weight" placeholder="Weight" >
+						</div>
+					</div>
+					<label>Dimensions (cm)</label>
+					<div class="form-group">
+						<div class="box-3">
+							<label>Lenght</label>
+							<input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght" >
+						</div>
+						<div class="box-3">
+							<label>Width</label>
+							<input type="text" class="form-control inside-shadow" name="width" placeholder="Width" >
+						</div>
+						<div class="box-3">
+							<label>Height</label>
+							<input type="text" class="form-control inside-shadow" name="height" placeholder="Height" >
+						</div>
+					</div>
+				</div> -->
+				<div class="productGallery generalTab">
+					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+				</div>
+				<!-- <div class="productAdditionalDetails generalTab" style="display: none;">
+					
+				</div> -->
+			</section>
+
 			<section>
 				<h3>Advance Options for digital marketing</h3>
 				<ul class='tabs'>
@@ -110,13 +169,13 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($post_status==1) ? 'Update ' : 'Publish ' ); ?>post">
+				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($gallery_status==1) ? 'Update ' : 'Publish ' ); ?>post">
 				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
 				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 				<input type="hidden" name="action" value="update" >
-				<input type="hidden" name='postStatus' value='<?php echo $post_status ?>' >
-				<input type="hidden" name="id" value="<?php echo $post_id ?>" >
-				<input type="hidden" name="postType" value="<?php echo $post_type ?>" >
+				<input type="hidden" name='postStatus' value='<?php echo $gallery_status ?>' >
+				<input type="hidden" name="id" value="<?php echo $gallery_id ?>" >
+				<input type="hidden" name="postType" value="<?php echo $gallery_type ?>" >
 				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live post</a>
 			</div>
 			<div class="form-group">
@@ -132,7 +191,7 @@
 						while($category=mysqli_fetch_assoc($categoryList)) {
 							if($category['category_id']==${$postType.'_category'}) { ?>
 								<div class="form-group">
-									<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$post_category) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
+									<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$gallery_category) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
 								</div>
 							<?php
 							} else { ?>
@@ -147,7 +206,7 @@
 			</div>
 			<h2>Tags</h2>
 			<?php
-				$tagpostID=(($post_parent_id==0) ? $post_id : $post_parent_id );
+				$tagpostID=(($gallery_parent_id==0) ? $gallery_id : $gallery_parent_id );
 				
 				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagpostID}' AND tag_site_id='".SITE_ID."' AND tag_type='post'")) {
 					if(mysqli_num_rows($tagList)!=0) {
@@ -169,14 +228,14 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($post_image!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($gallery_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
-				<input type="hidden" name="oldFeatureImage" value="<?php echo $post_image ?>">
+				<input type="hidden" name="oldFeatureImage" value="<?php echo $gallery_image ?>">
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($post_image!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.$post_image ?>" id="featureImagePath" alt="">
+			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($gallery_image!='') ? 'block' : 'none') ?>;">
+				<img src="//<?php echo SITE_DOMAIN.$gallery_image ?>" id="featureImagePath" alt="">
 				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
