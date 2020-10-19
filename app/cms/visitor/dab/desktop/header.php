@@ -12,7 +12,7 @@
 
     <!-- SEO -->
 
-    <meta name="theme-color" content="#D01F28">
+    <meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
     <meta name='robots' content='index, follow' />
     <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
     <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" >
