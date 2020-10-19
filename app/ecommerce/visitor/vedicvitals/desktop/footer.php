@@ -129,7 +129,7 @@
 					<div class="row">																	
 						<div class="col-md-12 col-12">
 							<div class="footer-btm">
-								<p>&copy; All rights reserved by Vedic Vitals Enterprise<br />Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi">ITS Soft World</a> in India</p>
+								<p>&copy; All rights reserved by <?php echo SITE_NAME ?><br />Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi">ITS Soft World</a> in India</p>
 							</div>
 						</div>
 					</div>
