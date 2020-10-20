@@ -33,10 +33,21 @@
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."inventory (
     inventory_id bigint(20) NOT NULL,
     inventory_product_id bigint(20) NOT NULL,
-    inventory_sku varchar(50) NOT NULL,
-    inventory_is_manage int(1) NOT NULL,
+    inventory_sku varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_currency varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_price varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_mrp varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_tax_status int(1) NOT NULL,
+    inventory_tax_rate int(2) NOT NULL,
+    inventory_in_stock int(1) NOT NULL,
+    inventory_current_stock varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     inventory_backorder int(1) NOT NULL,
     inventory_stock_notice int(2) NOT NULL,
+    inventory_weight varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_lenght varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_width varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_height varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    inventory_status int(1) NOT NULL,
     inventory_update timestamp NOT NULL DEFAULT current_timestamp()
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
@@ -44,9 +55,13 @@
     ADD PRIMARY KEY (inventory_id),
     ADD KEY inventory_product_id (inventory_product_id),
     ADD KEY inventory_sku (inventory_sku),
-    ADD KEY inventory_stock_notice (inventory_stock_notice),
+    ADD KEY inventory_currency (inventory_currency),
+    ADD KEY inventory_tax_status (inventory_tax_status),
+    ADD KEY inventory_in_stock (inventory_in_stock),
+    ADD KEY inventory_current_stock (inventory_current_stock),
     ADD KEY inventory_backorder (inventory_backorder),
-    ADD KEY inventory_is_manage (inventory_is_manage)");
+    ADD KEY inventory_stock_notice (inventory_stock_notice),
+    ADD KEY inventory_status (inventory_status)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
     MODIFY inventory_id bigint(20) NOT NULL AUTO_INCREMENT");
@@ -80,21 +95,40 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     MODIFY order_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  // /** Product table */
+  /** Product table */
 
-  // mysqli_query($connection, "");
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."product (
+    product_id bigint(20) NOT NULL,
+    product_parent_id bigint(20) NOT NULL,
+    product_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    product_thumbnail varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    product_gallery longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    product_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    product_description longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    product_highlight longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    product_category bigint(20) NOT NULL,
+    product_owner_id bigint(20) NOT NULL,
+    product_status int(1) NOT NULL,
+    product_type varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'product',
+    product_time timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-  // mysqli_query($connection, "");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+    ADD PRIMARY KEY (product_id),
+    ADD KEY product_category (product_category),
+    ADD KEY product_type (product_type),
+    ADD KEY product_parent_id (product_parent_id),
+    ADD KEY product_owner_id (product_owner_id),
+    ADD KEY product_time (product_time)");
 
-  // mysqli_query($connection, "");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+    MODIFY product_id bigint(20) NOT NULL AUTO_INCREMENT");
 
-  // /** Product meta table */
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+  ADD KEY product_status (product_status)");
 
-  // mysqli_query($connection, "");
-  
-  // mysqli_query($connection, "");
-
-  // mysqli_query($connection, "");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+    ADD product_review INT(1) NOT NULL AFTER product_category");
 
   /** Transaction Table */
 

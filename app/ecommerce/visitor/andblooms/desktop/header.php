@@ -65,7 +65,7 @@
 								<nav class="navbar navbar-expand-lg login-section justify-content-right ">
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav justify-content-center menu-login">
-									  <li><a href=""><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">0</span><span class="span-item">Cart</span></li>
+									  <li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">0</span><span class="span-item">Cart</span></li>
 									  <li class="nav-item dropdown">
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>menu.svg"><span class="span-item">More</span>
 									      </a>
