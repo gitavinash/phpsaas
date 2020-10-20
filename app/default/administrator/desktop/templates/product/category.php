@@ -102,7 +102,7 @@
 												<a href="<?php echo $postType ?>.php?type=category&id=<?php echo $category_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 												<?php
 													if($category_id!=1) { ?>
-														<a href="delete.php?type=category&id=<?php echo $category_id; ?>"><i class="fas fa-trash"></i> Delete</a>
+														<a href="delete.php?type=category&id=<?php echo $category_id; ?>" id="<?php echo $category_id.'_'.$type ?>" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 													<?php
 													}
 												?>
