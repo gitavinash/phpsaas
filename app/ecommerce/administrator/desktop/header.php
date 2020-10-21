@@ -110,7 +110,7 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/export/') ? 'class="active"' : '' ) ?> >
+					<!-- <li <?php echo ((ADMIN_BASE_URL=='/export/') ? 'class="active"' : '' ) ?> >
 						<a href="export.php?type=product"><i class="fas fa-download"></i> Export</a>
 						<div class="side-menu">
 							<ul>
@@ -126,7 +126,7 @@
 								<li><a href="export.php?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
 							</ul>
 						</div>
-					</li>
+					</li> -->
 					<!-- <li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Import</a>
 						<div class="side-menu">
