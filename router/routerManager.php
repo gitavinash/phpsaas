@@ -14,7 +14,9 @@
 
 			} else {
 
-				echo 'Undefined request found';
+				// echo 'Undefined request found';
+
+				echo ROUTER.$link_type.'.php';
 
 			}
 

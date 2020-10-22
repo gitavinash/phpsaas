@@ -65,6 +65,15 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
     MODIFY inventory_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    CHANGE inventory_price inventory_price VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    CHANGE inventory_mrp inventory_mrp VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD inventory_type VARCHAR(10) NOT NULL DEFAULT 'product' AFTER inventory_height");
   
   /** Order Table */
 

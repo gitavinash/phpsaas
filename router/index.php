@@ -151,7 +151,6 @@
 			break;
 			
 		default :
-
 			/** Check Cache is available or not */
 			require_once ROUTER.'cache.php';
 			break;

@@ -20,16 +20,13 @@
         <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
         <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" >
         <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
-        <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
-
-    </head>
-	<body>
-        
-        <header>
-
-            <!-- Sticky bar -->
-
-            <div class="header-top">
+		<meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
+	
+	</head>
+	<body >
+		<!-- header start -->
+		<header>
+			<div class="header-top">
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-12">
@@ -40,42 +37,42 @@
 						</div>
 					</div>
 				</div>
-            </div>
-
-            <!-- main header -->
-            
-            <div class="header-mid dn-s">
+			</div>
+			<div class="header-mid dn-s">
 				<div class="container-fluid">
 					<div class="row">
 						
 						<div class="col-md-2">
-							<div class="logo">
-								<!-- <img src="<?php echo SITE_LOGO ?>" > -->
-								<img src="https://andblooms.com/wp-content/uploads/2019/07/andblooms_logo_512x512.png" >
-							</div>
+							<a href="/">
+								<div class="logo">
+									<!-- <img src="<?php echo USER_IMAGES ?>logo.png"> -->
+									<img src="https://andblooms.com/wp-content/uploads/2019/07/andblooms_logo_512x512.png">
+								</div>
+							</a>
 						</div>
-						<div class="col-md-3"></div>
+						<div class="col-md-3">
+						</div>
 						<div class="col-md-7">
 							<div class="search-box">
-								<form class="form-inline">
-							      <input class="form-control" type="search" placeholder="Search for gifts, flowers..." >
+								<form method="get" action="/search/" class="form-inline">
+							      <input class="form-control" type="text" name="q" placeholder="Search for gifts, flowers..." >
 							    </form>
 							</div>
 							<div class="search-pro">
 								<nav class="navbar navbar-expand-lg login-section justify-content-right ">
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav justify-content-center menu-login">
-									  <li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">0</span><span class="span-item">Cart</span></li>
-									  <li class="nav-item dropdown">
-									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>menu.svg"><span class="span-item">More</span>
-									      </a>
-									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="#"><img src="<?php echo USER_IMAGES ?>gifts.svg"> Corporate Gifts</a>
-									        <a class="dropdown-item" href="#"><img src="<?php echo USER_IMAGES ?>franchise.svg"> Franchise</a>
-									        <a class="dropdown-item" href="#"><img src="<?php echo USER_IMAGES ?>need.svg"> Need Help</a>
-									        <a class="dropdown-item" href="#"><img src="<?php echo USER_IMAGES ?>feedback.svg"> About Us</a>
-									      </div>
-									  </li>
+										<li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">0</span><span class="span-item">Cart</span></li>
+									  	<li class="nav-item dropdown">
+											<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>menu.svg"><span class="span-item">More</span>
+											</a>
+											<div class="dropdown-menu barMenu">
+												<a class="dropdown-item bm1" href="#"><img src="<?php echo USER_IMAGES ?>gifts-fa.svg"> Corporate Gifts</a>
+												<a class="dropdown-item bm2" href="#"><img src="<?php echo USER_IMAGES ?>franchise-fa.svg"> Franchise</a>
+												<a class="dropdown-item " href="#"><img src="<?php echo USER_IMAGES ?>need-fa.svg"> Need Help</a>
+												<a class="dropdown-item " href="#"><img src="<?php echo USER_IMAGES ?>feedback-fa.svg"> About Us</a>
+											</div>
+									  	</li>
 									  
 									</ul>
 								</div>
@@ -85,40 +82,46 @@
 
 					</div>
 				</div>
-            </div>
-            
-            <!-- menu bar -->
-
-            <div class="header-box">
+			</div>
+			<div class="header-box">
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-12">
 							<nav class="navbar navbar-expand-lg menu-top fixed">
-								<a href="" class="dn-l"><img src="image/logo1.png" class="logo-mb"></a>
-								<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-								<span class="navbar-icon"></span>
-								<span class="navbar-icon"></span>
-								<span class="navbar-icon"></span>
+								<a href="" class="dn-l">
+									<!-- <img src="<?php echo USER_IMAGES ?>logo1.png" class="logo-mb"> -->
+									<img src="https://andblooms.com/wp-content/uploads/2019/07/andblooms_logo_512x512.png" class="logo-mb">
+								</a>
+								<button class="navbar-toggler bar-mnu" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+								<span class="navbar-icon bar-1"></span>
+								<span class="navbar-icon bar-2"></span>
+								<span class="navbar-icon bar-1"></span>
 								</button>
+								<div class="mob-menu dn-l">
+									<div class="cart-mob">
+										<a href="" class="mob-bag sr-mob" onclick="divSearchPop()"><img src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span>
+										<a href="/checkout/" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">0</span></span>
+									</div>
+								</div>
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav menu-ul">
 									 
-									  <li class="nav-item active">
-									    <a class="nav-link" href="index.html">Home</a>
+									  <li class="nav-item">
+									    <a class="nav-link" href="/">Home</a>
 									  </li>
 									  <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Luxury Collections
+									    <a class="nav-link dropdown-toggle" href="category/" id="navbardrop" data-toggle="dropdown">Luxury Collections
 									      </a>
 									      <div class="dropdown-menu mega-menu">
 									      	<div class="mega1">
-										      	<div class="menu-titl"><a href="">New Arivals<span class="cart-bodr"></span></a></div>
-										        <a class="dropdown-item" href="#">Fresh Flowers</a>
-										        <a class="dropdown-item" href="#">Artistic Artificial</a>
+										      	<div class="menu-titl"><a href="#">New Arivals<span class="cart-bodr"></span></a></div>
+										        <a class="dropdown-item" href="https://cartt.in/category/luxury-collections/fresh-flowers/">Fresh Flowers</a>
+										        <a class="dropdown-item" href="https://cartt.in/category/artistic-artificial/">Artistic Artificial</a>
 									        </div>
 									  	  </div>
 									  </li>
 									  <li class="nav-item">
-									    <a class="nav-link" href="index.html">Infinity Everlasting Flowers</a>
+									    <a class="nav-link" href="https://cartt.in/category/infinity-everlasting-flowers/">Infinity Everlasting Flowers</a>
 									  </li>
 									  <li class="nav-item dropdown">
 									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Occasins
@@ -126,27 +129,27 @@
 									      <div class="dropdown-menu mega-menu">
 									      	<div class="mega2">
 									      	    <div class="mega-gry flot-menu">
-									      	    	<div class="menu-titl"><a href="">Menu Name <span class="cart-bodr"></span></a></div>
-											        <a class="dropdown-item" href="#">Anniversary</a>
-											        <a class="dropdown-item" href="#">Birthday</a>
-											        <a class="dropdown-item" href="#">Corporate Gifting</a>
-											        <a class="dropdown-item" href="#">Congratulation</a>
-											        <a class="dropdown-item" href="#">Get Well</a>
-											        <a class="dropdown-item" href="#">House Warming</a>
+									      	    	<div class="menu-titl"><a href="#">Menu Name <span class="cart-bodr"></span></a></div>
+											        <a class="dropdown-item" href="https://cartt.in/category/anniversary/">Anniversary</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/birthday/">Birthday</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/corporate-gifting/">Corporate Gifting</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/congratulation/">Congratulation</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/get-well/">Get Well</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/category/occasions/house-warming/">House Warming</a>
 									    		</div>
 									    		<div class="mega-wht flot-menu">
-									    			<div class="menu-titl"><a href="">Manu Name <span class="cart-bodr"></span></a></div>
-											        <a class="dropdown-item" href="#">I'M Sorry</a>
-											        <a class="dropdown-item" href="#">Just Because</a>
-											        <a class="dropdown-item" href="#">New Baby</a>
-											        <a class="dropdown-item" href="#">Love & Romance</a>
-											        <a class="dropdown-item" href="#">Retirement</a>
-											        <a class="dropdown-item" href="#">Sympathy</a>
+									    			<div class="menu-titl"><a href="#">Menu Name <span class="cart-bodr"></span></a></div>
+											        <a class="dropdown-item" href="https://cartt.in/category/i-m-sorry/">I'M Sorry</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/just-because/">Just Because</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/new-baby/">New Baby</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/love---romance/">Love & Romance</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/retirement/">Retirement</a>
+											        <a class="dropdown-item" href="https://cartt.in/category/sympathy/">Sympathy</a>
 									    		</div>
 									    		<div class="mega-gry flot-menu">
 									      	    	<div class="menu-titl"><a href="">Bumper Sale <span class="cart-bodr"></span></a></div>
 											        <a class="dropdown-item" href="#">
-											        	<img class="mega-img" src="https://img.floweraura.com/sites/default/files/alloccasion/menucard/Plants.png">
+											        	<img class="mega-img" src="https://img.& Blooms.com/sites/default/files/alloccasion/menucard/Plants.png">
 											        </a>
 									    		</div>
 									    	</div>
@@ -158,13 +161,36 @@
 									  <li class="nav-item ">
 									    <a class="nav-link " href="#">Contact</a>
 									  </li>
+
+									  <div class="dn-l log-in">
+									  	<li class="nav-item">
+									    	<a class="nav-link" href="/">Login</a>
+									  	</li>
+									  </div>
 									</ul>
-									<a href="contact-us/" class="cont-menu">Contact Us</a>
+
+									<a href=" " class="cont-menu">Contact Us</a>
 								</div>
 							</nav>
 						</div>
 					</div>
 				</div>
 			</div>
-
-        </header>
+			<div class="dn-l location-map">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="map-tag">
+								<a href=""><img src="<?php echo USER_IMAGES ?>ping-map.svg">Select the city</a>
+							</div>
+							<div id="search-mob-div" class="searchInput">
+								<form method="get" action="/search/">
+									<input type="text" id="search_block" name="q" class="form-text ui-autocomplete-input" placeholder="Search for gifts, flowers..." autocomplete="off" ><div id="close">x</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- header end -->
