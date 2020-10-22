@@ -93,7 +93,6 @@
                                 } else {
 
                                     $msg='Something is wrong while adding new product';
-                                    echo $addNewProduct.' && '.$addNewLink.' && '.$addNewInventory.' && '.$addNewMeta.' && '.$addNewTags;
                                     mysqli_query($connection, "ROLLBACK");
 
                                 }
