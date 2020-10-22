@@ -21,6 +21,7 @@
         
                 } else {
         
+                    echo mysqli_error($connection);
                     $msg='Something is wrong while performing add to cart';
         
                 }

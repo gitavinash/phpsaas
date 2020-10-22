@@ -192,6 +192,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     ADD INDEX cart_session_id (cart_session_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    CHANGE cart_product_id cart_relation_id BIGINT(20) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD INDEX cart_relation_id (cart_relation_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    CHANGE cart_product_qty cart_qty BIGINT(20) NOT NULL");
+
   /** Update Transaction Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
