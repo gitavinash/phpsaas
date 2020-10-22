@@ -29,19 +29,55 @@
 				</ul>
 				<div class="productGeneral generalTab">
 					<div class="form-group">
-						<label>Regular price (₹)</label>
-						<input type="number" class="form-control inside-shadow" name="r_price" placeholder="Regular price" >
-					</div>
-					<div class="form-group">
-						<label>Sale price (₹)</label>
-						<input type="number" class="form-control inside-shadow" name="s_price" placeholder="Sale price" >
+						<label>Product short description / Highlights</label>
+						<textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights" ></textarea>
 					</div>
 				</div>
 				<div class="productInventory generalTab" style="display: none;">
+					
+					<div class="box-2">
+						<input type="checkbox" name="in_stock" checked > In Stock
+					</div>
+					<div class="box-2">
+						<input type="checkbox" name="backorder" checked > Allowed Backorders (if product is out of stock )
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Sale price (₹)</label>
+							<input type="number" class="form-control inside-shadow" name="salePrice" placeholder="Sale price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Regular price (₹)</label>
+							<input type="number" class="form-control inside-shadow" name="mrp" placeholder="Regular price" >
+						</div>
+					</div>
 					<div class="box-2">
 						<div class="form-group">
 							<label>SKU</label>
 							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Stock Alert</label>
+							<input type="text" class="form-control inside-shadow" name="stock_warning" placeholder="Stock Alert" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Calculate tax</label>
+							<select name="taxStatus" class="form-control inside-shadow" >
+								<option value="0">No</option>
+								<option value="1">Yes</option>
+							</select>
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Tax rate ( in % )</label>
+							<input type="number" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow" >
 						</div>
 					</div>
 				</div>

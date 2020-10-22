@@ -17,6 +17,8 @@
                     extract($image);
 
                     $featurePost=((isset($featurePost)) ? 1 : 0 );
+                    $postType=((isset($postType)) ? $postType : $type );
+                    $currentStock=((isset($currentStock)) ? $currentStock : 0 );
         
                     $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
                     $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));
@@ -33,7 +35,7 @@
 
                         /** product page url */
 
-                        $url=strtolower($categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url)).'/';
+                        $url=strtolower('/product'.$categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url)).'/';
                         
                         /* define facebook and twitter meta desciption */
 
@@ -52,11 +54,16 @@
 
                                 /* Insert data into link table */
 
-                                $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_thumbnail, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '{$website_user_id}', '{$post_status}', '{$postType}')");
+                                $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$gallery}', '{$title}', '{$description}', '{$highlight}', '{$category}', ".USER_ID.",'1', 'product')");
                                 $productID=mysqli_insert_id($connection);
 
-                                $linkData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', '{$postType}', '{$featurePost}', '{$website_user_id}', '".SITE_ID."', NOW() ,NOW())");
-                                $metaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$postID}', '{$meta_title}', '{$postType}', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
+                                $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$featurePost}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
+                                $linkID=mysqli_insert_id($connection);
+
+                                $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', '{$sku}', 'INR', '{$salePrice}', '{$mrp}', '{$taxStatus}', '{$taxRate}', '{$in_stock}', '{$currentStock}', '{$backorder}', '{$stock_warning}', '{$weight}', '{$lenght}', '{$width}', '{$height}', '1', current_timestamp())");
+
+                                $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', '{$meta_title}', 'product', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
+
 
                                 /* Insert tags into tag table */
 
@@ -67,20 +74,20 @@
                                     for($i=0; $i<sizeof($tags); $i++) {
 
                                         $tagsName=strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-                                        $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$postID}', '".USER_ID."', '".SITE_ID."', '{$postType}')");
+                                        $addNewTags=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$postID}', '".USER_ID."', '".SITE_ID."', '{$postType}')");
                                     }
 
                                 } else {
 
-                                    $tagData=TRUE;
+                                    $addNewTags=TRUE;
 
                                 }
 
-                                if($tes) {
+                                if($addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags) {
 
                                     $status=200;
                                     $msg='Product add successfully';
-                                    $redirect='/dashboard/product/?type=add&editor=true&id='.$productID;
+                                    $redirect='/dashboard/product/?type=edit&editor=true&id='.$productID;
                                     mysqli_query($connection, "COMMIT");
 
                                 } else {
@@ -126,7 +133,7 @@
         $result = array(
             'status' => ((isset($status)) ? $status : 'error' ),
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-            'gallery' => ((isset($gallery)) ? $gallery : '' )
+            'redirect' => ((isset($redirect)) ? $redirect : '' )
         );
     
         echo json_encode($result, TRUE);

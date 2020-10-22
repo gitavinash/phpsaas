@@ -6,7 +6,7 @@
 
         $id=base64_decode($id);
 
-        if($checkStatus=mysqli_query($connection, "SELECT order_total_price, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT(cart_product_id, ',') as cartProduct FROM isw_cart, isw_transaction INNER JOIN isw_order ON transaction_order_id=order_id INNER JOIN isw_profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id")) {
+        if($checkStatus=mysqli_query($connection, "SELECT order_total_price, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT(product_title, ',') as cartProduct FROM ".TABLE_PREFIX."cart, ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id")) {
 
             if(mysqli_num_rows($checkStatus)!=0) {
 
@@ -50,16 +50,24 @@
                 curl_close($ch); 
 
                 $response=json_decode($response, TRUE);
-                
-                if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_gateway='{$pg_name}', transaction_reference_id='{$response['payment_request']['id']}', transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID)) {
 
-                    header("Location: {$response['payment_request']['longurl']}", TRUE, 301);
-                    exit();
+                if($response['success']==1) {
+
+                    if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_gateway='{$pg_name}', transaction_reference_id='{$response['payment_request']['id']}', transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID)) {
+
+                        header("Location: {$response['payment_request']['longurl']}", TRUE, 301);
+                        exit();
+    
+                    } else {
+    
+                        echo 'Something is wrong while generation transaction status';
+                        // echo mysqli_error($connection);
+    
+                    }
 
                 } else {
 
-                    echo 'Something is wrong while generation transaction status';
-                    // echo mysqli_error($connection);
+                    echo 'Technical error occurs';
 
                 }
 

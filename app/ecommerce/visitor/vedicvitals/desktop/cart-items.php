@@ -43,7 +43,7 @@
 
 											extract($cartData);
 											
-											switch($cart_product_id) {
+											switch($cart_relation_id) {
 
 												case 1 :
 													$productName='Immunity Vitals';
@@ -78,7 +78,7 @@
 
 												<div class="prodcut-list-cart">
 													<img src="<?php echo $productImage ?>">
-													<h3><?php echo $productName; ?> – Pack of <?php echo $cart_product_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
+													<h3><?php echo $productName; ?> – Pack of <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
 													<div class="price-new">
 														<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
 													</div>
@@ -188,7 +188,7 @@
 								      <input type="text" name="city" class="form-control" id="inputCity" placeholder="City">
 								    </div>
 								    <div class="form-group col-md-4">
-								      <select id="inputState" name="state" class="form-control">
+								      <select id="inputState" name="state" class="form-control" required >
 								        <option selected>Choose State</option>
 										<?php
 										
@@ -322,7 +322,7 @@
 
 											extract($cartData);
 											
-											switch($cart_product_id) {
+											switch($cart_relation_id) {
 
 												case 1 :
 													$productName='Immunity Vitals';
@@ -357,7 +357,7 @@
 
 												<div class="prodcut-list-cart" id="product_<?php echo $cart_id ?>" >
 													<img src="<?php echo $productImage ?>">
-													<h3><?php echo $productName; ?> – Pack of <?php echo $cart_product_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
+													<h3><?php echo $productName; ?> – Pack of <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
 													<div class="price-new">
 														<span ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
 													</div>

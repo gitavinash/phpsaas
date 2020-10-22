@@ -148,6 +148,7 @@
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL Redirection</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
@@ -156,6 +157,7 @@
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL Redirection</a></li>
 							</ul>
 						</div>
 					</li>

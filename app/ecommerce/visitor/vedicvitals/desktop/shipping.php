@@ -55,7 +55,7 @@
 
 														extract($cartData);
 														
-														switch($cart_product_id) {
+														switch($cart_relation_id) {
 
 															case 1 :
 																$productName='Immunity Vitals';
@@ -90,7 +90,7 @@
 
 															<div class="prodcut-list-cart">
 																<img src="<?php echo $productImage ?>">
-																<h3><?php echo $productName; ?> – Pack of <?php echo $cart_product_qty ?></h3>
+																<h3><?php echo $productName; ?> – Pack of <?php echo $cart_qty ?></h3>
 																<div class="price-new">
 																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
 																</div>
@@ -248,7 +248,7 @@
 
 														extract($cartData);
 														
-														switch($cart_product_id) {
+														switch($cart_relation_id) {
 
 															case 1 :
 																$productName='Immunity Vitals';
@@ -283,7 +283,7 @@
 
 															<div class="prodcut-list-cart">
 																<img src="<?php echo $productImage ?>">
-																<h3><?php echo $productName; ?> – Pack of <?php echo $cart_product_qty ?></h3>
+																<h3><?php echo $productName; ?> – Pack of <?php echo $cart_qty ?></h3>
 																<div class="price-new">
 																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
 																</div>

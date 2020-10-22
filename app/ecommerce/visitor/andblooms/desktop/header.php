@@ -10,7 +10,9 @@
 		<!-- css -->
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>flickity.min.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
 		        
         <!-- SEO -->
@@ -62,7 +64,17 @@
 								<nav class="navbar navbar-expand-lg login-section justify-content-right ">
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav justify-content-center menu-login">
-										<li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">0</span><span class="span-item">Cart</span></li>
+										<li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">
+											<?php
+											
+												if($cartNumber=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1")) {
+
+													echo mysqli_num_rows($cartNumber);
+
+												}
+
+											?>
+										</span><span class="span-item">Cart</span></li>
 									  	<li class="nav-item dropdown">
 											<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>menu.svg"><span class="span-item">More</span>
 											</a>
@@ -115,13 +127,13 @@
 									      <div class="dropdown-menu mega-menu">
 									      	<div class="mega1">
 										      	<div class="menu-titl"><a href="#">New Arivals<span class="cart-bodr"></span></a></div>
-										        <a class="dropdown-item" href="https://cartt.in/category/luxury-collections/fresh-flowers/">Fresh Flowers</a>
-										        <a class="dropdown-item" href="https://cartt.in/category/artistic-artificial/">Artistic Artificial</a>
+										        <a class="dropdown-item" href="category/luxury-collections/fresh-flowers/">Fresh Flowers</a>
+										        <a class="dropdown-item" href="category/artistic-artificial/">Artistic Artificial</a>
 									        </div>
 									  	  </div>
 									  </li>
 									  <li class="nav-item">
-									    <a class="nav-link" href="https://cartt.in/category/infinity-everlasting-flowers/">Infinity Everlasting Flowers</a>
+									    <a class="nav-link" href="category/infinity-everlasting-flowers/">Infinity Everlasting Flowers</a>
 									  </li>
 									  <li class="nav-item dropdown">
 									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Occasins
@@ -130,21 +142,21 @@
 									      	<div class="mega2">
 									      	    <div class="mega-gry flot-menu">
 									      	    	<div class="menu-titl"><a href="#">Menu Name <span class="cart-bodr"></span></a></div>
-											        <a class="dropdown-item" href="https://cartt.in/category/anniversary/">Anniversary</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/birthday/">Birthday</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/corporate-gifting/">Corporate Gifting</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/congratulation/">Congratulation</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/get-well/">Get Well</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/category/occasions/house-warming/">House Warming</a>
+											        <a class="dropdown-item" href="category/anniversary/">Anniversary</a>
+											        <a class="dropdown-item" href="category/birthday/">Birthday</a>
+											        <a class="dropdown-item" href="category/corporate-gifting/">Corporate Gifting</a>
+											        <a class="dropdown-item" href="category/congratulation/">Congratulation</a>
+											        <a class="dropdown-item" href="category/get-well/">Get Well</a>
+											        <a class="dropdown-item" href="category/category/occasions/house-warming/">House Warming</a>
 									    		</div>
 									    		<div class="mega-wht flot-menu">
 									    			<div class="menu-titl"><a href="#">Menu Name <span class="cart-bodr"></span></a></div>
-											        <a class="dropdown-item" href="https://cartt.in/category/i-m-sorry/">I'M Sorry</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/just-because/">Just Because</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/new-baby/">New Baby</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/love---romance/">Love & Romance</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/retirement/">Retirement</a>
-											        <a class="dropdown-item" href="https://cartt.in/category/sympathy/">Sympathy</a>
+											        <a class="dropdown-item" href="category/i-m-sorry/">I'M Sorry</a>
+											        <a class="dropdown-item" href="category/just-because/">Just Because</a>
+											        <a class="dropdown-item" href="category/new-baby/">New Baby</a>
+											        <a class="dropdown-item" href="category/love---romance/">Love & Romance</a>
+											        <a class="dropdown-item" href="category/retirement/">Retirement</a>
+											        <a class="dropdown-item" href="category/sympathy/">Sympathy</a>
 									    		</div>
 									    		<div class="mega-gry flot-menu">
 									      	    	<div class="menu-titl"><a href="">Bumper Sale <span class="cart-bodr"></span></a></div>
@@ -180,9 +192,6 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-12">
-							<div class="map-tag">
-								<a href=""><img src="<?php echo USER_IMAGES ?>ping-map.svg">Select the city</a>
-							</div>
 							<div id="search-mob-div" class="searchInput">
 								<form method="get" action="/search/">
 									<input type="text" id="search_block" name="q" class="form-text ui-autocomplete-input" placeholder="Search for gifts, flowers..." autocomplete="off" ><div id="close">x</div>

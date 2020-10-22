@@ -48,14 +48,11 @@
 						echo (($inventory_in_stock==0) ? "<h5 class='outStock'>Out of Stock</h5>" : "<h5 class='stock'>In Stock</h5>" );
 
 					?>
-					
-					<!-- <div class="rating">
-						<span><img src="<?php echo USER_IMAGES ?>stars_single.svg" align="star"> 4.6</span><a href="">237 Review</a>
-					</div> -->
 					<p class="catag-lbel">Product Contains </p>
 					<p class="catg-info"><?php echo $product_highlight ?></p>
-					<!-- <p class="pro-info"></p> -->
 					<div class="price-tg">
+
+						<p style="display:none" id="productInfo" ><?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?></p>
 
 						<?php
 						
@@ -75,58 +72,15 @@
 						?>
 
 					</div>
-					<!-- <div class="earn-pnt">
-						<img src="<?php echo USER_IMAGES ?>earn_point.svg" alt="earn star"> Earn <strong>50 Points</strong> upon gifting this <span data-toggle="tooltip" data-placement="right" title="You can redeem this on your next order."><img src="<?php echo USER_IMAGES ?>info1.svg" alt="info"> </span>
-					</div> -->
-					<!-- <div class="quantaty">
-						<div class="siz-bx">
-							<form> 
-								<input type="checkbox" id="fruit1" name="fruit-1" value="Apple">
-	  							<label class="size">Double the flowers @ Rs. 349</label><br>
-                                <input type="checkbox" id="fruit1" name="fruit-1" value="Apple">
-	  							<label class="size">Add Vase @ Rs. 200</label>
-							</form>
-						</div>
-					</div> -->
-					<!-- <div class="slct-city">
-						<form>
-							<input type="text" name="" placeholder="Enter And Select Delivery City" data-toggle="tooltip" data-placement="right" title="Check Your City">
-						</form>
-						<span>Available in limited cities*</span>
-					</div> -->
 					<div class="cart-box">
 						<span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date:</span>
-						<a href="/checkout/" class="cart-ad-btn">Buy Now</a>
+						<!-- <a href="/checkout/" id="addToCart" class="cart-ad-btn">Buy Now</a> -->
+						<a href="#" id="addToCart" class="cart-ad-btn">Add to cart</a>
 						<div class="deliver">
 							<img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
 						</div>
 					</div>
 					<div class="similar-product">
-						<!-- <h1>Make your flowers more special by adding</h1>
-						<div class="related-product">
-						    <div class="product-box">
-								<div class="img-rel">
-									<img src="<?php echo USER_IMAGES ?>demo.jpg">
-								</div>
-								<h2>With Butterscotch Cake</h2>
-								<span>Rs. 1044</span>
-							</div>
-                            <div class="product-box">
-								<div class="img-rel">
-									<img src="<?php echo USER_IMAGES ?>demo.jpg">
-								</div>
-								<h2>With Butterscotch Cake</h2>
-								<span>Rs. 1044</span>
-							</div>
-                            <div class="product-box">
-								<div class="img-rel">
-									<img src="<?php echo USER_IMAGES ?>demo.jpg">
-								</div>
-								<h2>With Butterscotch Cake</h2>
-								<span>Rs. 1044</span>
-							</div>
-						</div> -->
-
                         <h2>Product Description</h2>
 						<p><?php echo $product_description ?></p>
 						<h2>Care & Tips</h2>

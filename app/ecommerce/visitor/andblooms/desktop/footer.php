@@ -125,6 +125,26 @@
 		</div>
 		</footer>
 
+		<div class="popup" id="addToCardPopUp" style="display:none" >
+			<div class="description-pop">
+		        <h6>JUST ADDED TO YOUR CART</h6>
+		        <div class="links-pop" id="closeAddToCartPopUp">
+		        	<a href="#" ><i class="fa fa-times" aria-hidden="true"></i></a>
+		     	</div>
+	      	</div>
+		    <div class="img-pop">
+			    <img src="" id="selectedImg" >
+			    <div class="prod-name">
+			      	<h5 id="selectedName" ></h5>
+			    </div>
+			    <span id="selectedQty" ></span>
+		    </div>
+		    <div class="cart-duc">
+		      	<!-- <a href="#" class="del-b remove-cart-btn removeFromCart" id="" ><i class="fas fa-trash" aria-hidden="true"></i></a> -->
+		      	<a href="/checkout/" class="buy-b cart-ad-btn">Proceed to Checkout</a>
+		    </div>
+	    </div>
+
 		<!-- sections end -->
 
 		<!-- script start -->
@@ -132,62 +152,9 @@
 		<script src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
 		<script src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
 		<script src="<?php echo JS_LIBRARY ?>bootstrap.min.js"></script>
+		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
+		<script src="<?php echo USER_JS ?>app.min.js"></script>
 		<!-- script end -->
-		
-		<!-- city search popup start -->
-		<div id="popup1" class="overlay-pop">
-			<div class="popup">
-				<h2>Here i am</h2>
-				<a class="close" href="#">&times;</a>
-				<div class="content-pop">
-					Thank to pop me out of that button, but now i'm done so you can close this window.
-				</div>
-			</div>
-		</div>
 
-		<!-- city search popup end -->
-
-		<script type="text/javascript">
-			$(document).ready(function() {
-			  $('.card-slider').slick({
-			    dots: false,
-			    arrows: true,
-			    slidesToShow: 4,
-			    infinite: false,
-			    responsive: [
-			      {
-			        breakpoint: 800,
-			        settings: {
-			          slidesToShow: 3
-			        }
-			      },
-			      {
-			        breakpoint: 600,
-			        settings: {
-			          slidesToShow: 2
-			        }
-			      }
-			    ]
-			  });
-			});
-		</script>
-		
-		<!-- search in mobile div show -->
-
-		<script type="text/javascript">
-			function divSearchPop() {
-			  var x = document.getElementById("search-mob-div");
-			  if (x.style.display === "none") {
-			    x.style.display = "block";
-			  } else {
-			    x.style.display = "none";
-			  }
-			}
-
-			$("#close").click(function(){
-			  $("searchInput").hide();
-			});
-
-		</script>
 	</body>
 </html>

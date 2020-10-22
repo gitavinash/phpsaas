@@ -12,8 +12,8 @@
     cart_id bigint(20) NOT NULL,
     cart_site_id bigint(20) NOT NULL,
     cart_user_id bigint(20) NOT NULL,
-    cart_product_id bigint(20) NOT NULL,
-    cart_product_qty int(11) NOT NULL,
+    cart_relation_id bigint(20) NOT NULL,
+    cart_qty int(11) NOT NULL,
     cart_status int(1) NOT NULL,
     cart_generated timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     cart_updated timestamp NOT NULL DEFAULT current_timestamp()
@@ -21,7 +21,7 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     ADD PRIMARY KEY (cart_id),
-    ADD KEY cart_product_id (cart_product_id),
+    ADD KEY cart_relation_id (cart_relation_id),
     ADD KEY cart_user_id (cart_user_id),
     ADD KEY cart_site_id (cart_site_id)");
 
@@ -32,7 +32,7 @@
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."inventory (
     inventory_id bigint(20) NOT NULL,
-    inventory_product_id bigint(20) NOT NULL,
+    inventory_relation_id bigint(20) NOT NULL,
     inventory_sku varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     inventory_currency varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     inventory_price varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -53,7 +53,7 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
     ADD PRIMARY KEY (inventory_id),
-    ADD KEY inventory_product_id (inventory_product_id),
+    ADD KEY inventory_relation_id (inventory_relation_id),
     ADD KEY inventory_sku (inventory_sku),
     ADD KEY inventory_currency (inventory_currency),
     ADD KEY inventory_tax_status (inventory_tax_status),
@@ -182,10 +182,10 @@
   /** Update cart table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
-    ADD cart_price VARCHAR(10) NOT NULL AFTER cart_product_qty");
+    ADD cart_price VARCHAR(10) NOT NULL AFTER cart_qty");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
-    ADD cart_currency VARCHAR(5) NOT NULL DEFAULT 'INR' AFTER cart_product_qty");
+    ADD cart_currency VARCHAR(5) NOT NULL DEFAULT 'INR' AFTER cart_qty");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart ADD cart_session_id VARCHAR(255) NOT NULL AFTER cart_id");
 
