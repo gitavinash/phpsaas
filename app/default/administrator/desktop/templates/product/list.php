@@ -29,16 +29,15 @@
 			<!-- <th style="width: 50px"></th> -->
 			<th>Title</th>
 			<th style="width: 150px">Category</th>
-			<th style="width: 150px">Author</th>
-			<th style="width: 100px">Date</th>
+			<th style="width: 75px">Selling Price</th>
+			<th style="width: 75px">MRP</th>
+			<th style="width: 100px">Publish date</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
 
-			echo "SELECT product_id, product_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE product_owner_id='".USER_ID."' AND link_type='product' AND link_relation_id=product_id AND link_site_id='".SITE_ID."' AND category_id=product_category AND link_status!=301 $productStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10";
-
-			if($dataList=mysqli_query($connection, "SELECT product_id, product_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE product_owner_id='".USER_ID."' AND link_type='product' AND link_relation_id=product_id AND link_site_id='".SITE_ID."' AND category_id=product_category AND link_status!=301 $productStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+			if($dataList=mysqli_query($connection, "SELECT product_id, product_title, product_owner_id, category_title, link_url, link_status, link_creation, IFNULL(inventory_mrp, 0) as inventory_mrp, IFNULL(inventory_price, 0) as inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."category ON category_id=product_category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_type='product' AND link_relation_id=product_id AND link_site_id=".SITE_ID." AND category_id=product_category AND link_status!=301 {$productStatus} ORDER BY link_published DESC LIMIT {$startFrom}, 100")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
@@ -51,7 +50,8 @@
 								</div>
 							</td>
 							<td><?php echo $category_title; ?></td>
-							<td><?php echo $profile_display_name; ?></td>
+							<td><i class="fas fa-rupee-sign"></i> <?php echo (($inventory_price!='') ? $inventory_price : 0 ); ?></td>
+							<td><i class="fas fa-rupee-sign"></i> <?php echo (($inventory_mrp!='') ? $inventory_mrp : 0 );; ?></td>
 							<td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
 						</tr>
 					<?php
