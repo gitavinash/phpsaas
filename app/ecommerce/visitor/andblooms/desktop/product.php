@@ -75,7 +75,7 @@
 					<div class="cart-box">
 						<span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date:</span>
 						<!-- <a href="/checkout/" id="addToCart" class="cart-ad-btn">Buy Now</a> -->
-						<a href="#" id="addToCart" class="cart-ad-btn">Add to cart</a>
+						<a href="#" id="addToCart" class="cart-ad-btn">Buy Now</a>
 						<div class="deliver">
 							<img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
 						</div>

@@ -58,7 +58,7 @@ $(document).ready(function() {
                   $('#selectedQty').text('');
                   $('#selectedQty').append(data.productQty);
 
-                  console.log(data);
+                  window.location.href='/checkout/';
 
               } else {
                   console.log(data.msg);
