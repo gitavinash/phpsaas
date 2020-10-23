@@ -1,41 +1,134 @@
 <?php
 	
-    $page_id=mysqli_real_escape_string($connection, $_GET['id']);
-    
-	if($pageDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."page, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='page' AND link_relation_id=page_id AND meta_relation_id=link_id AND page_id='{$page_id}' AND link_status!=301 AND link_type='page' LIMIT 1")) {
-		if(mysqli_num_rows($pageDetails)!=0) {
-			extract(mysqli_fetch_assoc($pageDetails));
+	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' LIMIT 1")) {
+		if(mysqli_num_rows($productDetails)!=0) {
+			extract(mysqli_fetch_assoc($productDetails));
 		} else { exit(); ?>
 			<script type="text/javascript">
 				alert('Invalid action found');
-				window.location.href='dashboard/page/?type=list&status=all';
+				window.location.href='dashboard/product/?type=list&status=all';
 			</script>
 		<?php
 		}
 	}
 
 ?>
-<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $pageType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
+<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 <div class="form-box">
-	<form method="page" id="formData" enctype="multipart/form-data" >
+	<form method="POST" id="formData" enctype="multipart/form-data" >
 		<div class="left-box">
 			<div class="form-group">
-				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $page_title ?>" required="" >
+				<input type="text" id="title" class="form-control inside-shadow" name="title" value="<?php echo $product_title ?>" placeholder="Title" autofocus required >
 			</div>
 			<div class="form-group">
 				<div class="url">
-					<?php
-						$url=explode('/', ltrim(rtrim($link_url, '/'), '/'));
-					?>
-					<p><strong>Permalink</strong></p><p><span><?php echo SITE_DOMAIN.'/...'; ?>/</span></p>
-					<input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url" >
-					<input type="hidden" name='oldURL' value='<?php echo $link_url ?>' >
+					<p><strong>Permalink</strong></p><p><span><?php echo SITE_DOMAIN ?>/product/</span></p>
+					<input type="text" id="url" class="form-control" value="<?php echo $link_url ?>" name="url" >
 				</div>
 			</div>
 			<div class="form-group fullscreen-editor">
-				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode($page_description); ?></textarea>
+				<textarea name="description" class="editor inside-shadow" ></textarea>
 			</div>
+
+			<!-- Product description and other things -->
+
+			<section style="margin-bottom:20px" >
+				<h3>Product Details</h3>
+				<ul class='tabs'>
+					<li id="productGeneral" class='active' >General</li>
+					<li id="productInventory" >Inventory</li>
+					<li id="productShipping" >Shipping</li>
+					<li id="productGallery" >Gallery</li>
+					<li id="productAdditionalDetails" >Additional Details</li>
+				</ul>
+				<div class="productGeneral generalTab">
+					<div class="form-group">
+						<label>Product short description / Highlights</label>
+						<textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights" ></textarea>
+					</div>
+				</div>
+				<div class="productInventory generalTab" style="display: none;">
+					
+					<div class="box-2">
+						<input type="checkbox" name="in_stock" checked > In Stock
+					</div>
+					<div class="box-2">
+						<input type="checkbox" name="backorder" checked > Allowed Backorders (if product is out of stock )
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Sale price (₹)</label>
+							<input type="number" class="form-control inside-shadow" name="salePrice" placeholder="Sale price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Regular price (₹)</label>
+							<input type="number" class="form-control inside-shadow" name="mrp" placeholder="Regular price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>SKU</label>
+							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Stock Alert</label>
+							<input type="text" class="form-control inside-shadow" name="stock_warning" placeholder="Stock Alert" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Calculate tax</label>
+							<select name="taxStatus" class="form-control inside-shadow" >
+								<option value="0">No</option>
+								<option value="1">Yes</option>
+							</select>
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Tax rate ( in % )</label>
+							<input type="number" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow" >
+						</div>
+					</div>
+				</div>
+				<div class="productShipping generalTab" style="display: none;">
+					<div class="box-1">
+						<div class="form-group">
+							<label>Weight (kg)</label>
+							<input type="text" class="form-control inside-shadow" name="weight" placeholder="Weight" >
+						</div>
+					</div>
+					<label>Dimensions (cm)</label>
+					<div class="form-group">
+						<div class="box-3">
+							<label>Lenght</label>
+							<input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght" >
+						</div>
+						<div class="box-3">
+							<label>Width</label>
+							<input type="text" class="form-control inside-shadow" name="width" placeholder="Width" >
+						</div>
+						<div class="box-3">
+							<label>Height</label>
+							<input type="text" class="form-control inside-shadow" name="height" placeholder="Height" >
+						</div>
+					</div>
+				</div>
+				<div class="productGallery generalTab" style="display: none;">
+					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+				</div>
+				<div class="productAdditionalDetails generalTab" style="display: none;">
+					
+				</div>
+			</section>
+
+			<!-- SEO & social media marketing -->
+
 			<section>
 				<h3>Advance Options for digital marketing</h3>
 				<ul class='tabs'>
@@ -46,120 +139,110 @@
 				<div class="seo generalTab">
 					<div class="form-group">
 						<label>Meta Title</label>
-						<input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title" class="form-control inside-shadow"  placeholder="Meta title" >
+						<input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow"  placeholder="Meta title" >
 					</div>
 					<div class="form-group">
 						<label>Meta Description</label>
-						<textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow" placeholder="Meta Description" ><?php echo $meta_description ?></textarea>
+						<textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow" placeholder="Meta Description" ></textarea>
 					</div>
 					<div class="form-group">
 						<label>Meta Keywords</label>
-						<textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the page ( use , to seprate keywords )" ><?php echo $meta_keyword ?></textarea>
+						<textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the post ( use , to seprate keywords )" ></textarea>
 					</div>
 					<div class="form-group">
 						<label>Canonical URL</label>
-						<input type="text" name="canonical" class="form-control inside-shadow" value="<?php echo $meta_canonical; ?>" id="canonical" placeholder="Actual URL of the <?php echo $pageType ?>"  >
+						<input type="text" name="canonical" class="form-control inside-shadow" id="canonical" placeholder="Actual URL of the <?php echo $postType ?>" >
 					</div>
 					<div class="form-group">
-						<label>Allow search engines to show this page in search results?</label>
+						<label>Allow search engines to show this Post in search results?</label>
 						<select name="robots" class="form-control inside-shadow">
-							<option value="index, follow" <?php echo (($meta_robots=='index, follow') ? 'selected' : '' ) ?> >Yes</option>
-							<option value="noindex, nofollow" <?php echo (($meta_robots=='noindex, nofollow') ? 'selected' : '' ) ?> >No</option>
+							<option value="index, follow">Yes</option>
+							<option value="noindex, nofollow">No</option>
 						</select>
 					</div>
 				</div>
 				<div class="fb generalTab"  style="display: none;">
-					<div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
-						<input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
-						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
+					<div class="facebookPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
-					<div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
+					<div class="facebookUploadBox">
 						<span>Set facebook feature image</span>
 						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
-						<input type="text" name="fb_title" class="form-control inside-shadow" value="<?php echo $fb_title ?>" placeholder="Facebook title" >
+						<input type="text" name="fb_title" id="fb_title" class="form-control inside-shadow"  placeholder="Facebook title" >
 					</div>
 					<div class="form-group">
 						<label>Facebook Description</label>
-						<textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description" ><?php echo $fb_desc ?></textarea>
+						<textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description" ></textarea>
 					</div>
 				</div>
 				<div class="tw generalTab"  style="display: none;">
-					<div class="twitterPreviewBox" style="display: <?php echo (($tw_img=='') ? 'none' : 'block' ) ?>;">
-						<input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
-						<div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
+					<div class="twitterPreviewBox" style="display: none;">
+						<div class="img"><img src="" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
-					<div class="twitterUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
+					<div class="twitterUploadBox">
 						<span>Set Twitter feature image</span>
 						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
-						<input type="text" name="tw_title" class="form-control inside-shadow" value="<?php echo $tw_title; ?>" placeholder="Twitter title" >
+						<input type="text" name="tw_title" id="tw_title" class="form-control inside-shadow"  placeholder="Twitter title" >
 					</div>
 					<div class="form-group">
 						<label>Twitter Description</label>
-						<textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description" ><?php echo $tw_desc ?></textarea>
+						<textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description" ></textarea>
 					</div>
 				</div>
 			</section>
+
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updatepage" class="btn btn-green btn-block" value=" <?php echo (($page_status==1) ? 'Update ' : 'Publish ' ); ?>Page">
-				<input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft">
-				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-				<input type="hidden" name="type" value="draft" >
-				<input type="hidden" name='pageStatus' value='<?php echo $page_status ?>' >
-				<input type="hidden" name="pageType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<input type="hidden" name="page_id" value="<?php echo $page_id ?>" >
-				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live Page</a>
+				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
+				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
+				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="hidden" name="action" value="publish" >
 			</div>
 			<div class="form-group">
-				<h2>Fearure page</h2>
+				<h2>Fearure Post</h2>
 				<div class="action-box inside-shadow">
-					<input type="checkbox" value="1" name='featurepage' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature page
+					<input type="checkbox" value="1" name='featurePost' > Mark as feature product
 				</div>
 			</div>
-			<h2>Tags</h2>
-			<?php
-				$tagpageID=(($page_parent_id==0) ? $page_id : $page_parent_id );
-				
-				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagpageID}' AND tag_site_id='".SITE_ID."' AND tag_type='page'")) {
-					if(mysqli_num_rows($tagList)!=0) {
-						while($tagsName=mysqli_fetch_assoc($tagList)) {
-							$tags[]=$tagsName['tag_title'];
+			<h2>Categories</h2>
+			<div class="action-box height-200 inside-shadow">
+				<?php
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$postType}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
+						while($category=mysqli_fetch_assoc($categoryList)) { ?>
+							<div class="form-group">
+								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
+							</div>
+						<?php
 						}
-						$tags=implode(',', $tags);
-					} else {
-						$tags='';
 					}
-				}
-			?>
+				?>
+			</div>
+			<h2>Tags</h2>
 			<div class="action-box inside-shadow">
 				<div class="form-group">
 					<input type="text" class='tags' />
-					<input type="hidden" id="tagValue" value="<?php echo $tags; ?>" >
 					<input type="hidden" id='tags' name="tags" value='' >
 				</div>
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($post_image!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox upload-btn">
 				<span>Set Feature Image</span>
-				<input type="hidden" name="oldFeatureImage" value="<?php echo $post_image ?>">
 				<input type="file" id="featureImage" name="featureImage">
-				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
+				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif <strong>Recommended file size maximum 500kb</p>
 			</div>
-			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($post_image!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.$post_image ?>" id="featureImagePath" alt="">
-				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
+			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">
+				<img src="#" id="featureImagePath" alt="">
+				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>
