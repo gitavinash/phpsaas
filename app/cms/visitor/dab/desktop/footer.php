@@ -53,8 +53,10 @@
             </div>
         </section>
     </footer>
+    
     <?php require_once NOTIFICATION.'index.php'; ?>
     <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js" ></script>
+    <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>galleria/galleria.min.js" ></script>
     <script type="text/javascript" src="<?php echo USER_JS ?>script.min.js" ></script>
 </body>
 </html>

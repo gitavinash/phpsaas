@@ -1,562 +1,272 @@
-body {
-    float: left;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0;
-    font-family: 'Oswald', sans-serif;
+.vanilla-calendar .vanilla-calendar-header {
+  align-items: center;
+  display: flex;
+  padding: 10px 0px;
+  margin: 15px 0px 20px;
+}
+.vanilla-calendar .vanilla-calendar-btn {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: button;
+  background: none;
+  border: 0;
+  color: #457ba9;
+  cursor: pointer;
+  display: inline-block;
+  flex: 0 0 14.28%;
+  max-width: 14.28%;
+  outline: none;
+  overflow: visible;
+  padding: 0;
+  text-align: center;
+}
+.vanilla-calendar .vanilla-calendar-header__label {
+  font-weight: bold;
+  text-align: center;
+  max-width: 71.44%;
+  color : #457ba9;
+  flex: 0 0 71.44%;
+}
+.vanilla-calendar .vanilla-calendar-week {
+  display: flex;
+  flex-wrap: wrap;
+}
+.vanilla-calendar .vanilla-calendar-week span {
+  flex-direction: column;
+  flex: 0 0 14.28%;
+  max-width: 14.28%;
+  color: #457ba9;
+  text-align: center;
+}
+.vanilla-calendar .vanilla-calendar-body {
+  background-color: rgba(#538fcd, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
 }
 
-p, li, ul, h1, h2, h3, h4, h5, h6 {
-    padding: 0;
-    margin: 0 auto;
+.calendar-dates{
+	height: 266px; 
 }
 
-.red {
-    background: #D87764;
-    color: #fff;
+.weekday, .calendar-date{
+	display: inline-block;
+	flex: 0 0 14.28%;
+	max-width: 14.28%;
+	text-align: center;
+}
+.weekday{
+	/* padding: 5px; */
+	/* vertical-align: middle; */
+	/* height: 30px; */
+	cursor: pointer;
+}
+.cal-day{
+	line-height: 38px;
+	position: relative;
+	margin: 0px;
+	width: 38px;
+	display: inline-block;
+	height: 38px;
 }
 
-.yellow {
-    background: #FEF1CE;
-    color: #000 !important;
+.today .cal-day{
+	background-color: #538fcd;
+	color: #fff;
+	border-radius: 50%;
 }
 
-.green {
-    background: #6BA74F;
-    color: #fff;
+.nextmonth, .prevmonth{
+	color: #bbb;
+	cursor: not-allowed;
 }
 
-button.slick-prev.slick-arrow {
-    display: none;
+.prev-dates{
+	color: #bbb;
+	cursor: not-allowed;
+}
+.vanilla-calendar .vanilla-calendar-btn:disabled{
+	cursor: not-allowed;
+	color: #bbb;
+	opacity: 0.2;
+}
+.flex-it{
+	margin-top: 3px;
+	display: flex;
+	flex: 0 0 100%;
+	max-width: 100%;
+	justify-content: space-evenly;
+	align-items: center;
+}
+.flex-it span{
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%
+}
+.flex-it >span[data="1"]{
+	display: none;
+}
+.slot-booked-not-confirmed{
+	background-color: #f39e80;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%
+}
+.flex-it >span[data="0"]{
+	background-color: #f39e80;
+}
+.dtl-box{
+	font-size: 12px;
+}
+.dtl-box span{
+	color: #777;
+}
+.breakfast{
+	cursor: no-drop;
+	background-color: #f5e133
+}
+.lunch{
+	cursor: no-drop;
+	background-color: #8cc34a
+}
+.dinner{
+	cursor: no-drop;
+	background-color: #666666
+}
+.prev-dates .flex-it{
+	display: none;
+}
+.bookingSlots{
+	padding: 10px;
+	display: none;
+}
+.bookingSlots.active{
+	display: block;
 }
 
-button.slick-next.slick-arrow {
-    display: none;
+.bor-rounded{
+	border-radius: 10px;
+}
+.clkAlw.highlight p{
+	border-radius: 50%;
+	background-color: #81a4c7;
 }
 
-/** Form Stylesheet */
-
-::-webkit-input-placeholder { /* Edge */
-    font-weight: 300;
+.sch{
+	font-size: 12px;
 }
-  
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-    font-weight: 300;
+.time-sch{
+	font-size: 12px;
+	color: #333;
 }
-  
-::placeholder {
-    font-weight: 300;
+.bookedForText > div{
+	padding: 20px 0px;
+	display: none;
 }
-
-.form-control {
-	float: left;
-	width: 100%;
-	box-sizing: border-box;
-	padding: 7px 10px;
-	border: none;
-	outline: none;
+.bookedForText > div.active{
+	display: flex;
+}
+.bookedForText .sch{
 	font-size: 16px;
 }
-
-.form-control::placeholder {
-    font-weight: 300;
+.bookedForText .sch i{
+	margin-right: 10px;
+}
+.bookedForText .time-sch{
+	font-size: 16px;
+}
+.forbreakfast .sch{
+	color: #f5e133;
+}
+.forlunch .sch{
+	color: #8cc34a;
+}
+.fordinner .sch{
+	color: #666666;
 }
 
-textarea.form-control {
-	resize: none;
-	height: 100px;
+.com-sch{
+	margin-bottom: 10px;
 }
-
-.inside-shadow {
-	position: relative;
-	box-shadow: inset 0px 0px 2px 0px #9c9c9c;
+.com-sch.notConf{
+	cursor: progress;
 }
-
-/** Form Stylesheet **/
-
-.loader {
-    float: left;
-    width: 100%;
-    text-align: center;
-    padding: 100px 0px;
+.com-sch.notAvl{
+	cursor: no-drop;
 }
-
-section {
-    display: block;
-    margin: 0 auto;
-    width: 800px;
-    overflow: hidden;
-    box-sizing: border-box;
+.com-sch.isAvl{
+	cursor: pointer;
 }
-
-header {
-    float: left;
-    width: 100%;
+.bookedForText{
+	margin-bottom: 10px;
 }
-
-ul.menu {
-    float: left;
-    width: 100%;
-    list-style: none;
-    box-sizing: border-box;
-}
-
-ul.menu li:last-child {
-    background: #946E3E;
-    color: #fff !important;
-}
-
-ul.menu li {
-    float: left;
-    width: 13%;
-    padding: 0;
-    margin: 0 auto;
-    box-sizing: border-box;
-    border-top: none;
-    border-right: 1px solid #efefef;
-    border-bottom: 1px solid #efefef;
-}
-
-ul.menu li:last-child {
-    border-right: none;
-}
-
-ul.menu li.logo {
-    width: 22%;
-    text-align: center;
-}
-
-ul.menu li.logo a {
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 70px;
-    text-transform: uppercase;
-    color: #000;
-}
-
-ul.menu li.logo a:hover {
-    color: #000;
-}
-
-ul.menu li a:hover {
-    color: #333;
-}
-
-ul.menu li a {
-    float: left;
-    width: 100%;
-    padding: 10px 20px;
-    text-align: center;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: #807e7e;
-    font-weight: 300;
-    letter-spacing: 1px;
-    font-size: 16px;
-    line-height: 70px;
-}
-
-.mobile-menu {
-    display: none;
-}
-
-main {
-    float: left;
-    width: 100%;
-}
-
-section h1 {
-    float: left;
-    width: 100%;
-    padding: 50px 0px 0px 0px;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-section h3 {
-    float: left;
-    width: 100%;
-    padding: 10px 0px 0px 0px;
-    text-align: left;
-    box-sizing: border-box;
-}
-
-section h3 span {
-    float: left;
-    width: 100%;
-    font-size: 12px;
-    font-weight: 300;
-}
-
-.booking-form {
-    float: left;
-    width: 100%;
-    margin: 10px 0px;
-    box-sizing: border-box;
-}
-
-.booking-form h2 {
-    float: left;
-    width: 100%;
-    text-align: center;
-    padding: 10px 0px;
-    box-sizing: border-box;
-    color: #946E3E;
-}
-
-.calender {
-    float: left;
-    width: 100%;
-    padding: 10px 0px 0px 0px;
-    margin: 0 auto;
-    margin-top: 40px;
-    margin-bottom: 20px;
-    border: 1px solid #333;
-    box-sizing: border-box;
-}
-
-.calender h4 {
-    float: right;
-    text-align: center;
-    width: 100%;
-    margin-top: -40px;
-}
-
-.calender #previousMonth {
-    float: left;
-}
-
-.calender #nextMonth {
-    float: right;
-}
-
-.calenderNote {
-    margin-bottom: 20px;
-}
-
-p#bookingSlotInfo {
-    float: left;
-    width: 100%;
-    line-height: 24px;
-    font-size: 16px;
-}
-
-.calender h4 a {
-    text-decoration: none;
-    color: #333;
-}
-
-.calender .heading {
-    float: left;
-    width: 100%;
-}
-
-.calender .heading h2 {
-    float: left;
-    width: 100%;
-    text-align: center;
-    font-weight: 400;
-    color: #000;
-    font-size: 24px;
-}
-
-.calender .date-list {
-    float: left;
-    width: 114px;
-    box-sizing: border-box;
-}
-
-.calender .date-list .date {
-    float: left;
-    width: 100%;
-    text-align: center;
-    font-size: 16px;
-    padding: 10px 0px;
-    color: #946E3E;
-    box-sizing: border-box;
-}
-
-.calender .date-list .bookPangat {
-    float: left;
-    width: 100%;
-    padding: 5px 10px;
-    text-align: left;
-    font-weight: 300;
-    color: #fff;
-    box-sizing: border-box;
-}
-
-.calender-info {
-    float: left;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.calender-info span {
-    float: left;
-    padding: 10px 20px;
-    margin-right: 50px;
-    min-width: 120px;
-    font-weight: 300 !important;
-    letter-spacing: 1px;
-}
-
-.form {
-    float: left;
-    width: 100%;
-    background: #fff;
-    padding: 0px 10px;
-    box-sizing: border-box;
-}
-
-.form-control {
-	float: left;
+.inputClass, .submit-data{
+	height: 50px;
+	border-radius: 8px;
+	background-color: #fcf9fa;
 	width: 100%;
-	box-sizing: border-box;
-	padding: 10px 10px;
 	border: none;
 	outline: none;
-    font-size: 16px;
-    border-radius: 4px;
-}
-
-textarea.form-control {
-	resize: none;
-	height: 100px;
-}
-
-.inside-shadow {
-	position: relative;
-	box-shadow: inset 0px 0px 2px 0px #9c9c9c;
-}
-
-.form-group {
-	float: left;
-	width: 100%;
-	margin: 0px 0px 10px 0px;
-}
-
-.form-group span {
-	background: #00609E;
-	padding: 10px 30px;
-	border-radius: 4px;
-	color: #fff;
-}
-
-.form-group label {
-	float: left;
+	margin-bottom: 10px;
+	padding: 5px 10px;
 	font-size: 14px;
-	margin-bottom: 5px;
 }
-
-.form-group label span {
-	background: none;
-    padding: 0;
-    font-size: 11px;
-    margin-left: 10px;
-    color: red;
+.forms-data{
+	margin-left: -0.75rem;
+	margin-right: -0.75rem;
 }
-
-.btn {
-	text-decoration: none !important;
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    outline: none;
-    margin-bottom: 10px;
-    cursor: pointer;
+.form-cont .color-red{
+	color: red;
+	display: none;
 }
-
-.btn:last-child {
-	margin-right: 0px;
+.form-cont p.warning{
+	display: block;
 }
-
-.btn-block {
-    box-sizing: border-box;
-	width: 100%;
+.form-cont span{
+	font-size: 14px;
 }
-
-.btn-red {
-	background: #dc3545;
+.submit-data{
+	background-color: #1a6fc8;
+	cursor: pointer;
 	color: #fff;
-	border: #dc3545;
+	font-size: 16px;
+}
+.no-booking{
+	display: none;
+	text-align: center;
+	padding-bottom: 10px;
+}
+.no-booking.active{
+	display: block;
 }
 
-.btn-green {
-	background: #28a745;
-	color: #fff;
-	border: #28a745;
-
+.navReqButton{
+	background-color: #f49910;
+  color: #fff;
+  padding: 11px 28px;
+  line-height: 1.4;
+  border-radius: 30px;
+  transition: ease .5s all 0s;
 }
-
-.btn-yellow {
-	background: #ffc107;
-	color: #fff;
-	border: #ffc107;
-
+.navbar-light .navbar-nav .nav-link{
+	color: #000;
 }
-
-.btn-blue {
-	background: #006CD1;
-	color: #fff;
-	border: #006CD1;
-
+@media(min-width: 992px){
+	.vanilla-calendar{
+		margin-left: -40px;
+	}
+	.container{
+    max-width: 920px;
+	}
 }
-
-.btn-sm {
-	font-size: 12px;
-	letter-spacing: 1px;
-	padding: 2px 7px;
+@media (min-width: 1200px){
+	.container{
+    max-width: 940px;
+	}
 }
-
-.page-not-found {
-    float: left;
-    width: 100%;
-}
-
-.form {
-    float: left;
-    width: 100%;
-    padding: 50px 200px;
-    box-sizing: border-box;
-}
-
-.form h2 {
-    padding-bottom: 20px
-}
-
-.statusMsg {
-    float: left;
-    width: 100%;
-    text-align: center;
-}
-
-.statusMsg h2 {
-    float: left;
-    width: 100%;
-    text-align: center;
-    padding: 100px 0px 20px 0px
-}
-
-.statusMsg p {
-    float: left;
-    width: 100%;
-    text-align: center;
-    padding: 0px 0px 10px 0px;
-}
-
-.statusMsg p a {
-    text-decoration: none;
-    color: #946E3E;
-}
-
-.bookingForm {
-    cursor: pointer;
-}
-
-@media (orientation: portrait) {
-    
-    .desktop {
-        display: none;
-    }
-
-    .loader {
-        float: left;
-        width: 100%;
-        text-align: center;
-    }
-
-    .mobile-menu {
-        display: block;
-        float: left;
-        width: 100%;
-        box-sizing: border-box;
-        border-bottom: 1px solid #efefef;
-    }
-
-    .mobile-menu h1 {
-        float: left;
-        width: 80%;
-        text-align: center;
-    }
-
-    .mobile-menu h1 a {
-        float: left;
-        width: 100%;
-        text-decoration: none;
-        color: #000;
-        font-size: 28px;
-        text-align: center;
-        padding: 20px 0px;
-        box-sizing: border-box;
-    }
-
-    .mobile-menu .menu-box {
-        float: right;
-        width: 20%;
-        box-sizing: border-box;
-        padding: 25px 20px;
-    }
-
-    .mobile-menu .menu-box img {
-        height: 32px;
-    }
-
-    section {
-        float: left;
-        width: 100%;
-        padding: 0px 10px;
-        box-sizing: border-box;
-    }
-
-    .calender-info p span {
-        float: left;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .calender .date-list {
-        float: left;
-        width: 20%;
-        box-sizing: border-box;
-    }
-
-    .calender-info {
-        float: left;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .calender-info p {
-        float: left;
-        width: 33.33%;        
-    }
-
-    .calender-info p span {
-        padding: 5px 5px;
-    }
-
-    .form {
-        float: left;
-        width: 100%;
-        padding: 20px 0px;
-        box-sizing: border-box;
-    }
-    
-    .form h2 {
-        padding-bottom: 20px
-    }
-
+.bg-body{
+	background-image: url(b.png);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
 }

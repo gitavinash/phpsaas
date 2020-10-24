@@ -13,7 +13,7 @@
         
         extract($data);
 
-        $availablityDate=($date!='' ? date('01-M-Y', strtotime($date)) : date('01-M-Y'));
+        $availablityDate=((isset($date)) ? date('01-M-Y', strtotime($date)) : date('01-M-Y'));
 
         for($i=0; $i<date('t', strtotime($availablityDate)); $i++) {
 

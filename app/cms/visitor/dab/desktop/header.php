@@ -45,6 +45,17 @@
                 </div>
                 <div class="menu">
                     <img src="<?php echo USER_IMAGES ?>icon/menu.png" id="mobileMenu" alt="">
+                    <div class="mobileMenu">
+                        <span id="closeMenu">X</span>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#ourstory">Our Story</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#portfolio">Portfolio</a></li>
+                            <li><a href="/blog/">Blog</a></li>
+                            <li><a href="#contactus">Contact Us</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

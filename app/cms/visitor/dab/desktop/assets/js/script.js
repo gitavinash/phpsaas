@@ -29,5 +29,10 @@ $(document).ready(function(){
         slidesToShow: 2,
         slidesToScroll: 1
     });
+
+    (function() {
+        Galleria.loadTheme('lib/resource/ui/plugin/galleria/themes/classic/galleria.classic.min.js');
+        Galleria.run('.galleria');
+    }());
     
 });
