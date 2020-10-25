@@ -3,10 +3,10 @@ var nexttmonth = '';
 var dates = new Date();
 var month = dates.getMonth();
 var year = dates.getFullYear();
-var onGoingMonth = '';
-var onGoingYear = '';
+var onGoingMonth = dates.getMonth();
+var onGoingYear = dates.getFullYear();
 var isPrevAllowed = 0;
-var isNextAllowed = 2;
+var isNextAllowed = 4;
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var dataIndexer = 0;
 var dummydata = {
@@ -297,8 +297,7 @@ var nextmonth = function(y, m) {
   return nexyear + ', '+nexmonth;
 }
 var calendar = function(y, m) { //———–Calendar function start ———-//
-  onGoingMonth = m;
-  onGoingYear = y;
+
   var selectedFirstDate = new Date(y, (m), 1).getDate(); // get first date of month
   var selectedLastDate = new Date(y, (m + 1), 0).getDate(); // get last date of month
   var selectedFirstDay = new Date(y, (m), 1).getDay(); // get first day of the month
@@ -361,18 +360,23 @@ var calendar = function(y, m) { //———–Calendar function start ———-
 
 var callingData = {type: 'booking',action: 'availability'}
 
-/*—-Call calendar funtion —–*/
-$(document).ready(function (argument) {
-
-    $.ajax({
+function callTheBackednData() {
+  $.ajax({
       type: 'POST',
-      dataType: 'json',
-      data: {
-          'type' : 'booking',
-          'action' : 'availability'
+      url: 'https://pangat.srisanwalimurat.com/',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Access-Control-Allow-Origin': '*'
       },
+      contentType: 'application/x-www-form-urlencoded',
+      dataType: 'jsonp',
+      crossDomain: true,
+      data: callingData,
       success: function (ret) {
-        console.log(ret)
+        // console.log(ret)
+        dummydata = ret;
+        calendar(onGoingYear, onGoingMonth);
         console.log('success')
       },
       error: function (err) {
@@ -380,10 +384,24 @@ $(document).ready(function (argument) {
         console.log('In Error')
       }
     });
+}
 
+function markTheDate(m, y) {
+  onGoingMonth = m;
+  onGoingYear = y;
+  m = parseInt(m) +1;
+  let d = ''+ y + '-' + m + '-1';
+  callingData['date'] = d;
+  console.log(callingData);
+  callTheBackednData();
 
+}
 
-  calendar(year, month);
+/*—-Call calendar funtion —–*/
+$(document).ready(function (argument) {
+
+  callTheBackednData();
+
   $('#prearrow').click(function() {
     if (isPrevAllowed <= 0) {
       $('#prearrow').attr('disabled', true)
@@ -395,7 +413,9 @@ $(document).ready(function (argument) {
     console.log(isPrevAllowed)
     $('#nexarrow').removeAttr('disabled')
     var x = previousmonth.split(', ');
-    calendar(x[0], x[1]);
+    markTheDate(x[0], x[1])
+    // console.log('1', x[0]);
+    // calendar('1', (x[0]+1), x[1]);
 
   });
 
@@ -410,7 +430,8 @@ $(document).ready(function (argument) {
     console.log(isPrevAllowed)
     $('#prearrow').removeAttr('disabled')
     var y = nexttmonth.split(', ');
-    calendar(y[0], y[1]);
+    markTheDate(y[1], y[0])
+    // calendar(y[0], y[1]);
 
   });
 
@@ -494,7 +515,3 @@ function checkAndShow(elem, classNameSent){
     $(".bookingSlots ."+ classNameSent).addClass('isAvl')
   }
 }
-
-
-
-
