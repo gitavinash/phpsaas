@@ -373,7 +373,7 @@ function callTheBackednData() {
       type: 'POST',
       dataType: 'json',
       data: callingData,
-      url: 'https://pangat.srisanwalimurat.com/',
+      // url: 'https://pangat.srisanwalimurat.com/',
       success: function (ret) {
         dummydata = ret;
         // console.log(dummydata);
@@ -427,7 +427,8 @@ $(document).ready(function (argument) {
 })
 var bookingData ={
   'bookingDate': '',
-  'bookedFor': ''
+  'bookedFor': '',
+  'guest': false
 }
 
 $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click', function (argument) {
@@ -554,27 +555,28 @@ $(".phoneVerify").keypress(function (e) {
 });
 
 $("body").delegate('.submit-data', 'click',function (argument) {
+  let sendingData = {type: 'booking',action: 'request'}
   let errFlag = false;
   if (!bookingData['bookedFor']) {
     $('.booking-select').removeClass('d-none')
     return
   }
-  $('.reqInput').each(function (argument) {
-    // console.log($(this).val())
-    if(!$(this).val()){
-      $(this).parent().children('p').addClass('warning')
-      errFlag = true
-      return
-    }
-    if(!$(this).hasClass('phoneVerify')) {
-      let lengthM = $(this).val().length;
-      if(lengthM > 9) {
-        $(this).parent().children('p').addClass('warning')
-        errFlag = true
-        return;
-      }
-    }
-  })
+  if (!$('.firstName').val() || $('.firstName').val() == '') {
+    $('.firstName').parent().children('p').addClass('warning')
+    errFlag = true
+    return
+  }
+  if (!$('.emailName').val() || $('.emailName').val() == '') {
+    $('.emailName').parent().children('p').addClass('warning')
+    errFlag = true
+    return
+  }
+  if (!$('.mobName').val() || $('.mobName').val() == '') {
+    $('.mobName').parent().children('p').addClass('warning')
+    errFlag = true
+    return
+  }
+  
   if (errFlag) {
     return
   }
@@ -584,28 +586,41 @@ $("body").delegate('.submit-data', 'click',function (argument) {
   bookingData['last_name']= $('.lastName').val();
   bookingData['mobile']= $('.mobName').val();
   bookingData['email']= $('.emailName').val();
-  bookingData['guest']= $('.inputBox').is(":checked");
   sendingData = {...bookingData, ...sendingData }
-  console.log('Final Data is Here to send it backend remove comment from line 578', sendingData)
-  // formSubmission()
+  console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
+  formSubmission(sendingData)
 })
 $("body").delegate('.reqInput', 'click',function (argument) {
   $(this).parent().children('p').removeClass('warning')
 })
 
-var sendingData = {type: 'booking',action: 'request'}
+$("body").delegate('.inputBox', 'click',function (argument) {
+  if($(this).prop("checked") == true){
+    bookingData['guest']= true;
+    // console.log('CheckBoxed True')
+
+  }
+  else if($(this).prop("checked") == false){
+    bookingData['guest']= false;
+    // console.log('CheckBoxed False')
+
+  }
+
+})
 
 
-function formSubmission(argument) {
+
+function formSubmission(sendingData) {
 
   $.ajax({
     type: 'POST',
     dataType: 'json',
+    // url: 'https://pangat.srisanwalimurat.com/',
     data: sendingData,
-    url: 'https://pangat.srisanwalimurat.com/',
     success: function (ret) {
-      alert('Your Booking is successfully accepted')
-      location. reload()
+      // alert('Your Booking is successfully accepted')
+      // location. reload()
+      console.log(ret);
       // $('.retryButton').removeClass('working')
       // $('.calendar-body-wraper').removeClass('d-none')
     },
