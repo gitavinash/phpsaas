@@ -73,7 +73,7 @@
 							</ul>
 					  </div>
 						<div class="retryButton mb-3 mt-3 working text-center">
-							<p class="mb-1">Click to Load again</p>
+							<!-- <p class="mb-1">Click to Load again</p> -->
 							<i class="fa fa-refresh display-4"></i>
 						</div>
 						<div class="dtl-box mt-4">
