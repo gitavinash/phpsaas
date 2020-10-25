@@ -297,6 +297,7 @@ var nextmonth = function(y, m) {
   return nexyear + ', '+nexmonth;
 }
 var calendar = function(y, m) { //———–Calendar function start ———-//
+  $('#calendardates').html(''); // writes current month calendar in html table with id calendar
 
   var selectedFirstDate = new Date(y, (m), 1).getDate(); // get first date of month
   var selectedLastDate = new Date(y, (m + 1), 0).getDate(); // get last date of month
@@ -355,8 +356,14 @@ var calendar = function(y, m) { //———–Calendar function start ———-
   nexttmonth = nextmonth(y, m); // store value of previous month and year
 
   $('#month').html(months[m] + ' '+y); //write current month and year in div
-  $('#calendardates').html(calendardates); // writes current month calendar in html table with id calendar
+  // $.when($('#calendardates').html(calendardates)).done(function (argument) {
+  //   reboundTheFunctions();
+  // });
+  $('#calendardates').html(calendardates)// writes current month calendar in html table with id calendar
+  
 }
+
+
 
 var callingData = {type: 'booking',action: 'availability'}
 
@@ -384,49 +391,16 @@ function markTheDate(m, y) {
   m = parseInt(m) +1;
   let d = ''+ y + '-' + m + '-1';
   callingData['date'] = d;
-  console.log(callingData);
-  calendar(onGoingYear, onGoingMonth);
-  // callTheBackednData();
+  // console.log(callingData);
+  // calendar(onGoingYear, onGoingMonth);
+  callTheBackednData();
 }
 
 /*—-Call calendar funtion —–*/
 $(document).ready(function (argument) {
 
-  // callTheBackednData();
-  calendar(onGoingYear, onGoingMonth);
-
-  $('#prearrow').click(function() {
-    if (isPrevAllowed <= 0) {
-      $('#prearrow').attr('disabled', true)
-      return
-    }
-    isPrevAllowed--;
-    isNextAllowed++;
-    console.log(isNextAllowed)
-    console.log(isPrevAllowed)
-    $('#nexarrow').removeAttr('disabled')
-    var x = previousmonth.split(', ');
-    markTheDate(x[1], x[0])
-    // console.log('1', x[0]);
-    // calendar('1', (x[0]+1), x[1]);
-
-  });
-
-  $('#nexarrow').click(function() {
-    if (isNextAllowed <= 0) {
-      $('#nexarrow').attr('disabled', true)
-      return
-    }
-    isNextAllowed--;
-    isPrevAllowed++;
-    console.log(isNextAllowed)
-    console.log(isPrevAllowed)
-    $('#prearrow').removeAttr('disabled')
-    var y = nexttmonth.split(', ');
-    markTheDate(y[1], y[0])
-    // calendar(y[0], y[1]);
-
-  });
+  callTheBackednData();
+  // calendar(onGoingYear, onGoingMonth);
 
   /**
    * 
@@ -435,63 +409,97 @@ $(document).ready(function (argument) {
    * 0 -> Request received but booking not confirmed
    * 1 -> Slot not available
    * 2 -> Slot available
-  */
-  $('.clkAlw[bookingAllowed="1"]').click(function (argument) {
-    console.log('Not Allowed')
-    $('.no-booking').addClass('active');
-    $('.clkAlw').removeClass('highlight');
-    $(this).addClass('highlight')
-    // let y = nexttmonth.split(', ')
-    // $(this).attr(date)
-    $('.no-booking span').html($(this).attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear )
-    console.log(onGoingYear)
-    $('.bookingSlots').removeClass('active')
-  })
-  $('.clkAlw[bookingAllowed="0"]').click(function (argument) {
-    console.log('Not Allowed')
-    $('.clkAlw').removeClass('highlight');
-    $(this).addClass('highlight')
-    $('.no-booking').addClass('active')
-    $('.no-booking span').html($(this).attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear )
-    $('.bookingSlots').removeClass('active')
-  })
-
-  $('.clkAlw[bookingAllowed="2"]').click(function (argument) {
-    $('.bookedForText div').removeClass('active')
-    $('.no-booking').removeClass('active')
-    $('.clkAlw').removeClass('today');
-    $('.clkAlw').removeClass('highlight');
-    $(this).addClass('highlight')
-    $('.bookingSlots').addClass('active')
-    checkAndShow($(this).children('.flex-it').children('.breakfast'), 'breakfast')
-    checkAndShow($(this).children('.flex-it').children('.lunch'), 'lunch')
-    checkAndShow($(this).children('.flex-it').children('.dinner'), 'dinner')
-    // console.log('Worked', $(this).children('.flex-it').children('.breakfast').attr('data'))
-    bookingData['bookingDate'] = $(this).attr('date') + ' ' +  months[onGoingMonth] + ' ' + onGoingYear
-  })
-  var bookingData ={
-    'bookingDate': '',
-    'bookedFor': []
-  }
-  $('.com-sch').click(function (argument) {
-    if (!$(this).hasClass('isAvl')) {
-      return
-    }
-    // var bookFor = 'You had booked for ';
-    $('.bookedForText div').removeClass('active')
-    // console.log('Consoled')
-    $('.com-sch').removeClass('booked')
-    $(this).addClass('booked')
-    var textBook = '';
-    textBook = $(this).attr('booking-for')
-    let markClass = '.for' + textBook;
-    $(markClass).addClass('active');
-    $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
-    // $('.bookedForText').html(bookFor + textBook)
-    bookingData['bookedFor'] = textBook;
-    console.log(bookingData)
-  })
+  */  
 })
+var bookingData ={
+  'bookingDate': '',
+  'bookedFor': []
+}
+
+$("body").delegate('.clkAlw[bookingAllowed="1"]', 'click', function (argument) {
+  // console.log('Not Allowed')
+  $('.no-booking').addClass('active');
+  $('.clkAlw').removeClass('highlight');
+  $('.clkAlw').removeClass('today');
+  $(this).addClass('highlight')
+  // let y = nexttmonth.split(', ')
+  // $(this).attr(date)
+  $('.no-booking span').html($(this).attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear )
+  // console.log(onGoingYear)
+  $('.bookingSlots').removeClass('active')
+})
+$("body").delegate('.clkAlw[bookingAllowed=""]', 'click', function (argument) {
+  // console.log('Not Allowed')
+  $('.clkAlw').removeClass('today');
+  $('.clkAlw').removeClass('highlight');
+  $(this).addClass('highlight')
+  $('.no-booking').addClass('active')
+  $('.no-booking span').html($(this).attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear )
+  $('.bookingSlots').removeClass('active')
+})
+$("body").delegate('.clkAlw[bookingAllowed="2"]', 'click', function (argument) {
+  $('.bookedForText div').removeClass('active')
+  $('.no-booking').removeClass('active')
+  $('.clkAlw').removeClass('today');
+  $('.clkAlw').removeClass('highlight');
+  $(this).addClass('highlight')
+  $('.bookingSlots').addClass('active')
+  checkAndShow($(this).children('.flex-it').children('.breakfast'), 'breakfast')
+  checkAndShow($(this).children('.flex-it').children('.lunch'), 'lunch')
+  checkAndShow($(this).children('.flex-it').children('.dinner'), 'dinner')
+  // console.log('Worked', $(this).children('.flex-it').children('.breakfast').attr('data'))
+  bookingData['bookingDate'] = $(this).attr('date') + ' ' +  months[onGoingMonth] + ' ' + onGoingYear
+})
+
+$("body").delegate('.clkAlw[bookingAllowed="1"]', 'click',function (argument) {
+  if (!$(this).hasClass('isAvl')) {
+    return
+  }
+  // var bookFor = 'You had booked for ';
+  $('.bookedForText div').removeClass('active')
+  // console.log('Consoled')
+  $('.com-sch').removeClass('booked')
+  $(this).addClass('booked')
+  var textBook = '';
+  textBook = $(this).attr('booking-for')
+  let markClass = '.for' + textBook;
+  $(markClass).addClass('active');
+  $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
+  // $('.bookedForText').html(bookFor + textBook)
+  bookingData['bookedFor'] = textBook;
+  console.log(bookingData)
+})
+
+$("body").delegate('#prearrow', 'click',function (argument) {
+  if (isPrevAllowed <= 0) {
+    $('#prearrow').attr('disabled', true)
+    return
+  }
+  isPrevAllowed--;
+  isNextAllowed++;
+  // console.log(isNextAllowed)
+  // console.log(isPrevAllowed)
+  $('#nexarrow').removeAttr('disabled')
+  var x = previousmonth.split(', ');
+  markTheDate(x[1], x[0])
+  // console.log('1', x[0]);
+  // calendar('1', (x[0]+1), x[1]);
+
+});
+$("body").delegate('#nexarrow', 'click',function (argument) {
+  if (isNextAllowed <= 0) {
+    $('#nexarrow').attr('disabled', true)
+    return
+  }
+  isNextAllowed--;
+  isPrevAllowed++;
+  // console.log(isNextAllowed)
+  // console.log(isPrevAllowed)
+  $('#prearrow').removeAttr('disabled')
+  var y = nexttmonth.split(', ');
+  markTheDate(y[1], y[0])
+  // calendar(y[0], y[1]);
+});
 
 
 
