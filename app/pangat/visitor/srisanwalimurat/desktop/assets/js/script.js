@@ -384,7 +384,7 @@ function callTheBackednData() {
       },
       error: function (err) {
         console.log(err)
-        console.log('In Error')
+        // console.log('In Error')
         $('.retryButton').addClass('failed')
         $('.calendar-body-wraper').addClass('d-none')
       }
@@ -587,7 +587,7 @@ $("body").delegate('.submit-data', 'click',function (argument) {
   bookingData['mobile']= $('.mobName').val();
   bookingData['email']= $('.emailName').val();
   sendingData = {...bookingData, ...sendingData }
-  console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
+  // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
   formSubmission(sendingData)
 })
 $("body").delegate('.reqInput', 'click',function (argument) {
@@ -618,16 +618,15 @@ function formSubmission(sendingData) {
     // url: 'https://pangat.srisanwalimurat.com/',
     data: sendingData,
     success: function (ret) {
-      // alert('Your Booking is successfully accepted')
-      // location. reload()
-      console.log(ret);
+      alert('Your Booking is successfully accepted')
+      location. reload()
+      // console.log(ret);
       // $('.retryButton').removeClass('working')
       // $('.calendar-body-wraper').removeClass('d-none')
     },
     error: function (err) {
       console.log(err)
       resetInputs()
-      console.log('In Error')
     }
   });
 
