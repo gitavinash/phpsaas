@@ -332,7 +332,7 @@ var calendar = function(y, m) { //———–Calendar function start ———-
         else{
           number++;
           //alert('not in inarray');
-          calendardates += " <li class='weekday clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'> <p class='cal-day upcoming-dates'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]+['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]+['dinner'] + "'></span></div></li > ";
+          calendardates += " <li class='weekday clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]+['bookingAllowed'] + "' date='" + number + "'> <p class='cal-day upcoming-dates'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]+['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]+['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]+['dinner'] + "'></span></div></li > ";
         }
       }
     }
