@@ -322,16 +322,16 @@ var calendar = function(y, m) { //———–Calendar function start ———-
         next++;
       } else if (number + 1 == dates.getDate() && isPrevAllowed <= 0) {
         number++;
-        calendardates += "<li class='weekday today clkAlw' bookingAllowed='"+dummydata['availablity'][number-1]['bookingAllowed']+"' date='"+number+"'><p class='cal-day'>"+number+" </p><div class='flex-it'><span class='breakfast' data='"+dummydata['availablity'][number-1]['breakfast']+"'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch']+"'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner']+"'></span></div></li > ";
+        calendardates += "<li class='weekday today clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'><p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
       } else {
         if(number + 1 < dates.getDate() && isPrevAllowed <= 0){
           number++;
-          calendardates += " <li class='weekday prev-dates'> <p class='cal-day' id='"+number+"'>"+number+" </p></li > ";
+          calendardates += " <li class='weekday prev-dates'> <p class='cal-day' id='" + number + "'>" + number + " </p></li > ";
         }
         else{
           number++;
           //alert('not in inarray');
-          calendardates += " <li class='weekday clkAlw' bookingAllowed='"+dummydata['availablity'][number-1]['bookingAllowed']+"' date='"+number+"'> <p class='cal-day upcoming-dates'>"+number+" </p><div class='flex-it'><span class='breakfast' data='"+dummydata['availablity'][number-1]['breakfast']+"'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch']+"'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner']+"'></span></div></li > ";
+          calendardates += " <li class='weekday clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'> <p class='cal-day upcoming-dates'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]+['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]+['dinner'] + "'></span></div></li > ";
         }
       }
     }
@@ -366,7 +366,7 @@ function callTheBackednData() {
       dataType: 'json',
       data: callingData,
       success: function (ret) {
-        // console.log(ret)
+        console.log(ret);
         dummydata = ret;
         calendar(onGoingYear, onGoingMonth);
         console.log('success')
@@ -385,14 +385,15 @@ function markTheDate(m, y) {
   let d = ''+ y + '-' + m + '-1';
   callingData['date'] = d;
   console.log(callingData);
-  callTheBackednData();
-
+  calendar(onGoingYear, onGoingMonth);
+  // callTheBackednData();
 }
 
 /*—-Call calendar funtion —–*/
 $(document).ready(function (argument) {
 
-  callTheBackednData();
+  // callTheBackednData();
+  calendar(onGoingYear, onGoingMonth);
 
   $('#prearrow').click(function() {
     if (isPrevAllowed <= 0) {
@@ -405,7 +406,7 @@ $(document).ready(function (argument) {
     console.log(isPrevAllowed)
     $('#nexarrow').removeAttr('disabled')
     var x = previousmonth.split(', ');
-    markTheDate(x[0], x[1])
+    markTheDate(x[1], x[0])
     // console.log('1', x[0]);
     // calendar('1', (x[0]+1), x[1]);
 
@@ -436,6 +437,7 @@ $(document).ready(function (argument) {
    * 2 -> Slot available
   */
   $('.clkAlw[bookingAllowed="1"]').click(function (argument) {
+    console.log('Not Allowed')
     $('.no-booking').addClass('active');
     $('.clkAlw').removeClass('highlight');
     $(this).addClass('highlight')
@@ -446,6 +448,7 @@ $(document).ready(function (argument) {
     $('.bookingSlots').removeClass('active')
   })
   $('.clkAlw[bookingAllowed="0"]').click(function (argument) {
+    console.log('Not Allowed')
     $('.clkAlw').removeClass('highlight');
     $(this).addClass('highlight')
     $('.no-booking').addClass('active')
