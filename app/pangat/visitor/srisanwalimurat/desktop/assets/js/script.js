@@ -299,11 +299,13 @@ var nextmonth = function(y, m) {
 var calendar = function(y, m) { //———–Calendar function start ———-//
   $('#calendardates').html(''); // writes current month calendar in html table with id calendar
 
+  m = parseInt(m)
+  y = parseInt(y)
+  // console.log(m, y, 'Passed Values')
   var selectedFirstDate = new Date(y, (m), 1).getDate(); // get first date of month
   var selectedLastDate = new Date(y, (m + 1), 0).getDate(); // get last date of month
   var selectedFirstDay = new Date(y, (m), 1).getDay(); // get first day of the month
   var selectedLastDay = new Date(y, (m + 1), 0).getDay(); // get last day of the month
-
   var calendardates = '';
   var number = 0;
   var next = 1;
@@ -326,13 +328,14 @@ var calendar = function(y, m) { //———–Calendar function start ———-
         calendardates += "<li class='weekday today clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'><p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
       } else {
         if(number + 1 < dates.getDate() && isPrevAllowed <= 0){
+          // console.log(number, 'Number')
           number++;
           calendardates += " <li class='weekday prev-dates'> <p class='cal-day' id='" + number + "'>" + number + " </p></li > ";
         }
         else{
           number++;
           //alert('not in inarray');
-          calendardates += " <li class='weekday clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'> <p class='cal-day upcoming-dates'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
+          calendardates += " <li class='weekday clkAlw upcoming-dates' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'> <p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
         }
       }
     }
@@ -342,6 +345,8 @@ var calendar = function(y, m) { //———–Calendar function start ———-
     }
 
   }
+  $('.calendar-body-wraper').removeClass('d-none')
+
 
   //premonth(y,m);
   // console.log('Consoled the data', calendardates)
@@ -356,13 +361,9 @@ var calendar = function(y, m) { //———–Calendar function start ———-
   nexttmonth = nextmonth(y, m); // store value of previous month and year
 
   $('#month').html(months[m] + ' '+y); //write current month and year in div
-  // $.when($('#calendardates').html(calendardates)).done(function (argument) {
-  //   reboundTheFunctions();
-  // });
   $('#calendardates').html(calendardates)// writes current month calendar in html table with id calendar
   
 }
-
 
 
 var callingData = {type: 'booking',action: 'availability'}
@@ -372,20 +373,28 @@ function callTheBackednData() {
       type: 'POST',
       dataType: 'json',
       data: callingData,
+      url: 'https://pangat.srisanwalimurat.com/',
       success: function (ret) {
-        console.log(ret);
         dummydata = ret;
+        // console.log(dummydata);
         calendar(onGoingYear, onGoingMonth);
-        console.log('success')
+        // console.log('success');
+        $('.retryButton').removeClass('working')
+        $('.calendar-body-wraper').removeClass('d-none')
       },
       error: function (err) {
         console.log(err)
         console.log('In Error')
+        $('.retryButton').addClass('failed')
+        $('.calendar-body-wraper').addClass('d-none')
       }
     });
 }
 
 function markTheDate(m, y) {
+  $('.calendar-body-wraper').addClass('d-none')
+  $('.retryButton').addClass('working')
+
   onGoingMonth = m;
   onGoingYear = y;
   m = parseInt(m) +1;
@@ -410,10 +419,15 @@ $(document).ready(function (argument) {
    * 1 -> Slot not available
    * 2 -> Slot available
   */  
+  $('.retryButton').click(function (argument) {
+    callTheBackednData();
+    $('.retryButton').addClass('working')
+  })
+
 })
 var bookingData ={
   'bookingDate': '',
-  'bookedFor': []
+  'bookedFor': ''
 }
 
 $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click', function (argument) {
@@ -428,7 +442,8 @@ $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click', function (argument) {
   // console.log(onGoingYear)
   $('.bookingSlots').removeClass('active')
 })
-$("body").delegate('.clkAlw[bookingAllowed=""]', 'click', function (argument) {
+
+$("body").delegate('.clkAlw[bookingAllowed="0"]', 'click', function (argument) {
   // console.log('Not Allowed')
   $('.clkAlw').removeClass('today');
   $('.clkAlw').removeClass('highlight');
@@ -437,18 +452,20 @@ $("body").delegate('.clkAlw[bookingAllowed=""]', 'click', function (argument) {
   $('.no-booking span').html($(this).attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear )
   $('.bookingSlots').removeClass('active')
 })
+
 $("body").delegate('.clkAlw[bookingAllowed="2"]', 'click', function (argument) {
   $('.bookedForText div').removeClass('active')
   $('.no-booking').removeClass('active')
   $('.clkAlw').removeClass('today');
   $('.clkAlw').removeClass('highlight');
+  bookingData['bookedFor'] = '';
   $(this).addClass('highlight')
   $('.bookingSlots').addClass('active')
   checkAndShow($(this).children('.flex-it').children('.breakfast'), 'breakfast')
   checkAndShow($(this).children('.flex-it').children('.lunch'), 'lunch')
   checkAndShow($(this).children('.flex-it').children('.dinner'), 'dinner')
   // console.log('Worked', $(this).children('.flex-it').children('.breakfast').attr('data'))
-  bookingData['bookingDate'] = $(this).attr('date') + ' ' +  months[onGoingMonth] + ' ' + onGoingYear
+  bookingData['bookingDate'] = onGoingYear + '-' + (parseInt(onGoingMonth)+1) + '-' + $(this).attr('date') 
 })
 
 $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click',function (argument) {
@@ -467,7 +484,7 @@ $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click',function (argument) {
   $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
   // $('.bookedForText').html(bookFor + textBook)
   bookingData['bookedFor'] = textBook;
-  console.log(bookingData)
+  // console.log(bookingData)
 })
 
 $("body").delegate('#prearrow', 'click',function (argument) {
@@ -477,6 +494,7 @@ $("body").delegate('#prearrow', 'click',function (argument) {
   }
   isPrevAllowed--;
   isNextAllowed++;
+  $('.bookingSlots').removeClass('active')
   // console.log(isNextAllowed)
   // console.log(isPrevAllowed)
   $('#nexarrow').removeAttr('disabled')
@@ -493,6 +511,8 @@ $("body").delegate('#nexarrow', 'click',function (argument) {
   }
   isNextAllowed--;
   isPrevAllowed++;
+  $('.bookingSlots').removeClass('active')
+
   // console.log(isNextAllowed)
   // console.log(isPrevAllowed)
   $('#prearrow').removeAttr('disabled')
@@ -500,6 +520,112 @@ $("body").delegate('#nexarrow', 'click',function (argument) {
   markTheDate(y[1], y[0])
   // calendar(y[0], y[1]);
 });
+$("body").delegate('.com-sch', 'click',function (argument) {
+  if (!$(this).hasClass('isAvl')) {
+    return
+  }
+  // var bookFor = 'You had booked for ';
+  $('.bookedForText div').removeClass('active')
+  $('.booking-select').addClass('d-none')
+
+  // console.log('Consoled')
+  $('.com-sch').removeClass('booked')
+  $(this).addClass('booked')
+  var textBook = '';
+  textBook = $(this).attr('booking-for')
+  let markClass = '.for' + textBook;
+  $(markClass).addClass('active');
+  $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
+  // $('.bookedForText').html(bookFor + textBook)
+  bookingData['bookedFor'] = textBook;
+  // console.log(bookingData)
+})
+
+$(".phoneVerify").keypress(function (e) {
+  // console.log('I am in');
+  var length = jQuery(this).val().length;
+  if(length > 9) {
+    return false;
+  } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+    return false;
+  } else if((length == 0) && (e.which == 48)) {
+    return false;
+  }
+});
+
+$("body").delegate('.submit-data', 'click',function (argument) {
+  let errFlag = false;
+  if (!bookingData['bookedFor']) {
+    $('.booking-select').removeClass('d-none')
+    return
+  }
+  $('.reqInput').each(function (argument) {
+    // console.log($(this).val())
+    if(!$(this).val()){
+      $(this).parent().children('p').addClass('warning')
+      errFlag = true
+      return
+    }
+    if(!$(this).hasClass('phoneVerify')) {
+      let lengthM = $(this).val().length;
+      if(lengthM > 9) {
+        $(this).parent().children('p').addClass('warning')
+        errFlag = true
+        return;
+      }
+    }
+  })
+  if (errFlag) {
+    return
+  }
+  $('.serverError').addClass('d-none')
+  
+  bookingData['first_name']= $('.firstName').val();
+  bookingData['last_name']= $('.lastName').val();
+  bookingData['mobile']= $('.mobName').val();
+  bookingData['email']= $('.emailName').val();
+  bookingData['guest']= $('.inputBox').is(":checked");
+  sendingData = {...bookingData, ...sendingData }
+  console.log('Final Data is Here to send it backend remove comment from line 578', sendingData)
+  // formSubmission()
+})
+$("body").delegate('.reqInput', 'click',function (argument) {
+  $(this).parent().children('p').removeClass('warning')
+})
+
+var sendingData = {type: 'booking',action: 'request'}
+
+
+function formSubmission(argument) {
+
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    data: sendingData,
+    url: 'https://pangat.srisanwalimurat.com/',
+    success: function (ret) {
+      alert('Your Booking is successfully accepted')
+      location. reload()
+      // $('.retryButton').removeClass('working')
+      // $('.calendar-body-wraper').removeClass('d-none')
+    },
+    error: function (err) {
+      console.log(err)
+      resetInputs()
+      console.log('In Error')
+    }
+  });
+
+}
+
+function resetInputs(){
+  $('.inputClass').each(function (argument) {
+    $(this).val('');
+  })
+  $('.inputBox').prop('checked', false)
+  $('.serverError').removeClass('d-none')
+}
+
 
 
 
