@@ -363,15 +363,7 @@ var callingData = {type: 'booking',action: 'availability'}
 function callTheBackednData() {
   $.ajax({
       type: 'POST',
-      url: 'https://pangat.srisanwalimurat.com/',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Access-Control-Allow-Origin': '*'
-      },
-      contentType: 'application/x-www-form-urlencoded',
-      dataType: 'jsonp',
-      crossDomain: true,
+      dataType: 'json',
       data: callingData,
       success: function (ret) {
         // console.log(ret)
