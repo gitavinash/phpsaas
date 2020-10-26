@@ -459,7 +459,7 @@ $("body").delegate('.clkAlw[bookingAllowed="2"]', 'click', function (argument) {
   $('.no-booking').removeClass('active')
   $('.clkAlw').removeClass('today');
   $('.clkAlw').removeClass('highlight');
-  bookingData['bookedFor'] = '';
+  bookingData['bookedTime'] = '';
   $(this).addClass('highlight')
   $('.bookingSlots').addClass('active')
   checkAndShow($(this).children('.flex-it').children('.breakfast'), 'breakfast')
@@ -484,7 +484,7 @@ $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click',function (argument) {
   $(markClass).addClass('active');
   $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
   // $('.bookedForText').html(bookFor + textBook)
-  bookingData['bookedFor'] = textBook;
+  bookingData['bookedTime'] = textBook;
   // console.log(bookingData)
 })
 
@@ -538,7 +538,7 @@ $("body").delegate('.com-sch', 'click',function (argument) {
   $(markClass).addClass('active');
   $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
   // $('.bookedForText').html(bookFor + textBook)
-  bookingData['bookedFor'] = textBook;
+  bookingData['bookedTime'] = textBook;
   // console.log(bookingData)
 })
 
@@ -557,7 +557,7 @@ $(".phoneVerify").keypress(function (e) {
 $("body").delegate('.submit-data', 'click',function (argument) {
   let sendingData = {type: 'booking',action: 'request'}
   let errFlag = false;
-  if (!bookingData['bookedFor']) {
+  if (!bookingData['bookedTime']) {
     $('.booking-select').removeClass('d-none')
     return
   }
@@ -587,8 +587,8 @@ $("body").delegate('.submit-data', 'click',function (argument) {
   bookingData['mobile']= $('.mobName').val();
   bookingData['email']= $('.emailName').val();
   sendingData = {...bookingData, ...sendingData }
-  // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
-  formSubmission(sendingData)
+  console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
+  // formSubmission(sendingData)
 })
 $("body").delegate('.reqInput', 'click',function (argument) {
   $(this).parent().children('p').removeClass('warning')

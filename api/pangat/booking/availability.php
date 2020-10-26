@@ -20,9 +20,7 @@
             $calenderDate=date('Y-m-d', strtotime("+{$i} days", strtotime($availablityDate)));
 
             if(date('Y-m-d')<=$calenderDate) {
-
-                echo "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}' AND booking_site_id=".APP_SITE_ID;
-
+                
                 if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}' AND booking_site_id=".APP_SITE_ID)) {
 
                     if(mysqli_num_rows($checkDateAvailablity)!=0) {
