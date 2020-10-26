@@ -587,8 +587,8 @@ $("body").delegate('.submit-data', 'click',function (argument) {
   bookingData['mobile']= $('.mobName').val();
   bookingData['email']= $('.emailName').val();
   sendingData = {...bookingData, ...sendingData }
-  console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
-  // formSubmission(sendingData)
+  // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
+  formSubmission(sendingData)
 })
 $("body").delegate('.reqInput', 'click',function (argument) {
   $(this).parent().children('p').removeClass('warning')
