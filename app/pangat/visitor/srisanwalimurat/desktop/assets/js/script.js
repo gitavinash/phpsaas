@@ -427,7 +427,7 @@ $(document).ready(function (argument) {
 })
 var bookingData ={
   'bookingDate': '',
-  'bookedFor': '',
+  'bookingTime': '',
   'guest': false
 }
 
@@ -459,7 +459,7 @@ $("body").delegate('.clkAlw[bookingAllowed="2"]', 'click', function (argument) {
   $('.no-booking').removeClass('active')
   $('.clkAlw').removeClass('today');
   $('.clkAlw').removeClass('highlight');
-  bookingData['bookedTime'] = '';
+  bookingData['bookingTime'] = '';
   $(this).addClass('highlight')
   $('.bookingSlots').addClass('active')
   checkAndShow($(this).children('.flex-it').children('.breakfast'), 'breakfast')
@@ -484,7 +484,7 @@ $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click',function (argument) {
   $(markClass).addClass('active');
   $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
   // $('.bookedForText').html(bookFor + textBook)
-  bookingData['bookedTime'] = textBook;
+  bookingData['bookingTime'] = textBook;
   // console.log(bookingData)
 })
 
@@ -538,7 +538,7 @@ $("body").delegate('.com-sch', 'click',function (argument) {
   $(markClass).addClass('active');
   $('.bookedForText .time-sch').html($('.highlight').attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear)
   // $('.bookedForText').html(bookFor + textBook)
-  bookingData['bookedTime'] = textBook;
+  bookingData['bookingTime'] = textBook;
   // console.log(bookingData)
 })
 
@@ -557,7 +557,7 @@ $(".phoneVerify").keypress(function (e) {
 $("body").delegate('.submit-data', 'click',function (argument) {
   let sendingData = {type: 'booking',action: 'request'}
   let errFlag = false;
-  if (!bookingData['bookedTime']) {
+  if (!bookingData['bookingTime']) {
     $('.booking-select').removeClass('d-none')
     return
   }

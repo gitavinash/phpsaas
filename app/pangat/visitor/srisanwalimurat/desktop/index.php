@@ -175,7 +175,7 @@
 					  	</div>
 					  	<div class="form-cont mb-4">
 					  		<input type="checkbox" name="box" required="" class="inputBox">
-					  		<spn class="d-inline-block">I will be great in pangat.</span>
+					  		<spn class="d-inline-block">I will be present in pangat.</span>
 					  	</div>
 					  	<button class="submit-data">Submit</button>
 					  	<div class="serverError d-none text-danger">Something went wrong Please try again</div>
