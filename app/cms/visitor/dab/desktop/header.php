@@ -46,8 +46,9 @@
                 <div class="menu">
                     <img src="<?php echo USER_IMAGES ?>icon/menu.png" id="mobileMenu" alt="">
                     <div class="mobileMenu">
-                        <span id="closeMenu">X</span>
+                        <span id="closeMenu">x</span>
                         <ul>
+                            <!-- <li><a href="#"><span id="closeMenu">X</span></a></li> -->
                             <li><a href="#home">Home</a></li>
                             <li><a href="#ourstory">Our Story</a></li>
                             <li><a href="#services">Services</a></li>

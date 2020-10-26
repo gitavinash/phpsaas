@@ -34,5 +34,17 @@ $(document).ready(function(){
         Galleria.loadTheme('lib/resource/ui/plugin/galleria/themes/classic/galleria.classic.min.js');
         Galleria.run('.galleria');
     }());
+
+    $('#mobileMenu').click(function(e){
+        e.preventDefault();
+        $('.mobileMenu').show();
+    });
+
+    $('#closeMenu').click(function(e) {
+        e.preventDefault();
+        $('.mobileMenu').hide();
+    });
+
+
     
 });
