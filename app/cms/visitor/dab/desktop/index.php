@@ -171,7 +171,7 @@
 
             <?php
             
-                if($checkBlogs=mysqli_query($connection, "SELECT post_title, post_thumbnail, link_url FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE link_type='post' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND link_status=200 ORDER BY link_published DESC LIMIT 0, 3")) {
+                if($checkBlogs=mysqli_query($connection, "SELECT post_title, post_image, link_url FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE link_type='post' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND link_status=200 ORDER BY link_published DESC LIMIT 0, 3")) {
 
                     if(mysqli_num_rows($checkBlogs)!=0) {
 
@@ -183,7 +183,7 @@
                             <a href='{$link_url}'>
                                 <div class='slide'>
                                     <div class='img'>
-                                        <img src='{$post_thumbnail}' alt='{$post_title}' >
+                                        <img src='{$post_image}' alt='{$post_title}' >
                                     </div>
                                     <div class='text'>
                                         <h3>{$post_title}</h3>
