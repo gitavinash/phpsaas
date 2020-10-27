@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <base href="/">
+    <base href="<?php echo SITE_URL ?>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
@@ -30,12 +30,12 @@
                 </div>
                 <div class="menu">
                     <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#ourstory">Our Story</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#portfolio">Portfolio</a></li>
-                        <li><a href="/blog/">Blog</a></li>
-                        <li><a href="#contactus">Contact Us</a></li>
+                        <li><a href="index.php#home">Home</a></li>
+                        <li><a href="index.php#ourstory">Our Story</a></li>
+                        <li><a href="index.php#services">Services</a></li>
+                        <li><a href="index.php#portfolio">Portfolio</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="index.php#contactus">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                             <li><a href="#ourstory">Our Story</a></li>
                             <li><a href="#services">Services</a></li>
                             <li><a href="#portfolio">Portfolio</a></li>
-                            <li><a href="/blog/">Blog</a></li>
+                            <li><a href="#blog/">Blog</a></li>
                             <li><a href="#contactus">Contact Us</a></li>
                         </ul>
                     </div>
