@@ -104,6 +104,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     MODIFY order_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    ADD order_gift INT(1) NOT NULL DEFAULT '0' AFTER order_coupon");
+    
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    ADD INDEX order_gift (order_gift)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
+    ADD order_msg longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER order_gift");
+
   /** Product table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."product (

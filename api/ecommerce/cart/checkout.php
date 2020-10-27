@@ -8,6 +8,10 @@
 
             if($mobile!='') {
 
+                /** Default country is set to india */
+
+                $country=((isset($country)) ? $country : 101 );
+
                 /** Generate Salt Key for user account */
                         
                 $saltKey=hash('sha256', uniqid(mt_rand(), true).$email.substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12).time());
