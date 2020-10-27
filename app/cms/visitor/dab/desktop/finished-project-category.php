@@ -11,7 +11,7 @@
 
             <?php
             
-            if($checkBlogs=mysqli_query($connection, "SELECT gallery_title, gallery_image, link_url FROM ".TABLE_PREFIX."gallery, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE link_type='gallery' AND link_relation_id=gallery_id AND link_site_id='".SITE_ID."' AND category_id=gallery_category AND link_status=200 ORDER BY link_published DESC")) {
+            if($checkBlogs=mysqli_query($connection, "SELECT gallery_title, gallery_image, link_url FROM ".TABLE_PREFIX."gallery, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category WHERE link_type='gallery' AND link_relation_id=gallery_id AND link_site_id='".SITE_ID."' AND category_id=gallery_category AND gallery_category='{$category_id}' AND link_status=200 ORDER BY link_published DESC")) {
 
                     if(mysqli_num_rows($checkBlogs)!=0) {
 
