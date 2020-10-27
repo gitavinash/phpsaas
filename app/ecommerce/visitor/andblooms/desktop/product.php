@@ -23,19 +23,28 @@
 				<div class="galery-carousel">
 					<div class="lg-carousel-box">
 						<div class="carousel carousel-main" data-flickity>
-                            <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-							<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-							<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-							<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
+							<?php
+							
+							if($product_gallery!='') {
+
+							} else {
+								echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
+							}
+
+							?>
 						</div>
 					</div>
 					<div class="vert-carousel">
 						<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
-                            <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-                            <div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-							<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-							<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
-							<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>demo.jpg"></div>
+							<?php
+							
+								if($product_gallery!='') {
+
+								} else {
+									echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
+								}
+
+							?>
 						</div>
 					</div>
 				</div>

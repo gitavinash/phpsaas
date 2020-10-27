@@ -44,7 +44,7 @@
 										<div class="ad-card">
 											<a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img src="<?php echo USER_IMAGES ?>delete.png" alt=""></a>
 											<div class="cart-img">
-												<img src="<?php echo USER_IMAGES ?>demo.jpg">
+												<img src="<?php echo $product_thumbnail ?>">
 											</div>
 											<div class="prodct-nme">
 												<a href="<?php echo $link_url ?>"><h2><?php echo $product_title ?></h2></a>

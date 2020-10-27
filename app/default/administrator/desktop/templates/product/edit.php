@@ -3,7 +3,8 @@
 	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' LIMIT 1")) {
 		if(mysqli_num_rows($productDetails)!=0) {
 			extract(mysqli_fetch_assoc($productDetails));
-		} else { ?>
+		} else { echo "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' LIMIT 1";
+		exit(); ?>
 			<script type="text/javascript">
 				alert('Invalid action found');
 				window.location.href='dashboard/product/?type=list&status=all';
@@ -34,6 +35,104 @@
 			<div class="form-group fullscreen-editor">
 				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode($product_description); ?></textarea>
 			</div>
+
+			<!-- Product description and other things -->
+
+			<section style="margin-bottom:20px" >
+				<h3>Product Details</h3>
+				<ul class='tabs'>
+					<li id="productGeneral" class='active' >General</li>
+					<li id="productInventory" >Inventory</li>
+					<li id="productShipping" >Shipping</li>
+					<li id="productGallery" >Gallery</li>
+					<li id="productAdditionalDetails" >Additional Details</li>
+				</ul>
+				<div class="productGeneral generalTab">
+					<div class="form-group">
+						<label>Product short description / Highlights</label>
+						<textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights" ><?php echo $product_highlight ?></textarea>
+					</div>
+				</div>
+				<div class="productInventory generalTab" style="display: none;">
+					
+					<div class="box-2">
+						<input type="checkbox" name="in_stock" <?php (($inventory_in_stock==1) ? 'checked' : '' ) ?> > In Stock
+					</div>
+					<div class="box-2">
+						<input type="checkbox" name="backorder"  <?php (($inventory_backorder==1) ? 'checked' : '' ) ?> > Allowed Backorders (if product is out of stock )
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Sale price (₹)</label>
+							<input type="number" class="form-control inside-shadow" value="<?php echo $inventory_price ?>" name="salePrice" placeholder="Sale price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Regular price (₹)</label>
+							<input type="number" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>" name="mrp" placeholder="Regular price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>SKU</label>
+							<input type="text" class="form-control inside-shadow" value="<?php echo $inventory_sku ?>" name="sku" placeholder="SKU" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Stock Alert</label>
+							<input type="text" class="form-control inside-shadow" value="<?php echo $inventory_stock_notice ?>" name="stock_warning" placeholder="Stock Alert" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Calculate tax</label>
+							<select name="taxStatus" class="form-control inside-shadow" >
+								<option value="0" <?php echo (($inventory_tax_status==0) ? 'selected' : ' ') ?> >No</option>
+								<option value="1" <?php echo (($inventory_tax_status==1) ? 'selected' : ' ') ?>>Yes</option>
+							</select>
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Tax rate ( in % )</label>
+							<input type="number" name="taxRate" value="<?php echo $inventory_tax_rate ?>" placeholder="Tax rate ( in % )" class="form-control inside-shadow" >
+						</div>
+					</div>
+				</div>
+				<div class="productShipping generalTab" style="display: none;">
+					<div class="box-1">
+						<div class="form-group">
+							<label>Weight (kg)</label>
+							<input type="text" class="form-control inside-shadow" value="<?php echo $inventory_weight ?>" name="weight" placeholder="Weight" >
+						</div>
+					</div>
+					<label>Dimensions (cm)</label>
+					<div class="form-group">
+						<div class="box-3">
+							<label>Lenght</label>
+							<input type="text" class="form-control inside-shadow" value="<?php echo $inventory_lenght ?>" name="lenght" placeholder="Lenght" >
+						</div>
+						<div class="box-3">
+							<label>Width</label>
+							<input type="text" class="form-control inside-shadow" value="<?php echo $inventory_width ?>" name="width" placeholder="Width" >
+						</div>
+						<div class="box-3">
+							<label>Height</label>
+							<input type="text" class="form-control inside-shadow" value="<?php echo $inventory_height ?>" name="height" placeholder="Height" >
+						</div>
+					</div>
+				</div>
+				<div class="productGallery generalTab" style="display: none;">
+					<input type="hidden" name="oldGallery" value="<?php echo $product_gallery ?>" >
+					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+				</div>
+				<div class="productAdditionalDetails generalTab" style="display: none;">
+					
+				</div>
+			</section>
+
 			<section>
 				<h3>Advance Options for digital marketing</h3>
 				<ul class='tabs'>
@@ -67,14 +166,14 @@
 					</div>
 				</div>
 				<div class="fb" style="display: none;">
-					<div class="facebook-image" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
+					<div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;" >
 						<input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
-						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebook-image" alt=""></div>
+						<div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
 						<p id="facebookChangeImage" class='changeImage' >Remove facebook feature image</p>
 					</div>
 					<div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -86,14 +185,14 @@
 					</div>
 				</div>
 				<div class="tw" style="display: none;">
-					<div class="twitter-image" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+					<div class="twitterPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
 						<input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
-						<div class="img"><img src="<?php echo $tw_img ?>" id="twitter-image" alt=""></div>
+						<div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
 					</div>
 					<div class="twitterUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
 						<span>Set twitters feature image</span>
-						<input type='file' id="twImage" name='twitterImage' />
+						<input type='file' id="twitterImage" name='twitterImage' />
 					</div>
 					<div class="form-group">
 						<label>Twitter Title</label>
@@ -102,21 +201,18 @@
 					<div class="form-group">
 						<label>Twitter Description</label>
 						<textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description" ><?php echo $tw_desc ?></textarea>
-						</div>
+					</div>
 				</div>
 			</section>
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updateproduct" class="btn btn-green btn-block" value="<?php echo (($product_status==1) ? 'Update ' : 'Publish ' ); ?>product">
-				<input type="submit" class="btn btn-yellow btn-block" value="Save Draft">
-				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-				<input type="hidden" name="type" value="draft" >
-				<input type="hidden" name='productStatus' value='<?php echo $product_status ?>' >
-				<input type="hidden" name="productType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<input type="hidden" name="product_id" value="<?php echo $id ?>" >
-				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="button" id="updatePost" class="btn btn-green btn-block" value="<?php echo (($product_status==1) ? 'Update ' : 'Publish ' ); ?>product">
+				<!-- <input type="submit" class="btn btn-yellow btn-block" value="Save Draft"> -->
+				<input type="hidden" name='postStatus' value='<?php echo $product_status ?>' >
+				<input type="hidden" name="postType" value="<?php echo $product_type; ?>" >
+				<input type="hidden" name="id" value="<?php echo $id ?>" >
+				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live product</a>
 			</div>
 			<div class="form-group">
@@ -140,18 +236,20 @@
 			</div>
 			<h2>Tags</h2>
 			<?php
+
 				$tagproductID=(($product_parent_id==0) ? $id : $product_parent_id );
 				
-				if($tagList=mysqli_query($connection, "SELECT tag_name FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagproductID}' AND tag_site_id='".SITE_ID."'")) {
+				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagproductID}' AND tag_site_id='".SITE_ID."'")) {
 					if(mysqli_num_rows($tagList)!=0) {
 						while($tagsName=mysqli_fetch_assoc($tagList)) {
-							$tags[]=$tagsName['tag_name'];
+							$tags[]=$tagsName['tag_title'];
 						}
 						$tags=implode(',', $tags);
 					} else {
 						$tags='';
 					}
 				}
+
 			?>
 			<div class="action-box inside-shadow">
 				<div class="form-group">
@@ -162,15 +260,15 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group upload-btn" style="display: <?php echo (($product_image!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox" style="display: <?php echo (($product_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
 				<input type="hidden" name="oldFeatureImage" value="<?php echo $product_image ?>">
 				<input type="file" id="featureImage" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview action-box" style="display: <?php echo (($product_image!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.$product_image ?>" id="previewImage" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
+			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($product_image!='') ? 'block' : 'none') ?>;">
+				<img src="//<?php echo SITE_DOMAIN.$product_image ?>" id="featureImagePath" alt="">
+				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>
