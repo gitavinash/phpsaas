@@ -112,7 +112,7 @@
     </div>
     <div class="container-without-padding">
         <div class="row">
-            <div class="text-box" style="background: url('<?php echo USER_IMAGES ?>portfolio-upcoming.jpg'); background-repeat: no-repeat; background-position: center center; background-size: cover; background-attachment: fixed;" >
+            <div class="text-box" style="background: url('<?php echo USER_IMAGES ?>portfolio-upcoming.jpg');" >
                 <div class="left">
                     <h3>Upcoming Project</h3>
                     <a href="/category/upcoming-project/">View projects</a>
@@ -120,7 +120,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="text-box" style="background: url('<?php echo USER_IMAGES ?>portfolio-concept.jpg'); background-repeat: no-repeat; background-position: center center; background-size: cover; background-attachment: fixed;" >
+            <div class="text-box" style="background: url('<?php echo USER_IMAGES ?>portfolio-concept.jpg');" >
                 <div class="right">
                     <h3>Our Concepts</h3>
                     <a href="/category/our-concepts/">View concepts</a>
@@ -128,7 +128,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="text-box" style="background: url('<?php echo USER_IMAGES ?>portfolio-finished.jpg'); background-repeat: no-repeat; background-position: center center; background-size: cover; background-attachment: fixed;" >
+            <div class="text-box" style="background: url('<?php echo USER_IMAGES ?>portfolio-finished.jpg');" >
                 <div class="left">
                     <h3>Finished Project</h3>
                     <a href="/category/finished-project/">View project</a>
