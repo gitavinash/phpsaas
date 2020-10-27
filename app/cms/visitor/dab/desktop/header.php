@@ -30,12 +30,31 @@
                 </div>
                 <div class="menu">
                     <ul>
-                        <li><a href="index.php#home">Home</a></li>
-                        <li><a href="index.php#ourstory">Our Story</a></li>
-                        <li><a href="index.php#services">Services</a></li>
-                        <li><a href="index.php#portfolio">Portfolio</a></li>
-                        <li><a href="#blog">Blog</a></li>
-                        <li><a href="index.php#contactus">Contact Us</a></li>
+                        <?php
+                        
+                            if(BASE_URL=='/') { ?>
+
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#ourstory">Our Story</a></li>
+                                <li><a href="#services">Services</a></li>
+                                <li><a href="#portfolio">Portfolio</a></li>
+                                <li><a href="#blog">Blog</a></li>
+                                <li><a href="#contactus">Contact Us</a></li>
+
+                            <?php
+                            } else { ?>
+                                
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/">Our Story</a></li>
+                                <li><a href="/">Services</a></li>
+                                <li><a href="/">Portfolio</a></li>
+                                <li><a href="/">Blog</a></li>
+                                <li><a href="/">Contact Us</a></li>
+
+                            <?php
+                            }
+
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -48,13 +67,31 @@
                     <div class="mobileMenu">
                         <span id="closeMenu">x</span>
                         <ul>
-                            <!-- <li><a href="#"><span id="closeMenu">X</span></a></li> -->
-                            <li><a href="#home">Home</a></li>
-                            <li><a href="#ourstory">Our Story</a></li>
-                            <li><a href="#services">Services</a></li>
-                            <li><a href="#portfolio">Portfolio</a></li>
-                            <li><a href="#blog/">Blog</a></li>
-                            <li><a href="#contactus">Contact Us</a></li>
+                            <?php
+                                
+                                if(BASE_URL=='/') { ?>
+
+                                    <li><a href="#home">Home</a></li>
+                                    <li><a href="#ourstory">Our Story</a></li>
+                                    <li><a href="#services">Services</a></li>
+                                    <li><a href="#portfolio">Portfolio</a></li>
+                                    <li><a href="#blog">Blog</a></li>
+                                    <li><a href="#contactus">Contact Us</a></li>
+
+                                <?php
+                                } else { ?>
+                                    
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/">Our Story</a></li>
+                                    <li><a href="/">Services</a></li>
+                                    <li><a href="/">Portfolio</a></li>
+                                    <li><a href="/">Blog</a></li>
+                                    <li><a href="/">Contact Us</a></li>
+
+                                <?php
+                                }
+
+                            ?>
                         </ul>
                     </div>
                 </div>
