@@ -4,9 +4,17 @@
     <div class="form-box">
 	    <form method="POST" id="importData" enctype="multipart/form-data"  >
 
-            <div class="form-group">
+            <div id="importFromBox" class="form-group">
                 <label>Step 1</label>
-				<select name="id" id='productImportStep1' class='form-control inside-shadow' required >
+				<select name="importFrom" id='importFrom' class='form-control inside-shadow' required >
+				    <option value="" >Import from</option>
+                    <option value="wordpress">WordPress</option>
+                    <option value="csv">CSV</option>
+				</select>
+            </div>
+            <div id="importCategoryBox" class="form-group" style="display:none">
+                <label>Step 2</label>
+				<select name="categoryID" id='importCategory' class='form-control inside-shadow' required >
 				<option value="" >Select product category</option>
 				<?php
 					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$type}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
@@ -22,8 +30,8 @@
 				</select>
             </div>
 
-            <div id='file' class='import-box' >
-                <label style="float: left; margin-bottom: 10px" >Step 2</label>
+            <div id='importFileBox' style="display:none" class='import-box' >
+                <label style="float: left; margin-bottom: 10px" >Step 3</label>
                 <div class='import-file-box'>
                     <div class="form-group">
                         <label>Upload product csv file</label>
@@ -32,7 +40,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" id="importBtnBox" style="display:none" >
                 <input type="hidden" name="type" value="import" >
                 <input type="hidden" name="action" value="product" >
                 <button id="importDataBtn" class="btn btn-green">Import Data</button>

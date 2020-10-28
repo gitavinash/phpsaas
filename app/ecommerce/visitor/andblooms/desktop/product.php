@@ -27,8 +27,18 @@
 							
 							if($product_gallery!='') {
 
+								$galleryImages=explode(', ', $product_gallery);
+
+								for($i=0; $i<sizeof($galleryImages); $i++) {
+
+									echo "<div class='carousel-cell'><img src='{$galleryImages[$i]}'></div>";
+
+								}
+
 							} else {
+
 								echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
+
 							}
 
 							?>
@@ -39,6 +49,14 @@
 							<?php
 							
 								if($product_gallery!='') {
+
+									$galleryImages=explode(', ', $product_gallery);
+
+									for($i=0; $i<sizeof($galleryImages); $i++) {
+
+										echo "<div class='carousel-cell'><img src='{$galleryImages[$i]}'></div>";
+
+									}
 
 								} else {
 									echo "<div class='carousel-cell'><img src='{$product_image}'></div>";

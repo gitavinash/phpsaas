@@ -337,6 +337,12 @@
     CHANGE tw_img tw_img varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     ADD KEY meta_type (meta_type)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
+    ADD meta_site_id bigint(20) NOT NULL AFTER meta_relation_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
+    ADD INDEX meta_site_id (meta_site_id)");
+
   /** Notification Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."notification

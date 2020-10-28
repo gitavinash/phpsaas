@@ -95,7 +95,7 @@
 							
 							<?php
 							
-								if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_thumbnail, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 10")) {
+								if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 10")) {
 
 									if(mysqli_num_rows($productList)!=0) {
 
@@ -108,7 +108,7 @@
 													<div class='col-card-3'>
 														<div class='event-card'>
 															<div class='img-cd'>
-																<img src='https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg'>
+																<img src='{$product_image}'>
 															</div>
 																<h4>{$product_title}</h4>
 																<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
