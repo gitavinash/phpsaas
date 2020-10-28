@@ -92,7 +92,7 @@
 														<div class='col-card-12'>
 															<div class='event-card'>
 																<div class='img-cd'>
-																	<img src='https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg'>
+																	<img src='{$product_thumbnail}'>
 																</div>
 																	<h4>{$product_title}</h4>
 																	<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
