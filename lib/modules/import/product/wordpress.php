@@ -28,7 +28,7 @@
                 $productTaxRate=mysqli_real_escape_string($connection, $dataLines[20]);
                 $productIsFeatured=mysqli_real_escape_string($connection, $dataLines[28]);
                 $productImages=mysqli_real_escape_string($connection, $dataLines[38]);
-                $productTags=mysqli_real_escape_string($connection, $dataLines[43]);
+                $productTags=str_replace('|', ',', mysqli_real_escape_string($connection, $dataLines[43]));
 
                 /** Missing fields */
 
