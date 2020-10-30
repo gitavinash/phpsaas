@@ -42,17 +42,14 @@
 							<h5 class="stock">In Stock</h5>
 							<!-- <h5 class="outStock">Out of Stock</h5> -->
 							<h2 id="productName" ><?php echo $product_title ?></h2>
-							<p class="catag-lbel">Categories : <span> <?php echo $category_title ?></span></p>
-							<p class="pro-info">Let your lungs breathe again by flushing out tar accumulated in your lungs Naturally without any side effects.</p>
-							<p class="pro-info">Tar Free is a scientific ayurvedic formulation backed with high quality herbs to detox your lungs from the tar accumulated by consumption of tobacco & pollution.</p>
+							<p class="catag-lbel">Categories : <span> <?php echo ucwords($category_title) ?></span></p>
+							<p class="pro-info">Immunity Vitals help in developing respiratory health along with a robust immune system. Immunity Vitals is an extraordinary formulation that uses super herbs, known to Boost Immunity, Promote Respiratory health, decrease inflammation and remove the symptoms of a weak Immune System.</p>
 							<ul>
-							<li><i class="fas fa-circle"></i> Removes harmful toxins from lungs responsible for lung cancer.</li>
-							<li><i class="fas fa-circle"></i> Removes congestion in lungs & helps to breathe freely.</li>
-							<li><i class="fas fa-circle"></i> Improves stamina and allows you to perform physical work without breathlessness.</li>
+							<li><i class="fas fa-circle"></i> Increase Energy Levels.</li>
+							<li><i class="fas fa-circle"></i> Defends Against Virus/Bacteria.</li>
+							<li><i class="fas fa-circle"></i> 15 Classic Herbs To Build Immunity.</li>
 							</ul>
-							<p><strong>Note:- </strong>Tar Free should not be consumed during pregnancy.</p>
-
-							
+							<!-- <p><strong>Note:- </strong>Tar Free should not be consumed during pregnancy.</p> -->					
 							<br>
 							
 							<form action="qtyForm" >
