@@ -65,46 +65,8 @@
 													</tbody>
 													</table>
 												</div>
-
-												<div class="form-row">
-													<div class="form-group col-md-12">
-														<h3 class="heading-2">Payment Mode</h3>
-													</div>
-													<table class="table ship-table ship-mth">
-													
-													<tbody>
-														<tr>
-														<td>
-															<input class="form-check-input" id="online" type="radio" name="paymentMode" value="online" checked >
-														</td>
-														<th scope="row">Prepaid Shipping</th>
-														<td><span>Free</span></td>
-														</tr>
-														<tr>
-														<td>
-															<input class="form-check-input" id="cod" type="radio" name="paymentMode" value="cash" >
-														</td>
-														<th scope="row">COD ( Cash handling Charges )</th>
-														<td><span><i class="fas fa-rupee-sign"></i> 50/-</span></td>
-														</tr>
-													</tbody>
-													</table>
-												<!-- </div> -->
-
-												<!-- <div class="form-row actn-box">
-													<div class="form-group col-md-6">
-														<a href='#' id='backToCheckout' class="retn"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Information</a>
-													</div>
-													<div class="form-group col-md-6">
-														<input type="hidden" name="order" value="<?php echo $id ?>" >
-														<a href='#' id="continueToPayment" class="btn shi-btn">Continue Payment</a>
-													</div>
-												</div> -->
-
-												</form>
-												</div>
-												</div>
 											</div>
+										</div>
 
                                     <?php
                                     } else {

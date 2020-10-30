@@ -55,7 +55,7 @@
 						<div class="col-md-3 col-6">
 							<div class="fot-box">
 								<h3>Contact Us</h3>
-								<p>622-A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI - 110051, India</p>
+								<p>622-A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI - 110092, India</p>
 								<p>care@vedicvitals.com</p>
 								<p>+91 9310142836</p>
 
