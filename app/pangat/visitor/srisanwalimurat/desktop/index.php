@@ -87,13 +87,13 @@
 				</div>
 				<div class="col-lg-5 col-md-6 pl-md-0 pr-md-0">
 					<div class="no-booking">Booking Not Available / Pending for the <span></span></div>
-					<div class="bookingSlots pl-3 pr-3">
+					<div class="bookingSlots active pl-3 pr-3">
 						<div class="row">
 				  		<div class="col-md-4 pl-1 pr-1">
 						  	<div class="breakfast com-sch bor-rounded" booking-for="breakfast">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block pl-1 pr-1">
-						  				<i class="fa fa-cutlery"></i>
+									  	<i class="fa fa-utensils"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
 						  				<p class="sch mb-0 text-white">Breakfast</p>
@@ -106,7 +106,7 @@
 						  	<div class="lunch com-sch bor-rounded" booking-for="lunch">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block pl-1 pr-1">
-						  				<i class="fa fa-sun-o"></i>
+									  	<i class="far fa-sun"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
 						  				<p class="sch mb-0 text-white">Lunch</p>
@@ -119,7 +119,7 @@
 						  	<div class="dinner com-sch bor-rounded" booking-for="dinner">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block pl-1 pr-1">
-						  				<i class="fa fa-moon-o"></i>
+									  	<i class="far fa-moon"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
 						  				<p class="sch mb-0 text-white">Dinner</p>

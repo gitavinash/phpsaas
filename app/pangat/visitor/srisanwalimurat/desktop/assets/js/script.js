@@ -7,265 +7,8 @@ var onGoingMonth = dates.getMonth();
 var onGoingYear = dates.getFullYear();
 var isPrevAllowed = 0;
 var isNextAllowed = 4;
-var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var dataIndexer = 0;
-var dummydata = {
-    "status": 200,
-    "msg": "Data fetch successfully",
-    "current_month": "October 2020",
-    "previous_month": "",
-    "next_month": "2020-11-01",
-    "availablity": [
-      {
-        "full_date": "01-10-2020",
-        "short_date": "Thu, 01",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "02-10-2020",
-        "short_date": "Fri, 02",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "03-10-2020",
-        "short_date": "Sat, 03",
-        "bookingAllowed": 1,
-        "breakfast": 1900,
-        "lunch": 1222,
-        "dinner": 1333
-      },
-      {
-        "full_date": "04-10-2020",
-        "short_date": "Sun, 04",
-        "bookingAllowed": 1,
-        "breakfast": 1011,
-        "lunch": 1711,
-        "dinner": 1522
-      },
-      {
-        "full_date": "05-10-2020",
-        "short_date": "Mon, 05",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "06-10-2020",
-        "short_date": "Tue, 06",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "07-10-2020",
-        "short_date": "Wed, 07",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "08-10-2020",
-        "short_date": "Thu, 08",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "09-10-2020",
-        "short_date": "Fri, 09",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "10-10-2020",
-        "short_date": "Sat, 10",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "11-10-2020",
-        "short_date": "Sun, 11",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "12-10-2020",
-        "short_date": "Mon, 12",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "13-10-2020",
-        "short_date": "Tue, 13",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "14-10-2020",
-        "short_date": "Wed, 14",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "15-10-2020",
-        "short_date": "Thu, 15",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "16-10-2020",
-        "short_date": "Fri, 16",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "17-10-2020",
-        "short_date": "Sat, 17",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "18-10-2020",
-        "short_date": "Sun, 18",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "19-10-2020",
-        "short_date": "Mon, 19",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "20-10-2020",
-        "short_date": "Tue, 20",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "21-10-2020",
-        "short_date": "Wed, 21",
-        "bookingAllowed": 1,
-        "breakfast": 1,
-        "lunch": 1,
-        "dinner": 1
-      },
-      {
-        "full_date": "22-10-2020",
-        "short_date": "Thu, 22",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "23-10-2020",
-        "short_date": "Fri, 23",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "24-10-2020",
-        "short_date": "Sat, 24",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "25-10-2020",
-        "short_date": "Sun, 25",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "26-10-2020",
-        "short_date": "Mon, 26",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "27-10-2020",
-        "short_date": "Tue, 27",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "28-10-2020",
-        "short_date": "Wed, 28",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 1,
-        "dinner": 2
-      },
-      {
-        "full_date": "29-10-2020",
-        "short_date": "Thu, 29",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "30-10-2020",
-        "short_date": "Fri, 30",
-        "bookingAllowed": 1,
-        "breakfast": 2,
-        "lunch": 2,
-        "dinner": 2
-      },
-      {
-        "full_date": "31-10-2020",
-        "short_date": "Sat, 31",
-        "bookingAllowed": 2,
-        "breakfast": 2,
-        "lunch": 0,
-        "dinner": 2
-      }
-    ]
-}
+var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 var getprevdate = function(y, m, d) {
   var prevdate = new Date(y, (m), -d).getDate();
@@ -325,7 +68,8 @@ var calendar = function(y, m) { //———–Calendar function start ———-
         next++;
       } else if (number + 1 == dates.getDate() && isPrevAllowed <= 0) {
         number++;
-        calendardates += "<li class='weekday today clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'><p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
+        // calendardates += "<li class='weekday today clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'><p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
+        calendardates += "<li class='weekday clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'><p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
       } else {
         if(number + 1 < dates.getDate() && isPrevAllowed <= 0){
           // console.log(number, 'Number')
@@ -451,7 +195,7 @@ $("body").delegate('.clkAlw[bookingAllowed="0"]', 'click', function (argument) {
   $(this).addClass('highlight')
   $('.no-booking').addClass('active')
   $('.no-booking span').html($(this).attr('date') + ' ' + months[onGoingMonth] + ' ' + onGoingYear )
-  $('.bookingSlots').removeClass('active')
+  // $('.bookingSlots').removeClass('active')
 })
 
 $("body").delegate('.clkAlw[bookingAllowed="2"]', 'click', function (argument) {
@@ -461,7 +205,7 @@ $("body").delegate('.clkAlw[bookingAllowed="2"]', 'click', function (argument) {
   $('.clkAlw').removeClass('highlight');
   bookingData['bookingTime'] = '';
   $(this).addClass('highlight')
-  $('.bookingSlots').addClass('active')
+  // $('.bookingSlots').addClass('active')
   checkAndShow($(this).children('.flex-it').children('.breakfast'), 'breakfast')
   checkAndShow($(this).children('.flex-it').children('.lunch'), 'lunch')
   checkAndShow($(this).children('.flex-it').children('.dinner'), 'dinner')
@@ -495,7 +239,7 @@ $("body").delegate('#prearrow', 'click',function (argument) {
   }
   isPrevAllowed--;
   isNextAllowed++;
-  $('.bookingSlots').removeClass('active')
+  // $('.bookingSlots').removeClass('active')
   // console.log(isNextAllowed)
   // console.log(isPrevAllowed)
   $('#nexarrow').removeAttr('disabled')
@@ -512,7 +256,7 @@ $("body").delegate('#nexarrow', 'click',function (argument) {
   }
   isNextAllowed--;
   isPrevAllowed++;
-  $('.bookingSlots').removeClass('active')
+  // $('.bookingSlots').removeClass('active')
 
   // console.log(isNextAllowed)
   // console.log(isPrevAllowed)
@@ -602,8 +346,6 @@ $("body").delegate('.inputBox', 'click',function (argument) {
   }
   else if($(this).prop("checked") == false){
     bookingData['guest']= false;
-    // console.log('CheckBoxed False')
-
   }
 
 })
@@ -615,14 +357,10 @@ function formSubmission(sendingData) {
   $.ajax({
     type: 'POST',
     dataType: 'json',
-    // url: 'https://pangat.srisanwalimurat.com/',
     data: sendingData,
     success: function (ret) {
       alert('Your Booking is successfully accepted')
       location. reload()
-      // console.log(ret);
-      // $('.retryButton').removeClass('working')
-      // $('.calendar-body-wraper').removeClass('d-none')
     },
     error: function (err) {
       console.log(err)
