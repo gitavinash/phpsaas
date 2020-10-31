@@ -3,8 +3,7 @@
 	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' LIMIT 1")) {
 		if(mysqli_num_rows($productDetails)!=0) {
 			extract(mysqli_fetch_assoc($productDetails));
-		} else { echo "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' LIMIT 1";
-		exit(); ?>
+		} else { ?>
 			<script type="text/javascript">
 				alert('Invalid action found');
 				window.location.href='dashboard/product/?type=list&status=all';
@@ -223,8 +222,13 @@
 			</div>
 			<h2>Categories</h2>
 			<div class="action-box height-200 inside-shadow">
+
 				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200")) {
+
+					echo  "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title, product_category ASC";
+					exit();
+
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title, product_category ASC")) {
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
 								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$category_id) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
