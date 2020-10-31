@@ -4,12 +4,12 @@
 
 ?>
 
-		<! section global platform start >
-		<section class="bannersection">
-			<div class="containerfluid">
+		<!-- section global platform start -->
+		<section class="banner-section">
+			<div class="container-fluid">
 				<div class="row">
-					<div class="cardban">
-						<div class="banersingle">
+					<div class="card-ban">
+						<div class="baner-single">
 							<img src="<?php echo USER_IMAGES ?>slider1.jpg">
 						</div>
 					</div>
@@ -17,59 +17,59 @@
 			</div>
 		</section>
 		
-		<section class="sectioncontent contform" >
+		<section class="section-content cont-form" >
 			<div class="container">
 				<div class="row">
-					<div class="colmd12">
-						<div class="head1">
+					<div class="col-md-12">
+						<div class="head-1">
 							<h2>Contact Us</h2>
 						</div>
 					</div>
 
 					
-					<div class="colmd6">
-						<div class="contctinfo">
+					<div class="col-md-6">
+						<div class="contct-info">
 							<ul>
-								<li><i class="fa fahome" ariahidden="true"></i> 622A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI  110051, India</li>
-								<li><i class="fa faphonealt" ariahidden="true"></i> +91 9310142836</li>
-								<li><i class="fa faenvelope" ariahidden="true"></i> care@vedicvitals.com</li>
+								<li><i class="fa fa-home" aria-hidden="true"></i> 622-A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI - 110092, India</li>
+								<li><i class="fa fa-phone-alt" aria-hidden="true"></i> +91 9310142836</li>
+								<li><i class="fa fa-envelope" aria-hidden="true"></i> care@vedicvitals.com</li>
 							</ul>
 						</div>
 					</div>
 
-					<div class="colmd6">
-						<! form start >
-						<form class="checkoutform">
-							<div class="formrow">
-								<div class="formgroup colmd12">
-									<label class="lablhead">Your Query</label>
+					<div class="col-md-6">
+						<!-- form start -->
+						<form class="checkout-form">
+							<div class="form-row">
+								<div class="form-group col-md-12">
+									<label class="labl-head">Your Query</label>
 								</div>
-							    <div class="formgroup colmd12">
-							      <input type="text" class="formcontrol" id="" placeholder="First name">
+							    <div class="form-group col-md-12">
+							      <input type="text" class="form-control" id="" placeholder="First name">
 							    </div>
-							    <div class="formgroup colmd12">
-							      <input type="text" class="formcontrol" id="" placeholder="Last name">
+							    <div class="form-group col-md-12">
+							      <input type="text" class="form-control" id="" placeholder="Last name">
 							    </div>
-							    <div class="formgroup colmd12">
-							      <input type="email" class="formcontrol" id="inputEmail4" placeholder="Email">
+							    <div class="form-group col-md-12">
+							      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
 							    </div>
-								    <div class="formgroup colmd12">
-								    <input type="tel" class="formcontrol" id="" placeholder="Contact number">
+								    <div class="form-group col-md-12">
+								    <input type="tel" class="form-control" id="" placeholder="Contact number">
 								</div>
-								<div class="formgroup colmd12">
-							    	<textarea class="formcontrol txarea" id="exampleFormControlTextarea1" rows="3" placeholder="Your Query"></textarea>
+								<div class="form-group col-md-12">
+							    	<textarea class="form-control txarea" id="exampleFormControlTextarea1" rows="3" placeholder="Your Query"></textarea>
 								</div>
 							</div>
 
 							
-							<div class="formrow actnbox">
-								<div class="formgroup colmd12">
-							  		<! <button type="submit" class="btn shibtn">Continue Shipping</button> >
-							  		<a href="checkoutshipping.html" class="btn shibtn">Send</a>
+							<div class="form-row actn-box">
+								<div class="form-group col-md-12">
+							  		<!-- <button type="submit" class="btn shi-btn">Continue Shipping</button> -->
+							  		<a href="checkout-shipping.html" class="btn shi-btn">Send</a>
 								</div>
 							</div>
 						</form>
-					<! form end >
+					<!-- form end -->
 					</div>
 
 
