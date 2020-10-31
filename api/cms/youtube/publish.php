@@ -112,7 +112,7 @@
 		}
         
         $result = array(
-            'status' => intval((isset($status)) ? $status : 'error' ),
+            'status' => (isset($status)) ? $status : 'error',
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
             'redirect' => '/dashboard/youtube.php?type=list&status=all',
         );

@@ -98,7 +98,7 @@
         }
     
         $result = array(
-            'status' => intval((isset($status)) ? $status : 'error' ),
+            'status' => (isset($status)) ? $status : 'error',
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
             'current_month' => date('F Y', strtotime($calenderDate)),
             'previous_month' => ((date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) < date('Y-m-01')) ? '' : date('Y-m-01', strtotime("-1 month", strtotime($availablityDate))) ),

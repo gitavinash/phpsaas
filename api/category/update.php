@@ -72,7 +72,7 @@
         }
     
         $result = array(
-            'status' => intval((isset($status)) ? $status : 'error' ),
+            'status' => (isset($status)) ? $status : 'error',
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
 			'categoryID' => ((isset($categoryID)) ? $categoryID : 0 ),
 			'postType' => ((isset($postType)) ? $postType : 'post' )
