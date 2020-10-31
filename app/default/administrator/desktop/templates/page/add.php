@@ -1,4 +1,4 @@
-<h2>Add New <?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?></h2>
+<h2>Add new page</h2>
 
 <div class="form-box">
 	<form method="POST" id="formData" enctype="multipart/form-data" >
@@ -89,7 +89,7 @@
 
 			<div class="action-box inside-shadow">
 				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-				<input type="button" id="draftBtn"  class="btn btn-yellow btn-block" value="Save Draft">
+				<!-- <input type="button" id="draftBtn"  class="btn btn-yellow btn-block" value="Save Draft"> -->
 				<input type="hidden" name="type" value="<?php echo ltrim(rtrim(ADMIN_BASE_URL, '/'), '/') ?>" >
 			</div>
 

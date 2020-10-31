@@ -14,7 +14,7 @@
 
 		if(isset($image)) {
 
-			extract($image);
+			
 
 			if(isset($featureImage)) {
 

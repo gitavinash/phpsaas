@@ -14,7 +14,7 @@
 
 			/** when image is upload by user */
 
-			extract($image);
+			
 
 			$featureImage=(((isset($featureImage)) ? $featureImage : $oldFeatureImage ));
 			$thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $oldThumbnailImage ));

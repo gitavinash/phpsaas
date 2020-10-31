@@ -6,7 +6,7 @@
 	$postStatus=(($postStatus=='all') ? '' : "AND page_status='{$postStatus}'" );
 	
 ?>
-<h2>All <?php echo ucwords($postType.'s') ?></h2>
+<h2>All pages</h2>
 <div class="options-bar">
 	<div class="left-box">
 		<form method="GET">
@@ -38,12 +38,12 @@
 				if($dataList=mysqli_query($connection, "SELECT page_id, page_title ,link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."page, ".TABLE_PREFIX."link, ".TABLE_PREFIX."profile WHERE page_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=page_id AND link_site_id='".SITE_ID."' AND profile_user_id='".USER_ID."' $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
-						<tr>
+						<tr style="height: 60px" >
 							<td>
 								<p><a href="page.php?type=edit&editor=true&page=<?php echo $page_id; ?>" ><?php echo $page_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
 									<a href="page.php?type=edit&editor=true&page_id=<?php echo $page_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="page.php?type=post&page_id=<?php echo $page_id; ?>"><i class="fas fa-trash"></i> Delete</a>
+									<a href="#" id="<?php echo $page_id ?>_page" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>

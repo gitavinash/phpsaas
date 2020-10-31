@@ -14,7 +14,7 @@
 
                     // Extract the single upload image string to variables
 
-                    extract($image);
+                    
 
                     $featurePost=((isset($featurePost)) ? 1 : 0 );
                     $postType=((isset($postType)) ? $postType : $type );

@@ -12,10 +12,6 @@
 
                 if(isset($image['featureImage'])) {
 
-                    // Extract the single upload image string to variables
-
-                    extract($image);
-
                     $featurePost=((isset($featurePost)) ? 1 : 0 );
                     $post_status=((isset($post_status)) ? $post_status : 0 );
                     $link_status=((isset($link_status)) ? $link_status : 200 );

@@ -6,7 +6,7 @@
 
         require_once IMAGE_UPLOADER;
 
-        extract($image);
+        
 
         if($checkSiteAccess=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site_access WHERE site_access_site_id=".SITE_ID." AND site_access_user_id=".USER_ID."")) {
 

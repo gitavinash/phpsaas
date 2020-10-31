@@ -152,6 +152,10 @@
 	
 					$image[$imageName]=$uploadMediaPath;
 					$image[$imageName.'_url']=$uploadMediaLink;
+
+					// Extract the single upload image string to variables
+					
+					extract($image);
 		
 				}
 

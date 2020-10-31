@@ -44,7 +44,7 @@
 			<nav class="side-nav">
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-					<!-- <li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
+					<li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?> >
 						<a href="page.php?type=list"><i class="fas fa-file-alt"></i> Page</a>
 						<div class="side-menu">
 							<ul>
@@ -58,7 +58,7 @@
 								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
 							</ul>
 						</div>
-					</li> -->
+					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/post/') ? 'class="active"' : '' ) ?> >
 						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
 						<div class="side-menu">
