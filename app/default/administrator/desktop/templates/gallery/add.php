@@ -157,8 +157,8 @@
 				<input type="hidden" name="action" value="publish" >
 			</div>
 			<div class="form-group">
-				<h2>Fearure Post</h2>
-				<div class="action-box inside-shadow">
+				<h2>Fearure post</h2>
+				<div class="action-box inside-shadow" style="padding: 10px" >
 					<input type="checkbox" value="1" name='featurePost' > Mark as feature product
 				</div>
 			</div>

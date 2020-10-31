@@ -2,12 +2,19 @@
     
 	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."gallery, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='gallery' AND link_relation_id=gallery_id AND meta_relation_id=link_id AND gallery_id='{$id}' AND link_status!=301 AND link_type='gallery' LIMIT 1")) {
 		if(mysqli_num_rows($postDetails)!=0) {
+
 			extract(mysqli_fetch_assoc($postDetails));
-		} else { exit(); ?>
+
+			$imageList=json_decode($gallery_image_list, TRUE);
+			// $galleryImageList=implode(", ", $imageList);
+
+		} else { ?>
+
 			<script type="text/javascript">
 				alert('Invalid action found');
 				window.location.href='dashboard/gallery/?type=list&status=all';
 			</script>
+
 		<?php
 		}
 	}
@@ -40,59 +47,12 @@
 			<section style="margin-bottom:20px" >
 				<h3>Gallery images</h3>
 				<ul class='tabs'>
-					<!-- <li id="productGeneral" class='active' >General</li>
-					<li id="productInventory" >Inventory</li>
-					<li id="productShipping" >Shipping</li> -->
 					<li id="productGallery" >Gallery</li>
-					<!-- <li id="productAdditionalDetails" >Additional Details</li> -->
 				</ul>
-				<!-- <div class="productGeneral generalTab">
-					<div class="form-group">
-						<label>Regular price (₹)</label>
-						<input type="number" class="form-control inside-shadow" name="r_price" placeholder="Regular price" >
-					</div>
-					<div class="form-group">
-						<label>Sale price (₹)</label>
-						<input type="number" class="form-control inside-shadow" name="s_price" placeholder="Sale price" >
-					</div>
-				</div>
-				<div class="productInventory generalTab" style="display: none;">
-					<div class="box-2">
-						<div class="form-group">
-							<label>SKU</label>
-							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
-						</div>
-					</div>
-				</div>
-				<div class="productShipping generalTab" style="display: none;">
-					<div class="box-1">
-						<div class="form-group">
-							<label>Weight (kg)</label>
-							<input type="text" class="form-control inside-shadow" name="weight" placeholder="Weight" >
-						</div>
-					</div>
-					<label>Dimensions (cm)</label>
-					<div class="form-group">
-						<div class="box-3">
-							<label>Lenght</label>
-							<input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght" >
-						</div>
-						<div class="box-3">
-							<label>Width</label>
-							<input type="text" class="form-control inside-shadow" name="width" placeholder="Width" >
-						</div>
-						<div class="box-3">
-							<label>Height</label>
-							<input type="text" class="form-control inside-shadow" name="height" placeholder="Height" >
-						</div>
-					</div>
-				</div> -->
 				<div class="productGallery generalTab">
+					<!-- <input type="hidden" name="oldGallery" value="<?php echo $galleryImageList ?>" > -->
 					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
 				</div>
-				<!-- <div class="productAdditionalDetails generalTab" style="display: none;">
-					
-				</div> -->
 			</section>
 
 			<section>
@@ -169,19 +129,19 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($gallery_status==1) ? 'Update ' : 'Publish ' ); ?>post">
+				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($gallery_status==1) ? 'Update ' : 'Publish ' ); ?>gallery">
 				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
 				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
 				<input type="hidden" name="action" value="update" >
 				<input type="hidden" name='postStatus' value='<?php echo $gallery_status ?>' >
 				<input type="hidden" name="id" value="<?php echo $gallery_id ?>" >
 				<input type="hidden" name="postType" value="<?php echo $gallery_type ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live post</a>
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live gallery</a>
 			</div>
 			<div class="form-group">
 				<h2>Fearure post</h2>
-				<div class="action-box inside-shadow">
-					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature post
+				<div class="action-box inside-shadow" style="padding: 10px" >
+					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature gallery
 				</div>
 			</div>
 			<h2>Categories</h2>

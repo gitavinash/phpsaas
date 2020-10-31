@@ -55,7 +55,7 @@
 
                                 /* Insert data into link table */
 
-                                $addNewGallery=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."gallery(gallery_image, gallery_thumbnail, gallery_title, gallery_description, gallery_image_list, gallery_category, gallery_owner_id, gallery_status, gallery_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$gallery}', '{$category}', '".USER_ID."', '{$post_status}', 'gallery')");
+                                $addNewGallery=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."gallery(gallery_image, gallery_thumbnail, gallery_title, gallery_description, gallery_image_list, gallery_category, gallery_owner_id, gallery_status, gallery_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$gallery}', '{$category}', '".USER_ID."', '1', 'gallery')");
                                 $galleryID=mysqli_insert_id($connection);
 
                                 $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$galleryID}', '{$link_status}', '{$postType}', '{$featurePost}', '".USER_ID."', '".SITE_ID."', NOW() ,NOW())");
