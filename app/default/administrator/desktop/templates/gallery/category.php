@@ -101,12 +101,7 @@
 											<div class="hover">
 												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo $category_id; ?>&taxonomy=category" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
 												<a href="<?php echo $postType ?>.php?type=category&id=<?php echo $category_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-												<?php
-													if($category_id!=1) { ?>
-														<a href="delete.php?type=category&id=<?php echo $category_id; ?>"><i class="fas fa-trash"></i> Delete</a>
-													<?php
-													}
-												?>
+												<a href="#" id="<?php echo $category_id ?>_category" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
 												<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 											</div>
 										</td>
