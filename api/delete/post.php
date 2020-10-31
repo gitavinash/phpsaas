@@ -1,6 +1,6 @@
 <?php
 
-    function  post($connection, $data) {
+    function post($connection, $data) {
 
         extract($data);
 

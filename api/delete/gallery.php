@@ -1,6 +1,6 @@
 <?php
 
-    function  gallery($connection, $data) {
+    function gallery($connection, $data) {
 
         extract($data);
 
