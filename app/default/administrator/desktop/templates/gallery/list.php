@@ -44,7 +44,7 @@
 								<p><a href="gallery.php?type=edit&editor=true&id=<?php echo $gallery_id; ?>" ><?php echo $gallery_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
 									<a href="gallery.php?type=edit&editor=true&id=<?php echo $gallery_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="gallery.php?type=post&id=<?php echo $gallery_id; ?>"><i class="fas fa-trash"></i> Delete</a>
+									<a href="#" id="<?php echo $gallery_id ?>_gallery" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>
