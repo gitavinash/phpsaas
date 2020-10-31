@@ -91,10 +91,10 @@
 				<tbody>
 					<?php
 
-						if($dataList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$postType}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
+						if($dataList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$postType}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_title ASC")) {
 							if(mysqli_num_rows($dataList)!=0) {
 								while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
-									<tr>
+									<tr style="height: 60px" >
 										<td>
 											<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&post_id=<?php echo $category_id; ?>" ><?php echo $category_title ?></a></p>
 											<div class="hover">

@@ -25,7 +25,7 @@
 				<?php
 				}
 
-				if($_GET['type']=='list') { ?>
+				if($_GET['type']=='list' ||  $_GET['type']=='category') { ?>
 
 					<script>
 						$(document).ready( function () {
