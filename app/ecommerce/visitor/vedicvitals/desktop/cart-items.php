@@ -189,7 +189,7 @@
 								    </div>
 								    <div class="form-group col-md-4">
 								      <select id="inputState" name="state" class="form-control" required >
-								        <option selected>Choose State</option>
+								        <option value="" >Choose State</option>
 										<?php
 										
 										if($checkState=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."state WHERE state_country_id='101'")) {
