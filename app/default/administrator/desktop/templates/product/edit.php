@@ -225,10 +225,7 @@
 
 				<?php
 
-					echo  "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title, product_category ASC";
-					exit();
-
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title, product_category ASC")) {
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
 								<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$category_id) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
