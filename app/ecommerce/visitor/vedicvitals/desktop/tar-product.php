@@ -169,7 +169,7 @@
 						<hr color="#ccc">
 						<div class="sec-1">
 							<div class="grad-head">
-								<p class="product-fact" ><span><i class="fa fa-quote-left"></i></span>Approximately two third of India’s rural population, who comprises 70% of the Indian population, use Ayurveda for their primary health care needs<span><i class="fa fa-quote-right"></i></span></p>
+								<p class="product-fact" ><span><i class="fa fa-quote-left"></i></span>27.1% of India’s all cancer cases in 2020 will be tobacco-related, ICMR report estimates - The Print<span><i class="fa fa-quote-right"></i></span></p>
 							</div>
 						</div>
 					</div>
@@ -213,7 +213,6 @@
 								<h2 class="pb-3 pt-0">Who Should Consume?</h2>
 							</div>
 							<div class="who-1">
-								<p>Anyone and everyone who is exposed to pollution & consumes tobacco (smoking) should consume Tar Free on a regular basis.</p>
 							</div>
 						</div>
 					</div>
