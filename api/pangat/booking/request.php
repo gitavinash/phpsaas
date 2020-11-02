@@ -4,15 +4,8 @@
         
         extract($data);
 
-        if(isset($self)) {
-
-            $details='Yes';
-
-        } else {
-
-            $details='No';
-
-        }
+        $details=((isset($self)) ? 'yes' : 'no' );
+        $noOfGuest=((isset($noOfGuest)) ? $noOfGuest : 0 );
 
         mysqli_query($connection, "START TRANSACTION");
 
@@ -32,7 +25,7 @@
 
             }
 
-            $newEnquiry=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_query, enquiry_message, enquiry_type, enquiry_status) VALUES(".APP_SITE_ID.", '{$user_id}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$guest}', '{$details}', 'pangat', 0)");
+            $newEnquiry=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_query, enquiry_message, enquiry_type, enquiry_status) VALUES(".APP_SITE_ID.", '{$user_id}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$noOfGuest}', '{$details}', 'pangat', 0)");
             $enquiryID=mysqli_insert_id($connection);
 
             $newBooking=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."booking(booking_site_id, booking_user_id, booking_enquiry_id, booking_date, booking_time, booking_service, booking_details, booking_type, booking_status) VALUES(".APP_SITE_ID.", '{$user_id}', '{$enquiryID}', '{$bookingDate}', '{$bookingTime}', 'pangat', '{$details}', 'pangat', 0)");

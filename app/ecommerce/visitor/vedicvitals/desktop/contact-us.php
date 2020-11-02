@@ -39,33 +39,29 @@
 
 					<div class="col-md-6">
 						<!-- form start -->
-						<form class="checkout-form">
+						<form class="contact-us">
 							<div class="form-row">
 								<div class="form-group col-md-12">
 									<label class="labl-head">Your Query</label>
 								</div>
 							    <div class="form-group col-md-12">
-							      <input type="text" class="form-control" id="" placeholder="First name">
+							      <input type="text" class="form-control" name="name" id="name" placeholder="Full name*">
 							    </div>
 							    <div class="form-group col-md-12">
-							      <input type="text" class="form-control" id="" placeholder="Last name">
-							    </div>
-							    <div class="form-group col-md-12">
-							      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+							      <input type="email" class="form-control" name="email" id="email" placeholder="Email*">
 							    </div>
 								    <div class="form-group col-md-12">
-								    <input type="tel" class="form-control" id="" placeholder="Contact number">
+								    <input type="tel" class="form-control" name="mobile" id="mobile" placeholder="Contact number*">
 								</div>
 								<div class="form-group col-md-12">
-							    	<textarea class="form-control txarea" id="exampleFormControlTextarea1" rows="3" placeholder="Your Query"></textarea>
+							    	<textarea class="form-control textarea" name="msg" rows="3" placeholder="Your Query"></textarea>
 								</div>
 							</div>
 
 							
 							<div class="form-row actn-box">
 								<div class="form-group col-md-12">
-							  		<!-- <button type="submit" class="btn shi-btn">Continue Shipping</button> -->
-							  		<a href="checkout-shipping.html" class="btn shi-btn">Send</a>
+							  		<a href="#" id="submitContactUsForm" class="btn shi-btn">Send</a>
 								</div>
 							</div>
 						</form>

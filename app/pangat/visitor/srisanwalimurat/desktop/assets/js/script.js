@@ -10,6 +10,16 @@ var isNextAllowed = 4;
 var dataIndexer = 0;
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+/** Check box guest */
+
+$('#guest').click(function(e) {
+  if($('#guest').prop('checked')==true) {
+    $('#checkBox').show();
+  } else {
+    $('#checkBox').hide();
+  }
+});
+
 var getprevdate = function(y, m, d) {
   var prevdate = new Date(y, (m), -d).getDate();
   return prevdate; // return the last day of month
@@ -330,6 +340,7 @@ $("body").delegate('.submit-data', 'click',function (argument) {
   bookingData['last_name']= $('.lastName').val();
   bookingData['mobile']= $('.mobName').val();
   bookingData['email']= $('.emailName').val();
+  bookingData['noOfGuest']= $('.guestVal').val();
   sendingData = {...bookingData, ...sendingData }
   // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
   formSubmission(sendingData)
@@ -354,19 +365,42 @@ $("body").delegate('.inputBox', 'click',function (argument) {
 
 function formSubmission(sendingData) {
 
-  $.ajax({
-    type: 'POST',
-    dataType: 'json',
-    data: sendingData,
-    success: function (ret) {
-      alert('Your Booking is successfully accepted')
-      location. reload()
-    },
-    error: function (err) {
-      console.log(err)
-      resetInputs()
+  if(bookingData['guest']==true) {
+
+    if(bookingData['noOfGuest']!='') {
+
+      var sendDataToServer = true;
+
+    } else {
+
+      alert('Please enter number of guest');
+
     }
-  });
+
+
+  } else {
+  
+    var sendDataToServer = true;
+
+  }
+
+  if(sendDataToServer==true) {
+
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      data: sendingData,
+      success: function (ret) {
+        alert('Your Booking is successfully accepted')
+        location. reload()
+      },
+      error: function (err) {
+        console.log(err)
+        resetInputs()
+      }
+    });
+
+  }
 
 }
 
