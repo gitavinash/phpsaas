@@ -431,7 +431,7 @@ function checkAndShow(elem, classNameSent){
   $(".bookingSlots ."+ classNameSent).removeClass('notConf')
 
   if (elem.attr('data') == 0) {
-    $(".bookingSlots ."+ classNameSent).addClass('notConf')
+    $(".bookingSlots ."+ classNameSent).addClass('isAvl')
   }
   if (elem.attr('data') == 1) {
     $(".bookingSlots ."+ classNameSent).addClass('notAvl')
@@ -439,4 +439,5 @@ function checkAndShow(elem, classNameSent){
   if (elem.attr('data') == 2) {
     $(".bookingSlots ."+ classNameSent).addClass('isAvl')
   }
+  
 }
