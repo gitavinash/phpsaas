@@ -391,8 +391,18 @@ function formSubmission(sendingData) {
       dataType: 'json',
       data: sendingData,
       success: function (ret) {
-        alert('Your Booking is successfully accepted')
-        location. reload()
+        
+
+        if(ret.status==200) {
+
+          alert('Your Booking is successfully accepted')
+          location. reload()
+
+        } else {
+
+          alert(ret.msg);
+        }
+
       },
       error: function (err) {
         console.log(err)

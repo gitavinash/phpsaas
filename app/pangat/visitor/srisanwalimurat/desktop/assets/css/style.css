@@ -193,7 +193,7 @@
 	margin-bottom: 10px;
 }
 .com-sch.notConf{
-	cursor: progress;
+	/* cursor: progress; */
 }
 .com-sch.notAvl{
 	cursor: no-drop;
