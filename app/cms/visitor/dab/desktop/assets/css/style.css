@@ -499,7 +499,7 @@ header .menu ul li a:hover {
     background-repeat: no-repeat !important;
     background-position: center center !important;
     background-size: cover !important;
-    background-attachment: fixed;
+    background-attachment: fixed !important;
 }
 
 .portfolio .text-box .left {
@@ -1028,6 +1028,7 @@ footer a:hover {
         background-repeat: no-repeat !important;
         background-position: center center !important;
         background-size: cover !important;
+        background-attachment: cover !important;
     }
 
     .blogSlider .slide {
