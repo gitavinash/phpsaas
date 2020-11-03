@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Playfair+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
   <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
   <title>Booking Slot</title>
 </head>
@@ -194,6 +195,7 @@
     <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
     <script src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
     <script src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
+	<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
     <script type="text/javascript" src="<?php echo USER_JS ?>script.min.js"></script>
 
 </body>

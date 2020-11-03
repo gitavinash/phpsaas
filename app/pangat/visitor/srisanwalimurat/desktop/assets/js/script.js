@@ -10,6 +10,25 @@ var isNextAllowed = 4;
 var dataIndexer = 0;
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+function popUpMessage(msgPostion, msgTxt, msgType) {
+
+  if(msgType==200) {
+
+    msgType='success'
+
+  }
+
+  Swal.fire({
+    position: msgPostion,
+    type: msgType,
+    title: msgTxt,
+    showConfirmButton: false,
+    timer: 1500
+  })
+
+}
+
+
 /** Check box guest */
 
 $('#guest').click(function(e) {
@@ -373,7 +392,7 @@ function formSubmission(sendingData) {
 
     } else {
 
-      alert('Please enter number of guest');
+      popUpMessage('center', 'Please enter number of guest', 'warning');
 
     }
 
@@ -386,21 +405,26 @@ function formSubmission(sendingData) {
 
   if(sendDataToServer==true) {
 
+    $('.submit-data').hide();
+
     $.ajax({
       type: 'POST',
       dataType: 'json',
       data: sendingData,
       success: function (ret) {
         
+        popUpMessage('center', ret.msg, ret.status);
 
         if(ret.status==200) {
 
-          alert('Your Booking is successfully accepted')
-          location. reload()
+          window.setTimeout(function() {
+              location.reload()
+          }, 1600);
 
         } else {
 
-          alert(ret.msg);
+          $('.submit-data').show();
+
         }
 
       },
