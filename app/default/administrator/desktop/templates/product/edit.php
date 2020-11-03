@@ -212,7 +212,7 @@
 				<input type="hidden" name="postType" value="<?php echo $product_type; ?>" >
 				<input type="hidden" name="id" value="<?php echo $id ?>" >
 				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live product</a>
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live product</a>
 			</div>
 			<div class="form-group">
 				<h2>Fearure product</h2>
