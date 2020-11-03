@@ -12,6 +12,9 @@
     function availability($connection, $data) {
         
         extract($data);
+        $breakfast=2;
+        $lunch=2;
+        $dinner=2;
 
         $availablityDate=((isset($date)) ? date('01-M-Y', strtotime($date)) : date('01-M-Y'));
 
@@ -27,7 +30,10 @@
     
                         while($pangatStatus=mysqli_fetch_assoc($checkDateAvailablity)) {
 
+                            // print_r($pangatStatus);
                             extract($pangatStatus);
+
+                            // exit();
 
                             if($booking_time=='breakfast') {
 

@@ -174,10 +174,10 @@
 					  		<input type="text" name="mname" class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required min="10" max="10" pattern="[6-9]{1}[0-9]{9}" title="Enter Your 10 Digit Mobile Number only">
 					  	</div>
 					  	<div class="form-cont mb-4">
-					  		<input type="checkbox" id="guest" name="box" class="inputBox">
+					  		<input type="checkbox" id="guest" name="box" class="inputBox" checked >
 					  		<spn class="d-inline-block">I will be present in pangat.</span>
 					  	</div>
-					  	<div id="checkBox" style="display:none" class="form-cont">
+					  	<div id="checkBox" class="form-cont">
 					  		<p class="color-red">Enter number of guests</p>
 					  		<input type="text" name="guest" class="mobName inputClass guestVal reqInput" placeholder="Number of guest">
 					  	</div>
