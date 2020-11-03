@@ -5,7 +5,9 @@
 		header("Content-type: application/json; charset=utf-8");
 
 		foreach($_POST as $key => $value) {
+			
 			$secure[$key]=mysqli_real_escape_string($connection, $value);
+
 		}
 
 		extract($secure);
