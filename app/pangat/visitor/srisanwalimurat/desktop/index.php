@@ -93,7 +93,7 @@
 				  		<div class="col-md-4 pl-1 pr-1">
 						  	<div class="breakfast com-sch bor-rounded" booking-for="breakfast">
 						  		<div class="d-flex justify-content-center align-items-center">
-						  			<div class="d-inline-block pl-1 pr-1">
+						  			<div class="d-inline-block left-icon pl-1 pr-1">
 									  	<i class="fa fa-utensils"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
@@ -106,7 +106,7 @@
 				  		<div class="col-md-4 pl-1 pr-1">
 						  	<div class="lunch com-sch bor-rounded" booking-for="lunch">
 						  		<div class="d-flex justify-content-center align-items-center">
-						  			<div class="d-inline-block pl-1 pr-1">
+						  			<div class="d-inline-block left-icon pl-1 pr-1">
 									  	<i class="far fa-sun"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
@@ -119,7 +119,7 @@
 				  		<div class="col-md-4 pl-1 pr-1">
 						  	<div class="dinner com-sch bor-rounded" booking-for="dinner">
 						  		<div class="d-flex justify-content-center align-items-center">
-						  			<div class="d-inline-block pl-1 pr-1">
+						  			<div class="d-inline-block left-icon pl-1 pr-1">
 									  	<i class="far fa-moon"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">

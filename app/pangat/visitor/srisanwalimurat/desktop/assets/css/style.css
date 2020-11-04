@@ -1,3 +1,9 @@
+.bg-body{
+	background-image: url(/app/pangat/visitor/srisanwalimurat/desktop/assets/images/background.png);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+}
+
 .vanilla-calendar .vanilla-calendar-header {
   align-items: center;
   display: flex;
@@ -268,8 +274,11 @@
     max-width: 940px;
 	}
 }
-.bg-body{
-	background-image: url(/app/pangat/visitor/srisanwalimurat/desktop/assets/images/background.png);
-	background-size: 100% auto;
-	background-repeat: no-repeat;
+
+@media (max-width: 680px) {
+	.left-icon {
+		float: left;
+		width: 70%;
+		padding: 10px 0px;
+	}
 }
