@@ -213,6 +213,7 @@
 								<h2 class="pb-3 pt-0">Who Should Consume?</h2>
 							</div>
 							<div class="who-1">
+								<p>Anyone who consumes tobacco (smoking) or have exposure to air pollution should use Tar Free on a regular basis.</p>
 							</div>
 						</div>
 					</div>
