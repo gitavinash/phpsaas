@@ -14,7 +14,7 @@
 
                 $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=1 WHERE booking_enquiry_id='{$enquiry_id}' AND booking_site_id=".APP_SITE_ID);
 
-                if($checkOtherBooking=mysqli_query($connection, "SELECT booking_enquiry_id FROM ".TABLE_PREFIX."booking WHERE booking_date='{$date}' AND booking_time='{$time}' AND booking_id!='{$booking_enquiry_id}' AND booking_site_id=".APP_SITE_ID)) {
+                if($checkOtherBooking=mysqli_query($connection, "SELECT booking_enquiry_id FROM ".TABLE_PREFIX."booking WHERE booking_date='{$date}' AND booking_time='{$time}' AND booking_enquiry_id!='{$booking_enquiry_id}' AND booking_site_id=".APP_SITE_ID)) {
 
                     if(mysqli_num_rows($checkOtherBooking)!=0) {
 
