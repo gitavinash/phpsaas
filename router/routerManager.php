@@ -20,8 +20,8 @@
 
 				if(file_exists(ROUTER.$link_type.'.php')) {
 
-					// require_once ROUTER.$link_type.'.php';
-					echo  ROUTER.$link_type.'.php';
+					require_once ROUTER.$link_type.'.php';
+					// echo  ROUTER.$link_type.'.php';
 
 				} else {
 
