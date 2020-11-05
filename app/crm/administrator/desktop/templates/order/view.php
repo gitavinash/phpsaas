@@ -73,10 +73,28 @@
     
                                                     <?php
     
-                                                } else {
+                                                } else { ?>
+
+                                                    <div class="form-group">
+                                                        <label>Product name ( Cart item no <?php echo $i+1 ?> )</label>
+                                                        <!-- <input type="text" class="form-control inside-shadow" value="<?php echo $productName ?>" > -->
+                                                        <select name="product_id_<?php echo $i ?>" class="form-control inside-shadow" >
+                                                            <option value="">Select product</option>
+                                                            <?php
+                                                            
+                                                                for($j=0; $j<sizeof($productListData); $j++) {
+                                                                    echo "<option value='{$productListData[$j]['product_id']}' >{$productListData[$j]['product_title']}</option>";
+                                                                }
     
-                                                    echo 'Invalid product information';
-    
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Product qty.</label>
+                                                        <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow" >
+                                                    </div>
+
+                                                <?php    
                                                 }
     
                                             }

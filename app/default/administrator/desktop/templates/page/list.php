@@ -42,7 +42,7 @@
 							<td>
 								<p><a href="page.php?type=edit&editor=true&page=<?php echo $page_id; ?>" ><?php echo $page_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
-									<a href="page.php?type=edit&editor=true&page_id=<?php echo $page_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="page.php?type=edit&editor=true&id=<?php echo $page_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 									<a href="#" id="<?php echo $page_id ?>_page" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>

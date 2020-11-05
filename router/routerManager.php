@@ -1,28 +1,46 @@
 <?php
 
-	/* Search url in link table  */
+	/** Check physical file is available or not */
 
-	if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+	$checkPhysicalPageTemplate=USER_PATH.str_replace('/', '', ACTIVE_URL).'.php';
 
-		if(mysqli_num_rows($checkUrl)!=0) {
+	if(file_exists($checkPhysicalPageTemplate)) {
 
-			extract(mysqli_fetch_assoc($checkUrl));
+		require_once $checkPhysicalPageTemplate;
 
-			if(file_exists(ROUTER.$link_type.'.php')) {
+	} else {
 
-				require_once ROUTER.$link_type.'.php';
+		/* Search url in link table  */
+
+		if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+
+			if(mysqli_num_rows($checkUrl)!=0) {
+
+				extract(mysqli_fetch_assoc($checkUrl));
+
+				if(file_exists(ROUTER.$link_type.'.php')) {
+
+					// require_once ROUTER.$link_type.'.php';
+					echo  ROUTER.$link_type.'.php';
+
+				} else {
+
+					// echo 'Undefined request found';
+
+					echo ROUTER.$link_type.'.php';
+
+				}
 
 			} else {
-
-				// echo 'Undefined request found';
-
-				echo ROUTER.$link_type.'.php';
+					
+				require_once 'pagination.php';
 
 			}
 
 		} else {
-				
-			require_once 'pagination.php';
+
+			echo 'sfd';
+			exit();
 
 		}
 

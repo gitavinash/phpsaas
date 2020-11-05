@@ -13,7 +13,7 @@
 						<div class="list-covid">
 							<div class="covid-box">
 								<div class="covid-img">
-									<img src="image/fasanitization.png">
+									<img src="<?php echo USER_IMAGES ?>fasanitization.png">
 								</div>
 								<div class="covid-name">
 									<h4>Sanitization</h4>
@@ -23,7 +23,7 @@
 
 							<div class="covid-box">
 								<div class="covid-img">
-									<img src="image/fasanitization.png">
+									<img src="<?php echo USER_IMAGES ?>fasanitization.png">
 								</div>
 								<div class="covid-name">
 									<h4>Contact Less Delivery</h4>
@@ -33,7 +33,7 @@
 
 							<div class="covid-box">
 								<div class="covid-img">
-									<img src="image/facontactless.png">
+									<img src="<?php echo USER_IMAGES ?>facontactless.png">
 								</div>
 								<div class="covid-name">
 									<h4>Temperature Checks</h4>
@@ -43,7 +43,7 @@
 
 							<div class="covid-box">
 								<div class="covid-img">
-									<img src="image/fasafety.png">
+									<img src="<?php echo USER_IMAGES ?>fasafety.png">
 								</div>
 								<div class="covid-name">
 									<h4>Compulsory Mask & Gloves</h4>
@@ -70,11 +70,11 @@
 						<h2 class="h2-socl">Spread The Love</h2>
 
 						<div class="social-1">
-							<a href=""><img src="image/fb.svg"></a>
-							<a href=""><img src="image/tweet.svg"></a>
-							<a href=""><img src="image/linkedin.svg"></a>
-							<a href=""><img src="image/pinterest.svg"></a>
-							<!-- <a href=""><img src="image/insta.svg"></a> -->
+							<a href=""><img src="<?php echo USER_IMAGES ?>fb.svg"></a>
+							<a href=""><img src="<?php echo USER_IMAGES ?>tweet.svg"></a>
+							<a href=""><img src="<?php echo USER_IMAGES ?>linkedin.svg"></a>
+							<a href=""><img src="<?php echo USER_IMAGES ?>pinterest.svg"></a>
+							<!-- <a href=""><img src="<?php echo USER_IMAGES ?>insta.svg"></a> -->
 						</div>
 					</div>
 				</div>
@@ -89,26 +89,25 @@
 					<div class="col-md-12">
 						<div class="fot-box">	
 							<ul class="dn-s">
-				              <li><a href="index">About Us</a></li>
-				              <li><a href="">Coupons & Deals</a></li>
-				              <li><a href="">Cancellation & Refund</a></li>
-				              <li><a href="">Career</a></li>
-				              <li><a href="">Media</a></li>
-				              <li><a href="">Reviews</a></li>
-				              <li><a href="">Blog</a></li>
+				              <li><a href="/about-us/">About Us</a></li>
+				              <!-- <li><a href="">Coupons & Deals</a></li> -->
+				              <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
+				              <li><a href="/career/">Career</a></li>
+				              <li><a href="/media/">Media</a></li>
+				              <li><a href="reviews/">Reviews</a></li>
+				              <li><a href="/blog/">Blog</a></li>
 				            </ul>
 				            <ul class="dn-l">
-				              <li><a href="">Terms</a></li>
-				              <li><a href="">Cancellation</a></li>
-				              <li><a href="">Privacy</a></li>
+				              <li><a href="/terms-and-conditions/">Terms</a></li>
+				              <li><a href="/cancellation/">Cancellation</a></li>
+				              <li><a href="/privacy-policy/">Privacy</a></li>
 				            </ul>
 						</div>
 					</div>
 					<div class="col-md-12">
 						<div class="acept-py">
-							<span class="partnr">Our Partner <a href="">Partner Name</a></span>
-							<span class="payout dn-s">We Accept <img src="image/desktop-payment-option.png"></span>
-							<span class="payout dn-l">We Accept <img src="image/paymentFooter.png"></span>
+							<span class="payout dn-s">We Accept <img src="<?php echo USER_IMAGES ?>desktop-payment-option.png"></span>
+							<span class="payout dn-l">We Accept <img src="<?php echo USER_IMAGES ?>paymentFooter.png"></span>
 						</div>
 					</div>
 				</div>
@@ -119,7 +118,7 @@
 				<div class="row">
 					<div class="col-md-12 col-12">
 						<div class="footer-btm">
-							<p>© 2020 . All Rights Reserved</p>
+							<p>© 2020 <?php echo SITE_NAME; ?> . All Rights Reserved</p>
 						</div>
 					</div>
 				</div>
@@ -128,24 +127,14 @@
 		</footer>
 
 		<!-- sections end -->
-
-		<!-- script start -->
-		<script src="js/jquery-3.4.1.slim.min.js" ></script>
-		<script src="js/flickity.pkgd.min.js"></script>
-		<script src="js/popper.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<!-- script end -->
-		
-		<!-- city search popup start -->
-		<div id="popup1" class="overlay-pop">
-			<div class="popup">
-				<h2>Here i am</h2>
-				<a class="close" href="#">&times;</a>
-				<div class="content-pop">
-					Thank to pop me out of that button, but now i'm done so you can close this window.
-				</div>
-			</div>
-		</div>
+		<?php include_once NOTIFICATION.'index.php' ?>
+	
+		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
+		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
+		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
+		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js" ></script>
+		<!-- <script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script> -->
 
 		<!-- city search popup end -->
 
