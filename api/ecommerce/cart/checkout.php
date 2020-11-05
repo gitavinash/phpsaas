@@ -6,7 +6,6 @@
 
         if($email!='') {
 
-
             if($mobile!='') {
 
                 if(preg_match("/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/", $mobile)) {
@@ -120,13 +119,13 @@
                         }
                     } else {
 
-                        $msg='Enter valid mobile number';
+                        $msg='Please select your state';
 
                     }
 
                 } else {
 
-                    $msg='Please select your state';
+                    $msg='Enter valid mobile number';
 
                 }
 
