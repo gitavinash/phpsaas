@@ -131,17 +131,17 @@
 .breakfast{
 	cursor: no-drop;
 	background-color: #f5e133;
-	padding: 2px 5px;
+	/* padding: 2px 5px; */
 }
 .lunch{
 	cursor: no-drop;
-	background-color: #8cc34a;
-	padding: 2px 5px;
+	background-color: #e0f0cc;
+	/* padding: 2px 5px; */
 }
 .dinner{
 	cursor: no-drop;
 	background-color: #666666;
-	padding: 2px 5px;
+	/* padding: 2px 5px; */
 }
 .prev-dates .flex-it{
 	display: none;
