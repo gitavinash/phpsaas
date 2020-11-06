@@ -110,9 +110,9 @@
 	height: 6px;
 	border-radius: 50%
 }
-.flex-it >span[data="1"]{
+/* .flex-it >span[data="1"]{
 	display: none;
-}
+} */
 .slot-booked-not-confirmed{
 	background-color: #f39e80;
 	width: 10px;
