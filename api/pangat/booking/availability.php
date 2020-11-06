@@ -27,13 +27,14 @@
                 if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}' AND booking_site_id=".APP_SITE_ID)) {
 
                     if(mysqli_num_rows($checkDateAvailablity)!=0) {
-    
+
                         while($pangatStatus=mysqli_fetch_assoc($checkDateAvailablity)) {
+                            
+                            $breakfast=2;
+                            $lunch=2;
+                            $dinner=2;
 
-                            // print_r($pangatStatus);
                             extract($pangatStatus);
-
-                            // exit();
 
                             if($booking_time=='breakfast') {
 
