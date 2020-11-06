@@ -14,6 +14,7 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>flickity.min.css">
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		        
         <!-- SEO -->
 

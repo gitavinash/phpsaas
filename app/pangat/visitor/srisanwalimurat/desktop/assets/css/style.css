@@ -282,3 +282,11 @@
 		padding: 10px 0px;
 	}
 }
+
+.weekday.clkAlw .flex-it span[data="2"]{
+	display: none;
+}
+
+.weekday.upcoming-dates .flex-it span[data="2"]{
+	display: none;
+}

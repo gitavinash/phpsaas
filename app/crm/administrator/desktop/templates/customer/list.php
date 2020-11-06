@@ -76,13 +76,13 @@
 							<tr>
                                 <td><?php echo $i ?></td>
                                 <td><?php echo 'OD'.$order_id ?></td>
-                                <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_display_name ?></a></td>
-                                <td><a href="customer/?type=profile&id=<?php echo $profile_user_id ?>"><?php echo $profile_mobile ?></a></td>
+                                <td><a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_display_name ?></a></td>
+                                <td><a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_mobile ?></a></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>
                                 <td><?php echo $order_payment_mode ?></td>
                                 <td><?php echo (($order_status==1) ? 'Confirm' : ((($order_status)==0) ? 'Pending' : 'Reject') ); ?></td>
 								<td>
-									<a href="order.php?type=view&id=<?php echo $order_id; ?>" class="btn btn-sm btn-blue" ><i class="fas fa-eye"></i> View</a>
+									<a href="order.php?type=view&id=<?php echo base64_encode($order_id); ?>" class="btn btn-sm btn-blue" ><i class="fas fa-eye"></i> View</a>
 								</td>
 							</tr>
 						<?php

@@ -1,6 +1,6 @@
 <?php
 
-	$user_id=mysqli_real_escape_string($connection, $_GET['id']);
+	$user_id=base64_decode($id);
 
 ?>
 <h2>Customer profile</h2>
@@ -76,7 +76,7 @@
                         
                                         }
 
-                                        echo "<li><a href='/dashboard/order/?type=view&id={$order_id}'>{$productName}<br />Qty : {$order_product_qty} | Time : ".date("d M Y", strtotime($order_generate))."</a></li>";
+                                        echo "<li><a href='/dashboard/order/?type=view&id=".base64_encode($order_id)."'>{$productName}<br />Qty : {$order_product_qty} | Time : ".date("d M Y", strtotime($order_generate))."</a></li>";
 
                                     }
                 

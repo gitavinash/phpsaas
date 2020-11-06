@@ -2,6 +2,8 @@
 
     if(isset($id)) {
 
+        $id=base64_decode($id);
+
         $productList=mysqli_query($connection, "SELECT product_id, product_title FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE link_type='product' AND link_site_id=".APP_SITE_ID);
 
         if(mysqli_num_rows($productList)!=0) {
