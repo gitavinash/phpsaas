@@ -79,7 +79,19 @@
 									  </li> -->
 									   <!-- <li class="wal-icn"><a href=""><img src="<?php echo USER_IMAGES ?>wallet.svg"></a><span class="span-item">Wallet</span></li>
 									  <li><a href=""><img src="<?php echo USER_IMAGES ?>track.svg"></a><span class="span-item">Track Order</span></li> -->
-									  <li><a href=""><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">0</span><span class="span-item">Cart</span></li>
+									  <li><a href=""><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">
+
+									  <?php
+											
+											if($cartNumber=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1")) {
+
+												echo mysqli_num_rows($cartNumber);
+
+											}
+
+										?>
+
+										</span><span class="span-item">Cart</span></li>
 									  <!-- user acount -->
 									  <!-- <li class="nav-item dropdown us-icn">
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>signin.svg"><span class="span-item">My Account</span>

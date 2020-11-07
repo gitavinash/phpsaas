@@ -110,9 +110,15 @@
 						</div>
 					</div> -->
 					<div class="cart-box">
+						<input type="hidden" id="qty" value="<?php echo $product_id.'_1_'.(($inventory_price!=0) ? $inventory_price : $inventory_mrp) ?>" >
 						<span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date: <?php echo date('d M Y', strtotime('+3 days')) ?></span>
-						<!-- <a href="/checkout/" id="addToCart" class="cart-ad-btn">Buy Now</a> -->
-						<a href="#" id="addToCart" class="cart-ad-btn">Buy Now</a>
+						
+						<?php
+					
+							echo (($inventory_in_stock==0) ? "<a class='out-of-stock'>Out of stock</a>" : "<a href='#' id='addToCart' class='cart-ad-btn'>Buy Now</a>" );
+
+						?>
+
 						<div class="deliver">
 							<img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
 						</div>

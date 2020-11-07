@@ -16,11 +16,6 @@
             require_once 'sms-api-configuration.php';
             $smsStatus=file_get_contents($smsURL);
             
-        } else {
-
-            echo 'i m here';
-            exit();
-
         }
 
     } else {

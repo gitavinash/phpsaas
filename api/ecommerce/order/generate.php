@@ -23,26 +23,34 @@
 
                 }
                 
-                if($updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_product_id='{$product}', order_product_qty='{$quantity}', order_product_price='{$price}', order_delivery_charges='{$deliveryCharges}', order_total_price='{$totalPrice}', order_coupon='{$coupon}', order_payment_mode='{$paymentMode}' WHERE order_id='{$order}' AND order_cart_session_id='".SESSION_ID."' AND order_site_id=".SITE_ID)) {
+                if($paymentMode!='') {
 
-                    /** Start new transaction */
+                    if($updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_product_id='{$product}', order_product_qty='{$quantity}', order_product_price='{$price}', order_delivery_charges='{$deliveryCharges}', order_total_price='{$totalPrice}', order_coupon='{$coupon}', order_payment_mode='{$paymentMode}' WHERE order_id='{$order}' AND order_cart_session_id='".SESSION_ID."' AND order_site_id=".SITE_ID)) {
 
-                    if($startTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$user_id}', '{$order}', '{$paymentMode}', '{$cart_currency}', '{$totalPrice}', 'purchase', 0)")) {
-
-                        $status=200;
-                        $msg='Redirect to payment mode';
-                        $transaction_id=base64_encode(mysqli_insert_id($connection));
-                        if($paymentMode=='cash') {
-
-                            $url='/thank-you/?id='.$transaction_id;
-
-                        } else {
-
-                            $url='/payment/generate/?id='.$transaction_id.'&type=order';
-
+                        /** Start new transaction */
+    
+                        if($startTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$user_id}', '{$order}', '{$paymentMode}', '{$cart_currency}', '{$totalPrice}', 'purchase', 0)")) {
+    
+                            $status=200;
+                            $msg='Redirect to payment mode';
+                            $transaction_id=base64_encode(mysqli_insert_id($connection));
+                            if($paymentMode=='cash') {
+    
+                                $url='/thank-you/?id='.$transaction_id;
+    
+                            } else {
+    
+                                $url='/payment/generate/?id='.$transaction_id.'&type=order';
+    
+                            }
+    
                         }
-
+    
                     }
+
+                } else {
+
+
 
                 }
 

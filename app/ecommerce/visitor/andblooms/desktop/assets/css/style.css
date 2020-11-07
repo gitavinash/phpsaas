@@ -1730,6 +1730,19 @@ a.cart-ad-btn {
     font-weight: 500;
     text-transform: uppercase;
 }
+a.out-of-stock {
+    display: inline-block;
+    background: #C70039;
+    color: #fff;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+a.out-of-stock:hover {
+    color: #fff;
+}
 .cart-box span {
     float: left;
     width: 100%;
@@ -1981,6 +1994,56 @@ a.cart-ad-btn {
     width: 21px;
     position: relative;
     top: 1px;
+}
+
+.continue-shopping {
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 100px 20px;
+    box-sizing: border-box;
+}
+
+.continue-shopping h1 {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.continue-shopping h1 span {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 300;
+    color: #a7a7a7;
+    padding: 20px 0px;
+    box-sizing: border-box;
+}
+
+.delivery-btn {
+    float: left;
+    width: 100%;
+    color: #000;
+    padding: 5px 10px;
+    border: 1px solid #b8b8b8;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 24px;
+}
+
+.delivery-btn:hover {
+    color: #000;
+    border:1px solid #000;
+}
+
+.delivery-btn.active {
+    background: #197902;
+    border:none;
+    color: #fff;
 }
 
 /*------------- account backend----*/
@@ -4176,17 +4239,13 @@ a.delet img {
 
 }
 
+.whatsapp {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+.whatsapp img {
+    float: left;
+    width: 50px;
+}

@@ -124,6 +124,9 @@
 				</div>
 			</div>
 		</div>
+		<div class="whatsapp">
+			<a href="https://wa.me/919910744118?text=Hello"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
+		</div>
 		</footer>
 
 		<!-- sections end -->
@@ -134,7 +137,7 @@
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js" ></script>
-		<!-- <script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script> -->
+		<script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
 
 		<!-- city search popup end -->
 
