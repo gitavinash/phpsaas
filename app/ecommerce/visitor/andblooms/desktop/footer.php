@@ -125,7 +125,7 @@
 			</div>
 		</div>
 		<div class="whatsapp">
-			<a href="https://wa.me/919910744118?text=Hello"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
+			<a href="https://wa.me/919910744118?text=<?php echo ((isset($link_type)) ? (($link_type=='product') ? urlencode('i want to know about '.$product_title.' '.SITE_URL.ACTIVE_URL) : 'Hello' ) : 'Hello' ) ?>"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
 		</div>
 		</footer>
 
