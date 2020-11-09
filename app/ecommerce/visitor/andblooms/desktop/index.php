@@ -13,11 +13,11 @@
 							<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>2.png"></div>
 							<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>3.png"></div>
 						</div>
-						<!-- <div class="carousel dn-l mob-baner"  data-flickity='{ "autoPlay": true, "wrapAround": true }'>
+						<div class="carousel dn-l mob-baner"  data-flickity='{ "autoPlay": true, "wrapAround": true }'>
 							<div class="carousel-cell-2 "><img src="<?php echo USER_IMAGES ?>mob-baner.jpg"></div>
 							<div class="carousel-cell-2 "><img src="<?php echo USER_IMAGES ?>mob-baner1.jpg"></div>
 							<div class="carousel-cell-2 "><img src="<?php echo USER_IMAGES ?>mob-baner3.jpg"></div>
-						</div> -->
+						</div>
 					</div>
 				</div>
 			</div>
