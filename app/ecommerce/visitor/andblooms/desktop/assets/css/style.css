@@ -4069,6 +4069,21 @@ img.logo-mb {
     font-size: 30px;
 }
 
+.delivery-btn {
+    margin-bottom: 20px;
+}
+
+.deliveryDateBox {
+    float: left;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.deliverySchedule {
+    float: left;
+    width: 100% !important;
+}
 
 /*----- index----*/
 
@@ -4196,9 +4211,7 @@ button.navbar-toggler.bar-mnu {
     top: 6px;
     padding-left: 0px;
 }
-button.navbar-toggler.more-dots {
 
-}
 .mob-menu button {
     padding-right: 0px;
     /* top: 100%; */
@@ -4271,4 +4284,68 @@ a.delet img {
     padding: 0px;
 }
 
+}
+
+.deliveryDateBox {
+    float: left;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.deliverySchedule {
+    width: 470px;
+	height: 400px;
+	background-color:#fff;
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+#closeCalender {float: right;
+    border: 1px solid #d4946e;
+    border-radius: 100%;
+    width: 25px;
+    text-align: center;
+    height: 25px;
+    cursor: pointer;
+    color: #d4946e;
+}
+
+.today {
+    color: #fff !important;
+    background: #D4946E !important;
+}
+
+.calender .active {
+    color: #D4946E !important;
+    border: 1px solid #D4946E !important;
+    background: none !important;
+}
+
+.deliverySchedule .calenderBox {
+    float: left;
+    width: 440px;
+}
+
+.datepicker {
+    padding: 0px !important;
+}
+
+.datepicker-inline {
+    width: 100% !important;
+}
+
+.datepicker td, .datepicker th {
+    width: 60px !important;
+    height: 40px !important;
 }

@@ -144,10 +144,10 @@
 											<a href="#" id="deliverByToday" class="delivery-btn active" ><?php echo date('jS M, ') ?>Today</a>
 										</div>
 										<div class="col-md-4">
-											<a href="#" id="deliverByToday" class="delivery-btn" ><?php echo date('jS M, ', strtotime('+1 days')) ?>Tomorrow</a>
+											<a href="#" id="deliverByTomorrow" class="delivery-btn" ><?php echo date('jS M, ', strtotime('+1 days')) ?>Tomorrow</a>
 										</div>
 										<div class="col-md-4">
-											<a href="#" id="deliverByToday" class="delivery-btn" ><img src="<?php echo IMG_LIBRARY ?>booking-calendar-sm.png" alt=""> Other dates</a>
+											<a href="#" id="deliverByOther" class="delivery-btn" ><img src="<?php echo IMG_LIBRARY ?>booking-calendar-sm.png" alt=""> Other dates</a>
 										</div>
 									</div>
 
@@ -214,6 +214,44 @@
 								<li><span class="material-icons">security</span> 100% Secure payments</li>
 								<li><span class="material-icons">tag_faces</span> 2 lakh Smiles Delivered</li>
 							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="deliveryDateBox" style="display: none" >
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="deliverySchedule" >
+							<div class="calenderBox" style="display: none" >
+								<h3 class="heading-2" >Select delivery date<span id="closeCalender" >x</span></h3>
+								<div id="calender" ></div>
+							</div>
+							<div class="showTimeBox" style="display: none" >
+								<h3 class="heading-2" >Select delivery type and slot</h3>
+								<div class="form-group">
+									<input type="radio" name="deliveryType" value="morning_200" > Morning delivery at <i class="fas fa-rupee-sign"></i> 200
+								</div>
+								<div class="form-group">
+									<input type="radio" name="deliveryType" value="morning_200" > Standard delivery for free
+								</div>
+								<div class="form-group">
+									<input type="radio" name="deliveryType" value="morning_200" > Fixed Time delivery at <i class="fas fa-rupee-sign"></i> 200
+								</div>
+								<div class="form-group">
+									<input type="radio" name="deliveryType" value="morning_200" > Midnight delivery at <i class="fas fa-rupee-sign"></i> 249
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<a href="#" class="showCalender btn btn-light btn-block" ><i class="fas fa-arrow-left"></i> Go to calender</a>
+									</div>
+									<div class="col-6">
+										<a href="#" class="showTimeSlots btn btn-success btn-block" >Next <i class="fas fa-arrow-right"></i></a>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

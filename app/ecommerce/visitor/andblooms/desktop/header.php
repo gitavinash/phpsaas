@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.css">
 		        
         <!-- SEO -->
 
@@ -79,7 +80,7 @@
 									  </li> -->
 									   <!-- <li class="wal-icn"><a href=""><img src="<?php echo USER_IMAGES ?>wallet.svg"></a><span class="span-item">Wallet</span></li>
 									  <li><a href=""><img src="<?php echo USER_IMAGES ?>track.svg"></a><span class="span-item">Track Order</span></li> -->
-									  <li><a href=""><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">
+									  <li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl">
 
 									  <?php
 											
@@ -146,7 +147,7 @@
 								<div class="mob-menu dn-l">
 									<div class="cart-mob">
 										<a href="" class="mob-bag sr-mob" onclick="divSearchPop()"><img src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span>
-										<a href="" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">0</span></span>
+										<a href="/checkout/" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">0</span></span>
 									</div>
 
 									<!-- more dots menu mobile -->

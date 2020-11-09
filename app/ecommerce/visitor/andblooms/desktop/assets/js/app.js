@@ -18,7 +18,12 @@ $(document).ready(function() {
 			timer: 1500
 		})
 
-	}
+    }
+    
+    /** Default variable for booking deliveries */
+
+    var deliveryDate = '';
+    var deliveryTime = '';
 
 
     /** Add to cart */
@@ -259,5 +264,80 @@ $(document).ready(function() {
       })
 
   });
+
+  function showDeliveryTimeSlots(date) {
+
+    switch (date) {
+
+        case 'today' :
+            
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            deliveryDate = mm + '/' + dd + '/' + yyyy;
+
+            break;
+            
+        case 'tomorrow' :
+            
+            var today = new Date( new Date().getTime() + + 24 * 60 * 60 * 1000 );
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            deliveryDate = mm + '/' + dd + '/' + yyyy;
+
+            break;
+
+        default : 
+            
+            $('.calenderBox').hide();
+            deliveryDate = date;
+            break;
+            
+        }
+        $('.deliveryDateBox').show();
+        $('.deliverySchedule').show();
+        $('.showTimeBox').show();
+        console.log(deliveryDate);
+
+  }
+
+  $('#deliverByToday').click(function(e) {
+      e.preventDefault();
+      $('.calenderBox').hide();
+      showDeliveryTimeSlots('today');
+  });
+  $('#deliverByTomorrow').click(function(e) {
+      e.preventDefault();
+      $('.calenderBox').hide();
+      showDeliveryTimeSlots('tomorrow');
+  });
+  $('#deliverByOther').click(function(e) {
+      e.preventDefault();
+      $('.showTimeBox').hide();
+        $('.deliveryDateBox').show();
+        $('.calenderBox').show();
+    });
+
+    $('.showCalender').click(function(e) {
+        e.preventDefault();
+        $('.deliveryDateBox').show();
+        $('.calenderBox').show();
+        $('.showTimeBox').hide();
+    });
+
+    $('#closeCalender').click(function(e) {
+        e.preventDefault();
+        $('.deliveryDateBox').hide();
+    });
+
+    $('#calender').datepicker({
+        todayHighlight: true,
+        startDate: '0',
+        maxViewMode: 0
+    }).on('changeDate', function(e) {
+        showDeliveryTimeSlots(e.format());
+    });
 
 });
