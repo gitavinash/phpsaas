@@ -22,9 +22,12 @@ $(document).ready(function() {
     
     /** Default variable for booking deliveries */
 
+    var todayDateCheck = '';
     var deliveryDate = '';
     var deliveryTime = '';
-
+    var currentTimeInHour = (new Date()).getHours(); //get hours of the day in 24Hr format (0-23)
+    var deliveryType = '';
+    var deliverySlot = '';
 
     /** Add to cart */
 
@@ -276,7 +279,7 @@ $(document).ready(function() {
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
             deliveryDate = mm + '/' + dd + '/' + yyyy;
-
+            todayDateCheck = mm + '/' + dd + '/' + yyyy;
             break;
             
         case 'tomorrow' :
@@ -286,7 +289,6 @@ $(document).ready(function() {
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
             deliveryDate = mm + '/' + dd + '/' + yyyy;
-
             break;
 
         default : 
@@ -298,8 +300,34 @@ $(document).ready(function() {
         }
         $('.deliveryDateBox').show();
         $('.deliverySchedule').show();
+    
+        if(deliveryDate==todayDateCheck) {
+            
+            if(currentTimeInHour > '08') {
+
+                $('#morningDeliveryBox').hide();
+
+                if(currentTimeInHour > '19') {
+
+                    $('#standardDeliveryBox').hide();
+                    
+                }
+                
+            } else {
+
+                $('#morningDeliveryBox').show();
+                $('#standardDeliveryBox').show();
+
+            }
+
+        } else {
+
+            $('#morningDeliveryBox').show();
+            $('#standardDeliveryBox').show();
+
+        }
+        
         $('.showTimeBox').show();
-        console.log(deliveryDate);
 
   }
 
@@ -308,11 +336,13 @@ $(document).ready(function() {
       $('.calenderBox').hide();
       showDeliveryTimeSlots('today');
   });
+
   $('#deliverByTomorrow').click(function(e) {
       e.preventDefault();
       $('.calenderBox').hide();
       showDeliveryTimeSlots('tomorrow');
   });
+
   $('#deliverByOther').click(function(e) {
       e.preventDefault();
       $('.showTimeBox').hide();
@@ -327,9 +357,10 @@ $(document).ready(function() {
         $('.showTimeBox').hide();
     });
 
-    $('#closeCalender').click(function(e) {
+    $('.closeCalender').click(function(e) {
         e.preventDefault();
         $('.deliveryDateBox').hide();
+        $('.showDeliveryTimeBox').hide();
     });
 
     $('#calender').datepicker({
@@ -339,5 +370,31 @@ $(document).ready(function() {
     }).on('changeDate', function(e) {
         showDeliveryTimeSlots(e.format());
     });
+
+    $('.deliverySlot').click(function(e) {
+
+        var deliverySlot = $(this).attr('id').replace('Slots', '');
+        
+        $('.showTimeBox').hide();
+        $('.showDeliveryTimeBox').show();
+        $('.morningDeliveryTimeSlots').hide();
+        $('.standardDeliveryTimeSlots').hide();
+        $('.fixedDeliveryTimeSlots').hide();
+        $('.midnightDeliveryTimeSlots').hide();
+        $('.'+deliverySlot+'TimeSlots').show();
+        console.log('.'+deliverySlot+'TimeSlots');
+
+    });
+
+    $('.visibleShowTimeBox').click(function(e) {
+        e.preventDefault();
+        
+        $('.showDeliveryTimeBox').hide();
+        $('.morningTimeSlots').hide();
+        $('.standardTimeSlots').hide();
+        $('.fixedTimeSlots').hide();
+        $('.midnightTimeSlots').hide();
+        $('.showTimeBox').show();
+    })
 
 });

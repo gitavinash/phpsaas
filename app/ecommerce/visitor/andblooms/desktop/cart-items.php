@@ -11,16 +11,16 @@
 		<section class="banner-section pro-galery">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-12">
+					<!-- <div class="col-md-12">
 						<div class="brdcrum">
 							<nav aria-label="breadcrumb">
 							  <ol class="breadcrumb">
 							    <li class="breadcrumb-item"><a href="#">Home</a></li>
-							    <li class="breadcrumb-item active" aria-current="page">Customer Service</li>
+							    <li class="breadcrumb-item active" aria-current="page">Checkou</li>
 							  </ol>
 							</nav>
 						</div>
-					</div>
+					</div> -->
 					
 					<div class="col-md-8">
 
@@ -151,42 +151,6 @@
 										</div>
 									</div>
 
-									<div id="popup1" class="overlay-pop">
-										<div class="popup">
-											<h2>!Now Choose Delivery Date & Time</h2>
-											<a class="close" href="#">&times;</a>
-											<div class="content-pop">
-												
-												
-												<div class="form-check col-md-12 radio-slct">
-												<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
-												<label class="form-check-label" for="inlineRadio1">Standard Delivery</label>
-												<span class="tag-pric">Free</span>
-												</div>
-												<div class="form-check col-md-12 radio-slct">
-												<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-												<label class="form-check-label" for="inlineRadio2">Fixed Time Delivery</label>
-												<span class="tag-pric">Rs. 200</span>
-												</div>
-												<div class="form-check col-md-12 radio-slct">
-												<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-												<label class="form-check-label" for="inlineRadio2">Midnight Delivery</label>
-												<span class="tag-pric">Rs. 249</span>
-												</div>
-
-												<div class="form-group">
-													<div class='input-group date js-datetimepicker2'>
-														<input type='text' class="form-control" id="input"	placeholder="Select Date & Time" />
-														<span class="input-group-addon">
-														</span>
-													</div>
-												</div>
-
-											</div>
-										</div>
-									</div>
-
-
 								</form>
 
 								</div>
@@ -226,32 +190,157 @@
 					<div class="col-12">
 						<div class="deliverySchedule" >
 							<div class="calenderBox" style="display: none" >
-								<h3 class="heading-2" >Select delivery date<span id="closeCalender" >x</span></h3>
+								<h3 class="heading-2" >Select delivery date<span class="closeCalender" >x</span></h3>
 								<div id="calender" ></div>
 							</div>
 							<div class="showTimeBox" style="display: none" >
-								<h3 class="heading-2" >Select delivery type and slot</h3>
+								<h3 class="heading-2" >Select delivery type and slot<span class="closeCalender" >x</span></h3>
 								<div class="form-group">
-									<input type="radio" name="deliveryType" value="morning_200" > Morning delivery at <i class="fas fa-rupee-sign"></i> 200
+									<div class="custom-control custom-radio" id="morningDeliveryBox" >
+										<input type="radio" class="deliverySlot custom-control-input" id="morningDelivery" name="deliveryType" value="morning_200" >
+										<label class="custom-control-label" for="morningDelivery"> Morning delivery at <i class="fas fa-rupee-sign"></i> 200</label>
+									</div>
 								</div>
 								<div class="form-group">
-									<input type="radio" name="deliveryType" value="morning_200" > Standard delivery for free
+									<div class="custom-control custom-radio" id="standardDeliveryBox" >
+										<input type="radio" class="deliverySlot custom-control-input" id="standardDelivery" name="deliveryType" value="standard_0" >
+										<label class="custom-control-label" for="standardDelivery"> Standard delivery for free</label>
+									</div>
 								</div>
 								<div class="form-group">
-									<input type="radio" name="deliveryType" value="morning_200" > Fixed Time delivery at <i class="fas fa-rupee-sign"></i> 200
+									<div class="custom-control custom-radio" id="fixedDeliveryBox" >
+										<input type="radio" class="deliverySlot custom-control-input" id="fixedDelivery" name="deliveryType" value="fixed_200" >
+										<label class="custom-control-label" for="fixedDelivery"> Fixed Time delivery at <i class="fas fa-rupee-sign"></i> 200</label>
+									</div>
 								</div>
 								<div class="form-group">
-									<input type="radio" name="deliveryType" value="morning_200" > Midnight delivery at <i class="fas fa-rupee-sign"></i> 249
+									<div class="custom-control custom-radio" id="midnightDeliveryBox" >
+										<input type="radio" class="deliverySlot custom-control-input" id="midnightDelivery" name="deliveryType" value="midnight_249" >
+										<label class="custom-control-label" for="midnightDelivery"> Midnight delivery at <i class="fas fa-rupee-sign"></i> 249</label>
+									</div>
 								</div>
 								<div class="row">
 									<div class="col-6">
 										<a href="#" class="showCalender btn btn-light btn-block" ><i class="fas fa-arrow-left"></i> Go to calender</a>
 									</div>
 									<div class="col-6">
-										<a href="#" class="showTimeSlots btn btn-success btn-block" >Next <i class="fas fa-arrow-right"></i></a>
+										<a href="#" class="showTimeSlots btn btn-success btn-block" >Delivery time <i class="fas fa-arrow-right"></i></a>
 									</div>
 								</div>
 							</div>
+
+							<div class="showDeliveryTimeBox" style="display: none" >
+								<h3 class="heading-2" >Select delivery time<span class="closeCalender" >x</span></h3>
+								<div class="row morningDeliveryTimeSlots" style="display: none; margin-bottom: 20px" >
+									<div class="col-6">
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">07:00 - 09:00 hrs</label>
+										</div>
+									</div>
+								</div>
+								<div class="row standardDeliveryTimeSlots" style="display: none; margin-bottom: 20px" >
+									<div class="col-6">
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">09:00 - 12:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">15:00 - 18:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">20:00 - 22:00 hrs</label>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">12:00 - 15:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">18:00 - 21:00 hrs</label>
+										</div>
+									</div>
+								</div>
+								<div class="row fixedDeliveryTimeSlots" style="display: none; margin-bottom: 20px" >
+									<div class="col-6">
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">10:00 - 11:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">12:00 - 13:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">14:00 - 15:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">16:00 - 17:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">18:00 - 19:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">20:00 - 21:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">22:00 - 23:00 hrs</label>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">11:00 - 12:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">13:00 - 14:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">15:00 - 16:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">17:00 - 18:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">19:00 - 20:00 hrs</label>
+										</div>
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">21:00 - 22:00 hrs</label>
+										</div>
+									</div>
+								</div>
+								<div class="row midnightDeliveryTimeSlots" style="display: none; margin-bottom: 20px" >
+									<div class="col-12">
+										<div class="custom-control custom-radio">
+											<input type="radio" class="deliveryTimeSlot custom-control-input" id="defaultUnchecked" name="deliveryType" value="morning_200" >
+											<label class="custom-control-label" for="defaultUnchecked">23:00 - 01:00 hrs<br /><span style="color: red;" >We will deliver product on  <?php echo (((int) date('H')<20) ? date('jS F') : date('jS F', strtotime('+1 days')) ); ?> after 11:00PM.</span></label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<a href="#" class="visibleShowTimeBox btn btn-light btn-block" ><i class="fas fa-arrow-left"></i> Delivery slots</a>
+									</div>
+									<div class="col-6">
+										<a href="#" class="specialNotesBox btn btn-success btn-block" >Special notes <i class="fas fa-arrow-right"></i></a>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</div>

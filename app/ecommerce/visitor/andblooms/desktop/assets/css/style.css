@@ -2024,6 +2024,11 @@ a.out-of-stock:hover {
     color: #333;
 }
 
+.datepicker td, .datepicker th {
+    width: 60px !important;
+    height: 40px !important;
+}
+
 .continue-shopping h1 span {
     float: left;
     width: 100%;
@@ -4076,13 +4081,18 @@ img.logo-mb {
 .deliveryDateBox {
     float: left;
     width: 100%;
-    padding: 10px;
     box-sizing: border-box;
+}
+
+.datepicker td, .datepicker th {
+    width: 42px !important;
+    height: 40px !important;
 }
 
 .deliverySchedule {
     float: left;
     width: 100% !important;
+    margin-left: 0px !important;
 }
 
 /*----- index----*/
@@ -4297,21 +4307,19 @@ a.delet img {
 
 .deliverySchedule {
     width: 470px;
-	height: 400px;
+    float: left;
+	/* height: 400px; */
 	background-color:#fff;
-	position: absolute;
-	top:0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	/* position: absolute; */
     margin: auto;
     margin-top: 100px;
+    margin-left: 25%;
     padding: 20px;
     box-sizing: border-box;
     border-radius: 4px;
 }
 
-#closeCalender {float: right;
+.closeCalender {float: right;
     border: 1px solid #d4946e;
     border-radius: 100%;
     width: 25px;
@@ -4319,6 +4327,10 @@ a.delet img {
     height: 25px;
     cursor: pointer;
     color: #d4946e;
+}
+
+.custom-control {
+    margin-bottom: 20px;
 }
 
 .today {
@@ -4343,9 +4355,4 @@ a.delet img {
 
 .datepicker-inline {
     width: 100% !important;
-}
-
-.datepicker td, .datepicker th {
-    width: 60px !important;
-    height: 40px !important;
 }
