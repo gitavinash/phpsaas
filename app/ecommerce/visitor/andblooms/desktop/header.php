@@ -147,7 +147,19 @@
 								<div class="mob-menu dn-l">
 									<div class="cart-mob">
 										<a href="" class="mob-bag sr-mob" onclick="divSearchPop()"><img src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span>
-										<a href="/checkout/" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">0</span></span>
+										<a href="/checkout/" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">
+											
+										<?php
+											
+											if($cartNumber=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1")) {
+
+												echo mysqli_num_rows($cartNumber);
+
+											}
+
+										?>
+										
+										</span></span>
 									</div>
 
 									<!-- more dots menu mobile -->
