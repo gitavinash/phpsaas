@@ -113,6 +113,25 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     ADD order_msg longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER order_gift");
 
+  // Order meta table
+
+  mysqli_query($connection, "CREATE TABLE isw_order_meta (
+    order_meta_id bigint(20) NOT NULL,
+    order_relation_id bigint(20) NOT NULL,
+    order_meta_key varchar(255) NOT NULL,
+    order_meta_value longtext NOT NULL,
+    order_meta_status int(1) NOT NULL,
+    order_meta_update timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+  
+  mysqli_query($connection, "ALTER TABLE isw_order_meta
+    ADD PRIMARY KEY (order_meta_id),
+    ADD KEY order_id (order_relation_id)");
+
+
+  mysqli_query($connection, "ALTER TABLE isw_order_meta
+    MODIFY order_meta_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   /** Product table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."product (
