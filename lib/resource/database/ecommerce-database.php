@@ -28,6 +28,32 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     MODIFY cart_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  // Coupon code table
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."coupon (
+    coupon_id int(11) NOT NULL,
+    coupon_relation_id bigint(20) NOT NULL,
+    coupon_site_id bigint(20) NOT NULL,
+    coupon_code varchar(20) NOT NULL,
+    coupon_discount varchar(10) NOT NULL,
+    coupon_discount_type varchar(5) NOT NULL,
+    coupon_min_value varchar(10) NOT NULL,
+    coupon_mix_discount varchar(10) NOT NULL,
+    coupon_status int(1) NOT NULL,
+    coupon_owner_id bigint(20) NOT NULL,
+    coupon_update_on timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD PRIMARY KEY (coupon_id),
+    ADD KEY coupon_relation_id (coupon_relation_id),
+    ADD KEY coupon_site_id (coupon_site_id),
+    ADD KEY coupon_code (coupon_code),
+    ADD KEY coupon_owner_id (coupon_owner_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    MODIFY coupon_id int(11) NOT NULL AUTO_INCREMENT");
+
   /** Inventory table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."inventory (
@@ -115,7 +141,7 @@
 
   // Order meta table
 
-  mysqli_query($connection, "CREATE TABLE isw_order_meta (
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."order_meta (
     order_meta_id bigint(20) NOT NULL,
     order_relation_id bigint(20) NOT NULL,
     order_meta_key varchar(255) NOT NULL,
@@ -124,12 +150,12 @@
     order_meta_update timestamp NOT NULL DEFAULT current_timestamp()
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
   
-  mysqli_query($connection, "ALTER TABLE isw_order_meta
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order_meta
     ADD PRIMARY KEY (order_meta_id),
-    ADD KEY order_id (order_relation_id)");
+    ADD KEY order_relation_id (order_relation_id)");
 
 
-  mysqli_query($connection, "ALTER TABLE isw_order_meta
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order_meta
     MODIFY order_meta_id bigint(20) NOT NULL AUTO_INCREMENT");
 
   /** Product table */
