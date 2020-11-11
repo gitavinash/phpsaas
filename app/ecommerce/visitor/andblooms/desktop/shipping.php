@@ -33,11 +33,35 @@
 
                             <?php
 
-                                if($checkOrder=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0")) {
+                                if($checkOrder=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2")) {
 
                                     if(mysqli_num_rows($checkOrder)!=0) {
 										
-										extract(mysqli_fetch_assoc($checkOrder));  ?>
+										extract(mysqli_fetch_assoc($checkOrder));
+										
+										$totalPrice=$totalPrice+$cart_price;
+
+										if($checkOrderMeta=mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1")) {
+
+											if(mysqli_num_rows($checkOrderMeta)!=0) {
+
+												$orderMetas=array();
+
+												while($orderMeta=mysqli_fetch_assoc($checkOrderMeta)) {
+
+													extract($orderMeta);
+
+													$orderMetas[$order_meta_key] = $order_meta_value;
+
+												}
+
+											}
+
+										}
+
+										extract($orderMetas);
+
+										?>
 
                                         <div class="ad-card">
                                             <div class="paymnet-section">
@@ -58,6 +82,16 @@
 														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
 														</tr>
 														<tr>
+														<th scope="row">Delivery date</th>
+														<td id='shippingName' ><?php echo date('l, jS F Y', strtotime($deliveryDate)) ?></td>
+														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+														</tr>
+														<tr>
+														<th scope="row">Delivery time</th>
+														<td id='shippingName' ><?php echo ucwords($deliverySlot).' - '.$deliveryTime ?></td>
+														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+														</tr>
+														<tr>
 														<th scope="row">Ship to</th>
 														<td id='shippingAddress' ><?php echo $address_house_no.', '.$address_landmark.', '.$address_area.',<br />'.$city_name.', '.$state_name.' - '.$address_pin_code; ?></td>
 														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
@@ -65,6 +99,16 @@
 													</tbody>
 													</table>
 												</div>
+
+												<h3 class="heading-2">Order summary</h3>
+
+												<?php
+												
+												// echo implode(' OR ', $order_product_id);
+												echo $order_product_id;
+
+												?>
+
 											</div>
 										</div>
 
@@ -85,18 +129,25 @@
 					<div class="col-md-4">
 
 						<div class="cart-purchase" >
-							<h2>Cart Summary</h2>
+							<h2>Cart summary</h2>
+							<div>
+								<div class="row">
+									<div class="col-8">Subtotal</div>
+									<div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $totalPrice ?></div>
+								</div>
+								<div class="row" style="margin-bottom: 10px" >
+									<div class="col-8">Delivery charges</div>
+									<div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $deliveryFees ?></div>
+								</div>
+							</div>
 							<h4>Grand Total</h4>
-							<h5 style="margin-bottom: 10px" ><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $totalPrice ?></h5>
+							<h5 style="margin-bottom: 10px" ><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $totalPrice+$deliveryFees ?></h5>
 							<!-- <p>Have a Coupon Code? You can apply the discount coupon in the Checkout Process</p> -->
 							<form>
 								<input type="hidden" name="order" value="<?php echo $id ?>" >
-								<a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Continue Payment</a>
+								<input type="hidden" name="paymentMode" value="online" >
+								<a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Proceed to payment</a>
 							</form>
-						</div>
-
-						<div class="conti-shop">
-							<a href="/" class="btn-bloom shop-btn">Continue Shoping</a>
 						</div>
 
 						<div class="site-feature">

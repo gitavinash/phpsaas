@@ -49,7 +49,7 @@
 						
 						<div class="col-md-2">
 							<div class="logo">
-								<img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" >
+								<a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" ></a>
 							</div>
 						</div>
 						<div class="col-md-3">

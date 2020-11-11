@@ -11,39 +11,43 @@
             if(mysqli_num_rows($checkOrder)!=0) {
 
                 extract(mysqli_fetch_assoc($checkOrder));
-                
-                switch($order_product_id) {
-
-                    case 1 :
-                        $productName='Immunity Vitals';
-                        break;
-
-                    case 2 :
-                        $productName='Tar Free';
-                        break;
-
-                    case 3 :
-                        $productName='Gyno Vitals';
-                        break;
-
-                    case 4 :
-                        $productName='V Liver Vitals';
-                        break;
-
-                    default :
-                        $productName='Combile Product';
-                        break;
-
-                }
 
                 mysqli_query($connection, "START TRANSACTION");
 
                 $updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_status=1 WHERE transaction_order_id='{$order_id}'");
 
                 if($updateTransaction) {
-
                     
                     mysqli_query($connection, "COMMIT");
+                    
+                    $orderProductID=str_replace(' ', '', explode(',', $order_product_id));
+                    $productID='';
+
+                    for($i=0; $i<sizeof($orderProductID); $i++) {
+
+                        if($i==0) {
+
+                            $productID=$productID."product_id='{$orderProductID[$i]}'";
+
+                        } else {
+
+                            $productID=$productID." OR product_id='{$orderProductID[$i]}'";
+
+                        }
+
+                    }
+
+                    if($productDetails=mysqli_query($connection, "SELECT GROUP_CONCAT(product_title) as productName, GROUP_CONCAT(product_image) as productImage FROM isw_product WHERE product_type='product' AND {$productID}")) {
+
+                        $productName='';
+
+                        if(mysqli_num_rows($productDetails)!=0) {
+
+                            extract(mysqli_fetch_assoc($productDetails));
+
+                        }
+
+                    }
                     
                     if($transaction_method=='online') {
 
@@ -120,7 +124,6 @@
                         /** Send Email */
                         
                         require_once APP_EMAIL_TEMPLATE.'order/cod.php';
-                        
 
                         ?>
                     

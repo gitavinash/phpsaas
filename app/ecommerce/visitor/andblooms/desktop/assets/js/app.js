@@ -28,6 +28,7 @@ $(document).ready(function() {
     var currentTimeInHour = (new Date()).getHours(); //get hours of the day in 24Hr format (0-23)
     var deliveryType = '';
     var deliverySlot = '';
+    var orderID = '';
 
     /** Add to cart */
 
@@ -69,7 +70,7 @@ $(document).ready(function() {
                   window.location.href='/checkout/';
 
               } else {
-                  console.log(data.msg);
+                //   console.log(data.msg);
               }
 
           },
@@ -162,7 +163,7 @@ $(document).ready(function() {
                       
                       if(data.status==200) {
                           
-                          $('.checkout-form').hide();
+                            $('.checkout-form').hide();
                           // $('#shippingName').append(data.name);
                           // $('#shippingAddress').append(data.address);
                           // $('.shipping-box').show();
@@ -171,6 +172,8 @@ $(document).ready(function() {
                         $('#continueShipping').hide();
                         $('#deliveryDetails').show();
                         $('#continueDelivery').show();
+
+                        orderID = data.order;
 
                       } else {
                           popUpMessage('center', data.msg, 'error');
@@ -303,7 +306,7 @@ $(document).ready(function() {
     
         if(deliveryDate==todayDateCheck) {
             
-            if(currentTimeInHour > '08') {
+            if(currentTimeInHour >= '07') {
 
                 $('#morningDeliveryBox').hide();
 
@@ -382,7 +385,6 @@ $(document).ready(function() {
         $('.fixedDeliveryTimeSlots').hide();
         $('.midnightDeliveryTimeSlots').hide();
         $('.'+deliverySlot+'TimeSlots').show();
-        console.log('.'+deliverySlot+'TimeSlots');
 
     });
 
@@ -395,6 +397,63 @@ $(document).ready(function() {
         $('.fixedTimeSlots').hide();
         $('.midnightTimeSlots').hide();
         $('.showTimeBox').show();
+    });
+
+    /** Special notes */
+
+    $('.specialNotesBox').click(function(e) {
+
+        e.preventDefault();
+        deliveryType = $("input:radio[name='deliveryType']:checked").val();
+        deliveryTime = $("input:radio[name='deliveryTime']:checked").val();
+
+        $('.showDeliveryTimeBox').hide();
+        $('.specialNotesBox').show();
+
+    });
+
+    $('.reviewBtn').click(function(e) {
+        e.preventDefault();
+
+        var occasion = $('#occasion').val();
+        var message = $('#message').val();
+
+        $.ajax({
+
+            type: 'POST',
+            dataType: 'json',
+            data = {
+                type: 'order',
+                action: 'meta',
+                order_id: orderID,
+                occasion: occasion,
+                message: message,
+                deliveryDate: deliveryDate,
+                deliveryTime: deliveryTime,
+                deliverySlot: deliveryType
+            },
+            success: function(data) {
+  
+                if(data.status==200) {
+
+                    window.location.href=data.redirect;
+
+                } else {
+
+                    popUpMessage('center', data.msg, data.status);
+
+                }
+  
+                console.log(data);
+            },
+            error: function(data) {
+
+                console.log(data);
+
+            }
+
+        });
+
     })
 
 });
