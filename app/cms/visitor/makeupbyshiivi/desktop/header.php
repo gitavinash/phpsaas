@@ -145,9 +145,9 @@
                 <div class="col-md-12 text-center mb-20">
                     <div class="text-center">
                         <ul class="mbs-social-link">
-                            <li><a href="/#"><i class="fab fa-facebook"></i></a></li>
-                            <li><a href="/#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="/#"><i class="fab fa-instagram"></i></a></li>
+                            <!-- <li><a href="/#"><i class="fab fa-facebook"></i></a></li>
+                            <li><a href="/#"><i class="fab fa-twitter"></i></a></li> -->
+                            <li><a href="https://instagram.com/shiivani_.gupta"><i class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
