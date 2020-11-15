@@ -66,7 +66,7 @@
                     <div class="mbs-about-info">
                         <h1>About Me</h1>
                         <h3>Hi, I'm Shivani Gupta a Professional Makeup Artist</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis congue odio nec tempus. Donec non sodales metus. Suspendisse iaculis, turpis id ornare congue, ante arcu imperdiet odio, nec sollicitudin sapien dolor eu sapien. Ut commodo massa sed ultricies pellentesque. Aenean ac sapien tristique, ullamcorper felis vel, convallis nunc. Pellentesque auctor, est ut lacinia luctus, purus ante accumsan sem, quis iaculis odio tortor in nisi. </p>
+                        <p>Hey, I am Shivani, a professional makeup artist possessing dedicated passion towards makeup and art. I have always been fascinated by the tempting cosmetics and their implementations that do make one look confident, fresh and most importantly, flawless. </p>
                     </div>
                 </div>
             </div>
