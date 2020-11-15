@@ -49,15 +49,15 @@
 						<a href="product.php?type=list"><i class="fas fa-box-open"></i> Product</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All Product</a></li>
-								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Product</a></li>
+								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a></li>
+								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new product</a></li>
 								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All Product</a></li>
-								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Product</a></li>
+								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a></li>
+								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new product</a></li>
 								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
 							</ul>
 						</div>
@@ -66,14 +66,14 @@
 						<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
-								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
+								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
-								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+								<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
+								<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
 							</ul>
 						</div>
 					</li>
@@ -81,8 +81,8 @@
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
-								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="media.php?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
+								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
 								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
 								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
@@ -90,11 +90,26 @@
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
-								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="media.php?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
+								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
 								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
 								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+							</ul>
+						</div>
+					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/coupon/') ? 'class="active"' : '' ) ?> >
+						<a href="coupon.php?type=list"><i class="fas fa-tags"></i> Coupon</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
+								<li><a href="coupon.php?type=add"><i class="fas fa-ticket-alt"></i> Add new coupon</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
+								<li><a href="coupon.php?type=add"><i class="fas fa-ticket-alt"></i> Add new coupon</a></li>
 							</ul>
 						</div>
 					</li>
@@ -147,9 +162,9 @@
 							<ul>
 								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
-								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL Redirection</a></li>
+								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
@@ -158,7 +173,7 @@
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL Redirection</a></li>
+								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li>
 							</ul>
 						</div>
 					</li>
