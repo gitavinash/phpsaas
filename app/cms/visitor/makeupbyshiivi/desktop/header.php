@@ -11,7 +11,7 @@
     <base href="/">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Makeup by Shiivi MARTIN</title>
+    <title>Makeup by Shiivi</title>
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo USER_IMAGES ?>favicon.png">
     <link href="<?php echo CSS_LIBRARY ?>all.min.css" rel="stylesheet">
     <!-- <link href="<?php echo USER_STYLESHEET ?>themify-icons.min.css" rel="stylesheet"> -->
@@ -51,11 +51,11 @@
         <div class="mbs-profile-info">
             <div class="d-flex align-items-center w-100">
                 <div class="mx-auto mbs-profile-inner">
-                    <h2>Makeup by Shiivi MARTIN<span>Makeup Artist</span></h2> </div>
+                    <h2>Makeup by Shiivi<span>Makeup Artist</span></h2> </div>
             </div>
         </div>
         <div class="owl-carousel mbs-main-slider">
-            <div class="slide-item" style="background-image: url(<?php echo USER_IMAGES ?>slider-01.jpg);"></div>
+            <div class="slide-item" style="background-image: url(<?php echo USER_IMAGES ?>shiivi-bg-2.jpg);"></div>
         </div>
     </div>
     <!-- About Me -->
@@ -65,15 +65,15 @@
                 <div class="col-md-8 offset-md-2 text-center">
                     <div class="mbs-about-info">
                         <h1>About Me</h1>
-                        <h3>Hi, I'm Makeup by Shiivi a Professional Makeup Artist</h3>
-                        <p>Nulla molestie finibus dignissim. Nunc ultrices odio mauris fermentum, gravida varius dranex the celacinia. Proin dictum nisleu scelerisque risus feugiat the amet. Vestibulum condimentum sem non dui tempoeu. Aliquam non venenatis. Donec eget neque et nulla interdum iaculis seder.</p>
+                        <h3>Hi, I'm Shivani Gupta a Professional Makeup Artist</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis congue odio nec tempus. Donec non sodales metus. Suspendisse iaculis, turpis id ornare congue, ante arcu imperdiet odio, nec sollicitudin sapien dolor eu sapien. Ut commodo massa sed ultricies pellentesque. Aenean ac sapien tristique, ullamcorper felis vel, convallis nunc. Pellentesque auctor, est ut lacinia luctus, purus ante accumsan sem, quis iaculis odio tortor in nisi. </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Services -->
-    <section class="mbs-homepage-services-section">
+    <!-- <section class="mbs-homepage-services-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3 text-center mb-40">
@@ -136,7 +136,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- Footer -->
     <footer class="mbs-footer-section text-center">
         <div class="container">
@@ -161,7 +161,8 @@
             <!-- Copyright -->
             <div class="row">
                 <div class="col-md-12">
-                    <p class="copright"><?php echo date('Y') ?> &copy; <?php echo SITE_NAME ?>. All rights reserved. | Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi" style="color: #fff" >ITS Soft World</a> in India </p>
+                    <p class="copright"><?php echo date('Y') ?> &copy; <?php echo SITE_NAME ?>. All rights reserved.</p>
+                    <p class="copright">Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi" style="color: #fff" >ITS Soft World</a> in India </p>
                 </div>
             </div>
         </div>
