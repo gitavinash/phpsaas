@@ -46,10 +46,18 @@
 		$mail->Subject = $subject;
 		$mail->Body = $email_body;
 
-		if(!$mail->Send()) {
+		if(DEVELOPMENT_MODE==true) {
 
-			echo "Message could not be sent. <p>";
-			echo "Mailer Error: " . $mail->ErrorInfo;
+			if(!$mail->Send()) {
+
+				echo "Message could not be sent. <p>";
+				echo "Mailer Error: " . $mail->ErrorInfo;
+	
+			}
+
+		} else {
+
+			$mail->Send();
 
 		}
 
