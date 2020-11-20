@@ -193,6 +193,37 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
     ADD product_review INT(1) NOT NULL AFTER product_category");
 
+  /** Service table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."service (
+    service_id bigint(20) NOT NULL,
+    service_parent_id bigint(20) NOT NULL,
+    service_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    service_thumbnail varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    service_gallery longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    service_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    service_description longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    service_highlight longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    service_category bigint(20) NOT NULL,
+    service_review int(1) NOT NULL,
+    service_owner_id bigint(20) NOT NULL,
+    service_status int(1) NOT NULL,
+    service_type varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'service',
+    service_time timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
+    ADD PRIMARY KEY (service_id),
+    ADD KEY service_category (service_category),
+    ADD KEY service_type (service_type),
+    ADD KEY service_parent_id (service_parent_id),
+    ADD KEY service_owner_id (service_owner_id),
+    ADD KEY service_time (service_time),
+    ADD KEY service_status (service_status)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
+    MODIFY service_id bigint(20) NOT NULL AUTO_INCREMENT");
+
   /** Transaction Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."transaction (

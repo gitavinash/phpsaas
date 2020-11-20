@@ -172,7 +172,9 @@
                         $postID=mysqli_insert_id($connection);
 
                         $linkData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$link_url}', '{$postID}', '200', 'post', '".USER_ID."', '".SITE_ID."', '{$post_date}', '{$post_modified}', '{$post_modified}')");
-                        $metaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_title, meta_type, meta_description, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$postID}', '{$meta_title}', 'post', '{$meta_desc}', '{$post_image}', '{$meta_title}', '{$meta_desc}', '{$post_image}', '{$meta_title}', '{$meta_desc}')");
+                        $linkID=mysqli_insert_id($linkData);
+
+                        $metaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".APP_SITE_ID.", '{$meta_title}', 'post', '{$meta_desc}', '{$post_image}', '{$meta_title}', '{$meta_desc}', '{$post_image}', '{$meta_title}', '{$meta_desc}')");
 
                         $updateCategoryData=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."category SET category_total_count=category_total_count+1 WHERE category_id='{$categoryID}'");
                         

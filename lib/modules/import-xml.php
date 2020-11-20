@@ -125,10 +125,11 @@
         /** Insert data into link table and create post */
 
         $insertLink=mysqli_query($connection , "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$link}', '{$postID}', '200', 'post', '{$website_user_id}', '{$website_id}', '{$publishDate}', '{$publishDate}', '{$modifiedDate}')");
+        $linkID=mysqli_insert_id($connection);
 
         /** Insert Data into meta table */
 
-        $insertMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_type, meta_title, meta_description, meta_keyword) VALUES('{$postID}', 'post', '{$title}', '{$metaDescription}', '{$tags}')");
+        $insertMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_type, meta_title, meta_description, meta_keyword) VALUES('{$linkID}', 'post', '{$title}', '{$metaDescription}', '{$tags}')");
 
         /** Insert Tags into tag table */
 

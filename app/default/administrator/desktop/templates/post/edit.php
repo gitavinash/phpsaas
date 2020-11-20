@@ -120,7 +120,7 @@
 				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live post</a>
 			</div>
 			<div class="form-group">
-				<h2>Fearure post</h2>
+				<h2>Featured</h2>
 				<div class="action-box inside-shadow" style="padding: 10px" >
 					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature post
 				</div>

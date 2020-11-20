@@ -76,6 +76,23 @@
 							</ul>
 						</div>
 					</li>
+					<li <?php echo ((ADMIN_BASE_URL=='/service/') ? 'class="active"' : '' ) ?> >
+						<a href="service.php?type=list&status=all"><i class="fas fa-hand-holding-heart"></i> Services</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="service.php?type=list&status=all"><i class="fas fa-list"></i> All services</a></li>
+								<li><a href="service.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new service</a></li>
+								<li><a href="service.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="service.php?type=list&status=all"><i class="fas fa-list"></i> All services</a></li>
+								<li><a href="service.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new service</a></li>
+								<li><a href="service.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+							</ul>
+						</div>
+					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/gallery/') ? 'class="active"' : '' ) ?> >
 						<a href="gallery.php?type=list&status=all"><i class="fas fa-images"></i> Gallery</a>
 						<div class="side-menu">
