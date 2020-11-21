@@ -201,7 +201,7 @@ $(document).ready(function (argument) {
 var bookingData ={
   'bookingDate': '',
   'bookingTime': '',
-  'guest': false
+  'guest': 1
 }
 
 $("body").delegate('.clkAlw[bookingAllowed="1"]', 'click', function (argument) {
@@ -370,12 +370,11 @@ $("body").delegate('.reqInput', 'click',function (argument) {
 
 $("body").delegate('.inputBox', 'click',function (argument) {
   if($(this).prop("checked") == true){
-    bookingData['guest']= true;
-    // console.log('CheckBoxed True')
-
+    bookingData['guest']=1;
+    console.log('CheckBoxed True');
   }
   else if($(this).prop("checked") == false){
-    bookingData['guest']= false;
+    bookingData['guest']=0;
   }
 
 })
@@ -384,7 +383,7 @@ $("body").delegate('.inputBox', 'click',function (argument) {
 
 function formSubmission(sendingData) {
 
-  if(bookingData['guest']==true) {
+  if(bookingData['guest']==1) {
 
     if(bookingData['noOfGuest']!='') {
 
@@ -395,7 +394,6 @@ function formSubmission(sendingData) {
       popUpMessage('center', 'Please enter number of guest', 'warning');
 
     }
-
 
   } else {
   
@@ -445,8 +443,6 @@ function resetInputs(){
   $('.inputBox').prop('checked', false)
   $('.serverError').removeClass('d-none')
 }
-
-
 
 
 function checkAndShow(elem, classNameSent){

@@ -17,14 +17,14 @@
                             $details=((isset($self)) ? 'yes' : 'no' );
                             $noOfGuest=((isset($noOfGuest)) ? $noOfGuest : 0 );
                 
-                            if(isset($guest)) {
+                            if($guest!=false) {
                 
                                 if($noOfGuest!=0) {
                 
                                     $bookingValid=true;
                                     
                                 } else {
-                                    
+
                                     $bookingValid=false;
                                     $msg='Please enter no of guests';
                 

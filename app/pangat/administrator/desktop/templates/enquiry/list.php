@@ -3,10 +3,10 @@
 	$postStatus=mysqli_real_escape_string($connection, $_GET['status']);
 	$postStatus=(($postStatus=='all') ? '' : "AND booking_status='{$postStatus}'" );
 
-	$selectedMonth=mysqli_real_escape_string($connection, ((isset($_GET['month'])) ? $_GET['month'] : '' ));
+	$selectedMonth=mysqli_real_escape_string($connection, ((isset($_GET['month'])) ? $_GET['month'] : date('m') ));
 	$monthStatus=(($selectedMonth=='') ? '' : "AND month(booking_date) = {$selectedMonth}" );
 
-	$selectedYear=mysqli_real_escape_string($connection, ((isset($_GET['year'])) ? $_GET['year'] : '' ));
+	$selectedYear=mysqli_real_escape_string($connection, ((isset($_GET['year'])) ? $_GET['year'] : date('Y') ));
 	$yearStatus=(($selectedYear=='') ? '' : "AND year(booking_date) = {$selectedYear}" );
 	
 ?>
@@ -18,8 +18,8 @@
 			<select class="form-control" name="status" id="changeStatus" >
 				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All <?php echo $postType ?></option>
 				<option value="0" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Pending <?php echo $postType ?></option>
-				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Confirm <?php echo $postType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='2') ? 'selected' : '' ) ?>  >Cancel <?php echo $postType ?></option>
+				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Confirmed <?php echo $postType ?></option>
+				<option value="2" <?php echo (($_GET['status']=='2') ? 'selected' : '' ) ?>  >Cancelled <?php echo $postType ?></option>
 			</select>
 			<select class="form-control" name="month" id="changeMonth" >
 				<option value="">Select Month</option>
@@ -55,9 +55,8 @@
 <table id="table">
 	<thead>
 		<tr>
+			<th>Booked Date & Slot</th>
 			<th>Booking Time</th>
-			<th>Booked Date</th>
-			<th>Booked Slot</th>
 			<th>Name</th>
 			<th>Mobile</th>
 			<th>Coming?</th>
@@ -74,27 +73,36 @@
 					if(mysqli_num_rows($dataList)!=0) {
 						
 						while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
-							<tr>
-								<td><?php echo date('d-m-Y h:i A', strtotime($enquiry_time)) ?></td>
-								<td><?php echo date('d-m-Y', strtotime($booking_date)) ?></td>
-								<td><?php echo $booking_time; ?></td>
+							<tr <?php echo (($booking_status==1) ? 'style="background: red; color: #fff"' : '' ) ?> >
+								<td><?php echo date('d-M-Y', strtotime($booking_date)).' '.$booking_time; ?></td>
+								<td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
 								<td><?php echo $enquiry_first_name.' '.$enquiry_last_name; ?></td>
 								<td><?php echo $enquiry_mobile; ?></td>
-								<td><?php echo $booking_details; ?></td>
-								<td><?php echo $enquiry_query; ?></td>
-								<td><?php echo (($enquiry_status==1) ? 'Confirm' : ((($enquiry_status)==0) ? 'Pending' : 'Cancel') ); ?></td>
+								<td><?php echo ucfirst($booking_details); ?></td>
+								<td><?php echo (($enquiry_query!='') ? $enquiry_query : 'No' ); ?></td>
+								<td><?php echo (($enquiry_status==1) ? 'Confirmed' : ((($enquiry_status)==0) ? 'Pending' : 'Cancelled') ); ?></td>
 								<td>
 									<?php
 									
 									if($enquiry_status==1) { ?>
 
-										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Cancelled</a>
 
 									<?php
 									} else { ?>
 	
-										<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>&date=<?php echo $booking_date ?>&time=<?php echo $booking_time ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirm</a>
-										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Reject</a>
+										<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>&date=<?php echo $booking_date ?>&time=<?php echo $booking_time ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirmed</a>
+
+										<?php
+										
+											if($booking_date==date('Y-m-d')) { ?>
+
+												<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" id="You are cancelling the pangat booked on <?php echo date('d-M-Y', strtotime($booking_date)).' by '.$enquiry_first_name ?>." data="<?php echo $booking_id ?>" class="btn btn-sm btn-red bookingCancelBtn"><i class="fas fa-times-circle"></i> Cancelled</a>
+
+											<?php												
+											}
+
+										?>
 
 									<?php
 									}
