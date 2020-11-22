@@ -12,7 +12,6 @@
 			}
 
 			extract($configuration);
-
 			
 		}
 
