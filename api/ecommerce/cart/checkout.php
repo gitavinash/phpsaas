@@ -17,6 +17,8 @@
                             if($mobile!='') {
                         
                                 if(preg_match("/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/", $mobile)) {
+
+                                    $mobile=ltrim((str_replace('+91', '', $mobile)), 0);
                         
                                     if($state!='') {
                         

@@ -42,7 +42,7 @@
                 
                                 $bookingDate=date('Y-m-d', strtotime($bookingDate));
                 
-                                $mobile=ltrim(str_replace('+91', '', (str_replace('91', '', $mobile))), 0);
+                                $mobile=ltrim((str_replace('+91', '', $mobile)), 0);
                 
                                 if($checkUser=mysqli_query($connection, "SELECT user_id FROM ".TABLE_PREFIX."user WHERE user_mobile='{$mobile}'")) {
                 

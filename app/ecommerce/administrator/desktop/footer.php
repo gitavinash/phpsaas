@@ -9,7 +9,7 @@
 		<script src="<?php echo JS_LIBRARY ?>jquery.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript" ></script>
 		<script src='<?php echo PLUGIN_LIBRARY ?>editor/editor.min.js' type='text/javascript' ></script>
-		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/datatables.min.js" type="text/javascript" ></script>
+		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/datatables.min.js" type="text/javascript" ></script>
 		<script src="<?php echo DEFAULT_ADMIN_JS ?>script.min.js"></script>
 
 		<?php

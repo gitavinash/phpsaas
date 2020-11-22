@@ -15,8 +15,8 @@
         <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/datatables.min.css">
-		<link href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/buttons.min.css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
 	</head>
 	<body>
@@ -59,17 +59,7 @@
 						</div>
 					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?> >
-						<a href="calender.php?type=list&status=all"><i class="fas fa-calendar-alt"></i> Manage calender</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="calender.php?type=range"><i class="fas fa-list"></i>  All enquiries</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="calender.php?type=list&status=all"><i class="fas fa-list"></i>  All enquiries</a></li>
-							</ul>
-						</div>
+						<a href="calender.php?type=manage"><i class="fas fa-calendar-alt"></i> Manage calender</a>
 					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
@@ -89,7 +79,7 @@
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
 							</ul>
 						</div>
-					</>
+					</li>
 				</ul>
 			</nav>
 		</aside>
