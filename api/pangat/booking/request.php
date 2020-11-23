@@ -14,7 +14,7 @@
 
                         if(preg_match("/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/", $mobile)) {
         
-                            $details=((isset($self)) ? 'yes' : 'no' );
+                            
                             $noOfGuest=((isset($noOfGuest)) ? $noOfGuest : 0 );
                 
                             if($guest!=false) {
@@ -29,10 +29,13 @@
                                     $msg='Please enter no of guests';
                 
                                 }
+
+                                $details='yes';
                 
                             } else {
                 
                                 $bookingValid=true;
+                                $details='no';
                 
                             }
                 
