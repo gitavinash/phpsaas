@@ -130,6 +130,7 @@
 
 										default: 
 											echo "<a href='".base64_encode($enquiry_id)."' date='".date('Y-m-d')."' time='{$booking_time}' msg='You are confirm the pangat booked on ".date('d-M-Y', strtotime($booking_date))." by ".$enquiry_first_name."' data='{$booking_id}' action='confirm' class='btn btn-sm btn-green bookingConfirmBtn'><i class='fas fa-times-circle'></i> Confirm</a>";
+											echo "<a href='".base64_encode($enquiry_id)."' msg='You are cancelling the pangat booked on ".date('d-M-Y', strtotime($booking_date))." by ".$enquiry_first_name."' data='{$booking_id}' action='cancel' class='btn btn-sm btn-red bookingCancelBtn'><i class='fas fa-times-circle'></i> Cancel</a>";
 											break;
 
 									}
