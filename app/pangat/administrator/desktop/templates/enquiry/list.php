@@ -2,12 +2,28 @@
 
 	$postStatus=mysqli_real_escape_string($connection, $_GET['status']);
 	$postStatus=(($postStatus=='all') ? '' : "AND booking_status='{$postStatus}'" );
-
 	$selectedMonth=mysqli_real_escape_string($connection, ((isset($_GET['month'])) ? $_GET['month'] : date('m') ));
-	$monthStatus=(($selectedMonth=='') ? '' : "AND month(booking_date) = {$selectedMonth}" );
-
 	$selectedYear=mysqli_real_escape_string($connection, ((isset($_GET['year'])) ? $_GET['year'] : date('Y') ));
-	$yearStatus=(($selectedYear=='') ? '' : "AND year(booking_date) = {$selectedYear}" );
+
+	$selectedDate=mysqli_real_escape_string($connection, ((isset($_GET['date'])) ? $_GET['date'] : '' ));
+	// $yearStatus=(($selectedDate=='') ? '' : "AND year(booking_date) = {$selectedDate}" );
+
+	if($selectedDate!='') {
+
+		$bookingDate="AND booking_date='".date("{$selectedYear}-{$selectedMonth}-{$selectedDate}")."'";
+
+	} else {
+
+		$bookingDate=(($selectedMonth=='') ? '' : " AND month(booking_date)={$selectedMonth}" );
+		$bookingDate.=(($selectedYear=='') ? '' : " AND year(booking_date)={$selectedYear}" );
+
+	}
+
+	// echo $bookingDate;
+	// exit();
+
+	$selectedSlot=mysqli_real_escape_string($connection, ((isset($_GET['slot'])) ? $_GET['slot'] : '' ));
+	$bookingSlot=(($selectedSlot=='') ? '' : "AND booking_time='{$selectedSlot}'" );
 	
 ?>
 <h2>All Enquiries</h2>
@@ -17,12 +33,12 @@
 			<input type="hidden" name="type" value="<?php echo $_GET['type']; ?>" >
 			<select class="form-control" name="status" id="changeStatus" >
 				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All <?php echo $postType ?></option>
-				<option value="0" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Pending <?php echo $postType ?></option>
-				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Confirmed <?php echo $postType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='2') ? 'selected' : '' ) ?>  >Cancelled <?php echo $postType ?></option>
+				<option value="0" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Pending</option>
+				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Confirmed</option>
+				<option value="2" <?php echo (($_GET['status']=='2') ? 'selected' : '' ) ?>  >Cancelled</option>
 			</select>
-			<select class="form-control" name="month" id="changeMonth" >
-				<option value="">Select Month</option>
+			<select class="form-control" name="month" id="changeMonth" required >
+				<option value="">Select month</option>
 				<option value="01" <?php echo (($selectedMonth=='01') ? 'selected' : '' ) ?> >January</option>
 				<option value="02" <?php echo (($selectedMonth=='02') ? 'selected' : '' ) ?> >Febuary</option>
 				<option value="03" <?php echo (($selectedMonth=='03') ? 'selected' : '' ) ?> >March</option>
@@ -36,14 +52,32 @@
 				<option value="11" <?php echo (($selectedMonth=='11') ? 'selected' : '' ) ?> >November</option>
 				<option value="12" <?php echo (($selectedMonth=='12') ? 'selected' : '' ) ?> >December</option>
 			</select>
-			<select class="form-control" name="year" id="changeYear" >
-				<option value="">Select Year</option>
+			<select class="form-control" name="year" id="changeYear" required >
+				<option value="">Select year</option>
 				<option value="2020" <?php echo (($selectedYear=='2020') ? 'selected' : '' ) ?> >2020</option>
 				<option value="2021" <?php echo (($selectedYear=='2021') ? 'selected' : '' ) ?> >2021</option>
 				<option value="2022" <?php echo (($selectedYear=='2022') ? 'selected' : '' ) ?> >2022</option>
 				<option value="2023" <?php echo (($selectedYear=='2023') ? 'selected' : '' ) ?> >2023</option>
 				<option value="2024" <?php echo (($selectedYear=='2024') ? 'selected' : '' ) ?> >2024</option>
 				<option value="2025" <?php echo (($selectedYear=='2025') ? 'selected' : '' ) ?> >2025</option>
+			</select>
+			<select class="form-control" name="date" id="changeDater" >
+				<option value="">Select date</option>
+				<?php
+				
+					for($i=1; $i<=31; $i++) {
+
+						echo "<option value='{$i}' ".(($selectedDate==$i) ? 'selected' : '' )." >{$i}</option>";
+
+					}
+
+				?>
+			</select>
+			<select class="form-control" name="slot" id="changeSlot" >
+				<option value="">Select booking slot</option>
+				<option value="breakfast" <?php echo (($selectedSlot=='breakfast') ? 'selected' : '' ) ?> >Breakfast</option>
+				<option value="lunch" <?php echo (($selectedSlot=='lunch') ? 'selected' : '' ) ?>>Lunch</option>
+				<option value="dinner" <?php echo (($selectedSlot=='dinner') ? 'selected' : '' ) ?>>Dinner</option>
 			</select>
 			<input type="submit" class="btn" value="Filter" >
 		</form>
@@ -68,7 +102,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."booking INNER JOIN ".TABLE_PREFIX."enquiry ON enquiry_id=booking_enquiry_id WHERE booking_date >= CURDATE() {$postStatus} {$monthStatus} {$yearStatus} AND booking_site_id=".APP_SITE_ID." ORDER BY booking_date, FIELD(booking_time, 'breakfats', 'lunch', 'dinner') DESC")) {
+			if($dataList=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."booking INNER JOIN ".TABLE_PREFIX."enquiry ON enquiry_id=booking_enquiry_id WHERE booking_date >= CURDATE() {$postStatus} {$bookingDate} {$bookingSlot} AND booking_site_id=".APP_SITE_ID." ORDER BY booking_date, FIELD(booking_time, 'breakfats', 'lunch', 'dinner') DESC")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
 						
@@ -83,30 +117,23 @@
 								<td><?php echo (($enquiry_status==1) ? 'Confirmed' : ((($enquiry_status)==0) ? 'Pending' : 'Cancelled') ); ?></td>
 								<td>
 									<?php
-									
-									if($enquiry_status==1) { ?>
 
-										<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" class="btn btn-sm btn-red"><i class="fas fa-times-circle"></i> Cancelled</a>
+									switch($enquiry_status) {
 
-									<?php
-									} else { ?>
-	
-										<a href="enquiry.php?type=confirm&enquiry_id=<?php echo $enquiry_id; ?>&date=<?php echo $booking_date ?>&time=<?php echo $booking_time ?>" class="btn btn-sm btn-green" ><i class="fas fa-check-circle"></i> Confirmed</a>
+										case 1 :
+											echo "<a href='".base64_encode($enquiry_id)."' msg='You are cancelling the pangat booked on ".date('d-M-Y', strtotime($booking_date))." by ".$enquiry_first_name."' data='{$booking_id}' action='cancel' class='btn btn-sm btn-red bookingCancelBtn'><i class='fas fa-times-circle'></i> Cancel</a>";
+											break;
 
-										<?php
-										
-											if($booking_date==date('Y-m-d')) { ?>
+										case 2 :
+											echo "<a href='".base64_encode($enquiry_id)."' date='".date('Y-m-d')."' time='{$booking_time}' msg='You want to cancel previous bookings and confirm the pangat booked on ".date('d-M-Y', strtotime($booking_date))." by ".$enquiry_first_name."' data='{$booking_id}' action='confirm' class='btn btn-sm btn-blue bookingConfirmBtn'><i class='fas fa-times-circle'></i> Cancel Previous and Confirm</a>";
+											break;
 
-												<a href="enquiry.php?type=reject&enquiry_id=<?php echo $enquiry_id; ?>" id="You are cancelling the pangat booked on <?php echo date('d-M-Y', strtotime($booking_date)).' by '.$enquiry_first_name ?>." data="<?php echo $booking_id ?>" class="btn btn-sm btn-red bookingCancelBtn"><i class="fas fa-times-circle"></i> Cancelled</a>
+										default: 
+											echo "<a href='".base64_encode($enquiry_id)."' date='".date('Y-m-d')."' time='{$booking_time}' msg='You are confirm the pangat booked on ".date('d-M-Y', strtotime($booking_date))." by ".$enquiry_first_name."' data='{$booking_id}' action='confirm' class='btn btn-sm btn-green bookingConfirmBtn'><i class='fas fa-times-circle'></i> Confirm</a>";
+											break;
 
-											<?php												
-											}
-
-										?>
-
-									<?php
 									}
-
+									
 									?>
 								</td>
 							</tr>
