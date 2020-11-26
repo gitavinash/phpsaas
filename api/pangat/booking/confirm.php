@@ -4,9 +4,7 @@
 
     function confirm($connection, $data) {
 
-        // extract($data);
-        print_r($data);
-        exit();
+        extract($data);
 
         if(isset($id)) {
 
