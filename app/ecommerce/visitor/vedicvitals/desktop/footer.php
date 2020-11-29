@@ -160,7 +160,7 @@
 		<div class="whatsapp">
 			<a href="https://wa.me/919310142836?text=Hello"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
 		</div>
-
+		
 		<!-- sections end -->
 
 		<!-- script start -->

@@ -51,6 +51,20 @@
 
 	</head>
 	<body>
+
+		<div id="popUp">
+			<div class="popUpBox">
+				<span id="popUpClose">x</span>
+				<div class="popUpInfo">
+					<h2>Attention Required</h2>
+					<p>Due to certain restrictions in our area in lieu of Covid 19 all orders placed after 25th November 2020  will be processed after 3rd December 2020.</p>
+					<p>We request you to bear with us in this tough situation.</p>
+					<p><strong>Kind Regards</strong></p>
+					<p>Management Vedic Vitals</p>
+				</div>
+			</div>
+		</div>
+
 		<!-- Google Tag Manager (noscript) -->
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-55MD564"
 		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
