@@ -52,7 +52,7 @@
 	</head>
 	<body>
 
-		<div id="popUp">
+		<!-- <div id="popUp">
 			<div class="popUpBox">
 				<span id="popUpClose">x</span>
 				<div class="popUpInfo">
@@ -63,7 +63,7 @@
 					<p>Management Vedic Vitals</p>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- Google Tag Manager (noscript) -->
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-55MD564"
