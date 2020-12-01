@@ -152,7 +152,7 @@
 
                         if($productTags!='') {
 
-                            $tags=explode(',', $productTags);
+                            $tags=explode('|', $productTags);
 
                                 for($i=0; $i<sizeof($tags); $i++) {
 

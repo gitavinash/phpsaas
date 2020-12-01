@@ -194,7 +194,7 @@
 									<ul class="navbar-nav menu-ul">
 									 
 									  <li class="nav-item active">
-									    <a class="nav-link" href="index.html">Home</a>
+									    <a class="nav-link" href="/">Home</a>
 									  </li>
 									  <li class="nav-item dropdown">
 									    <a class="nav-link dropdown-toggle" href="/category/luxury-collections/" id="navbardrop" data-toggle="dropdown">Luxury Collections

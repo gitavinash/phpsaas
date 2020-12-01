@@ -34,7 +34,7 @@
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Flowers</h4>
+									<h4>Fresh Flowers</h4>
 								</div>
 							</div>
 						</a>
@@ -45,7 +45,7 @@
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Cakes</h4>
+									<h4>Everlasting Flowers</h4>
 								</div>
 							</div>
 						</a>
@@ -56,7 +56,7 @@
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Combos</h4>
+									<h4>Artistic Arrangement</h4>
 								</div>
 							</div>
 						</a>
@@ -67,7 +67,7 @@
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Plants</h4>
+									<h4>Gift</h4>
 								</div>
 							</div>
 						</a>
@@ -78,7 +78,7 @@
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Gifts</h4>
+									<h4>Hampers</h4>
 								</div>
 							</div>
 						</a>

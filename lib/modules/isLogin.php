@@ -2,7 +2,7 @@
 
 	if(!isset($_COOKIE['user_data'])) {
 		
-		header("Location: /login/");
+		header("Location: /logout/");
 		exit();
 
 	} else {

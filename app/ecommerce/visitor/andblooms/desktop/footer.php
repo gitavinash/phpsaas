@@ -70,10 +70,11 @@
 						<h2 class="h2-socl">Spread The Love</h2>
 
 						<div class="social-1">
-							<a href=""><img src="<?php echo USER_IMAGES ?>fb.svg"></a>
-							<a href=""><img src="<?php echo USER_IMAGES ?>tweet.svg"></a>
+							<a href="https://www.facebook.com/andblooms"><img src="<?php echo USER_IMAGES ?>fb.svg"></a>
+							<a href="https://www.instagram.com/andblooms/"><img src="<?php echo USER_IMAGES ?>insta.svg"></a>
+							<!-- <a href=""><img src="<?php echo USER_IMAGES ?>tweet.svg"></a>
 							<a href=""><img src="<?php echo USER_IMAGES ?>linkedin.svg"></a>
-							<a href=""><img src="<?php echo USER_IMAGES ?>pinterest.svg"></a>
+							<a href=""><img src="<?php echo USER_IMAGES ?>pinterest.svg"></a> -->
 							<!-- <a href=""><img src="<?php echo USER_IMAGES ?>insta.svg"></a> -->
 						</div>
 					</div>
@@ -125,7 +126,7 @@
 			</div>
 		</div>
 		<div class="whatsapp">
-			<a href="https://wa.me/919910744118?text=<?php echo ((isset($link_type)) ? (($link_type=='product') ? urlencode('i want to know about '.$product_title.' '.SITE_URL.ACTIVE_URL) : 'Hello' ) : 'Hello' ) ?>"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
+			<a href="https://wa.me/919910744119?text=<?php echo ((isset($link_type)) ? (($link_type=='product') ? urlencode('i want to know about '.$product_title.' '.SITE_URL.ACTIVE_URL) : 'Hello' ) : 'Hello' ) ?>"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
 		</div>
 		</footer>
 
