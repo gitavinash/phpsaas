@@ -331,3 +331,11 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
     ADD INDEX product_site_id (product_site_id)");
+
+  /** Update service table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
+    ADD service_site_id BIGINT NOT NULL AFTER service_parent_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
+    ADD INDEX service_site_id (service_site_id)");
