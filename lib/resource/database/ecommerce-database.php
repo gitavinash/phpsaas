@@ -286,6 +286,14 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     CHANGE cart_product_qty cart_qty BIGINT(20) NOT NULL");
 
+  /** Update inventory table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD inventory_site_id BIGINT NOT NULL AFTER inventory_relation_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD INDEX inventory_site_id (inventory_site_id)");
+
   /** Update Transaction Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
@@ -307,3 +315,19 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
     CHANGE order_generate order_generate TIMESTAMP NULL DEFAULT NULL");
+
+  /** Update order meta */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order_meta
+    ADD order_site_id BIGINT NOT NULL AFTER order_relation_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order_meta
+    ADD INDEX order_site_id (order_site_id)");
+
+  /** Update product table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+    ADD product_site_id BIGINT NOT NULL AFTER product_parent_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+    ADD INDEX product_site_id (product_site_id)");

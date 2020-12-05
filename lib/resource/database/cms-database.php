@@ -34,6 +34,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."gallery
     MODIFY gallery_id bigint(20) NOT NULL AUTO_INCREMENT");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."gallery
+    ADD gallery_site_id BIGINT NOT NULL AFTER gallery_parent_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."gallery
+    ADD INDEX gallery_site_id (gallery_site_id)");
+
   // Video table
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."video (
@@ -67,3 +73,11 @@
   ##                                        Update CMS Applications Database Table                                      ##
   ##                                                                                                                    ##
   ########################################################################################################################
+
+  /** Update video table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."video
+    ADD video_site_id BIGINT NOT NULL AFTER video_parent_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."video
+    ADD INDEX video_site_id (video_site_id)");

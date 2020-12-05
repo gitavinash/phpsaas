@@ -140,7 +140,7 @@
     ADD PRIMARY KEY (app_id)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
-    ADD UNIQUE app_path (app_path);");
+    ADD UNIQUE app_path (app_path)");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
     MODIFY app_id bigint(20) NOT NULL AUTO_INCREMENT");
@@ -509,7 +509,11 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
     DROP page_category");
 
-  /** Panga */
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
+    ADD page_site_id BIGINT NOT NULL AFTER page_parent_id");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
+    ADD INDEX page_site_id (page_site_id)");
 
   /** Professional Table */
 
@@ -646,7 +650,7 @@
     CHANGE site_app_activation_time site_app_activation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
-    CHANGE site_app_expiry_time site_app_expiry_date DATE NOT NULL;");
+    CHANGE site_app_expiry_time site_app_expiry_date DATE NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
     DROP INDEX site_app_expiry_time");
@@ -704,13 +708,13 @@
     CHANGE site_app_site_id site_installation_site_id BIGINT(20) NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_site_id;");
+    DROP INDEX site_app_site_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     CHANGE site_app_site_id site_installation_site_id BIGINT(20) NOT NULL COMMENT 'Refer as parent website of app website'");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_site_id;");
+    DROP INDEX site_app_site_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_site_id (site_installation_site_id)");
@@ -719,7 +723,7 @@
     CHANGE site_app_user_id site_installation_user_id BIGINT(20) NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_user_id;");
+    DROP INDEX site_app_user_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_user_id (site_installation_user_id)");
@@ -728,7 +732,7 @@
     CHANGE site_app_package_id site_installation_package_id BIGINT(20) NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_package_id;");
+    DROP INDEX site_app_package_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_package_id (site_installation_package_id)");
@@ -737,7 +741,7 @@
     CHANGE site_app_activation_time site_installation_activation_time DATE NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_activation_time;");
+    DROP INDEX site_app_activation_time");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_activation_time (site_installation_activation_time)");
@@ -746,7 +750,7 @@
     CHANGE site_app_expiry_date site_installation_expiry_date DATE NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_expiry_date;");
+    DROP INDEX site_app_expiry_date");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_expiry_date (site_installation_expiry_date)");
@@ -755,7 +759,7 @@
     CHANGE site_app_status site_installation_status NOT NULL");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
-    DROP INDEX site_app_status;");
+    DROP INDEX site_app_status");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_status (site_installation_status)");
@@ -956,6 +960,12 @@
     
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post
     ADD INDEX post_time (post_time)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post
+    ADD post_site_id BIGINT NOT NULL AFTER post_parent_id");
+  
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post
+    ADD INDEX post_site_id (post_site_id)");
   
 
   ########################################################################################################################
