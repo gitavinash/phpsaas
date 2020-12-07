@@ -15,9 +15,8 @@
 
                 if(mysqli_num_rows($pageData)!=0) {
 
-                    // extract(mysqli_fetch_assoc($pageData));
-                    print_r(mysqli_fetch_assoc($pageData));
-                    exit();
+                    extract(mysqli_fetch_assoc($pageData));
+                    
                     if(file_exists(ROUTER.$link_status.'.php')) {
 
                         /** Include status router file */
