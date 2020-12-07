@@ -529,7 +529,10 @@ main .container {
     border-radius: 4px;
     box-sizing: border-box;
 	margin-bottom: 20px;
-	overflow-x: none;
+}
+
+.form-box .right-box .action-box .btn-block {
+	width: 96%;
 }
 
 .form-box .right-box .action-box .form-group {
