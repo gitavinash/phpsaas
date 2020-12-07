@@ -529,7 +529,7 @@ main .container {
     border-radius: 4px;
     box-sizing: border-box;
 	margin-bottom: 20px;
-	overflow-x: overlay;
+	overflow-x: none;
 }
 
 .form-box .right-box .action-box .form-group {
