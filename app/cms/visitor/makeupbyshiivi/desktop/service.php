@@ -31,7 +31,7 @@
                     for($i=0; $i<sizeof($service_gallery); $i++) { ?>
                         <div class="col-md-6 single-item hair">
                             <div class="gallery-wrap">
-                                <img src="<?php echo $service_gallery[0]['path'] ?>" alt="<?php echo $service_gallery[0]['name'] ?>" >
+                                <img src="<?php echo $service_gallery[$i]['path'] ?>" alt="<?php echo $service_gallery[$i]['name'] ?>" >
                             </div>
                         </div>
                     <?php
