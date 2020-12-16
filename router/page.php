@@ -30,12 +30,19 @@
                         /** Check category template is avilable or not */
 
                         $checkCategoryTemplate=USER_PATH.strtolower($page_type).'-page.php';
+                        $checkPageNameTemplate=USER_PATH.strtolower(str_replace(' ', '-', $page_title)).'-page.php';
 
                         if(file_exists($checkCategoryTemplate)) {
 
                             /** Opening category page template */
 
                             require_once $checkCategoryTemplate;
+
+                        } else if(file_exists($checkPageNameTemplate)) {
+
+                            /** Open template as same name of page name */
+
+                            require_once $checkPageNameTemplate;
 
                         } else {
 

@@ -2,7 +2,7 @@
 
     require_once LOGIN_CHECK;
 
-    function product($connection, $data) {
+    function csvProduct($connection, $data) {
 
         extract($data);
         

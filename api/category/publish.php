@@ -34,7 +34,7 @@
 
 					$addLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$newCategoryID}', '200', 'category', '".USER_ID."', '".SITE_ID."', NOW(), NOW())");
 					$linkID=mysqli_insert_id($connection);
-					$addMetaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_type) VALUES('{$linkID}', 'category')");
+					$addMetaData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_type) VALUES('{$linkID}', ".APP_SITE_ID.",'category')");
 
 					if($addCategory && $addMetaData && $addLink) {
 
@@ -46,6 +46,7 @@
 
 					} else {
 
+						$msg=mysqli_error($connection);
 						mysqli_query($connection, "ROLLBACK");
 
 					}

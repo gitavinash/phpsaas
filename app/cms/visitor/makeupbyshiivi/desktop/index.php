@@ -41,58 +41,38 @@
                 </div>
             </div>
             <div class="row mbs-portfolio-items">
-                <div class="col-md-6 single-item">
-                    <div class="mbs-portfolio-wrap">
-                        <a href="portfolio/"><img src="<?php echo USER_IMAGES ?>services/eye-makeup.jpg" alt=""></a>
-                        <div class="mbs-portfolio-content">
-                            <p>Vestibulume</p>
-                            <h3><a href="portfolio/">Eye Makeup</a></h3>
-                            <a href="portfolio/" class="mbs-portfolio-link"></a>
-                        </div>
-                    </div>
-                    <div class="mbs-portfolio-wrap">
-                        <a href="portfolio/"><img src="<?php echo USER_IMAGES ?>services/children-makeup.jpg" alt=""></a>
-                        <div class="mbs-portfolio-content">
-                            <p>Vestibulume</p>
-                            <h3><a href="portfolio/">Children Makeup</a></h3>
-                            <a href="portfolio/" class="mbs-portfolio-link"></a>
-                        </div>
-                    </div>
-                    <div class="mbs-portfolio-wrap">
-                        <a href="portfolio/"><img src="<?php echo USER_IMAGES ?>services/effect-makeup.jpg" alt=""></a>
-                        <div class="mbs-portfolio-content">
-                            <p>Vestibulume</p>
-                            <h3><a href="portfolio/">Effect Makeup</a></h3>
-                            <a href="portfolio/" class="mbs-portfolio-link"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 single-item">
-                    <div class="mbs-portfolio-wrap">
-                        <a href="portfolio/"><img src="<?php echo USER_IMAGES ?>services/face-makeup.jpg" alt=""></a>
-                        <div class="mbs-portfolio-content">
-                            <p>Vestibulume</p>
-                            <h3><a href="portfolio/">Face Makeup</a></h3>
-                            <a href="portfolio/" class="mbs-portfolio-link"></a>
-                        </div>
-                    </div>
-                    <div class="mbs-portfolio-wrap">
-                        <a href="portfolio/"><img src="<?php echo USER_IMAGES ?>services/hair-makeup.jpg" alt=""></a>
-                        <div class="mbs-portfolio-content">
-                            <p>Vestibulume</p>
-                            <h3><a href="portfolio/">Hair Makeup</a></h3>
-                            <a href="portfolio/" class="mbs-portfolio-link"></a>
-                        </div>
-                    </div>
-                    <div class="mbs-portfolio-wrap">
-                        <a href="portfolio/"><img src="<?php echo USER_IMAGES ?>services/wedding-makeup.jpg" alt=""></a>
-                        <div class="mbs-portfolio-content">
-                            <p>Vestibulume</p>
-                            <h3><a href="portfolio/">Wedding Makeup</a></h3>
-                            <a href="portfolio/" class="mbs-portfolio-link"></a>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                
+                    /** Service list */
+
+                    if($serviceList=mysqli_query($connection, "SELECT service_image, service_title, link_url FROM ".TABLE_PREFIX."service INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=service_id WHERE link_site_id=".SITE_ID)) {
+
+                        if(mysqli_num_rows($serviceList)!=0) {
+
+                            while($serviceData=mysqli_fetch_assoc($serviceList)) {
+
+                                extract($serviceData); ?>
+
+                                    <div class="col-md-6 single-item">
+                                        <div class="mbs-portfolio-wrap">
+                                            <a href="<?php echo $link_url ?>"><img src="<?php echo $service_image ?>" alt=""></a>
+                                            <div class="mbs-portfolio-content">
+                                                <!-- <p>Vestibulume</p> -->
+                                                <h3><a href="<?php echo $link_url ?>"><?php echo $service_title ?></a></h3>
+                                                <a href="<?php echo $link_url ?>" class="mbs-portfolio-link"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <?php
+
+                            }
+
+                        }
+
+                    }
+
+                ?>
             </div>
         </div>
     </section>

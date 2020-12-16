@@ -36,6 +36,9 @@
 	<tbody>
 		<?php
 
+			echo "SELECT service_id, service_title, service_owner_id, category_title, link_url, link_status, link_creation, IFNULL(inventory_mrp, 0) as inventory_mrp, IFNULL(inventory_price, 0) as inventory_price FROM ".TABLE_PREFIX."service INNER JOIN ".TABLE_PREFIX."category ON category_id=service_category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=service_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=service_id WHERE link_type='service' AND link_relation_id=service_id AND link_site_id=".SITE_ID." AND category_id=service_category AND link_status!=301 {$serviceStatus} ORDER BY link_published DESC LIMIT {$startFrom}, 100";
+			exit();
+
 			if($dataList=mysqli_query($connection, "SELECT service_id, service_title, service_owner_id, category_title, link_url, link_status, link_creation, IFNULL(inventory_mrp, 0) as inventory_mrp, IFNULL(inventory_price, 0) as inventory_price FROM ".TABLE_PREFIX."service INNER JOIN ".TABLE_PREFIX."category ON category_id=service_category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=service_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=service_id WHERE link_type='service' AND link_relation_id=service_id AND link_site_id=".SITE_ID." AND category_id=service_category AND link_status!=301 {$serviceStatus} ORDER BY link_published DESC LIMIT {$startFrom}, 100")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>

@@ -2,8 +2,10 @@
 
     require_once LOGIN_CHECK;
 
-    while(($dataLines=fgetcsv($openFile)) !== false) {
+    $productFeaturedImage='';
 
+    while(($dataLines=fgetcsv($openFile)) !== false) {
+        
         if($i!=0) {
 
             if($dataLines[0]!='') {
@@ -28,7 +30,7 @@
                 $productTaxRate=mysqli_real_escape_string($connection, $dataLines[20]);
                 $productIsFeatured=mysqli_real_escape_string($connection, $dataLines[28]);
                 $productImages=mysqli_real_escape_string($connection, $dataLines[38]);
-                $productTags=str_replace('|', ',', mysqli_real_escape_string($connection, $dataLines[43]));
+                $productTags=mysqli_real_escape_string($connection, $dataLines[43]);
 
                 /** Missing fields */
 
@@ -138,15 +140,15 @@
 
                         }
 
-                        $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES('{$productFeaturedImage}', '{$productFeaturedImage}', '{$gallery}', '{$productName}', '{$productDescription}', '{$productHighlights}', '{$categoryID}', ".USER_ID.",'1', 'product')");
+                        $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_site_id, product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(".SITE_ID.", '{$productFeaturedImage}', '{$productFeaturedImage}', '{$gallery}', '{$productName}', '{$productDescription}', '{$productHighlights}', '{$categoryID}', ".USER_ID.",'1', 'product')");
                         $productID=mysqli_insert_id($connection);
 
                         $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$productIsFeatured}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
                         $linkID=mysqli_insert_id($connection);
 
-                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', '{$productSKU}', 'INR', '{$productSalePrice}', '{$productMRP}', '{$productTaxStatus}', '{$productTaxRate}', '{$productInStock}', '{$productCurrentStock}', '{$productBackorder}', '{$productLowStockWarning}', '{$productWeight}', '{$productLenght}', '{$productWidth}', '{$productHeight}', '1', current_timestamp())");
+                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', ".SITE_ID.", '{$productSKU}', 'INR', '{$productSalePrice}', '{$productMRP}', '{$productTaxStatus}', '{$productTaxRate}', '{$productInStock}', '{$productCurrentStock}', '{$productBackorder}', '{$productLowStockWarning}', '{$productWeight}', '{$productLenght}', '{$productWidth}', '{$productHeight}', '1', current_timestamp())");
 
-                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".APP_SITE_ID.",  ".APP_SITE_ID.", 'product', '{$productTitle}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productTitle}', '{$productHighlights}', '', '{$productTitle}', '{$productHighlights}')");
+                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".SITE_ID.",  ".SITE_ID.", 'product', '{$productTitle}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productTitle}', '{$productHighlights}', '', '{$productTitle}', '{$productHighlights}')");
 
                         /* Insert tags into tag table */
 

@@ -24,11 +24,11 @@
         <div class="mbs-site-menu-inner" id="mbs-navbar">
             <ul class="list-unstyled">
                 <li><a href="/">Home</a></li>
-                <li><a href="about/">About Me</a></li>
-                <li><a href="services/">Services</a></li>
+                <li><a href="about-me/">About Me</a></li>
+                <!-- <li><a href="services/">Services</a></li>
                 <li><a href="portfolio/">Portfolio</a></li>
                 <li><a href="blog/">Blog</a></li>
-                <li><a href="contact/">Contact</a></li>
+                <li><a href="contact/">Contact</a></li> -->
             </ul>
         </div>
     </nav>
@@ -38,7 +38,7 @@
             <div class="row align-items-center">
                 <!-- Logo -->
                 <div class="col-6 col-md-4 mbs-site-logo-wrap">
-                    <a href="/" class="mbs-site-logo"><img src="<?php echo USER_IMAGES ?>favicon.png" alt="Makeup by Shiivi"></a>
+                    <a href="/" class="mbs-site-logo"><img src="<?php echo USER_IMAGES ?>logo.png" alt="Makeup by Shiivi"></a>
                 </div>
                 <!-- Menu Burger -->
                 <div class="col-6 col-md-8 text-right mbs-menu-burger-wrap"> <a href="#" class="mbs-site-nav-toggle mbs-js-mbs-site-nav-toggle"><i></i></a> </div>
