@@ -17,6 +17,8 @@
                 $productSKU=mysqli_real_escape_string($connection, $dataLines[10]);
                 $productMRP=mysqli_real_escape_string($connection, $dataLines[14]);
                 
+                /** Product sale price */
+
                 $productSalePrice=mysqli_real_escape_string($connection, $dataLines[15]);
                 $productSalePrice=(($productSalePrice!=0) ? $productSalePrice : $productMRP );
 
