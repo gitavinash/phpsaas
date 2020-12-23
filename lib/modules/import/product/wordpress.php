@@ -2,10 +2,8 @@
 
     require_once LOGIN_CHECK;
 
-    $productFeaturedImage='';
-
     while(($dataLines=fgetcsv($openFile)) !== false) {
-        
+
         if($i!=0) {
 
             if($dataLines[0]!='') {
@@ -18,7 +16,10 @@
                 $productDate=mysqli_real_escape_string($connection, date('Y-m-d', strtotime($dataLines[7])));
                 $productSKU=mysqli_real_escape_string($connection, $dataLines[10]);
                 $productMRP=mysqli_real_escape_string($connection, $dataLines[14]);
+                
                 $productSalePrice=mysqli_real_escape_string($connection, $dataLines[15]);
+                $productSalePrice=(($productSalePrice!=0) ? $productSalePrice : $productMRP );
+
                 $productWeight=mysqli_real_escape_string($connection, $dataLines[16]);
                 $productLenght=mysqli_real_escape_string($connection, $dataLines[17]);
                 $productWidth=mysqli_real_escape_string($connection, $dataLines[18]);
@@ -30,85 +31,34 @@
                 $productTaxRate=mysqli_real_escape_string($connection, $dataLines[20]);
                 $productIsFeatured=mysqli_real_escape_string($connection, $dataLines[28]);
                 $productImages=mysqli_real_escape_string($connection, $dataLines[38]);
-                $productTags=mysqli_real_escape_string($connection, $dataLines[43]);
-
-                /** Missing fields */
-
-                $productCurrentStock=0;
-                $productLowStockWarning=0;
-
-                mysqli_query($connection, "START TRANSACTION");
+                $productTags=str_replace('|', ',', mysqli_real_escape_string($connection, $dataLines[43]));
 
                 if($productImages!='') {
 
                     $galleryImages=explode(' | ', $productImages);
 
                     $localSavedGallery=array();
+                    $imageGallerySize=sizeof($galleryImages);
 
-                    for($j=0; $j<sizeof($galleryImages); $j++) {
+                    if($imageGallerySize!=1) {
 
-                        if(isset($galleryImages[$j])) {
+                        // for($j=0; $j<$imageGallerySize; $j++) {
 
-                            $galleryImageNameArray=explode('/', $galleryImages[$j]);
-                            $galleryImagesName=end($galleryImageNameArray);
-                            $galleryImagesName=explode('.', $galleryImagesName);
-                            $filename=$galleryImagesName[0];
-                            $fileExtension=end($galleryImagesName);
-                            $Type='image/'.$fileExtension;
+                        //     if(isset($galleryImages[$j])) {
 
-                            $uploadPath=ROOT.'/upload/'.date('Y/m/');
-                            $uploadFile=$uploadPath.time().'_'.strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename)).'.'.$fileExtension;
-                            $uploadMediaPath=str_replace(ROOT, '', $uploadFile);
-                            $uploadMediaLink='/attachment'.str_replace('.'.$fileExtension, '', $uploadMediaPath).'/';
-                            $uploadFileName=ucwords(preg_replace('/[_]+/', ' ',str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
+                        //         echo "Product ID : {$i} -> {$productName} this product has ".$imageGallerySize." of images || ";
 
-                            if(!is_dir($uploadPath)) {
-            
-                                mkdir($uploadPath, 0755, true);
+                        //     }
 
-                                /* Creating original image directory inside default upload directory */
+                        // }
 
-                                mkdir($originalUploadDir, 0755, true);
+                        echo "Product ID : {$i} -> {$productName} this product has ".$imageGallerySize." of images || ";
 
-                                /* Creating thumbnail image directory inside default upload directory */
+                    } else {
 
-                                mkdir($thumbnailUploadDir, 0755, true);
-
-                            }
-
-                            $response=file_put_contents($uploadFile, file_get_contents($galleryImages[$j]));
-
-                            if($response) {
-
-                                if($j==0) {
-
-                                    $productFeaturedImage=$uploadMediaPath;
-
-                                }
-
-                                $addNewMedia=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadMediaPath}', '{$uploadFileName}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
-                                $mediaID=mysqli_insert_id($connection);
-            
-                                $mediaLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
-
-                            } else {
-
-                                $msg='Unable to download image from server ';
-
-                            }
-
-                            $localSavedGallery[]=$uploadMediaPath;
-
-                        } else {
-
-                            $addNewMedia=true;
-                            $mediaLink=true;
-
-                        }
+                        echo "Product ID : {$i} -> {$productName} this product has ".$imageGallerySize." of images || ";
 
                     }
-
-                    $gallery=implode(', ', $localSavedGallery);
 
                 } else {
 
@@ -118,86 +68,11 @@
 
                 }
 
-                if($checkProduct=mysqli_query($connection, "SELECT inventory_relation_id FROM ".TABLE_PREFIX."inventory WHERE inventory_sku='{$productSKU}'")) {
-
-                    if(mysqli_num_rows($checkProduct)==0) {
-
-                        mysqli_query($connection, "START TRANSACTION");
-
-                        $categoryID=explode('_', $categoryID);
-                        $categoryURL=str_replace('category/', '', $categoryID[1]);
-                        $categoryID=$categoryID[0];
-
-                        $url='/product/'.strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $productName)).'/';
-
-                        if($checkURL=mysqli_query($connection, "SELECT link_url FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
-                            
-                            if(mysqli_num_rows($checkURL)!=0) {
-
-                                $url=ltrim($url, '/').'-'.$productSKU.'/';
-
-                            }
-
-                        }
-
-                        $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_site_id, product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(".SITE_ID.", '{$productFeaturedImage}', '{$productFeaturedImage}', '{$gallery}', '{$productName}', '{$productDescription}', '{$productHighlights}', '{$categoryID}', ".USER_ID.",'1', 'product')");
-                        $productID=mysqli_insert_id($connection);
-
-                        $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$productIsFeatured}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
-                        $linkID=mysqli_insert_id($connection);
-
-                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', ".SITE_ID.", '{$productSKU}', 'INR', '{$productSalePrice}', '{$productMRP}', '{$productTaxStatus}', '{$productTaxRate}', '{$productInStock}', '{$productCurrentStock}', '{$productBackorder}', '{$productLowStockWarning}', '{$productWeight}', '{$productLenght}', '{$productWidth}', '{$productHeight}', '1', current_timestamp())");
-
-                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".SITE_ID.",  ".SITE_ID.", 'product', '{$productTitle}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productTitle}', '{$productHighlights}', '', '{$productTitle}', '{$productHighlights}')");
-
-                        /* Insert tags into tag table */
-
-                        if($productTags!='') {
-
-                            $tags=explode('|', $productTags);
-
-                                for($i=0; $i<sizeof($tags); $i++) {
-
-                                    $tagsName=strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-
-                                    $addNewTags=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$productID}', '".USER_ID."', '".SITE_ID."', 'product')");
-                                
-                                }
-
-                        } else {
-
-                            $addNewTags=TRUE;
-
-                        }
-
-                        if($addNewMedia && $mediaLink && $addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags) {
-
-                            $success++;
-                            $msg='Product import successfully';
-                            mysqli_query($connection, "COMMIT");
-                                            
-                        } else {
-
-                            $failed++;
-                            $msg='Something is wrong while adding new product';
-                            mysqli_query($connection, "ROLLBACK");
-
-                        }
-
-                    } else {
-
-                        $status='warning';
-                        $dublicate++;
-                        $msg='Dublicate products found';
-
-                    }
-
-                }
-
             }
 
+            
         }
-
+        
         $i++;
 
     }

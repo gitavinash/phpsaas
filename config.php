@@ -4,7 +4,7 @@
 
 	define('ROOT', dirname(__FILE__));
 
-	define('DEVELOPMENT_MODE', true); // Error reporting true to show error or false to hide error
+	define('DEVELOPMENT_MODE', false); // Error reporting true to show error or false to hide error
 
 	/* database connection setting */
 
@@ -21,9 +21,6 @@
 
 	$time_zone = 'Asia/Calcutta';
 	$time_zone_value = '+5:30';
-
-	/* Error Reporting */
-
 
 	/** User IP Address */
 
