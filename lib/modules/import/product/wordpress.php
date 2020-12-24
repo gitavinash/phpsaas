@@ -2,6 +2,12 @@
 
     require_once LOGIN_CHECK;
 
+    mysqli_query($connection, "START TRANSACTION");
+
+    $categoryID=explode('_', $categoryID);
+    $categoryURL=str_replace('category/', '', $categoryID[1]);
+    $categoryID=$categoryID[0];
+
     while(($dataLines=fgetcsv($openFile)) !== false) {
 
         if($i!=0) {
@@ -27,7 +33,7 @@
                 $productWidth=mysqli_real_escape_string($connection, $dataLines[18]);
                 $productHeight=mysqli_real_escape_string($connection, $dataLines[19]);
                 $productInStock=mysqli_real_escape_string($connection, (($dataLines[22]=='instock') ? 1 : 0 ));
-                $productBackOrder=mysqli_real_escape_string($connection, (($dataLines[23]=='yes') ? 1 : 0 ));
+                $productBackOrder=mysqli_real_escape_string($connection, (($dataLines[23]=='yes') ? 1 : '' ));
                 $productManageStock=mysqli_real_escape_string($connection, (($dataLines[24]=='yes') ? 1 : 0 ));
                 $productTaxStatus=mysqli_real_escape_string($connection, (($dataLines[25]=='taxable') ? 1 : 0));
                 $productTaxRate=mysqli_real_escape_string($connection, $dataLines[20]);
@@ -123,15 +129,9 @@
 
                 }
 
-                if($checkProduct=mysqli_query($connection, "SELECT inventory_relation_id FROM ".TABLE_PREFIX."inventory WHERE inventory_sku='{$productSKU}'")) {
+                // if($checkProduct=mysqli_query($connection, "SELECT inventory_relation_id FROM ".TABLE_PREFIX."inventory WHERE inventory_sku='{$productSKU}' AND ")) {
 
-                    if(mysqli_num_rows($checkProduct)==0) {
-
-                        mysqli_query($connection, "START TRANSACTION");
-
-                        $categoryID=explode('_', $categoryID);
-                        $categoryURL=str_replace('category/', '', $categoryID[1]);
-                        $categoryID=$categoryID[0];
+                //     if(mysqli_num_rows($checkProduct)==0) {
 
                         $url='/product/'.strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $productName)).'/';
 
@@ -151,9 +151,9 @@
                         $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$productIsFeatured}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
                         $linkID=mysqli_insert_id($connection);
 
-                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', '{$productSKU}', 'INR', '{$productSalePrice}', '{$productMRP}', '{$productTaxStatus}', '{$productTaxRate}', '{$productInStock}', '{$productCurrentStock}', '{$productBackorder}', '{$productLowStockWarning}', '{$productWeight}', '{$productLenght}', '{$productWidth}', '{$productHeight}', '1', current_timestamp())");
+                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', '{$productSKU}', 'INR', '{$productSalePrice}', '{$productMRP}', '{$productTaxStatus}', '{$productTaxRate}', '{$productInStock}', '{$productInStock}', '{$productBackOrder}', '{$productWeight}', '{$productLenght}', '{$productWidth}', '{$productHeight}', '1', current_timestamp())");
 
-                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', 'product', '{$productTitle}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productTitle}', '{$productHighlights}', '', '{$productTitle}', '{$productHighlights}')");
+                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', 'product', '{$productName}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productName}', '{$productHighlights}', '', '{$productName}', '{$productHighlights}')");
 
                         /* Insert tags into tag table */
 
@@ -183,7 +183,8 @@
                         } else {
 
                             $failed++;
-                            $msg='Something is wrong while adding new product';
+                            // $msg='Something is wrong while adding new product';
+                            $msg=mysqli_error($connection);
                             mysqli_query($connection, "ROLLBACK");
 
                         }
@@ -196,9 +197,9 @@
 
                     }
 
-                }
+            //     }
 
-            }
+            // }
 
         }
         

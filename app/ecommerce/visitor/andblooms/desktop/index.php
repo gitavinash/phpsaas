@@ -28,57 +28,57 @@
 			<div class="container">
 				<div class="row">
 					<div class="main-card">
-						<a href="" class="card-link">
+						<a href="/tag/luxury/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Fresh Flowers</h4>
+									<h4>Luxury collection</h4>
 								</div>
 							</div>
 						</a>
 				
-						<a href="" class="card-link">
+						<a href="/tag/birthday/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Everlasting Flowers</h4>
+									<h4>Birthday special</h4>
 								</div>
 							</div>
 						</a>
 
-						<a href="" class="card-link">
+						<a href="/tag/anniversary/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Artistic Arrangement</h4>
+									<h4>Anniversary</h4>
 								</div>
 							</div>
 						</a>
 					
-						<a href="" class="card-link">
+						<a href="/tag/love/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Gift</h4>
+									<h4>Love collection</h4>
 								</div>
 							</div>
 						</a>
 
-						<a href="" class="card-link">
+						<a href="/tag/cake/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
 									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Hampers</h4>
+									<h4>Cake</h4>
 								</div>
 							</div>
 						</a>
