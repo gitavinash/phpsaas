@@ -54,7 +54,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="you-tube" >
-							<iframe width="100%" height="280" src="https://www.youtube.com/embed/WDmrzNh5Ph8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							<iframe width="100%" height="280" src="https://www.youtube.com/embed/rT9r7_633YQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 						</div>	
 					</div>
 					
@@ -93,25 +93,25 @@
 				              <li><a href="/about-us/">About Us</a></li>
 				              <!-- <li><a href="">Coupons & Deals</a></li> -->
 				              <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
-				              <li><a href="/career/">Career</a></li>
-				              <li><a href="/media/">Media</a></li>
+				              <!-- <li><a href="/career/">Career</a></li>
+				              <li><a href="/media/">Media</a></li> -->
 				              <!-- <li><a href="reviews/">Reviews</a></li>
 				              <li><a href="/blog/">Blog</a></li> -->
-				              <li><a href="/terms-and-conditions/">Terms</a></li>
+				              <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
 				              <li><a href="/cancellation/">Cancellation</a></li>
-				              <li><a href="/privacy-policy/">Privacy</a></li>
+				              <li><a href="/privacy-policy/">Privacy policy</a></li>
 				            </ul>
 				            <ul class="dn-l">
 				              <li><a href="/about-us/">About Us</a></li>
 				              <!-- <li><a href="">Coupons & Deals</a></li> -->
 				              <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
-				              <li><a href="/career/">Career</a></li>
-				              <li><a href="/media/">Media</a></li>
+				              <!-- <li><a href="/career/">Career</a></li>
+				              <li><a href="/media/">Media</a></li> -->
 				              <!-- <li><a href="reviews/">Reviews</a></li>
 				              <li><a href="/blog/">Blog</a></li> -->
-				              <li><a href="/terms-and-conditions/">Terms</a></li>
+				              <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
 				              <li><a href="/cancellation/">Cancellation</a></li>
-				              <li><a href="/privacy-policy/">Privacy</a></li>
+				              <li><a href="/privacy-policy/">Privacy policy</a></li>
 				            </ul>
 						</div>
 					</div>

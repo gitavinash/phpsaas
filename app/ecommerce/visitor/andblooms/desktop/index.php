@@ -31,7 +31,7 @@
 						<a href="/tag/luxury/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
+									<img src="<?php echo USER_IMAGES ?>luxury.jpeg">
 								</div>
 								<div class="acc-card-head">
 									<h4>Luxury collection</h4>
@@ -42,7 +42,7 @@
 						<a href="/tag/birthday/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
+									<img src="<?php echo USER_IMAGES ?>birthday.jpg">
 								</div>
 								<div class="acc-card-head">
 									<h4>Birthday special</h4>
@@ -53,7 +53,7 @@
 						<a href="/tag/anniversary/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
+									<img src="<?php echo USER_IMAGES ?>anniversary.jpg">
 								</div>
 								<div class="acc-card-head">
 									<h4>Anniversary</h4>
@@ -64,7 +64,7 @@
 						<a href="/tag/love/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
+									<img src="<?php echo USER_IMAGES ?>love.png">
 								</div>
 								<div class="acc-card-head">
 									<h4>Love collection</h4>
@@ -75,7 +75,7 @@
 						<a href="/tag/cake/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="https://andblooms.com/wp-content/uploads/2020/02/4993353155090-scaled.jpg">
+									<img src="<?php echo USER_IMAGES ?>cake.jpg">
 								</div>
 								<div class="acc-card-head">
 									<h4>Cake</h4>
@@ -106,7 +106,7 @@
 						
 						<?php
 							
-							if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 10")) {
+							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='white background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1")) {
 
 								if(mysqli_num_rows($productList)!=0) {
 
@@ -141,171 +141,6 @@
 
 						?>
 						
-						</div>
-					</div>
-				</div>
-				<!-- catagery 2 carousel -->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Luxury Collection</h2>
-							<span class="cart-bodr-h2"></span>
-							<div class="dn-l view-box">
-								<a href="" class="btn-vw">View All</a>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
-							
-						<?php
-							
-							if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 10")) {
-
-								if(mysqli_num_rows($productList)!=0) {
-
-									while($productData=mysqli_fetch_assoc($productList)) {
-
-										extract($productData);
-
-										echo "<div class='carousel-cell-home'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
-													</div>
-												</div>
-											</a>
-										</div>";
-
-									}
-
-								}
-
-							} else {
-
-								echo mysqli_error($connection);
-								exit();
-
-							}
-
-						?>
-
-						</div>
-					</div>
-				</div>
-				<!-- catagery 3 carousel-->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Birthday</h2>
-							<span class="cart-bodr-h2"></span>
-							<div class="dn-l view-box">
-								<a href="" class="btn-vw">View All</a>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
-							
-						<?php
-							
-							if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 10")) {
-
-								if(mysqli_num_rows($productList)!=0) {
-
-									while($productData=mysqli_fetch_assoc($productList)) {
-
-										extract($productData);
-
-										echo "<div class='carousel-cell-home'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
-													</div>
-												</div>
-											</a>
-										</div>";
-
-									}
-
-								}
-
-							} else {
-
-								echo mysqli_error($connection);
-								exit();
-
-							}
-
-						?>
-
-						</div>
-					</div>
-				</div>
-				<!-- catagery 4 carousel-->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Anniversary</h2>
-							<span class="cart-bodr-h2"></span>
-							<div class="dn-l view-box">
-								<a href="" class="btn-vw">View All</a>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
-							
-						<?php
-							
-							if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 10")) {
-
-								if(mysqli_num_rows($productList)!=0) {
-
-									while($productData=mysqli_fetch_assoc($productList)) {
-
-										extract($productData);
-
-										echo "<div class='carousel-cell-home'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
-													</div>
-												</div>
-											</a>
-										</div>";
-
-									}
-
-								}
-
-							} else {
-
-								echo mysqli_error($connection);
-								exit();
-
-							}
-
-						?>
-
 						</div>
 					</div>
 				</div>
@@ -395,7 +230,7 @@
 			</div>
 		</section>
 
-		<section class="section-content info-setion" >
+		<!-- <section class="section-content info-setion" >
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12">
@@ -417,7 +252,7 @@
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> -->
 
 <?php
 

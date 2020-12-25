@@ -236,7 +236,7 @@
 									    		<div class="mega-gry flot-menu">
 									      	    	<div class="menu-titl"><a href="/tag/bumper-sale/">Bumper Sale <span class="cart-bodr"></span></a></div>
 											        <a class="dropdown-item" href="#">
-											        	<img class="mega-img" src="https://img.& Blooms.com/sites/default/files/alloccasion/menucard/Plants.png">
+											        	<img class="mega-img" src="">
 											        </a>
 									    		</div>
 									    	</div>
