@@ -70,8 +70,8 @@
 						<h2 class="h2-socl">Spread The Love</h2>
 
 						<div class="social-1">
-							<a href="https://www.facebook.com/andblooms"><img src="<?php echo USER_IMAGES ?>fb.svg"></a>
-							<a href="https://www.instagram.com/andblooms/"><img src="<?php echo USER_IMAGES ?>insta.svg"></a>
+							<a href="https://www.facebook.com/andblooms"><img src="<?php echo USER_IMAGES ?>facebook.png"></a>
+							<a href="https://www.instagram.com/andblooms/"><img src="<?php echo USER_IMAGES ?>instagram.png"></a>
 							<!-- <a href=""><img src="<?php echo USER_IMAGES ?>tweet.svg"></a>
 							<a href=""><img src="<?php echo USER_IMAGES ?>linkedin.svg"></a>
 							<a href=""><img src="<?php echo USER_IMAGES ?>pinterest.svg"></a> -->
@@ -95,10 +95,20 @@
 				              <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
 				              <li><a href="/career/">Career</a></li>
 				              <li><a href="/media/">Media</a></li>
-				              <li><a href="reviews/">Reviews</a></li>
-				              <li><a href="/blog/">Blog</a></li>
+				              <!-- <li><a href="reviews/">Reviews</a></li>
+				              <li><a href="/blog/">Blog</a></li> -->
+				              <li><a href="/terms-and-conditions/">Terms</a></li>
+				              <li><a href="/cancellation/">Cancellation</a></li>
+				              <li><a href="/privacy-policy/">Privacy</a></li>
 				            </ul>
 				            <ul class="dn-l">
+				              <li><a href="/about-us/">About Us</a></li>
+				              <!-- <li><a href="">Coupons & Deals</a></li> -->
+				              <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
+				              <li><a href="/career/">Career</a></li>
+				              <li><a href="/media/">Media</a></li>
+				              <!-- <li><a href="reviews/">Reviews</a></li>
+				              <li><a href="/blog/">Blog</a></li> -->
 				              <li><a href="/terms-and-conditions/">Terms</a></li>
 				              <li><a href="/cancellation/">Cancellation</a></li>
 				              <li><a href="/privacy-policy/">Privacy</a></li>

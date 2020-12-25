@@ -133,7 +133,7 @@
 			</div>
 		</section>
 
-		<section class="section-content info-setion" >
+		<!-- <section class="section-content info-setion" >
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12">
@@ -155,8 +155,8 @@
 					</div>
 				</div>
 			</div>
-		</section>
-
+		</section> -->
+		
 		<section class="section-content cloth-card" >
 			<div class="container">
 				<div class="row">
@@ -172,15 +172,15 @@
 							<div class="carousel-cell-testimonial">
 								<div class="col-card-4">
 									<div class="review-list recommand-service">
-									   <h3>super plant</h3>
+									   <h3>Tasteful beautiful</h3>
 									   <div class="rating ratingstar"> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup></div>
 									   <div class="cont-tst">
-										   <p class="rating-desc">excellent qualities</p>
-										   <span class="author-name">Abhi</span>
-										   <p>On October 04, 2020 from <strong>khammam</strong></p>
-										   <div class="recommanded">
+										   <p class="rating-desc">TASTEFULLY done up store with beautiful collection of premium quality flowers... Very creative and exquisite flower arrangements.</p>
+										   <span class="author-name">Manisha Agarwal</span>
+										   <!-- <p>On August 09, 2019</p> -->
+										   <!-- <div class="recommanded">
 										      <p class="recommanded-icon">Recommends</p>
-										   </div>
+										   </div> -->
 										</div>
 									</div>
 								</div>
@@ -188,15 +188,15 @@
 							<div class="carousel-cell-testimonial">
 								<div class="col-card-4">
 									<div class="review-list recommand-service">
-									   <h3>super plant</h3>
+									   <h3>Quality & Choices</h3>
 									   <div class="rating ratingstar"> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup></div>
 									   <div class="cont-tst">
-										   <p class="rating-desc">excellent qualities</p>
-										   <span class="author-name">Abhi</span>
-										   <p>On October 04, 2020 from <strong>khammam</strong></p>
-										   <div class="recommanded">
+										   <p class="rating-desc">Very helpful staff for all your flower needs and at a reasonable price. Their product is very high quality and fresh. Lots of choices for flowers, and teddy . Many unique flowers to choose from.</p>
+										   <span class="author-name">Sakshi Negi</span>
+										   <!-- <p>On March 02, 2018</p> -->
+										   <!-- <div class="recommanded">
 										      <p class="recommanded-icon">Recommends</p>
-										   </div>
+										   </div> -->
 										</div>
 									</div>
 								</div>
@@ -204,15 +204,15 @@
 							<div class="carousel-cell-testimonial">
 								<div class="col-card-4">
 									<div class="review-list recommand-service">
-									   <h3>super plant</h3>
+									   <h3>Creativity at its Best!</h3>
 									   <div class="rating ratingstar"> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup></div>
 									   <div class="cont-tst">
-										   <p class="rating-desc">excellent qualities</p>
-										   <span class="author-name">Abhi</span>
-										   <p>On October 04, 2020 from <strong>khammam</strong></p>
+										   <p class="rating-desc">I really like the ambience of this place, beautiful flowers, creativity at it best.. anyone looking up for creative and mesmerizing bouquets for their loved ones surely go ahead and order for them. </p>
+										   <span class="author-name">Jon Snow</span>
+										   <!-- <p>On October 04, 2020 from <strong>khammam</strong></p>
 										   <div class="recommanded">
 										      <p class="recommanded-icon">Recommends</p>
-										   </div>
+										   </div> -->
 										</div>
 									</div>
 								</div>
@@ -220,15 +220,15 @@
 							<div class="carousel-cell-testimonial">
 								<div class="col-card-4">
 									<div class="review-list recommand-service">
-									   <h3>super plant</h3>
+									   <h3>Flowers are Jewels!</h3>
 									   <div class="rating ratingstar"> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup> <sup class="fill-star"></sup></div>
 									   <div class="cont-tst">
-										   <p class="rating-desc">excellent qualities</p>
-										   <span class="author-name">Abhi</span>
-										   <p>On October 04, 2020 from <strong>khammam</strong></p>
+										   <p class="rating-desc">Who said flowers can't replace jewels... Must visit this fabulous store. I wld rate &Blooms among the best in the business, with some great collection of fresh and exclusive flowers from across the globe.  On a lighter note, I can take the liberty of annoying my loved ones now. because I know a bunch ordered from &Blooms will serve as a saviour😀😀.</p>
+										   <span class="author-name">Sunil Bhateja</span>
+										   <!-- <p>On October 04, 2020 from <strong>khammam</strong></p>
 										   <div class="recommanded">
 										      <p class="recommanded-icon">Recommends</p>
-										   </div>
+										   </div> -->
 										</div>
 									</div>
 								</div>
