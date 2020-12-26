@@ -50,7 +50,7 @@
 								</div>
 							</td>
 							<td><?php echo $category_title; ?></td>
-							<td><?php echo $inventory_in_stock; ?></td>
+							<td><?php echo (($inventory_in_stock==1) ? 'Yes' : 'No' ); ?></td>
 							<td><i class="fas fa-rupee-sign"></i> <?php echo (($inventory_price!='') ? $inventory_price : 0 ); ?></td>
 							<td><i class="fas fa-rupee-sign"></i> <?php echo (($inventory_mrp!='') ? $inventory_mrp : 0 );; ?></td>
 							<td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
