@@ -55,10 +55,10 @@
 				<div class="productInventory generalTab" style="display: none;">
 					
 					<div class="box-2">
-						<input type="checkbox" name="in_stock" <?php (($inventory_in_stock==1) ? 'checked' : '' ) ?> > In Stock
+						<input type="checkbox" name="in_stock" <?php echo (($inventory_in_stock==1) ? 'checked' : '' ) ?> > In Stock
 					</div>
 					<div class="box-2">
-						<input type="checkbox" name="backorder"  <?php (($inventory_backorder==1) ? 'checked' : '' ) ?> > Allowed Backorders (if product is out of stock )
+						<input type="checkbox" name="backorder"  <?php echo (($inventory_backorder==1) ? 'checked' : '' ) ?> > Allowed Backorders (if product is out of stock )
 					</div>
 					<div class="box-2">
 						<div class="form-group">
