@@ -754,9 +754,9 @@ img.mega-img {
   color: white;
 }
 
-.carousel-cell-home:hover {
+/* .carousel-cell-home:hover {
     transform: scale(1.05);
-}
+} */
 
 .col-card-3{
     width: 100%;
@@ -1132,6 +1132,11 @@ a.card-link:hover .img-acc img {
     box-shadow: 0px 2px 10px #33333317;
     background: #fff
 }
+
+.event-card:hover {
+    transform: scale(1.05);
+}
+
 .img-cd img {
     text-align: center;
     width: 100%;    
