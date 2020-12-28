@@ -1,5 +1,8 @@
 <?php
 
+    $tag_type='';
+    $tag_description='';
+
     /** Pagination */
 
 	$currentPage=end($urlStructure);
@@ -31,23 +34,25 @@
 
             extract($tagPost[0]); // Extract first result for page meta's
 
-            $tag_path=USER_PATH."{$tag_type}-tag.php";
-
-            /** Include Tag view template */
-
-            if(file_exists($tag_path)) {
-
-                require_once $tag_path;
-
-            } else {
-                
-                require_once USER_PATH.'tag.php';
-
-            }
-
         } else {
 
-            require_once ERROR_404;
+            $tagPost='';
+
+        }
+
+        /** Include dedicated tag theme template */
+
+        $tag_path=USER_PATH."{$tag_type}-tag.php";
+
+        /** Include Tag view template */
+
+        if(file_exists($tag_path)) {
+
+            require_once $tag_path;
+
+        } else {
+            
+            require_once USER_PATH.'tag.php';
 
         }
 
