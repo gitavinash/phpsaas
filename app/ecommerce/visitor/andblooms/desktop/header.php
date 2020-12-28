@@ -197,26 +197,26 @@
 									    <a class="nav-link" href="/">Home</a>
 									  </li>
 									  <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="/category/luxury-collections/" id="navbardrop" data-toggle="dropdown">Luxury Collections
+									    <a class="nav-link dropdown-toggle" href="/tag/luxury/" id="navbardrop" data-toggle="dropdown">Luxury Collections
 									      </a>
 									      <div class="dropdown-menu mega-menu">
 									      	<div class="mega1">
 										      	<div class="menu-titl"><a href="">New Arivals<span class="cart-bodr"></span></a></div>
-										        <a class="dropdown-item" href="/category/luxury-collections/fresh-flowers/">Fresh Flowers</a>
+										        <a class="dropdown-item" href="/category/flower/">Fresh Flowers</a>
 										        <a class="dropdown-item" href="/category/artistic-artificial/">Artistic Artificial</a>
 									        </div>
 									  	  </div>
 									  </li>
 									  <li class="nav-item">
-									    <a class="nav-link" href="/category/infinity-everlasting-flowers/">Infinity Everlasting Flowers</a>
+									    <a class="nav-link" href="/tag/everlasting-flowers/">Infinity Everlasting Flowers</a>
 									  </li>
 									  <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="/category/occasions/" id="navbardrop" data-toggle="dropdown">Occasins
+									    <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop" data-toggle="dropdown">Occasins
 									      </a>
 									      <div class="dropdown-menu mega-menu">
 									      	<div class="mega2">
 									      	    <div class="mega-gry flot-menu">
-									      	    	<div class="menu-titl"><a href="#">Menu Name <span class="cart-bodr"></span></a></div>
+									      	    	<div class="menu-titl"><a href="#">By Theme<span class="cart-bodr"></span></a></div>
 											        <a class="dropdown-item" href="/tag/anniversary">Anniversary</a>
 											        <a class="dropdown-item" href="/tag/birthday/">Birthday</a>
 											        <a class="dropdown-item" href="/tag/corporate-gifting/">Corporate Gifting</a>
@@ -225,7 +225,7 @@
 											        <a class="dropdown-item" href="/tag/house-warming/">House Warming</a>
 									    		</div>
 									    		<div class="mega-wht flot-menu">
-									    			<div class="menu-titl"><a href="">Manu Name <span class="cart-bodr"></span></a></div>
+									    			<div class="menu-titl"><a href="#">By Type<span class="cart-bodr"></span></a></div>
 											        <a class="dropdown-item" href="/tag/i-m-sorry/">I'M Sorry</a>
 											        <a class="dropdown-item" href="/tag/just-because/">Just Because</a>
 											        <a class="dropdown-item" href="/tag/new-baby/">New Baby</a>
@@ -234,7 +234,7 @@
 											        <a class="dropdown-item" href="/tag/sympathy/">Sympathy</a>
 									    		</div>
 									    		<div class="mega-gry flot-menu">
-									      	    	<div class="menu-titl"><a href="/tag/bumper-sale/">Bumper Sale <span class="cart-bodr"></span></a></div>
+									      	    	<div class="menu-titl"><a href="/tag/bumper-sale/">Offer <span class="cart-bodr"></span></a></div>
 											        <a class="dropdown-item" href="#">
 											        	<img class="mega-img" src="">
 											        </a>
