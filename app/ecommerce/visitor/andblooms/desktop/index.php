@@ -93,7 +93,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="head-1">
-							<h2>Love Collection</h2>
+							<h2>Luxury Collection</h2>
 							<span class="cart-bodr-h2"></span>
 							<div class="view-box">
 								<a href="/tag/white-background/" class="btn-vw">View All</a>
@@ -144,7 +144,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="head-1">
-							<h2>Love Collection</h2>
+							<h2>Birthday Special</h2>
 							<span class="cart-bodr-h2"></span>
 							<div class="view-box">
 								<a href="/tag/grey-background/" class="btn-vw">View All</a>
@@ -196,7 +196,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="head-1">
-							<h2>Love Collection</h2>
+							<h2>Anniversary</h2>
 							<span class="cart-bodr-h2"></span>
 							<div class="view-box">
 								<a href="/tag/black-background/" class="btn-vw">View All</a>
