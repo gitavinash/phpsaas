@@ -65,8 +65,8 @@
 						</div>
 						<div class="col-md-7">
 							<div class="search-box">
-								<form class="form-inline">
-							      <input class="form-control" type="search" placeholder="Search for gifts, flowers..." >
+								<form action="/search/" class="form-inline">
+							      <input class="form-control" name="q" type="search" placeholder="Search for gifts, flowers..." >
 							    </form>
 							</div>
 							<div class="search-pro">
