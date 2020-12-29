@@ -229,7 +229,7 @@
 											        <a class="dropdown-item" href="/tag/i-m-sorry/">I'M Sorry</a>
 											        <a class="dropdown-item" href="/tag/just-because/">Just Because</a>
 											        <a class="dropdown-item" href="/tag/new-baby/">New Baby</a>
-											        <a class="dropdown-item" href="/tag/love-&-romance/">Love & Romance</a>
+											        <a class="dropdown-item" href="/tag/love/">Love & Romance</a>
 											        <a class="dropdown-item" href="/tag/retirement/">Retirement</a>
 											        <a class="dropdown-item" href="/tag/sympathy/">Sympathy</a>
 									    		</div>
