@@ -46,7 +46,7 @@
 				<ul>
 					<li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 					<li <?php echo ((ADMIN_BASE_URL=='/product/') ? 'class="active"' : '' ) ?> >
-						<a href="product.php?type=list"><i class="fas fa-box-open"></i> Product</a>
+						<a href="product.php?type=list&status=all"><i class="fas fa-box-open"></i> Product</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a></li>
