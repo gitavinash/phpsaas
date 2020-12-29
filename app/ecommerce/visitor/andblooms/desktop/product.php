@@ -172,7 +172,6 @@
 					if(mysqli_num_rows($tagListData)!=0) {
 					
 						extract(mysqli_fetch_assoc($tagListData));
-						echo 'Tag name : '.$relatedTags;
 						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY tag_time DESC LIMIT 0, 10";
 					
 					} else {
