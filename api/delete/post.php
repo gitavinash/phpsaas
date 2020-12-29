@@ -14,8 +14,8 @@
 
                     mysqli_query($connection, "START TRANSACTION");
 
-                    $deletePost=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."post WHERE post_id='{$post_id}'");
-                    $deleteLink=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."link WHERE link_id='{$link_id}' AND link_type='post'");
+                    $deletePost=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."post WHERE post_id='{$post_id}');
+                    $deleteLink=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."link WHERE link_relation_id='{$link_id}' AND link_type='post'");
                     $deleteMeta=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."meta WHERE meta_relation_id='{$link_id}' AND meta_type='post' AND meta_site_id=".SITE_ID);
                     $deleteTag=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."tag WHERE tag_id='{$post_id}' AND tag_type='post' AND tag_site_id=".SITE_ID);
 

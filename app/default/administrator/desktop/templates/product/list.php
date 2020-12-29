@@ -45,7 +45,7 @@
 								<p><a href="product.php?type=edit&editor=true&id=<?php echo $product_id; ?>" ><?php echo $product_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
 									<a href="product.php?type=edit&editor=true&id=<?php echo $product_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="product.php?type=product&id=<?php echo $product_id; ?>"><i class="fas fa-trash"></i> Delete</a>
+									<a href="#" id="<?php echo $product_id ?>_product" class="deletePost"><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>
