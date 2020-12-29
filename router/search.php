@@ -1,37 +1,48 @@
 <?php
 
-    $keyword=str_replace('-', ' ', mysqli_real_escape_string($connection, $_GET['q']));
+    $tag_type='';
+    $tag_description='';
 
-    if($searchList=mysqli_query($connection, "SELECT DISTINCT(link_relation_id), link_status, link_published, link_url, news_image, news_title, meta_description FROM ".TABLE_PREFIX."news LEFT JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id LEFT JOIN ".TABLE_PREFIX."tag ON tag_relation_id=news_id LEFT JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE meta_type='news' AND tag_type='news' AND link_type='news' AND link_status=200 AND news_title LIKE '%{$keyword}%' OR tag_title='{$keyword}' ORDER BY link_published DESC LIMIT 0, 30")) {
+    /** Pagination */
 
-        if(mysqli_num_rows($searchList)!=0) {
+    $searchTag=str_replace('-', ' ', mysqli_real_escape_string($connection, $_GET['q']));
 
-            while($seachPostData=mysqli_fetch_assoc($searchList)) {
+    if($tagList=mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
 
-                $searchPost[]=$seachPostData;
+        if(mysqli_num_rows($tagList)!=0) {
 
-            }
+            while($tagPostData=mysqli_fetch_assoc($tagList)) {
 
-            $seachPath=USER_PATH.$keyword.'-search.php';
-
-            /** Include Tag view template */
-
-            if(file_exists($seachPath)) {
-
-                require_once $seachPath;
-
-            } else {
-
-                require_once USER_PATH.'search.php';
+                $tagPost[]=$tagPostData;
 
             }
+
+            extract($tagPost[0]); // Extract first result for page meta's
 
         } else {
 
-            /** Search using post title */
-
-            echo 'No Result Found';
+            $tagPost='';
 
         }
+
+        /** Include dedicated tag theme template */
+
+        $tag_path=USER_PATH."{$tag_type}-search.php";
+
+        /** Include Tag view template */
+
+        if(file_exists($tag_path)) {
+
+            require_once $tag_path;
+
+        } else {
+            
+            require_once USER_PATH.'search.php';
+
+        }
+
+    } else {
+
+        require_once ERROR_404;
 
     }
