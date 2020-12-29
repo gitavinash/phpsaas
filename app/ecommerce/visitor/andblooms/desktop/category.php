@@ -11,54 +11,9 @@
 			<div class="container">
 				<div class="row ">
 					<div class="col-md-12">
-						
 						<div class="bg-content">
 							<h1><?php echo $category_title ?></h1>
 							<h3><?php echo $category_description ?></h3>
-						</div>
-					</div>
-					
-					<?php
-								
-								if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_is_featured=1 AND inventory_in_stock=1 AND product_category='{$category_id}' ORDER BY link_id DESC LIMIT 0, 10")) {
-
-									if(mysqli_num_rows($productList)!=0) {
-
-										echo "<div class='col-md-12'>
-										<div class='carousel carousel-baner' data-flickity='{ 'groupCells': true, 'freeScroll': true,'pageDots': false, 'contain': true }'>'";
-
-										while($productData=mysqli_fetch_assoc($productList)) {
-
-											extract($productData);
-
-											echo "<div class='carousel-cell-baner'>
-												<a href='{$link_url}'>
-													<div class='col-card-3'>
-														<div class='event-card'>
-															<div class='img-cd'>
-																<img src='{$product_image}'>
-															</div>
-																<h4>{$product_title}</h4>
-														</div>
-													</div>
-												</a>
-											</div>";
-
-										}
-
-									}
-
-									echo "</div></div>";
-
-								} else {
-
-									echo mysqli_error($connection);
-									exit();
-
-								}
-
-							?>
-							
 						</div>
 					</div>
 				</div>
@@ -84,51 +39,41 @@
 				<div class="row">
 
 				<?php
-							
-							if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND inventory_in_stock=1 ORDER BY link_id DESC LIMIT 0, 20")) {
 
-								if(mysqli_num_rows($productList)!=0) {
+					if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN isw_category ON category_id=product_category WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category=39 ORDER BY link_id DESC LIMIT 0, 20")) {
 
-									while($productData=mysqli_fetch_assoc($productList)) {
+						if(mysqli_num_rows($productList)!=0) {
 
-										extract($productData);
+							while($productData=mysqli_fetch_assoc($productList)) {
 
-										echo "<div class='col-md-3'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
+								extract($productData);
+
+								echo "<div class='col-md-3'>
+										<a href='{$link_url}'>
+											<div class='col-card-3'>
+												<div class='event-card'>
+													<div class='img-cd'>
+														<img src='{$product_image}'>
 													</div>
+													<h4>{$product_title}</h4>
+													<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
 												</div>
-											</a>
-										</div>";
-
-									}
-
-								}
-
-							} else {
-
-								echo mysqli_error($connection);
-								exit();
+											</div>
+										</a>
+									</div>";
 
 							}
 
-						?>
+						}
 
-					<!-- <div class="col-md-3">
-						<div class="event-card">
-							<div class="img-cd">
-								<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-							</div>
-							<h4>Alexander Mcqueen</h4>
-							<p class="rate">Rs. 115</p>
-						</div>
-					</div> -->
+					} else {
+
+						echo mysqli_error($connection);
+						exit();
+
+					}
+
+				?>
 				</div>
 			</div>
 		</section>
