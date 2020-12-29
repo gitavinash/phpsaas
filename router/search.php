@@ -1,39 +1,41 @@
 <?php
 
+    $search_type = '';
     $tag_type='';
     $tag_description='';
 
-    /** Pagination */
+    /** Search query */
 
-    $searchTag=str_replace('-', ' ', mysqli_real_escape_string($connection, $_GET['q']));
+    $searchQuery=str_replace('-', ' ', mysqli_real_escape_string($connection, $_GET['q']));
 
-    if($tagList=mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
 
-        if(mysqli_num_rows($tagList)!=0) {
+    if($queryList=mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
 
-            while($tagPostData=mysqli_fetch_assoc($tagList)) {
+        if(mysqli_num_rows($queryList)!=0) {
 
-                $tagPost[]=$tagPostData;
+            while($queryPostData=mysqli_fetch_assoc($queryList)) {
+
+                $queryPost[]=$queryPostData;
 
             }
 
-            extract($tagPost[0]); // Extract first result for page meta's
+            extract($queryPost[0]); // Extract first result for page meta's
 
         } else {
 
-            $tagPost='';
+            $queryPost='';
 
         }
 
         /** Include dedicated tag theme template */
 
-        $tag_path=USER_PATH."{$tag_type}-search.php";
+        $search_path=USER_PATH."{$search_type}-search.php";
 
         /** Include Tag view template */
 
-        if(file_exists($tag_path)) {
+        if(file_exists($search_path)) {
 
-            require_once $tag_path;
+            require_once $search_path;
 
         } else {
             
