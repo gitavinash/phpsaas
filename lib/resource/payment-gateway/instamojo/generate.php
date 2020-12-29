@@ -61,13 +61,12 @@
                     } else {
     
                         echo 'Something is wrong while generation transaction status';
-                        // echo mysqli_error($connection);
     
                     }
 
                 } else {
 
-                    echo 'Technical error occurs';
+                    echo $response['message'].' of '.SITE_DOMAIN;
 
                 }
 
