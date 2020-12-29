@@ -22,7 +22,7 @@
 
     $searchTag=mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
 
-    if($tagList=mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
+    if($tagList=mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_type='product' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
 
         if(mysqli_num_rows($tagList)!=0) {
 
