@@ -211,7 +211,7 @@
 									    <a class="nav-link" href="/tag/everlasting-flowers/">Infinity Everlasting Flowers</a>
 									  </li>
 									  <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop" data-toggle="dropdown">Occasins
+									    <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop" data-toggle="dropdown">Occasions
 									      </a>
 									      <div class="dropdown-menu mega-menu">
 									      	<div class="mega2">
