@@ -150,212 +150,130 @@
 	    </div>
 	</div>
 </section>
-		<!-- similar product start -->
-		<section class="section-content">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Similar Products</h2>
-							<span class="cart-bodr-h2"></span>
-						</div>
-					</div>
 
-					<div class="col-md-12">
-						<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 115</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 145</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 255</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 1255</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 1255</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 1255</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 1255</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Related Products</h2>
-							<span class="cart-bodr-h2"></span>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="carousel carousel-home related-card" data-flickity='{"groupCells": true, "freeScroll": true,"pageDots": false, "contain": true, "cellAlign": "left"}'>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 115</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 145</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 255</p>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-cell-home">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd">
-											<img src="https://andblooms.com/wp-content/uploads/2020/06/Untitled-design-37.jpg">
-										</div>
-											<h4>Alexander Mcqueen</h4>
-											<p class="rate">Rs. 255</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+<section class="section-content">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="head-1">
+					<h2>Similar Products</h2>
+					<span class="cart-bodr-h2"></span>
 				</div>
 			</div>
-		</section>
-		<!-- similar product end -->
 
-        <section class="section-content">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-2">
-							<h2>Why & Blooms?</h2>
-							<hr class="border-tp">
-						</div>
-					</div>
+			<div class="col-md-12">
+				<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
+							
 
-					<div class="col-md-12">
-						<div class="why-bloom">
-							<div class="flower-box">
-								<div class="img-why box-b">
-									<img src="<?php echo USER_IMAGES; ?>Freshness-Guranteed.jpg">
-								</div>
-								<div class="why-cont box-b">
-									<h3>Freshness Guaranteed</h3>
-									<h2>We deliver the finest & freshest</h2>
-								</div>
+				<?php
+				
+				if($tagListData=mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
+
+					if(mysqli_num_rows($tagListData)!=0) {
+					
+						extract(mysqli_fetch_assoc($tagListData));
+					
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY tag_time DESC LIMIT 0, 10";
+					
+					} else {
+					
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY tag_time DESC LIMIT 0, 10";
+					
+					}
+				
+				}
+
+				if($relatedProductsData=mysqli_query($connection, $relatedProductQuery)) {
+
+					if(mysqli_num_rows($relatedProductsData)!=0) {
+					
+						while($relatedProducts=mysqli_fetch_assoc($relatedProductsData)) {
+					
+							extract($relatedProducts);
+
+							echo "
+							<div class='carousel-cell-home'>
+								<a href='{$link_url}'>
+									<div class='col-card-3'>
+										<div class='event-card'>
+											<div class='img-cd'>
+												<img src='{$product_image}'>
+											</div>
+												<h4>Alexander Mcqueen</h4>
+												<p class='rate'>Rs. {$inventory_price}</p>
+										</div>
+									</div>
+								</a>
 							</div>
+						";
 
-							<div class="flower-box">
-								<div class="why-cont box-b dn-s">
-									<h3>Delivery In 3 Hours</h3>
-									<h2>Racing quick to win you love</h2>
-								</div>
-								<div class="img-why box-b">
-									<img src="<?php echo USER_IMAGES; ?>delivery_in_3hours.jpg">
-								</div>
-								<div class="why-cont box-b dn-l">
-									<h3>Delivery In 3 Hours</h3>
-									<h2>Racing quick to win you love</h2>
-								</div>
-								
-							</div>
+						}
 
-							<div class="flower-box">
-								<div class="img-why box-b">
-									<img src="<?php echo USER_IMAGES; ?>dedicated-efforts.jpg">
-								</div>
-								<div class="why-cont box-b">
-									<h3>Dedicated Efforts</h3>
-									<h2>Over 1 Million Smiles delivered</h2>
-								</div>
-							</div>
-						</div>
-					</div>
+					}
+
+				}
+
+				?>
+				
 				</div>
 			</div>
-		</section>
+		</div>
+
+	</div>
+</section>
+
+<section class="section-content">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="head-2">
+					<h2>Why & Blooms?</h2>
+					<hr class="border-tp">
+				</div>
+			</div>
+
+			<div class="col-md-12">
+				<div class="why-bloom">
+					<div class="flower-box">
+						<div class="img-why box-b">
+							<img src="<?php echo USER_IMAGES; ?>Freshness-Guranteed.jpg">
+						</div>
+						<div class="why-cont box-b">
+							<h3>Freshness Guaranteed</h3>
+							<h2>We deliver the finest & freshest</h2>
+						</div>
+					</div>
+
+					<div class="flower-box">
+						<div class="why-cont box-b dn-s">
+							<h3>Delivery In 3 Hours</h3>
+							<h2>Racing quick to win you love</h2>
+						</div>
+						<div class="img-why box-b">
+							<img src="<?php echo USER_IMAGES; ?>delivery_in_3hours.jpg">
+						</div>
+						<div class="why-cont box-b dn-l">
+							<h3>Delivery In 3 Hours</h3>
+							<h2>Racing quick to win you love</h2>
+						</div>
+							
+					</div>
+
+					<div class="flower-box">
+						<div class="img-why box-b">
+							<img src="<?php echo USER_IMAGES; ?>dedicated-efforts.jpg">
+						</div>
+						<div class="why-cont box-b">
+							<h3>Dedicated Efforts</h3>
+							<h2>Over 1 Million Smiles delivered</h2>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 
 <?php
 
