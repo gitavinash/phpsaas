@@ -112,7 +112,7 @@
 									      </div>
 									  </li> -->
 									  
-									  <li class="nav-item dropdown">
+									  <!-- <li class="nav-item dropdown">
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>menu.svg"><span class="span-item">More</span>
 									      </a>
 									      <div class="dropdown-menu barMenu">
@@ -121,7 +121,7 @@
 									        <a class="dropdown-item " href="#"><img src="<?php echo USER_IMAGES ?>need-fa.svg"> Need Help</a>
 									        <a class="dropdown-item " href="#"><img src="<?php echo USER_IMAGES ?>feedback-fa.svg"> About Us</a>
 									      </div>
-									  </li>
+									  </li> -->
 									  
 									</ul>
 								</div>
@@ -219,7 +219,7 @@
 									      	    	<div class="menu-titl"><a href="#">By Theme<span class="cart-bodr"></span></a></div>
 											        <a class="dropdown-item" href="/tag/anniversary">Anniversary</a>
 											        <a class="dropdown-item" href="/tag/birthday/">Birthday</a>
-											        <a class="dropdown-item" href="/tag/corporate-gifting/">Corporate Gifting</a>
+											        <a class="dropdown-item" href="/tag/corporate-gift/">Corporate Gifting</a>
 											        <a class="dropdown-item" href="/tag/congratulation/">Congratulation</a>
 											        <a class="dropdown-item" href="/tag/get-well/">Get Well</a>
 											        <a class="dropdown-item" href="/tag/house-warming/">House Warming</a>
