@@ -27,11 +27,12 @@
 							
 							if($product_gallery!='') {
 
-								$galleryImages=explode(', ', $product_gallery);
+								$galleryImages=json_decode($product_gallery, TRUE);
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
-									echo "<div class='carousel-cell'><img src='{$galleryImages[$i]}'></div>";
+									extract($galleryImages[$i]);
+									echo "<div class='carousel-cell'><img src='{$path}'></div>";
 
 								}
 
@@ -48,19 +49,22 @@
 						<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
 							<?php
 							
-								if($product_gallery!='') {
+							if($product_gallery!='') {
 
-									$galleryImages=explode(', ', $product_gallery);
+								$galleryImages=json_decode($product_gallery, TRUE);
 
-									for($i=0; $i<sizeof($galleryImages); $i++) {
+								for($i=0; $i<sizeof($galleryImages); $i++) {
 
-										echo "<div class='carousel-cell'><img src='{$galleryImages[$i]}'></div>";
+									extract($galleryImages[$i]);
+									echo "<div class='carousel-cell'><img src='{$path}'></div>";
 
-									}
-
-								} else {
-									echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
 								}
+
+							} else {
+
+								echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
+
+							}
 
 							?>
 						</div>
@@ -68,6 +72,7 @@
 				</div>
 			</div>
 			<div class="col-md-6">
+			
 				<div class="prod-detail">
 					<h2><?php echo $product_title ?></h2>
 					<?php
@@ -198,7 +203,7 @@
 											<div class='img-cd'>
 												<img src='{$product_image}'>
 											</div>
-												<h4>Alexander Mcqueen</h4>
+												<h4>{$product_title}</h4>
 												<p class='rate'>Rs. {$inventory_price}</p>
 										</div>
 									</div>
