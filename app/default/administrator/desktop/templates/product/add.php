@@ -227,7 +227,7 @@
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">
 				<img src="#" id="featureImagePath" alt="">
-				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
+				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>

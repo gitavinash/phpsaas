@@ -269,7 +269,7 @@
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($product_image!='') ? 'block' : 'none') ?>;">
 				<img src="//<?php echo SITE_DOMAIN.$product_image ?>" id="featureImagePath" alt="">
-				<p id="changeImage" class="btn btn-red btn-sm" >Remove feature image</p>
+				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>
