@@ -34,7 +34,7 @@
 									<img src="<?php echo USER_IMAGES ?>luxury.jpeg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Luxury collection</h4>
+									<h4>Luxury</h4>
 								</div>
 							</div>
 						</a>
@@ -45,7 +45,7 @@
 									<img src="<?php echo USER_IMAGES ?>birthday.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Birthday special</h4>
+									<h4>Birthday</h4>
 								</div>
 							</div>
 						</a>
