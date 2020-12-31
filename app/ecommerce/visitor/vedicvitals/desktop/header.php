@@ -3,7 +3,7 @@
 	<head>
 		<base href="<?php echo SITE_URL ?>">
 		<meta charset="utf-8">
-      	<link rel="shortcut icon" href=" ">
+      	<link rel="shortcut icon" href="<?php echo SITE_ICON ?>">
 		<meta name="" content="">
 		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
 		<title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
