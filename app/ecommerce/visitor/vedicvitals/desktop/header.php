@@ -113,6 +113,7 @@
 									      </div>
 									  </li>
 									  <li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>
+									  <li class="nav-item"><a class="nav-link" href="https://blog.vedicvitals.com/">Blog</a></li>
 									  <li class="nav-item"><a class="nav-link" target="_blank" href="https://vedicvitals.shiprocket.co">Track Order</a></li>
 									  <li class="nav-item"><a class="nav-link" href="/contact-us/">Contact Us</a></li>
 									</ul>
