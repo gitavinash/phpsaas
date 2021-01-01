@@ -6,11 +6,34 @@
 
         $id=base64_decode($id);
 
-        if($checkStatus=mysqli_query($connection, "SELECT order_total_price, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT(product_title, ',') as cartProduct FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id")) {
+        if($checkStatus=mysqli_query($connection, "SELECT order_id, order_total_price, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT(product_title, ',') as cartProduct FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id")) {
 
             if(mysqli_num_rows($checkStatus)!=0) {
 
                 extract(mysqli_fetch_assoc($checkStatus));
+                // print_r(mysqli_fetch_assoc($checkStatus));
+                
+                if($checkOrderMeta=mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1")) {
+
+                    if(mysqli_num_rows($checkOrderMeta)!=0) {
+
+                        $orderMetas=array();
+
+                        while($orderMeta=mysqli_fetch_assoc($checkOrderMeta)) {
+
+                            extract($orderMeta);
+
+                            $orderMetas[$order_meta_key] = $order_meta_value;
+
+                        }
+
+                    }
+
+                }
+
+                extract($orderMetas);
+
+                $paymentAmount=$order_total_price + ((isset($deliveryFees)) ? $deliveryFees : 0 );
 
                 /** Start payment gateway code */
 
@@ -35,7 +58,7 @@
                 );
                 $payload = Array(
                     'purpose' => $cartProduct,
-                    'amount' => $order_total_price,
+                    'amount' => $paymentAmount,
                     'phone' => "{$profile_mobile}",
                     'buyer_name' => $profile_display_name,
                     'redirect_url' => SITE_URL.'/payment/status/',

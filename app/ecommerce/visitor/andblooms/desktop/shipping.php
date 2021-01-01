@@ -33,11 +33,13 @@
 
                             <?php
 
-                                if($checkOrder=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2")) {
+                                if($checkOrder=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2 AND cart_site_id=".SITE_ID)) {
 
                                     if(mysqli_num_rows($checkOrder)!=0) {
 										
 										extract(mysqli_fetch_assoc($checkOrder));
+										// print_r(mysqli_fetch_assoc($checkOrder));
+										// exit();
 										
 										$totalPrice=$totalPrice+$cart_price;
 
@@ -105,7 +107,7 @@
 												<?php
 												
 												// echo implode(' OR ', $order_product_id);
-												echo $order_product_id;
+												// echo 'Order product id : '.$order_product_id;
 
 												?>
 
