@@ -6,10 +6,10 @@
 
         // track traffic resource
 
-        $trafficSource=((isset($_GET['utm_source']) ? $_GET['utm_source'] : $trafficDomain=parse_url($_SERVER['HTTP_REFERER']) ));
+        $trafficSource=((isset($_GET['utm_source']) ? $_GET['utm_source'] : $trafficDomain=parse_url($_SERVER['HTTP_REFERER'])));
         $trafficSource=mysqli_real_escape_string($connection, ((isset($trafficDomain['host'])) ? (($trafficDomain['host']!=SITE_DOMAIN) ? $trafficDomain['host'] : '' ) : $trafficSource ));
 
-        echo $trafficSource.' -> '.$trafficDomain['host'];
+        print_r(parse_url($_SERVER['HTTP_REFERER']));
         exit();
 
         $trafficMedium=mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : '' )));
