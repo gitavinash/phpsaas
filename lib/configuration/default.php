@@ -34,11 +34,35 @@
 						break;
 
 		default : 	if($deviceType->isMobile()) {
+						
 						define('SITE_VERSION', 'mobile');
+
+					} else if($deviceType->isTablet()) {
+
+						define('SITE_VERSION', 'tablet');
+
 					} else {
+
 						define('SITE_VERSION', 'desktop');
+
 					}
 					break;
+
+	}
+
+	/** Check device is ios */
+	
+	if($deviceType->isiOS()) {
+
+		define('DEVICE_OS', 'ios');
+		
+	}
+
+	/** Check device is android */
+
+	if($deviceType->isAndroidOS()) {
+
+		define('DEVICE_OS', 'android');
 
 	}
 

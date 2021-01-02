@@ -245,7 +245,7 @@ class Device
         // http://us.toshiba.com/tablets/tablet-finder
         // http://www.toshiba.co.jp/regza/tablet/
         'ToshibaTablet'     => 'Android.*(AT100|AT105|AT200|AT205|AT270|AT275|AT300|AT305|AT1S5|AT500|AT570|AT700|AT830)|TOSHIBA.*FOLIO',
-        // http://www.nttdocomo.co.jp/english/service/developer/smart_phone/technical_info/spec//
+        // http://www.nttdocomo.co.jp/english/service/developer/smart_phone/technical_info/spec/index.html
         // http://www.lg.com/us/tablets
         'LGTablet'          => '\bL-06C|LG-V909|LG-V900|LG-V700|LG-V510|LG-V500|LG-V410|LG-V400|LG-VK810\b',
         'FujitsuTablet'     => 'Android.*\b(F-01D|F-02F|F-05E|F-10D|M532|Q572)\b',
@@ -349,7 +349,7 @@ class Device
         // http://www.yonesnav.com/products/products.php
         'YONESTablet' => 'BQ1078|BC1003|BC1077|RK9702|BC9730|BC9001|IT9001|BC7008|BC7010|BC708|BC728|BC7012|BC7030|BC7027|BC7026',
         // http://www.cjshowroom.com/eproducts.aspx?classcode=004001001
-        // China manufacturer makes tablets for different small brands (eg. http://www.zeepad.net//)
+        // China manufacturer makes tablets for different small brands (eg. http://www.zeepad.net/index.html)
         'ChangJiaTablet'    => 'TPC7102|TPC7103|TPC7105|TPC7106|TPC7107|TPC7201|TPC7203|TPC7205|TPC7210|TPC7708|TPC7709|TPC7712|TPC7110|TPC8101|TPC8103|TPC8105|TPC8106|TPC8203|TPC8205|TPC8503|TPC9106|TPC9701|TPC97101|TPC97103|TPC97105|TPC97106|TPC97111|TPC97113|TPC97203|TPC97603|TPC97809|TPC97205|TPC10101|TPC10103|TPC10106|TPC10111|TPC10203|TPC10205|TPC10503',
         // http://www.gloryunion.cn/products.asp
         // http://www.allwinnertech.com/en/apply/mobile.html
@@ -451,7 +451,7 @@ class Device
         'MediacomTablet' => 'M-MPI10C3G|M-SP10EG|M-SP10EGP|M-SP10HXAH|M-SP7HXAH|M-SP10HXBH|M-SP8HXAH|M-SP8MXA',
         // http://www.mi.com/en
         'MiTablet' => '\bMI PAD\b|\bHM NOTE 1W\b',
-        // http://www.nbru.cn//
+        // http://www.nbru.cn/index.html
         'NibiruTablet' => 'Nibiru M1|Nibiru Jupiter One',
         // http://navroad.com/products/produkty/tablety/
         // http://navroad.com/products/produkty/tablety/
@@ -544,7 +544,7 @@ class Device
         // http://www.puffinbrowser.com/index.php
         // https://github.com/serbanghita/Mobile-Detect/issues/752
         // 'Puffin'            => 'Puffin',
-        // http://mercury-browser.com//
+        // http://mercury-browser.com/index.html
         'Mercury'          => '\bMercury\b',
         // http://en.wikipedia.org/wiki/Obigo_Browser
         'ObigoBrowser' => 'Obigo',
@@ -1167,7 +1167,7 @@ class Device
         // Check specifically for cloudfront headers if the useragent === 'Amazon CloudFront'
         if ($this->getUserAgent() === 'Amazon CloudFront') {
             $cfHeaders = $this->getCfHeaders();
-            if(array_key_exists('HTTP_CLOUDFRONT_IS_MOBILEER', $cfHeaders) && $cfHeaders['HTTP_CLOUDFRONT_IS_MOBILEER'] === 'true') {
+            if(array_key_exists('HTTP_CLOUDFRONT_IS_MOBILE_VIEWER', $cfHeaders) && $cfHeaders['HTTP_CLOUDFRONT_IS_MOBILE_VIEWER'] === 'true') {
                 return true;
             }
         }
@@ -1195,7 +1195,7 @@ class Device
         // Check specifically for cloudfront headers if the useragent === 'Amazon CloudFront'
         if ($this->getUserAgent() === 'Amazon CloudFront') {
             $cfHeaders = $this->getCfHeaders();
-            if(array_key_exists('HTTP_CLOUDFRONT_IS_TABLETER', $cfHeaders) && $cfHeaders['HTTP_CLOUDFRONT_IS_TABLETER'] === 'true') {
+            if(array_key_exists('HTTP_CLOUDFRONT_IS_TABLET_VIEWER', $cfHeaders) && $cfHeaders['HTTP_CLOUDFRONT_IS_TABLET_VIEWER'] === 'true') {
                 return true;
             }
         }

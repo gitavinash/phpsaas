@@ -10,19 +10,21 @@
             {
                 "src": "%SITE_ICON%",
                 "type": "image/png",
-                "sizes": "192x192"
+                "sizes": "192x192",
+                "purpose": "maskable"
             },
             {
                 "src": "%SITE_ICON%",
                 "type": "image/png",
-                "sizes": "512x512"
+                "sizes": "512x512",
+                "purpose": "maskable"
             }
         ],
         "start_url": "/",
         "background_color": "%SITE_THEME_COLOUR%",
         "display": "standalone",
         "scope": "/",
-        "theme_color": "%SITE_THEME_COLOUR%",
+        "theme_color": "%SITE_THEME_COLOUR%"
     }', TRUE));
 
     /** Default robots.txt file */
