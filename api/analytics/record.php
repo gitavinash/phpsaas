@@ -7,7 +7,10 @@
         // track traffic resource
 
         $trafficSource=((isset($_GET['utm_source']) ? $_GET['utm_source'] : $trafficDomain=parse_url($_SERVER['HTTP_REFERER']) ));
-        $trafficSource=mysqli_real_escape_string($connection, ((isset($trafficDomain['host'])) ? $trafficDomain['host'] : $trafficSource ));
+        $trafficSource=mysqli_real_escape_string($connection, ((isset($trafficDomain['host'])) ? (($trafficDomain['host']!=SITE_DOMAIN) ? $trafficDomain['host'] : '' ) : $trafficSource ));
+
+        echo $trafficSource;
+        exit();
 
         $trafficMedium=mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : '' )));
         $trafficCampaign=mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '' )));
