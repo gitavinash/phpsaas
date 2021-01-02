@@ -22,50 +22,6 @@
 	define('CREDIT_MAIL', 'avinash@isw.one');
 	define('CREDIT_URL', 'http://www.itssoftworld.com');
 
-	/** Use for url rounting in router index.php */
-
-	$urlStructure=explode('/', rtrim(ltrim(ACTIVE_URL_NON_QUERY, '/'), '/'));
-
-	/** Defining Site Version  */
-
-	switch($urlStructure[0]) {
-
-		case 'amp' : 	define('SITE_VERSION', 'amp');
-						break;
-
-		default : 	if($deviceType->isMobile()) {
-						
-						define('SITE_VERSION', 'mobile');
-
-					} else if($deviceType->isTablet()) {
-
-						define('SITE_VERSION', 'tablet');
-
-					} else {
-
-						define('SITE_VERSION', 'desktop');
-
-					}
-					break;
-
-	}
-
-	/** Check device is ios */
-	
-	if($deviceType->isiOS()) {
-
-		define('DEVICE_OS', 'ios');
-		
-	}
-
-	/** Check device is android */
-
-	if($deviceType->isAndroidOS()) {
-
-		define('DEVICE_OS', 'android');
-
-	}
-
 	/** Define website default name and description according to domain */
 
 	define('SITE_ID', ((isset($site_id)) ? $site_id : 0 ));
