@@ -156,7 +156,16 @@
 	/** Cache Directory Managment */
 
 	define('CACHE_PATH', ROOT.'/cache/'.SITE_DOMAIN.'/'.SITE_VERSION);
-	define('CACHE_FILE', CACHE_PATH.'/'.str_replace('/', '-', rtrim(ltrim(ACTIVE_URL, '/'), '/')).'.html');
+
+	/** Create cache directory path */
+
+	if(!is_dir(CACHE_PATH)) {
+	
+		mkdir(CACHE_PATH, 0755, true);
+
+	}
+
+	define('CACHE_FILE', CACHE_PATH.'/'.str_replace('/', '-', rtrim(ltrim(ACTIVE_URL_NON_QUERY, '/'), '/')).'.html');
 	define('CACHE_TIME', ((isset($cache_time)) ? $cache_time : 24 )*3600); // Default caching time is 24 hours
 
 	/* Default HTTP Error pages path of visitor */

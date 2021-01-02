@@ -11,6 +11,8 @@
             if(mysqli_num_rows($checkCart)!=0) {
 
                 extract(mysqli_fetch_assoc($checkCart));
+                // print_r(mysqli_fetch_assoc($checkCart));
+                // exit();
 
                 if($paymentMode=='cash') {
 

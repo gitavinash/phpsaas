@@ -28,24 +28,14 @@
 			<div class="container">
 				<div class="row">
 					<div class="main-card">
-						<a href="/tag/luxury/" class="card-link">
+
+						<a href="/tag/love/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>luxury.jpeg">
+									<img src="<?php echo USER_IMAGES ?>love.png">
 								</div>
 								<div class="acc-card-head">
-									<h4>Luxury</h4>
-								</div>
-							</div>
-						</a>
-				
-						<a href="/tag/birthday/" class="card-link">
-							<div class="acce-card">
-								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>birthday.jpg">
-								</div>
-								<div class="acc-card-head">
-									<h4>Birthday</h4>
+									<h4>Love collection</h4>
 								</div>
 							</div>
 						</a>
@@ -60,14 +50,25 @@
 								</div>
 							</div>
 						</a>
-					
-						<a href="/tag/love/" class="card-link">
+										
+						<a href="/tag/birthday/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
-									<img src="<?php echo USER_IMAGES ?>love.png">
+									<img src="<?php echo USER_IMAGES ?>birthday.jpg">
 								</div>
 								<div class="acc-card-head">
-									<h4>Love collection</h4>
+									<h4>Birthday</h4>
+								</div>
+							</div>
+						</a>
+						
+						<a href="/tag/luxury/" class="card-link">
+							<div class="acce-card">
+								<div class="img-acc">
+									<img src="<?php echo USER_IMAGES ?>luxury.jpeg">
+								</div>
+								<div class="acc-card-head">
+									<h4>Luxury</h4>
 								</div>
 							</div>
 						</a>

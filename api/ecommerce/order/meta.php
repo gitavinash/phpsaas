@@ -12,7 +12,7 @@
 
             if(!in_array($order_meta_key, $meta_filter)) {
 
-                mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order_meta(order_relation_id, order_meta_key, order_meta_value, order_meta_status) VALUES('{$order_id}', '{$order_meta_key}', '{$order_meta_value}', 1)");
+                mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order_meta(order_relation_id, order_site_id, order_meta_key, order_meta_value, order_meta_status) VALUES('{$order_id}', ".SITE_ID.", '{$order_meta_key}', '{$order_meta_value}', 1)");
 
             }
 
@@ -22,9 +22,13 @@
                 $deliveryFees=$deliverySlot[1];
                 $deliverySlot=$deliverySlot[0];
 
-                mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order_meta(order_relation_id, order_meta_key, order_meta_value, order_meta_status) VALUES('{$order_id}', 'deliveryFees', '$deliveryFees', 1)");
+                /** Update order delivery charges */
 
-                mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order_meta(order_relation_id, order_meta_key, order_meta_value, order_meta_status) VALUES('{$order_id}', 'deliverySlot', '$deliverySlot', 1)");
+                mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_delivery_charges='{$deliveryFees}' WHERE order_id='{$order_id}' AND order_status=0");
+
+                /** Update delivery slot */
+
+                mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order_meta(order_relation_id, order_site_id, order_meta_key, order_meta_value, order_meta_status) VALUES('{$order_id}', ".SITE_ID.",'deliverySlot', '$deliverySlot', 1)");
 
             }
 

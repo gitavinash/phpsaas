@@ -25,33 +25,9 @@
 						<div class="carousel carousel-main" data-flickity>
 							<?php
 							
-							if($product_gallery!='') {
-
-								$galleryImages=json_decode($product_gallery, TRUE);
-
-								for($i=0; $i<sizeof($galleryImages); $i++) {
-
-									extract($galleryImages[$i]);
-									echo "<div class='carousel-cell'><img src='{$path}'></div>";
-
-								}
-
-							} else {
-
-								echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
-
-							}
-
-							?>
-						</div>
-					</div>
-					<div class="vert-carousel">
-						<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
-							<?php
+							$galleryImages=json_decode($product_gallery, TRUE);
 							
-							if($product_gallery!='') {
-
-								$galleryImages=json_decode($product_gallery, TRUE);
+							if($galleryImages!='') {
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
@@ -69,6 +45,41 @@
 							?>
 						</div>
 					</div>
+
+					<?php
+					
+						if($galleryImages!='') { ?>
+
+							<div class="vert-carousel">
+								<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
+									<?php
+									
+									if($product_gallery!='') {
+
+										$galleryImages=json_decode($product_gallery, TRUE);
+
+										for($i=0; $i<sizeof($galleryImages); $i++) {
+
+											extract($galleryImages[$i]);
+											echo "<div class='carousel-cell'><img src='{$path}'></div>";
+
+										}
+
+									} else {
+
+										echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
+
+									}
+
+									?>
+								</div>
+							</div>
+
+						<?php
+						}
+					
+					?>
+
 				</div>
 			</div>
 			<div class="col-md-6">

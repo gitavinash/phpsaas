@@ -139,11 +139,11 @@
 								</div>
 								<div class="row" style="margin-bottom: 10px" >
 									<div class="col-8">Delivery charges</div>
-									<div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $deliveryFees ?></div>
+									<div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $order_delivery_charges ?></div>
 								</div>
 							</div>
 							<h4>Grand Total</h4>
-							<h5 style="margin-bottom: 10px" ><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $totalPrice+$deliveryFees ?></h5>
+							<h5 style="margin-bottom: 10px" ><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $order_total_price ?></h5>
 							<!-- <p>Have a Coupon Code? You can apply the discount coupon in the Checkout Process</p> -->
 							<form>
 								<input type="hidden" name="order" value="<?php echo $id ?>" >

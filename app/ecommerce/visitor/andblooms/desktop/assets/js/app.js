@@ -94,7 +94,7 @@ $(document).ready(function() {
   $('.removeFromCart').click(function(e) {
       e.preventDefault();
       var id = $(this).attr('id');
-      console.log(id);
+      
       /** Call remove from cart api */
 
       $.ajax({
@@ -156,14 +156,12 @@ $(document).ready(function() {
                   dataType: 'json',
                   data: formData,
                   success: function(data) {
-
-                      console.log(data);
-                                  
+   
                       $('#addToCart').show();
                       
                       if(data.status==200) {
                           
-                            $('.checkout-form').hide();
+                        $('.checkout-form').hide();
                           // $('#shippingName').append(data.name);
                           // $('#shippingAddress').append(data.address);
                           // $('.shipping-box').show();
@@ -258,7 +256,7 @@ $(document).ready(function() {
 
               } else {
 
-                  console.log(data);
+                  console.log('Something is wrong => ' + data);
 
               }
               $('#continueToPayment').show();
@@ -444,7 +442,6 @@ $(document).ready(function() {
 
                 }
   
-                console.log(data);
             },
             error: function(data) {
 

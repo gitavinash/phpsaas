@@ -4317,7 +4317,7 @@ a.delet img {
     height: 100vh;
     position: absolute;
     background: rgba(0, 0, 0, 0.6);
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .deliverySchedule {

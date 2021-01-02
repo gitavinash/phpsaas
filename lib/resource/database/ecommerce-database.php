@@ -286,6 +286,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     CHANGE cart_product_qty cart_qty BIGINT(20) NOT NULL");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD cart_relation_type VARCHAR(10) NOT NULL AFTER cart_relation_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD INDEX cart_relation_type (cart_relation_type)");
+
   /** Update inventory table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
