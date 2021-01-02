@@ -26,7 +26,7 @@
 
                     }
 
-                    if($productDetails=mysqli_query($connection, "SELECT GROUP_CONCAT(product_title) as productName, GROUP_CONCAT(product_image) as productImage FROM isw_product WHERE product_type='product' AND {$productID}")) {
+                    if($productDetails=mysqli_query($connection, "SELECT GROUP_CONCAT(product_title) as productName, GROUP_CONCAT(product_image) as productImage FROM isw_product WHERE product_type='product' AND {$order_product_id}")) {
 
                         $productName='';
 

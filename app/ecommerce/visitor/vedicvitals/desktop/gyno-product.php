@@ -61,7 +61,7 @@
 											<option value="3_1_348" >1</option>
 											<option value="3_2_627" >2</option>
 											<option value="3_3_888" >3</option>
-										</select> 
+										</select>
 									</div>
 								</div>
 								<div class="cart-box">

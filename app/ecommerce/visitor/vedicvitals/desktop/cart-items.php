@@ -63,12 +63,8 @@
 
 										}
 
-									} else {
-
-										echo "Empty Cart";
-
 									}
-
+									
 								}
 
 							?>
