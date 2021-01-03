@@ -256,7 +256,7 @@ $(document).ready(function() {
 
               } else {
 
-                  console.log('Something is wrong => ' + data);
+                  console.log(data);
 
               }
               $('#continueToPayment').show();
