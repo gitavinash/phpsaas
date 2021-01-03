@@ -100,14 +100,14 @@
 													</table>
 												</div>
 
-												<!-- <h3 class="heading-2">Order summary</h3> -->
+												<h3 class="heading-2">Order summary</h3>
 
-												<?php
-												
-												// echo implode(' OR ', $order_product_id);
-												// echo 'Order product id : '.$order_product_id;
-
-												?>
+												<div class="row">
+													<div class="col-3">
+														<img src="<?php echo $product_image ?>" width="100px" height="100px" alt="">
+													</div>
+													<div class="col-9"><strong><?php echo $product_title ?></strong><br />Qty: <?php echo $cart_qty ?></div>
+												</div>
 
 											</div>
 										</div>
