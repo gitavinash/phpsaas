@@ -23,7 +23,7 @@
 
                 $updateSite=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_domain='{$domain}', site_app_id='{$app}', site_theme_id=1, site_status=1, site_expire_date='{$expireDate}' WHERE site_id='{$site_id}'");
 
-                $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_custom_domain=1 WHERE site_setting_id='{$site_id}'");
+                $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_custom_domain=1 WHERE site_setting_site_id='{$site_id}'");
 
                 $updateSiteApp=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_installation SET site_installation_parent_site_id='{$site_id}', site_installation_user_id='{$user_id}', site_installation_package_id={$package}, site_installation_expiry_date='{$expireDate}' WHERE site_installation_parent_site_id='{$site_id}'");
 

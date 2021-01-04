@@ -6,7 +6,7 @@
 
         extract($data);
 
-        if($updateFile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_robots_txt='{$robotsData}' WHERE site_setting_id=".SITE_ID)) {
+        if($updateFile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_robots_txt='{$robotsData}' WHERE site_setting_site_id=".SITE_ID)) {
 
             $status='success';
             $msg='Robots.txt file update successfully';

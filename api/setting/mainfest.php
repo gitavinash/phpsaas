@@ -8,7 +8,7 @@
 
         $maifestFile=json_encode($mainfestData, TRUE);
 
-        if($updateFile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_mainfest_json='{$maifestFile}' WHERE site_setting_id=".SITE_ID)) {
+        if($updateFile=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_mainfest_json='{$maifestFile}' WHERE site_setting_site_id=".SITE_ID)) {
 
             $status='success';
             $msg='Mainfest.json file update successfully';

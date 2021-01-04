@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Coming Soon | Vedic Vitals</title>
+        <title>Coming Soon | <?php echo SITE_NAME ?></title>
         <style>
             body {
                 margin: 0 auto;
@@ -22,7 +22,6 @@
         </style>
     </head>
     <body>
-        <img src="https://vedicvitals.com/upload/2020/07/original/1594281942_vedic_vitals_logo_png.png" alt="">
         <h1>Coming Soon</h1>
     </body>
 </html>

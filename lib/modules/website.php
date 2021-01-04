@@ -74,7 +74,7 @@
 
         $userSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_status) VALUES('{$websiteID}', '{$newUserId}', 1)");
 
-        $websiteSetting=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_setting(site_setting_id) VALUES('{$websiteID}')");
+        $websiteSetting=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_setting(site_setting_site_id) VALUES('{$websiteID}')");
 
         if($addUser && $createProfile && $createNewWebsite && $userSiteAccess && $websiteSetting) {
 

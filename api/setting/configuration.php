@@ -14,7 +14,7 @@
 
         $updateSite=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_name='{$site_name}', site_description='{$site_description}', site_keyword='{$site_keyword}', site_index='{$site_index}' WHERE site_id=".SITE_ID);
 
-        $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_theme_color='{$site_theme}' WHERE site_setting_id=".SITE_ID);
+        $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_theme_color='{$site_theme}' WHERE site_setting_site_id=".SITE_ID);
 
         if($updateSite && $updateSiteSetting) {
 
