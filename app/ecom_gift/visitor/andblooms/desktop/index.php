@@ -90,6 +90,57 @@
 
 		<section class="section-content bg-light">
 			<div class="container">
+
+				<!-- Love collection -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="head-1">
+							<h2>Love Collection</h2>
+							<span class="cart-bodr-h2"></span>
+							<div class="view-box">
+								<a href="/tag/love/" class="btn-vw">View All</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
+						
+						<?php
+							
+							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='green background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
+
+								if(mysqli_num_rows($productList)!=0) {
+
+									while($productData=mysqli_fetch_assoc($productList)) {
+
+										extract($productData);
+
+										echo "<div class='carousel-cell-home'>
+											<a href='{$link_url}'>
+												<div class='col-card-3'>
+													<div class='event-card'>
+														<div class='img-cd'>
+															<img src='{$product_image}'>
+														</div>
+															<h4>{$product_title}</h4>
+															<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
+													</div>
+												</div>
+											</a>
+										</div>";
+
+									}
+
+								}
+
+							}
+
+						?>
+						
+						</div>
+					</div>
+				</div>
 				<!-- Anniversary -->
 				<div class="row">
 					<div class="col-md-12">
@@ -97,7 +148,7 @@
 							<h2>Anniversary</h2>
 							<span class="cart-bodr-h2"></span>
 							<div class="view-box">
-								<a href="/tag/luxury/" class="btn-vw">View All</a>
+								<a href="/tag/anniversary/" class="btn-vw">View All</a>
 							</div>
 						</div>
 					</div>
@@ -200,7 +251,7 @@
 							<h2>Luxury Collection</h2>
 							<span class="cart-bodr-h2"></span>
 							<div class="view-box">
-								<a href="/tag/anniversary/" class="btn-vw">View All</a>
+								<a href="/tag/luxury/" class="btn-vw">View All</a>
 							</div>
 						</div>
 					</div>
@@ -211,57 +262,6 @@
 						<?php
 							
 							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='black background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
-
-								if(mysqli_num_rows($productList)!=0) {
-
-									while($productData=mysqli_fetch_assoc($productList)) {
-
-										extract($productData);
-
-										echo "<div class='carousel-cell-home'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
-													</div>
-												</div>
-											</a>
-										</div>";
-
-									}
-
-								}
-
-							}
-
-						?>
-						
-						</div>
-					</div>
-				</div>
-
-				<!-- Love collection -->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2>Love Collection</h2>
-							<span class="cart-bodr-h2"></span>
-							<div class="view-box">
-								<a href="/tag/love/" class="btn-vw">View All</a>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
-						
-						<?php
-							
-							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='green background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
 
 								if(mysqli_num_rows($productList)!=0) {
 
