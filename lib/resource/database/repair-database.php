@@ -829,6 +829,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
     DROP site_package_id");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting
+    ADD site_setting_site_id BIGINT NOT NULL AFTER site_setting_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting 
+    ADD INDEX site_setting_site_id (site_setting_site_id");
+
   /** State Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."state
