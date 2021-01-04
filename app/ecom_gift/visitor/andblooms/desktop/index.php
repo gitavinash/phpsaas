@@ -73,7 +73,7 @@
 							</div>
 						</a>
 
-						<a href="/tag/cake/" class="card-link">
+						<a href="/category/cake/" class="card-link">
 							<div class="acce-card">
 								<div class="img-acc">
 									<img src="<?php echo USER_IMAGES ?>cake.jpg">
