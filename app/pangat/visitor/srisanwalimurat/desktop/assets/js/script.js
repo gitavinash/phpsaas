@@ -6,7 +6,7 @@ var year = dates.getFullYear();
 var onGoingMonth = dates.getMonth();
 var onGoingYear = dates.getFullYear();
 var isPrevAllowed = 0;
-var isNextAllowed = 4;
+var isNextAllowed = 2;
 var dataIndexer = 0;
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -121,7 +121,7 @@ var calendar = function(y, m) { //———–Calendar function start ———-
   $('.calendar-body-wraper').removeClass('d-none')
 
 
-  //premonth(y,m);
+  // premonth(y,m);
   // console.log('Consoled the data', calendardates)
   if (isPrevAllowed <= 0) {
     $('#prearrow').attr('disabled', true)
