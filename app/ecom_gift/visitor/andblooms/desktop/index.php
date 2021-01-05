@@ -108,7 +108,7 @@
 						
 						<?php
 							
-							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='green background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
+							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='green background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 12")) {
 
 								if(mysqli_num_rows($productList)!=0) {
 
@@ -158,7 +158,7 @@
 						
 						<?php
 							
-							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='white background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
+							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='white background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 12")) {
 
 								if(mysqli_num_rows($productList)!=0) {
 
@@ -209,7 +209,7 @@
 						
 						<?php
 							
-							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='grey background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
+							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='grey background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 12")) {
 
 								if(mysqli_num_rows($productList)!=0) {
 
@@ -261,7 +261,7 @@
 						
 						<?php
 							
-							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='black background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 10")) {
+							if($productList=mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM ".TABLE_PREFIX."tag INNER JOIN ".TABLE_PREFIX."product ON product_id=tag_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title='black background' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=".SITE_ID." AND link_site_id=".SITE_ID."  ORDER BY link_published DESC LIMIT 0, 12")) {
 
 								if(mysqli_num_rows($productList)!=0) {
 
