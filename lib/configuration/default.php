@@ -25,7 +25,7 @@
 	/** Define website default name and description according to domain */
 
 	define('SITE_ID', ((isset($site_id)) ? $site_id : 0 ));
-	define('APP_SITE_ID', ((isset($site_installation_site_id)) ? $site_installation_site_id : 0 ));
+	define('APP_SITE_ID', ((isset($site_installation_parent_site_id)) ? $site_installation_parent_site_id : ((isset($site_installation_site_id)) ? $site_installation_site_id : 0 ) ));
 	define('SITE_LANG', ((isset($site_lang)) ? $site_lang : 'en' ));
 	define('SITE_NAME', ((isset($site_name)) ? $site_name : CREDIT ));
 	define('SITE_DESC', ((isset($site_description)) ? $site_description : '' ));
