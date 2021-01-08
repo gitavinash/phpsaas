@@ -89,7 +89,7 @@
 
                 } else {
 
-                    echo $response['message'].' of '.SITE_DOMAIN;
+                    print_r($response['message']).' of '.SITE_DOMAIN;
 
                 }
 
