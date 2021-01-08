@@ -6,6 +6,11 @@
 
         $smsStatus=file_get_contents($url);
 
-        print_r($smsStatus);
-
     }
+
+    $result=array(
+        'status' => 200,
+        'msg' => $smsStatus
+    )
+
+    echo json_encode($result, TRUE);
