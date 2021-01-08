@@ -11,6 +11,6 @@
     $result=array(
         'status' => 200,
         'msg' => $smsStatus
-    )
+    );
 
     echo json_encode($result, TRUE);
