@@ -18,13 +18,21 @@
 
 				extract(mysqli_fetch_assoc($checkUrl));
 
-				if(file_exists(ROUTER.$link_type.'.php')) {
+				if($link_status==200) {
 
-					require_once ROUTER.$link_type.'.php';
+					if(file_exists(ROUTER.$link_type.'.php')) {
+
+						require_once ROUTER.$link_type.'.php';
+
+					} else {
+
+						echo ROUTER.$link_type.'.php';
+
+					}
 
 				} else {
 
-					echo ROUTER.$link_type.'.php';
+					require_once $link_status.'.php';
 
 				}
 
