@@ -143,8 +143,8 @@
 		<!-- sections end -->
 		<?php include_once NOTIFICATION.'index.php' ?>
 	
-		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
+		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
