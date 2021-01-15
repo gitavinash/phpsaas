@@ -138,8 +138,13 @@
 												
 												<tbody>
 													<tr>
-													<th scope="row">Contact</th>
+													<th scope="row" style="width: 80px" >Name</th>
 													<td id='shippingName' ><?php echo $profile_display_name ?></td>
+													<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+													</tr>
+													<tr>
+													<th scope="row">Mobile</th>
+													<td id='shippingName' ><?php echo $address_mobile ?></td>
 													<!-- <td><a href="checkout-detail.html">Change</a></td> -->
 													</tr>
 													<tr>
@@ -178,7 +183,7 @@
 
 											<div class="form-row actn-box">
 												<div class="form-group col-md-6">
-													<a href='#' id='backToCheckout' class="retn"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Information</a>
+													<!-- <a href='#' id='backToCheckout' class="retn"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Information</a> -->
 												</div>
 												<div class="form-group col-md-6">
 													<input type="hidden" name="order" value="<?php echo $id ?>" >
