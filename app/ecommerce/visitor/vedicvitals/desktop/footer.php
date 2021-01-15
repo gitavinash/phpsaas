@@ -32,10 +32,10 @@
 							<div class="fot-box">	
 								<h3>Products</h3>
 								<ul class="list-unstyled">
-									<li><a href="/immunity-vitals/">Immunity Vitals</a></li>
-									<li><a href="/tar-free/">Tar Free</a></li>
-									<li><a href="/gyno-vitals/">Gyno Vitals</a></li>
-									<li><a href="/v-liver-vitals/">V-Liver Vitals</a></li>
+									<li><a href="/product/immunity/immunity-vitals/">Immunity Vitals</a></li>
+									<li><a href="/product/tar/tar-free/">Tar Free</a></li>
+									<li><a href="/product/gyno/gyno-vitals/">Gyno Vitals</a></li>
+									<li><a href="/product/liver/v-liver-vitals/">V-Liver Vitals</a></li>
 					            </ul>
 							</div>
 						</div>

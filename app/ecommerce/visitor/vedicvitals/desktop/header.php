@@ -108,10 +108,10 @@
 									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Our Products
 									      </a>
 									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="/immunity-vitals/">Immunity Vitals</a>
-									        <a class="dropdown-item" href="/tar-free/">Tar Free</a>
-									        <a class="dropdown-item" href="/gyno-vitals/">Gyno Vitals</a>
-									        <a class="dropdown-item" href="/v-liver-vitals/">V-Liver Vitals</a>
+									        <a class="dropdown-item" href="/product/immunity/immunity-vitals/">Immunity Vitals</a>
+									        <a class="dropdown-item" href="/product/tar/tar-free/">Tar Free</a>
+									        <a class="dropdown-item" href="/product/gyno/gyno-vitals/">Gyno Vitals</a>
+									        <a class="dropdown-item" href="/product/liver/v-liver-vitals/">V-Liver Vitals</a>
 									      </div>
 									  </li>
 									  <li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>
