@@ -37,7 +37,7 @@
                         
                             /** Check order history */
 
-                            if($checkOrder=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order WHERE order_user_id='{$user_id}' AND order_site_id=".APP_SITE_ID)) {
+                            if($checkOrder=mysqli_query($connection, "SELECT order_id, order_product_qty, order_generate, product_title FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."product ON product_id=order_product_id WHERE order_user_id='{$user_id}' AND order_site_id=".APP_SITE_ID)) {
 
                                 echo "<ul>";
 
@@ -47,36 +47,7 @@
 
                                         extract($orderData);
 
-                                        switch($order_product_id) {
-
-                                            case 1 :
-                                                $productName='Immunity Vitals';
-                                                $productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/immunity-vitals/1.jpg';
-                                                break;
-                        
-                                            case 2 :
-                                                $productName='Tar Free';
-                                                $productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/tar-free/1.jpg';
-                                                break;
-                        
-                                            case 3 :
-                                                $productName='Gyno Vitals';
-                                                $productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/gyno-vitals/1.jpg';
-                                                break;
-                        
-                                            case 4 :
-                                                $productName='V Liver Vitals';
-                                                $productImage=SITE_URL.'/app/ecommerce/visitor/vedicvitals/desktop/assets/images/product/v-liver-vitals/1.jpg';
-                                                break;
-                        
-                                            default :
-                                                $productName='';
-                                                $productImage='';
-                                                break;
-                        
-                                        }
-
-                                        echo "<li><a href='/dashboard/order/?type=view&id=".base64_encode($order_id)."'>{$productName}<br />Qty : {$order_product_qty} | Time : ".date("d M Y", strtotime($order_generate))."</a></li>";
+                                        echo "<li><a href='/dashboard/order/?type=view&id=".base64_encode($order_id)."'>{$product_title}<br />Qty : {$order_product_qty} | Time : ".date("d M Y", strtotime($order_generate))."</a></li>";
 
                                     }
                 
