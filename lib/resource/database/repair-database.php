@@ -567,6 +567,25 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     ADD INDEX profile_user_id (profile_user_id)");
 
+  /** Profile meta table */
+
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."profile_meta (
+    profile_meta_id bigint(20) NOT NULL,
+    profile_meta_profile_id bigint(20) NOT NULL,
+    profile_meta_key varchar(255) NOT NULL,
+    profile_meta_value varchar(255) NOT NULL,
+    profile_meta_status int(1) NOT NULL DEFAULT 0,
+    profile_meta_time timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile_meta
+    ADD PRIMARY KEY (profile_meta_id),
+    ADD KEY profile_meta_profile_id (profile_meta_profile_id),
+    ADD KEY profile_meta_key (profile_meta_key)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile_meta
+    MODIFY profile_meta_id bigint(20) NOT NULL AUTO_INCREMENT");
+  
   /* Site Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site

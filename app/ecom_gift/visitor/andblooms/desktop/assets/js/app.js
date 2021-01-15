@@ -176,6 +176,9 @@ $(document).ready(function() {
                       } else {
                           popUpMessage('center', data.msg, 'error');
                           $('#continueShipping').show();
+
+                          console.log(data);
+
                       }
                       
                   },

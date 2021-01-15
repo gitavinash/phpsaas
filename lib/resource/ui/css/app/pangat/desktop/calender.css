@@ -1,0 +1,302 @@
+.bg-body{
+	background-image: url(/app/pangat/visitor/srisanwalimurat/desktop/assets/images/background.png);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+}
+
+.calender-box {
+	float: left;
+	width: 400px;
+}
+
+#calendardates {
+	padding: 0px;
+}
+
+.vanilla-calendar .vanilla-calendar-header {
+  align-items: center;
+  display: flex;
+  padding: 10px 0px;
+  margin: 15px 0px 20px;
+}
+.vanilla-calendar .vanilla-calendar-btn {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: button;
+  background: none;
+  border: 0;
+  color: #457ba9;
+  cursor: pointer;
+  display: inline-block;
+  flex: 0 0 14.28%;
+  max-width: 14.28%;
+  outline: none;
+  overflow: visible;
+  padding: 0;
+  text-align: center;
+}
+.vanilla-calendar .vanilla-calendar-header__label {
+  font-weight: bold;
+  text-align: center;
+  max-width: 71.44%;
+  color : #457ba9;
+  flex: 0 0 71.44%;
+}
+.vanilla-calendar .vanilla-calendar-week {
+  display: flex;
+  flex-wrap: wrap;
+}
+.vanilla-calendar .vanilla-calendar-week span {
+    flex-direction: column;
+    color: #457ba9;
+    text-align: center;
+    color: #fff;
+    margin-left: 6px;
+    margin-bottom: 5px;
+    padding: 5px 20px;
+}
+.vanilla-calendar .vanilla-calendar-body {
+  background-color: rgba(#538fcd, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+}
+
+.calendar-dates{
+	height: 266px; 
+}
+
+.weekday, .calendar-date{
+	display: inline-block;
+	flex: 0 0 14.28%;
+	max-width: 14.28%;
+	text-align: center;
+}
+.weekday{
+	/* padding: 5px; */
+	/* vertical-align: middle; */
+	/* height: 30px; */
+	cursor: pointer;
+}
+.cal-day{
+	line-height: 38px;
+	position: relative;
+	margin: 0px;
+	width: 38px;
+	display: inline-block;
+	height: 38px;
+}
+
+.today .cal-day{
+	background-color: #538fcd;
+	color: #fff;
+	border-radius: 50%;
+}
+
+.nextmonth, .prevmonth{
+	color: #bbb;
+	cursor: not-allowed;
+}
+
+.prev-dates{
+	color: #bbb;
+	cursor: not-allowed;
+}
+.vanilla-calendar .vanilla-calendar-btn:disabled{
+	cursor: not-allowed;
+	color: #bbb;
+	opacity: 0.2;
+}
+.flex-it{
+	margin-top: 3px;
+	display: flex;
+	flex: 0 0 100%;
+	max-width: 100%;
+	justify-content: space-evenly;
+	align-items: center;
+}
+.flex-it span{
+	display: inline-block;
+	padding: 3px;
+	border-radius: 50%
+}
+/* .flex-it >span[data="1"]{
+	display: none;
+} */
+.slot-booked-not-confirmed{
+	background-color: #f39e80;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%
+}
+.flex-it >span[data="0"]{
+	background-color: #f39e80 !important;
+}
+.flex-it >span[data="4"]{
+	background-color: #9b0202 !important;
+}
+.dtl-box{
+	font-size: 12px;
+}
+.dtl-box span{
+	color: #777;
+}
+.breakfast{
+	cursor: no-drop;
+	background-color: #f5e133 !important;
+	/* padding: 2px 5px; */
+}
+.lunch{
+	cursor: no-drop;
+	background-color: #e0f0cc !important;
+	/* padding: 2px 5px; */
+}
+.dinner{
+	cursor: no-drop;
+	background-color: #666666 !important;
+	/* padding: 2px 5px; */
+}
+.prev-dates .flex-it{
+	display: none;
+}
+.bookingSlots{
+	padding: 10px;
+	display: none;
+}
+.bookingSlots.active{
+	display: block;
+}
+
+.bor-rounded{
+	border-radius: 10px;
+}
+.clkAlw.highlight p{
+	border-radius: 50%;
+	background-color: #81a4c7;
+}
+
+.sch{
+	font-size: 12px;
+}
+.time-sch{
+	font-size: 12px;
+	color: #333;
+}
+.bookedForText > div{
+	padding: 20px 0px;
+	display: none;
+}
+.bookedForText > div.active{
+	display: flex;
+}
+.bookedForText .sch{
+	font-size: 16px;
+}
+.bookedForText .sch i{
+	margin-right: 10px;
+}
+.bookedForText .time-sch{
+	font-size: 16px;
+}
+.forbreakfast .sch{
+	color: #f5e133;
+}
+.forlunch .sch{
+	color: #8cc34a;
+}
+.fordinner .sch{
+	color: #666666;
+}
+
+.com-sch{
+	margin-bottom: 10px;
+}
+.com-sch.notConf{
+	/* cursor: progress; */
+}
+.com-sch.notAvl{
+	cursor: no-drop;
+}
+.com-sch.isAvl{
+	cursor: pointer;
+}
+.bookedForText{
+	margin-bottom: 10px;
+}
+.inputClass, .submit-data{
+	height: 50px;
+	border-radius: 8px;
+	background-color: #fcf9fa;
+	width: 100%;
+	border: none;
+	outline: none;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+	font-size: 14px;
+}
+.forms-data{
+	margin-left: -0.75rem;
+	margin-right: -0.75rem;
+}
+.form-cont .color-red{
+	color: red;
+	display: none;
+}
+.form-cont p.warning{
+	display: block;
+}
+.form-cont span{
+	font-size: 14px;
+}
+.submit-data{
+	background-color: #1a6fc8;
+	cursor: pointer;
+	color: #fff;
+	font-size: 16px;
+}
+.no-booking{
+	display: none;
+	text-align: center;
+	padding-bottom: 10px;
+}
+.no-booking.active{
+	display: block;
+}
+
+.navReqButton{
+	background-color: #f49910;
+  color: #fff;
+  padding: 11px 28px;
+  line-height: 1.4;
+  border-radius: 30px;
+  transition: ease .5s all 0s;
+}
+.navbar-light .navbar-nav .nav-link{
+	color: #000;
+}
+@media(min-width: 992px){
+	.container{
+    max-width: 920px;
+	}
+}
+@media (min-width: 1200px){
+	.container{
+    max-width: 940px;
+	}
+}
+
+@media (max-width: 680px) {
+	.left-icon {
+		float: left;
+		width: 70%;
+		padding: 10px 0px;
+	}
+}
+
+.weekday.clkAlw .flex-it span[data="2"]{
+	display: none;
+}
+
+.weekday.upcoming-dates .flex-it span[data="2"]{
+	display: none;
+}

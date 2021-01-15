@@ -130,7 +130,7 @@
                     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
                     $response = curl_exec($ch);
                     curl_close($ch);
-
+                    
                     /** Update cart table */
 
                     if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>

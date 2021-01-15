@@ -32,8 +32,8 @@
 							<h3 class="heading-2">Express Delivery Products</h3>
 
                             <?php
-
-                                if($checkOrder=mysqli_query($connection, "SELECT order_id, order_currency, order_delivery_charges, order_total_price, order_coupon, order_payment_mode, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_price, cart_status, product_image, product_title, inventory_currency, inventory_price, profile_display_name, address_house_no, address_landmark, address_area, city_name, state_name, address_pin_code FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE inventory_type='product' AND order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2 AND cart_site_id=".SITE_ID)) {
+							
+                                if($checkOrder=mysqli_query($connection, "SELECT order_id, order_currency, order_delivery_charges, order_total_price, order_coupon, order_payment_mode, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_price, cart_status, product_image, product_title, inventory_currency, inventory_price, profile_display_name, profile_mobile, profile_email, address_house_no, address_landmark, address_area, city_name, state_name, address_pin_code FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE inventory_type='product' AND order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2 AND cart_site_id=".SITE_ID)) {
 
                                     if(mysqli_num_rows($checkOrder)!=0) {
 										
@@ -77,19 +77,24 @@
 													
 													<tbody>
 														<tr>
-														<th scope="row">Contact</th>
+														<th scope="row">Name</th>
 														<td id='shippingName' ><?php echo $profile_display_name ?></td>
-														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+														</tr>
+														<tr>
+														<th scope="row">Contact</th>
+														<td id='shippingName' ><?php echo $profile_mobile ?></td>
+														</tr>
+														<tr>
+														<th scope="row">Email</th>
+														<td id='shippingName' ><?php echo $profile_email ?></td>
 														</tr>
 														<tr>
 														<th scope="row">Delivery date</th>
 														<td id='shippingName' ><?php echo date('l, jS F Y', strtotime($deliveryDate)) ?></td>
-														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
 														</tr>
 														<tr>
 														<th scope="row">Delivery time</th>
 														<td id='shippingName' ><?php echo ucwords($deliverySlot).' - '.$deliveryTime ?></td>
-														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
 														</tr>
 														<tr>
 														<th scope="row">Ship to</th>
