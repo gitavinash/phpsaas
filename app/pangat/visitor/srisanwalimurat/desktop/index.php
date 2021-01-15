@@ -80,6 +80,8 @@
 						<div class="dtl-box mt-4">
 							<span class="d-inline-block slot-booked-not-confirmed"></span>
 							<span>Request received</span>
+							<span class="d-inline-block date-blocked"></span>
+							<span>Booking date blocked by admin</span>
 							<p>
 								Note: In Case of any issue, please call Mandir at 011-2125452
 							</p>

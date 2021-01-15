@@ -119,6 +119,12 @@
 	height: 10px;
 	border-radius: 50%
 }
+.date-blocked{
+	background-color: #9b0202;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%
+}
 .flex-it >span[data="0"]{
 	background-color: #f39e80;
 }
