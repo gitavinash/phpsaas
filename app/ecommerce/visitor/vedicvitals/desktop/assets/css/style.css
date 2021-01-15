@@ -928,6 +928,12 @@ a.del-b:hover {
     width: 100%;
     float: left;
 }
+
+.shipping-box {
+    width: 100%;
+    float: left;
+}
+
 .check-head {
     float: left;
     width: 100%;
