@@ -22,17 +22,17 @@
 					<div class="col-md-6" style="padding-bottom: 0;">
 						<div class="galery-carousel">
 							<div class="carousel carousel-main" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "imagesLoaded": true, "pageDots": false }'>
-								<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/1.jpg"></div>
-							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/2.jpg"></div>
-							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/3.jpg"></div>
-							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/4.jpg"></div>
+								<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/1.jpg" alt="Gyno Vitals - The Ultimate Uterine Relief Syrup" ></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/2.jpg" alt="Gyno Vitals Benefits" ></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/3.jpg" alt="Special Things About Vedic Vitals’ Products" ></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/4.jpg" alt="Our Promise With Every Product" ></div>
 							</div>
 
 							<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "imagesLoaded": true, "pageDots": false }'>
-								<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/1.jpg"></div>
-							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/2.jpg"></div>
-							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/3.jpg"></div>
-							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/4.jpg"></div>
+								<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/1.jpg" alt="Gyno Vitals - The Ultimate Uterine Relief Syrup" ></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/2.jpg" alt="Gyno Vitals Benefits" ></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/3.jpg" alt="Special Things About Vedic Vitals’ Products" ></div>
+							  	<div class="carousel-cell"><img src="<?php echo USER_IMAGES ?>product/gyno-vitals/4.jpg" alt="Our Promise With Every Product" ></div>
 							</div>
 						</div>
 

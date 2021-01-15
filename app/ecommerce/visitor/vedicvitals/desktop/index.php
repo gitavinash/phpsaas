@@ -113,31 +113,31 @@
 				<div class="row">
 					<div class="col-md-4 col-12 ">
 						<div class="product-feature">
-							<img src="<?php echo USER_IMAGES ?>product/feature.png" alt="">
+							<img src="<?php echo USER_IMAGES ?>product/feature.png" title="Vedic Vitals, a modern age Ayurvedic Company" alt="Ayurvedic Health Supplements by Vedic Vitals">
 						</div>
 					</div>
 					<div class="col-md-8 col-12">
 						<div class="row">
 							<div class="col-md-6 col-12" style="padding: 0px" >
 								<div class="product-highlight">
-									<a href="/gyno-vitals/"><img src="<?php echo USER_IMAGES ?>product/gyno.png" alt=""></a>
+									<a href="/gyno-vitals/"><img src="<?php echo USER_IMAGES ?>product/gyno.png" title="Purchase Gyno Vitals by Vedic Vitals" alt="Gyno Vitals - Herbal Uterine Relief Syrup"></a>
 								</div>
 							</div>
 							<div class="col-md-6 col-12" style="padding: 0px">
 								<div class="product-highlight">
-									<a href="/immunity-vitals/"><img src="<?php echo USER_IMAGES ?>product/immunity.png" alt=""></a>
+									<a href="/immunity-vitals/"><img src="<?php echo USER_IMAGES ?>product/immunity.png" title="Purchase Immunity Vitals by Vedic Vitals" alt="Immunity Vitals - 100% Herbal Immunity Booster"></a>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-6 col-12" style="padding: 0px">
 								<div class="product-highlight-top">
-									<a href="/tar-free/"><img src="<?php echo USER_IMAGES ?>product/tar.png" alt=""></a>
+									<a href="/tar-free/"><img src="<?php echo USER_IMAGES ?>product/tar.png" title="Purchase Tar Free by Vedic Vitals" alt="Tar Free - 100% Herbal Lung Detox"></a>
 								</div>
 							</div>
 							<div class="col-md-6 col-12" style="padding: 0px">
 								<div class="product-highlight-top">
-									<a href="/v-liver-vitals/"><img src="<?php echo USER_IMAGES ?>product/v-liver.png" alt=""></a>
+									<a href="/v-liver-vitals/"><img src="<?php echo USER_IMAGES ?>product/v-liver.png" title="Purchase V-Liver Vitals by Vedic Vitals" alt="V-Liver Vitals - 100% Herbal Liver Tonic"></a>
 								</div>
 							</div>
 						</div>

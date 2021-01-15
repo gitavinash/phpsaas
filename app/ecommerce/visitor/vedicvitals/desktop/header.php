@@ -6,7 +6,7 @@
       	<link rel="shortcut icon" href="<?php echo SITE_ICON ?>">
 		<meta name="" content="">
 		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
-		<title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
+		<title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.': '.SITE_DESC ) ?></title>
 		<!-- css -->
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
