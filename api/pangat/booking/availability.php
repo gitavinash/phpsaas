@@ -7,6 +7,8 @@
      * 0 -> Request received but booking not confirmed
      * 1 -> Slot not available
      * 2 -> Slot available
+     * 3 -> Slot available ( but booking is cancelled )
+     * 4 -> Slot blocked by admin
     */
 
     function availability($connection, $data) {
@@ -36,31 +38,43 @@
                             
                             extract($pangatStatus);
 
-                            if($booking_time=='breakfast') {
+                            if($booking_status!=4) {
 
-                                $breakfast=intval($booking_status);
+                                if($booking_time=='breakfast') {
 
-                            }
-
-                            if($booking_time=='lunch') {
-
-                                $lunch=intval($booking_status);
-
-                            }
-
-                            if($booking_time=='dinner') {
-
-                                $dinner=intval($booking_status);
-
-                            }
-
-                            if($breakfast==1 && $lunch==1 && $dinner==1) {
-                                
-                                $bookingAllowed=0;
+                                    $breakfast=intval($booking_status);
+    
+                                }
+    
+                                if($booking_time=='lunch') {
+    
+                                    $lunch=intval($booking_status);
+    
+                                }
+    
+                                if($booking_time=='dinner') {
+    
+                                    $dinner=intval($booking_status);
+    
+                                }
+    
+                                if($breakfast==1 && $lunch==1 && $dinner==1) {
+                                    
+                                    $bookingAllowed=0;
+    
+                                } else {
+                                    
+                                    $bookingAllowed=2;
+    
+                                }
 
                             } else {
-                                
-                                $bookingAllowed=2;
+
+
+                                $bookingAllowed=4;
+                                $breakfast=4;
+                                $lunch=4;
+                                $dinner=4;
 
                             }
 

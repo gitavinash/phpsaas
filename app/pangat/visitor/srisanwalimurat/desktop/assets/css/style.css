@@ -122,6 +122,9 @@
 .flex-it >span[data="0"]{
 	background-color: #f39e80;
 }
+.flex-it >span[data="4"]{
+	background-color: #9b0202 !important;
+}
 .dtl-box{
 	font-size: 12px;
 }
