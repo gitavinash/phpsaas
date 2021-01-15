@@ -6,7 +6,7 @@
 
             extract(mysqli_fetch_assoc($linkStatus));
 
-            header("Location: {$link_url}");
+            header("Location: {$link_url}", TRUE, 301);
             exit();
 
         } else {
