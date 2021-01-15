@@ -8,7 +8,7 @@
         
         $bookingDate=date('Y-m-d', strtotime($date));
 
-        if($checkDate=mysqli_query($connection, "SELECT booking_date FROM ".TABLE_PREFIX."booking WHERE booking_date='{$bookingDate}' AND booking_status=3 OR booking_status=4")) {
+        if($checkDate=mysqli_query($connection, "SELECT booking_date FROM ".TABLE_PREFIX."booking WHERE booking_date='{$bookingDate}' AND booking_status!=4")) {
 
             if(mysqli_num_rows($checkDate)!=0) {
 
@@ -18,17 +18,40 @@
 
             } else {
 
-                /** Block calender date */
+                if($checkDate=mysqli_query($connection, "SELECT booking_date FROM ".TABLE_PREFIX."booking WHERE booking_date='{$bookingDate}' AND booking_status=4")) {
 
-                if($blockDate=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."booking(booking_site_id, booking_date, booking_status) VALUES(".APP_SITE_ID.", '{$bookingDate}', 4)")) {
+                    if(mysqli_num_rows($checkDate)!=0) {
+        
+                        /** Update data */
+        
+                        if($blockDate=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=4 WHERE booking_date='{$bookingDate}'")) {
 
-                    $status=200;
-                    $msg=date('jS M Y', strtotime($bookingDate))." has blocked successfully";
+                            $status=200;
+                            $msg=date('jS M Y', strtotime($bookingDate))." has blocked successfully";
 
-                } else {
+                        } else {
 
-                    $msg='Something is wrong while blocking the date';
+                            $msg='Something is wrong while blocking the date';
 
+                        }
+        
+                    } else {
+        
+                        /** Block calender date */
+
+                        if($blockDate=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."booking(booking_site_id, booking_date, booking_status) VALUES(".APP_SITE_ID.", '{$bookingDate}', 4)")) {
+
+                            $status=200;
+                            $msg=date('jS M Y', strtotime($bookingDate))." has blocked successfully";
+
+                        } else {
+
+                            $msg='Something is wrong while blocking the date';
+
+                        }
+        
+                    }
+        
                 }
 
             }

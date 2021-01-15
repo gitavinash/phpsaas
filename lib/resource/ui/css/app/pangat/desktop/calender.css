@@ -50,7 +50,6 @@
     flex-direction: column;
     color: #457ba9;
     text-align: center;
-    color: #fff;
     margin-left: 6px;
     margin-bottom: 5px;
     padding: 5px 20px;
@@ -299,4 +298,10 @@
 
 .weekday.upcoming-dates .flex-it span[data="2"]{
 	display: none;
+}
+
+.block-dates {
+	float: left;
+	width: 450px;
+	margin-left: 50px;
 }
