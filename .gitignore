@@ -2,6 +2,7 @@
 upload/
 logs/
 cache/
+cache/*
 *.DS_Store
 node_modules
 custom.log
