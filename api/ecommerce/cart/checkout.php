@@ -24,6 +24,11 @@
                         
                                         if($city!='') {
 
+                                            $error=FALSE;
+                                            $addUser=TRUE;
+                                            $addUserProfile=TRUE;
+                                            $addUserSiteAccess=TRUE;
+
                                             /** Check user is register or not */
 
                                             $mobile=ltrim(str_replace('+91', '', (str_replace('91', '', $mobile))), 0);
@@ -41,9 +46,6 @@
                                                 if(mysqli_num_rows($checkUser)!=0) {
                                     
                                                     extract(mysqli_fetch_assoc($checkUser));
-                                                    $addUser=TRUE;
-                                                    $addUserProfile=TRUE;
-                                                    $addUserSiteAccess=TRUE;
                                     
                                                 } else {
 
@@ -60,22 +62,19 @@
                                                                 if(mysqli_num_rows($checkAlternateMobile)!=0) {
 
                                                                     extract(mysqli_fetch_assoc($checkAlternateMobile));
-
-                                                                    $addUser=TRUE;
-                                                                    $addUserProfile=TRUE;
-                                                                    $addUserSiteAccess=TRUE;
                                                                     $mobile=$profile_meta_value;
 
                                                                 } else {
 
                                                                     if(!mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile_meta(profile_meta_profile_id, profile_meta_key, profile_meta_value) VALUES('{$user_id}', 'mobile', '{$mobile}')")) {
 
-                                                                        echo 'Something is wrong while adding alternate mobile number';
-                                                                        exit();
+                                                                        $error=TRUE;
+                                                                        $msg='Something is wrong while adding alternate mobile number';
 
                                                                     } else {
 
                                                                         $alternateID=mysqli_insert_id($connection);
+                                                                        $mobile=$profile_meta_value;
 
                                                                     }
 
@@ -98,18 +97,14 @@
                                                                         if(mysqli_num_rows($checkAlternateEmail)!=0) {
 
                                                                             extract(mysqli_fetch_assoc($checkAlternateEmail));
-        
-                                                                            $addUser=TRUE;
-                                                                            $addUserProfile=TRUE;
-                                                                            $addUserSiteAccess=TRUE;
                                                                             $email=$profile_meta_value;
         
                                                                         } else {
         
                                                                             if(!mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile_meta(profile_meta_profile_id, profile_meta_key, profile_meta_value) VALUES('{$user_id}', 'email', '{$email}')")) {
         
-                                                                                echo 'Something is wrong while adding alternate email';
-                                                                                exit();
+                                                                                $error=TRUE;
+                                                                                $msg='Something is wrong while adding alternate email';
         
                                                                             } else {
 
@@ -147,7 +142,6 @@
                                                                     $user_id=mysqli_insert_id($connection);
                                             
                                                                     $addUserProfile=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."profile(profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$user_id}', '{$first_name}', '{$last_name}', '{$display_name}', '{$mobileNumber}', '{$email}')");
-                                            
                                                                     $addUserSiteAccess=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(".SITE_ID.", '{$user_id}', 'member', 0)");
 
                                                                 }
@@ -189,7 +183,8 @@
                                             $addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_address_id, order_status, order_generate) VALUES(".SITE_ID.", '{$user_id}', '".SESSION_ID."', '{$addressID}', 0, NOW())");
                                             $order_id=mysqli_insert_id($connection);
                             
-                                            if($addUser && $addUserProfile && $addUserSiteAccess && $addNewAddress && $updateCart && $addNewOrder) {
+                                            // if($addUser && $addUserProfile && $addUserSiteAccess && $addNewAddress && $updateCart && $addNewOrder) {
+                                            if($error!=TRUE) {
                             
                                                 $status=200;
                                                 $msg='Cart update successfully';
@@ -199,7 +194,6 @@
                                             } else {
                             
                                                 $msg='Something is wrong while updating cart';
-                                                $msg=$addUser.' && '.$addUserProfile.' && '.$addUserSiteAccess.' && '.$addNewAddress.' && '.$updateCart.' && '.$addNewOrder;
                                                 mysqli_query($connection, "ROLLBACK");
                             
                                             }
