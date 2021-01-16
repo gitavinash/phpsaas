@@ -74,7 +74,6 @@
                                                                     } else {
 
                                                                         $alternateID=mysqli_insert_id($connection);
-                                                                        $mobile=$profile_meta_value;
 
                                                                     }
 
