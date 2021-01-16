@@ -138,19 +138,20 @@
 												
 												<tbody>
 													<tr>
-													<th scope="row" style="width: 80px" >Name</th>
-													<td id='shippingName' ><?php echo $profile_display_name ?></td>
-													<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+														<th scope="row" style="width: 80px" >Name</th>
+														<td id='shippingName' ><?php echo $profile_display_name ?></td>
 													</tr>
 													<tr>
-													<th scope="row">Mobile</th>
-													<td id='shippingName' ><?php echo $address_mobile ?></td>
-													<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+														<th scope="row">Email</th>
+														<td id='shippingName' ><?php echo $profile_email ?></td>
 													</tr>
 													<tr>
-													<th scope="row">Ship to</th>
-													<td id='shippingAddress' ><?php echo $address_house_no.', '.$address_landmark.', '.$address_area.', '.$city_name.', '.$state_name.' - '.$address_pin_code; ?></td>
-													<!-- <td><a href="checkout-detail.html">Change</a></td> -->
+														<th scope="row">Mobile</th>
+														<td id='shippingName' ><?php echo $address_mobile ?></td>
+													</tr>
+													<tr>
+														<th scope="row">Ship to</th>
+														<td id='shippingAddress' ><?php echo $address_house_no.', '.$address_landmark.', '.$address_area.', '.$city_name.', '.$state_name.' - '.$address_pin_code; ?></td>
 													</tr>
 												</tbody>
 												</table>
