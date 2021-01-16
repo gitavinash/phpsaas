@@ -57,7 +57,7 @@
 
                                                             /** Add mobile as a alternative number */
 
-                                                            if($checkAlternateMobile=mysqli_query($connection, "SELECT profile_meta_value FROM ".TABLE_PREFIX."profile_meta WHERE profile_meta_key='mobile' AND profile_meta_profile_id='{$user_id}'")) {
+                                                            if($checkAlternateMobile=mysqli_query($connection, "SELECT profile_meta_value FROM ".TABLE_PREFIX."profile_meta WHERE profile_meta_key='mobile' AND profile_meta_profile_id='{$user_id}' AND profile_meta_value='{$mobile}'")) {
 
                                                                 if(mysqli_num_rows($checkAlternateMobile)!=0) {
 
@@ -92,7 +92,7 @@
 
                                                                     /** Add email as a alternative email */
 
-                                                                    if($checkAlternateEmail=mysqli_query($connection, "SELECT profile_meta_value FROM ".TABLE_PREFIX."profile_meta WHERE profile_meta_key='email' AND profile_meta_profile_id='{$user_id}'")) {
+                                                                    if($checkAlternateEmail=mysqli_query($connection, "SELECT profile_meta_value FROM ".TABLE_PREFIX."profile_meta WHERE profile_meta_key='email' AND profile_meta_profile_id='{$user_id}' AND profile_meta_value='{$email}'")) {
 
                                                                         if(mysqli_num_rows($checkAlternateEmail)!=0) {
 
