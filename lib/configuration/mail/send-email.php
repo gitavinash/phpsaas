@@ -47,6 +47,9 @@
 				$mail->Subject = $subject;
 				$mail->Body = $email_body;
 
+				echo $email_body;
+				exit();
+
 				if(DEVELOPMENT_MODE==true) {
 
 					if(!$mail->Send()) {
