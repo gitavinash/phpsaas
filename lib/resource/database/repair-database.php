@@ -124,11 +124,14 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
     CHANGE analytics_ip analytics_ip VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL");
 
-  mysqli_query($connection, "ALTER TABLE isw_analytics
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
     ADD analytics_link_original VARCHAR(255) NOT NULL  AFTER analytics_link_url");
 
-  mysqli_query($connection, "ALTER TABLE isw_analytics
-    ADD INDEX analytics_link_original (analytics_link_original);");
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    ADD INDEX analytics_link_original (analytics_link_original)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    DROP analytics_device");
 
   /** App Table */
 
