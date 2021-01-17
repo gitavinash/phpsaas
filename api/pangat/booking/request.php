@@ -68,6 +68,9 @@
                 
                                         $status=200;
                                         $msg='Pangat request received successfully';
+
+                                        require_once APP_EMAIL_TEMPLATE.'booking-confirmation.php';
+
                                         mysqli_query($connection, "COMMIT");
                 
                                     } else {

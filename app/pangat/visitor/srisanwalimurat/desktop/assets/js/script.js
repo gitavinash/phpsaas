@@ -427,6 +427,7 @@ function formSubmission(sendingData) {
 
       },
       error: function (err) {
+        $('.submit-data').show();
         console.log(err)
         resetInputs()
       }

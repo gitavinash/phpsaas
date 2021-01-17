@@ -2,16 +2,16 @@
 
 	/* Email Server setup configuration */
 
-    if(isset($email_active)) {
+    if($email_smtp_default==0) {
 
         define('SMTP_HOST', $email_smtp_host);
-        define('SMTP_SSL', $email_ssl); // is email server is using ssl if yes then change to true
+        define('SMTP_SSL', $email_smtp_ssl); // is email server is using ssl if yes then change to true
         define('SMTP_PORT', $email_smtp_port); // PORT id of their email server like :- 587, 465
         define('SMTP_USERNAME', $email_smtp_username); // email user like :- contact@isw.one
         define('SMTP_PASSWORD', $email_smtp_password); // password of the email
-        define('SMTP_EMAIL', 'donotreply@'.SITE_DOMAIN); // Which email is display to receiver end like :- donotreply@isw.one
-        define('SMTP_NAME', SITE_NAME); // Show Name on email :- ITS Soft World, Avinash Kumar
-        define('REPLY_EMAIL', SITE_NAME); // Reply email where user can send a reply mail like :- contact@isw.one
+        define('SMTP_EMAIL', $email_smtp_email); // Which email is display to receiver end like :- donotreply@isw.one
+        define('SMTP_NAME', $email_smtp_name); // Show Name on email :- ITS Soft World, Avinash Kumar
+        define('REPLY_EMAIL', $email_smtp_reply_name); // Reply email where user can send a reply mail like :- contact@isw.one
 
     } else {
 

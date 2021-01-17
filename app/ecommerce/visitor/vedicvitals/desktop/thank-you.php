@@ -55,8 +55,6 @@
 
                         $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
 
-                        
-                        
                         /** Calling Numbus API */
                         // curl_setopt($ch, CURLOPT_URL, 'https://ship.nimbuspost.com/api/orders/create');
                         // curl_setopt($ch, CURLOPT_HEADER, FALSE);
@@ -145,14 +143,6 @@
 
                     } else {
                         
-                        /** Send SMS */
-
-                        // require_once APP_SMS_TEMPLATE.'order/cod.php';
-
-                        // /** Send Email */
-                        
-                        // require_once APP_EMAIL_TEMPLATE.'order/cod.php';
-
                         ?>
                     
                         <section class='continue-shopping' >

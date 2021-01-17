@@ -11,7 +11,7 @@
 				<td style='text-align: center'>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Hi {$profile_first_name}</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Thanks for taking interest in ancient science of Ayurveda while ordering with Vedic Vitals.</p>
-					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Your order for {$productName} {$order_product_qty} Qty is successfully received.</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Your order for {$product_title} {$order_product_qty} Qty is successfully received.</p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'><strong>Silent Features About Your Product<strong></p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'><li> Your Product is 100% Ayurvedic.</li></p>
 					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'><li> Consume it with confidence. It does not have any side effects.</li></p>

@@ -52,6 +52,14 @@
 
                     if($response['payment']['status']=='Credit') {
 
+                        /** Send SMS */
+
+                        require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+
+                        /** Send Email */
+                                        
+                        require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
+
                         header("Location: /thank-you/?id={$transaction_id}", TRUE, 301);
 
                     } else {
