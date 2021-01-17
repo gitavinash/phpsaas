@@ -184,6 +184,9 @@
 					  		<p class="color-red">Enter number of guests</p>
 					  		<input type="text" name="guest" class="mobName inputClass guestVal reqInput" placeholder="Number of guest">
 					  	</div>
+						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
+						<input type="hidden" name="amount" value="1000" id="pangatAmount" >
+						<input type="hidden" name="orderType" value="service" >
 					  	<button class="submit-data">Submit</button>
 					  	<div class="serverError d-none text-danger">Something went wrong Please try again</div>
 					  </div>

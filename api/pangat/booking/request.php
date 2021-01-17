@@ -65,11 +65,37 @@
                                     $newBooking=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."booking(booking_site_id, booking_user_id, booking_enquiry_id, booking_date, booking_time, booking_service, booking_details, booking_type, booking_status) VALUES(".APP_SITE_ID.", '{$user_id}', '{$enquiryID}', '{$bookingDate}', '{$bookingTime}', 'pangat', '{$details}', 'pangat', 0)");
                 
                                     if($newEnquiry && $newBooking) {
-                
-                                        $status=200;
-                                        $msg='Pangat request received successfully';
 
-                                        require_once APP_EMAIL_TEMPLATE.'booking-confirmation.php';
+                                        if(isset($acceptPayment)) {
+
+                                            if($acceptPayment==1) {
+
+                                                /** Generate new order for pangat */
+
+                                                require_once API_APP_MODULES.'order/generate.php';
+
+                                                $data=array(
+                                                    'hello' => 'world'
+                                                );
+
+                                                generate($connection, $data);
+
+                                            }
+
+                                        } else {
+                
+                                            $status=200;
+                                            $msg='Pangat request received successfully';
+
+                                            /** Send smsm */
+
+                                            require_once APP_SMS_TEMPLATE.'booking-confirmation.php';
+
+                                            /** Send email */
+
+                                            require_once APP_EMAIL_TEMPLATE.'booking-confirmation.php';
+
+                                        }
 
                                         mysqli_query($connection, "COMMIT");
                 
