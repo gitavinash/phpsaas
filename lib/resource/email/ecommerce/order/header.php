@@ -1,7 +1,6 @@
 <?php
 
 	$textColor='#333';
-	$themeColor='#459B45';
 
 	$email_header = "
 	
@@ -104,7 +103,7 @@
 
 								<tr>
 
-									<td colspan='4' valign='top' class='image-section' style='border-collapse: collapse;border: 0;margin: 0;padding: 0;-webkit-text-size-adjust: none;color: #555559;font-family: Arial, sans-serif;font-size: 16px;line-height: 26px;background-color: #fff;border-bottom: 4px solid {$themeColor}'>
+									<td colspan='4' valign='top' class='image-section' style='border-collapse: collapse;border: 0;margin: 0;padding: 0;-webkit-text-size-adjust: none;color: #555559;font-family: Arial, sans-serif;font-size: 16px;line-height: 26px;background-color: #fff;border-bottom: 4px solid ".SITE_THEME_COLOUR."'>
 
 										<a href='".SITE_URL."'><img class='top-image' src='".SITE_URL.SITE_LOGO."' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
 
