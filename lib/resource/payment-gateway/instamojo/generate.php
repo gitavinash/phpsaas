@@ -8,13 +8,26 @@
 
         $orderType=((isset($orderType)) ? $orderType : 'product' );
 
-        if($checkStatus=mysqli_query($connection, "SELECT order_id, order_total_price, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id")) {
+        switch ($orderType) {
+
+            case 'booking' :
+                $query = "SELECT order_id, order_total_price, profile_mobile, profile_email, profile_display_name FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id";
+                $cartProduct='Online booking';
+                break;
+
+            default : 
+                $query = "SELECT order_id, order_total_price, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID." AND order_cart_session_id=cart_session_id";
+                exit();
+
+        }
+
+        if($checkStatus=mysqli_query($connection, $query)) {
 
             if(mysqli_num_rows($checkStatus)!=0) {
 
                 extract(mysqli_fetch_assoc($checkStatus));
                 
-                if($checkOrderMeta=mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1")) {
+                if($checkOrderMeta=mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1 AND order_meta_site_id=".APP_SITE_ID)) {
 
                     if(mysqli_num_rows($checkOrderMeta)!=0) {
 
@@ -28,11 +41,11 @@
 
                         }
 
+                        extract($orderMetas);
+
                     }
 
                 }
-
-                extract($orderMetas);
 
                 $paymentAmount=$order_total_price + ((isset($deliveryFees)) ? $deliveryFees : 0 );
 
@@ -71,7 +84,7 @@
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
                 $response = curl_exec($ch);
-                curl_close($ch); 
+                curl_close($ch);
 
                 $response=json_decode($response, TRUE);
 

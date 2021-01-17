@@ -349,8 +349,7 @@ $("body").delegate(".submit-data", "click", function (argument) {
         type: "booking",
         action: "request",
         acceptPayment: $('#acceptPayment').val(),
-        amount: $('#pangatAmount').val(),
-        orderType: 'service'
+        amount: $('#pangatAmount').val()
     };
     let errFlag = false;
     if (!bookingData["bookingTime"]) {
@@ -396,7 +395,6 @@ $("body").delegate(".reqInput", "click", function (argument) {
 $("body").delegate(".inputBox", "click", function (argument) {
     if ($(this).prop("checked") == true) {
         bookingData["guest"] = 1;
-        console.log("CheckBoxed True");
     } else if ($(this).prop("checked") == false) {
         bookingData["guest"] = 0;
     }
@@ -424,9 +422,16 @@ function formSubmission(sendingData) {
                 popUpMessage("center", ret.msg, ret.status);
 
                 if (ret.status == 200) {
-                    window.setTimeout(function () {
-                        location.reload();
-                    }, 1600);
+                    console.log(ret);
+
+                    if(ret.url!='#') {
+                        window.location.href=ret.url;
+                    } else {
+                        window.setTimeout(function () {
+                            location.reload();
+                        }, 1600);
+                    }
+
                 } else {
                     $(".submit-data").show();
                 }

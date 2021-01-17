@@ -69,7 +69,7 @@
         
                                 /** Start new transaction */
             
-                                if($startTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$user_id}', '{$order}', '{$paymentMode}', '{$cart_currency}', '{$totalPrice}', 'purchase', 0)")) {
+                                if($startTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$user_id}', '{$order}', '{$paymentMode}', '{$cart_currency}', '{$totalPrice}', '$orderType', 0)")) {
             
                                     $status=200;
                                     $msg='Redirect to payment mode';
@@ -99,7 +99,7 @@
         
                         } else {
         
-        
+                            $msg='Please select payment mode';
         
                         }
         
