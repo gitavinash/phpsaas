@@ -45,10 +45,6 @@
                                                 }
                                             }
 
-                                            /** Check user is register or not */
-
-                                            $mobile=ltrim(str_replace('+91', '', (str_replace('91', '', $mobile))), 0);
-
                                             /** Profile Display Name */
                                                     
                                             $display_name=$first_name.' '.$last_name;
