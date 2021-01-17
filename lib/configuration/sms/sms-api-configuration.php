@@ -2,6 +2,15 @@
 
     require_once 'sms-api-configuration.php';
 
+    if($sms_default==1) {
+
+        $sms_auth_key='';
+        $sms_sender='';
+        $sms_route='';
+        $sms_gateway='msg91';
+
+    }
+
     switch($sms_gateway) {
 
         case 'kap' :
@@ -13,7 +22,7 @@
             break;
 
         default :
-            $smsURL="https://api.msg91.com/api/sendhttp.php?authkey={$sms_auth_key}&mobiles={$mobile}&country=91&message={$message}&sender={$sms_sender}&route={$sms_route}";
+            $smsURL="https://api.msg91.com/api/sendhttp.php?authkey={$sms_auth_key}&mobiles={$mobile}&country=91&message={$message}&sender={$sms_sender}&route={$sms_route}&DLT_TE_ID={$sms_dlt_sms_id}";
             break;
 
     }
