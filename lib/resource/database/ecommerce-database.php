@@ -310,7 +310,7 @@
     ADD coupon_expire DATE NOT NULL AFTER coupon_status");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
-    CHANGE coupon_update_on coupon_update_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER coupon_used");
+    CHANGE coupon_update_on coupon_update_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER coupon_expire");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
     ADD coupon_payment_mode VARCHAR(10) NOT NULL AFTER coupon_discount_type");
@@ -320,6 +320,21 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
     ADD coupon_description DATE NOT NULL AFTER coupon_title");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_title coupon_title VARCHAR(255) NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_description coupon_description LONGTEXT NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_discount coupon_discount VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_min_value coupon_min_value VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0'");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_max_discount coupon_max_discount VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0'");
 
   /** Update inventory table */
 
