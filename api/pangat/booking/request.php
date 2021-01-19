@@ -197,7 +197,7 @@
                                         $status=200;
                                         $msg='Pangat request received successfully';
 
-                                        /** Send smsm */
+                                        /** Send sms */
 
                                         require_once APP_SMS_TEMPLATE.'booking-confirmation.php';
 

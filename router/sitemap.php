@@ -2,23 +2,21 @@
 
 	header('Content-Type: application/xml; charset=utf-8');
 
-	$sitemapType=explode('-', str_replace('.xml', '', $urlStructure[0]));
+	$sitemapType=((sizeof($urlStructure)==1) ? 'default' : $urlStructure[1] );
+	$sitemapStartLimit=((isset($urlStructure[2])) ? $urlStructure[2] : 0 );
 
-	$sitemapType=array_shift($sitemapType);
-
-	$sitemapType=(($sitemapType=='sitemap') ? 'default' : $sitemapType );
-
-	if($sitemapType=='sitemap') {
+	if($sitemapType=='default') {
 
 		require_once RESOURCE."sitemap/default.php";
 
 	} else {
 
 		/** Inner page sitemap */
+		$sitemapTemplate=RESOURCE."sitemap/{$sitemapType}.php";
 
-		if(file_exists(RESOURCE."sitemap/{$sitemapType}.php")) {
+		if(file_exists($sitemapTemplate)) {
 
-			require_once RESOURCE."sitemap/{$sitemapType}.php";
+			require_once $sitemapTemplate;
 	
 		} else {
 	
