@@ -6,17 +6,24 @@
 
         extract($data);
 
+        $discount=(($discount!='') ? $discount : 0 );
+        $maxDiscount=(($maxDiscount!='') ? $maxDiscount : 0 );
+        $minCartAmount=(($minCartAmount!='') ? $minCartAmount : 0 );
+        $limit=(($limit!='') ? $limit : 0 );
+
         if($title!='') {
 
             if($code!='') {
 
-                if($discount<=0) {
+                if($discount>=0 && is_numeric($discount)) {
 
-                    if($maxDiscount<=0) {
+                    if($maxDiscount>=0 && is_numeric($maxDiscount)) {
 
-                        if($minCartAmount<=0) {
+
+                        if($minCartAmount>=0 && is_numeric($minCartAmount)) {
+
     
-                            if($limit<=0) {
+                            if($limit>=0 && is_numeric($limit)) {
     
                                 $expiryDate=str_replace('/', '-', $expiryDate);
                                 $couponExpire=date("Y-m-d", strtotime($expiryDate));

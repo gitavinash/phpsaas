@@ -44,7 +44,8 @@
                     <select class="form-control inside-shadow" name="discountType" id="discountType" required >
                         <option value="#" >Dicount type</option>
                         <option value="%" selected >Percentage (%)</option>
-                        <option value="$">Currency (₹, $)</option>
+                        <option value="₹">INR (₹)</option>
+                        <option value="$">USD ($)</option>
                     </select>
                 </div>
             </div>

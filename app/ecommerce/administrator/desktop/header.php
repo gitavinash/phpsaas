@@ -99,7 +99,7 @@
 						</div>
 					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/coupon/') ? 'class="active"' : '' ) ?> >
-						<a href="coupon.php?type=list"><i class="fas fa-ticket-alt"></i> Coupon</a>
+						<a href="coupon.php?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
