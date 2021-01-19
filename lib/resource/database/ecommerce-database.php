@@ -54,6 +54,21 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
     MODIFY coupon_id int(11) NOT NULL AUTO_INCREMENT");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    DROP coupon_relation_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_mix_discount coupon_max_discount VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD coupon_limit BIGINT(10) NOT NULL AFTER coupon_max_discount");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD coupon_used BIGINT(10) NOT NULL AFTER coupon_limit;");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD coupon_expire DATE NOT NULL AFTER coupon_status;");
+
   /** Inventory table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."inventory (
