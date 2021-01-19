@@ -304,16 +304,22 @@
     ADD coupon_limit BIGINT(10) NOT NULL AFTER coupon_max_discount");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
-    ADD coupon_used BIGINT(10) NOT NULL AFTER coupon_limit;");
+    ADD coupon_used BIGINT(10) NOT NULL AFTER coupon_limit");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
-    ADD coupon_expire DATE NOT NULL AFTER coupon_status;");
+    ADD coupon_expire DATE NOT NULL AFTER coupon_status");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
     CHANGE coupon_update_on coupon_update_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER coupon_used");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
-    ADD coupon_payment_mode VARCHAR(10) NOT NULL AFTER coupon_discount_type;");
+    ADD coupon_payment_mode VARCHAR(10) NOT NULL AFTER coupon_discount_type");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD coupon_title DATE NOT NULL AFTER coupon_site_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD coupon_description DATE NOT NULL AFTER coupon_title");
 
   /** Update inventory table */
 
