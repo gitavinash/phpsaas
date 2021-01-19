@@ -17,6 +17,7 @@
 		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/vfs_fonts.js"></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/buttons.html5.min.js"></script>
 		<script src="<?php echo ADMIN_JS ?>calender.min.js" ></script>
+		<script src="<?php echo DEFAULT_ADMIN_JS ?>script.min.js"></script>
 		<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 
 		<?php
