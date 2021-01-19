@@ -309,6 +309,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
     ADD coupon_expire DATE NOT NULL AFTER coupon_status;");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    CHANGE coupon_update_on coupon_update_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER coupon_used");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon
+    ADD coupon_payment_mode VARCHAR(10) NOT NULL AFTER coupon_discount_type;");
+
   /** Update inventory table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
