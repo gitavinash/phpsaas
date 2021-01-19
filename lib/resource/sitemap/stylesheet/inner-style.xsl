@@ -38,7 +38,7 @@
 						line-height: 1.3em;
 					}
 					.expl a, .expl a:visited {
-						color: #da3114;
+						color: #0F5EA3;
 						font-weight: bold;
 					}
 					a {

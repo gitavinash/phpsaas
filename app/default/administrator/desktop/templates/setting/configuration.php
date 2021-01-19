@@ -4,6 +4,7 @@
 	<div class="configMenu">
         <ul>
             <li id="configurationBtn" class="active" >General</li>
+            <li id="sitemapTab">Sitemap</li>
             <li id="adsTab">Ads.txt</li>
             <li id="robotsTab">Robots.txt</li>
             <li id="mainfestTab">Mainfest.json</li>
@@ -136,6 +137,17 @@
         ?>
             
         </div>
+        <div id="sitemapTabBox" style="display: none" >
+
+            <!-- Sitemap section -->
+            
+            <h3>Manage website sitemap</h3>
+            <p style="font-size: 14px;" ><span>You can find more information about XML sitemaps on <a href="http://sitemaps.org/" title="" target="_blank" style="text-decoration: none" >sitemaps.org.</a></span></p>
+            
+            
+
+        </div>
+
         <div id="adsTabBox" style="display: none" >
 
             <!-- Ads.txt section -->
@@ -148,6 +160,7 @@
             </form>
 
         </div>
+
         <div id="robotsTabBox" style="display: none" >
             
             <!-- Robots.txt section -->
