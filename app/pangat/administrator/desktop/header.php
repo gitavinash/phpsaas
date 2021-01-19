@@ -63,7 +63,7 @@
 						<a href="calender.php?type=manage"><i class="fas fa-calendar-alt"></i> Manage calender</a>
 					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
-						<a href="setting.php?type=website"><i class="fas fa-cog"></i> Settings</a>
+						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i>  Menu</a></li>
