@@ -108,7 +108,7 @@
 			require_once 'logout.php';
 			break;
 
-			/** For all type of verification process */
+		/** For all type of verification process */
 		
 		case 'verify' :
 			require_once 'verify.php';
