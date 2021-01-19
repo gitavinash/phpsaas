@@ -3,7 +3,7 @@
 	header('Content-Type: application/xml; charset=utf-8');
 
 	$sitemapType=((sizeof($urlStructure)==1) ? 'default' : $urlStructure[1] );
-	$sitemapStartLimit=((isset($urlStructure[2])) ? $urlStructure[2] : 0 );
+	$sitemapStartFrom=((isset($urlStructure[2])) ? $urlStructure[2] : 0 );
 
 	if($sitemapType=='default') {
 
