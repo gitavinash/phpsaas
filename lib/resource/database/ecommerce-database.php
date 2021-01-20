@@ -355,6 +355,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
     ADD transaction_coupon_amount VARCHAR(20) NOT NULL AFTER transaction_coupon");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
+    ADD INDEX transaction_coupon (transaction_coupon)");
+
   /** Update order table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
