@@ -63,7 +63,7 @@
 																<img src="<?php echo $product_image ?>">
 																<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
 																<div class="price-new">
-																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
+																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
 																</div>
 															</div>
 
@@ -86,13 +86,14 @@
 												<div class="form-group col-md-4 ap-btn">
 													<button type="submit" class="checkCoupon btn">Apply</button>
 												</div>
+												<span class="couponMsg" ></span>
 											</form>
 										</div>
 
 										<div class="sub-totl">
 											<div class="sub1">
 												<span class="spn-lft">Subtotal</span>
-												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="subTotal" ><?php echo $totalPrice ?></strong>.00</span>
+												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="subTotal" ><?php echo number_format($totalPrice, 2) ?></strong></span>
 											</div>
 											<div class="sub1">
 												<span class="spn-lft">Shipping</span>
@@ -104,7 +105,7 @@
 											<div class="sub1">
 												<span class="spn-lft-1 totl">Total<br>
 													<span class="ship-ad">Including GST</span></span>
-												<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice2" ><?php echo $totalPrice ?></strong>.00</span>
+												<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice2" ><?php echo number_format($totalPrice, 2) ?></strong></span>
 											</div>
 										</div>
 
@@ -230,7 +231,7 @@
 																<img src="<?php echo $product_image ?>">
 																<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
 																<div class="price-new">
-																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
+																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
 																</div>
 															</div>
 
@@ -257,13 +258,15 @@
 												<div class="form-group col-md-4 ap-btn">
 													<button type="submit" class="checkCoupon btn">Apply</button>
 												</div>
+												<span class="couponMsg" ></span>
 											</form>
 										</div>
 
 										<div class="sub-totl">
 											<div class="sub1">
 												<span class="spn-lft">Subtotal</span>
-												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo number_format($totalPrice, 2) ?></span>
+												<span id='cartPrice' style='display:none' ><?php echo number_format($totalPrice, 2) ?></span>
 											</div>
 											<div class="sub1">
 												<span class="spn-lft">Shipping</span>
@@ -275,7 +278,7 @@
 											<div class="sub1">
 												<span class="spn-lft-1 totl">Total<br>
 												<span class="ship-ad">Including GST</span></span>
-												<span class="spn-rgt-1 man-t" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice" ><?php echo $totalPrice ?></strong>.00</span>
+												<span class="spn-rgt-1 man-t" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice" ><?php echo number_format($totalPrice, 2) ?></strong></span>
 											</div>
 										</div>
 

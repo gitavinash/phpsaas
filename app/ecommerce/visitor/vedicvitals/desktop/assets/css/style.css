@@ -3358,3 +3358,10 @@ ol li {
 .product-feature {
 	list-style: list
 }
+
+.couponMsg {
+    font-size: 12px;
+    font-weight: 600;
+	padding: 2px 5px 0px 5px;
+	color: #ff0000;
+}
