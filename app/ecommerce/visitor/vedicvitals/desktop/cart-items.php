@@ -69,7 +69,7 @@
 							<div class="copn-div">
 								<form class="form-row">
 								  	<div class="form-group col-md-8 cod-ap">
-									    <input type="text" class="form-control couponCode" placeholder="Discount Code">
+									    <input type="text" id="couponCode1" class="form-control couponCode" placeholder="Discount Code">
 								  	</div>
 								  	<div class="form-group col-md-4 ap-btn">
 									  	<button type="submit" class="checkCoupon btn">Apply</button>
@@ -315,17 +315,6 @@
 								}
 
 							?>
-
-							<div class="copn-div">
-								<form class="form-row">
-								  	<div class="form-group col-md-8 cod-ap">
-									    <input type="text" class="form-control couponCode" placeholder="Discount Code">
-								  	</div>
-								  	<div class="form-group col-md-4 ap-btn">
-								  		<button type="submit" class="checkCoupon btn">Apply</button>
-								  	</div>
-								</form>
-							</div>
 
 							<div class="sub-totl">
 								<div class="sub1">

@@ -287,8 +287,10 @@
 					<!-- section global platform end -->
 
 					<!-- script start -->
-					<?php echo require_once NOTIFICATION.'index.php' ?>
-					<script src="<?php echo APP_JS_LIBRARY ?>app.min.js" ></script>
+					<?php require_once NOTIFICATION.'index.php' ?>
+	
+					<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
+					<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
 					<!-- script end -->
 
 					
