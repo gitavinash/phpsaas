@@ -98,7 +98,6 @@
 				              <!-- <li><a href="reviews/">Reviews</a></li>
 				              <li><a href="/blog/">Blog</a></li> -->
 				              <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
-				              <li><a href="/cancellation/">Cancellation</a></li>
 				              <li><a href="/privacy-policy/">Privacy policy</a></li>
 				            </ul>
 				            <ul class="dn-l">

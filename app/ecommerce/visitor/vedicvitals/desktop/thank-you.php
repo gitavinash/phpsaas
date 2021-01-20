@@ -122,6 +122,8 @@
                         'total_24157' => $order_total_price,
                         'shipp_24216' => '',
                         'awbnu_24187' => '',
+                        'alert_client' => '1',
+                        'alert_rep' => '1',
                     );
 
                     curl_setopt($ch, CURLOPT_POST, true);
