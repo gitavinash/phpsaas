@@ -2535,6 +2535,10 @@ a.retn {
 	letter-spacing: 1px
 }
 
+.ap-btn .btn:hover {
+	background: #a7a7a7;
+}
+
 .prodcut-list-cart {
 	width: 100%;
 	float: left;
