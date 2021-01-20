@@ -349,6 +349,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
     ADD transaction_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER transaction_status");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
+    ADD transaction_coupon VARCHAR(20) NOT NULL AFTER transaction_amount");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction
+    ADD transaction_coupon_amount VARCHAR(20) NOT NULL AFTER transaction_coupon");
+
   /** Update order table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."order
