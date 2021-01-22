@@ -95,7 +95,6 @@ var calendar = function (y, m) {
                 next++;
             } else if (number + 1 == dates.getDate() && isPrevAllowed <= 0) {
                 number++;
-                // calendardates += "<li class='weekday today clkAlw' bookingAllowed='" + dummydata['availablity'][number-1]['bookingAllowed'] + "' date='" + number + "'><p class='cal-day'>" + number + " </p><div class='flex-it'><span class='breakfast' data='" + dummydata['availablity'][number-1]['breakfast'] + "'></span><span class='lunch' data='"+dummydata['availablity'][number-1]['lunch'] + "'></span><span class='dinner' data='"+dummydata['availablity'][number-1]['dinner'] + "'></span></div></li > ";
                 calendardates +=
                     "<li class='weekday clkAlw' bookingAllowed='" +
                     dummydata["availablity"][number - 1]["bookingAllowed"] +
@@ -253,10 +252,10 @@ $("body").delegate('.clkAlw[bookingAllowed="2"]', "click", function (argument) {
     bookingData["bookingTime"] = "";
     $(this).addClass("highlight");
     // $('.bookingSlots').addClass('active')
-    checkAndShow($(this).children(".flex-it").children(".breakfast"), "breakfast");
-    checkAndShow($(this).children(".flex-it").children(".lunch"), "lunch");
-    checkAndShow($(this).children(".flex-it").children(".dinner"), "dinner");
-    // console.log('Worked', $(this).children('.flex-it').children('.breakfast').attr('data'))
+    checkAndShow($(this).children(".flex-it").children(".breakfast"), "breakfast-btn");
+    checkAndShow($(this).children(".flex-it").children(".lunch"), "lunch-btn");
+    checkAndShow($(this).children(".flex-it").children(".dinner"), "dinner-btn");
+    // console.log('Worked', $(this).children('.flex-it').children('.breakfast-btn-btn').attr('data'))
     bookingData["bookingDate"] = onGoingYear + "-" + (parseInt(onGoingMonth) + 1) + "-" + $(this).attr("date");
 });
 

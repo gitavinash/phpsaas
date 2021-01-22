@@ -170,9 +170,35 @@
 
 	/* Default HTTP Error pages path of visitor */
 
-	define('ERROR_403', USER_PATH.'403.php');
-	define('ERROR_404', USER_PATH.'404.php');
-	define('ERROR_502', USER_PATH.'502.php');
+	if(file_exists(USER_PATH.'403.php')) {
+
+		define('ERROR_403', USER_PATH.'403.php');
+		
+	} else {
+		
+		define('ERROR_403', DEFAULT_VISITOR_PATH.'403.php');
+
+	}
+
+	if(file_exists(USER_PATH.'404.php')) {
+
+		define('ERROR_404', USER_PATH.'404.php');
+		
+	} else {
+		
+		define('ERROR_404', DEFAULT_VISITOR_PATH.'404.php');
+
+	}
+
+	if(file_exists(USER_PATH.'502.php')) {
+
+		define('ERROR_502', USER_PATH.'502.php');
+		
+	} else {
+		
+		define('ERROR_502', DEFAULT_VISITOR_PATH.'502.php');
+
+	}
 
 	/* Default HTTP Error pages path of visitor */
 

@@ -42,7 +42,7 @@
 				<div class="col-12">
 					<div class="headingDate text-center">
 						<h2 class="h4 pt-3 font-weight-bold">
-							Select Date and Time 
+							Pangat Booking
 						</h2>
 						<p class="">Choose a date below to place a request for pangat</p>
 					</div>
@@ -93,7 +93,7 @@
 					<div class="bookingSlots active pl-3 pr-3">
 						<div class="row">
 				  		<div class="col-md-4 pl-1 pr-1">
-						  	<div class="breakfast com-sch bor-rounded" booking-for="breakfast">
+						  	<div class="breakfast-btn com-sch bor-rounded" booking-for="breakfast">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block left-icon pl-1 pr-1">
 									  	<i class="fa fa-utensils"></i>
@@ -106,7 +106,7 @@
 						  	</div>
 				  		</div>
 				  		<div class="col-md-4 pl-1 pr-1">
-						  	<div class="lunch com-sch bor-rounded" booking-for="lunch">
+						  	<div class="lunch-btn com-sch bor-rounded" booking-for="lunch">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block left-icon pl-1 pr-1">
 									  	<i class="far fa-sun"></i>
@@ -119,7 +119,7 @@
 						  	</div>
 				  		</div>
 				  		<div class="col-md-4 pl-1 pr-1">
-						  	<div class="dinner com-sch bor-rounded" booking-for="dinner">
+						  	<div class="dinner-btn com-sch bor-rounded" booking-for="dinner">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block left-icon pl-1 pr-1">
 									  	<i class="far fa-moon"></i>
@@ -159,7 +159,6 @@
 					  			</div>
 					  		</div>
 					  	</div>
-					  	<div class="font-weight-bold mb-3">Enter Details to Confirmed</div>
 					  	<div class="booking-select text-danger d-none">Select any booking Schedule</div>
 					  	<div class="form-cont">
 					  		<p class="color-red">Name is Required</p>
@@ -186,7 +185,7 @@
 					  	</div>
 						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
 						<input type="hidden" name="amount" value="1000" id="pangatAmount" >
-					  	<button class="submit-data">Submit</button>
+					  	<button class="submit-data">Send request</button>
 					  	<div class="serverError d-none text-danger">Something went wrong Please try again</div>
 					  </div>
 				  </div>

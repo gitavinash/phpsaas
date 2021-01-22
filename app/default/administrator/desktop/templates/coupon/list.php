@@ -10,9 +10,9 @@
 		<form method="GET">
 			<input type="hidden" name="type" value="<?php echo $_GET['type']; ?>" >
 			<select class="form-control" name="status" id="changeStatus" >
-				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All <?php echo $couponType ?></option>
-				<option value="2" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Expired <?php echo $couponType ?></option>
-				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Active <?php echo $couponType ?></option>
+				<option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?> >All coupons</option>
+				<option value="2" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?> >Expired coupons</option>
+				<option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>  >Active coupons</option>
 			</select>
 			<input type="submit" class="btn" value="Filter" >
 		</form>

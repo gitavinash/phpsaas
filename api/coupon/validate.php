@@ -6,7 +6,6 @@
 
         $cartPrice=(float)$cartPrice;
         
-
         if($checkCoupon=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."coupon WHERE coupon_code='{$coupon}' AND coupon_site_id=".APP_SITE_ID)) {
 
             if(mysqli_num_rows($checkCoupon)!=0) {

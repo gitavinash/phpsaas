@@ -13,7 +13,7 @@
                 if(mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=2 WHERE booking_date='{$bookingDate}'")) {
 
                    $status=200;
-                   date('jS M Y', strtotime($bookingDate))." has unblock successfully";
+                   $msg=date('jS M Y', strtotime($bookingDate))." has unblock successfully";
 
                 }
 

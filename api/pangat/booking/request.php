@@ -25,7 +25,12 @@
                                     
                                 } else {
 
-                                    $bookingValid=false;
+                                    if($noOfGuest<100) {
+                                        $bookingValid=true;
+                                    } else {
+                                        $bookingValid=false;
+                                    }
+
                                     $msg='Please enter no of guests';
                 
                                 }
