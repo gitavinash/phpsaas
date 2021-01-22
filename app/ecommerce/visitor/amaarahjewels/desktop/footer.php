@@ -6,8 +6,8 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="foter-left">
-								<h1>Ammarah</h1>
-								<p>We know that your jewelry means a lot to you, and that's why we offer a 1-year warranty on it.</p>
+								<h1><?php echo SITE_NAME ?></h1>
+								<p><?php echo SITE_DESC ?></p>
 
 								<div class="cont-nfo">
 									<ul>

@@ -5,6 +5,7 @@
         extract($data);
 
         $orderType=((isset($orderType)) ? $orderType : 'product' );
+        $discountValue=0;
 
         /** Get Product from cart */
 
@@ -13,121 +14,122 @@
             if(mysqli_num_rows($checkOrderStatus)!=0) {
 
                 extract(mysqli_fetch_assoc($checkOrderStatus));
-                
-                /** Check coupon */
 
-                if($coupon!='') {
+                $orderProductID=str_replace(' ', '', explode(',', $order_product_id));
+                $productID='';
 
-                    
-                    $couponCodeIsValid=FALSE;
+                for($i=0; $i<sizeof($orderProductID); $i++) {
 
-                } else {
+                    if($i==0) {
 
-                    $couponCodeIsValid;
+                        $productID=$productID."product_id='{$orderProductID[$i]}'";
+
+                    } else {
+
+                        $productID=$productID." OR product_id='{$orderProductID[$i]}'";
+
+                    }
 
                 }
 
-                /** Continue if coupon code is valid or not in used */
+                /** Fetch product details  */
 
-                if($couponCodeIsValid) {
+                if($productDetails=mysqli_query($connection, "SELECT GROUP_CONCAT(product_title) as product_title, GROUP_CONCAT(product_image) as productImage FROM isw_product WHERE product_type='{$orderType}' AND {$productID}")) {
 
-                    $orderProductID=str_replace(' ', '', explode(',', $order_product_id));
-                    $productID='';
+                    $product_title='';
 
-                    for($i=0; $i<sizeof($orderProductID); $i++) {
+                    if(mysqli_num_rows($productDetails)!=0) {
 
-                        if($i==0) {
+                        extract(mysqli_fetch_assoc($productDetails));
 
-                            $productID=$productID."product_id='{$orderProductID[$i]}'";
+                    }
+
+                }
+
+                if($checkCart=mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=".SITE_ID)) {
+
+                    if(mysqli_num_rows($checkCart)!=0) {
+            
+                        extract(mysqli_fetch_assoc($checkCart));
+            
+                        if($paymentMode=='cash') {
+            
+                            $deliveryCharges=50;
+                                
+                        } else {
+                                
+                            $deliveryCharges=(($order_delivery_charges!='') ? $order_delivery_charges : 0 );
+                                
+                        }
+
+                        /** Check coupon */
+
+                        if($coupon!='') {
+
+                            require_once MODULES.'validateCoupon.php';
 
                         } else {
 
-                            $productID=$productID." OR product_id='{$orderProductID[$i]}'";
+                            $couponCodeIsValid=true;
 
                         }
 
-                    }
+                        /** Continue if coupon code is valid or not in used */
 
-                    /** Fetch product details  */
+                        if($couponCodeIsValid) {
 
-                    if($productDetails=mysqli_query($connection, "SELECT GROUP_CONCAT(product_title) as product_title, GROUP_CONCAT(product_image) as productImage FROM isw_product WHERE product_type='{$orderType}' AND {$productID}")) {
+                            $totalPrice=($totalPrice+$deliveryCharges)-$discountValue;
 
-                        $product_title='';
-
-                        if(mysqli_num_rows($productDetails)!=0) {
-
-                            extract(mysqli_fetch_assoc($productDetails));
-
-                        }
-
-                    }
-
-                    if($checkCart=mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=".SITE_ID)) {
-
-                        if(mysqli_num_rows($checkCart)!=0) {
-            
-                            extract(mysqli_fetch_assoc($checkCart));
-            
-                            if($paymentMode=='cash') {
-            
-                                $deliveryCharges=50;
-                                
-                            } else {
-                                
-                                $deliveryCharges=(($order_delivery_charges!='') ? $order_delivery_charges : 0 );
-                                
-                            }
-
-                            $totalPrice=$totalPrice+$deliveryCharges;
-                            
                             if($paymentMode!='') {
             
                                 if($updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_product_id='{$product}', order_product_qty='{$quantity}', order_product_price='{$price}', order_delivery_charges='{$deliveryCharges}', order_total_price='{$totalPrice}', order_coupon='{$coupon}', order_payment_mode='{$paymentMode}' WHERE order_id='{$order}' AND order_cart_session_id='".SESSION_ID."' AND order_site_id=".SITE_ID)) {
-            
+                
                                     /** Start new transaction */
-                
-                                    if($startTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$user_id}', '{$order}', '{$paymentMode}', '{$cart_currency}', '{$totalPrice}', '$orderType', 0)")) {
-                
+                    
+                                    if($startTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_coupon, transaction_coupon_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$user_id}', '{$order}', '{$paymentMode}', '{$cart_currency}', '{$totalPrice}', '{$coupon}', '{$discountValue}', '$orderType', 0)")) {
+                    
                                         $status=200;
                                         $msg='Redirect to payment mode';
                                         $transaction_id=base64_encode(mysqli_insert_id($connection));
-
+    
                                         if($paymentMode=='cash') {
-
+    
                                             /** Send SMS */
-
                                             require_once APP_SMS_TEMPLATE.'order/cod.php';
-
+    
                                             /** Send Email */
-                                            
                                             require_once APP_EMAIL_TEMPLATE.'order/cod.php';
-                
+                    
                                             $url='/thank-you/?id='.$transaction_id;
-                
+                    
                                         } else {
-                
+                    
                                             $url='/payment/generate/?id='.$transaction_id.'&type=order';
                 
                                         }
-                
+                    
                                     }
-                
+                    
                                 }
-            
+                
                             } else {
-            
+                
                                 $msg='Please select payment mode';
-            
+                
                             }
-            
+
                         } else {
-            
-                            $msg='Cart is empty or something is wrong';
-            
+
+                            $msg='Coupon code is invalid';
+
                         }
             
+                    } else {
+            
+                        $msg='Cart is empty or something is wrong';
+            
                     }
-
+            
                 }
 
             } else {

@@ -24,7 +24,7 @@
 						<div class="col-md-5">
 							<div class="lang-section">
 								<form action="" autocomplete="on">
-									<div class="input-group slct-lang">
+									<!-- <div class="input-group slct-lang">
 	  									<select class="custom-select" id="inputGroupSelect02">
 		    								<option selected>English</option>
 		    								<option value="1">Hindi</option>
@@ -37,7 +37,7 @@
 		    								<option selected>USD</option>
 		    								<option value="1">INR</option>
 	  									</select>
-								    </div>
+								    </div> -->
 									<div class="searc-div">
 										<!-- <div id="google_translate_element"></div> -->
 										<input id="search" name="search" type="text" placeholder="What're we looking for ?"><input id="search_submit" value="Rechercher" type="submit">
@@ -47,7 +47,7 @@
 						</div>
 						<div class="col-md-2">
 							<div class="logo">
-								<img src="image/logo.jpg" align="logo">
+								<img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>">
 							</div>
 						</div>
 						<div class="col-md-5">
@@ -55,9 +55,9 @@
 								<nav class="navbar navbar-expand-lg login-section justify-content-right ">
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav justify-content-center menu-login">
-									  <li><a href=""><img src="image/heart.jpg"><b>Wishlist</b></a></li>
+									  <li><a href=""><img src="<?php echo USER_IMAGES ?>heart.jpg"><b>Wishlist</b></a></li>
 									  <li class="nav-item dropdown">
-									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="image/account.png"><b>My Account</b></a>
+									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="<?php echo USER_IMAGES ?>account.png"><b>My Account</b></a>
 									      <div class="dropdown-menu">
 									        <a class="dropdown-item" href="#">My Account</a>
 									        <a class="dropdown-item" href="#">My Whislist</a>
@@ -65,7 +65,7 @@
 									        <a class="dropdown-item" href="#">Login</a>
 									      </div>
 									  </li>
-									  <li><a href=""><img src="image/bag.jpg"><span>0</span><b>Cart</b></a></li>
+									  <li><a href=""><img src="<?php echo USER_IMAGES ?>bag.jpg"><span>0</span><b>Cart</b></a></li>
 									  
 									</ul>
 								</div>
@@ -78,7 +78,7 @@
 			</div>
 			<div class="header-box dn-l">
 				<nav class="navbar navbar-expand-lg menu-top ">
-					<a href="" class="logo-mob"><img src="image/logo.jpg" class="logo-mb"></a>
+					<a href="" class="logo-mob"><img src="<?php echo USER_IMAGES ?>logo.jpg" class="logo-mb"></a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-icon"></span>
 					<span class="navbar-icon"></span>
