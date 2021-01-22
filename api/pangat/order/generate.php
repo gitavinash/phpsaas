@@ -26,7 +26,7 @@
 
                 /** Initiate the new transactiuon */
 
-                $initiateNewTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$booking_user_id}', '{$orderID}', 'online', '{$currency}', '{$price}', 'purchase', 0)");
+                $initiateNewTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$booking_user_id}', '{$orderID}', 'online', '{$currency}', '{$price}', 'booking', 0)");
                 $transaction_id=base64_encode(mysqli_insert_id($connection));
 
                 if($addIntoCart && $createNewOrder && $initiateNewTransaction) {
