@@ -209,7 +209,7 @@
 									  	  </div>
 									  </li>
 									  <li class="nav-item">
-									    <a class="nav-link" href="/tag/everlasting-flowers/">Infinity Everlasting Flowers</a>
+									    <a class="nav-link" href="/tag/everlasting/">Infinity Everlasting Flowers</a>
 									  </li>
 									  <li class="nav-item dropdown">
 									    <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop" data-toggle="dropdown">Occasions
