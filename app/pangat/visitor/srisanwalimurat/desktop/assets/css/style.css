@@ -227,7 +227,7 @@
 	border-radius: 8px;
 	background-color: #fcf9fa;
 	width: 100%;
-	border: none;
+	border: 1px solid #b9b9b9;
 	outline: none;
 	margin-bottom: 10px;
 	padding: 5px 10px;

@@ -43,8 +43,29 @@
                                 $details='no';
                 
                             }
-                
+
+                            if($donation!='') {
+
+                                if(is_numeric($donation)) {
+
+                                    $bookingValid=true;
+
+                                } else {
+
+                                    $bookingValid=false;
+                                    $msg='Please enter a valid donation amount';
+
+                                }
+
+                            } else {
+
+                                $bookingValid=true;
+
+                            }
+
                             if($bookingValid==true) {
+
+
                 
                                 mysqli_query($connection, "START TRANSACTION");
                 

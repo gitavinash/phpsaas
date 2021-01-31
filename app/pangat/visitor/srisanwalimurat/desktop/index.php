@@ -181,7 +181,10 @@
 					  	</div>
 					  	<div id="checkBox" class="form-cont">
 					  		<p class="color-red">Enter number of guests</p>
-					  		<input type="text" name="guest" class="mobName inputClass guestVal reqInput" placeholder="Number of guest">
+					  		<input type="text" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest">
+					  	</div>
+					  	<div class="form-cont">
+					  		<input type="text" name="donation" class="inputClass donationAmt" placeholder="Any donation..." >
 					  	</div>
 						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
 						<input type="hidden" name="amount" value="1000" id="pangatAmount" >

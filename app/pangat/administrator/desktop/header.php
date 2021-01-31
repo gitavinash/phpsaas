@@ -59,8 +59,23 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?> >
+					<!-- <li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?> >
 						<a href="calender.php?type=manage"><i class="fas fa-calendar-alt"></i> Manage calender</a>
+					</li> -->
+					<li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?> >
+						<a href="calender.php?type=manage"><i class="fas fa-cog"></i> Manage calender</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="calender.php?type=manage"><i class="fas fa-ellipsis-v"></i> Calender</a></li>
+								<li><a href="calender.php?type=month"><i class="fas fa-cog"></i> Setting</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="calender.php?type=manage"><i class="fas fa-ellipsis-v"></i> Calender</a></li>
+								<li><a href="calender.php?type=month"><i class="fas fa-cog"></i> Setting</a></li>
+							</ul>
+						</div>
 					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
