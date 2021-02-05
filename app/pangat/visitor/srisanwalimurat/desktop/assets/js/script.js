@@ -344,27 +344,33 @@ $(".phoneVerify").keypress(function (e) {
 });
 
 $("body").delegate(".submit-data", "click", function (argument) {
+
     let sendingData = {
         type: "booking",
         action: "request",
         acceptPayment: $('#acceptPayment').val(),
         amount: $('#pangatAmount').val()
     };
+
     let errFlag = false;
+
     if (!bookingData["bookingTime"]) {
         $(".booking-select").removeClass("d-none");
         return;
     }
+
     if (!$(".firstName").val() || $(".firstName").val() == "") {
         $(".firstName").parent().children("p").addClass("warning");
         errFlag = true;
         return;
     }
+
     if (!$(".emailName").val() || $(".emailName").val() == "") {
         $(".emailName").parent().children("p").addClass("warning");
         errFlag = true;
         return;
     }
+
     if (!$(".mobName").val() || $(".mobName").val() == "") {
         $(".mobName").parent().children("p").addClass("warning");
         errFlag = true;
@@ -374,18 +380,46 @@ $("body").delegate(".submit-data", "click", function (argument) {
     if (errFlag) {
         return;
     }
+    
     $(".serverError").addClass("d-none");
 
-    bookingData["first_name"] = $(".firstName").val();
-    bookingData["last_name"] = $(".lastName").val();
-    bookingData["mobile"] = $(".mobName").val();
-    bookingData["email"] = $(".emailName").val();
-    bookingData["noOfGuest"] = $(".guestVal").val();
-    bookingData["donation"] = $(".donationAmt").val();
-    sendingData = { ...bookingData, ...sendingData };
-    
-    // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
-    formSubmission(sendingData)
+    /** Show booking confirmation screen */
+
+    $('.bookingFormScreen').hide();
+    $('.bookingConfirmationScreen').show();
+
+    var selfComing='No';
+
+    if(bookingData.guest==1) {
+
+        selfComing='Yes';
+
+    }
+
+    $('#nameConfirmation').html($(".firstName").val() + ' ' +$(".lastName").val());
+    $('#emailConfirmation').html($(".emailName").val());
+    $('#mobileConfirmation').html($(".mobName").val());
+    $('#comingConfirmation').html(selfComing);
+
+    if(bookingData.guest==1) {
+
+        $('.guestComing').show();
+        $('#guestConfirmation').html($(".guestVal").val());
+
+    }
+
+    $('#bookingDateConfirmation').html(bookingData.bookingDate);
+    $('#bookingTimeConfirmation').html(bookingData.bookingTime);
+
+});
+
+$('#editForm').click(function(e) {
+
+    /** Show booking confirmation screen */
+
+    $('.bookingConfirmationScreen').hide();
+    $('.bookingFormScreen').show();
+
 });
 
 $("body").delegate(".reqInput", "click", function (argument) {
@@ -412,32 +446,35 @@ function formSubmission(sendingData) {
     }
 
     if (sendDataToServer == true) {
-        $(".submit-data").hide();
+        $(".submitForm").hide();
 
         $.ajax({
             type: "POST",
             dataType: "json",
             data: sendingData,
             success: function (ret) {
-                popUpMessage("center", ret.msg, ret.status);
-
+                
                 if (ret.status == 200) {
-                    console.log(ret);
-
+                    
                     if(ret.url!='#') {
+                        
                         window.location.href=ret.url;
+                        
                     } else {
+
+                        popUpMessage("center", ret.msg, ret.status);
+                        
                         window.setTimeout(function () {
                             location.reload();
                         }, 1600);
                     }
 
                 } else {
-                    $(".submit-data").show();
+                    $(".submitForm").show();
                 }
             },
             error: function (err) {
-                $(".submit-data").show();
+                $(".submitForm").show();
                 console.log(err);
                 resetInputs();
             },
@@ -468,3 +505,30 @@ function checkAndShow(elem, classNameSent) {
         $(".bookingSlots ." + classNameSent).addClass("isAvl");
     }
 }
+
+
+/** Submit data to server */
+
+$("body").delegate("#submitForm", "click", function (e) {
+
+    let sendingData = {
+        type: "booking",
+        action: "request",
+        acceptPayment: $('#acceptPayment').val(),
+        amount: $('#pangatAmount').val()
+    };
+
+    e.preventDefault();
+
+    bookingData["first_name"] = $(".firstName").val();
+    bookingData["last_name"] = $(".lastName").val();
+    bookingData["mobile"] = $(".mobName").val();
+    bookingData["email"] = $(".emailName").val();
+    bookingData["noOfGuest"] = $(".guestVal").val();
+    bookingData["donation"] = $(".donationAmt").val();
+    sendingData = { ...bookingData, ...sendingData };
+    
+    // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
+    formSubmission(sendingData);
+
+});

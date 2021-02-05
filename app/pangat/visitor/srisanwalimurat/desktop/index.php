@@ -36,7 +36,10 @@
 	    </nav>
 		</div>
 	</header>
-	<section class="pt-5">
+
+	<!-- Booking form screen -->
+
+	<section class="pt-5 bookingFormScreen" >
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
@@ -183,15 +186,107 @@
 					  		<p class="color-red">Enter number of guests</p>
 					  		<input type="text" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest">
 					  	</div>
-					  	<div class="form-cont">
-					  		<input type="text" name="donation" class="inputClass donationAmt" placeholder="Any donation..." >
-					  	</div>
 						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
 						<input type="hidden" name="amount" value="1000" id="pangatAmount" >
 					  	<button class="submit-data">Send request</button>
 					  	<div class="serverError d-none text-danger">Something went wrong Please try again</div>
 					  </div>
 				  </div>
+				</div>
+			</div>
+	  </div>
+		
+	</section>
+
+	<!-- Booking confirmation screen -->
+
+	<section class="pt-5 bookingConfirmationScreen " style="display:none" >
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="headingDate text-center">
+						<h2 class="h4 pt-3 font-weight-bold">
+							Pangat Booking Confirmation
+						</h2>
+						<p class="">Please confirm your booking details</p>
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-8 col-xs-12 bookingConfirmation ">
+					<div class="row">
+						<div class="col-4">
+							<p>Name</p>
+						</div>
+						<div class="col-8">
+							<p id="nameConfirmation"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<p>Email</p>
+						</div>
+						<div class="col-8">
+							<p id="emailConfirmation"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<p>Mobile</p>
+						</div>
+						<div class="col-8">
+							<p id="mobileConfirmation"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<p>Booking date</p>
+						</div>
+						<div class="col-8">
+							<p id="bookingDateConfirmation"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<p>Booking time</p>
+						</div>
+						<div class="col-8">
+							<p id="bookingTimeConfirmation"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<p>Are you coming</p>
+						</div>
+						<div class="col-8">
+							<p id="comingConfirmation"></p>
+						</div>
+					</div>
+					<div class="row guestComing" style="display: none" >
+						<div class="col-4">
+							<p>No of guest</p>
+						</div>
+						<div class="col-8">
+							<p id="guestConfirmation"></p>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 10px" >
+						<div class="col-4">
+							<p>Donation amount</p>
+						</div>
+						<div class="col-8">
+							<input type="text" name="donation" id="donationAmount" class="form-control" placeholder="If you want to donate any amount." >
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-md-4 col-xs-12">
+							<a href="#" id="editForm" class="btn btn-primary btn-block" >Edit</a>
+						</div>
+						<div class="col-2" style="height: 10px" ></div>
+						<div class="col-md-4 col-xs-12">
+							<input type="submit" id="submitForm" class="btn btn-success btn-block" value="Continue" >
+						</div>
+					</div>
 				</div>
 			</div>
 	  </div>
