@@ -17,7 +17,7 @@
 								</div>
 								<div class="covid-name">
 									<h4>Sanitization</h4>
-									<p>Sanitize our hands & kitchen surface in every 4 hours</p>
+									<p>All workers sanitize their hands & surface every 4 hours</p>
 								</div>
 							</div>
 
@@ -37,7 +37,7 @@
 								</div>
 								<div class="covid-name">
 									<h4>Temperature Checks</h4>
-									<p>Real-time Temperature Tracking of kitchen & delivery staff</p>
+									<p>All workers sanitize their hands & surface every 4 hours</p>
 								</div>
 							</div>
 
