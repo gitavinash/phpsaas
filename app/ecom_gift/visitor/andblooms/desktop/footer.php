@@ -37,7 +37,7 @@
 								</div>
 								<div class="covid-name">
 									<h4>Temperature Checks</h4>
-									<p>All workers sanitize their hands & surface every 4 hours</p>
+									<p>Temperature checks of delivery staff before every delivery</p>
 								</div>
 							</div>
 
