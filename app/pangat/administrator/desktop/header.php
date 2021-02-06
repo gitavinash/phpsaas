@@ -67,13 +67,13 @@
 						<div class="side-menu">
 							<ul>
 								<li><a href="calender.php?type=manage"><i class="fas fa-ellipsis-v"></i> Calender</a></li>
-								<li><a href="calender.php?type=month"><i class="fas fa-cog"></i> Setting</a></li>
+								<li><a href="calender.php?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="calender.php?type=manage"><i class="fas fa-ellipsis-v"></i> Calender</a></li>
-								<li><a href="calender.php?type=month"><i class="fas fa-cog"></i> Setting</a></li>
+								<li><a href="calender.php?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
 							</ul>
 						</div>
 					</li>

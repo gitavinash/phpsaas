@@ -186,6 +186,18 @@
 
                                             require_once API_APP_MODULES.'order/generate.php';
 
+                                            switch($bookingTime) {
+
+                                                case 'breakfast':
+                                                    $amount=1500;
+                                                    break;
+
+                                                default:
+                                                    $amount=3100;
+                                                    break;
+
+                                            }
+
                                             $data=array(
                                                 'id' => $bookingID,
                                                 'price' => $amount,
