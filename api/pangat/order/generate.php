@@ -16,17 +16,17 @@
 
                 /** Add booking into cart */
 
-                $addIntoCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".APP_SITE_ID.", '{$id}', 'booking', '', '{$price}', 0, NOW())");
+                $addIntoCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".APP_SITE_ID.", '{$id}', 'booking', '', '{$txnAmount}', 0, NOW())");
                 $cartID=mysqli_insert_id($connection);
 
                 /** Create a new order */
 
-                $createNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_currency, order_total_price, order_status) VALUES(".APP_SITE_ID.", '{$booking_user_id}', '".SESSION_ID."', '{$price}', '{$currency}', '{$price}', 0)");
+                $createNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_currency, order_total_price, order_status) VALUES(".APP_SITE_ID.", '{$booking_user_id}', '".SESSION_ID."', '{$txnAmount}', '{$currency}', '{$txnAmount}', 0)");
                 $orderID=mysqli_insert_id($connection);
 
                 /** Initiate the new transactiuon */
 
-                $initiateNewTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$booking_user_id}', '{$orderID}', 'online', '{$currency}', '{$price}', 'booking', 0)");
+                $initiateNewTransaction=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(".SITE_ID.", '{$booking_user_id}', '{$orderID}', 'online', '{$currency}', '{$txnAmount}', 'booking', 0)");
                 $transaction_id=base64_encode(mysqli_insert_id($connection));
 
                 if($addIntoCart && $createNewOrder && $initiateNewTransaction) {

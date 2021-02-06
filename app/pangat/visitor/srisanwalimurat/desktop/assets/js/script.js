@@ -455,7 +455,7 @@ function formSubmission(sendingData) {
             success: function (ret) {
                 
                 if (ret.status == 200) {
-                    
+
                     if(ret.url!='#') {
                         
                         window.location.href=ret.url;
@@ -520,12 +520,22 @@ $("body").delegate("#submitForm", "click", function (e) {
 
     e.preventDefault();
 
+    if($("#donationAmount").val()=='') {
+
+        donationAmt = 0;
+
+    } else {
+
+        donationAmt = $("#donationAmount").val();
+
+    }
+
     bookingData["first_name"] = $(".firstName").val();
     bookingData["last_name"] = $(".lastName").val();
     bookingData["mobile"] = $(".mobName").val();
     bookingData["email"] = $(".emailName").val();
     bookingData["noOfGuest"] = $(".guestVal").val();
-    bookingData["donation"] = $(".donationAmt").val();
+    bookingData["donation"] = donationAmt;
     sendingData = { ...bookingData, ...sendingData };
     
     // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)

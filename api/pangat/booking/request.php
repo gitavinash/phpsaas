@@ -201,6 +201,8 @@
                                             $data=array(
                                                 'id' => $bookingID,
                                                 'price' => $amount,
+                                                'donation' => $donation,
+                                                'txnAmount' => $amount + $donation,
                                                 'bookingRequest' => true,
                                                 'currency' => $currency
                                             );
