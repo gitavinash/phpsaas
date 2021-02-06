@@ -2,7 +2,26 @@
 
 <?php
 
-    $calender_month_visible=((isset($calender_month_visible)) ? $calender_month_visible : 2 );
+    /** Check month range setting is already defined or not */
+
+    if($checkSetting=mysqli_query($connection, "SELECT site_configuration_value FROm ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".APP_SITE_ID." AND site_configuration_name='calender_month_visible'")) {
+
+        if(mysqli_num_rows($checkSetting)!=0) {
+
+            extract(mysqli_fetch_assoc($checkSetting));
+
+            /** Update query of month setting */
+
+            $calender_month_visible=$site_configuration_value;
+
+        } else {
+
+            $calender_month_visible=2;
+
+        }
+
+    }
+
 
 ?>
 
