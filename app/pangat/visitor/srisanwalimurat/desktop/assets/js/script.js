@@ -446,7 +446,6 @@ function formSubmission(sendingData) {
     }
 
     if (sendDataToServer == true) {
-        $(".submitForm").hide();
 
         $.ajax({
             type: "POST",
@@ -470,11 +469,11 @@ function formSubmission(sendingData) {
                     }
 
                 } else {
-                    $(".submitForm").show();
+                    $("#submitForm").show();
                 }
             },
             error: function (err) {
-                $(".submitForm").show();
+                $("#submitForm").show();
                 console.log(err);
                 resetInputs();
             },
@@ -510,6 +509,8 @@ function checkAndShow(elem, classNameSent) {
 /** Submit data to server */
 
 $("body").delegate("#submitForm", "click", function (e) {
+
+    $('#submitForm').hide();
 
     let sendingData = {
         type: "booking",
