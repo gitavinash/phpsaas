@@ -419,6 +419,7 @@ $('#editForm').click(function(e) {
 
     $('.bookingConfirmationScreen').hide();
     $('.bookingFormScreen').show();
+    $('#submitForm').show();
 
 });
 
@@ -472,7 +473,7 @@ function formSubmission(sendingData) {
                 } else {
 
                     popUpMessage("center", ret.msg, ret.status);
-                    
+
                     $("#submitForm").show();
 
                 }
