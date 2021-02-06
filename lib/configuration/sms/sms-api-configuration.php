@@ -22,7 +22,7 @@
             break;
 
         case 'textmysms' :
-            $smsURL="http://sms.textmysms.com/app/smsapi/index.php?key={$sms_key}&campaign={$sms_campaign}&routeid={$sms_routeid}&type={$sms_type}&contacts={$mobile}senderid={$sms_senderid}&msg={$message}&template_id={$sms_dlt_sms_id}";
+            $smsURL="http://sms.textmysms.com/app/smsapi/index.php?key={$sms_key}&campaign={$sms_campaign}&routeid={$sms_routeid}&type={$sms_type}&contacts={$mobile}senderid={$sms_senderid}&msg={$message}&template_id={$dlt_sms_temp_id}";
             break;
 
         default :
