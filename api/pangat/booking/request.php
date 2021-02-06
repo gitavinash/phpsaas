@@ -2,8 +2,9 @@
 
     function request($connection, $data) {
         
-        // print_r($data);
         extract($data);
+
+        $bookingValid=false;
 
         if($first_name!='') {
 
@@ -22,15 +23,22 @@
                 
                                 if($noOfGuest!='') {
 
-                                    if($noOfGuest<100) {
+                                    if(is_numeric($noOfGuest)) {
+
+                                        if($noOfGuest<100) {
                                         
-                                        $bookingValid=true;
+                                            $bookingValid=true;
+    
+                                        } else {
+    
+                                            $msg='Maximum 99 guest are allowed';
+                                            
+                                        }
 
                                     } else {
 
-                                        $bookingValid=false;
-                                        $msg='Maximum 99 guest are allowed';
-                                        
+                                        $msg='Enter no of guest in number';
+
                                     }
                                     
                                 } else {
@@ -182,6 +190,14 @@
 
                                 if($newEnquiry && $newBooking) {
 
+                                    /** Send sms */
+
+                                    require_once APP_SMS_TEMPLATE.'booking-request.php';
+
+                                    /** Send email */
+
+                                    require_once APP_EMAIL_TEMPLATE.'booking-request.php';
+
                                     if(isset($acceptPayment)) {
 
                                         if($acceptPayment==1) {
@@ -221,14 +237,6 @@
 
                                         $status=200;
                                         $msg='Pangat request received successfully';
-
-                                        /** Send sms */
-
-                                        require_once APP_SMS_TEMPLATE.'booking-confirmation.php';
-
-                                        /** Send email */
-
-                                        require_once APP_EMAIL_TEMPLATE.'booking-confirmation.php';
 
                                     }
 
