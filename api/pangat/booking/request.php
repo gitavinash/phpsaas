@@ -2,6 +2,7 @@
 
     function request($connection, $data) {
         
+        // print_r($data);
         extract($data);
 
         if($first_name!='') {
@@ -15,22 +16,25 @@
                         if(preg_match("/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/", $mobile)) {
         
                             
-                            $noOfGuest=((isset($noOfGuest)) ? $noOfGuest : 0 );
+                            $noOfGuest=(($noOfGuest!='') ? $noOfGuest : 0 );
                 
-                            if($guest!=false) {
+                            if($guest==1) {
                 
-                                if($noOfGuest!=0) {
-                
-                                    $bookingValid=true;
-                                    
-                                } else {
+                                if($noOfGuest!='') {
 
                                     if($noOfGuest<100) {
+                                        
                                         $bookingValid=true;
-                                    } else {
-                                        $bookingValid=false;
-                                    }
 
+                                    } else {
+
+                                        $bookingValid=false;
+                                        $msg='Maximum 99 guest are allowed';
+                                        
+                                    }
+                                    
+                                } else {
+                                    
                                     $msg='Please enter no of guests';
                 
                                 }

@@ -452,6 +452,8 @@ function formSubmission(sendingData) {
             dataType: "json",
             data: sendingData,
             success: function (ret) {
+
+                console.log(ret);
                 
                 if (ret.status == 200) {
 
@@ -463,14 +465,18 @@ function formSubmission(sendingData) {
 
                         popUpMessage("center", ret.msg, ret.status);
                         
-                        window.setTimeout(function () {
-                            location.reload();
-                        }, 1600);
+                        $("#submitForm").show();
+                        
                     }
 
                 } else {
+
+                    popUpMessage("center", ret.msg, ret.status);
+                    
                     $("#submitForm").show();
+
                 }
+                
             },
             error: function (err) {
                 $("#submitForm").show();
@@ -510,8 +516,6 @@ function checkAndShow(elem, classNameSent) {
 
 $("body").delegate("#submitForm", "click", function (e) {
 
-    $('#submitForm').hide();
-
     let sendingData = {
         type: "booking",
         action: "request",
@@ -540,6 +544,8 @@ $("body").delegate("#submitForm", "click", function (e) {
     sendingData = { ...bookingData, ...sendingData };
     
     // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
+
+    $('#submitForm').hide();
     formSubmission(sendingData);
 
 });
