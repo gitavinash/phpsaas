@@ -1,3 +1,23 @@
+<?php
+
+	/** Check month range setting is already defined or not */
+
+	if($checkSetting=mysqli_query($connection, "SELECT site_configuration_value as calender_month_visible FROm ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".APP_SITE_ID." AND site_configuration_name='calender_month_visible'")) {
+
+		if(mysqli_num_rows($checkSetting)!=0) {
+
+			extract(mysqli_fetch_assoc($checkSetting));
+
+		} else {
+
+			$calender_month_visible=2;
+
+		}
+
+	}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -284,6 +304,7 @@
 						</div>
 						<div class="col-2" style="height: 10px" ></div>
 						<div class="col-md-4 col-xs-12">
+							<input type="hidden" id="calenderMonthLimit" value="<?php echo $calender_month_visible ?>" >
 							<input type="submit" id="submitForm" class="btn btn-success btn-block" value="Continue" >
 						</div>
 					</div>

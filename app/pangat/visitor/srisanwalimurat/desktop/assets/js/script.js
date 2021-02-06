@@ -6,7 +6,7 @@ var year = dates.getFullYear();
 var onGoingMonth = dates.getMonth();
 var onGoingYear = dates.getFullYear();
 var isPrevAllowed = 0;
-var isNextAllowed = 2;
+var isNextAllowed = $('#calenderMonthLimit').val();
 var dataIndexer = 0;
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
