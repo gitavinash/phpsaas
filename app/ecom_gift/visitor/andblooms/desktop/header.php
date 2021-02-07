@@ -293,7 +293,7 @@
 									  </li> -->
 									</ul>
 
-									<a href=" " class="cont-menu">Contact Us</a>
+									<a href="/contact/" class="cont-menu">Contact Us</a>
 								</div>
 							</nav>
 						</div>
