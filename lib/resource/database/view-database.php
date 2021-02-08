@@ -7,11 +7,11 @@
   mysqli_query($connection, "CREATE
     OR REPLACE VIEW ".TABLE_PREFIX."view_daily_page_view AS
     SELECT
-      COUNT(analytics_id) AS page_view_total,
       analytics_site_id AS page_view_site_id,
+      COUNT(analytics_id) AS page_view_total,
       DATE(analytics_time) as page_view_time
     FROM
       ".TABLE_PREFIX."analytics
     GROUP BY
-    analytics_site_id
+      DATE(analytics_time)
   ");
