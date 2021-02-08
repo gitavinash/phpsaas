@@ -182,6 +182,32 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="box-2">
+                                    <?php
+                                    
+                                        if($orderMeta=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$id}' AND order_site_id='".APP_SITE_ID."'")) {
+
+                                            if(mysqli_num_rows($orderMeta)!=0) {
+
+                                                while($orderMetaData=mysqli_fetch_assoc($orderMeta)) {
+
+                                                    extract($orderMetaData);
+
+                                                    echo "<div class='form-group'>
+                                                        <label>".ucwords($order_meta_key)."</label>
+                                                        <input type='text' class='form-control inside-shadow' value='{$order_meta_value}' readonly >
+                                                    </div>";
+
+                                                }
+
+                                            }
+
+                                        }
+
+                                    ?>
+                                </div>
+
                                 <div class="form-group">
                                     <input type="hidden" name="type" value="order" >
                                     <input type="hidden" name="id" value="<?php echo $id ?>" >
