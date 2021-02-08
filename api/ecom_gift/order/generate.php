@@ -57,7 +57,7 @@
         
                         } else {
         
-        
+                            $msg='Please select payment mode';
         
                         }
         
