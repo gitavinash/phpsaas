@@ -314,7 +314,8 @@
 		
 	</section>
 
-    <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
+	<?php include_once NOTIFICATION.'index.php' ?>
+
     <script src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
     <script src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 	<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
