@@ -9,6 +9,7 @@
 				<select name="importFrom" id='importFrom' class='form-control inside-shadow' required >
 				    <option value="" >Import from</option>
                     <option value="wordpress">WordPress</option>
+                    <option value="etsy">Etsy</option>
                     <option value="csv">CSV</option>
 				</select>
             </div>

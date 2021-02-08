@@ -12,8 +12,6 @@
       DATE(analytics_time) as page_view_time
     FROM
       ".TABLE_PREFIX."analytics
-    WHERE
-      DATE(analytics_time) = CURDATE()
     GROUP BY
     analytics_site_id
   ");
