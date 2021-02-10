@@ -88,7 +88,7 @@
 
                                     }
 
-                                    $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES('{$productName}', '{$productDescription}', '{$productShortDescription}', '{$categoryID}', ".USER_ID.",'1', 'product')");
+                                    $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_site_id, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(".APP_SITE_ID.", '{$productName}', '{$productDescription}', '{$productShortDescription}', '{$categoryID}', ".USER_ID.",'1', 'product')");
                                     $productID=mysqli_insert_id($connection);
 
                                     $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$productIsFeatured}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
