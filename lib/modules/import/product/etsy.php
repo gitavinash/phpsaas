@@ -21,47 +21,36 @@
                 $productTags=str_replace('_', ' ', mysqli_real_escape_string($connection, $dataLines[5]));
                 $productHighlights=mysqli_real_escape_string($connection, $dataLines[6]);
 
-                echo $productTags;
-                exit();
-                
-                /** Product sale price */
+                $productGalleryImages=array();
 
-                $productSalePrice=mysqli_real_escape_string($connection, $dataLines[15]);
-                $productSalePrice=(($productSalePrice!=0) ? $productSalePrice : $productMRP );
+                for($i=7; $i<=16; $i++) {
 
+                    if($dataLines[$i]!='') {
 
+                        $productGalleryImages[]=$dataLines[$i];
 
-                $productURL=mysqli_real_escape_string($connection, $dataLines[1]);
-                $productStatus=mysqli_real_escape_string($connection, (($dataLines[5]=='publish') ? 1 : 0 ));
-                $productDate=mysqli_real_escape_string($connection, date('Y-m-d', strtotime($dataLines[7])));
-                $productSKU=mysqli_real_escape_string($connection, $dataLines[10]);
+                    }
 
-                $productWeight=mysqli_real_escape_string($connection, $dataLines[16]);
-                $productLenght=mysqli_real_escape_string($connection, $dataLines[17]);
-                $productWidth=mysqli_real_escape_string($connection, $dataLines[18]);
-                $productHeight=mysqli_real_escape_string($connection, $dataLines[19]);
-                $productInStock=mysqli_real_escape_string($connection, (($dataLines[22]=='instock') ? 1 : 0 ));
-                $productBackOrder=mysqli_real_escape_string($connection, (($dataLines[23]=='yes') ? 1 : '' ));
-                $productManageStock=mysqli_real_escape_string($connection, (($dataLines[24]=='yes') ? 1 : 0 ));
-                $productTaxStatus=mysqli_real_escape_string($connection, (($dataLines[25]=='taxable') ? 1 : 0));
-                $productTaxRate=mysqli_real_escape_string($connection, $dataLines[20]);
-                $productIsFeatured=mysqli_real_escape_string($connection, $dataLines[28]);
+                }
 
-                
-                $productImages=mysqli_real_escape_string($connection, $dataLines[38]);
+                $productMetaName[]=mysqli_real_escape_string($connection, $dataLines[18]);
+                $productMetaValue[]=mysqli_real_escape_string($connection, $dataLines[19]);
 
-                if($productImages!='') {
+                $productMetaValue[]=mysqli_real_escape_string($connection, $dataLines[21]);
+                $productMetaValue[]=mysqli_real_escape_string($connection, $dataLines[22]);
 
-                    $galleryImages=explode(' | ', $productImages);
+                $productSKU=mysqli_real_escape_string($connection, $dataLines[23]);
+
+                if($productGalleryImages!='') {
 
                     $localSavedGallery=array();
-                    $imageGallerySize=sizeof($galleryImages);
+                    $imageGallerySize=sizeof($productGalleryImages);
 
                     for($j=0; $j<$imageGallerySize; $j++) {
 
-                        if(isset($galleryImages[$j])) {
+                        if(isset($productGalleryImages[$j])) {
 
-                            $galleryImageNameArray=explode('/', $galleryImages[$j]);
+                            $galleryImageNameArray=explode('/', $productGalleryImages[$j]);
                             $galleryImagesName=end($galleryImageNameArray);
                             $galleryImagesName=explode('.', $galleryImagesName);
                             $filename=$galleryImagesName[0];
@@ -96,7 +85,7 @@
 
                             }
 
-                            $response=file_put_contents($uploadFile, file_get_contents($galleryImages[$j]));
+                            $response=file_put_contents($uploadFile, file_get_contents($productGalleryImages[$j]));
 
                             if($response) {
 
@@ -108,7 +97,7 @@
 
                                 $addNewMedia=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadMediaPath}', '{$uploadFileName}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
                                 $mediaID=mysqli_insert_id($connection);
-            
+
                                 $mediaLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
 
                             } else {
@@ -148,7 +137,7 @@
                             
                             if(mysqli_num_rows($checkURL)!=0) {
 
-                                $url=ltrim($url, '/').'-'.$productSKU.'/';
+                                $url=ltrim($url, '/').'-'.(($productSKU!='') ? $productSKU : time() ).'/';
 
                             }
 
@@ -157,12 +146,28 @@
                         $addNewProduct=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product(product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES('{$productFeaturedImage}', '{$productFeaturedImage}', '{$gallery}', '{$productName}', '{$productDescription}', '{$productHighlights}', '{$categoryID}', ".USER_ID.",'1', 'product')");
                         $productID=mysqli_insert_id($connection);
 
-                        $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$productIsFeatured}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
+                        $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '0', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
                         $linkID=mysqli_insert_id($connection);
 
-                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', '{$productSKU}', 'INR', '{$productSalePrice}', '{$productMRP}', '{$productTaxStatus}', '{$productTaxRate}', '{$productInStock}', '{$productInStock}', '{$productBackOrder}', '{$productWeight}', '{$productLenght}', '{$productWidth}', '{$productHeight}', '1', current_timestamp())");
+                        $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', '{$productSKU}', '{$productCurrency}', '{$productMRP}', '{$productMRP}', '', '', '', '', '', '', '', '', '', '1', current_timestamp())");
 
                         $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', 'product', '{$productName}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productName}', '{$productHighlights}', '', '{$productName}', '{$productHighlights}')");
+
+                        /** Insert product meta values */
+
+                        for($i=0; $i<sizeof($productMetaName); $i++) {
+
+                            if($productMetaName[$i]!=0) {
+
+                                $addProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_name, product_meta_value, product_meta_status) VALUES('{$productID}', '".APP_SITE_ID."', '{$productMetaName[$i]}', '{$productMetaValue[$i]}', 1)");
+
+                            } else {
+
+                                $addProductMeta=true;
+
+                            }
+
+                        }
 
                         /* Insert tags into tag table */
 
@@ -183,9 +188,10 @@
 
                         }
 
-                        if($addNewMedia && $mediaLink && $addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags) {
+                        if($addNewMedia && $mediaLink && $addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags && $addProductMeta) {
 
                             $success++;
+                            $status=200;
                             $msg='Product import successfully';
                             mysqli_query($connection, "COMMIT");
                                             
@@ -193,7 +199,7 @@
 
                             $failed++;
                             // $msg='Something is wrong while adding new product';
-                            $msg=mysqli_error($connection);
+                            echo 'Error -> '.$i.' -> '.$j.' | '.$addNewMedia.' && '.$mediaLink.' && '.$addNewProduct.' && '.$addNewLink.' && '.$addNewInventory.' && '.$addNewMeta.' && '.$addNewTags.' && '.$addProductMeta;
                             mysqli_query($connection, "ROLLBACK");
 
                         }

@@ -403,9 +403,9 @@
 
   mysqli_query($connection, "CREATE TABLE isw_product_meta (
     product_meta_id bigint(20) NOT NULL,
-    product_relation_id bigint(20) NOT NULL,
-    product_site_id bigint(20) NOT NULL,
-    product_meta_key varchar(255) NOT NULL,
+    product_meta_relation_id bigint(20) NOT NULL,
+    product_meta_site_id bigint(20) NOT NULL,
+    product_meta_name varchar(255) NOT NULL,
     product_meta_value longtext NOT NULL,
     product_meta_status int(1) NOT NULL,
     product_meta_update timestamp NOT NULL DEFAULT current_timestamp()
@@ -413,8 +413,8 @@
 
   mysqli_query($connection, "ALTER TABLE isw_product_meta
     ADD PRIMARY KEY (product_meta_id),
-    ADD KEY product_id (product_relation_id),
-    ADD KEY product_site_id (product_site_id)");
+    ADD KEY product_meta_id (product_meta_relation_id),
+    ADD KEY product_meta_site_id (product_meta_site_id)");
 
   mysqli_query($connection, "ALTER TABLE isw_product_meta
     MODIFY product_meta_id bigint(20) NOT NULL AUTO_INCREMENT");
