@@ -797,6 +797,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
     ADD INDEX site_installation_parent_site_id (site_installation_parent_site_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_installation_status site_installation_status INT(1) NOT NULL AFTER site_installation_package_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_installation_activation_time site_installation_activation_time DATE NOT NULL AFTER site_installation_expiry_date");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_installation
+    CHANGE site_installation_activation_time site_installation_activation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+
   /** Site Configuration Table ( for SMS, E-Mail, Payment Gateway and other things ) */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_configuration (

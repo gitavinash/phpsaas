@@ -8,7 +8,6 @@
 
 		$expireDate=date('Y-m-d', strtotime('+1 years'));
         $theme=((isset($theme)) ? $theme : 1 );
-        $package=((isset($package)) ? $package : 1 );
         $checkUser=mysqli_query($connection, "SELECT user_id, site_id FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."site ON site_owner_id=user_id WHERE user_username='{$username}'");
     
         if(mysqli_num_rows($checkUser)!=0) {
@@ -25,9 +24,7 @@
 
                 $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_custom_domain=1 WHERE site_setting_site_id='{$site_id}'");
 
-                $updateSiteApp=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_installation SET site_installation_parent_site_id='{$site_id}', site_installation_user_id='{$user_id}', site_installation_package_id={$package}, site_installation_expiry_date='{$expireDate}' WHERE site_installation_parent_site_id='{$site_id}'");
-
-                if($updateSite && $updateSiteSetting && $updateSiteApp) {
+                if($updateSite && $updateSiteSetting) {
 
                     $status='success';
                     $msg='Website setup is successfully completed';

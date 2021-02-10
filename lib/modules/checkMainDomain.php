@@ -6,38 +6,30 @@
 
 		if(mysqli_num_rows($checkInstallation)==0) {
 
-			if($checkInstallationAnyWebsite=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site INNER JOIN ".TABLE_PREFIX."site_setting ON site_setting_site_id=site_id AND site_domain='".SITE_DOMAIN."'")) {
+			if($checkDomain=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site")) {
 
-				if(mysqli_num_rows($checkInstallationAnyWebsite)==0) {
-
-					if($checkDomain=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site")) {
-
-						if(mysqli_num_rows($checkDomain)==0) {
-							
-							$websiteIntallationFile=ROOT.'/app/install/website.php';
-
-							if(file_exists($websiteIntallationFile)) {
-								
-								require_once $websiteIntallationFile;
-								exit();
-
-							} else {
-
-								echo 'Unable to find <strong>Website Installation File</strong> on the server';
-
-							}
+				if(mysqli_num_rows($checkDomain)==0) {
 					
-						} else {
+					$websiteIntallationFile=ROOT.'/app/install/website.php';
 
-							echo SITE_DOMAIN.' is not registed with us';
-							exit();
+					if(file_exists($websiteIntallationFile)) {
+						
+						require_once $websiteIntallationFile;
+						exit();
 
-						}
-					
+					} else {
+
+						echo 'Unable to find <strong>Website Installation File</strong> on the server';
+
 					}
-					
-				}
+			
+				} else {
 
+					echo SITE_DOMAIN.' is not registed with us';
+					exit();
+
+				}
+			
 			}
 
 		} else {
