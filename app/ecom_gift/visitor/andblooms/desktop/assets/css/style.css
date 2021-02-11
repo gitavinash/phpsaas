@@ -3351,7 +3351,7 @@ footer{
 @media only screen and (min-width: 320px) and (max-width: 768px){
 
 .card-ban {
-    height: 130px;
+    height: 150px;
     overflow: hidden;
 }
 
