@@ -213,8 +213,7 @@
                         } else {
 
                             $failed++;
-                            // $msg='Something is wrong while adding new product';
-                            echo 'Error -> '.$j.' -> '.$i.' | '.$addNewMedia.' && '.$mediaLink.' && '.$addNewProduct.' && '.$addNewLink.' && '.$addNewInventory.' && '.$addNewMeta.' && '.$addNewTags.' && '.$addProductMeta;
+                            $msg='Something is wrong while adding new product';
                             mysqli_query($connection, "ROLLBACK");
 
                         }
