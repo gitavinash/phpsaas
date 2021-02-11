@@ -3350,15 +3350,18 @@ footer{
 
 @media only screen and (min-width: 320px) and (max-width: 768px){
 
+.card-ban {
+    height: 130px;
+    overflow: hidden;
+}
+
 .flickity-viewport {
     height: 300px !important
 }
 
 .carousel-main .carousel-cell img {
-
     width: auto;
     max-height: 300px;
-
 }
 
 .fot-box ul li {
