@@ -50,63 +50,72 @@
 
                         if(isset($productGalleryImages[$j])) {
 
-                            $galleryImageNameArray=explode('/', $productGalleryImages[$j]);
-                            $galleryImagesName=end($galleryImageNameArray);
-                            $galleryImagesName=explode('.', $galleryImagesName);
-                            $filename=$galleryImagesName[0];
-                            $fileExtension=end($galleryImagesName);
-                            $filetype='image/'.$fileExtension;
+                            if($productGalleryImages[$j]!='') {
 
-                            $uploadPath=ROOT.'/upload/'.date('Y/m/');
-                            $uploadFile=$uploadPath.time().'_'.strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename)).'.'.$fileExtension;
-                            $uploadMediaPath=str_replace(ROOT, '', $uploadFile);
-                            $uploadMediaLink='/attachment'.str_replace('.'.$fileExtension, '', $uploadMediaPath).'/';
-                            $uploadFileName=ucwords(preg_replace('/[_]+/', ' ',str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
+                                $galleryImageNameArray=explode('/', $productGalleryImages[$j]);
+                                $galleryImagesName=end($galleryImageNameArray);
+                                $galleryImagesName=explode('.', $galleryImagesName);
+                                $filename=$galleryImagesName[0];
+                                $fileExtension=end($galleryImagesName);
+                                $filetype='image/'.$fileExtension;
 
-							/** Original Image variables */
-								
-							$originalUploadDir=$uploadPath.'original/';
+                                $uploadPath=ROOT.'/upload/'.date('Y/m/');
+                                $uploadFile=$uploadPath.time().'_'.strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename)).'.'.$fileExtension;
+                                $uploadMediaPath=str_replace(ROOT, '', $uploadFile);
+                                $uploadMediaLink='/attachment'.str_replace('.'.$fileExtension, '', $uploadMediaPath).'/';
+                                $uploadFileName=ucwords(preg_replace('/[_]+/', ' ',str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
 
-							/** Thumbnail Image variables */
-	
-							$thumbnailUploadDir=$uploadPath.'thumbnail/';
+                                /** Original Image variables */
+                                    
+                                $originalUploadDir=$uploadPath.'original/';
 
-                            if(!is_dir($uploadPath)) {
-            
-                                mkdir($uploadPath, 0755, true);
+                                /** Thumbnail Image variables */
+        
+                                $thumbnailUploadDir=$uploadPath.'thumbnail/';
 
-                                /* Creating original image directory inside default upload directory */
+                                if(!is_dir($uploadPath)) {
+                
+                                    mkdir($uploadPath, 0755, true);
 
-                                mkdir($originalUploadDir, 0755, true);
+                                    /* Creating original image directory inside default upload directory */
 
-                                /* Creating thumbnail image directory inside default upload directory */
+                                    mkdir($originalUploadDir, 0755, true);
 
-                                mkdir($thumbnailUploadDir, 0755, true);
+                                    /* Creating thumbnail image directory inside default upload directory */
 
-                            }
-
-                            $response=file_put_contents($uploadFile, file_get_contents($productGalleryImages[$j]));
-
-                            if($response) {
-
-                                if($j==0) {
-
-                                    $productFeaturedImage=$uploadMediaPath;
+                                    mkdir($thumbnailUploadDir, 0755, true);
 
                                 }
 
-                                $addNewMedia=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadMediaPath}', '{$uploadFileName}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
-                                $mediaID=mysqli_insert_id($connection);
+                                $response=file_put_contents($uploadFile, file_get_contents($productGalleryImages[$j]));
 
-                                $mediaLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
+                                if($response) {
+
+                                    if($j==0) {
+
+                                        $productFeaturedImage=$uploadMediaPath;
+
+                                    }
+
+                                    $addNewMedia=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadMediaPath}', '{$uploadFileName}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
+                                    $mediaID=mysqli_insert_id($connection);
+
+                                    $mediaLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
+
+                                } else {
+
+                                    $msg='Unable to download image from server ';
+
+                                }
+
+                                $localSavedGallery[]=$uploadMediaPath;
 
                             } else {
 
-                                $msg='Unable to download image from server ';
+                                $addNewMedia=true;
+                                $mediaLink=true;
 
                             }
-
-                            $localSavedGallery[]=$uploadMediaPath;
 
                         } else {
 
@@ -126,8 +135,6 @@
                     $mediaLink=true;
 
                 }
-
-                echo 'Add new media : '.$addNewMedia;
 
                 // if($checkProduct=mysqli_query($connection, "SELECT inventory_relation_id FROM ".TABLE_PREFIX."inventory WHERE inventory_sku='{$productSKU}' AND ")) {
 
