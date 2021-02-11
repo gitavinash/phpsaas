@@ -166,7 +166,7 @@
 
                         $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_update, inventory_status) VALUES ('{$productID}', ".APP_SITE_ID.", '{$productSKU}', '{$productCurrency}', '{$productMRP}', '{$productMRP}', '', '', '1', '', '', '', '','', '', '', '1')");
 
-                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".APP_SITE_ID.", 'product', '{$productName}', '{$productHighlights}', '{$productTags}', '', '', '', '{$productName}', '{$productHighlights}', '', '{$productName}', '{$productHighlights}')");
+                        $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".APP_SITE_ID.", 'product', '{$productName}', '{$productHighlights}', '{$productTags}', '', '', '{$productFeaturedImage}', '{$productName}', '{$productHighlights}', '{$productFeaturedImage}', '{$productName}', '{$productHighlights}')");
 
                         /** Insert product meta values */
 
