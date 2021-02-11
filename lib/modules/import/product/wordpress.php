@@ -54,8 +54,12 @@
 
                             $galleryImageNameArray=explode('/', $galleryImages[$j]);
                             $galleryImagesName=end($galleryImageNameArray);
+                            
+                            /** Image file name */
                             $galleryImagesName=explode('.', $galleryImagesName);
-                            $filename=$galleryImagesName[0];
+                            array_pop($galleryImagesName);
+                            $filename=implode('_', $galleryImagesName);
+
                             $fileExtension=end($galleryImagesName);
                             $filetype='image/'.$fileExtension;
 

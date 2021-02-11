@@ -52,7 +52,7 @@
 
 		/** Import Database */
 
-		require_once ROOT.'/app/install/import-database.php';
+		require_once  ROOT.'/lib/resource/database/setup-database.php';
 		exit();
 				
 	}

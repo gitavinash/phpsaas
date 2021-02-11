@@ -54,8 +54,13 @@
 
                                 $galleryImageNameArray=explode('/', $productGalleryImages[$j]);
                                 $galleryImagesName=end($galleryImageNameArray);
+
+                                /** Image file name */
+
                                 $galleryImagesName=explode('.', $galleryImagesName);
-                                $filename=$galleryImagesName[0];
+                                array_pop($galleryImagesName);
+                                $filename=implode('_', $galleryImagesName);
+
                                 $fileExtension=end($galleryImagesName);
                                 $filetype='image/'.$fileExtension;
 
@@ -98,6 +103,7 @@
                                     }
 
                                     $addNewMedia=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadMediaPath}', '{$uploadFileName}', '{$filetype}', '{$fileExtension}', '".USER_ID."', 1, '".SITE_ID."')");
+
                                     $mediaID=mysqli_insert_id($connection);
 
                                     $mediaLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$uploadMediaLink}', '{$mediaID}', 200, 'media', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), NOW())");
@@ -208,7 +214,7 @@
 
                             $failed++;
                             // $msg='Something is wrong while adding new product';
-                            echo 'Error -> '.$i.' -> '.$j.' | '.$addNewMedia.' && '.$mediaLink.' && '.$addNewProduct.' && '.$addNewLink.' && '.$addNewInventory.' && '.$addNewMeta.' && '.$addNewTags.' && '.$addProductMeta;
+                            echo 'Error -> '.$j.' -> '.$i.' | '.$addNewMedia.' && '.$mediaLink.' && '.$addNewProduct.' && '.$addNewLink.' && '.$addNewInventory.' && '.$addNewMeta.' && '.$addNewTags.' && '.$addProductMeta;
                             mysqli_query($connection, "ROLLBACK");
 
                         }
