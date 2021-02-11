@@ -156,7 +156,9 @@ $(document).ready(function() {
                   dataType: 'json',
                   data: formData,
                   success: function(data) {
-   
+
+                      $('html, body').animate({ scrollTop: 0 }, 'fast');
+
                       $('#addToCart').show();
                       
                       if(data.status==200) {

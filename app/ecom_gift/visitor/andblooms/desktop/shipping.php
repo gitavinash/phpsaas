@@ -108,10 +108,10 @@
 												<h3 class="heading-2">Order summary</h3>
 
 												<div class="row">
-													<div class="col-3">
+													<div class="col-md-3 col-xs-12">
 														<img src="<?php echo $product_image ?>" width="100px" height="100px" alt="">
 													</div>
-													<div class="col-9"><strong><?php echo $product_title ?></strong><br />Qty: <?php echo $cart_qty ?></div>
+													<div class="col-md-9 col-xs-12"><strong><?php echo $product_title ?></strong><br />Qty: <?php echo $cart_qty ?></div>
 												</div>
 
 											</div>
