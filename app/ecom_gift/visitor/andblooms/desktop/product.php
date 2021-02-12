@@ -127,7 +127,8 @@
 					</div> -->
 					<div class="cart-box">
 						<input type="hidden" id="qty" value="<?php echo $product_id.'_1_'.(($inventory_price!=0) ? $inventory_price : $inventory_mrp) ?>" >
-						<span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date: <?php echo date('d M Y', strtotime('+1 days')) ?></span>
+						<!-- <span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date: <?php echo date('d M Y', strtotime('+1 days')) ?></span> -->
+						<span><img src="<?php echo USER_IMAGES ?>van.svg">Same day delivery</span>
 						
 						<?php
 					
