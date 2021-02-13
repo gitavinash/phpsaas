@@ -344,6 +344,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
     ADD INDEX inventory_site_id (inventory_site_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD inventory_currency_symbol VARCHAR(1) NOT NULL DEFAULT '₹' AFTER inventory_currency");
+
   /** Update Transaction Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."transaction

@@ -20,21 +20,24 @@
 						</div>
 						<div class="col-md-3">
 							<div class="fot-box">	
-								<h3>My Account</h3>
+								<h3>Quick links</h3>
 								<ul class="list-unstyled">
-					              <li><a href="index">The Brand</a></li>
-					              <li><a href="index">Jwelery faq</a></li>
-					              <li><a href="index">REtailer</a></li>
+									<li><a href="/">Home</a></li>
+									<li><a href="/about-us/" >The Brand</a></li>
+									<li><a href="/faq/" >Jewery Faq</a></li>
+									<li><a href="/how-to-wear/" >How to wear</a></li>
+									<li><a href="/contact-us/">Contact Us</a></li>
 					            </ul>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="fot-box">	
-								<h3>Quick Links</h3>
+								<h3>Information</h3>
 								<ul class="list-unstyled">
-					              <li><a href="index">Content</a></li>
-					              <li><a href="index">Retailer</a></li>
-					              <li><a href="index">Shipping</a></li>
+									<li><a href="/privacy-policy/">Privacy Policy</a></li>
+									<li><a href="/disclaimer/">Disclaimer</a></li>
+									<li><a href="/return-policy/">Return Policy</a></li>
+									<li><a href="/terms-of-use/">Terms of Use</a></li>
 					            </ul>
 							</div>
 						</div>

@@ -8,6 +8,7 @@
 		<meta name="" content="">
 		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
 		<title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'}.' | '.SITE_NAME ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
+		
 		<!-- css -->
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
@@ -17,15 +18,16 @@
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.css">
 		        
-        <!-- SEO -->
+        <!-- SEO --><!-- SEO -->
 
         <meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
         <meta name='robots' content='<?php echo $meta_robots ?>' />
-        <meta name='title' content="<?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'}.' | '.SITE_NAME ) : SITE_DESC.' | '.SITE_NAME ) ?>" />
+		<link rel="manifest" href="mainfest.json">
+		<link rel="apple-touch-icon" href="<?php echo SITE_ICON ?>">
+        <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
         <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" >
         <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
         <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
-		<link rel="manifest" href="mainfest.json">
 
 	</head>
 	<body >
