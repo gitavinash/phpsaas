@@ -310,17 +310,22 @@ hr.bdr-gry-bg {
     width: 100%;
     float: left;
     max-height: 250px;
-    min-height: 240px;
+    overflow: hidden;
 }
 .product-box a .pro-img img{
     width: 100%;
 }
 .product-box h3 {
+    float: left;
     color: #333;
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 10px;
+    margin-top: 10px;
     text-align: left;
+    overflow: hidden;
+    line-height: 24px;
+    height: 100px;
 }
 .product-box h4 {
     font-size: 15px;
@@ -329,7 +334,9 @@ hr.bdr-gry-bg {
     text-align: left;
 }
 .product-box h4 span{
-    font-weight: 400    
+    font-weight: 400;
+    color: #ebb15a;
+    font-size: 24px;
 }
 .product-box a:hover img{
     transform: scale(1.2);
@@ -347,6 +354,7 @@ span.tag-new {
     position: absolute;
     right: -20px;
     top: -14px;
+    z-index: 9;
 }
 span.tag-new:after {
     border-left: 3px solid #ebb15a;
@@ -1868,7 +1876,7 @@ a.cart-ad-btn {
 }
 .filter-right{
     width: 30%;
-    float: left;
+    float: right;
     text-align: right;
 }
 .recom{
@@ -2488,7 +2496,7 @@ hr.bdr-gry-bg {
     font-weight: 500;
     margin-bottom: 10px;
     text-align: left;
-    height: 38px;
+    height: 100px;
     float: left;
     width: 100%;
     overflow: hidden;

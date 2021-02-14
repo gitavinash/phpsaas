@@ -1,4 +1,84 @@
+		<!-- testimonial start -->
+		<section class="section-content-2">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="heading2">
+							<h2>Testimonial</h2>
+							<hr class="bdr-gry">
+							<p>We know that your jewelry means a lot to you, and that's why we offer a 1-year warranty on it.</p>
+						</div>
+					</div>
 
+					<div class="col-md-12">
+						<div class="carousel carousel-home-bestlook" data-flickity='{ "groupCells": true, "freeScroll": false, "contain": true }'>
+							<div class="carousel-cell-bestlook">
+								<a href="">
+								<div class="col-card-3">
+									<div class="event-card">
+										
+										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P4_Homepage.jpg);">
+											<div class="over-screen-look">
+											<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
+											<h5>Cathrine</h5>
+											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
+										</div>
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							<div class="carousel-cell-bestlook">
+								<a href="">
+								<div class="col-card-3">
+									<div class="event-card">
+										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P8_BeMaadandYou.jpg);">
+											<div class="over-screen-look">
+												<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
+											<h5>Cathrine</h5>
+											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							<div class="carousel-cell-bestlook">
+								<a href="">
+								<div class="col-card-3">
+									<div class="event-card">
+										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P3_Homepage.jpg);">
+											<div class="over-screen-look">
+												<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
+											<h5>Cathrine</h5>
+											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							<div class="carousel-cell-bestlook">
+								<a href="">
+								<div class="col-card-3">
+									<div class="event-card">
+										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P8_BeMaadandYou.jpg);">
+											<div class="over-screen-look">
+												<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
+											<h5>Cathrine</h5>
+											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- testimonial end -->
 
 		<footer>
 			<div class="top-section-footer ">
@@ -6,7 +86,7 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="foter-left">
-								<h1><?php echo SITE_NAME ?></h1>
+								<h1><a href="/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></h1>
 								<p><?php echo SITE_DESC ?></p>
 
 								<div class="cont-nfo">
@@ -76,6 +156,8 @@
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
+		<script type="text/javascript" src="<?php echo USER_JS ?>zoom-image.js"  ></script>
+		<script type="text/javascript" src="<?php echo USER_JS ?>product-zoom-main.js"  ></script>
 		<!-- script end -->
 		<script>
 			window.onscroll = function() {myFunction()};

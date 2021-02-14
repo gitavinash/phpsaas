@@ -1,136 +1,8 @@
-  <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-      	<link rel="shortcut icon" href=" ">
-		<title>Product</title>
-		<meta name="" content="">
-		<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
-		<!-- css -->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-		<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-		<script src="https://kit.fontawesome.com/6e319b2dad.js" crossorigin="anonymous"></script>
-		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+<?php
 
-		<link rel="stylesheet" type="text/css" href="css/product-zoom.css">
+	include_once 'header.php';
 
-	</head>
-	<body>
-		<!-- header start -->
-		<header id="header">
-			<div class="header-mid dn-s">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-5">
-							<div class="lang-section">
-								<form action="" autocomplete="on">
-									<div class="input-group slct-lang">
-	  									<select class="custom-select" id="inputGroupSelect02">
-		    								<option selected>English</option>
-		    								<option value="1">Hindi</option>
-		    								<option value="2">Urban</option>
-		    								<option value="3">Urdu</option>
-	  									</select>
-								    </div>
-								    <div class="input-group slct-lang1">
-	  									<select class="custom-select" id="inputGroupSelect02">
-		    								<option selected>USD</option>
-		    								<option value="1">INR</option>
-	  									</select>
-								    </div>
-									<div class="searc-div">
-										<!-- <div id="google_translate_element"></div> -->
-										<input id="search" name="search" type="text" placeholder="What're we looking for ?"><input id="search_submit" value="Rechercher" type="submit">
-									</div>
-								</form>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="logo">
-								<img src="image/logo.jpg" align="logo">
-							</div>
-						</div>
-						<div class="col-md-5">
-							<div class="search-pro">
-								<nav class="navbar navbar-expand-lg login-section justify-content-right ">
-								<div class="collapse navbar-collapse" id="navbarNavDropdown">
-									<ul class="navbar-nav justify-content-center menu-login">
-									  <li><a href=""><img src="image/heart.jpg"><b>Wishlist</b></a></li>
-									  <li class="nav-item dropdown">
-									      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><img src="image/account.png"><b>My Account</b></a>
-									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="#">My Account</a>
-									        <a class="dropdown-item" href="#">My Whislist</a>
-									        <a class="dropdown-item" href="#">Register</a>
-									        <a class="dropdown-item" href="#">Login</a>
-									      </div>
-									  </li>
-									  <li><a href=""><img src="image/bag.jpg"><span>0</span><b>Cart</b></a></li>
-									  
-									</ul>
-								</div>
-							</nav>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<div class="header-box dn-l">
-				<nav class="navbar navbar-expand-lg menu-top ">
-					<a href="" class="logo-mob"><img src="image/logo.jpg" class="logo-mb"></a>
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-icon"></span>
-					<span class="navbar-icon"></span>
-					<span class="navbar-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarNavDropdown">
-						<ul class="navbar-nav menu-ul">
-						  
-						  <li class="nav-item ">
-						      <a class="nav-link" href="#" >The Brand</a>
-						  </li>
-						  <li class="nav-item ">
-						      <a class="nav-link" href="#" >Jewery Faq</a>
-						  </li>
-						  <li class="nav-item ">
-						      <a class="nav-link" href="#" >How to wear</a>
-						  </li>
-
-						  <li class="nav-item ">
-						      <a class="nav-link" href="#" >Gemstone Pop Sockets</a>
-						  </li>
-						  <li class="nav-item ">
-						      <a class="nav-link" href="#" >Studs & Climber</a>
-						  </li>
-
-
-						  <li class="nav-item dropdown">
-						      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Ladies
-						      </a>
-						      <div class="dropdown-menu">
-						        <a class="dropdown-item" href="#">Best Seller</a>
-						        <a class="dropdown-item" href="#">Gemstone</a>
-						        <a class="dropdown-item" href="#">Essential</a>
-						      </div>
-						  </li>
-						  <li class="nav-item">
-						    <a class="nav-link" href="#">Login</a>
-						  </li>
-						  <li class="nav-item ">
-						      <a class="nav-link" href="#" >Studs & Climber</a>
-						  </li>
-						</ul>
-					</div>
-				</nav>
-			</div>
-		</header>
-		<!-- header end -->
-
+?>
 				<!-- section global platform start -->
 		<section class="section-content">
 			<div class="container">
@@ -139,39 +11,66 @@
 						<div class="brdcrum">
 							<nav aria-label="breadcrumb">
 							  <ol class="breadcrumb">
-							    <li class="breadcrumb-item"><a href="#">Home</a></li>
-							    <li class="breadcrumb-item"><a href="#">Library</a></li>
-							    <li class="breadcrumb-item active" aria-current="page">Data</li>
+							    <li class="breadcrumb-item"><a href="/">Home</a></li>
+							    <!-- <li class="breadcrumb-item"><a href="#">Product</a></li> -->
+							    <li class="breadcrumb-item active" aria-current="page"><?php echo $product_title ?></li>
 							  </ol>
 							</nav>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="product-gallery">
-					        <div class="show-pro-box" href="image/home-cat-01.png">
-					            <img src="image/home-cat-01.png" id="show-img">
-					         </div>
-					        <div class="small-img">
-					            <img src="image/left-arow.png" class="icon-left" alt="" id="prev-img">
+
+							<div class='show-pro-box' href='<?php echo $product_image ?>'>
+								<img src='<?php echo $product_image ?>' id='show-img'>
+							</div>
+
+							<div class="small-img">
+					            <img src="<?php echo USER_IMAGES ?>left-arow.png" class="icon-left" alt="" id="prev-img">
+
 					            <div class="small-container">
-					               <div id="small-img-roll">
-					                  <img src="image/home-cat-01.png" class="show-small-img" alt="">
-					                  <img src="image/home-cat-02.png" class="show-small-img" alt="">
-					                  <img src="image/home-cat-03.png" class="show-small-img" alt="">
-					                  <img src="image/home-cat-04.png" class="show-small-img" alt="">
-					               </div>
-					            </div>
-					            <img src="image/right-arow.png" class="icon-right" alt="" id="next-img">
-					        </div>
+					               	<div id="small-img-roll">
+									<?php
+									
+										$galleryImages=json_decode($product_gallery, TRUE);
+										
+										if($galleryImages!='') {
+
+											for($i=0; $i<sizeof($galleryImages); $i++) {
+												
+												extract($galleryImages[$i]);
+
+												echo "<img src='{$galleryImages[$i]}' class='show-small-img' alt=''>";
+
+											}
+
+										} else {
+
+											echo "<img src='{$product_image}' class='show-small-img' alt=''>";
+
+										}
+
+									?>
+									</div>
+								</div>
+
+								<img src="<?php echo USER_IMAGES ?>right-arow.png" class="icon-right" alt="" id="next-img">
+							</div>
+
 					    </div>
 					</div>
 					<div class="col-md-6">
 						<div class="prod-detail">
-							<h5 class="stock">In Stock</h5>
-							<!-- <h5 class="outStock">Out of Stock</h5> -->
-							<h2>Giuseppe Zanotti RS5093</h2>
-							<p class="catag-lbel">Categories : <span> Women</span></p>
-							<p class="pro-info">We promise you that you will leave this store happy, having found what you have been looking for.</p>
+							
+							<?php
+							
+								echo (($inventory_in_stock==0) ? "<h5 class='outStock'>Out of Stock</h5>" : "<h5 class='stock'>In Stock</h5>" );
+
+							?>
+
+							<h2><?php echo $product_title ?></h2>
+							<!-- <p class="catag-lbel">Categories : <span> Women</span></p> -->
+							<p class="pro-info"><?php echo $product_highlight ?></p>
 							<div class="quantaty">
 
 								<div class="quant-bx">
@@ -182,19 +81,15 @@
 									  		<option value="audi">4</option>
 										</select> 
 								</div>
+
 								<div class="siz-bx">
 									<form>
 										<span>Size :</span>  
 										<input type="checkbox" id="fruit1" name="fruit-1" value="Apple">
 	  									<label class="size">5</label>
-
-	  									<input type="checkbox" id="fruit1" name="fruit-1" value="Apple">
-	  									<label class="size">6</label>
-
-	  									<input type="checkbox" id="fruit1" name="fruit-1" value="Apple">
-	  									<label class="size">7</label>
 									</form>
 								</div>
+
 							</div>
 
 							<div class="price-tg">
@@ -202,7 +97,7 @@
 								<h2 class="with-ofer-price">₹ 203.00 - ₹ 263.00</h2>
 							</div>
 							<div class="cart-box">
-								<a href="" class="cart-ad-btn">Add to Cart</a>
+								<a href="" id="addToCart" class="cart-ad-btn">Add to Cart</a>
 								<div class="wish-btns">
 									<div class="icon-wishlist"></div>
 								</div>
@@ -283,46 +178,7 @@
 							<a href="">
 								<span class="tag-new">New</span>
 								<div class="pro-img">
-									<img src="image/home-cat-01.png">
-								</div>
-								<h3>Rings</h3>
-								<h4>Rs. <span>900.00</span></h4>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-md-3 col-6">
-						<div class="product-box light-bg">
-							<a href="">
-								<span class="tag-new">New</span>
-								<div class="pro-img">
-									<img src="image/home-cat-01.png">
-								</div>
-								<h3>Rings</h3>
-								<h4>Rs. <span>900.00</span></h4>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-md-3 col-6">
-						<div class="product-box light-bg">
-							<a href="">
-								<span class="tag-new">New</span>
-								<div class="pro-img">
-									<img src="image/home-cat-01.png">
-								</div>
-								<h3>Rings</h3>
-								<h4>Rs. <span>900.00</span></h4>
-							</a>
-						</div> 
-					</div> 
-
-					<div class="col-md-3 col-6">
-						<div class="product-box light-bg">
-							<a href="">
-								<span class="tag-new">New</span>
-								<div class="pro-img">
-									<img src="image/home-cat-01.png">
+									<img src="<?php echo USER_IMAGES ?>home-cat-01.png">
 								</div>
 								<h3>Rings</h3>
 								<h4>Rs. <span>900.00</span></h4>
@@ -334,187 +190,8 @@
 			</div>
 		</section>
 		<!-- product end -->
+<?php
 
-		<!-- testimonial start -->
-		<section class="section-content-2">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="heading2">
-							<h2>Testimonial</h2>
-							<hr class="bdr-gry">
-							<p>We know that your jewelry means a lot to you, and that's why we offer a 1-year warranty on it.</p>
-						</div>
-					</div>
+	include_once 'footer.php';
 
-					<div class="col-md-12">
-						<div class="carousel carousel-home-bestlook" data-flickity='{ "groupCells": true, "freeScroll": false, "contain": true }'>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										
-										<div class="img-cd-look" style="background-image:url(image/P4_Homepage.jpg);">
-											<div class="over-screen-look">
-											<img class="hovr-img" src="image/Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-										</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd-look" style="background-image:url(image/P8_BeMaadandYou.jpg);">
-											<div class="over-screen-look">
-												<img class="hovr-img" src="image/Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd-look" style="background-image:url(image/P3_Homepage.jpg);">
-											<div class="over-screen-look">
-												<img class="hovr-img" src="image/Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd-look" style="background-image:url(image/P8_BeMaadandYou.jpg);">
-											<div class="over-screen-look">
-												<img class="hovr-img" src="image/Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- testimonial end -->
-
-
-		<footer>
-			<div class="top-section-footer ">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="foter-left">
-								<h1>Ammarah</h1>
-								<p>We know that your jewelry means a lot to you, and that's why we offer a 1-year warranty on it.</p>
-
-								<div class="cont-nfo">
-									<ul>
-										<li><span><i class="fas fa-map-marker-alt"></i></span> Ammarah Delhi, 110057, India</li>
-										<li><span><i class="fas fa-phone-alt"></i></span> 8058758008</li>
-										<li><span><i class="fas fa-envelope"></i></span> contact@ammarah.com</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="fot-box">	
-								<h3>My Account</h3>
-								<ul class="list-unstyled">
-					              <li><a href="index">The Brand</a></li>
-					              <li><a href="index">Jwelery faq</a></li>
-					              <li><a href="index">REtailer</a></li>
-					            </ul>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="fot-box">	
-								<h3>Quick Links</h3>
-								<ul class="list-unstyled">
-					              <li><a href="index">Content</a></li>
-					              <li><a href="index">Retailer</a></li>
-					              <li><a href="index">Shipping</a></li>
-					            </ul>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<div class="section-footer">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-6 col-12">
-							<div class="footer-btm">
-								<p>Copyright Ammarh <span>© 2020</span> All Right Reserved</a>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="social-1">
-								<a href=""><i class="fab fa-facebook-f"></i></a>
-								<a href=""><i class="fab fa-twitter" aria-hidden="true"></i></a>
-								<a href=""><i class="fab fa-instagram" aria-hidden="true"></i></a>
-								<!-- <a href=""><i class="fab fa-linkedin" aria-hidden="true"></i></a> -->
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</footer>
-
-		<!-- sections end -->
-
-		<!-- script start -->
-		<script src="js/jquery-3.4.1.slim.min.js" ></script>
-		<script src="js/flickity.pkgd.min.js"></script>
-		<script src="js/popper.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<!-- script end -->
-		<!-- product zoom -->
-		<script src="js/zoom-image.js"></script>
-	    <script src="js/product-zoom-main.js"></script>
-	    <!--  -->
-	    <!-- wish list start -->
-		<script type="text/javascript">
-			$('.icon-wishlist').on('click', function(){
-			  $(this).toggleClass('in-wishlist');
-			});
-		</script>
-		<!--  -->
-		<script>
-			window.onscroll = function() {myFunction()};
-
-			var header = document.getElementById("header");
-			var sticky = header.offsetTop;
-
-			function myFunction() {
-			  if (window.pageYOffset > sticky) {
-			    header.classList.add("sticky");
-			  } else {
-			    header.classList.remove("sticky");
-			  }
-			}
-		</script>
-		
-	</body>
-</html>
+?>

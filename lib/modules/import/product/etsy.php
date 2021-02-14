@@ -14,6 +14,9 @@
 
             if($dataLines[0]!='') {
 
+                $productMetaName=array();
+                $productMetaValue=array();
+
                 $productName=mysqli_real_escape_string($connection, $dataLines[0]);
                 $productDescription=mysqli_real_escape_string($connection, $dataLines[1]);
                 $productMRP=mysqli_real_escape_string($connection, $dataLines[2]);
@@ -36,7 +39,7 @@
                 $productMetaName[]=mysqli_real_escape_string($connection, $dataLines[18]);
                 $productMetaValue[]=mysqli_real_escape_string($connection, $dataLines[19]);
 
-                $productMetaValue[]=mysqli_real_escape_string($connection, $dataLines[21]);
+                $productMetaName[]=mysqli_real_escape_string($connection, $dataLines[21]);
                 $productMetaValue[]=mysqli_real_escape_string($connection, $dataLines[22]);
 
                 $productSKU=mysqli_real_escape_string($connection, $dataLines[23]);
@@ -152,7 +155,7 @@
                             
                             if(mysqli_num_rows($checkURL)!=0) {
 
-                                $url=ltrim($url, '/').'-'.(($productSKU!='') ? $productSKU : time() ).'/';
+                                $url=rtrim($url, '/').'-'.(($productSKU!='') ? $productSKU : time() ).'/';
 
                             }
 
@@ -170,17 +173,20 @@
 
                         /** Insert product meta values */
 
-                        for($i=0; $i<sizeof($productMetaName); $i++) {
+                        if(sizeof($productMetaName)>0) {
 
-                            if($productMetaName[$i]!=0) {
+                            for($i=0; $i<sizeof($productMetaName); $i++) {
 
-                                $addProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_name, product_meta_value, product_meta_status) VALUES('{$productID}', '".APP_SITE_ID."', '{$productMetaName[$i]}', '{$productMetaValue[$i]}', 1)");
-
-                            } else {
-
-                                $addProductMeta=true;
-
+                                if($productMetaName[$i]!='') {
+    
+                                    $addProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_name, product_meta_value, product_meta_status) VALUES('{$productID}', '".APP_SITE_ID."', '{$productMetaName[$i]}', '{$productMetaValue[$i]}', 1)");
+    
+                                }
                             }
+
+                        } else {
+
+                            $addProductMeta=TRUE;
 
                         }
 

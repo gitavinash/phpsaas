@@ -54,11 +54,11 @@
 
                         /** Send SMS */
 
-                        require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+                        require_once APP_SMS_TEMPLATE.'order/booking-confirmation.php';
 
                         /** Send Email */
                                         
-                        require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
+                        require_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
 
                         header("Location: /thank-you/?id={$transaction_id}", TRUE, 301);
 

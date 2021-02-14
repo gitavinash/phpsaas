@@ -83,9 +83,9 @@
 
 					<div class="col-md-3 col-6">
 						<div class="explore-box">
-							<a href="">
+							<a href="/category/bangles/">
 								<img src="<?php echo USER_IMAGES ?>home-cat-01.png">
-								<h3>Rings</h3>
+								<h3>Bangles</h3>
 								<h4>See the Collection</h4>
 							</a>
 						</div>
@@ -93,7 +93,7 @@
 
 					<div class="col-md-3 col-6">
 						<div class="explore-box">
-							<a href="">
+							<a href="/category/bangles/">
 								<img src="<?php echo USER_IMAGES ?>home-cat-02.png">
 								<h3>Rings</h3>
 								<h4>See the Collection</h4>
@@ -103,7 +103,7 @@
 
 					<div class="col-md-3 col-6">
 						<div class="explore-box">
-							<a href="">
+							<a href="/category/bangles/">
 								<img src="<?php echo USER_IMAGES ?>home-cat-03.png">
 								<h3>Rings</h3>
 								<h4>See the Collection</h4>
@@ -113,7 +113,7 @@
 
 					<div class="col-md-3 col-6">
 						<div class="explore-box">
-							<a href="">
+							<a href="/category/bangles/">
 								<img src="<?php echo USER_IMAGES ?>home-cat-04.png">
 								<h3>Rings</h3>
 								<h4>See the Collection</h4>
@@ -139,18 +139,36 @@
 						</div>
 					</div>
 
-					<div class="col-md-3 col-6">
-						<div class="product-box">
-							<a href="">
-								<span class="tag-new">New</span>
-								<div class="pro-img">
-									<img src="<?php echo USER_IMAGES ?>home-cat-01.png">
-								</div>
-								<h3>Rings</h3>
-								<h4>$ ₹ <span>900.00</span></h4>
-							</a>
-						</div>
-					</div>
+					<?php
+							
+						if($productList=mysqli_query($connection, "SELECT link_id, link_url, link_published, product_title, product_image, inventory_currency_symbol, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND link_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, 8")) {
+
+							if(mysqli_num_rows($productList)!=0) {
+
+								while($productData=mysqli_fetch_assoc($productList)) {
+
+									extract($productData);
+
+									echo "<div class='col-md-3 col-6'>
+										<div class='product-box'>
+											<a href='{$link_url}'>
+												<span class='tag-new'>New</span>
+												<div class='pro-img'>
+													<img src='{$product_image}'>
+												</div>
+												<h3>{$product_title}</h3>
+												<h4><span>{$inventory_currency_symbol} ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</span></h4>
+											</a>
+										</div>
+									</div>";
+
+								}
+
+							}
+
+						}
+
+					?>
 
 				</div>
 			</div>
@@ -206,88 +224,6 @@
 			</div>
 		</section>
 		<!-- expertise end -->
-
-		<!-- testimonial start -->
-		<section class="section-content-2">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="heading2">
-							<h2>Testimonial</h2>
-							<hr class="bdr-gry">
-							<p>We know that your jewelry means a lot to you, and that's why we offer a 1-year warranty on it.</p>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="carousel carousel-home-bestlook" data-flickity='{ "groupCells": true, "freeScroll": false, "contain": true }'>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										
-										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P4_Homepage.jpg);">
-											<div class="over-screen-look">
-											<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-										</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P8_BeMaadandYou.jpg);">
-											<div class="over-screen-look">
-												<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P3_Homepage.jpg);">
-											<div class="over-screen-look">
-												<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-							<div class="carousel-cell-bestlook">
-								<a href="">
-								<div class="col-card-3">
-									<div class="event-card">
-										<div class="img-cd-look" style="background-image:url(<?php echo USER_IMAGES ?>P8_BeMaadandYou.jpg);">
-											<div class="over-screen-look">
-												<img class="hovr-img" src="<?php echo USER_IMAGES ?>Rachel.png">
-											<h5>Cathrine</h5>
-											<p>The snake earrings or serpent earrings are available in black or gold finish in a variety of stones.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- testimonial end -->
 
 		<!-- blog start
 		<section class="section-content explore-section">

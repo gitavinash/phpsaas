@@ -52,11 +52,11 @@
     </div>
     
     <div class="please-wait" style='text-align: center; display: none; margin: 100px 0px;' >
-        <img src="<?php echo ADMIN_IMAGES ?>import-animation.gif" alt="">
+        <img src="<?php echo IMG_LIBRARY ?>circle-dot-loader.gif" alt="">
         <h1>Please wait...</h1>
     </div>
 
-    <div id='status' style="display:none;" >
+    <div id='status' >
         <span id="success" style='float: left;width: 100%;font-size: 20px;' ></span>
         <span id="dublicate" style='float: left;width: 100%;font-size: 20px;' ></span>
         <span id="failed" style='float: left;width: 100%;font-size: 20px;' ></span>

@@ -58,7 +58,7 @@
 						</div>
 						<div class="col-md-2">
 							<div class="logo">
-								<img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>">
+								<a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></a>
 							</div>
 						</div>
 						<div class="col-md-5">
@@ -89,7 +89,7 @@
 			</div>
 			<div class="header-box dn-l">
 				<nav class="navbar navbar-expand-lg menu-top ">
-					<a href="" class="logo-mob"><img src="<?php echo USER_IMAGES ?>logo.jpg" class="logo-mb"></a>
+					<a href="/" class="logo-mob"><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-icon"></span>
 					<span class="navbar-icon"></span>
