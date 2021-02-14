@@ -100,28 +100,33 @@
 							<!-- <p class="mb-1">Click to Load again</p> -->
 							<i class="fa fa-refresh display-4"></i>
 						</div>
-						<div class="dtl-box mt-4">
+						<div class="dtl-box">
 
 							<!-- Request received -->
 
 							<span class="d-inline-block slot-booked-not-confirmed"></span>
 							<span>Request received</span>
 
+						</div>
+						<div class="dtl-box">
 							<!-- Date blocked by admin -->
 
 							<span class="d-inline-block date-blocked"></span>
 							<span>Blocked by admin</span>
-
+						</div>
+						<div class="dtl-box">
 							<!-- Slot available -->
 
-							<span class="d-inline-block slot-booked-not-confirmed"></span>
+							<span class="d-inline-block date-available"></span>
 							<span>Available</span>
-
+						</div>
+						<div class="dtl-box" style="margin-bottom: 10px" >
 							<!-- Date blocked -->
 
-							<span class="d-inline-block date-blocked"></span>
+							<span class="d-inline-block date-booked"></span>
 							<span>Booked</span>
-
+						</div>
+						<div class="dtl-box">
 							<p>
 								Note: In Case of any issue, please call : <a href="tel:011-23670506">011-23670506</a>, <a href="tel:011-47200965">011-47200965</a>, <a href="tel:+91-9810115828">9810115828</a>
 							</p>
@@ -266,6 +271,14 @@
 				<div class="col-md-8 col-xs-12 bookingConfirmation ">
 					<div class="row">
 						<div class="col-4">
+							<p>Booking amount<br /><span style="font-size: 12px" >( including Dakshina )</span></p>
+						</div>
+						<div class="col-8">
+							<p id="bookingAmount"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
 							<p>Name</p>
 						</div>
 						<div class="col-8">
@@ -325,7 +338,7 @@
 							<p>Donation amount</p>
 						</div>
 						<div class="col-8">
-							<input type="number" name="donation" id="donationAmount" class="form-control" placeholder="If you want to donate any amount." >
+							<input type="number" name="donation" id="donationAmount" inputmode="numeric" pattern="[0-9]*" class="form-control" placeholder="If you want to donate any amount." >
 						</div>
 					</div>
 					<div class="row justify-content-center">
@@ -335,7 +348,7 @@
 						<div class="col-2" style="height: 10px" ></div>
 						<div class="col-md-4 col-xs-12">
 							<input type="hidden" id="calenderMonthLimit" value="<?php echo $calender_month_visible ?>" >
-							<input type="submit" id="submitForm" class="btn btn-success btn-block" value="Continue" >
+							<input type="submit" id="submitForm" class="btn btn-success btn-block" value="" >
 						</div>
 					</div>
 				</div>

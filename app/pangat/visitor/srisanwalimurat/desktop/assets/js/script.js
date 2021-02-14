@@ -396,6 +396,19 @@ $("body").delegate(".submit-data", "click", function (argument) {
 
     }
 
+    if(bookingData.bookingTime=='breakfast') {
+
+        bookingAmount = 1500;
+        bookingSlotAmount = '₹ ' + bookingAmount;
+
+    } else {
+
+        bookingAmount = 3100;
+        bookingSlotAmount = '₹ ' + bookingAmount;
+
+    }
+
+    $('#bookingAmount').html(bookingSlotAmount);
     $('#nameConfirmation').html($(".firstName").val() + ' ' +$(".lastName").val());
     $('#emailConfirmation').html($(".emailName").val());
     $('#mobileConfirmation').html($(".mobName").val());
@@ -411,7 +424,29 @@ $("body").delegate(".submit-data", "click", function (argument) {
     $('#bookingDateConfirmation').html(bookingData.bookingDate);
     $('#bookingTimeConfirmation').html(bookingData.bookingTime);
 
+    $('#submitForm').val('Pay ₹ ' + bookingAmount);
+
 });
+
+$('#donationAmount').on('change', function(e) {
+
+    var donationAmount = $('#donationAmount').val();
+
+    if(bookingData.bookingTime=='breakfast') {
+
+        bookingAmount = 1500;
+
+    } else {
+
+        bookingAmount = 3100;
+
+    }
+
+    var totalAmount = parseInt(bookingAmount) + parseInt(donationAmount);
+
+    $('#submitForm').val('Pay ₹ ' + totalAmount);
+
+})
 
 $('#editForm').click(function(e) {
 
