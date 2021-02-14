@@ -212,7 +212,7 @@
 					  		<p class="color-red">Email is required</p>
 					  	</div>
 					  	<div class="form-cont">
-					  		<input type="number" name="mname" class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required min="10" max="10" pattern="[6-9]{1}[0-9]{9}" title="Enter Your 10 Digit Mobile Number only">
+					  		<input type="number" name="mname" inputmode="numeric" pattern="[0-9]*" class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required min="10" max="10" pattern="[6-9]{1}[0-9]{9}" title="Enter Your 10 Digit Mobile Number only">
 					  		<p class="color-red">Enter a valid mobile number</p>
 					  	</div>
 					  	<div class="form-cont mb-4">
