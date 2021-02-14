@@ -199,7 +199,7 @@
 					  			</div>
 					  		</div>
 					  	</div>
-					  	<div class="booking-select text-danger d-none">Select any booking Schedule</div>
+					  	<div class="booking-select text-danger d-none">Select a date and booking slot first.</div>
 					  	<div class="form-cont">
 					  		<input type="text" name="fname" class="firstName inputClass reqInput" placeholder="First Name*" required>
 					  		<p class="color-red">Name is required</p>
@@ -220,8 +220,21 @@
 					  		<spn class="d-inline-block">I will be present in pangat.</span>
 					  	</div>
 					  	<div id="checkBox" class="form-cont">
-					  		<input type="number" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest">
-					  		<p class="color-red">Enter number of guests</p>
+					  		<!-- <input type="number" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest"> -->
+							<select name="guest" class="inputClass guestVal reqInput">
+								<option value="">Select number of guests</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
+					  		<p class="color-red">Select number of guests</p>
 					  	</div>
 						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
 						<input type="hidden" name="amount" value="1000" id="pangatAmount" >

@@ -25,7 +25,7 @@
 
                                     if(is_numeric($noOfGuest)) {
 
-                                        if($noOfGuest<100) {
+                                        if($noOfGuest<10) {
                                         
                                             $bookingValid=true;
     
