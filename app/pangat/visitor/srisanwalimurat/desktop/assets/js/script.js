@@ -471,6 +471,9 @@ $("body").delegate(".inputBox", "click", function (argument) {
 });
 
 function formSubmission(sendingData) {
+
+    $('#editForm').hide();
+
     if (bookingData["guest"] == 1) {
         if (bookingData["noOfGuest"] != "") {
             var sendDataToServer = true;
@@ -502,6 +505,7 @@ function formSubmission(sendingData) {
                         popUpMessage("center", ret.msg, ret.status);
                         
                         $("#submitForm").show();
+                        $('#editForm').show();
                         
                     }
 
@@ -510,12 +514,14 @@ function formSubmission(sendingData) {
                     popUpMessage("center", ret.msg, ret.status);
 
                     $("#submitForm").show();
+                    $('#editForm').show();
 
                 }
                 
             },
             error: function (err) {
                 $("#submitForm").show();
+                $('#editForm').show();
                 console.log(err);
                 resetInputs();
             },
