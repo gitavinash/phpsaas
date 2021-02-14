@@ -128,7 +128,7 @@
 	border-radius: 50%
 }
 .flex-it >span[data="1"]{
-	display: #9b0202;
+	background: #9b0202;
 }
 .slot-booked-not-confirmed{
 	background-color:#fb8101;
