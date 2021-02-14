@@ -296,15 +296,15 @@
 }
 
 .flex-it span[data="3"]{
-	background-color: green;
+	background-color: #2ecc71;
 }
 
 .weekday.clkAlw .flex-it span[data="2"]{
-	background-color: green;
+	background-color: #2ecc71;
 }
 
 .weekday.upcoming-dates .flex-it span[data="2"]{
-	background-color: green;
+	background-color: #2ecc71;
 }
 
 .bookingConfirmation {

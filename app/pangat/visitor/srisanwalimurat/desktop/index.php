@@ -101,12 +101,29 @@
 							<i class="fa fa-refresh display-4"></i>
 						</div>
 						<div class="dtl-box mt-4">
+
+							<!-- Request received -->
+
 							<span class="d-inline-block slot-booked-not-confirmed"></span>
 							<span>Request received</span>
+
+							<!-- Date blocked by admin -->
+
 							<span class="d-inline-block date-blocked"></span>
-							<span>Booking date blocked by admin</span>
+							<span>Blocked by admin</span>
+
+							<!-- Slot available -->
+
+							<span class="d-inline-block slot-booked-not-confirmed"></span>
+							<span>Available</span>
+
+							<!-- Date blocked -->
+
+							<span class="d-inline-block date-blocked"></span>
+							<span>Booked</span>
+
 							<p>
-								Note: In Case of any issue, please call Mandir at 011-2125452
+								Note: In Case of any issue, please call : <a href="tel:011-23670506">011-23670506</a>, <a href="tel:011-47200965">011-47200965</a>, <a href="tel:+91-9810115828">9810115828</a>
 							</p>
 						</div>
 					</div>
@@ -122,8 +139,8 @@
 									  	<i class="fa fa-utensils"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
-						  				<p class="sch mb-0 text-white">Breakfast</p>
-						  				<p class="time-sch mb-0">8:00 - 10:00</p>
+						  				<p class="sch mb-0 text-white" style="color: #333 !important" >Breakfast</p>
+						  				<p class="time-sch mb-0">8 AM - 9 AM</p>
 						  			</div>
 						  		</div>
 						  	</div>
@@ -135,8 +152,8 @@
 									  	<i class="far fa-sun"></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
-						  				<p class="sch mb-0 text-white">Lunch</p>
-						  				<p class="time-sch mb-0">8:00 - 10:00</p>
+						  				<p class="sch mb-0 text-white" style="color: #333 !important">Lunch</p>
+						  				<p class="time-sch mb-0">12 PM - 1 PM</p>
 						  			</div>
 						  		</div>
 						  	</div>
@@ -145,11 +162,11 @@
 						  	<div class="dinner-btn com-sch bor-rounded" booking-for="dinner">
 						  		<div class="d-flex justify-content-center align-items-center">
 						  			<div class="d-inline-block left-icon pl-1 pr-1">
-									  	<i class="far fa-moon"></i>
+									  	<i class="far fa-moon" style="color: #fff" ></i>
 						  			</div>
 						  			<div class="d-inline-block pl-1 pr-1">
 						  				<p class="sch mb-0 text-white">Dinner</p>
-						  				<p class="time-sch mb-0">8:00 - 10:00</p>
+						  				<p class="time-sch mb-0" style="color: #fff !important" >8 PM - 9 PM</p>
 						  			</div>
 						  		</div>
 						  	</div>
@@ -184,32 +201,32 @@
 					  	</div>
 					  	<div class="booking-select text-danger d-none">Select any booking Schedule</div>
 					  	<div class="form-cont">
-					  		<p class="color-red">Name is Required</p>
 					  		<input type="text" name="fname" class="firstName inputClass reqInput" placeholder="First Name*" required>
+					  		<p class="color-red">Name is required</p>
 					  	</div>
 					  	<div class="form-cont">
 					  		<input type="text" name="lname" class="lastName inputClass" placeholder="Last Name">
 					  	</div>
 					  	<div class="form-cont">
-					  		<p class="color-red">Email is Required</p>
 					  		<input type="email" name="ename" class="emailName inputClass reqInput" placeholder="Email" required>
+					  		<p class="color-red">Email is required</p>
 					  	</div>
 					  	<div class="form-cont">
-					  		<p class="color-red">Enter a valid mobile number</p>
 					  		<input type="number" name="mname" class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required min="10" max="10" pattern="[6-9]{1}[0-9]{9}" title="Enter Your 10 Digit Mobile Number only">
+					  		<p class="color-red">Enter a valid mobile number</p>
 					  	</div>
 					  	<div class="form-cont mb-4">
 					  		<input type="checkbox" id="guest" name="box" class="inputBox" checked >
 					  		<spn class="d-inline-block">I will be present in pangat.</span>
 					  	</div>
 					  	<div id="checkBox" class="form-cont">
-					  		<p class="color-red">Enter number of guests</p>
 					  		<input type="number" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest">
+					  		<p class="color-red">Enter number of guests</p>
 					  	</div>
 						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
 						<input type="hidden" name="amount" value="1000" id="pangatAmount" >
 					  	<button class="submit-data">Send request</button>
-					  	<div class="serverError d-none text-danger">Something went wrong Please try again</div>
+					  	<div class="serverError d-none text-danger">Something went wrong. Please try again</div>
 					  </div>
 				  </div>
 				</div>
