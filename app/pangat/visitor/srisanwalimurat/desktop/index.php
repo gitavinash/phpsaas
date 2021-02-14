@@ -196,7 +196,7 @@
 					  	</div>
 					  	<div class="form-cont">
 					  		<p class="color-red">Enter a valid mobile number</p>
-					  		<input type="text" name="mname" class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required min="10" max="10" pattern="[6-9]{1}[0-9]{9}" title="Enter Your 10 Digit Mobile Number only">
+					  		<input type="number" name="mname" class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required min="10" max="10" pattern="[6-9]{1}[0-9]{9}" title="Enter Your 10 Digit Mobile Number only">
 					  	</div>
 					  	<div class="form-cont mb-4">
 					  		<input type="checkbox" id="guest" name="box" class="inputBox" checked >
@@ -204,7 +204,7 @@
 					  	</div>
 					  	<div id="checkBox" class="form-cont">
 					  		<p class="color-red">Enter number of guests</p>
-					  		<input type="text" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest">
+					  		<input type="number" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest">
 					  	</div>
 						<input type="hidden" name="acceptPayment" value="1" id="acceptPayment" >
 						<input type="hidden" name="amount" value="1000" id="pangatAmount" >
@@ -295,7 +295,7 @@
 							<p>Donation amount</p>
 						</div>
 						<div class="col-8">
-							<input type="text" name="donation" id="donationAmount" class="form-control" placeholder="If you want to donate any amount." >
+							<input type="number" name="donation" id="donationAmount" class="form-control" placeholder="If you want to donate any amount." >
 						</div>
 					</div>
 					<div class="row justify-content-center">
