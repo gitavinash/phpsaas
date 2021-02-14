@@ -192,11 +192,11 @@
 
                                     /** Send sms */
 
-                                    require_once APP_SMS_TEMPLATE.'booking-request.php';
+                                    require_once APP_SMS_TEMPLATE.'order/booking-request.php';
 
                                     /** Send email */
 
-                                    require_once APP_EMAIL_TEMPLATE.'booking-request.php';
+                                    require_once APP_EMAIL_TEMPLATE.'order/booking-request.php';
 
                                     if(isset($acceptPayment)) {
 
