@@ -89,7 +89,7 @@
                                 <td><?php echo 'OD'.$order_id ?></td>
                                 <td><a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_display_name ?></a></td>
                                 <td><a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $address_mobile ?></a></td>
-                                <td><?php echo $order_currency.' '.$order_total_price ?></td>
+                                <td><?php echo (($order_total_price!='') ? $order_currency : '' ).' '.$order_total_price ?></td>
                                 <td><?php echo $order_payment_mode ?></td>
                                 <td><?php echo $order_status ?></td>
                                 <td><?php echo date('d-m-Y h:i A', strtotime($order_generate)) ?></td>
