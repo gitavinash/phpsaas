@@ -21,7 +21,7 @@
 
             }
 
-            if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, user_mobile, user_email, order_product_id, order_product_qty, order_product_price, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_id='{$id}' AND order_site_id=".APP_SITE_ID)) {
+            if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_id='{$id}' AND order_site_id=".APP_SITE_ID)) {
 
                 if(mysqli_num_rows($checkOrder)!=0) {
                     
@@ -186,6 +186,21 @@
                                 <div class="box-2">
 
                                     <img src="<?php echo $product_image ?>" style='height: 200px; margin-bottom: 20px' alt="">
+
+                                    <div class="form-group">
+                                        <label>Product price</label>
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_product_price!='') ? $order_currency.' ' : '' ).$order_product_price ?>' readonly >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Delivery charge</label>
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_delivery_charges!='') ? $order_currency.' ' : '' ).$order_delivery_charges ?>' readonly >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Order total</label>
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_total_price!='') ? $order_currency.' ' : '' ).$order_total_price ?>' readonly >
+                                    </div>
 
                                     <?php
                                     
