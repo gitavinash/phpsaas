@@ -77,7 +77,7 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/media/') ? 'class="active"' : '' ) ?> >
+					<!-- <li <?php echo ((ADMIN_BASE_URL=='/media/') ? 'class="active"' : '' ) ?> >
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
 							<ul>
@@ -97,7 +97,7 @@
 								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 							</ul>
 						</div>
-					</li>
+					</li> -->
 					<!-- <li <?php echo ((ADMIN_BASE_URL=='/coupon/') ? 'class="active"' : '' ) ?> >
 						<a href="coupon.php?type=list&status=all"><i class="fas fa-tags"></i> Coupon</a>
 						<div class="side-menu">
@@ -160,20 +160,20 @@
 						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<!-- <li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li>
+								<!-- <li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<!-- <li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
 								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
 								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-								<li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li>
+								<!-- <li><a href="setting.php?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
 							</ul>
 						</div>
 					</li>

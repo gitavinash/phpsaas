@@ -128,7 +128,7 @@
 				<div class="row">
 					<div class="col-md-12 col-12">
 						<div class="footer-btm">
-							<p>© 2020 <?php echo SITE_NAME; ?>. All Rights Reserved | Developed by <a href="//itssoftworld.com">ITS Soft World</a></p>
+							<p>© 2020 <?php echo SITE_NAME; ?>. All Rights Reserved</p>
 						</div>
 					</div>
 				</div>
