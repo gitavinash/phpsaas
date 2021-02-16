@@ -55,7 +55,7 @@
 
                     <?php
 
-						if($tagResults=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND (link_relation_id={$resultTags}) AND link_site_id=".SITE_ID." AND inventory_type='product' ORDER BY link_is_featured, link_published DESC LIMIT 0, 100")) {
+						if($tagResults=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND (link_relation_id={$resultTags}) AND link_site_id=".SITE_ID." AND inventory_type='product' ORDER BY link_is_featured, link_published DESC LIMIT 0, 100")) {
 
 							if(mysqli_num_rows($tagResults)!=0) {
 
@@ -63,7 +63,7 @@
 
 									extract($tagResultsData);
 
-									echo "<div class='col-md-3'>
+									echo "<div class='col-md-3 col-6'>
 											<a href='{$link_url}'>
 												<div class='col-card-3'>
 													<div class='event-card'>
@@ -72,7 +72,7 @@
 															".(($link_published>date('Y-m-d', strtotime('-7 days'))) ? "<span style='position: absolute;right: 0px;background: #D4946D;padding: 2px 15px;border-bottom-right-radius: 4px;color: #fff;font-size: 13px;margin-right: 20px;border-bottom-left-radius: 4px;' >New</span>" : '' )."
 														</div>
 														<h4>{$product_title}</h4>
-														<p class='rate'>Rs. ".(($inventory_price!=0) ? $inventory_price : $inventory_mrp).(($inventory_in_stock!=1) ? '<span style="color: red; margin-left: 20px" >( Out of stock )</span>' : '' )."</p>
+														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp).(($inventory_in_stock!=1) ? '<span style="color: red; margin-left: 20px" >( Out of stock )</span>' : '' )."</p>
 													</div>
 												</div>
 											</a>
