@@ -92,7 +92,7 @@
 
                                 $status=200;
                                 $msg='Product add successfully';
-                                $redirect='/dashboard/product/?type=edit&editor=true&id='.$productID;
+                                $redirect='/dashboard/product/?type=edit&editor=true&id='.base64_encode($productID);
                                 mysqli_query($connection, "COMMIT");
 
                             } else {

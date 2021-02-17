@@ -29,9 +29,13 @@
 
             } else {
 
-                $msg='Invalid response found';
+                $msg="SELECT product_title as productName, product_thumbnail as productImage, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE product_id='{$id}' AND product_status=1 AND link_status=200 AND link_site_id=".SITE_ID;
 
             }
+
+        } else {
+
+            echo 'Somethinf is wrong';
 
         }
     

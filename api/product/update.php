@@ -141,7 +141,7 @@
 
                             $status=200;
                             $msg='Product upload successfully';
-                            $redirect="/dashboard/product/?type=edit&editor=true&id={$id}";
+                            $redirect="/dashboard/product/?type=edit&editor=true&id=".base64_encode($id);
                             mysqli_query($connection, "COMMIT");
 
                         } else {

@@ -12,7 +12,6 @@
 		<!-- css -->
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>flickity.min.css">
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -149,7 +148,7 @@
 								</button>
 								<div class="mob-menu dn-l">
 									<div class="cart-mob">
-										<a href="" class="mob-bag sr-mob" onclick="divSearchPop()"><img src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span>
+										<a href="" class="mob-bag sr-mob" id="searchBtn" ><img src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span>
 										<a href="/checkout/" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">
 											
 										<?php

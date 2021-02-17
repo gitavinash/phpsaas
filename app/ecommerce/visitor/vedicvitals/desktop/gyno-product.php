@@ -65,7 +65,7 @@
 									</div>
 								</div>
 								<div class="cart-box">
-									<a href="#" id="addToCart" class="cart-ad-btn" >Add to Cart</a>
+									<a href="#" class="cart-ad-btn addToCart" >Add to Cart</a>
 								</div>
 							</form>
 

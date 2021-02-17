@@ -1103,7 +1103,7 @@ a.card-link:hover .img-acc img {
 .img-cd {
 	height: 250px;
 	overflow: hidden;
-	position: relative;
+	position: relative
 }
 
 .quantity,
@@ -1445,6 +1445,10 @@ span.payout img {
 	float: left
 }
 
+.lg-carousel-box .carousel-cell {
+    height: 500px;
+    overflow: hidden;
+}
 .carousel {
 	margin-bottom: 40px
 }
@@ -3542,12 +3546,16 @@ only screen and (min-device-pixel-ratio:1.5) {
 		height: 150px;
 		overflow: hidden
 	}
-	.flickity-viewport {
+	.lg-carousel-box .carousel-cell {
+    height: 400px;
+    margin-right: 0px;
+}
+	/*.flickity-viewport {
 		height: 300px!important
-	}
+	}*/
 	.carousel-main .carousel-cell img {
 		width: auto;
-		max-height: 300px
+		max-height: 400px
 	}
 	.fot-box ul li {
 		float: left;
@@ -3929,8 +3937,8 @@ only screen and (min-device-pixel-ratio:1.5) {
 	}
 	.fot-box ul li a {
 		font-size: 14px;
-		padding: 0px;
-    display: inline-block;
+		padding: 0;
+		display: inline-block
 	}
 	.about-info h2 {
 		font-size: 20px

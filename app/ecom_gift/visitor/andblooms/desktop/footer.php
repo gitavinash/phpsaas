@@ -181,14 +181,26 @@
 		<!-- search in mobile div show -->
 
 		<script type="text/javascript">
-			function divSearchPop() {
-			  var x = document.getElementById("search-mob-div");
-			  if (x.style.display === "none") {
-			    x.style.display = "block";
-			  } else {
-			    x.style.display = "none";
-			  }
+		
+			function divSearchPop(e) {
+
+				e.preventDefault();
+
+			  	var x = document.getElementById("search-mob-div");
+
+			  	if (x.style.display === "none") {
+			    	x.style.display = "block";
+			  	} else {
+			    	x.style.display = "none";
+			  	}
+
 			}
+
+			$('#searchBtn').on('click', function(e) {
+				
+				e.preventDefault();
+
+			});
 
 			$("#close").click(function(){
 			  $("searchInput").hide();

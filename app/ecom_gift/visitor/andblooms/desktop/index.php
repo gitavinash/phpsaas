@@ -7,17 +7,10 @@
 		<section class="banner-section">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="card-ban">
-						<div class="carousel dn-s"  data-flickity='{ "autoPlay": true, "wrapAround": true }'>
-							<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>1.png"></div>
-							<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>2.png"></div>
-							<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>3.png"></div>
-						</div>
-						<div class="carousel dn-l mob-baner"  data-flickity='{ "autoPlay": true, "wrapAround": true }'>
-							<div class="carousel-cell-2 "><img src="<?php echo USER_IMAGES ?>1.png"></div>
-							<div class="carousel-cell-2 "><img src="<?php echo USER_IMAGES ?>2.png"></div>
-							<div class="carousel-cell-2 "><img src="<?php echo USER_IMAGES ?>3.png"></div>
-						</div>
+					<div class="homepage-slider">
+						<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>1.png"></div>
+						<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>2.png"></div>
+						<div class="carousel-cell-2"><img src="<?php echo USER_IMAGES ?>3.png"></div>
 					</div>
 				</div>
 			</div>
@@ -120,11 +113,9 @@
 											<a href='{$link_url}'>
 												<div class='col-card-3'>
 													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
+														<div class='img-cd' style='background:url({$product_image}) center center no-repeat;background-size:cover;'></div>
+														<h4>{$product_title}</h4>
+														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
 													</div>
 												</div>
 											</a>
@@ -170,11 +161,9 @@
 											<a href='{$link_url}'>
 												<div class='col-card-3'>
 													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
+														<div class='img-cd' style='background:url({$product_image}) center center no-repeat;background-size:cover;'></div>
+														<h4>{$product_title}</h4>
+														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
 													</div>
 												</div>
 											</a>
@@ -221,11 +210,9 @@
 											<a href='{$link_url}'>
 												<div class='col-card-3'>
 													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
+														<div class='img-cd' style='background:url({$product_image}) center center no-repeat;background-size:cover;'></div>
+														<h4>{$product_title}</h4>
+														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
 													</div>
 												</div>
 											</a>
@@ -273,11 +260,9 @@
 											<a href='{$link_url}'>
 												<div class='col-card-3'>
 													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-															<h4>{$product_title}</h4>
-															<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
+														<div class='img-cd' style='background:url({$product_image}) center center no-repeat;background-size:cover;'></div>
+														<h4>{$product_title}</h4>
+														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
 													</div>
 												</div>
 											</a>
