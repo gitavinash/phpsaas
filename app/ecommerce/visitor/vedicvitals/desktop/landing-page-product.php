@@ -35,6 +35,16 @@
 		})(window,document,'script','dataLayer','GTM-55MD564');</script>
 		<!-- End Google Tag Manager -->
 
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176806223-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-176806223-1');
+</script>
+
 	</head>
 	<body>
 		<!-- header start -->
@@ -709,6 +719,10 @@
 			</div>
 		</section> -->
 		<!-- garanty start -->
+
+		<div class="whatsapp">
+			<a href="https://wa.me/919310142836?text=Hello"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
+		</div>
 
 
 		<!-- sections end -->

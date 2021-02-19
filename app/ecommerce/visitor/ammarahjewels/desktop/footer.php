@@ -158,6 +158,7 @@
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
 		<script type="text/javascript" src="<?php echo USER_JS ?>zoom-image.js"  ></script>
 		<script type="text/javascript" src="<?php echo USER_JS ?>product-zoom-main.js"  ></script>
+		<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.js"  ></script>
 		<!-- script end -->
 		<script>
 			window.onscroll = function() {myFunction()};

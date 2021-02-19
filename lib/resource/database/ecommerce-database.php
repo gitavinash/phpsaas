@@ -292,6 +292,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
     ADD INDEX cart_relation_type (cart_relation_type)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."cart
+    ADD cart_currency_symbol VARCHAR(1) NOT NULL DEFAULT '₹' AFTER cart_currency");
+
   // Update coupon table
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."coupon

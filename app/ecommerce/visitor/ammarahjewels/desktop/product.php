@@ -24,40 +24,33 @@
 							<div class='show-pro-box' href='<?php echo $product_image ?>'>
 								<img src='<?php echo $product_image ?>' id='show-img'>
 							</div>
-
+							
 							<div class="small-img">
-					            <img src="<?php echo USER_IMAGES ?>left-arow.png" class="icon-left" alt="" id="prev-img">
+								<img src='<?php echo USER_IMAGES ?>left-arow.png' class='icon-left' alt='' id='prev-img'>
+								<div class="small-container">
+									<div id="small-img-roll">
+										<?php
+											
+											$galleryImages=explode(', ', $product_gallery);
 
-					            <div class="small-container">
-					               	<div id="small-img-roll">
-									<?php
-									
-										$galleryImages=json_decode($product_gallery, TRUE);
-										
-										if($galleryImages!='') {
+											if($galleryImages!='') {
 
-											for($i=0; $i<sizeof($galleryImages); $i++) {
-												
-												extract($galleryImages[$i]);
+												for($i=0; $i<sizeof($galleryImages); $i++) {
+														
+													echo "<img src='{$galleryImages[$i]}' class='show-small-img' alt=''>";
 
-												echo "<img src='{$galleryImages[$i]}' class='show-small-img' alt=''>";
+												}
 
 											}
 
-										} else {
-
-											echo "<img src='{$product_image}' class='show-small-img' alt=''>";
-
-										}
-
-									?>
+										?>
 									</div>
-								</div>
-
-								<img src="<?php echo USER_IMAGES ?>right-arow.png" class="icon-right" alt="" id="next-img">
+					    		</div>
+								<img src='<?php echo USER_IMAGES ?>right-arow.png' class='icon-right' alt='' id='next-img'>
 							</div>
 
-					    </div>
+						</div>
+
 					</div>
 					<div class="col-md-6">
 						<div class="prod-detail">
@@ -73,31 +66,52 @@
 							<p class="pro-info"><?php echo $product_highlight ?></p>
 							<div class="quantaty">
 
-								<div class="quant-bx">
-									Quantity : <select id="cars" name="carlist" form="carform">
-									  		<option value="volvo">1</option>
-									  		<option value="saab">2</option>
-									  		<option value="opel">3</option>
-									  		<option value="audi">4</option>
-										</select> 
-								</div>
+								<?php
+								
+									if($productMeta=mysqli_query($connection, "SELECT product_meta_name, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".APP_SITE_ID)) {
 
-								<div class="siz-bx">
-									<form>
-										<span>Size :</span>  
-										<input type="checkbox" id="fruit1" name="fruit-1" value="Apple">
-	  									<label class="size">5</label>
-									</form>
-								</div>
+										if(mysqli_num_rows($productMeta)!=0) {
+
+											while($productMetaData=mysqli_fetch_assoc($productMeta)) {
+
+												extract($productMetaData);
+												?>
+
+												<div class="form-group">
+													<label><?php echo $product_meta_name ?></label>
+													<select name="<?php echo strtolower(str_replace(' ', '_', $product_meta_name)); ?>" id="<?php echo strtolower(str_replace(' ', '_', $product_meta_name)); ?>" class="orderMeta form-control">
+														<?php
+														
+															$productMetaValue=explode(',', $product_meta_value);
+
+															for($i=0; $i<sizeof($productMetaValue); $i++) {
+
+																echo "<option value='{$productMetaValue[$i]}'>{$productMetaValue[$i]}</option>";
+
+															}
+
+														?>
+													</select>
+												</div>
+
+												<?php
+
+											}
+
+										}
+
+									}
+
+								?>
 
 							</div>
 
 							<div class="price-tg">
-								<h2 class="ofer-price">Price : <span>₹ 193.00 - ₹ 203.00</span></h2>
-								<h2 class="with-ofer-price">₹ 203.00 - ₹ 263.00</h2>
+								<h2 class="ofer-price">Price : <span><?php echo $inventory_currency_symbol.' '.$inventory_price; ?></span></h2>
+								<!-- <h2 class="with-ofer-price">₹ 203.00 - ₹ 263.00</h2> -->
 							</div>
 							<div class="cart-box">
-								<a href="" id="addToCart" class="cart-ad-btn">Add to Cart</a>
+								<a href="#" class="buyNow cart-ad-btn" id="<?php echo $product_id ?>" >Add to Cart</a>
 								<div class="wish-btns">
 									<div class="icon-wishlist"></div>
 								</div>
@@ -110,29 +124,18 @@
 	  							<li class="nav-item">
 								    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Details</a>
 								  </li>
-								  <li class="nav-item">
+								  <!-- <li class="nav-item">
 								    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">More Information</a>
-								  </li>
+								  </li> -->
 								  <!-- <li class="nav-item">
 								    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Review</a>
 								  </li> -->
 								</ul>
 								<div class="tab-content" id="myTabContent">
 								  	<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-									  	<p>
-										We started the fashion revolution as being the first brand to produce jeans. Along the way we realized that our collection is timeless and keeps its value. A beautiful pair of jeans keeps its value. That’s why we have let go of the season collections.</p>
-										<p>
-										Find your perfect fit in New collection. Our designers work tirelessly to bring you awesome jeans for you.</p>
-										<p>
-										If you are in a search of fine shoes which would meet your design and functional requirements, and meanwhile you are willing to save your time, an online store is a perfect option for you. We all know how frustrating choosing a proper pair of shoes may be, because the rule “everything is great except something” works. And right now you don’t have to waste your time, you don’t have to spend your precious time even trying the shoes on - you may relax, sit back in your chair and prepare for choosing a perfect pair of shoes right away.</p>
-										<p>
-										First of all, you’ll save your time. Your channel your attention towards shoes only, and nothing else gets you side-tracked (like it usually happens in stores). What do you need to know to be able to choose your perfect pair of shoes? Your sizing. If you don’t know it, have a look at our sizing table, find out the parameters which would work for you and use them as your filter when searching through the website.</p>
-										<p>
-										Filter is your assistant number one in this online store. Use it to choose a design which you like, a color and a size. There are some extra parameters which may help you choose a pair of shoes. Don’t forget that you may choose shoes by brand, if you are a devoted fan of a specific label, you are very likely to find your perfect pair, produced by that very brand.</p>
-										<p>
-										Shoes are always accompanied by accessories, which is why we bet you will enjoy our category “Bags and Handbags”. As we offer items both for men and women, and, moreover, for kids - you will enjoy a huge variety of the items offered. What about shipping and return policy? We provide free shipping, and you have 365 days to return the shoes. We promise you that you will leave this store happy, having found what you have been looking for.</p>
-								  </div>
-								  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+										<?php echo $product_description ?>
+								  	</div>
+								  	<!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 								  		<table class="table table-striped">
 											<tbody>
 											    <tr>
@@ -150,8 +153,7 @@
 											    
 											  </tbody>
 										</table>
-								  </div>
-								  <!-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> -->
+								  	</div> -->
 								</div>
 						</div>
 					</div>

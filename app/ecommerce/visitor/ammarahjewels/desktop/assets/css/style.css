@@ -1665,14 +1665,13 @@ section.section-content.socl-box {
     float: left;
 }
 h2.ofer-price {
-    font-size: 17px;
+    font-size: 24px;
     color: #888686;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
 }
 h2.ofer-price span {
     color:#ebb15a;
-    font-size: 17px;
     margin-right: 10px;
     font-weight: 600
 }
@@ -1764,6 +1763,8 @@ a.cart-ad-btn {
 
 .product-discription .tab-pane{
     padding: 20px;
+    line-height: 28px;
+    font-weight: 400;
 }
 
 .img-cd-related img {
@@ -2750,6 +2751,30 @@ label.labl-head {
     padding: 80px 40px 50px 20px;
 }
 
+}
 
+.continue-shopping {
+    float: left;
+    width: 100%;
+    padding: 10% 0px;
+    text-align: center;
+}
 
+@media only screen and (width: 720px) {
+    .continue-shopping {
+        float: left;
+        width: 100%;
+        padding: 20% 0px;
+        text-align: center;
+    }
+}
+
+.prodcut-list-cart h3 a {
+    float: left;
+    width: 100%;
+    font-size: 11px!important;
+    color: red;
+    font-weight: 300;
+    line-height: 22px;
+    text-decoration: none;
 }

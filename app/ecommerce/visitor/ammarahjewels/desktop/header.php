@@ -13,6 +13,7 @@
 		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Mrs+Saint+Delafield&family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>product-zoom.min.css">
 		
 		<!-- SEO -->
 
