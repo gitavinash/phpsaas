@@ -179,7 +179,7 @@
 			</div>
 
 			<div class="col-md-12">
-				<div class="carousel carousel-home" data-flickity='{ "groupCells": true, "freeScroll": true,"pageDots": false, "contain": true }'>
+				<div class="product-slider">
 							
 
 				<?php
@@ -208,7 +208,7 @@
 							extract($relatedProducts);
 
 							echo "
-							<div class='carousel-cell-home'>
+							<div class='product-slide'>
 								<a href='{$link_url}'>
 									<div class='col-card-3'>
 										<div class='event-card'>
