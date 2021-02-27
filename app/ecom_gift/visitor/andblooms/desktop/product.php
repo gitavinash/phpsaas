@@ -136,9 +136,9 @@
 
 						?>
 
-						<div class="deliver">
+						<!-- <div class="deliver">
 							<img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
-						</div>
+						</div> -->
 					</div>
 					<div class="similar-product">
                         <h2>Product Description</h2>
