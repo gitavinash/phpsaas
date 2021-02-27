@@ -1,7 +1,6 @@
 <?php
 
-	echo $bookingID=base64_decode($id);
-	exit();
+	$bookingID=base64_decode($id);
 
 ?>
 

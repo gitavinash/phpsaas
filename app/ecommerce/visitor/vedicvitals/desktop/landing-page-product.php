@@ -66,12 +66,22 @@
 								<div class="collapse navbar-collapse" id="navbarNavDropdown">
 									<ul class="navbar-nav justify-content-center menu-ul">
 									  
-									  <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-									  <li class="nav-item"><a class="nav-link" href="/product/tar/tar-free/">Our Products</a></li>
-									  <li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>
-									  <li class="nav-item"><a class="nav-link" href="/blog/">Blogs</a></li>
-									  <li class="nav-item"><a class="nav-link" href="https://vedicvitals.shiprocket.co/">Track Orders</a></li>
-									  <li class="nav-item"><a class="nav-link" href="/contact-us/">Contact Us</a></li>
+										<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+										<li class="nav-item dropdown">
+											<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Our Products
+											</a>
+											<div class="dropdown-menu">
+												<a class="dropdown-item" href="/product/immunity/immunity-vitals/">Immunity Vitals</a>
+												<a class="dropdown-item" href="/product/tar/tar-free/">Tar Free</a>
+												<a class="dropdown-item" href="/product/gyno/gyno-vitals/">Gyno Vitals</a>
+												<a class="dropdown-item" href="/product/liver/v-liver-vitals/">V-Liver Vitals</a>
+											</div>
+										</li>
+										<li class="nav-item"><a class="nav-link" href="/our-story/">Our Story</a></li>
+										<li class="nav-item"><a class="nav-link" href="/blog/">Blogs</a></li>
+										<li class="nav-item"><a class="nav-link" href="https://vedicvitals.shiprocket.co/">Track Orders</a></li>
+										<li class="nav-item"><a class="nav-link" href="/contact-us/">Contact Us</a></li>
+
 									</ul>
 
 

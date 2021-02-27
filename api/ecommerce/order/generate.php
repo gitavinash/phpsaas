@@ -79,6 +79,7 @@
                         if($couponCodeIsValid) {
 
                             $totalPrice=($totalPrice+$deliveryCharges)-$discountValue;
+                            $totalPrice=str_replace(',', '', number_format($totalPrice, 2));
 
                             if($paymentMode!='') {
             

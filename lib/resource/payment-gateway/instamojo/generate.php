@@ -49,6 +49,8 @@
 
                 $paymentAmount=$order_total_price + ((isset($deliveryFees)) ? $deliveryFees : 0 );
 
+                $paymentAmount=str_replace(",", "", number_format($paymentAmount, 2));
+
                 /** Start payment gateway code */
 
                 $ch = curl_init();
@@ -103,7 +105,7 @@
 
                 } else {
 
-                    print_r($response['message']).' of '.SITE_DOMAIN;
+                    print_r($response['message']);
 
                 }
 

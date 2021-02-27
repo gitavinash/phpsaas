@@ -498,6 +498,7 @@ function formSubmission(sendingData) {
 
                     if(ret.url!='#') {
                         
+                        $("#submitForm").hide();
                         window.location.href=ret.url;
                         
                     } else {
@@ -587,7 +588,6 @@ $("body").delegate("#submitForm", "click", function (e) {
     
     // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
 
-    $('#submitForm').hide();
     formSubmission(sendingData);
 
 });

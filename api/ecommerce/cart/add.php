@@ -12,9 +12,8 @@
 
                 extract(mysqli_fetch_assoc($checkProduct));
 
-                if(SITE_ID!=7) {
-                    $price=(($inventory_price!=0) ? $inventory_price : $inventory_mrp );
-                }
+                $price=((isset($price)) ? $price : (($inventory_price!=0) ? $inventory_price : $inventory_mrp ));
+                $price=str_replace(',', '', number_format($price, 2));
 
                 if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".SITE_ID.", '{$id}', '{$itemType}', '{$quantity}', '{$inventory_currency}', '{$inventory_currency_symbol}', '{$price}', 0, NOW())")) {
 
@@ -29,7 +28,8 @@
 
             } else {
 
-                $msg="SELECT product_title as productName, product_thumbnail as productImage, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE product_id='{$id}' AND product_status=1 AND link_status=200 AND link_site_id=".SITE_ID;
+                // $msg="SELECT product_title as productName, product_thumbnail as productImage, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE product_id='{$id}' AND product_status=1 AND link_status=200 AND link_site_id=".SITE_ID;
+                $msg="Invalid product found";
 
             }
 

@@ -12,7 +12,7 @@
 			<tr>
 				<td style='text-align: center'>
 					<h1 style='color: {$themeColor}'>{$subject}</h1>
-					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>You have successfully booked Pangat for {$bookingDate} {$bookingTime} {$guestNumbers}. Please call 011-23670506 in case of any issue.</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>You have successfully booked Pangat for {$booking_date} {$booking_time} {$guestNumbers}. Please call 011-23670506 in case of any issue.</p>
 				</td>
 			</tr>
     

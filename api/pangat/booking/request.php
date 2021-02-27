@@ -106,12 +106,13 @@
 
                                                 /** Add mobile as a alternative number */
 
-                                                if($checkAlternateMobile=mysqli_query($connection, "SELECT profile_meta_value FROM ".TABLE_PREFIX."profile_meta WHERE profile_meta_key='mobile' AND profile_meta_profile_id='{$user_id}' AND profile_meta_value='{$mobile}'")) {
+                                                if($checkAlternateMobile=mysqli_query($connection, "SELECT profile_meta_id, profile_meta_value FROM ".TABLE_PREFIX."profile_meta WHERE profile_meta_key='mobile' AND profile_meta_profile_id='{$user_id}' AND profile_meta_value='{$mobile}'")) {
 
                                                     if(mysqli_num_rows($checkAlternateMobile)!=0) {
 
                                                         extract(mysqli_fetch_assoc($checkAlternateMobile));
                                                         $mobile=$profile_meta_value;
+                                                        $alternateID=$profile_meta_id;
 
                                                     } else {
 
@@ -119,6 +120,8 @@
 
                                                             $error=TRUE;
                                                             $msg='Something is wrong while adding alternate mobile number';
+                                                            
+                                                            echo 'i m here';
 
                                                         } else {
 

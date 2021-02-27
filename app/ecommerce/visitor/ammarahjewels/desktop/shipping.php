@@ -47,7 +47,7 @@
 
 										<?php
 
-											if($checkCart=mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_price, product_title, product_image FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND product_status=1 AND cart_site_id=".SITE_ID)) {
+											if($checkCart=mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, product_title, product_image FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND product_status=1 AND cart_site_id=".SITE_ID)) {
 
 												if(mysqli_num_rows($checkCart)!=0) {
 
@@ -61,9 +61,9 @@
 
 															<div class="prodcut-list-cart">
 																<img src="<?php echo $product_image ?>">
-																<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
+																<h3><?php echo substr($product_title, 0, 30).((strlen($product_title)>100) ? '...' : ''); ?> x <?php echo $cart_qty ?> Qty</h3>
 																<div class="price-new">
-																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
+																	<span><?php echo $cart_currency_symbol.' '.$cart_price ?></span>
 																</div>
 															</div>
 
@@ -78,7 +78,7 @@
 
 										?>
 
-										<div class="copn-div">
+										<!-- <div class="copn-div">
 											<form class="form-row">
 												<div class="form-group col-md-8 cod-ap">
 													<input type="text" class="form-control couponCode" id="couponCode2" placeholder="Discount Code">
@@ -88,12 +88,12 @@
 												</div>
 												<span class="couponMsg" ></span>
 											</form>
-										</div>
+										</div> -->
 
 										<div class="sub-totl">
 											<div class="sub1">
 												<span class="spn-lft">Subtotal</span>
-												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="subTotal" ><?php echo number_format($totalPrice, 2) ?></strong></span>
+												<span class="spn-rgt rt-t"><strong id="subTotal" ><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></strong></span>
 											</div>
 											<div class="sub1">
 												<span class="spn-lft">Shipping</span>
@@ -105,7 +105,7 @@
 											<div class="sub1">
 												<span class="spn-lft-1 totl">Total<br>
 													<span class="ship-ad">Including GST</span></span>
-												<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice2" ><?php echo number_format($totalPrice, 2) ?></strong></span>
+												<span class="spn-rgt-1 man-t"><strong id="finalPrice2" ><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></strong></span>
 											</div>
 										</div>
 
@@ -172,13 +172,13 @@
 													<th scope="row">Prepaid Shipping</th>
 													<td><span>Free</span></td>
 													</tr>
-													<tr>
+													<!-- <tr>
 													<td>
 														<input class="form-check-input" id="cod" type="radio" name="paymentMode" value="cash" >
 													</td>
 													<th scope="row">COD ( Cash handling Charges )</th>
 													<td><span><i class="fas fa-rupee-sign"></i> 50/-</span></td>
-													</tr>
+													</tr> -->
 												</tbody>
 												</table>
 											</div>
@@ -213,7 +213,7 @@
 										<?php
 
 											// if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2")) {
-											if($checkCart=mysqli_query($connection, "SELECT product_title, product_thumbnail, product_image, cart_qty, cart_price FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2")) {
+											if($checkCart=mysqli_query($connection, "SELECT product_title, product_thumbnail, product_image, cart_id, cart_qty, cart_currency, cart_currency_symbol, cart_price FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2")) {
 
 												if(mysqli_num_rows($checkCart)!=0) {
 
@@ -229,9 +229,9 @@
 
 															<div class="prodcut-list-cart">
 																<img src="<?php echo $product_image ?>">
-																<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
+																<h3><?php echo substr($product_title, 0, 30).((strlen($product_title)>100) ? '...' : ''); ?> x <?php echo $cart_qty ?> Qty</h3>
 																<div class="price-new">
-																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
+																	<span><?php echo $cart_currency_symbol.' '.$cart_price ?></span>
 																</div>
 															</div>
 
@@ -250,7 +250,7 @@
 
 										?>
 
-										<div class="copn-div">
+										<!-- <div class="copn-div">
 											<form class="form-row">
 												<div class="form-group col-md-8 cod-ap">
 													<input type="text" class="form-control couponCode" id="couponCode1" placeholder="Discount Code">
@@ -260,12 +260,12 @@
 												</div>
 												<span class="couponMsg" ></span>
 											</form>
-										</div>
+										</div> -->
 
 										<div class="sub-totl">
 											<div class="sub1">
 												<span class="spn-lft">Subtotal</span>
-												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo number_format($totalPrice, 2) ?></span>
+												<span class="spn-rgt rt-t"><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></span>
 												<span id='cartPrice' style='display:none' ><?php echo number_format($totalPrice, 2) ?></span>
 											</div>
 											<div class="sub1">
@@ -278,7 +278,7 @@
 											<div class="sub1">
 												<span class="spn-lft-1 totl">Total<br>
 												<span class="ship-ad">Including GST</span></span>
-												<span class="spn-rgt-1 man-t" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice" ><?php echo number_format($totalPrice, 2) ?></strong></span>
+												<span class="spn-rgt-1 man-t" ><strong id="finalPrice" ><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></strong></span>
 											</div>
 										</div>
 

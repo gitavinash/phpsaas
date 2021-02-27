@@ -21,7 +21,8 @@
 
             } else {
 
-                echo 'Something is wrong while calling payment gateway function';
+                // echo 'Something is wrong while calling payment gateway function';
+                echo $pgFile;
 
             }
 

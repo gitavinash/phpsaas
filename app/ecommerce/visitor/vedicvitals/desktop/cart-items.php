@@ -35,7 +35,7 @@
 
 							<?php
 
-								if($checkCart=mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_price, product_title, product_image FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1 AND cart_site_id=".SITE_ID)) {
+								if($checkCart=mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, product_title, product_image FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1 AND cart_site_id=".SITE_ID)) {
 
 									if(mysqli_num_rows($checkCart)!=0) {
 
@@ -49,9 +49,9 @@
 
 												<div class="prodcut-list-cart">
 													<img src="<?php echo $product_image ?>">
-													<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
+													<h3><?php echo substr($product_title, 0, 10); ?> x <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
 													<div class="price-new">
-														<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
+														<span><?php echo $cart_currency_symbol.' '.number_format($cart_price, 2) ?></span>
 													</div>
 												</div>
 
@@ -66,21 +66,10 @@
 
 							?>
 
-							<div class="copn-div">
-								<form class="form-row">
-								  	<div class="form-group col-md-8 cod-ap">
-									    <input type="text" id="couponCode1" class="form-control couponCode" placeholder="Discount Code">
-								  	</div>
-								  	<div class="form-group col-md-4 ap-btn">
-									  	<button type="submit" class="checkCoupon btn">Apply</button>
-								  	</div>
-								</form>
-							</div>
-
 							<div class="sub-totl">
 								<div class="sub1">
 									<span class="spn-lft">Subtotal</span>
-									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="subTotal" ><?php echo $totalPrice ?></strong>.00</span>
+									<span class="spn-rgt rt-t"><strong id="subTotal" ><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></strong></span>
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
@@ -92,7 +81,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 										<span class="ship-ad">Including GST</span></span>
-									<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice2" ><?php echo $totalPrice ?></strong>.00</span>
+									<span class="spn-rgt-1 man-t"><strong id="finalPrice2" ><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></strong></span>
 								</div>
 							</div>
 
@@ -295,9 +284,9 @@
 
 												<div class="prodcut-list-cart" id="product_<?php echo $cart_id ?>" >
 													<img src="<?php echo $product_image ?>">
-													<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
+													<h3><?php echo substr($product_title, 0, 30).((strlen($product_title)>100) ? '...' : ''); ?> x <?php echo $cart_qty ?> Qty <a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
 													<div class="price-new">
-														<span ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?>.00</span>
+													<span><?php echo $cart_currency_symbol.' '.number_format($cart_price, 2) ?></span>
 													</div>
 												</div>
 
@@ -319,7 +308,7 @@
 							<div class="sub-totl">
 								<div class="sub1">
 									<span class="spn-lft">Subtotal</span>
-									<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $totalPrice ?>.00</span>
+									<span class="spn-rgt rt-t"><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></span>
 								</div>
 								<div class="sub1">
 									<span class="spn-lft">Shipping</span>
@@ -331,7 +320,7 @@
 								<div class="sub1">
 									<span class="spn-lft-1 totl">Total<br>
 									<span class="ship-ad">Including GST</span></span>
-									<span class="spn-rgt-1 man-t" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice" ><?php echo $totalPrice ?></strong>.00</span>
+									<span class="spn-rgt-1 man-t" ><strong id="finalPrice" ><?php echo $cart_currency_symbol.' '.number_format($totalPrice, 2) ?></span>
 								</div>
 							</div>
 
