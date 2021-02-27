@@ -142,9 +142,9 @@
 		<!-- sections end -->
 		<?php include_once NOTIFICATION.'index.php' ?>
 	
-		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
+		<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
 		<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js" ></script>
@@ -155,26 +155,25 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-			  $('.card-slider').slick({
-			    dots: false,
-			    arrows: true,
-			    slidesToShow: 4,
-			    infinite: false,
-			    responsive: [
-			      {
-			        breakpoint: 800,
-			        settings: {
-			          slidesToShow: 3
-			        }
-			      },
-			      {
-			        breakpoint: 600,
-			        settings: {
-			          slidesToShow: 2
-			        }
-			      }
-			    ]
-			  });
+
+			  	$('.card-ban').slick({
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					autoplay: true,
+					autoplaySpeed: 2000,
+					dots: false,
+					arrows: false,
+			  	});
+
+			  	$('.product-slider').slick({
+					slidesToShow: 4,
+					slidesToScroll: 1,
+					autoplay: true,
+					autoplaySpeed: 2000,
+					dots: false,
+					arrows: false,
+			  	});
+
 			});
 		</script>
 		

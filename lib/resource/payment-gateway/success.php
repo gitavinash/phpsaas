@@ -61,7 +61,16 @@
 
                     if($updateTransactionStatus && $updateOrderStatus && $updateCartStatus && $updateBookingStatus && $updateEnquiryStatus) {
 
+                        /** Send SMS */
+
+                        require_once APP_SMS_TEMPLATE.'order/booking-confirmation.php';
+
+                        /** Send Email */
+                                                    
+                        require_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+
                         mysqli_query($connection, "COMMIT");
+
 
                     } else {
 
@@ -76,18 +85,18 @@
                 default:
 
                     // default thank you page process
+                        
+                    /** Send SMS */
+
+                    require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+
+                    /** Send Email */
+
+                    require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
 
                     break;
 
             }
-
-            /** Send SMS */
-
-            require_once APP_SMS_TEMPLATE.'order/booking-confirmation.php';
-
-            /** Send Email */
-                                        
-            require_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
 
         } else {
 

@@ -87,14 +87,6 @@
                         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
                         $response = curl_exec($ch);
                         curl_close($ch);
-                        
-                        /** Send SMS */
-
-                        require_once APP_SMS_TEMPLATE.'order/prepaid.php';
-
-                        /** Send Email */
-
-                        require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
 
                     }
 
@@ -121,7 +113,6 @@
                         
                         require_once APP_EMAIL_TEMPLATE.'order/cod.php';
                         
-
                         ?>
                     
                         <section class='continue-shopping' >

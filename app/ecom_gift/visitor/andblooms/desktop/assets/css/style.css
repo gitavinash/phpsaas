@@ -40,6 +40,24 @@ a:hover {
 	float: left
 }
 
+.slider {
+	float: left;
+	width: 100%;
+}
+
+.product-slider {
+	float: left;
+	width: 100%;
+	overflow: hidden;
+}
+
+.product-slide {
+	float: left;
+	background: #fff;
+	box-sizing: border-box;
+	padding: 0px 10px;
+}
+
 .web-detail span a {
 	background: #fff;
 	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .16);
@@ -389,7 +407,8 @@ span.span-item {
 
 .banner-section {
 	width: 100%;
-	float: left
+	float: left;
+	overflow: hidden;
 }
 
 .search-pro {
