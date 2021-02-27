@@ -209,9 +209,6 @@
 									        </div>
 									  	  </div>
 									  </li>
-									  <li class="nav-item">
-									    <a class="nav-link" href="/tag/everlasting/">Infinity Everlasting Flowers</a>
-									  </li>
 									  <li class="nav-item dropdown">
 									    <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop" data-toggle="dropdown">Occasions
 									      </a>
@@ -244,11 +241,11 @@
 									    	</div>
 									      </div>
 									  </li>
-									  <li class="nav-item ">
-									    <a class="nav-link " href="/subscription/">Subscription</a>
+									  <li class="nav-item">
+									    <a class="nav-link" href="/tag/everlasting/">Infinity Everlasting Flowers</a>
 									  </li>
 									  <li class="nav-item ">
-									  	<a class="nav-link" href="/tag/mothers-day/">Mother's Day</a>
+									    <a class="nav-link " href="/subscription/">Subscription</a>
 									  </li>
 
 									  <div class="dn-l log-in">
