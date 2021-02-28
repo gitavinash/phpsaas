@@ -45,6 +45,11 @@ a:hover {
 	width: 100%;
 }
 
+.slider img {
+	float: left;
+	width: 100%;
+}
+
 .product-slider {
 	float: left;
 	width: 100%;
@@ -3629,9 +3634,9 @@ only screen and (min-device-pixel-ratio:1.5) {
 		left: auto;
 		right: 20px
 	}
-	.card-ban {
+	/* .card-ban {
 		padding: 15px
-	}
+	} */
 	.card-ban .flickity-viewport {
 		border-radius: 15px
 	}
@@ -3653,7 +3658,7 @@ only screen and (min-device-pixel-ratio:1.5) {
 		right: 0
 	}
 	.banner-section {
-		margin-top: 61px
+		margin-top: 70px
 	}
 	.header-top p {
 		margin-right: 0;
@@ -3752,7 +3757,8 @@ only screen and (min-device-pixel-ratio:1.5) {
 		margin: 0
 	}
 	.head-1 h2 {
-		font-size: 18px
+		font-size: 18px;
+		line-height: 40px;
 	}
 	.carousel-cell-home {
 		width: 45%;
