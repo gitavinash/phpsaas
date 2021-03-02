@@ -111,19 +111,19 @@
 						</div>
 					</li>
 					<li <?php echo ((ADMIN_BASE_URL=='/youtube/') ? 'class="active"' : '' ) ?> >
-						<a href="youtube.php?type=list&status=all"><i class="fab fa-youtube"></i> Youtube</a>
+						<a href="embed.php?type=list&status=all"><i class="fab fa-youtube"></i> Embed video</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="youtube.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>
-								<li><a href="youtube.php?type=add"><i class="fas fa-plus"></i>  Add New video</a></li>
-								<li><a href="youtube.php?type=live"><i class="fas fa-video"></i>  Add New live video</a></li>
+								<li><a href="embed.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>
+								<li><a href="embed.php?type=add"><i class="fas fa-plus"></i>  Add New video</a></li>
+								<li><a href="embed.php?type=live"><i class="fas fa-video"></i>  Add New live video</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="youtube.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>
-								<li><a href="youtube.php?type=add"><i class="fas fa-plus"></i>  Add New video</a></li>
-								<li><a href="youtube.php?type=live"><i class="fas fa-video"></i>  Add New live video</a></li>
+								<li><a href="embed.php?type=list&status=all"><i class="fas fa-list"></i>  All video</a></li>
+								<li><a href="embed.php?type=add"><i class="fas fa-plus"></i>  Add New video</a></li>
+								<li><a href="embed.php?type=live"><i class="fas fa-video"></i>  Add New live video</a></li>
 							</ul>
 						</div>
 					</li>

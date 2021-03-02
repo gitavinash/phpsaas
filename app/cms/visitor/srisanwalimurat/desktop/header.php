@@ -15,7 +15,7 @@
                 <li><a href="" style="color: #fff" >Publication</a></li>
                 <li><a href="">Gallery</a></li>
                 <li><a href="">Events</a></li>
-                <li class="logo"><h1><a href="">Sri Sanwali Murat</a></h1></li>
+                <li class="logo"><h1><a href="/">Sri Sanwali Murat</a></h1></li>
                 <li><a href="">Discourses</a></li>
                 <li><a href="">Bhajan/Aarti</a></li>
                 <li><a href="//pangat.<?php echo SITE_DOMAIN ?>">Request For Pangat</a></li>

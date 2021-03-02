@@ -44,6 +44,19 @@
 		$fb_desc=(($fb_desc=='') ? $meta_desc : $fb_desc );
 		$tw_desc=(($tw_desc=='') ? $meta_desc : $tw_desc );
 
+		if(isset($live)) {
+
+			$postType='live';
+
+		} else {
+
+			preg_match('/src="([^"]+)"/', $description, $match);
+			print_r($match);
+
+		}
+
+		exit();
+
 		if($title!='') {
 
 			if($checkURL=mysqli_query($connection, "SELECT link_relation_id FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".APP_SITE_ID."'")) {
@@ -60,7 +73,7 @@
 
 					/* Insert data into link table */
 
-					$addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_thumbnail, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '".USER_ID."', '{$video_status}', '".(((isset($live) ? 'live' : $postType)))."')");
+					$addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_thumbnail, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '".USER_ID."', '{$video_status}', '{$postType}')");
 					$postID=mysqli_insert_id($connection);
 
 					$linkData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', '{$postType}', '{$featurePost}', '".USER_ID."', '".SITE_ID."', NOW() ,NOW())");
