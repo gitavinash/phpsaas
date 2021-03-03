@@ -51,11 +51,8 @@
 		} else {
 
 			preg_match('/src="([^"]+)"/', $description, $match);
-			print_r($match);
 
 		}
-
-		exit();
 
 		if($title!='') {
 

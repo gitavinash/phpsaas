@@ -68,7 +68,7 @@
 						<div class="col-md-7">
 							<div class="search-box">
 								<form action="/search/" class="form-inline">
-							      <input class="form-control" name="q" type="search" placeholder="Search for gifts, flowers..." >
+							      <input class="form-control" name="q" type="search" value="<?php echo ((isset($_GET['q'])) ? $_GET['q'] : '' ); ?>" placeholder="Search for gifts, flowers..." >
 							    </form>
 							</div>
 							<div class="search-pro">

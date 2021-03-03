@@ -22,7 +22,25 @@
 
         } else {
 
-            $queryPost='';
+            if($queryList=mysqli_query($connection, "SELECT product_title, product_image, link_url FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE product_title LIKE '%{$searchQuery}%' AND product_site_id=".SITE_ID." ORDER BY product_time DESC")) {
+
+                if(mysqli_num_rows($queryList)!=0) {
+
+                    while($queryPostData=mysqli_fetch_assoc($queryList)) {
+        
+                        $queryPost[]=$queryPostData;
+        
+                    }
+        
+                    extract($queryPost[0]); // Extract first result for page meta's
+        
+                } else {
+
+                    $queryPost='';
+
+                }
+
+            }
 
         }
 

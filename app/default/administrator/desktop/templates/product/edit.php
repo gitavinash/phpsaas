@@ -127,7 +127,12 @@
 				</div>
 				<div class="productGallery generalTab" style="display: none;">
 					<input type="hidden" name="oldGallery" value="<?php echo $product_gallery ?>" >
-					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >	
+					<?php
+					
+						print_r(json_decode($product_gallery, TRUE));
+
+					?>				
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
 					
