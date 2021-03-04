@@ -98,7 +98,7 @@
 
                             } else {
 
-                                $msg='Invalid activity';
+                                $msg='Please enter a unique url';
 
                             }
 
