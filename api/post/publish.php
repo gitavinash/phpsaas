@@ -16,8 +16,6 @@
 
                     // Extract the single upload image string to variables
 
-                    
-
                     $featurePost=((isset($featurePost)) ? 1 : 0 );
         
                     $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
@@ -31,7 +29,7 @@
 
                     /** post page url */
 
-                    $url=strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)).'/';
+                    $url=strtolower($categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url)).'/';
                     
                     /* define facebook and twitter meta desciption */
 

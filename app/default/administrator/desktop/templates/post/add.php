@@ -1,4 +1,4 @@
-<h2>Add new <?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?></h2>
+<h2>Add new <?php echo $postType ?></h2>
 
 <div class="form-box">
 	<form method="POST" id="formData" enctype="multipart/form-data" >
@@ -93,7 +93,7 @@
 			<div class="action-box inside-shadow">
 				<input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
 				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
-				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="hidden" name="type" value="<?php echo $postType ?>" >
 				<input type="hidden" name="action" value="publish" >
 			</div>
 			<div class="form-group">

@@ -2,8 +2,8 @@
 
 	include_once 'header.php';
 
-	$includeDefaultFile=DEFAULT_ADMIN_PATH.((isset($_GET['action'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['action']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
-	$includeAppFile=ADMIN_PATH.((isset($_GET['action'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['action']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
+	$includeDefaultFile=DEFAULT_ADMIN_PATH.((isset($_GET['type'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['type']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
+	$includeAppFile=ADMIN_PATH.((isset($_GET['type'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['type']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
 	
 	if(file_exists($includeAppFile)) {
 

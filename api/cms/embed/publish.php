@@ -6,6 +6,8 @@
         
         extract($data);
 
+		$postType=(($postType=='live') ? 'video' : $postType);
+
         if(isset($featurePost)) {
 			$featurePost=1;
 		} else {
@@ -26,7 +28,7 @@
 		} else {
 
 			$featureImage = $twitterImage = $facebookImage = $thumbnailImage = '';
-
+			
 		}
 
 		$category=0;
@@ -46,12 +48,13 @@
 
 		if(isset($live)) {
 
-			$postType='live';
+			$type='live';
 
 		} else {
 
+			$type=(($type=='live') ? 'video' : $type);
 			preg_match('/src="([^"]+)"/', $description, $match);
-
+			
 		}
 
 		if($title!='') {
@@ -70,7 +73,7 @@
 
 					/* Insert data into link table */
 
-					$addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_thumbnail, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '".USER_ID."', '{$video_status}', '{$postType}')");
+					$addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."{$postType}({$postType}_image, {$postType}_thumbnail, {$postType}_title, {$postType}_description, {$postType}_category, {$postType}_owner_id, {$postType}_status, {$postType}_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '".USER_ID."', '{$video_status}', '{$type}')");
 					$postID=mysqli_insert_id($connection);
 
 					$linkData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', '{$postType}', '{$featurePost}', '".USER_ID."', '".SITE_ID."', NOW() ,NOW())");
@@ -97,11 +100,12 @@
 					}
 
 					if($addNewPost && $linkData && $metaData && $tagData) {
+						
 						mysqli_query($connection, "COMMIT");
 
 						$status=200;
-						$msg=$postType.' is publish successfully';
-						$redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.$postID;
+						$msg=ucwords($postType).' is publish successfully';
+						$redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.base64_encode($postID);
 
 					} else {
 						
@@ -115,6 +119,10 @@
 
 				}
 
+			} else {
+
+				echo 'i m here';
+
 			}
 
 		} else {
@@ -126,7 +134,7 @@
         $result = array(
             'status' => (isset($status)) ? $status : 'error',
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-            'redirect' => '/dashboard/youtube.php?type=list&status=all',
+            'redirect' => '/dashboard/embed.php?action=list&status=all',
         );
 
         echo json_encode($result, TRUE);

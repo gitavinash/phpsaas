@@ -139,7 +139,7 @@
 
                             $status=200;
                             $msg='Gallery upload successfully';
-                            $redirect="/dashboard/gallery/?type=edit&editor=true&id={$id}";
+                            $redirect="/dashboard/gallery/?type=edit&editor=true&id=".base64_encode($id);
                             mysqli_query($connection, "COMMIT");
 
                         } else {

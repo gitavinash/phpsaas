@@ -1,6 +1,6 @@
 <?php
 	
-    $video_id=mysqli_real_escape_string($connection, $_GET['id']);
+    $video_id=mysqli_real_escape_string($connection, base64_decode($_GET['id']));
     
 	if($videoDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."video, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='video' AND link_relation_id=video_id AND meta_relation_id=link_id AND video_id='{$video_id}' AND link_status!=301 AND link_type='video' LIMIT 1")) {
 		if(mysqli_num_rows($videoDetails)!=0) {

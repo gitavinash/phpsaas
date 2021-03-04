@@ -34,7 +34,7 @@
 	<header>
 		<div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light pt-3 pb-0 pt-md-3 pb-md-0 pl-md-0 pr-md-0">
-	      <a href="#" class="navbar-brand">
+	      <a href="http://srisanwalimurat.com/" class="navbar-brand">
 		  	Sri Sanwali Murat
 	        <!-- <img src="assets/img/logo.png" alt="" class="img-fluid"> -->
 	      </a>
@@ -43,11 +43,11 @@
 	      </button>
 	      <div class="collapse navbar-collapse position-relative" id="navbarSupportedContent">
 	        <ul class="navbar-nav ml-auto borderTheUl position-relative">
-	          <li class="nav-item"><a href="#" class="nav-link pl-3 pr-3 pt-2 pb-2">Publication</a></li>
-	          <li class="nav-item"><a href="#" class="nav-link pl-3 pr-3 pt-2 pb-2">Gallery</a></li>
-	          <li class="nav-item"><a href="#" class="nav-link pl-3 pr-3 pt-2 pb-2">Events</a></li>
-	          <li class="nav-item"><a href="#" class="nav-link pl-3 pr-3 pt-2 pb-2">Discourses</a></li>
-	          <li class="nav-item"><a href="#" class="nav-link pl-3 pr-3 pt-2 pb-2">Bhajan/Aarti</a></li>
+	          <li class="nav-item"><a href="http://srisanwalimurat.com/publication/" class="nav-link pl-3 pr-3 pt-2 pb-2">Publication</a></li>
+	          <li class="nav-item"><a href="http://srisanwalimurat.com/gallery/" class="nav-link pl-3 pr-3 pt-2 pb-2">Gallery</a></li>
+	          <li class="nav-item"><a href="http://srisanwalimurat.com/events/" class="nav-link pl-3 pr-3 pt-2 pb-2">Events</a></li>
+	          <li class="nav-item"><a href="http://srisanwalimurat.com/discourses/" class="nav-link pl-3 pr-3 pt-2 pb-2">Discourses</a></li>
+	          <li class="nav-item"><a href="http://srisanwalimurat.com/bhajan/" class="nav-link pl-3 pr-3 pt-2 pb-2">Bhajan/Aarti</a></li>
 	        </ul>
 	        <a href="" class="d-inline-flex align-items-center justify-content-center w-auto navReqButton shadow">
 	        	Request for Pangat

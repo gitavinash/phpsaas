@@ -187,6 +187,7 @@ nav.side-nav ul li a {
 	color: #fff;
 	font-size: 14px;
 	line-height: 24px;
+	cursor: pointer;
 }
 
 nav.side-nav ul li a:hover {

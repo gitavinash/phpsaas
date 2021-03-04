@@ -29,7 +29,7 @@
 
                                 /** Check category template is avilable or not */
 
-                                $categoryTemplate=USER_PATH.strtolower($category_title).'-post.php';
+                                $categoryTemplate=USER_PATH.strtolower(str_replace(' ', '-', $category_title)).'-post.php';
 
                                 if(file_exists($categoryTemplate)) {
 

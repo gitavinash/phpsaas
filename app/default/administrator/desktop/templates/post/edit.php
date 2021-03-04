@@ -1,11 +1,11 @@
 <?php
 	
-	$post_id=mysqli_real_escape_string($connection, $_GET['id']);
+	$post_id=base64_encode(mysqli_real_escape_string($connection, $_GET['id']));
     
-	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND link_type='post' LIMIT 1")) {
+	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND link_type='post' AND link_site_id=".SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($postDetails)!=0) {
 			extract(mysqli_fetch_assoc($postDetails));
-		} else { exit(); ?>
+		} else {?>
 			<script type="text/javascript">
 				alert('Invalid action found');
 				window.location.href='dashboard/post/?type=list&status=all';

@@ -47,10 +47,10 @@
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="embed.php?type=edit&editor=true&page=<?php echo $video_id; ?>" ><?php echo $video_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="embed.php?type=edit&editor=true&page=<?php echo base64_encode($video_id); ?>" ><?php echo $video_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
-									<a href="embed.php?type=edit&editor=true&id=<?php echo $video_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="#" id="<?php echo $video_id ?>_video" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
+									<a href="embed.php?type=edit&editor=true&id=<?php echo base64_encode($video_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="#" id="<?php echo base64_encode($video_id) ?>_video" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>

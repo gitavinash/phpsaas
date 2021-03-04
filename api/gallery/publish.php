@@ -81,7 +81,7 @@
 
                                     $status=200;
                                     $msg='Gallery add successfully';
-                                    $redirect='/dashboard/gallery/?type=edit&editor=true&id='.$galleryID;
+                                    $redirect='/dashboard/gallery/?action=edit&editor=true&id='.base64_encode($galleryID);
                                     mysqli_query($connection, "COMMIT");
 
                                 } else {
