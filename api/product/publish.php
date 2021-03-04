@@ -98,7 +98,7 @@
 
                             } else {
 
-                                $msg='Please enter a unique url';
+                                $msg='Permalink value is not unique';
 
                             }
 
