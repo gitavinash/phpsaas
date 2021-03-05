@@ -31,7 +31,7 @@
     
                                         } else {
     
-                                            $msg='Maximum 99 guest are allowed';
+                                            $msg='Maximum 10 guest are allowed';
                                             
                                         }
 
