@@ -12,7 +12,7 @@
             
             if(isset($category)) {
                 
-                if($checkPost=mysqli_query($connection, "SELECT link_id FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
+                if($checkPost=mysqli_query($connection, "SELECT link_id FROM ".TABLE_PREFIX."event INNER JOIN ".TABLE_PREFIX."link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
 
                     if(mysqli_num_rows($checkPost)!=0) {
                         
@@ -136,9 +136,7 @@
                 
                         } else {
                             
-                            echo $addRedirect.' && '.$updateLink.' && '.$updatePost.' && '.$updateMeta.' && '.$tagData;
-
-                            $msg="Somthing is wrong while updating {$postType}";
+                            echo 'i m here ->'.$addRedirect.' && '.$updateLink.' && '.$updatePost.' && '.$updateMeta.' && '.$tagData;
                             mysqli_query($connection, 'ROLLBACK');
 
                 
@@ -165,7 +163,7 @@
         }
 
 		$result = array(
-			'status' =>	((isset($status)) ? $status : 500 ),
+			'status' =>	((isset($status)) ? $status : 'error' ),
 			'msg' => ((isset($msg)) ? $msg : 'Something is wrong while updating '.$postType ),
 			'redirect' => ((isset($redirect)) ? $redirect : '' )
 		);
