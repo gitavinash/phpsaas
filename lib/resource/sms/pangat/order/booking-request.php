@@ -1,7 +1,7 @@
 <?php
 
-    $dlt_sms_temp_id='1107161263361686617';
+    $dlt_sms_temp_id='1107161484362007629';
 
-    $message=urlencode("We have received request for booking Pangat for {$bookingDate} {$bookingTime}. Please complete the payment to confirm.");
+    $message=urlencode("Hello {$first_name}, your request for ".date('d M Y', strtotime($bookingDate))." {$bookingTime} pangat has been received.");
     
     require_once SEND_SMS;
