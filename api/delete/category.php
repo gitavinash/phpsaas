@@ -50,6 +50,10 @@
 
                         }
 
+                    } else {
+
+                        echo "SELECT * FROM ".TABLE_PREFIX."{$category_type} WHERE {$category_type}_category='{$category_id}'";
+
                     }
 
 

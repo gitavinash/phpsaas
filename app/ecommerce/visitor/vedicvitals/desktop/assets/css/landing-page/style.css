@@ -19,6 +19,17 @@ a{
     text-decoration: none !important;
 }
 
+.whatsapp {
+	position: fixed;
+	left: 20px;
+	bottom: 20px
+}
+
+.whatsapp img {
+	float: left;
+	width: 50px
+}
+
 /*----- header start-------*/
 
 .header-mid {
