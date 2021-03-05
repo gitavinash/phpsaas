@@ -473,6 +473,7 @@ $("body").delegate(".inputBox", "click", function (argument) {
 function formSubmission(sendingData) {
 
     $('#editForm').hide();
+    $('#submitForm').hide();
 
     if (bookingData["guest"] == 1) {
         if (bookingData["noOfGuest"] != "") {
@@ -588,6 +589,7 @@ $("body").delegate("#submitForm", "click", function (e) {
     
     // console.log('Final Data is Here to send it backend remove comment from line 585', sendingData)
 
+    $('#submitForm').hide();
     formSubmission(sendingData);
 
 });

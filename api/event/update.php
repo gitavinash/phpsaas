@@ -132,7 +132,7 @@
                 
                             $status=200;
                             $msg=$postType.' is update successfully';
-                            $redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.$id;
+                            $redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.base64_encode($id);
                 
                         } else {
                             
