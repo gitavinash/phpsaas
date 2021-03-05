@@ -53,7 +53,7 @@
 				</ul>
 				<div class="productGallery generalTab">
 					<!-- <input type="hidden" name="oldGallery" value="<?php echo $galleryImageList ?>" > -->
-					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+					<input type="file" id="gallery" accept="image/x-png, image/gif, image/jpeg" class="galleryBtn" name="gallery[]" multiple >					
 				</div>
 			</section>
 
@@ -193,7 +193,7 @@
 			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($gallery_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
 				<input type="hidden" name="oldFeatureImage" value="<?php echo $gallery_image ?>">
-				<input type="file" id="featureImage" name="featureImage">
+				<input type="file" id="featureImage" accept="image/x-png, image/gif, image/jpeg" name="featureImage">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($gallery_image!='') ? 'block' : 'none') ?>;">
