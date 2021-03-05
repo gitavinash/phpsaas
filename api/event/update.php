@@ -12,7 +12,7 @@
             
             if(isset($category)) {
                 
-                if($checkPost=mysqli_query($connection, "SELECT link_id FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link WHERE link_url='{$oldURL}' AND post_id='{$id}'")) {
+                if($checkPost=mysqli_query($connection, "SELECT link_id FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
 
                     if(mysqli_num_rows($checkPost)!=0) {
                         
@@ -98,7 +98,7 @@
                 
                         /** Update post table */
                 
-                        $updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."post SET post_image='{$featureImage}', post_thumbnail='{$thumbnailImage}', post_title='{$title}', post_description='{$description}', post_category='{$category}', post_status='1' WHERE post_id='{$id}'");
+                        $updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_category='{$category}', event_status='1' WHERE event_id='{$id}'");
                 
                         /** Update meta table */
                 
