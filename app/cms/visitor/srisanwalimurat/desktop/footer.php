@@ -41,6 +41,9 @@
             </div>
 
         </footer>
+        <div class="whatsapp">
+			<a href="https://wa.me/919810115828?text=Hello"><img src="<?php echo SITE_URL ?>/lib/resource/ui/img/whatsapp.png" alt=""></a>
+		</div>
         <?php require_once NOTIFICATION.'index.php'; ?>
         <script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js" type="text/javascript" ></script>
         <script type="text/javascript" >

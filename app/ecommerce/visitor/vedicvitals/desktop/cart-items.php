@@ -35,32 +35,24 @@
 
 							<?php
 
-								if($checkCart=mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, product_title, product_image FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1 AND cart_site_id=".SITE_ID)) {
+								while($cartData=mysqli_fetch_assoc($checkCart)) {
 
-									if(mysqli_num_rows($checkCart)!=0) {
-
-										while($cartData=mysqli_fetch_assoc($checkCart)) {
-
-											extract($cartData);
+									extract($cartData);
 											
-											$totalPrice=$totalPrice+$cart_price;
+									$totalPrice=$totalPrice+$cart_price;
 
-											?>
+									?>
 
-												<div class="prodcut-list-cart">
-													<img src="<?php echo $product_image ?>">
-													<h3><?php echo substr($product_title, 0, 10); ?> x <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
-													<div class="price-new">
-														<span><?php echo $cart_currency_symbol.' '.number_format($cart_price, 2) ?></span>
-													</div>
-												</div>
+									<div class="prodcut-list-cart">
+										<img src="<?php echo $product_image ?>">
+										<h3><?php echo substr($product_title, 0, 10); ?> x <?php echo $cart_qty ?><a href='#' class='removeFromCart' id="<?php echo $cart_id ?>" >Remove item</a></h3>
+										<div class="price-new">
+											<span><?php echo $cart_currency_symbol.' '.number_format($cart_price, 2) ?></span>
+										</div>
+									</div>
 
 
-											<?php
-
-										}
-
-									}
+								<?php
 
 								}
 
@@ -268,7 +260,7 @@
 
 							<?php
 							
-								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND cart_site_id=".APP_SITE_ID)) {
+								if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_site_id=".SITE_ID." AND cart_status=0 AND product_status=1 AND link_status=200 AND link_type='product' AND link_site_id=".SITE_ID)) {
 
 									if(mysqli_num_rows($checkCart)!=0) {
 
