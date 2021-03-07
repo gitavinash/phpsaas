@@ -133,6 +133,40 @@
 									</ul>
 								</div>
 							</li>
+							<li <?php echo (($postType=='news') ? 'class="active"' : '' ) ?> >
+								<a href="news.php?type=list&status=all"><i class="fas fa-newspaper"></i> News</a>
+								<div class="side-menu">
+									<ul>
+										<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
+										<li><a href="news.php?type=add"><i class="fas fa-plus"></i> Add New news</a></li>
+										<li><a href="news.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+									</ul>
+								</div>
+								<div class="bottom-menu">
+									<ul>
+										<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
+										<li><a href="news.php?type=add"><i class="fas fa-plus"></i> Add New news</a></li>
+										<li><a href="news.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+									</ul>
+								</div>
+							</li>
+							<li <?php echo (($postType=='thought') ? 'class="active"' : '' ) ?> >
+								<a href="thought.php?type=list&status=all"><i class="fas fa-lightbulb"></i> Thought of The Day</a>
+								<div class="side-menu">
+									<ul>
+										<li><a href="thought.php?type=list&status=all"><i class="fas fa-list"></i> All Thoughts</a></li>
+										<li><a href="thought.php?type=add"><i class="fas fa-plus"></i> Add New thought</a></li>
+										<li><a href="thought.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+									</ul>
+								</div>
+								<div class="bottom-menu">
+									<ul>
+										<li><a href="thought.php?type=list&status=all"><i class="fas fa-list"></i> All Thoughts</a></li>
+										<li><a href="thought.php?type=add"><i class="fas fa-plus"></i> Add New thought</a></li>
+										<li><a href="thought.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+									</ul>
+								</div>
+							</li>
 
 						<?php
 						} else { ?>
