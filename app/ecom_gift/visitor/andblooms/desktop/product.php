@@ -267,7 +267,7 @@
 
 					<div class="flower-box">
 						<div class="img-why box-b">
-							<img src="<?php echo USER_IMAGES; ?>dedicated-efforts.jpg">
+							<img src="<?php echo USER_IMAGES; ?>_dedicated-efforts.jpg">
 						</div>
 						<div class="why-cont box-b">
 							<h3>Dedicated Efforts</h3>
