@@ -34,32 +34,13 @@
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
-									echo "<div class='slide'><img src='{$path}'></div>";
+									echo "<div class='slide'><div class='img'><img src='{$path}'></div></div>";
 
 								}
 
 							} else {
 
-								echo "<div class='slide'><img src='{$product_image}'></div>";
-
-							}
-
-							?>
-						</div>
-
-						<div class="product-main-slider-nav">
-							<?php
-							
-							$galleryImages=json_decode($product_gallery, TRUE);
-							
-							if($galleryImages!='' && sizeof($galleryImages)>1 ) {
-
-								for($i=0; $i<sizeof($galleryImages); $i++) {
-
-									extract($galleryImages[$i]);
-									echo "<div class='slide'><img src='{$path}'></div>";
-
-								}
+								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
 
 							}
 
