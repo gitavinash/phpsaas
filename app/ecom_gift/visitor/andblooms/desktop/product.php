@@ -21,8 +21,10 @@
 			</div>
 			<div class="col-md-6">
 				<div class="galery-carousel">
+
 					<div class="lg-carousel-box">
-						<div class="carousel carousel-main" data-flickity>
+
+						<div class="product-main-slider">
 							<?php
 							
 							$galleryImages=json_decode($product_gallery, TRUE);
@@ -32,53 +34,39 @@
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
-									echo "<div class='carousel-cell'><img src='{$path}'></div>";
+									echo "<div class='slide'><img src='{$path}'></div>";
 
 								}
 
 							} else {
 
-								echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
+								echo "<div class='slide'><img src='{$product_image}'></div>";
 
 							}
 
 							?>
 						</div>
+
+						<div class="product-main-slider-nav">
+							<?php
+							
+							$galleryImages=json_decode($product_gallery, TRUE);
+							
+							if($galleryImages!='' && sizeof($galleryImages)>1 ) {
+
+								for($i=0; $i<sizeof($galleryImages); $i++) {
+
+									extract($galleryImages[$i]);
+									echo "<div class='slide'><img src='{$path}'></div>";
+
+								}
+
+							}
+
+							?>
+						</div>
+
 					</div>
-
-					<?php
-					
-						if($galleryImages!='') { ?>
-
-							<div class="vert-carousel">
-								<div class="carousel carousel-nav" data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false }'>
-									<?php
-									
-									if($product_gallery!='') {
-
-										$galleryImages=json_decode($product_gallery, TRUE);
-
-										for($i=0; $i<sizeof($galleryImages); $i++) {
-
-											extract($galleryImages[$i]);
-											echo "<div class='carousel-cell'><img src='{$path}'></div>";
-
-										}
-
-									} else {
-
-										echo "<div class='carousel-cell'><img src='{$product_image}'></div>";
-
-									}
-
-									?>
-								</div>
-							</div>
-
-						<?php
-						}
-					
-					?>
 
 				</div>
 			</div>
@@ -192,8 +180,10 @@
 						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
 					
 					} else {
+
+						$productRelated=explode(' ', $product_title);
 					
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
 					
 					}
 				
