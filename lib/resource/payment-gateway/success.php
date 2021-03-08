@@ -30,14 +30,14 @@
         if(mysqli_num_rows($checkTransaction)!=0) {
 
             extract(mysqli_fetch_assoc($checkTransaction));
+
+            mysqli_query($connection, "START TRANSACTION");
             
             switch($transaction_type) {
 
                 case 'booking':
 
                     // Booking thank you page process
-
-                    mysqli_query($connection, "START TRANSACTION");
 
                     // Update transaction table
 
@@ -71,12 +71,11 @@
 
                         mysqli_query($connection, "COMMIT");
 
-
                     } else {
 
                         echo 'Something is wrong while updating the status';
                         mysqli_query($connection, "ROLLBACK");
-                        exit();
+                        
 
                     }
 
@@ -85,14 +84,35 @@
                 default:
 
                     // default thank you page process
-                        
-                    /** Send SMS */
 
-                    require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+                    // Update order table
 
-                    /** Send Email */
+                    $updateOrderStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
 
-                    require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
+                    // Update cart table
+
+                    $updateCartStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_id='{$transaction_cart_id}'");
+                    
+                    if($updateOrderStatus && $updateCartStatus) {
+
+                        /** Send SMS */
+
+                        require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+
+                        /** Send Email */
+
+                        require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
+
+                        mysqli_query($connection, "COMMIT");
+
+                        header("Location: /thank-you/?id={$id}", TRUE, 301);
+
+                    } else {
+
+                        echo mysqli_error($connection);
+                        mysqli_query($connection, "ROLLBACK");
+
+                    }
 
                     break;
 

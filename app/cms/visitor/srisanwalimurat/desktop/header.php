@@ -23,7 +23,18 @@
             </ul>
             <div class="mobile-menu">
                 <h1><a href="">Sri Sanwali Murat</a></h1>
-                <div class="menu-box" id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt=""></div>
+                <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
+                <div id="target">
+                    <ul>
+                        <span class="hide"><img src="<?php echo USER_IMAGES ?>cancel.png"></span>
+                        <li><a href="" style="color: #fff" >Publication</a></li>
+                        <li><a href="">Gallery</a></li>
+                        <li><a href="">Events</a></li>
+                        <li><a href="">Discourses</a></li>
+                        <li><a href="">Bhajan/Aarti</a></li>
+                        <li><a href="">Request For Pangat</a></li>
+                    </ul>
+                </div>
             </div>
         </header>
         <main>

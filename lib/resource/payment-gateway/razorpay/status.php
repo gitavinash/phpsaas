@@ -13,7 +13,7 @@
 
         /** Check order id is valid or not */
 
-        if($checkTransaction=mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_type FROM ".TABLE_PREFIX."transaction WHERE transaction_reference_id='{$transactionID}' AND transaction_site_id=".SITE_ID)) {
+        if($checkTransaction=mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_cart_id, transaction_type FROM ".TABLE_PREFIX."transaction WHERE transaction_reference_id='{$transactionID}' AND transaction_site_id=".SITE_ID)) {
 
             if(mysqli_num_rows($checkTransaction)!=0) {
 
@@ -28,8 +28,6 @@
                     $transaction_id=base64_encode($transaction_id);
                     require_once PAYMENT_GATEWAY.'success.php';
 
-                    header("Location: /thank-you/?id={$id}", TRUE, 301);
-
                 } else {
 
                     echo mysqli_error($connection);
@@ -38,8 +36,7 @@
 
             } else {
 
-                // echo 'Invalid transaction id found';
-                echo "SELECT transaction_id, transaction_order_id, transaction_type FROM ".TABLE_PREFIX."transaction WHERE transaction_reference_id='{$orderID}' AND transaction_site_id=".SITE_ID;
+                echo 'Invalid transaction id found';
 
             }
 
