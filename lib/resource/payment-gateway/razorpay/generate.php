@@ -64,7 +64,15 @@
                     'payment_capture' => 1
                 ];
 
-                $order  =   $api->order->create($orderData); // Creates order
+                $transaction = $api->order->create($orderData); // Creates order
+
+                // Update transaction table
+
+                if(!$updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_gateway='{$pg_name}', transaction_reference_id='{$transaction['id']}', transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID)) {
+
+                    echo 'Something is wrong while generation transaction status';
+
+                }
 
                 ?>
 
@@ -78,7 +86,7 @@
                         "name": '',
                         "description": '',
                         "image": '<?php echo SITE_LOGO ?>',
-                        "order_id": '<?php echo $order['id'] ?>',
+                        "order_id": '<?php echo $transaction['id'] ?>',
                         // "callback_url": '<?php echo SITE_URL ?>/payment/status/',
                         "prefill" : {
                             "name": '<?php echo $profile_display_name ?>',
@@ -92,11 +100,11 @@
                             "color": "#3399cc"
                         },
                         "handler": function (response){ // After payment done status
-                            window.location.href='<?php echo SITE_URL ?>/payment/status/?id=<?php echo base64_encode($order_id); ?>&txn_id=<?php echo base64_encode($order['id']); ?>';
+                            window.location.href='<?php echo SITE_URL ?>/payment/status/?id=<?php echo base64_encode($order_id); ?>&txn_id=<?php echo base64_encode($transaction['id']); ?>&pay_id='+btoa(response.razorpay_payment_id);
                         },
                         "modal": {  // Razorpay pop up activity
-                            "ondismiss": function(){
-                                window.location.href='<?php echo SITE_URL ?>/payment/status/?id=<?php echo base64_encode($order_id); ?>&txn_id=<?php echo base64_encode($order['id']); ?>';
+                            "ondismiss": function(response){
+                                window.location.href='<?php echo SITE_URL ?>/payment/status/?id=<?php echo base64_encode($order_id); ?>&txn_id=<?php echo base64_encode($transaction['id']); ?>';
                             }
                         }
                     }
@@ -104,7 +112,6 @@
                     var rzpPopUP = new Razorpay(orderValue);
 
                     $(document).ready(function(e) {
-                        // e.preventDefault();
                         openPopUp();
                     });
 
@@ -115,25 +122,6 @@
                 </script>
 
                 <?php
-                exit();
-                if($response['success']==1) {
-
-                    if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_gateway='{$pg_name}', transaction_reference_id='{$response['payment_request']['id']}', transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID)) {
-
-                        header("Location: {$response['payment_request']['longurl']}", TRUE, 301);
-                        exit();
-    
-                    } else {
-    
-                        echo 'Something is wrong while generation transaction status';
-    
-                    }
-
-                } else {
-
-                    print_r($response['message']).' of '.SITE_DOMAIN;
-
-                }
 
             } else {
 

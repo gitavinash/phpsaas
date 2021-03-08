@@ -54,7 +54,7 @@
 
                 } else {
 
-                    echo 'Error';
+                    include_once ERROR_404;
 
                 }
 

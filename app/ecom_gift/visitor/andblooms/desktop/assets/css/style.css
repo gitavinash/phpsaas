@@ -640,6 +640,21 @@ img.mega-img {
 	display: inline-block
 }
 
+.product-main-slider {
+	float: left;
+	width: 100%;
+}
+
+.product-main-slider .slide {
+	float: left;
+	width: 100%;
+}
+
+.product-main-slider .slide img {
+	float: left;
+	width: 100%;
+}
+
 .head-1 {
 	width: 100%;
 	float: left;
