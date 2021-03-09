@@ -696,10 +696,11 @@ img.mega-img {
 
 
 .product-main-slider .slide .img img {
-	min-width: 100%;
+	/* min-width: 100%;
 	min-height: 100%;
 	width: auto;
-	height: auto;
+	height: auto; */
+	width: 100%;
 }
 
 .head-1 {
