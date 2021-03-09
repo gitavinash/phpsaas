@@ -700,7 +700,8 @@ img.mega-img {
 	min-height: 100%;
 	width: auto;
 	height: auto; */
-	width: 100%;
+	width: auto;
+	max-height: 440px;
 }
 
 .head-1 {
