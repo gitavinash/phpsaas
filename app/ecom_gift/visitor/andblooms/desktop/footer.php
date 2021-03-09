@@ -199,6 +199,23 @@
 					]
 			  	});
 
+				$('.product-main-slider').slick({
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					arrows: false,
+					dots: false,
+					fade: true,
+					asNavFor: '.product-main-slider-nav'
+				});
+				$('.product-main-slider-nav').slick({
+					slidesToShow: 4,
+					slidesToScroll: 2,
+					asNavFor: '.product-main-slider',
+					dots: false,
+					arrows: false,
+					focusOnSelect: true
+				});
+
 			});
 		</script>
 		

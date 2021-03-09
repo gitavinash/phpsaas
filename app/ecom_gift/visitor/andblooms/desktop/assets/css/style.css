@@ -704,6 +704,38 @@ img.mega-img {
 	max-height: 440px;
 }
 
+.product-main-slider-nav {
+	float: left;
+	width: 100%;
+	overflow: hidden;
+}
+
+.product-main-slider-nav .slide {
+	float: left;
+	height: 100px;
+	text-align: center;
+	overflow: hidden;
+}
+
+.product-main-slider-nav .slide .img {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+	box-sizing: border-box;
+	border: 1px solid #cecece;
+}
+
+
+.product-main-slider-nav .slide .img img {
+	/* min-width: 100%;
+	min-height: 100%;
+	width: auto;
+	height: auto; */
+	width: auto;
+	max-height: 95px;
+}
+
 .head-1 {
 	width: 100%;
 	float: left;
