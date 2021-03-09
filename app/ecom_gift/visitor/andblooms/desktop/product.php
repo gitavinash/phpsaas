@@ -61,10 +61,6 @@
 
 								}
 
-							} else {
-
-								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
-
 							}
 
 							?>
