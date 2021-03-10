@@ -172,7 +172,7 @@
 			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($event_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
 				<input type="hidden" name="oldFeatureImage" value="<?php echo $event_image ?>">
-				<input type="file" id="featureImage" name="featureImage">
+				<input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($event_image!='') ? 'block' : 'none') ?>;">

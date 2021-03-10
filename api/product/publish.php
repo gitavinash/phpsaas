@@ -62,7 +62,6 @@
 
                                 $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".SITE_ID.", '{$meta_title}', 'product', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 
-
                                 /* Insert tags into tag table */
 
                                 if($tags!='') {
@@ -82,7 +81,21 @@
 
                                 }
 
-                                if($addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags) {
+                                if(isset($_POST['productMeta'])) {
+
+                                    foreach($_POST['productMeta'] as $product_meta_key => $product_meta_value ) {
+                        
+                                        $addProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_name, product_meta_value, product_meta_status) VALUES('', ".SITE_ID.", '{$product_meta_key}', '{$product_meta_value}', 1)");
+                        
+                                    }
+                        
+                                } else {
+                        
+                                    $addProductMeta=true;
+                        
+                                }
+
+                                if($addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags && $addProductMeta) {
 
                                     $status=200;
                                     $msg='Product add successfully';

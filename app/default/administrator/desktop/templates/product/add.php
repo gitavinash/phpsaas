@@ -116,12 +116,12 @@
 
 					<div class="form-group">
 						<label>Care & Tips</label>
-						<textarea name="care_n_tips" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ></textarea>
+						<textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ></textarea>
 					</div>
 					
 					<div class="form-group">
 						<label>Delivery information</label>
-						<textarea name="delivery_information" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ></textarea>
+						<textarea name="productMeta[delivery_information]" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ></textarea>
 					</div>
 					
 				</div>
@@ -237,7 +237,7 @@
 			<h2>Feature Image</h2>
 			<div class="form-group featureImageUploadBox upload-btn">
 				<span>Set Feature Image</span>
-				<input type="file" id="featureImage" name="featureImage">
+				<input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif <strong>Recommended file size maximum 500kb</p>
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">

@@ -98,7 +98,7 @@
 			<h2>Feature Image</h2>
 			<div class="form-group featureImageUploadBox upload-btn">
 				<span>Set Feature Image</span>
-				<input type="file" id="featureImage" name="featureImage">
+				<input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: none;">
