@@ -1802,31 +1802,3 @@ ul.tabs li.active {
 	height: 32px;
 	border: none !important;
 }
-
-.galleryBtn {
-	float: left;
-	width: 100%;
-}
-
-.imageThumb {
-	float:left;
-	max-height: 75px;
-	border: 2px solid;
-	padding: 1px;
-	cursor: pointer;
-}
-
-.pip {
-	display: inline-block;
-	margin: 10px 10px 0 0;
-}
-
-.remove {
-	float:left;
-	display: block;
-	background: #C70039;
-	color: #fff;
-	text-align: center;
-	cursor: pointer;
-	border-radius: 4px;
-}

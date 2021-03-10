@@ -8,7 +8,7 @@
 
             if(isset($category)) {
 
-                if($checkProduct=mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='product' AND product_id='{$id}'")) {
+                if($checkProduct=mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, product_gallery FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='product' AND product_id='{$id}'")) {
 
                     if(mysqli_num_rows($checkProduct)!=0) {
 
@@ -20,7 +20,6 @@
                             
                             // Extract the single upload image string to variables
 
-                            
                             $thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $featureImage ));
                             $facebookImage=(((isset($facebookImage)) ? $facebookImage : $oldFacebookImage ));
                             $twitterImage=(((isset($twitterImage)) ? $twitterImage : $oldTwitterImage ));
@@ -43,12 +42,46 @@
                         if(isset($_FILES['gallery'])) {
                 
                             require_once MODULES.'galleryUploader.php';
-                    
-                        } else {
+                            
+                            if($gallery!='') {
 
-                            $gallery=$oldGallery;
+                                $isGalleryUpdate=TRUE;
+
+                            }
+                    
+                        }
+
+                        $oldGallery=json_decode($product_gallery, TRUE);
+
+                        // Match old gallery db from from value
+
+                        if(sizeof($oldGallery)!=sizeof($_POST['oldGallery'])) {
+
+                            for($i=0; sizeof($oldGallery); $i++){
+
+                                echo $_POST['oldGallery'][$i].' -> ';
+
+                            }
 
                         }
+
+                        exit();
+
+                        /** Update old gallery */
+
+                        if(isset($isGalleryUpdate)) {
+
+                            $newProductGallery=array_merge($oldGallery, $images);
+
+                            // print_r($newProductGallery);
+
+                        } else {
+
+                            $updateGallery='';
+
+                        }
+                        
+                        exit();
                             
                         /** Category */
 
@@ -110,7 +143,7 @@
                     
                         }
 
-                        $updateProduct=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."product SET product_image='{$featureImage}', product_thumbnail='{$thumbnailImage}', product_gallery='{$gallery}', product_title='{$title}', product_description='{$description}', product_highlight='{$highlight}', product_category='{$category}', product_owner_id='".USER_ID."', product_status=1, product_type='{$postType}' WHERE product_id='{$id}'");
+                        $updateProduct=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."product SET product_image='{$featureImage}', product_thumbnail='{$thumbnailImage}', {$updateGallery}, product_title='{$title}', product_description='{$description}', product_highlight='{$highlight}', product_category='{$category}', product_owner_id='".USER_ID."', product_status=1, product_type='{$postType}' WHERE product_id='{$id}'");
 
                         $updateInventtory=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1, inventory_update=current_timestamp() WHERE inventory_relation_id='{$id}'");
 

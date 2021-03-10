@@ -36,10 +36,10 @@
 				<div class="productInventory generalTab" style="display: none;">
 					
 					<div class="box-2">
-						<input type="checkbox" name="in_stock" checked > In Stock
+						<input type="checkbox" name="in_stock" value=1 checked > In Stock
 					</div>
 					<div class="box-2">
-						<input type="checkbox" name="backorder" checked > Allowed Backorders (if product is out of stock )
+						<input type="checkbox" name="backorder" value=1 checked > Allowed Backorders (if product is out of stock )
 					</div>
 					<div class="box-2">
 						<div class="form-group">
@@ -105,7 +105,12 @@
 					</div>
 				</div>
 				<div class="productGallery generalTab" style="display: none;">
-					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >					
+
+					<!-- <input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple > -->
+					<div class="input-field">
+						<div class="input-images" style="padding-top: .5rem;"></div>
+					</div>
+
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
 					

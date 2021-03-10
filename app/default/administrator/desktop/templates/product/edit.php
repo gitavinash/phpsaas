@@ -57,10 +57,10 @@
 				<div class="productInventory generalTab" style="display: none;">
 					
 					<div class="box-2">
-						<input type="checkbox" name="in_stock" <?php echo (($inventory_in_stock==1) ? 'checked' : '' ) ?> > In Stock
+						<input type="checkbox" name="in_stock" value=1 <?php echo (($inventory_in_stock==1) ? 'checked' : '' ) ?> > In Stock
 					</div>
 					<div class="box-2">
-						<input type="checkbox" name="backorder"  <?php echo (($inventory_backorder==1) ? 'checked' : '' ) ?> > Allowed Backorders (if product is out of stock )
+						<input type="checkbox" name="backorder" value=1 <?php echo (($inventory_backorder==1) ? 'checked' : '' ) ?> > Allowed Backorders (if product is out of stock )
 					</div>
 					<div class="box-2">
 						<div class="form-group">
@@ -126,13 +126,29 @@
 					</div>
 				</div>
 				<div class="productGallery generalTab" style="display: none;">
-					<input type="hidden" name="oldGallery" value="<?php echo $product_gallery ?>" >
-					<input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple >	
+					<div class="input-field">
+						<div class="input-images" style="padding-top: .5rem;"></div>
+					</div>
 					<?php
 					
-						print_r(json_decode($product_gallery, TRUE));
-
-					?>				
+					$productGalleryList=json_decode($product_gallery, TRUE);
+					
+					$oldGalleryImages = array();
+					
+					for($i=0; $i<sizeof($productGalleryList); $i++) {
+						
+						$oldGalleryImages[]=array(
+							'id' => $i+1,
+							'src' => $productGalleryList[$i]['path'],
+						);
+						
+					}
+					
+					$oldGalleryImages=json_encode($oldGalleryImages, TRUE);
+					
+					echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+					
+					?>
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
 					

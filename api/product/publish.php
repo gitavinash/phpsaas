@@ -114,6 +114,10 @@
 
                     }
             
+                } else {
+
+                    print_r($_FILES);
+
                 }
 
             } else {
