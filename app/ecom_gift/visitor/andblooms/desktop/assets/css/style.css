@@ -1721,7 +1721,8 @@ span.payout img {
 	float: left;
 	width: 100%;
 	font-size: 12px;
-	margin-bottom: 5px
+	margin-bottom: 5px;
+	font-family: Poppins, sans-serif;
 }
 
 .catag-lbel span {
@@ -1735,7 +1736,8 @@ p.catg-info {
 	width: 100%;
 	margin-bottom: 10px;
 	font-weight: 400;
-	color: #000
+	color: #000;
+	font-size: 14px;
 }
 
 p.catg-info:before {
@@ -1957,7 +1959,8 @@ a.out-of-stock:hover {
 	float: left;
 	width: 100%;
 	border-top: 1px solid #ccc;
-	padding-top: 20px
+	padding-top: 20px;
+	font-family: Poppins, sans-serif !important;
 }
 
 .similar-product h1 {
@@ -1968,7 +1971,7 @@ a.out-of-stock:hover {
 }
 
 .similar-product h2 {
-	font-size: 24px;
+	font-size: 21px;
 	color: #000;
 	margin-bottom: 20px;
 	font-weight: 500;
@@ -2027,7 +2030,8 @@ a.out-of-stock:hover {
 
 .similar-product ul {
 	float: left;
-	width: 100%
+	width: 100%;
+	font-size: 14px;
 }
 
 .similar-product ul li:before {
@@ -2044,7 +2048,8 @@ a.out-of-stock:hover {
 }
 
 .similar-product p {
-	float: left
+	float: left;
+	font-size: 15px;
 }
 
 .sku {
