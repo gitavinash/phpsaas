@@ -98,21 +98,30 @@
 							</ul>
 						</div>
 					</li>
-					<li <?php echo ((ADMIN_BASE_URL=='/coupon/') ? 'class="active"' : '' ) ?> >
-						<a href="coupon.php?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
-								<li><a href="coupon.php?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
-								<li><a href="coupon.php?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
-							</ul>
-						</div>
-					</li>
+					<?php
+					
+					if(SITE_ID!=22) { ?>
+
+						<li <?php echo ((ADMIN_BASE_URL=='/coupon/') ? 'class="active"' : '' ) ?> >
+							<a href="coupon.php?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
+							<div class="side-menu">
+								<ul>
+									<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
+									<li><a href="coupon.php?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+								</ul>
+							</div>
+							<div class="bottom-menu">
+								<ul>
+									<li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
+									<li><a href="coupon.php?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+								</ul>
+							</div>
+						</li>
+
+					<?php
+					}
+
+					?>
 					<li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
 						<a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
 						<div class="side-menu">
