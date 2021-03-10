@@ -31,6 +31,8 @@
 							
 							if($galleryImages!='') {
 
+								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
+
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
@@ -53,6 +55,8 @@
 							$galleryImages=json_decode($product_gallery, TRUE);
 							
 							if($galleryImages!='') {
+
+								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
