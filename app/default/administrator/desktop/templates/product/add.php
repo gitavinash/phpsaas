@@ -113,6 +113,16 @@
 
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
+
+					<div class="form-group">
+						<label>Care & Tips</label>
+						<textarea name="care_n_tips" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ></textarea>
+					</div>
+					
+					<div class="form-group">
+						<label>Delivery information</label>
+						<textarea name="delivery_information" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ></textarea>
+					</div>
 					
 				</div>
 			</section>

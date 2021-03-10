@@ -253,6 +253,12 @@
 									  <li class="nav-item">
 									    <a class="nav-link" href="/tag/everlasting/">Infinity Everlasting Flowers</a>
 									  </li>
+									  <li class="nav-item">
+									    <a class="nav-link" href="/category/vases-and-ceramics/">Vases & Ceramics</a>
+									  </li>
+									  <li class="nav-item">
+									    <a class="nav-link" href="/category/planters/">Planters</a>
+									  </li>
 									  <li class="nav-item ">
 									    <a class="nav-link " href="/subscription/">Subscription</a>
 									  </li>

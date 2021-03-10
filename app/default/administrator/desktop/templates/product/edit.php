@@ -2,9 +2,23 @@
 
 	$id=base64_decode($id);
 
-	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
+	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."product_meta, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($productDetails)!=0) {
+			
 			extract(mysqli_fetch_assoc($productDetails));
+
+			if(!isset($care_n_tips)) {
+
+				$care_n_tips='';
+
+			}
+
+			if(!isset($delivery_information)) {
+
+				$delivery_information='';
+
+			}
+
 		} else { ?>
 			<script type="text/javascript">
 				alert('Invalid action found');
@@ -164,6 +178,16 @@
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
 					
+					<div class="form-group">
+						<label>Care & Tips</label>
+						<textarea name="care_n_tips" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ><?php echo $care_n_tips ?></textarea>
+					</div>
+					
+					<div class="form-group">
+						<label>Delivery information</label>
+						<textarea name="delivery_information" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ><?php echo $delivery_information ?></textarea>
+					</div>
+
 				</div>
 			</section>
 
