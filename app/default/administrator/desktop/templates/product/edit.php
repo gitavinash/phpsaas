@@ -131,21 +131,33 @@
 					</div>
 					<?php
 					
-					$productGalleryList=json_decode($product_gallery, TRUE);
 					
-					$oldGalleryImages = array();
 					
-					for($i=0; $i<sizeof($productGalleryList); $i++) {
+					if($product_gallery!='') {
 						
-						$oldGalleryImages[]=array(
-							'id' => $i+1,
-							'src' => $productGalleryList[$i]['path'],
-						);
+						$productGalleryList=json_decode($product_gallery, TRUE);
+					
+						$oldGalleryImages = array();
+
+						for($i=0; $i<sizeof($productGalleryList); $i++) {
 						
+							$oldGalleryImages[]=array(
+								'id' => $i+1,
+								'name' => $productGalleryList[$i]['name'],
+								'src' => $productGalleryList[$i]['path'],
+								'type' => $productGalleryList[$i]['type'],
+							);
+							
+						}
+
+						$oldGalleryImages=json_encode($oldGalleryImages, TRUE);
+
+					} else {
+
+						$oldGalleryImages=json_encode('', TRUE);
+
 					}
-					
-					$oldGalleryImages=json_encode($oldGalleryImages, TRUE);
-					
+										
 					echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
 					
 					?>
