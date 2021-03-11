@@ -6,6 +6,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkProduct=mysqli_query($connection, "SELECT product_id, link_id FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE link_type='product' AND link_site_id=".SITE_ID." AND product_id='{$id}'")) {
 
                 if(mysqli_num_rows($checkProduct)!=0) {
@@ -19,8 +21,9 @@
                     $deleteLink=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."inventory WHERE inventory_relation_id='{$product_id}' AND inventory_type='product' AND inventory_site_id=".SITE_ID);
                     $deleteMeta=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."meta WHERE meta_relation_id='{$link_id}' AND meta_type='product' AND meta_site_id=".SITE_ID);
                     $deleteTag=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."tag WHERE tag_id='{$product_id}' AND tag_type='product' AND tag_site_id=".SITE_ID);
+                    $deleteProductMeta=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".SITE_ID);
 
-                    if($deleteProduct && $deleteLink && $deleteMeta && $deleteTag) {
+                    if($deleteProduct && $deleteLink && $deleteMeta && $deleteTag && $deleteProductMeta) {
 
                         $status=200;
                         $msg='Product delete successfully';

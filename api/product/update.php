@@ -165,7 +165,37 @@
 
                         }
 
-                        if($updateProduct && $addRedirect && $updateInventtory && $updateMeta && $updateTags) {
+                        // Update product meta
+
+                        if(isset($_POST['productMeta'])) {
+
+                            foreach($_POST['productMeta'] as $product_meta_key => $product_meta_value ) {
+                
+                                if($checkMeta=mysqli_query($connection, "SELECT product_meta_id FROM ".TABLE_PREFIX."product_meta WHERE product_meta_key='{$product_meta_key}' AND product_meta_relation_id='{$id}' AND product_meta_site_id=".SITE_ID)) {
+
+                                    if(mysqli_num_rows($checkMeta)!=0) {
+
+                                        extract(mysqli_fetch_assoc($checkMeta));
+
+                                        $updateProductMeta=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."product_meta SET product_meta_value='{$product_meta_value}' WHERE product_meta_key='{$product_meta_key}' AND product_meta_relation_id='{$id}' AND product_meta_site_id=".SITE_ID);
+
+                                    } else {
+
+                                        $updateProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_key, product_meta_value, product_meta_status) VALUES('{$id}', ".SITE_ID.", '{$product_meta_key}', '{$product_meta_value}', 1)");
+
+                                    }
+
+                                }
+                
+                            }
+                
+                        } else {
+                
+                            $updateProductMeta=true;
+                
+                        }
+
+                        if($updateProduct && $addRedirect && $updateInventtory && $updateMeta && $updateTags && $updateProductMeta) {
 
                             $status=200;
                             $msg='Product upload successfully';
@@ -174,7 +204,7 @@
 
                         } else {
 
-                            echo $updateProduct.' && '.$addRedirect.' && '.$updateInventtory.' && '.$updateMeta.' && '.$updateTags;
+                            echo $updateProduct.' && '.$addRedirect.' && '.$updateInventtory.' && '.$updateMeta.' && '.$updateTags.' && '.$updateProductMeta;
                             $msg='Something is wrong while updateing product';
                             mysqli_query($connection, "ROLLBACK");
 

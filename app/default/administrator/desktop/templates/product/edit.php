@@ -2,20 +2,34 @@
 
 	$id=base64_decode($id);
 
-	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."product_meta, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
+	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($productDetails)!=0) {
 			
 			extract(mysqli_fetch_assoc($productDetails));
 
-			if(!isset($care_n_tips)) {
+			// Fetch product meta details
 
-				$care_n_tips='';
+			if($productMeta=mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".SITE_ID)) {
 
-			}
+				if(mysqli_num_rows($productMeta)!=0) {
 
-			if(!isset($delivery_information)) {
+					$productMetaArray=array();
 
-				$delivery_information='';
+					while($productMetaData=mysqli_fetch_assoc($productMeta)) {
+
+						extract($productMetaData);
+						$productMetaArray[$product_meta_key]=$product_meta_value;
+
+					}
+
+					extract($productMetaArray);
+
+				} else {
+
+					$care_n_tips='';
+					$delivery_information='';
+
+				}
 
 			}
 
@@ -180,12 +194,12 @@
 					
 					<div class="form-group">
 						<label>Care & Tips</label>
-						<textarea name="care_n_tips" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ><?php echo $care_n_tips ?></textarea>
+						<textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ><?php echo $care_n_tips ?></textarea>
 					</div>
 					
 					<div class="form-group">
 						<label>Delivery information</label>
-						<textarea name="delivery_information" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ><?php echo $delivery_information ?></textarea>
+						<textarea name="productMeta[delivery_information]" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ><?php echo $delivery_information ?></textarea>
 					</div>
 
 				</div>

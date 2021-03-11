@@ -6,6 +6,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkCategory=mysqli_query($connection, "SELECT category_id, category_type, link_id FROM ".TABLE_PREFIX."category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=category_id WHERE link_type='category' AND category_id='{$id}' AND link_site_id=".SITE_ID)) {
 
                 if(mysqli_num_rows($checkCategory)!=0) {

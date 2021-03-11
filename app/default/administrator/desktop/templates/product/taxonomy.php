@@ -1,4 +1,6 @@
 <?php
+
+	$id=base64_decode($id);
 	
 	if($pageDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id INNER JOIN ".TABLE_PREFIX."{$taxonomy} ON link_relation_id={$taxonomy}_id WHERE link_type='{$taxonomy}' AND {$taxonomy}_id='{$id}' AND link_status!=301 AND link_type='{$taxonomy}' AND meta_type='{$taxonomy}' AND link_site_id=".SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($pageDetails)!=0) {

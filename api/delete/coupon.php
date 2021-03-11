@@ -8,6 +8,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkCoupon=mysqli_query($connection, "SELECT coupon_id FROM ".TABLE_PREFIX."coupon WHERE coupon_id='{$id}' AND coupon_site_id=".APP_SITE_ID)) {
 
                 if(mysqli_num_rows($checkCoupon)!=0) {

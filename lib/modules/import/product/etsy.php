@@ -179,7 +179,7 @@
 
                                 if($productMetaName[$i]!='') {
     
-                                    $addProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_name, product_meta_value, product_meta_status) VALUES('{$productID}', '".APP_SITE_ID."', '{$productMetaName[$i]}', '{$productMetaValue[$i]}', 1)");
+                                    $addProductMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."product_meta(product_meta_relation_id, product_meta_site_id, product_meta_key, product_meta_value, product_meta_status) VALUES('{$productID}', '".APP_SITE_ID."', '{$productMetaName[$i]}', '{$productMetaValue[$i]}', 1)");
     
                                 }
                             }

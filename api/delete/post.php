@@ -6,6 +6,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkPost=mysqli_query($connection, "SELECT post_id, link_id FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id WHERE link_type='post' AND link_site_id=".SITE_ID." AND post_id='{$id}'")) {
 
                 if(mysqli_num_rows($checkPost)!=0) {

@@ -6,6 +6,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkVideo=mysqli_query($connection, "SELECT video_id, link_id FROM ".TABLE_PREFIX."video INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=video_id WHERE link_type='video' AND link_site_id=".SITE_ID." AND video_id='{$id}'")) {
 
                 if(mysqli_num_rows($checkVideo)!=0) {

@@ -45,7 +45,7 @@
 								<p><a href="coupon.php?type=edit&id=<?php echo base64_encode($coupon_id); ?>" ><?php echo $coupon_code ?></a></p>
 								<div class="hover">
 									<a href="coupon.php?type=edit&editor=true&id=<?php echo base64_encode($coupon_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="#" id="<?php echo $coupon_id ?>_coupon" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
+									<a href="#" id="<?php echo $coupon_id ?>_coupon" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 								</div>
 							</td>
                             <td><?php echo (($coupon_discount_type!='%') ? $coupon_discount_type.' ' : '' ).$coupon_discount.(($coupon_discount_type=='%') ? ' '.$coupon_discount_type : '' ); ?></td>

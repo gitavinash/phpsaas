@@ -1,7 +1,7 @@
 <?php
 
 	$deleteType=mysqli_real_escape_string($connection, $_GET['type']);
-	$deleteID=mysqli_real_escape_string($connection, $_GET['post_id']);
+	$deleteID=base64_decode(mysqli_real_escape_string($connection, $_GET['post_id']));
 
 	mysqli_query($connection, "START TRANSACTION");
 

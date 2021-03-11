@@ -44,7 +44,7 @@
 								<p><a href="post.php?type=edit&editor=true&id=<?php echo $post_id; ?>" ><?php echo $post_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
 									<a href="post.php?type=edit&editor=true&id=<?php echo $post_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="#" id="<?php echo $post_id ?>_post" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
+									<a href="#" id="<?php echo $post_id ?>_post" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>

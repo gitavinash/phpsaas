@@ -41,10 +41,10 @@
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="post.php?type=edit&editor=true&id=<?php echo $post_id; ?>" ><?php echo $post_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="post.php?type=edit&editor=true&id=<?php echo base64_encode($post_id); ?>" ><?php echo $post_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
-									<a href="post.php?type=edit&editor=true&id=<?php echo $post_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="#" id="<?php echo $post_id ?>_post" class="deletePost" ><i class="fas fa-trash"></i> Delete</a>
+									<a href="post.php?type=edit&editor=true&id=<?php echo base64_encode($post_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="#" id="<?php echo base64_encode($post_id) ?>_post" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>

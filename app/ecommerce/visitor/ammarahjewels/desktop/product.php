@@ -68,7 +68,7 @@
 
 								<?php
 								
-									if($productMeta=mysqli_query($connection, "SELECT product_meta_name, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".APP_SITE_ID)) {
+									if($productMeta=mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".APP_SITE_ID)) {
 
 										if(mysqli_num_rows($productMeta)!=0) {
 
@@ -78,8 +78,8 @@
 												?>
 
 												<div class="form-group">
-													<label><?php echo $product_meta_name ?></label>
-													<select name="<?php echo strtolower(str_replace(' ', '_', $product_meta_name)); ?>" id="<?php echo strtolower(str_replace(' ', '_', $product_meta_name)); ?>" class="orderMeta form-control">
+													<label><?php echo $product_meta_key ?></label>
+													<select name="<?php echo strtolower(str_replace(' ', '_', $product_meta_key)); ?>" id="<?php echo strtolower(str_replace(' ', '_', $product_meta_key)); ?>" class="orderMeta form-control">
 														<?php
 														
 															$productMetaValue=explode(',', $product_meta_value);

@@ -57,7 +57,7 @@
 
                         $status=200;
                         $msg='Page add successfully';
-                        $redirect='/dashboard/page/?type=edit&editor=true&id='.$pageID;
+                        $redirect='/dashboard/page/?type=edit&editor=true&id='.base64_encode($pageID);
                         mysqli_query($connection, "COMMIT");
 
                     } else {

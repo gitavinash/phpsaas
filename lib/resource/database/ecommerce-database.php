@@ -411,9 +411,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
     ADD INDEX service_site_id (service_site_id)");
 
-  /** Create order meta table */
+  /** Create product meta table */
 
-  mysqli_query($connection, "CREATE TABLE isw_product_meta (
+  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."product_meta (
     product_meta_id bigint(20) NOT NULL,
     product_meta_relation_id bigint(20) NOT NULL,
     product_meta_site_id bigint(20) NOT NULL,
@@ -423,10 +423,15 @@
     product_meta_update timestamp NOT NULL DEFAULT current_timestamp()
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-  mysqli_query($connection, "ALTER TABLE isw_product_meta
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product_meta
     ADD PRIMARY KEY (product_meta_id),
     ADD KEY product_meta_id (product_meta_relation_id),
     ADD KEY product_meta_site_id (product_meta_site_id)");
 
-  mysqli_query($connection, "ALTER TABLE isw_product_meta
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product_meta
     MODIFY product_meta_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  /** Update product meta table */
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product_meta
+    CHANGE product_meta_name product_meta_key VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL");

@@ -6,6 +6,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkPage=mysqli_query($connection, "SELECT page_id, link_id FROM ".TABLE_PREFIX."page INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=page_id WHERE link_type='page' AND link_site_id=".SITE_ID." AND page_id='{$id}'")) {
 
                 if(mysqli_num_rows($checkPage)!=0) {

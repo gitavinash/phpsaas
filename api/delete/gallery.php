@@ -6,6 +6,8 @@
 
         if(isset($id)) {
 
+            $id=base64_decode($id);
+
             if($checkGallery=mysqli_query($connection, "SELECT gallery_id, link_id FROM ".TABLE_PREFIX."gallery INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=gallery_id WHERE link_type='gallery' AND link_site_id=".SITE_ID." AND gallery_id='{$id}'")) {
 
                 if(mysqli_num_rows($checkGallery)!=0) {
