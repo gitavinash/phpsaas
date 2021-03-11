@@ -172,7 +172,7 @@
 						} else { ?>
 
 							<li <?php echo (($postType=='page') ? 'class="active"' : '' ) ?> >
-								<a href="page.php?type=list"><i class="fas fa-file-alt"></i> Page</a>
+								<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
 								<div class="side-menu">
 									<ul>
 										<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
@@ -264,6 +264,21 @@
 							</ul>
 						</div>
 					</li> -->
+					<li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
+						<a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="import.php?type=post"><i class="fas fa-file-alt"></i> Post</a></li>
+								<li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="import.php?type=post"><i class="fas fa-file-alt"></i> Post</a></li>
+								<li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
+							</ul>
+						</div>
+					</li>
 					<li <?php echo (($postType=='setting') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">

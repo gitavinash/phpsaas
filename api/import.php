@@ -2,7 +2,7 @@
 
     require_once LOGIN_CHECK;
 
-    function product($connection, $data) {
+    function import($connection, $data) {
 
         extract($data);
 
@@ -37,7 +37,7 @@
 
                     $openFile=fopen($_FILES['importFile']['tmp_name'], 'r');
 
-                    $importModuleFile=MODULES.'import/product/'.$importFrom.'.php';
+                    $importModuleFile=MODULES.'import/'.$action.'/'.$importFrom.'.php';
         
                     if(file_exists($importModuleFile)) {
 
