@@ -2,49 +2,59 @@
 
 	/** Check physical file is available or not */
 
-	$checkPhysicalPageTemplate=USER_PATH.str_replace('/', '', ACTIVE_URL).'.php';
+	$checkPhysicalFile=USER_PATH.str_replace('/', '', ACTIVE_URL);
 
-	if(file_exists($checkPhysicalPageTemplate)) {
+	if(file_exists($checkPhysicalFile)) {
 
-		require_once $checkPhysicalPageTemplate;
+		require_once $checkPhysicalFile;
 
 	} else {
 
-		/* Search url in link table  */
+		$checkPhysicalPageTemplate=USER_PATH.str_replace('/', '', ACTIVE_URL).'.php';
 
-		if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+		if(file_exists($checkPhysicalPageTemplate)) {
 
-			if(mysqli_num_rows($checkUrl)!=0) {
+			require_once $checkPhysicalPageTemplate;
 
-				extract(mysqli_fetch_assoc($checkUrl));
+		} else {
 
-				if($link_status==200) {
+			/* Search url in link table  */
 
-					if(file_exists(ROUTER.$link_type.'.php')) {
+			if($checkUrl=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
 
-						require_once ROUTER.$link_type.'.php';
+				if(mysqli_num_rows($checkUrl)!=0) {
+
+					extract(mysqli_fetch_assoc($checkUrl));
+
+					if($link_status==200) {
+
+						if(file_exists(ROUTER.$link_type.'.php')) {
+
+							require_once ROUTER.$link_type.'.php';
+
+						} else {
+
+							echo ROUTER.$link_type.'.php';
+
+						}
 
 					} else {
 
-						echo ROUTER.$link_type.'.php';
+						require_once $link_status.'.php';
 
 					}
 
 				} else {
-
-					require_once $link_status.'.php';
+						
+					require_once 'pagination.php';
 
 				}
 
 			} else {
-					
-				require_once 'pagination.php';
+
+				exit();
 
 			}
-
-		} else {
-
-			exit();
 
 		}
 

@@ -18,7 +18,7 @@
 				<select name="categoryID" id='importCategory' class='form-control inside-shadow' required >
 				<option value="" >Select product category</option>
 				<?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$type}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_id DESC")) {
+					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$type}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_title ASC")) {
 						if(mysqli_num_rows($categoryList)!=0) {
 							while($categoryData=mysqli_fetch_assoc($categoryList)) {
 								echo "<option value='{$categoryData['category_id']}_{$categoryData['link_url']}'>{$categoryData['category_title']}</option>";

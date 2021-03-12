@@ -37,22 +37,45 @@
 
                     $openFile=fopen($_FILES['importFile']['tmp_name'], 'r');
 
-                    $importModuleFile=MODULES.'import/'.$action.'/'.$importFrom.'.php';
-        
-                    if(file_exists($importModuleFile)) {
+                    $importAppModuleFile=MODULES.'import/'.$action.'/'.SITE_APP.'/'.$importFrom.'.php';
+                    
 
-                        require_once $importModuleFile;
+                    if(file_exists($importAppModuleFile)) {
+
+                        require_once $importAppModuleFile;
 
                     } else {
 
-                        $status='warning';
-                        $msg='Please select a valid import method';
+                        $importModuleFile=MODULES.'import/'.$action.'/'.$importFrom.'.php';
+
+                        if(file_exists($importModuleFile)) {
+
+                            require_once $importModuleFile;
+
+                        } else {
+
+                            $status='warning';
+                            $msg='Please select a valid import method';
+
+                        }
 
                     }
                     
+                } else {
+
+                    $msg='Please upload a valid csv file';
+
                 }
 
+            } else {
+
+                $msg='Something is wrong while uploading CSV';
+
             }
+
+        } else {
+
+            $msg='Please select category';
 
         }
 
