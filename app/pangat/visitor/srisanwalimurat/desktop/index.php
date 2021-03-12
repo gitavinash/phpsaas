@@ -35,27 +35,26 @@
 	<header>
 		<div class="header-top">
 			<ul class="menu desktop">
-                <li><a href="" style="color: #fff" >Publication</a></li>
-                <li><a href="">Gallery</a></li>
-                <li><a href="">Events</a></li>
-                <li class="logo"><h1><a href="">Sri Sanwali Murat</a></h1></li>
-                <li><a href="">Discourses</a></li>
-                <li><a href="">Bhajan/Aarti</a></li>
-                <li><a href="//pangat.<?php echo SITE_DOMAIN ?>">Request For Pangat</a></li>
-                <!-- <li><a href="">Account</a></li> -->
+				<li><a href="https://srisanwalimurat.com/publication/">Publication</a></li>
+                <li><a href="https://srisanwalimurat.com/gallery/">Gallery</a></li>
+                <li><a href="https://srisanwalimurat.com/events/">Events</a></li>
+                <li class="logo"><h1><a href="https://srisanwalimurat.com/">Sri Sanwali Murat</a></h1></li>
+                <li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
+                <li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
+                <li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
             </ul>
             <div class="mobile-menu">
                 <h1><a href="">Sri Sanwali Murat</a></h1>
-                <div class="menu-box " id="menu-box" ><img src="https://srisanwalimurat.com/lib/resource/ui/img/menu-icon.png" alt="" class="show"></div>
+                <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
                 <div id="target">
                     <ul>
-                        <span class="hide"><img src="assets/images/cancel.png"></span>
-                        <li><a href="" style="color: #fff" >Publication</a></li>
-                        <li><a href="">Gallery</a></li>
-                        <li><a href="">Events</a></li>
-                        <li><a href="">Discourses</a></li>
-                        <li><a href="">Bhajan/Aarti</a></li>
-                        <li><a href="">Request For Pangat</a></li>
+                        <span class="hide"><img src="<?php echo USER_IMAGES ?>cancel.png"></span>
+						<li><a href="https://srisanwalimurat.com/publication/">Publication</a></li>
+						<li><a href="https://srisanwalimurat.com/gallery/">Gallery</a></li>
+						<li><a href="https://srisanwalimurat.com/events/">Events</a></li>
+						<li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
+						<li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
+						<li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
                     </ul>
                 </div>
             </div>
@@ -388,46 +387,41 @@
 	<footer>
             <div class="foter-top">
                 <div class="box-1">
-                    <h2>Quick LInks</h2>
+                    <h2>Quick links</h2>
                     <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="">Gallery</a></li>
-                        <li><a href="">Discourses</a></li>
-                        <li><a href="">About</a></li>
-                        <li><a href=""></a></li>
+                        <li><a href="https://srisanwalimurat.com/">Home</a></li>
+                        <li><a href="https://srisanwalimurat.com/about-us/">About Us</a></li>
+                        <li><a href="https://srisanwalimurat.com/contact-us/">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="box-1">
-                    <h2>Quick LInks</h2>
+                    <h2>Quick links</h2>
                     <ul>
-                        <li><a href="">Bhajan</a></li>
-                        <li><a href="">Arti</a></li>
-                        <li><a href="">Terms</a></li>
-                        <li><a href="">Privacy Policy</a></li>
+						<li><a href="https://srisanwalimurat.com/publication/">Publication</a></li>
+						<li><a href="https://srisanwalimurat.com/gallery/">Gallery</a></li>
+						<li><a href="https://srisanwalimurat.com/events/">Events</a></li>
+						<li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
+						<li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
+						<li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
                     </ul>
                 </div>
                 <div class="box-1">
-                    <h2>Quick LInks</h2>
+                    <h2>Information</h2>
                     <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="">Gallery</a></li>
-                        <li><a href="">Discourses</a></li>
-                        <li><a href="">About</a></li>
-                        <li><a href=""></a></li>
+						<li><a href="https://srisanwalimurat.comprivacy-policy/">Privacy Policy</a></li>
+						<li><a href="https://srisanwalimurat.comdisclaimer/">Disclaimer</a></li>
+						<li><a href="https://srisanwalimurat.comreturn-policy/">Return Policy</a></li>
+						<li><a href="https://srisanwalimurat.comterms-of-use/">Terms of Use</a></li>
                     </ul>
                 </div>
                 <div class="box-1">
-                    <h2>Quick LInks</h2>
+                    <h2>Contact is</h2>
                     <ul>
                         <li>Address : 36, Gali Number 2, Block 69B, Dori Walan, Karol Bagh, New Delhi, Delhi 110005, India</li>
-                        <li>info@srisunwalimurat@gmail.com</li>
+                        <li>info@srisanwalimurat.com</li>
                     </ul>
                 </div>
 
-            </div>
-
-            <div class="footr-top">
-                <p>Power By: ITS World</p>
             </div>
         </footer>
 

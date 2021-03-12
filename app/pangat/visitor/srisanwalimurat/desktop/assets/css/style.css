@@ -9,7 +9,7 @@ ul.menu {
     font-family: 'Oswald', sans-serif;
 }
 
-ul.menu li:first-child {
+ul.menu li:last-child {
     background: #946E3E;
     color: #fff !important;
 }
