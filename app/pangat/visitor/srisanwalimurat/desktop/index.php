@@ -26,17 +26,45 @@
   <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Playfair+Display&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
   <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
   <title>Booking Slot</title>
 </head>
 <body class="bg-body">
 	<header>
-		<div class="container">
+		<div class="header-top">
+			<ul class="menu desktop">
+                <li><a href="" style="color: #fff" >Publication</a></li>
+                <li><a href="">Gallery</a></li>
+                <li><a href="">Events</a></li>
+                <li class="logo"><h1><a href="">Sri Sanwali Murat</a></h1></li>
+                <li><a href="">Discourses</a></li>
+                <li><a href="">Bhajan/Aarti</a></li>
+                <li><a href="//pangat.<?php echo SITE_DOMAIN ?>">Request For Pangat</a></li>
+                <!-- <li><a href="">Account</a></li> -->
+            </ul>
+            <div class="mobile-menu">
+                <h1><a href="">Sri Sanwali Murat</a></h1>
+                <div class="menu-box " id="menu-box" ><img src="https://srisanwalimurat.com/lib/resource/ui/img/menu-icon.png" alt="" class="show"></div>
+                <div id="target">
+                    <ul>
+                        <span class="hide"><img src="assets/images/cancel.png"></span>
+                        <li><a href="" style="color: #fff" >Publication</a></li>
+                        <li><a href="">Gallery</a></li>
+                        <li><a href="">Events</a></li>
+                        <li><a href="">Discourses</a></li>
+                        <li><a href="">Bhajan/Aarti</a></li>
+                        <li><a href="">Request For Pangat</a></li>
+                    </ul>
+                </div>
+            </div>
+		</div>
+		<!-- <div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light pt-3 pb-0 pt-md-3 pb-md-0 pl-md-0 pr-md-0">
 	      <a href="/" class="navbar-brand">
 		  	Sri Sanwali Murat
-	        <!-- <img src="assets/img/logo.png" alt="" class="img-fluid"> -->
+	        <img src="assets/img/logo.png" alt="" class="img-fluid">
 	      </a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
@@ -54,7 +82,7 @@
 	        </a>
 	      </div>
 	    </nav>
-		</div>
+		</div> -->
 	</header>
 
 	<!-- Booking form screen -->
@@ -357,12 +385,75 @@
 		
 	</section>
 
+	<footer>
+            <div class="foter-top">
+                <div class="box-1">
+                    <h2>Quick LInks</h2>
+                    <ul>
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Gallery</a></li>
+                        <li><a href="">Discourses</a></li>
+                        <li><a href="">About</a></li>
+                        <li><a href=""></a></li>
+                    </ul>
+                </div>
+                <div class="box-1">
+                    <h2>Quick LInks</h2>
+                    <ul>
+                        <li><a href="">Bhajan</a></li>
+                        <li><a href="">Arti</a></li>
+                        <li><a href="">Terms</a></li>
+                        <li><a href="">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="box-1">
+                    <h2>Quick LInks</h2>
+                    <ul>
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Gallery</a></li>
+                        <li><a href="">Discourses</a></li>
+                        <li><a href="">About</a></li>
+                        <li><a href=""></a></li>
+                    </ul>
+                </div>
+                <div class="box-1">
+                    <h2>Quick LInks</h2>
+                    <ul>
+                        <li>Address : 36, Gali Number 2, Block 69B, Dori Walan, Karol Bagh, New Delhi, Delhi 110005, India</li>
+                        <li>info@srisunwalimurat@gmail.com</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footr-top">
+                <p>Power By: ITS World</p>
+            </div>
+        </footer>
+
 	<?php include_once NOTIFICATION.'index.php' ?>
 
+	<script type="text/javascript" src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
     <script src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
     <script src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 	<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
     <script type="text/javascript" src="<?php echo USER_JS ?>script.min.js"></script>
+ 
+    <script type="text/javascript">
+            $('.show').click(function() {
+                $('#target').show(200);
+                $('.show').hide(0);
+                $('.hide').show(0);
+            });
+            $('.hide').click(function() {
+                $('#target').hide(500);
+                $('.show').show(0);
+                $('.hide').hide(0);
+            });
+            $('.toggle').click(function() {
+                $('#target').toggle('slow');
+            });
+        </script>
 
 </body>
 </html>

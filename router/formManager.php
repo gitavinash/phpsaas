@@ -26,11 +26,11 @@
 
 		extract($secure);
 
-		/** Default App API Request and directory is /api/{app}/{$type} */
+		/** Default API Request */
 
-		$appApiCall=API_APP_MODULES.$type.'/'.$action.'.php';
-		
-		if(!file_exists($appApiCall)) {
+		$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
+
+		if(!file_exists($apiCall)) {
 
 			/** Website APP Api Request */
 
@@ -40,7 +40,7 @@
 		
 		if(file_exists($apiCall)) {
 
-			/** Call the API and directory is /api/{$type} */
+			/** Call the API */
 
 			require_once $apiCall;
 
@@ -49,34 +49,34 @@
 				call_user_func($action, $connection, $secure);
 
 			} else {
-
-				echo $apiCall;
+				
+				$msg='<h1>Undefine function '.$type.' -> '.$action.' </h1>';
 
 			}
 
 		} else {
 
-			// Api directory /api/
+			/** Call dedicated api */
 
-			$dedicatedApiCall=API_MODULES.$type.'.php';
+			$apiCall=API_MODULES.$type.'.php';
 
-			if(file_exists($dedicatedApiCall)) {
+			if(file_exists($apiCall)) {
 
-				require_once $dedicatedApiCall;
+				require_once $apiCall;
 
-				if(function_exists($type)) {
+				if(function_exists($action)) {
 
-					call_user_func($type, $connection, $secure);
+					call_user_func($action, $connection, $secure);
 
 				} else {
-
-					echo $apiCall;
+					
+					$msg='<h1>Undefine function '.$type.' -> '.$action.' </h1>';
 
 				}
 
 			} else {
 
-				echo 'Api not found';	
+				$msg="Unable to find current request method -> {$apiCall}";
 
 			}
 
