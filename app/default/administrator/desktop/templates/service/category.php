@@ -96,13 +96,13 @@
 								while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 									<tr style="height: 60px" >
 										<td>
-											<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&post_id=<?php echo $category_id; ?>" ><?php echo $category_title ?></a></p>
+											<p><a href="<?php echo $postType ?>.php?type=edit&editor=true&post_id=<?php echo base64_encode($category_id); ?>" ><?php echo $category_title ?></a></p>
 											<div class="hover">
-												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo $category_id; ?>&taxonomy=category" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
-												<a href="<?php echo $postType ?>.php?type=category&id=<?php echo $category_id; ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
+												<a href="<?php echo $postType ?>.php?type=category&id=<?php echo base64_encode($category_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
 												<?php
 													if($category_id!=1) { ?>
-														<a href="delete.php?type=category&id=<?php echo $category_id; ?>" id="<?php echo $category_id.'_'.$type ?>" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
+														<a href="delete.php?type=category&id=<?php echo base64_encode($category_id); ?>" id="<?php echo base64_encode($category_id).'_'.$type ?>" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 													<?php
 													}
 												?>

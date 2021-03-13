@@ -50,7 +50,7 @@ ul.menu {
 	box-sizing: border-box
 }
 
-ul.menu li:first-child {
+ul.menu li .active {
 	background: #946e3e;
 	color: #fff!important
 }

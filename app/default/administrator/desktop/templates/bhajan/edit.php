@@ -1,6 +1,6 @@
 <?php
 	
-	$post_id=base64_encode(mysqli_real_escape_string($connection, $_GET['id']));
+	$post_id=base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
     
 	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND link_type='post' AND link_site_id=".SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($postDetails)!=0) {
@@ -8,7 +8,7 @@
 		} else {?>
 			<script type="text/javascript">
 				alert('Invalid action found');
-				window.location.href='dashboard/post/?type=list&status=all';
+				window.location.href='dashboard/bhajan/?type=list&status=all';
 			</script>
 		<?php
 		}
@@ -130,7 +130,7 @@
 				<?php
 					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_site_id='".SITE_ID."' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."' AND link_site_id=".SITE_ID)) {
 						while($category=mysqli_fetch_assoc($categoryList)) {
-							if($category['category_id']==${$postType.'_category'}) { ?>
+							if($category['category_id']==${'post_category'}) { ?>
 								<div class="form-group">
 									<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$post_category) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
 								</div>

@@ -6,7 +6,30 @@
 <section>
     <div class="main-left-box">
         <h2>Thought of The Day</h2>
-        <p>Anger leads to bewilderment, bewilderment to loss of memory of true Self, and by that intelligence is destroyed, and with the destruction of intelligence he perishes.<span>Srimad Bhagwad Gita<span></p>
+        <?php
+        
+        if($thoughtoOfTheDay=mysqli_query($connection, "SELECT post_description FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id WHERE post_type='thought' AND link_type='post' AND link_status=200 AND DATE(link_published) = CURDATE() AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 1" )) {
+
+            if(mysqli_num_rows($thoughtoOfTheDay)!=0) {
+
+                extract(mysqli_fetch_assoc($thoughtoOfTheDay));
+
+                echo "<p>{$post_description}</p>";
+
+            } else {
+
+                echo "<p>No thought for current day</p>";
+
+            }
+
+        } else {
+
+            echo mysqli_error($connection);
+            exit();
+
+        }
+
+        ?>
     </div>
     <div class="main-right-box">
         <div class="main-right-box-left-section">

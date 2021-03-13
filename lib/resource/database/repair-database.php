@@ -1022,6 +1022,7 @@
   require_once 'ecommerce-database.php';
   require_once 'redirection-database.php';
   require_once 'event-database.php';
+  require_once 'news-database.php';
   require_once 'view-database.php';
 
   $result = array(

@@ -128,13 +128,11 @@
                             mysqli_query($connection, 'COMMIT');
                 
                             $status=200;
-                            $msg=$postType.' is update successfully';
+                            $msg='Post is update successfully';
                             $redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.base64_encode($id);
                 
                         } else {
                             
-                            echo $addRedirect.' && '.$updateLink.' && '.$updatePost.' && '.$updateMeta.' && '.$tagData;
-
                             $msg="Somthing is wrong while updating {$postType}";
                             mysqli_query($connection, 'ROLLBACK');
 

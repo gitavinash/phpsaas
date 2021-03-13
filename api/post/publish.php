@@ -50,7 +50,7 @@
 
                             /* Insert data into link table */
 
-                            $addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."post(post_image, post_thumbnail, post_title, post_description, post_category, post_owner_id, post_status, post_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '".USER_ID."', '1', 'post')");
+                            $addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."post(post_site_id, post_image, post_thumbnail, post_title, post_description, post_category, post_owner_id, post_status, post_type) VALUES(".SITE_ID.", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '".USER_ID."', '1', 'post')");
                             $postID=mysqli_insert_id($connection);
 
                             $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'post', '{$featurePost}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
@@ -79,7 +79,7 @@
                             if($addNewPost && $addNewLink && $addNewMeta && $addNewTags) {
 
                                 $status=200;
-                                $msg='post add successfully';
+                                $msg='Post add successfully';
                                 $redirect='/dashboard/post/?type=edit&editor=true&id='.base64_encode($postID);
                                 mysqli_query($connection, "COMMIT");
 
