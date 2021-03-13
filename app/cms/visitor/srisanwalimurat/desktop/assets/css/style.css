@@ -20,6 +20,10 @@ button.slick-next.slick-arrow {
     display: none;
 }
 
+.img-gallery-magnific {
+    float: left;
+}
+
 section {
     display: block;
     margin: 0 auto;
@@ -1577,6 +1581,14 @@ img.mfp-img {
 
 @media only screen and (min-width: 320px) and (max-width: 768px){
 
+.img-gallery-magnific {
+    float: left;
+    width: 100%;
+}
+.img-gallery-magnific img {
+    float: left;
+    width: 100%;
+}
 
 /*--- home start ----*/
 
