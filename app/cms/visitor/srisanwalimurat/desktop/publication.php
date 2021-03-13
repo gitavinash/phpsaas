@@ -7,24 +7,24 @@
 
 <section>
     <div class="gallery">
-        <h1>Gallery</h1>
+        <h1>Publications</h1>
 
         <?php
         
-        if($galleryList=mysqli_query($connection, "SELECT link_url, gallery_title, gallery_image FROM ".TABLE_PREFIX."gallery INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=gallery_id WHERE link_type='gallery' AND link_status=200 AND link_site_id=".SITE_ID)) {
+        if($bookList=mysqli_query($connection, "SELECT link_url, book_title, book_image FROM ".TABLE_PREFIX."book INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=book_id WHERE link_type='book' AND link_status=200 AND link_site_id=".SITE_ID)) {
 
-            if(mysqli_num_rows($galleryList)!=0) {
+            if(mysqli_num_rows($bookList)!=0) {
 
-                while($galleryListData=mysqli_fetch_assoc($galleryList)) {
+                while($bookListData=mysqli_fetch_assoc($bookList)) {
 
-                    extract($galleryListData);
+                    extract($bookListData);
 
                     echo "<div class='img-gallery-magnific'>
                         <div class='magnific-img cur-pointer'>
-                            <a class='image-popup-vertical-fit' href='{$link_url}' title='{$gallery_title}'>
-                                <img src='{$gallery_image}' alt='{$gallery_title}' />
+                            <a class='image-popup-vertical-fit' href='{$link_url}' title='{$book_title}'>
+                                <img src='{$book_image}' alt='{$book_title}' />
                             </a>
-                            <a href='{$link_url}' class='gallery-title' >{$gallery_title}</a>
+                            <a href='{$link_url}' class='gallery-title' >{$book_title}</a>
                         </div>
                     </div>";
 
@@ -32,7 +32,7 @@
 
             } else {
 
-                echo 'No gallery found';
+                echo 'No book found';
 
             }
 
