@@ -410,7 +410,7 @@
                     <ul>
 						<li><a href="https://srisanwalimurat.com/privacy-policy/">Privacy Policy</a></li>
 						<li><a href="https://srisanwalimurat.com/disclaimer/">Disclaimer</a></li>
-						<li><a href="https://srisanwalimurat.com/return-policy/">Return Policy</a></li>
+						<li><a href="https://srisanwalimurat.com/refund-policy/">Refund Policy</a></li>
 						<li><a href="https://srisanwalimurat.com/terms-of-use/">Terms of Use</a></li>
                     </ul>
                 </div>

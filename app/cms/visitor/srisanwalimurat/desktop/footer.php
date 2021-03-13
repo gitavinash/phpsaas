@@ -25,7 +25,7 @@
                     <ul>
 						<li><a href="/privacy-policy/">Privacy Policy</a></li>
 						<li><a href="/disclaimer/">Disclaimer</a></li>
-						<li><a href="/return-policy/">Return Policy</a></li>
+						<li><a href="/refund-policy/">Refund Policy</a></li>
 						<li><a href="/terms-of-use/">Terms of Use</a></li>
                     </ul>
                 </div>
