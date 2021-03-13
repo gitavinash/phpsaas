@@ -17,7 +17,7 @@
 						<li><a href="/events/">Events</a></li>
 						<li><a href="/discourses/">Discourses</a></li>
 						<li><a href="/bhajan/">Bhajan/Aarti</a></li>
-						<li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
+						<li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff" >Request For Pangat</a></li>
                     </ul>
                 </div>
                 <div class="box-1">
