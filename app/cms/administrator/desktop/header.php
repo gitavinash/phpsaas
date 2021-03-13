@@ -61,6 +61,22 @@
 							</ul>
 						</div>
 					</li>
+
+					<li <?php echo (($postType=='page') ? 'class="active"' : '' ) ?> >
+								<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
+								<div class="side-menu">
+									<ul>
+										<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
+										<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+									</ul>
+								</div>
+								<div class="bottom-menu">
+									<ul>
+										<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
+										<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+									</ul>
+								</div>
+							</li>
 					<?php
 					
 						if(SITE_ID==9) { ?>
@@ -188,21 +204,6 @@
 						<?php
 						} else { ?>
 
-							<li <?php echo (($postType=='page') ? 'class="active"' : '' ) ?> >
-								<a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
-								<div class="side-menu">
-									<ul>
-										<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
-										<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
-									</ul>
-								</div>
-								<div class="bottom-menu">
-									<ul>
-										<li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
-										<li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
-									</ul>
-								</div>
-							</li>
 							<li <?php echo (($postType=='post') ? 'class="active"' : '' ) ?> >
 								<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
 								<div class="side-menu">
