@@ -32,7 +32,7 @@
 
             } else {
 
-                echo 'No gallery found';
+                echo 'No bhajan or aarti found';
 
             }
 

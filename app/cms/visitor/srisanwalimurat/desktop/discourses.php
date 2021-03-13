@@ -7,7 +7,7 @@
 
 <section>
     <div class="gallery">
-        <h1>Gallery</h1>
+        <h1>Discourses</h1>
 
         <?php
         
@@ -32,7 +32,7 @@
 
             } else {
 
-                echo 'No gallery found';
+                echo 'No discourses found';
 
             }
 
