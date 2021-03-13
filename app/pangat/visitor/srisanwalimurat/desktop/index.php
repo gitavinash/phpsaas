@@ -408,10 +408,10 @@
                 <div class="box-1">
                     <h2>Information</h2>
                     <ul>
-						<li><a href="https://srisanwalimurat.comprivacy-policy/">Privacy Policy</a></li>
-						<li><a href="https://srisanwalimurat.comdisclaimer/">Disclaimer</a></li>
-						<li><a href="https://srisanwalimurat.comreturn-policy/">Return Policy</a></li>
-						<li><a href="https://srisanwalimurat.comterms-of-use/">Terms of Use</a></li>
+						<li><a href="https://srisanwalimurat.com/privacy-policy/">Privacy Policy</a></li>
+						<li><a href="https://srisanwalimurat.com/disclaimer/">Disclaimer</a></li>
+						<li><a href="https://srisanwalimurat.com/return-policy/">Return Policy</a></li>
+						<li><a href="https://srisanwalimurat.com/terms-of-use/">Terms of Use</a></li>
                     </ul>
                 </div>
                 <div class="box-1">

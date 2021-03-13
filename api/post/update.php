@@ -25,9 +25,6 @@
                         if(isset($image)) {
                 
                             /** when image is upload by user */
-                
-                            
-                
                             $featureImage=(((isset($featureImage)) ? $featureImage : $oldFeatureImage ));
                             $thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $oldThumbnailImage ));
                             $facebookImage=(((isset($facebookImage)) ? $facebookImage : $oldFacebookImage ));
@@ -132,7 +129,7 @@
                 
                             $status=200;
                             $msg=$postType.' is update successfully';
-                            $redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.$id;
+                            $redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.base64_encode($id);
                 
                         } else {
                             

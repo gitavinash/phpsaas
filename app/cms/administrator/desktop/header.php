@@ -167,6 +167,23 @@
 									</ul>
 								</div>
 							</li>
+							<li <?php echo (($postType=='embed') ? 'class="active"' : '' ) ?> >
+								<a href="embed.php?type=list&status=all"><i class="fab fa-youtube"></i> Embed video</a>
+								<div class="side-menu">
+									<ul>
+										<li><a href="embed.php?type=list&status=all"><i class="fas fa-list"></i> All video</a></li>
+										<li><a href="embed.php?type=add"><i class="fas fa-plus"></i> Add New video</a></li>
+										<li><a href="embed.php?type=live"><i class="fas fa-video"></i> Add New live video</a></li>
+									</ul>
+								</div>
+								<div class="bottom-menu">
+									<ul>
+										<li><a href="embed.php?type=list&status=all"><i class="fas fa-list"></i> All video</a></li>
+										<li><a href="embed.php?type=add"><i class="fas fa-plus"></i> Add New video</a></li>
+										<li><a href="embed.php?type=live"><i class="fas fa-video"></i> Add New live video</a></li>
+									</ul>
+								</div>
+							</li>
 
 						<?php
 						} else { ?>
@@ -221,28 +238,26 @@
 									</ul>
 								</div>
 							</li>
+							<li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
+								<a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
+								<div class="side-menu">
+									<ul>
+										<li><a href="import.php?type=post"><i class="fas fa-file-alt"></i> Post</a></li>
+										<li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
+									</ul>
+								</div>
+								<div class="bottom-menu">
+									<ul>
+										<li><a href="import.php?type=post"><i class="fas fa-file-alt"></i> Post</a></li>
+										<li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
+									</ul>
+								</div>
+							</li>
 
 						<?php
 						}
 
 					?>
-					<li <?php echo (($postType=='embed') ? 'class="active"' : '' ) ?> >
-						<a href="embed.php?type=list&status=all"><i class="fab fa-youtube"></i> Embed video</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="embed.php?type=list&status=all"><i class="fas fa-list"></i> All video</a></li>
-								<li><a href="embed.php?type=add"><i class="fas fa-plus"></i> Add New video</a></li>
-								<li><a href="embed.php?type=live"><i class="fas fa-video"></i> Add New live video</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="embed.php?type=list&status=all"><i class="fas fa-list"></i> All video</a></li>
-								<li><a href="embed.php?type=add"><i class="fas fa-plus"></i> Add New video</a></li>
-								<li><a href="embed.php?type=live"><i class="fas fa-video"></i> Add New live video</a></li>
-							</ul>
-						</div>
-					</li>
 					<!-- <li <?php echo (($postType=='media') ? 'class="active"' : '' ) ?> >
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
@@ -264,21 +279,6 @@
 							</ul>
 						</div>
 					</li> -->
-					<li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?> >
-						<a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="import.php?type=post"><i class="fas fa-file-alt"></i> Post</a></li>
-								<li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="import.php?type=post"><i class="fas fa-file-alt"></i> Post</a></li>
-								<li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
-							</ul>
-						</div>
-					</li>
 					<li <?php echo (($postType=='setting') ? 'class="active"' : '' ) ?> >
 						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">

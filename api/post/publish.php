@@ -80,7 +80,7 @@
 
                                 $status=200;
                                 $msg='post add successfully';
-                                $redirect='/dashboard/post/?type=edit&editor=true&id='.$postID;
+                                $redirect='/dashboard/post/?type=edit&editor=true&id='.base64_encode($postID);
                                 mysqli_query($connection, "COMMIT");
 
                             } else {

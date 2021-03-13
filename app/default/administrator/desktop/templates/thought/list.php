@@ -3,7 +3,7 @@
 	$postStatus=mysqli_real_escape_string($connection, $_GET['status']);
 	$startFrom=(isset($_GET['post']) ? $_GET['post'] : 0 );
 
-	$postStatus=(($postStatus=='all') ? '' : "AND event_status='{$postStatus}'" );
+	$postStatus=(($postStatus=='all') ? '' : "AND post_status='{$postStatus}'" );
 	
 ?>
 <h2>All <?php echo ucwords($postType.'s') ?></h2>
@@ -36,15 +36,15 @@
 	<tbody>
 		<?php
 
-				if($dataList=mysqli_query($connection, "SELECT event_id, event_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."event, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE event_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=event_id AND link_site_id='".SITE_ID."' AND category_id=event_category AND profile_user_id='".USER_ID."' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+				if($dataList=mysqli_query($connection, "SELECT post_id, post_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE post_type='thought' AND post_owner_id='".USER_ID."' AND link_type='post' AND link_relation_id=post_id AND link_site_id='".SITE_ID."' AND category_id=post_category AND profile_user_id='".USER_ID."' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="event.php?type=edit&editor=true&id=<?php echo base64_encode($event_id); ?>" ><?php echo $event_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="thought.php?type=edit&editor=true&id=<?php echo base64_encode($post_id); ?>" ><?php echo $post_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
-									<a href="event.php?type=edit&editor=true&id=<?php echo base64_encode($event_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="#" id="<?php echo $event_id ?>_post" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
+									<a href="thought.php?type=edit&editor=true&id=<?php echo base64_encode($post_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="#" id="<?php echo $post_id ?>_post" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>

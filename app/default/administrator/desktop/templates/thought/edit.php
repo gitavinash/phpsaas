@@ -1,27 +1,27 @@
 <?php
 	
-	$event_id=base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
+	$post_id=base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
 	
-	if($eventDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."event, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='event' AND link_relation_id=event_id AND meta_relation_id=link_id AND event_id='{$event_id}' AND link_status!=301 AND link_type='event' AND link_site_id=".SITE_ID." LIMIT 1")) {
-		if(mysqli_num_rows($eventDetails)!=0) {
-			extract(mysqli_fetch_assoc($eventDetails));
+	if($thoughtDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."post, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND post_type='thought' AND link_site_id=".SITE_ID." LIMIT 1")) {
+		if(mysqli_num_rows($thoughtDetails)!=0) {
+			extract(mysqli_fetch_assoc($thoughtDetails));
 		} else { ?>
 			<script type="text/javascript">
 				alert('Invalid action found');
-				window.location.href='dashboard/event/?type=list&status=all';
+				window.location.href='dashboard/thought/?type=list&status=all';
 			</script>
 		<?php
 		}
 	}
 
 ?>
-<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $eventType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
+<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 <div class="form-box">
 	<form id="formData" enctype="multipart/form-data" >
 		<div class="left-box">
 			<div class="form-group">
-				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $event_title ?>" required="" >
+				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $post_title ?>" required="" >
 			</div>
 			<div class="form-group">
 				<div class="url">
@@ -34,7 +34,7 @@
 				</div>
 			</div>
 			<div class="form-group fullscreen-editor">
-				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode($event_description); ?></textarea>
+				<textarea name="description" class="editor inside-shadow" ><?php echo html_entity_decode($post_description); ?></textarea>
 			</div>
 			<section>
 				<h3>Advance Options for digital marketing</h3>
@@ -54,14 +54,14 @@
 					</div>
 					<div class="form-group">
 						<label>Meta Keywords</label>
-						<textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the event ( use , to seprate keywords )" ><?php echo $meta_keyword ?></textarea>
+						<textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the thought ( use , to seprate keywords )" ><?php echo $meta_keyword ?></textarea>
 					</div>
 					<div class="form-group">
 						<label>Canonical URL</label>
-						<input type="text" name="canonical" class="form-control inside-shadow" value="<?php echo $meta_canonical; ?>" id="canonical" placeholder="Actual URL of the <?php echo $eventType ?>"  >
+						<input type="text" name="canonical" class="form-control inside-shadow" value="<?php echo $meta_canonical; ?>" id="canonical" placeholder="Actual URL of the <?php echo $postType ?>"  >
 					</div>
 					<div class="form-group">
-						<label>Allow search engines to show this event in search results?</label>
+						<label>Allow search engines to show this thought in search results?</label>
 						<select name="robots" class="form-control inside-shadow">
 							<option value="index, follow" <?php echo (($meta_robots=='index, follow') ? 'selected' : '' ) ?> >Yes</option>
 							<option value="noindex, nofollow" <?php echo (($meta_robots=='noindex, nofollow') ? 'selected' : '' ) ?> >No</option>
@@ -110,14 +110,14 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($event_status==1) ? 'Update ' : 'Publish ' ); ?>event">
+				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($post_status==1) ? 'Update ' : 'Publish ' ); ?>thought">
 				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
 				<input type="hidden" name="type" value="<?php echo $postType ?>" >
 				<input type="hidden" name="action" value="update" >
-				<input type="hidden" name='postStatus' value='<?php echo $event_status ?>' >
-				<input type="hidden" name="id" value="<?php echo $event_id ?>" >
-				<input type="hidden" name="postType" value="<?php echo $event_type ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live event</a>
+				<input type="hidden" name='postStatus' value='<?php echo $post_status ?>' >
+				<input type="hidden" name="id" value="<?php echo $post_id ?>" >
+				<input type="hidden" name="postType" value="<?php echo $post_type ?>" >
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live thought</a>
 			</div>
 			<div class="form-group">
 				<h2>Featured</h2>
@@ -130,9 +130,9 @@
 				<?php
 					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_site_id='".SITE_ID."' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."' AND link_site_id=".SITE_ID)) {
 						while($category=mysqli_fetch_assoc($categoryList)) {
-							if($category['category_id']==${$postType.'_category'}) { ?>
+							if($category['category_id']==${'post_category'}) { ?>
 								<div class="form-group">
-									<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$event_category) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
+									<input type="radio" name="category" value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id']==$post_category) ? 'checked' : '' ) ?> > <?php echo ucwords($category['category_title']); ?>
 								</div>
 							<?php
 							} else { ?>
@@ -147,7 +147,7 @@
 			</div>
 			<h2>Tags</h2>
 			<?php
-				$tagpostID=(($event_parent_id==0) ? $event_id : $event_parent_id );
+				$tagpostID=(($post_parent_id==0) ? $post_id : $post_parent_id );
 				
 				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagpostID}' AND tag_site_id='".SITE_ID."' AND tag_type='post'")) {
 					if(mysqli_num_rows($tagList)!=0) {
@@ -168,15 +168,19 @@
 				</div>
 			</div>
 			<div class="tagList" style="display: none;"></div>
+			<h2>Thought date</h2>
+			<div class="form-group">
+				<input type="text" name="thoughtDate" class="form-control inside-shadow datepicker" >
+			</div>
 			<h2>Feature Image</h2>
-			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($event_image!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($post_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
-				<input type="hidden" name="oldFeatureImage" value="<?php echo $event_image ?>">
+				<input type="hidden" name="oldFeatureImage" value="<?php echo $post_image ?>">
 				<input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
 				<p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload limit is 300 MB</strong></p>
 			</div>
-			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($event_image!='') ? 'block' : 'none') ?>;">
-				<img src="//<?php echo SITE_DOMAIN.$event_image ?>" id="featureImagePath" alt="">
+			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($post_image!='') ? 'block' : 'none') ?>;">
+				<img src="//<?php echo SITE_DOMAIN.$post_image ?>" id="featureImagePath" alt="">
 				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>

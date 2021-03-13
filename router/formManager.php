@@ -76,7 +76,7 @@
 
 			} else {
 
-				$msg="Unable to find current request method -> {$apiCall}";
+				echo "Unable to find current request method -> {$apiCall}";
 
 			}
 
