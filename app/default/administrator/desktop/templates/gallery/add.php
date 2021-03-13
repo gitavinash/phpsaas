@@ -69,7 +69,9 @@
 					</div>
 				</div> -->
 				<div class="productGallery generalTab">
-					<input type="file" id="gallery" class="galleryBtn" accept="image/x-png, image/gif, image/jpeg" name="gallery[]" multiple >					
+					<div class="input-field">
+						<div class="input-images" style="padding-top: .5rem;"></div>
+					</div>
 				</div>
 				<!-- <div class="productAdditionalDetails generalTab" style="display: none;">
 					

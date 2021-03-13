@@ -106,7 +106,6 @@
 				</div>
 				<div class="productGallery generalTab" style="display: none;">
 
-					<!-- <input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple > -->
 					<div class="input-field">
 						<div class="input-images" style="padding-top: .5rem;"></div>
 					</div>

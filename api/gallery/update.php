@@ -8,7 +8,7 @@
 
             if(isset($category)) {
 
-                if($checkGallery=mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID FROM ".TABLE_PREFIX."gallery INNER JOIN ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='gallery' AND gallery_id='{$id}'")) {
+                if($checkGallery=mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, gallery_image_list FROM ".TABLE_PREFIX."gallery INNER JOIN ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='gallery' AND gallery_id='{$id}'")) {
 
                     if(mysqli_num_rows($checkGallery)!=0) {
 
@@ -20,7 +20,6 @@
                             
                             // Extract the single upload image string to variables
 
-                            
                             $thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $featureImage ));
                             $facebookImage=(((isset($facebookImage)) ? $facebookImage : $oldFacebookImage ));
                             $twitterImage=(((isset($twitterImage)) ? $twitterImage : $oldTwitterImage ));
@@ -43,12 +42,41 @@
                         if(isset($_FILES['gallery'])) {
                 
                             require_once MODULES.'galleryUploader.php';
-                    
-                        } else {
+                            
+                            if($gallery!='') {
 
-                            $gallery=$oldGallery;
+                                $isGalleryUpdate=TRUE;
+
+                            }
+                    
+                        }
+
+                        $oldGallery=json_decode($gallery_image_list, TRUE);
+                        
+                        // Match old gallery db from from value
+                        $newGallery=array();
+
+                        if(isset($_POST['oldGallery'])) {
+
+                            for($i=0; $i<sizeof($_POST['oldGallery']); $i++){
+   
+                                $j=$_POST['oldGallery'][$i]-1;
+                                
+                                $newGallery[]=$oldGallery[$j];
+    
+                            }
 
                         }
+
+                        /** Update old gallery */
+
+                        if(isset($isGalleryUpdate)) {
+
+                            $newGallery=array_merge($newGallery, $images);
+
+                        }
+
+                        $newGallery=json_encode($newGallery, TRUE);
                             
                         /** Category */
 
@@ -110,7 +138,7 @@
                     
                         }
 
-                        $updateGallery=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."gallery SET gallery_image='{$featureImage}', gallery_thumbnail='{$thumbnailImage}', gallery_title='{$title}', gallery_description='{$description}', gallery_category='{$category}', gallery_owner_id='".USER_ID."', gallery_status='{$postStatus}', gallery_type='{$postType}' WHERE gallery_id='{$id}'");
+                        $updateGallery=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."gallery SET gallery_image='{$featureImage}', gallery_thumbnail='{$thumbnailImage}', gallery_title='{$title}', gallery_description='{$description}', gallery_category='{$category}', gallery_owner_id='".USER_ID."', gallery_status='{$postStatus}', gallery_type='{$postType}', gallery_image_list='{$newGallery}' WHERE gallery_id='{$id}'");
 
                         $updateMeta=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."meta SET meta_title='{$meta_title}', meta_description='{$meta_desc}', meta_canonical='{$canonical}', meta_keyword='{$meta_key}', meta_relation_id='{$link_id}', fb_img='{$facebookImage}', fb_title='{$fb_title}', fb_desc='{$fb_desc}', tw_img='{$twitterImage}', tw_title='{$tw_title}', tw_desc='{$tw_desc}' WHERE meta_relation_id='{$oldLinkID}'");
                             

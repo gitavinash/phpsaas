@@ -52,9 +52,40 @@
 					<li id="productGallery" >Gallery</li>
 				</ul>
 				<div class="productGallery generalTab">
-					<!-- <input type="hidden" name="oldGallery" value="<?php echo $galleryImageList ?>" > -->
-					<input type="file" id="gallery" accept="image/x-png, image/gif, image/jpeg" class="galleryBtn" name="gallery[]" multiple >					
+				<div class="input-field">
+					<div class="input-images" style="padding-top: .5rem;"></div>
+					</div>
+					<?php
+					if($imageList!='') {
+						
+						// $productGalleryList=json_decode($galleryImageList, TRUE);
+					
+						// $oldGalleryImages = array();
+
+						for($i=0; $i<sizeof($imageList); $i++) {
+						
+							$oldGalleryImages[]=array(
+								'id' => $i+1,
+								'name' => $imageList[$i]['name'],
+								'src' => $imageList[$i]['path'],
+								'type' => $imageList[$i]['type'],
+							);
+							
+						}
+
+						$oldGalleryImages=json_encode($oldGalleryImages, TRUE);
+
+					} else {
+
+						$oldGalleryImages=json_encode('', TRUE);
+
+					}
+										
+					echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+					
+					?>
 				</div>
+				
 			</section>
 
 			<section>

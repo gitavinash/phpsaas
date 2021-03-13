@@ -11,6 +11,7 @@
 		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js" type="text/javascript" ></script>
+		<script src="<?php echo PLUGIN_LIBRARY ?>image-uploader/js/image-uploader.min.js" type="text/javascript" ></script>
 		<script src="<?php echo DEFAULT_ADMIN_JS ?>script.min.js"></script>
 
 		<?php
