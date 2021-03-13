@@ -18,7 +18,7 @@
 <h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 <div class="form-box">
-	<form id="formData" enctype="multipart/form-data" >
+	<form id="formData" enctype="multipart/form-data" autocomplete="off" >
 		<div class="left-box">
 			<div class="form-group">
 				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $post_title ?>" required="" >
@@ -170,7 +170,8 @@
 			<div class="tagList" style="display: none;"></div>
 			<h2>Thought date</h2>
 			<div class="form-group">
-				<input type="text" name="thoughtDate" class="form-control inside-shadow datepicker" >
+				<input type="text" name="thoughtDate" class="form-control inside-shadow thoughtDatepicker" value="<?php echo date('m/d/Y', strtotime($link_published)); ?>" >
+				<?php echo "<script>var thoughtDate=".date('d-m-Y', strtotime($link_published))."</script>" ?>
 			</div>
 			<h2>Feature Image</h2>
 			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($post_image!='') ? 'none' : 'block') ?>;">

@@ -12,6 +12,8 @@
 
                 if($thoughtDate!='') {
 
+                    $thoughtDate=date('Y-m-d H:i:s', strtotime($thoughtDate));
+
                     if(isset($_FILES['featureImage'])) {
                     
                         require_once MODULES.'imageUploader.php';

@@ -125,7 +125,7 @@
 			<div class="tagList" style="display: none;"></div>
 			<h2>Thought date</h2>
 			<div class="form-group">
-				<input type="text" name="thoughtDate" class="form-control inside-shadow datepicker" >
+				<input type="text" name="thoughtDate" class="form-control inside-shadow thoughtDatepicker" >
 			</div>
 			<h2>Feature Image</h2>
 			<div class="form-group featureImageUploadBox upload-btn">
