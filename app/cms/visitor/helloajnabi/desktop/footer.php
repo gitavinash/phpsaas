@@ -7,7 +7,7 @@
 							<div class="footer-widget about-widget">
 								<div class="footer-logo">
 									<a href="#" class="logo"><img src="<?php echo USER_IMAGES ?>logo-alt.png" alt=""></a>
-									<p>Populo tritani laboramus ex mei, no eum iuvaret ceteros euripidis, ne alia sadipscing mei. Te inciderint cotidieque pro, ei iisque docendi qui.</p>
+									<p><?php echo SITE_DESC ?></p>
 								</div>
 							</div>
 							<div class="footer-widget social-widget">
@@ -15,10 +15,10 @@
 									<h3 class="title">Follow Us</h3>
 								</div>
 								<ul>
-									<li><a href="https://www.facebook.com/helloajnabi" class="facebook" target="black"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="https://twitter.com/Hello_Ajnabi" class="twitter" target="black"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="https://www.instagram.com/helloajnabi" class="instagram" target="black"><i class="fa fa-instagram"></i></a></li>
-									<li><a href="https://www.youtube.com/channel/UC507HwLRcMaAqUNFTzSEK3w?sub_confirmation=1" class="youtube" target="black"><i class="fa fa-youtube"></i></a></li>
+									<li><a href="https://www.facebook.com/helloajnabi" class="facebook" target="black"><i class="fab fa-facebook"></i></a></li>
+									<li><a href="https://twitter.com/Hello_Ajnabi" class="twitter" target="black"><i class="fab fa-twitter"></i></a></li>
+									<li><a href="https://www.instagram.com/helloajnabi" class="instagram" target="black"><i class="fab fa-instagram"></i></a></li>
+									<li><a href="https://www.youtube.com/channel/UC507HwLRcMaAqUNFTzSEK3w?sub_confirmation=1" class="youtube" target="black"><i class="fab fa-youtube"></i></a></li>
 								</ul>
 							</div>
 							<div class="footer-widget subscribe-widget">

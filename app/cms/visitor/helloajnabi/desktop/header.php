@@ -22,19 +22,18 @@
 				<div class="container">
 					<div class="header-links">
 						<ul>
-							<li><a href="#">About us</a></li>
-							<li><a href="#">Contact</a></li>
-							<li><a href="#">Advertisement</a></li>
-							<li><a href="#">Privacy</a></li>
-							<li><a href="#"><i class="fa fa-sign-in"></i> Login</a></li>
+							<li><a href="/about-us/">About us</a></li>
+							<li><a href="/contact-us/">Contact us</a></li>
+							<li><a href="/advertisement/">Advertisement</a></li>
+							<li><a href="/privacy-policy/">Privacy policy</a></li>
 						</ul>
 					</div>
 					<div class="header-social">
 						<ul>
-							<li><a href="https://www.facebook.com/helloajnabi/" target="black"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="https://twitter.com/Hello_Ajnabi" target="black"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="https://www.instagram.com/helloajnabi/" target="black"><i class="fa fa-instagram"></i></a></li>
-							<li><a href="https://www.youtube.com/channel/UC507HwLRcMaAqUNFTzSEK3w?sub_confirmation=1"><i class="fa fa-youtube"></i></a></li>
+							<li><a href="https://www.facebook.com/helloajnabi/" target="black"><i class="fab fa-facebook"></i></a></li>
+							<li><a href="https://twitter.com/Hello_Ajnabi" target="black"><i class="fab fa-twitter"></i></a></li>
+							<li><a href="https://www.instagram.com/helloajnabi/" target="black"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="https://www.youtube.com/channel/UC507HwLRcMaAqUNFTzSEK3w?sub_confirmation=1"><i class="fab fa-youtube"></i></a></li>
 						</ul>
 					</div>
 				</div>
@@ -42,7 +41,7 @@
 			<div id="center-header">
 				<div class="container">
 					<div class="header-logo">
-						<a href="#" class="logo"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
+						<a href="/" class="logo"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
 					</div>
 				</div>
 			</div>
@@ -51,24 +50,28 @@
 				<div class="container">
 					<nav id="main-nav">
 						<div class="nav-logo">
-							<a href="#" class="logo"><img src="<?php echo USER_IMAGES ?>logo-alt.png" alt=""></a>
+							<a href="/" class="logo"><img src="<?php echo USER_IMAGES ?>logo-alt.png" alt=""></a>
 						</div>
 						<ul class="main-nav nav navbar-nav">
 							<li class="active"><a href="#">Home</a></li>
-							<li><a href="#">News</a></li>
-							<li><a href="#">Sport</a></li>
-							<li><a href="#">Lifestyle</a></li>
-							<li><a href="#">Fashion</a></li>
-							<li><a href="#">Music</a></li>
-							<li><a href="#">Business</a></li>
+							<li><a href="">Bollywood & TV</a></li>
+							<li><a href="http://hello.local/category/sports/">Sports</a></li>
+							<li><a href="http://hello.local/category/breaking-news/">Breaking news</a></li>
+							<li><a href="http://hello.local/category/interesting/">Intersting</a></li>
+							<li><a href="http://hello.local/category/food/">Food</a></li>
+							<li><a href="http://hello.local/category/astrology/">Astrology</a></li>
+							<li><a href="http://hello.local/category/politics/">Politics</a></li>
+							<li><a href="http://hello.local/category/spiritual/">Spiritual</a></li>
+							<li><a href="/category/viral/">Viral</a></li>
+							<li><a href="http://hello.local/category/stories/">Stories</a></li>
 						</ul>
 					</nav>
 					<div class="button-nav">
 						<button class="search-collapse-btn"><i class="fa fa-search"></i></button>
 						<button class="nav-collapse-btn"><i class="fa fa-bars"></i></button>
 						<div class="search-form">
-							<form>
-								<input class="input" type="text" name="search" placeholder="Search">
+							<form action="/search/" class="form-inline">
+								<input class="form-control" name="q" type="search" value="" placeholder="Search...">
 							</form>
 						</div>
 					</div>
