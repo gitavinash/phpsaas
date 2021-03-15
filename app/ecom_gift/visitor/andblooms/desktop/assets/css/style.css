@@ -688,22 +688,12 @@ body {
 	
 	 box-sizing: border-box;
 	 border: 1px solid #cecece;
-	 background-size: cover;
+	 background-size: cover !important;
 	 width: 100%;
 	 height: 100vh;
-	 background-position: center;
+	 background-position: center !important;
  }
-
- .care_n_tips {
-	float: left;
-	width: 100%;
- }
-
- .delivery_information {
-	float: left;
-	width: 100%;
- }
-
+ 
  /*.product-main-slider .slide .img {
 	display: flex;
 	justify-content: center;

@@ -247,6 +247,40 @@
 			  $("searchInput").hide();
 			});
 
+
+			// Height of product details dev
+
+			var productDetailsHeight = document.getElementById('productDetails').offsetHeight - 150;
+
+			function sticky_relocate() {
+
+				var window_top = $(window).scrollTop();
+				
+				//var div_top = $('#sticky-anchor').offset().top;
+				if (window_top >= 300 ) {
+					// alert('i m ready');
+					$('#sticky').addClass('stick');
+				} else {
+
+					$('#sticky').removeClass('stick');
+
+				}
+
+			}
+
+			$(function() {
+				$(window).scroll(sticky_relocate);
+				sticky_relocate();
+			});
+
+			$(function(){
+				$(window).scroll(function(e) {
+					if($(this).scrollTop()>productDetailsHeight){
+						$('#sticky').removeClass('stick'); 
+					}
+				});
+			});
+
 		</script>
 	</body>
 </html>

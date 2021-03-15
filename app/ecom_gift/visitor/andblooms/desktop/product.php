@@ -41,7 +41,7 @@
 			<div class="col-md-6">
 				<div class="galery-carousel">
 
-					<div class="lg-carousel-box">
+					<div class="lg-carousel-box" id="sticky">
 
 					<div class="product-main-slider">
 							<?php
@@ -50,18 +50,18 @@
 							
 							if($galleryImages!='') {
 
-								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
+								echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
-									echo "<div class='slide'><div class='img'><img src='{$path}'></div></div>";
+									echo "<div class='slide'><div class='img'><img src='{$path}' alt='{$name}'></div></div>";
 
 								}
 
 							} else {
 
-								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
+								echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
 
 							}
 
@@ -95,7 +95,7 @@
 			</div>
 			<div class="col-md-6">
 			
-				<div class="prod-detail">
+				<div class="prod-detail" id="productDetails" >
 					<h2><?php echo $product_title ?></h2>
 					<?php
 					
