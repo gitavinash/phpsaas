@@ -1,5 +1,24 @@
 <?php
 
+	if($checkProductMeta=mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".SITE_ID)) {
+
+		if(mysqli_num_rows($checkProductMeta)!=0) {
+
+			$productMeta=array();
+
+			while($checkProductMetaData=mysqli_fetch_assoc($checkProductMeta)) {
+
+
+				// Create dynamic variable in the name of product_meta_key value
+
+				${$checkProductMetaData['product_meta_key']}=$checkProductMetaData['product_meta_value'];
+
+			}
+
+		}
+
+	}
+
     include_once 'header.php';
 
 ?>
@@ -136,14 +155,52 @@
                         <h2>Product Description</h2>
 						<p><?php echo $product_description ?></p>
 						<h2>Care & Tips</h2>
-						<ul>
-							<li>Start by removing the bouquet wrapper.</li>
-							<li>Cut the stems by one or two inches from the bottom to ensure better water intake.</li>
-							<li>Choose a vase and fill it with water.</li>
-							<li>Remove the leaves below the water level to prevent bacterial growth.</li>
-							<li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-							<li>Make sure to place the vase in indirect sunlight.</li>
-						</ul>
+						<div class="care_n_tips">
+							<?php
+							
+							if(isset($care_n_tips)) {
+
+								echo $care_n_tips;
+
+							} else { ?>
+
+								<ul>
+									<li>Start by removing the bouquet wrapper.</li>
+									<li>Cut the stems by one or two inches from the bottom to ensure better water intake.</li>
+									<li>Choose a vase and fill it with water.</li>
+									<li>Remove the leaves below the water level to prevent bacterial growth.</li>
+									<li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
+									<li>Make sure to place the vase in indirect sunlight.</li>
+								</ul>
+
+							<?php
+							}
+
+							?>
+						</div>
+						<h2>Delivery Information</h2>
+						<div class="care_n_tips">
+							<?php
+							
+							if(isset($delivery_information)) {
+
+								echo $delivery_information;
+
+							} else { ?>
+
+								<ul>
+									<li>The image displayed is indicative. Actual product may vary in design & shape</li>
+									<li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
+									<li>The chosen delivery time is an estimate.</li>
+									<li>Since flowers are perishable in nature, we will be able to attempt delivery of your order once.</li>
+									<li>Occasionally, substitution of flowers is necessary due unavailability issues.</li>
+								</ul>
+
+							<?php
+							}
+
+							?>
+						</div>
 						<div class="sku">
 							<h4>SKU:</h4>
 							<h3><?php echo $inventory_sku ?></h3>
