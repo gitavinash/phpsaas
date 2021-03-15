@@ -160,7 +160,7 @@
 							
 							if(isset($care_n_tips)) {
 
-								echo $care_n_tips;
+								echo '<ul><li>'.str_replace('<br />', '</li><li>', $care_n_tips).'</li></ul>';
 
 							} else { ?>
 
@@ -184,7 +184,7 @@
 							
 							if(isset($delivery_information)) {
 
-								echo $delivery_information;
+								echo '<ul><li>'.str_replace('<br />', '</li><li>', $delivery_information).'</li></ul>';
 
 							} else { ?>
 
