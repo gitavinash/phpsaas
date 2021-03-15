@@ -60,14 +60,14 @@
 					<div class="col-md-12">
 						<div class="section-title">
 							<h2 class="title">Trending Posts</h2>
-							<ul class="tab-nav pull-right">
+							<!-- <ul class="tab-nav pull-right">
 								<li class="active"><a data-toggle="tab" href="#tab1">All</a></li>
 								<li><a data-toggle="tab" href="#tab1">News</a></li>
 								<li><a data-toggle="tab" href="#tab1">Sport</a></li>
 								<li><a data-toggle="tab" href="#tab1">Music</a></li>
 								<li><a data-toggle="tab" href="#tab1">Business</a></li>
 								<li><a data-toggle="tab" href="#tab1">Lifestyle</a></li>
-							</ul>
+							</ul> -->
 						</div>
 						<div class="tab-content">
 							<div id="tab1" class="tab-pane fade in active">
