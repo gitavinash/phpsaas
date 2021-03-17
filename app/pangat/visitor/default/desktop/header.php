@@ -13,14 +13,14 @@
                 <li><a href="" >Publication</a></li>
                 <li><a href="">Gallery</a></li>
                 <li><a href="">Events</a></li>
-                <li class="logo"><h1><a href="">Sri Sanwali Murat</a></h1></li>
+                <li class="logo"><h1><a href="">Sri Sanwali Murati</a></h1></li>
                 <li><a href="">Discourses</a></li>
                 <li><a href="">Bhajan/Aarti</a></li>
                 <li><a href="//pangat.<?php echo SITE_DOMAIN ?>" style="color: #fff">Request For Pangat</a></li>
                 <!-- <li><a href="">Account</a></li> -->
             </ul>
             <div class="mobile-menu">
-                <h1><a href="">Sri Sanwali Murat</a></h1>
+                <h1><a href="">Sri Sanwali Murati</a></h1>
                 <div class="menu-box" id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt=""></div>
             </div>
         </header>

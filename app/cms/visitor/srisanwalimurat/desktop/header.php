@@ -15,14 +15,14 @@
                 <li><a href="publication/" <?php echo ((ACTIVE_URL=='/publication/') ? 'class="active"' : '' ) ?> >Publication</a></li>
                 <li><a href="gallery/" <?php echo ((ACTIVE_URL=='/gallery/') ? 'class="active"' : '' ) ?> >Gallery</a></li>
                 <li><a href="events/" <?php echo ((ACTIVE_URL=='/events/') ? 'class="active"' : '' ) ?>>Events</a></li>
-                <li class="logo"><h1><a href="/">Sri Sanwali Murat</a></h1></li>
+                <li class="logo"><h1><a href="/">Sri Sanwali Murati</a></h1></li>
                 <li><a href="discourses/" <?php echo ((ACTIVE_URL=='/discourses/') ? 'class="active"' : '' ) ?>>Discourses</a></li>
                 <li><a href="bhajan/" <?php echo ((ACTIVE_URL=='/bhajan/') ? 'class="active"' : '' ) ?>>Bhajan/Aarti</a></li>
                 <li><a href="//pangat.<?php echo SITE_DOMAIN ?>">Request For Pangat</a></li>
                 <!-- <li><a href="">Account</a></li> -->
             </ul>
             <div class="mobile-menu">
-                <h1><a href="">Sri Sanwali Murat</a></h1>
+                <h1><a href="">Sri Sanwali Murati</a></h1>
                 <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
                 <div id="target">
                     <ul>

@@ -126,8 +126,8 @@ main {
 
 .main-left-box {
 	float: left;
-	width: 39%;
-	padding: 50px 50px;
+	width: 30%;
+	padding: 0px 50px;
 	height: 625px;
 	box-sizing: border-box;
 	border-left: 1px solid #efefef;
@@ -162,7 +162,7 @@ main {
 
 .main-right-box {
 	float: right;
-	width: 61%;
+	width: 70%;
 	height: 625px;
 	box-sizing: border-box;
 	border-left: 1px solid #efefef;
@@ -210,17 +210,40 @@ main {
 	color: #fff
 }
 
-.main-right-box .main-right-box-left-section .feature-video {
+.main-right-box .main-right-box-left-section .sanwali-murat {
 	float: left;
-	width: 100%;
+	width: 50%;
 	padding: 20px 20px;
 	box-sizing: border-box
 }
 
+.main-right-box .main-right-box-left-section .sanwali-murat img {
+	float: left;
+	width: 100%;
+}
+
+.main-right-box .main-right-box-left-section .feature-video {
+	float: left;
+	width: 50%;
+	padding: 0px 20px;
+	box-sizing: border-box
+}
+
+.main-right-box .main-right-box-left-section .feature-video h2 {
+	float: left;
+	width: 100%;
+	font-size: 32px;
+	line-height: 50px;
+	font-weight: 400;
+	padding: 20px 0 20px 0;
+	color: #946e3e;
+	letter-spacing: 1px
+}
+
 .main-right-box .main-right-box-left-section .feature-video iframe {
 	float: left;
-	width: 100%!important;
-	height: 400px!important
+	width: 100% !important;
+	height: 230px !important
 }
 
 .main-right-box .main-right-box-right-section {
@@ -1594,6 +1617,18 @@ screen and (max-height:300px) {
 }
 
 @media only screen and (min-width:320px) and (max-width:768px) {
+
+	.main-right-box .main-right-box-left-section .sanwali-murat {
+		float: left;
+		width: 100%;
+	}
+	.main-right-box .main-right-box-left-section .feature-video {
+		float: left;
+		width: 100%;
+	}
+	.main-right-box .main-right-box-left-section .feature-video iframe {
+		height: 200px !important;
+	}
 	.gallery{
 		width: 100%;
 		float: left;

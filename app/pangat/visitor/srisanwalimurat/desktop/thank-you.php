@@ -21,7 +21,7 @@
 		<div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light pt-3 pb-0 pt-md-3 pb-md-0 pl-md-0 pr-md-0">
 	      <a href="#" class="navbar-brand">
-		  	Sri Sanwali Murat
+		  	Sri Sanwali Murati
 	        <!-- <img src="assets/img/logo.png" alt="" class="img-fluid"> -->
 	      </a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

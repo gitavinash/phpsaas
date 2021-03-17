@@ -38,13 +38,13 @@
 				<li><a href="https://srisanwalimurat.com/publication/">Publication</a></li>
                 <li><a href="https://srisanwalimurat.com/gallery/">Gallery</a></li>
                 <li><a href="https://srisanwalimurat.com/events/">Events</a></li>
-                <li class="logo"><h1><a href="https://srisanwalimurat.com/">Sri Sanwali Murat</a></h1></li>
+                <li class="logo"><h1><a href="https://srisanwalimurat.com/">Sri Sanwali Murati</a></h1></li>
                 <li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
                 <li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
                 <li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
             </ul>
             <div class="mobile-menu">
-                <h1><a href="">Sri Sanwali Murat</a></h1>
+                <h1><a href="">Sri Sanwali Murati</a></h1>
                 <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
                 <div id="target">
                     <ul>
@@ -62,7 +62,7 @@
 		<!-- <div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light pt-3 pb-0 pt-md-3 pb-md-0 pl-md-0 pr-md-0">
 	      <a href="/" class="navbar-brand">
-		  	Sri Sanwali Murat
+		  	Sri Sanwali Murati
 	        <img src="assets/img/logo.png" alt="" class="img-fluid">
 	      </a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -252,7 +252,7 @@
 					  		<spn class="d-inline-block">I will be present in pangat.</span>
 					  	</div>
 					  	<div id="checkBox" class="form-cont">
-					  		<!-- <input type="number" name="guest" class="inputClass guestVal reqInput" placeholder="Number of guest"> -->
+					  		<label>Select no of guests</label>
 							<select name="guest" class="inputClass guestVal reqInput">
 								<option value="">Select number of guests</option>
 								<option value="1">1</option>

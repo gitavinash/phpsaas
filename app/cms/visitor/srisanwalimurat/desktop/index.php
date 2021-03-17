@@ -33,9 +33,9 @@
     </div>
     <div class="main-right-box">
         <div class="main-right-box-left-section">
-            <!-- <div class="live-section">
-                <a href="" class="live-btn" >Watch Live</a>
-            </div> -->
+            <div class="sanwali-murat">
+                <img src="<?php echo USER_IMAGES ?>murat.jpg" alt="Sri Sanwali Murati">
+            </div>
             <div class="feature-video">
                 <?php
                 
@@ -45,7 +45,7 @@
 
                             extract(mysqli_fetch_assoc($checkVideo));
 
-                            echo $video_description;
+                            echo '<h2>'.$video_title.'</h2><br />'.$video_description;
 
                         } else {
 
@@ -78,6 +78,18 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<section>
+    <div class="about-us-left-box">
+        <img src="<?php echo USER_IMAGES ?>murat.jpg" alt="">
+    </div>
+    <div class="about-us-right-box">
+        <h2>Mahanubhav Panth: An Introduction</h2>
+        <p>Mahanubhav Panth is a religious sect which follows the teachings of Srimad Bhagvad Gita and Sri Brahmvidya Shastra. Established around 800 years ago by Sarvagy Sri Chakradhar Swamiji in Maharashtra, this sect believes in single-minded devotion (“ananya bhakti”) of the Almighty God and its five incarnations (“panch avatars”). </p>
+        <p>The five avatars we are firmly devoted to are: Lord Sri Krishna, Bhagvan Sri Dattatreya Maharaj, Sri Chakrapani Prabhu Maharaj, Sri Govind Prabhu Maharaj and Sarvagy Sri Chakradhar Swami ji. This means that Mahanubhav Panth believes in the Theory of Incarnation (“avatarvad”).</p>
+        <p>The Supreme God took these five incarnations for the sole purpose of giving Godly knowledge (“Gyan”)and Godly Love (“Prem”) to the deserving human beings (Adhikari jeev) so that they can get rid of the cycle of life and death and attain Moksha (or Parmanand). From this position, soul never returns back to this earth again. So, we believe these two be the main sources of imancipation. </p>
     </div>
 </section>
 
@@ -136,18 +148,6 @@
             ?>
 
         </div>
-    </div>
-</section>
-
-<section>
-    <div class="about-us-left-box">
-        <img src="<?php echo USER_IMAGES ?>murat.jpg" alt="">
-    </div>
-    <div class="about-us-right-box">
-        <h2>Mahanubhav Panth: An Introduction</h2>
-        <p>Mahanubhav Panth is a religious sect which follows the teachings of Srimad Bhagvad Gita and Sri Brahmvidya Shastra. Established around 800 years ago by Sarvagy Sri Chakradhar Swamiji in Maharashtra, this sect believes in single-minded devotion (“ananya bhakti”) of the Almighty God and its five incarnations (“panch avatars”). </p>
-        <p>The five avatars we are firmly devoted to are: Lord Sri Krishna, Bhagvan Sri Dattatreya Maharaj, Sri Chakrapani Prabhu Maharaj, Sri Govind Prabhu Maharaj and Sarvagy Sri Chakradhar Swami ji. This means that Mahanubhav Panth believes in the Theory of Incarnation (“avatarvad”).</p>
-        <p>The Supreme God took these five incarnations for the sole purpose of giving Godly knowledge (“Gyan”)and Godly Love (“Prem”) to the deserving human beings (Adhikari jeev) so that they can get rid of the cycle of life and death and attain Moksha (or Parmanand). From this position, soul never returns back to this earth again. So, we believe these two be the main sources of imancipation. </p>
     </div>
 </section>
 
