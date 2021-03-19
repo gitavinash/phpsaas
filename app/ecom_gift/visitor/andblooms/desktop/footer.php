@@ -10,47 +10,28 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="list-covid">
-							<div class="covid-box">
-								<div class="covid-img">
-									<img src="<?php echo USER_IMAGES ?>fasanitization.png">
-								</div>
-								<div class="covid-name">
-									<h4>Sanitization</h4>
-									<p>All workers sanitize their hands & surface every 4 hours</p>
-								</div>
+						
+						<!-- Testimonial slider -->
+						<h2 class="testimonial-slider-title">Testimonial</h2>
+						<div class="testimonial-slider">
+							<div class="slider">
+								<p>Shalini has been a great friend in my school years and I can vouch for her amazing sense of aesthetics.She brings beauty to whatever she does. Whether it’s the way she dresses, keeps her house or runs her business.She brings value and commitment to each of these spheres. Her efforts have translated into a blooming flower business which brings joy to so many lives! ♥️</p>
+								<span>Pooja Sinha</span>
 							</div>
-
-							<div class="covid-box">
-								<div class="covid-img">
-									<img src="<?php echo USER_IMAGES ?>fasanitization.png">
-								</div>
-								<div class="covid-name">
-									<h4>Contact Less Delivery</h4>
-									<p>Maintaining the safe distance</p>
-								</div>
+							<div class="slider">
+								<p>The best ever flowers and arrangements you can buy. I have used there service many times....and every time they surprise me. Its like poetry and art with flowers. Truly the person running it loves flowers clearly evident from the selection. You cannot go wrong with them. Today I received my own Valentine day arrangement from my husband and so this review. It absolutely made my day.</p>
+								<span>Nidhi Jain Seth</span>
 							</div>
-
-							<div class="covid-box">
-								<div class="covid-img">
-									<img src="<?php echo USER_IMAGES ?>facontactless.png">
-								</div>
-								<div class="covid-name">
-									<h4>Temperature Checks</h4>
-									<p>Temperature checks of delivery staff before every delivery</p>
-								</div>
+							<div class="slider">
+								<p>They say get flowers from someone who lives flowers and that’s the case when your visit this store. It’s full of life and shall light a spark into yours the moment you visit them as well. A must visit if you love flowers. You won’t regret it.</p>
+								<span>Rad Rider</span>
 							</div>
-
-							<div class="covid-box">
-								<div class="covid-img">
-									<img src="<?php echo USER_IMAGES ?>fasafety.png">
-								</div>
-								<div class="covid-name">
-									<h4>Compulsory Mask & Gloves</h4>
-									<p>Always on mask & Gloves environment</p>
-								</div>
+							<div class="slider">
+								<p>I’ve ordered from And blooms at various occasions including planning my Diwali gifts to a lot of clients! Stunning arrangements, extremely customised quick service and fresh exotic flowers are their backbone! Love the staff and the approach and the passion towards bespoke flower gifting! Very niche and very exclusive!</p>
+								<span>Ankush Duggal</span>
 							</div>
 						</div>
+
 					</div>
 					<div class="col-md-6">
 						<div class="you-tube" >
@@ -157,6 +138,15 @@
 			$(document).ready(function() {
 
 			  	$('.card-ban').slick({
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					autoplay: true,
+					autoplaySpeed: 2000,
+					dots: false,
+					arrows: false,
+			  	});
+
+			  	$('.testimonial-slider').slick({
 					slidesToShow: 1,
 					slidesToScroll: 1,
 					autoplay: true,
