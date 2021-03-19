@@ -12,7 +12,7 @@
 					<div class="col-md-6">
 						
 						<!-- Testimonial slider -->
-						<h2 class="testimonial-slider-title">Testimonial</h2>
+						<h2 class="testimonial-slider-title">Testimonials</h2>
 						<div class="testimonial-slider">
 							<div class="slider">
 								<p>Shalini has been a great friend in my school years and I can vouch for her amazing sense of aesthetics.She brings beauty to whatever she does. Whether it’s the way she dresses, keeps her house or runs her business.She brings value and commitment to each of these spheres. Her efforts have translated into a blooming flower business which brings joy to so many lives! ♥️</p>
