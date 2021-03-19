@@ -415,7 +415,7 @@
                     </ul>
                 </div>
                 <div class="box-1">
-                    <h2>Contact is</h2>
+                    <h2>Contact us</h2>
                     <ul>
                         <li>Address : 36, Gali Number 2, Block 69B, Dori Walan, Karol Bagh, New Delhi, Delhi 110005, India</li>
                         <li>info@srisanwalimurat.com</li>
