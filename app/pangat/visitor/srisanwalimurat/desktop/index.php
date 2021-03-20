@@ -155,7 +155,7 @@
 						</div>
 						<div class="dtl-box">
 							<p>
-								Note: In Case of any issue, please call :  <a href="tel:+91-9810115828">9810115828</a>, <a href="tel:011-23670506">011-23670506</a>, <a href="tel:011-47200965">011-47200965</a>
+								Note: In Case of any issue, please call :  <a href="tel:+91-9821005828">9821005828</a>, <a href="tel:011-23670506">011-23670506</a>, <a href="tel:011-47200965">011-47200965</a>
 							</p>
 						</div>
 					</div>
