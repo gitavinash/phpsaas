@@ -1,24 +1,25 @@
 <?php
 	
-    $video_id=mysqli_real_escape_string($connection, base64_decode($_GET['id']));
+	$video_id=base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
     
-	if($videoDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."video, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='video' AND link_relation_id=video_id AND meta_relation_id=link_id AND video_id='{$video_id}' AND link_status!=301 AND link_type='video' LIMIT 1")) {
-		if(mysqli_num_rows($videoDetails)!=0) {
-			extract(mysqli_fetch_assoc($videoDetails));
-		} else { exit(); ?>
+	if($postDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."video, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='video' AND link_relation_id=video_id AND meta_relation_id=link_id AND video_id='{$video_id}' AND link_status!=301 AND link_type='video' AND link_site_id=".SITE_ID." LIMIT 1")) {
+		if(mysqli_num_rows($postDetails)!=0) {
+			extract(mysqli_fetch_assoc($postDetails));
+		} else {
+			?>
 			<script type="text/javascript">
 				alert('Invalid action found');
-				window.location.href='dashboard/video/?type=list&status=all';
+				window.location.href='dashboard/embed/?type=list&status=all';
 			</script>
 		<?php
 		}
 	}
 
 ?>
-<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $videoType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
+<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 <div class="form-box">
-	<form method="video" id="formData" enctype="multipart/form-data" >
+	<form method="POST" id="formData" enctype="multipart/form-data" >
 		<div class="left-box">
 			<div class="form-group">
 				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $video_title ?>" required="" >
@@ -58,7 +59,7 @@
 					</div>
 					<div class="form-group">
 						<label>Canonical URL</label>
-						<input type="text" name="canonical" class="form-control inside-shadow" value="<?php echo $meta_canonical; ?>" id="canonical" placeholder="Actual URL of the <?php echo $videoType ?>"  >
+						<input type="text" name="canonical" class="form-control inside-shadow" value="<?php echo $meta_canonical; ?>" id="canonical" placeholder="Actual URL of the <?php echo $postType ?>"  >
 					</div>
 					<div class="form-group">
 						<label>Allow search engines to show this video in search results?</label>
@@ -76,7 +77,7 @@
 					</div>
 					<div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
 						<span>Set facebook feature image</span>
-						<input type='file' id="fbImage" name='facebookImage' />
+						<input type='file' id="facebookImage" name='facebookImage' />
 					</div>
 					<div class="form-group">
 						<label>Facebook Title</label>
@@ -88,7 +89,7 @@
 					</div>
 				</div>
 				<div class="tw generalTab"  style="display: none;">
-					<div class="twitterPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+					<div class="twitterPreviewBox" style="display: <?php echo (($tw_img=='') ? 'none' : 'block' ) ?>;">
 						<input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
 						<div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
 						<p id="twitterChangeImage" class="changeImage" >Remove twitter feature image</p>
@@ -110,28 +111,26 @@
 		</div>
 		<div class="right-box">
 			<div class="action-box inside-shadow">
-				<input type="button" id="updatevideo" class="btn btn-green btn-block" value=" <?php echo (($video_status==1) ? 'Update ' : 'Publish ' ); ?>video">
+				<input type="button" id="updatePost" class="btn btn-green btn-block" value=" <?php echo (($video_status==1) ? 'Update ' : 'Publish ' ); ?>video">
 				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
-				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
-				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
-				<input type="hidden" name="type" value="draft" >
-				<input type="hidden" name='videoStatus' value='<?php echo $video_status ?>' >
-				<input type="hidden" name="videoType" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
-				<input type="hidden" name="video_id" value="<?php echo $video_id ?>" >
-				<input type="hidden" name="action" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>" >
+				<input type="hidden" name="action" value="update" >
+				<input type="hidden" name='postStatus' value='<?php echo $video_status ?>' >
+				<input type="hidden" name="id" value="<?php echo $video_id ?>" >
+				<input type="hidden" name="postType" value="<?php echo $video_type ?>" >
 				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live video</a>
 			</div>
 			<div class="form-group">
-				<h2>Fearure video</h2>
+				<h2>Featured</h2>
 				<div class="action-box inside-shadow" style="padding: 10px" >
-					<input type="checkbox" value="1" name='featurevideo' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature video
+					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature video
 				</div>
 			</div>
 			<h2>Tags</h2>
 			<?php
-				$tagvideoID=(($video_parent_id==0) ? $video_id : $video_parent_id );
+				$tagpostID=(($video_parent_id==0) ? $video_id : $video_parent_id );
 				
-				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagvideoID}' AND tag_site_id='".SITE_ID."' AND tag_type='video'")) {
+				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagpostID}' AND tag_site_id='".SITE_ID."' AND tag_type='video'")) {
 					if(mysqli_num_rows($tagList)!=0) {
 						while($tagsName=mysqli_fetch_assoc($tagList)) {
 							$tags[]=$tagsName['tag_title'];
@@ -151,7 +150,7 @@
 			</div>
 			<div class="tagList" style="display: none;"></div>
 			<h2>Feature Image</h2>
-			<div class="form-group featureImageUploadBox upload-btn style="display: <?php echo (($video_image!='') ? 'none' : 'block') ?>;">
+			<div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($video_image!='') ? 'none' : 'block') ?>;">
 				<span>Set Feature Image</span>
 				<input type="hidden" name="oldFeatureImage" value="<?php echo $video_image ?>">
 				<input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
@@ -159,7 +158,7 @@
 			</div>
 			<div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($video_image!='') ? 'block' : 'none') ?>;">
 				<img src="//<?php echo SITE_DOMAIN.$video_image ?>" id="featureImagePath" alt="">
-				<p id="changeImage" class="changeImage" >Remove feature image</p>
+				<p id="featureChangeImage" class="btn btn-red btn-sm" >Remove feature image</p>
 			</div>
 		</div>
 	</form>
