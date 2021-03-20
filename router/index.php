@@ -130,10 +130,6 @@
 			require_once 'category.php';
 			break;
 
-		// case 'video' :
-		// 	require_once 'video.php';
-		// 	break;
-
 		case 'feed' :
 			require_once 'feed.php';
 			break;

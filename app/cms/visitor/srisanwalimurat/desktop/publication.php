@@ -11,7 +11,7 @@
 
         <?php
         
-        if($bookList=mysqli_query($connection, "SELECT link_url, book_title, book_image FROM ".TABLE_PREFIX."book INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=book_id WHERE link_type='book' AND link_status=200 AND link_site_id=".SITE_ID)) {
+        if($bookList=mysqli_query($connection, "SELECT link_url, book_title, book_image FROM ".TABLE_PREFIX."book INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=book_id WHERE link_type='book' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_published DESC")) {
 
             if(mysqli_num_rows($bookList)!=0) {
 

@@ -11,7 +11,7 @@
 
         <?php
         
-        if($galleryList=mysqli_query($connection, "SELECT link_url, post_title, post_image FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id WHERE link_type='post' AND post_type='discourses' AND link_status=200 AND link_site_id=".SITE_ID)) {
+        if($galleryList=mysqli_query($connection, "SELECT link_url, post_title, post_image FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id WHERE link_type='post' AND post_type='discourses' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_published DESC")) {
 
             if(mysqli_num_rows($galleryList)!=0) {
 
