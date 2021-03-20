@@ -54,7 +54,7 @@
 
                                 $eventDate=date('Y-m-d', strtotime($eventDate));
 
-                                $addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."event(event_image, event_thumbnail, event_title, event_description, event_start_date, event_category, event_owner_id, event_status, event_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$eventDate}', '{$category}', '".USER_ID."', '1', 'event')");
+                                $addNewPost=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."event(event_site_id, event_image, event_thumbnail, event_title, event_description, event_start_date, event_category, event_owner_id, event_status, event_type) VALUES(".SITE_ID.", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$eventDate}', '{$category}', '".USER_ID."', '1', 'event')");
                                 $postID=mysqli_insert_id($connection);
 
                                 $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'event', '{$featurePost}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
@@ -109,7 +109,7 @@
 
                     } else {
 
-                        $msg='Please select event fearure image.';
+                        $msg='Please select event feature image.';
 
                     }
 

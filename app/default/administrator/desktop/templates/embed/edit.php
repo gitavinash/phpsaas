@@ -111,7 +111,7 @@
 		<div class="right-box">
 			<div class="action-box inside-shadow">
 				<input type="button" id="updatevideo" class="btn btn-green btn-block" value=" <?php echo (($video_status==1) ? 'Update ' : 'Publish ' ); ?>video">
-				<input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft">
+				<!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="draft" >
@@ -123,7 +123,7 @@
 			</div>
 			<div class="form-group">
 				<h2>Fearure video</h2>
-				<div class="action-box inside-shadow">
+				<div class="action-box inside-shadow" style="padding: 10px" >
 					<input type="checkbox" value="1" name='featurevideo' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature video
 				</div>
 			</div>

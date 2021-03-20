@@ -101,7 +101,7 @@
 											<div class="hover">
 												<a href="<?php echo $postType ?>.php?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category" ><i class="fas fa-pencil-alt"></i> Advanced Edit</a>
 												<a href="<?php echo $postType ?>.php?type=category&id=<?php echo base64_encode($category_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-												<a href="#" id="<?php echo base64_encode($category_id) ?>_category" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
+												<a href="#" id="<?php echo base64_encode($category_id) ?>_category_news" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 												<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 											</div>
 										</td>

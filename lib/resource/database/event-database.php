@@ -50,3 +50,9 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."event
     ADD INDEX event_start_date (event_start_date)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."event
+    ADD event_site_id BIGINT(20) NOT NULL AFTER event_parent_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."event
+    ADD INDEX event_site_id (event_site_id)");

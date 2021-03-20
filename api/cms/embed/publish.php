@@ -105,7 +105,7 @@
 
 						$status=200;
 						$msg=ucwords($postType).' is publish successfully';
-						$redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.base64_encode($postID);
+						$redirect='/dashboard/embed/?type=edit&editor=true&id='.base64_encode($postID);
 
 					} else {
 						
@@ -134,7 +134,7 @@
         $result = array(
             'status' => (isset($status)) ? $status : 'error',
             'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-            'redirect' => '/dashboard/embed.php?action=list&status=all',
+            'redirect' => ((isset($redirect)) ? $redirect : '#' ),
         );
 
         echo json_encode($result, TRUE);

@@ -1,7 +1,7 @@
 <h2>Add new <?php echo $postType ?></h2>
 
 <div class="form-box">
-	<form method="POST" id="formData" enctype="multipart/form-data" >
+	<form method="POST" id="formData" enctype="multipart/form-data" autocomplete="off" >
 		<div class="left-box">
 			<div class="form-group">
 				<input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title" autofocus required >

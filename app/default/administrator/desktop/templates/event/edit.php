@@ -18,7 +18,7 @@
 <h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $eventType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 <div class="form-box">
-	<form id="formData" enctype="multipart/form-data" >
+	<form id="formData" enctype="multipart/form-data" autocomplete="off" >
 		<div class="left-box">
 			<div class="form-group">
 				<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $event_title ?>" required="" >

@@ -37,8 +37,10 @@
 
                             } else {
 
+                                echo $deleteCategory.' && '.$deleteLink.' && '.$deleteMeta.' && '.$deleteTag;
                                 $msg='Something is wrong while deleting category';
                                 mysqli_query($connection, "ROLLBACK");
+                                exit();
 
                             }
 
