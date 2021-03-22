@@ -18,7 +18,7 @@
 	
 		<!-- Header -->
 		<header id="header">
-			<div id="top-header">
+			<!-- <div id="top-header">
 				<div class="container">
 					<div class="header-links">
 						<ul>
@@ -37,7 +37,7 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div> -->
 			<div id="center-header">
 				<div class="container">
 					<div class="header-logo">

@@ -11,7 +11,7 @@
             
                     /** Fetch data from database table  */
 
-                    if($postData=mysqli_query($connection, "SELECT media_id, media_url, media_title, profile_display_name, user_username, media_type FROM ".TABLE_PREFIX."media INNER JOIN ".TABLE_PREFIX."profile ON profile_id=media_owner_id INNER JOIN ".TABLE_PREFIX."user ON media_owner_id=user_id WHERE media_id='{$link_relation_id}'")) {
+                    if($postData=mysqli_query($connection, "SELECT media_id, media_url, media_title, profile_display_name, user_username, media_type FROM ".TABLE_PREFIX."media INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=media_owner_id INNER JOIN ".TABLE_PREFIX."user ON media_owner_id=user_id WHERE media_id='{$link_relation_id}'")) {
 
                         if(mysqli_num_rows($postData)!=0) {
 
