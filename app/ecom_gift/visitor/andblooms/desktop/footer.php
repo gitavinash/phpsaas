@@ -197,14 +197,36 @@
 					fade: true,
 					asNavFor: '.product-main-slider-nav'
 				});
-				$('.product-main-slider-nav').slick({
-					slidesToShow: 5,
-					slidesToScroll: 2,
-					asNavFor: '.product-main-slider',
-					dots: false,
-					arrows: false,
-					focusOnSelect: true
-				});
+
+				<?php
+
+				if(SITE_VERSION=='desktop') { ?>
+
+					$('.product-main-slider-nav').slick({
+						slidesToShow: 5,
+						slidesToScroll: 2,
+						asNavFor: '.product-main-slider',
+						dots: false,
+						arrows: false,
+						focusOnSelect: true
+					});
+
+				<?php
+				} else { ?>
+
+					$('.product-main-slider-nav').slick({
+						slidesToShow: 3,
+						slidesToScroll: 2,
+						asNavFor: '.product-main-slider',
+						dots: false,
+						arrows: false,
+						focusOnSelect: true
+					});
+
+				<?php
+				}
+
+				?>
 
 			});
 		</script>

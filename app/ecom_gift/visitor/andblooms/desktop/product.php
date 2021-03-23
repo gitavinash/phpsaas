@@ -39,7 +39,7 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="galery-carousel">
+				<div class="gallery-carousel">
 
 					<div class="lg-carousel-box" id="sticky">
 
