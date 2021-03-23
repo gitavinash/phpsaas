@@ -198,7 +198,7 @@
 					asNavFor: '.product-main-slider-nav'
 				});
 				$('.product-main-slider-nav').slick({
-					slidesToShow: 4,
+					slidesToShow: 5,
 					slidesToScroll: 2,
 					asNavFor: '.product-main-slider',
 					dots: false,

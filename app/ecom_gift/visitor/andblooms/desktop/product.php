@@ -50,12 +50,12 @@
 							
 							if($galleryImages!='') {
 
-								echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
+								echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
-									echo "<div class='slide'><div class='img'><img src='{$path}' alt='{$name}'></div></div>";
+									echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
 
 								}
 

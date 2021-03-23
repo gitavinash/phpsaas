@@ -10,7 +10,7 @@
 			
 				// Feature post slider
 
-				if($featurePostSlider=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id WHERE link_type='post' AND link_is_featured=1 AND link_status=200 ORDER BY link_published DESC LIMIT 0, 5")) {
+				if($featurePostSlider=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id WHERE link_type='post' AND link_is_featured=1 AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, 5")) {
 
 					if(mysqli_num_rows($featurePostSlider)!=0) {
 
@@ -60,7 +60,7 @@
 
 									// Recent post
 
-									if($recentPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id WHERE link_type='post' AND link_status=200 ORDER BY link_published DESC LIMIT 0, 4")) {
+									if($recentPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id WHERE link_type='post' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, 4")) {
 
 										if(mysqli_num_rows($recentPost)!=0) {
 
@@ -107,14 +107,14 @@
 						<div class="row">
 							<div class="col-md-6 col-sm-6">
 								<div class="section-title">
-									<h2 class="title">News</h2>
+									<h2 class="title">Sports</h2>
 								</div>
 
 								<?php
 									
 									// News category post
 
-									if($categoryPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND meta_type='post' ORDER BY link_published DESC LIMIT 0, 3")) {
+									if($categoryPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND link_site_id=".SITE_ID." AND post_category='54' AND meta_type='post' ORDER BY link_published DESC LIMIT 0, 3")) {
 
 										if(mysqli_num_rows($categoryPost)!=0) {
 
@@ -173,13 +173,13 @@
 							</div>
 							<div class="col-md-6 col-sm-6">
 								<div class="section-title">
-									<h2 class="title">Sport</h2>
+									<h2 class="title">Bollywood &amp; TV</h2>
 								</div>
 								<?php
 									
 									// News category post
 
-									if($categoryPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND meta_type='post' ORDER BY link_published DESC LIMIT 0, 3")) {
+									if($categoryPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND link_site_id=".SITE_ID." AND post_category=52 AND meta_type='post' ORDER BY link_published DESC LIMIT 0, 3")) {
 
 										if(mysqli_num_rows($categoryPost)!=0) {
 
@@ -239,16 +239,19 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="section-title">
-									<h2 class="title">News</h2>
+									<h2 class="title">Spiritual</h2>
 								</div>
 							</div>
 							<?php
 									
 								// News category post
 
-								if($categoryPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND meta_type='post' ORDER BY link_published DESC LIMIT 0, 5")) {
+								echo "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND meta_type='post' AND link_site_id=".SITE_ID." AND post_category=73 ORDER BY link_published DESC LIMIT 0, 5";
+								exit();
 
-									if(mysqli_num_rows($categoryPost)!=0) {
+								if($categoryPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, meta_description, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND meta_type='post' AND link_site_id=".SITE_ID." AND post_category=73 ORDER BY link_published DESC LIMIT 0, 5")) {
+
+									if($categoryPostSize=mysqli_num_rows($categoryPost)!=0) {
 
 										$i=0;
 
@@ -306,7 +309,7 @@
 											</div>
 											<?php
 
-												if($i==4) {
+												if($i==($categoryPostSize-1)) {
 													echo '</div>';
 												}
 												
