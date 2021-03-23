@@ -21,93 +21,58 @@
 									<li><a href="https://www.youtube.com/channel/UC507HwLRcMaAqUNFTzSEK3w?sub_confirmation=1" class="youtube" target="black"><i class="fab fa-youtube"></i></a></li>
 								</ul>
 							</div>
-							<div class="footer-widget subscribe-widget">
-								<div class="widget-title">
-									<h2 class="title">Subscribe to Newslatter</h2>
-								</div>
-								<form>
-									<input class="input" type="email" placeholder="Enter Your Email">
-									<button class="input-btn">Subscribe</button>
-								</form>
-							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="footer-widget">
 								<div class="widget-title">
 									<h2 class="title">Featured Posts</h2>
 								</div>
-								<article class="article widget-article">
-									<div class="article-img">
-										<a href="#">
-											<img src="<?php echo USER_IMAGES ?>img-widget-1.jpg" alt="">
-										</a>
-									</div>
-									<div class="article-body">
-										<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
-								<article class="article widget-article">
-									<div class="article-img">
-										<a href="#">
-											<img src="<?php echo USER_IMAGES ?>img-widget-2.jpg" alt="">
-										</a>
-									</div>
-									<div class="article-body">
-										<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
-								<article class="article widget-article">
-									<div class="article-img">
-										<a href="#">
-											<img src="<?php echo USER_IMAGES ?>img-widget-3.jpg" alt="">
-										</a>
-									</div>
-									<div class="article-body">
-										<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
+								<?php
+									
+									// Feature post slider
+
+									if($featurePostSlider=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_category WHERE link_type='post' AND link_is_featured=1 AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_published DESC LIMIT 0, 3")) {
+
+										if(mysqli_num_rows($featurePostSlider)!=0) {
+
+											while($featurePostSliderData=mysqli_fetch_assoc($featurePostSlider)) {
+
+												extract($featurePostSliderData); ?>
+
+													<article class="article widget-article">
+														<div class="article-img">
+															<a href="<?php echo $link_url ?>">
+																<img src="<?php echo $post_image ?>" alt="">
+															</a>
+														</div>
+														<div class="article-body">
+															<h4 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h4>
+															<ul class="article-meta">
+																<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
+															</ul>
+														</div>
+													</article>
+
+												<?php
+
+											}
+
+										}
+
+									}
+
+								?>
+								
 							</div>
 						</div>
 						<div class="col-md-4">
-							<div class="footer-widget galery-widget">
-								<div class="widget-title">
-									<h2 class="title">Flickr Photos</h2>
-								</div>
-								<ul>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-3.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-4.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-5.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-6.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-7.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-8.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-9.jpg" alt=""></a></li>
-									<li><a href="#"><img src="<?php echo USER_IMAGES ?>img-widget-10.jpg" alt=""></a></li>
-								</ul>
-							</div>
 							<div class="footer-widget tweets-widget">
 								<div class="widget-title">
-									<h2 class="title">Recent Tweets</h2>
+									<h2 class="title">Facebook page</h2>
 								</div>
-								<ul>
-									<li class="tweet">
-										<i class="fa fa-twitter"></i>
-										<div class="tweet-body">
-											<p><a href="#">@magnews</a> Populo tritani laboramus ex mei, no eum iuvaret ceteros euripidis <a href="#">https://t.co/DwsTbsmxTP</a></p>
-										</div>
-									</li>
-								</ul>
+								<div id="fb-root"></div>
+								<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v10.0&appId=1712739128907798&autoLogAppEvents=1" nonce="UT7QLpdp"></script>
+								<div class="fb-page" data-href="https://www.facebook.com/helloajnabi" data-tabs="timeline" data-width="" data-height="400" data-small-header="false" data-adapt-container-width="false" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/helloajnabi" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/helloajnabi">Hello Ajnabi</a></blockquote></div>
 							</div>
 						</div>
 					</div>
@@ -118,15 +83,15 @@
 					<div class="row">
 						<div class="col-md-6 col-md-push-6">
 							<ul class="footer-links">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Advertisement</a></li>
-								<li><a href="#">Privacy</a></li>
+								<li><a href="<?php echo $link_url ?>">About us</a></li>
+								<li><a href="<?php echo $link_url ?>">Contact</a></li>
+								<li><a href="<?php echo $link_url ?>">Advertisement</a></li>
+								<li><a href="<?php echo $link_url ?>">Privacy</a></li>
 							</ul>
 						</div>
 						<div class="col-md-6 col-md-pull-6">
 							<div class="footer-copyright">
-								<span>All rights reserved | This template is made with </span>
+								<span>All rights reserved | Developed by <a href="https://itssoftworld.com">ITS Soft World</a> </span>
 							</div>
 						</div>
 					</div>
