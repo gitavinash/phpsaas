@@ -83,10 +83,10 @@
 					<div class="row">
 						<div class="col-md-6 col-md-push-6">
 							<ul class="footer-links">
-								<li><a href="<?php echo $link_url ?>">About us</a></li>
-								<li><a href="<?php echo $link_url ?>">Contact</a></li>
-								<li><a href="<?php echo $link_url ?>">Advertisement</a></li>
-								<li><a href="<?php echo $link_url ?>">Privacy</a></li>
+								<li><a href="/about-us/">About us</a></li>
+								<li><a href="/contact-us/">Contact</a></li>
+								<li><a href="/advertisment/">Advertisement</a></li>
+								<li><a href="/privacy-policy/">Privacy policy</a></li>
 							</ul>
 						</div>
 						<div class="col-md-6 col-md-pull-6">

@@ -67,11 +67,6 @@
 
 						}
 
-					} else {
-
-						echo mysqli_error($connection);
-						exit();
-
 					}
 
 				?>

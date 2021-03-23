@@ -41,7 +41,7 @@
 
 								for($i=0; $i<sizeof($tagName); $i++) {
 
-									echo "<li><a href='/tag/{$tagName[$i]}'>{$tagName[$i]}</a></li>";
+									echo "<li><a href='/tag/".str_replace(' ', '-', $tagName[$i])."'>{$tagName[$i]}</a></li>";
 
 								}
 
@@ -94,150 +94,46 @@
 								<h2 class="title">Most Read</h2>
 							</div>
 							
-							<!-- owl carousel 3 -->
-							<div id="owl-carousel-3" class="owl-carousel owl-theme center-owl-nav">
-								<!-- ARTICLE -->
-								<article class="article">
-									<div class="article-img">
-										<a href="#">
-											<img src="./img/img-md-3.jpg" alt="">
-										</a>
-										<ul class="article-info">
-											<li class="article-type"><i class="fa fa-file-text"></i></li>
-										</ul>
-									</div>
-									<div class="article-body">
-										<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
-								<!-- /ARTICLE -->
-								
-								<!-- ARTICLE -->
-								<article class="article">
-									<div class="article-img">
-										<a href="#">
-											<img src="./img/img-md-4.jpg" alt="">
-										</a>
-										<ul class="article-info">
-											<li class="article-type"><i class="fa fa-file-text"></i></li>
-										</ul>
-									</div>
-									<div class="article-body">
-										<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
-								<!-- /ARTICLE -->
-							</div>
-							<!-- /owl carousel 3 -->
-							
-							<!-- ARTICLE -->
-							<article class="article widget-article">
-								<div class="article-img">
-									<a href="#">
-										<img src="./img/img-widget-1.jpg" alt="">
-									</a>
-								</div>
-								<div class="article-body">
-									<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-									<ul class="article-meta">
-										<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-										<li><i class="fa fa-comments"></i> 33</li>
-									</ul>
-								</div>
-							</article>
-							<!-- /ARTICLE -->
-							
-							<!-- ARTICLE -->
-							<article class="article widget-article">
-								<div class="article-img">
-									<a href="#">
-										<img src="./img/img-widget-2.jpg" alt="">
-									</a>
-								</div>
-								<div class="article-body">
-									<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-									<ul class="article-meta">
-										<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-										<li><i class="fa fa-comments"></i> 33</li>
-									</ul>
-								</div>
-							</article>
-							<!-- /ARTICLE -->
-							
-							<!-- ARTICLE -->
-							<article class="article widget-article">
-								<div class="article-img">
-									<a href="#">
-										<img src="./img/img-widget-3.jpg" alt="">
-									</a>
-								</div>
-								<div class="article-body">
-									<h4 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h4>
-									<ul class="article-meta">
-										<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-										<li><i class="fa fa-comments"></i> 33</li>
-									</ul>
-								</div>
-							</article>
-							<!-- /ARTICLE -->
-						</div>
-						<!-- /article widget -->
-						
-						<!-- article widget -->
-						<div class="widget">
-							<div class="widget-title">
-								<h2 class="title">Featured Posts</h2>
+							<?php
+
+								// Recent post
+
+								if($recentPost=mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."category ON category_id=post_category WHERE link_type='post' AND link_status=200 AND link_site_id=".SITE_ID." AND post_category=58 ORDER BY link_published DESC LIMIT 0, 10")) {
+
+									if(mysqli_num_rows($recentPost)!=0) {
+
+										$i=0;
+
+										while($recentPostData=mysqli_fetch_assoc($recentPost)) {
+											
+											extract($recentPostData); ?>
+
+											<!-- ARTICLE -->
+											<article class="article">
+												<div class="article-img">
+													<a href="#">
+														<img src="<?php echo $post_image ?>" alt="">
+													</a>
+												</div>
+												<div class="article-body">
+													<h4 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h4>
+													<ul class="article-meta">
+														<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
+													</ul>
+												</div>
+											</article>
+
+											<?php
+
+										}
+
+									}
+									
+								}
+
+								?>
 							</div>
 							
-							<!-- owl carousel 4 -->
-							<div id="owl-carousel-4" class="owl-carousel owl-theme">
-								<!-- ARTICLE -->
-								<article class="article thumb-article">
-									<div class="article-img">
-										<img src="./img/img-thumb-1.jpg" alt="">
-									</div>
-									<div class="article-body">
-										<ul class="article-info">
-											<li class="article-category"><a href="#">News</a></li>
-											<li class="article-type"><i class="fa fa-video-camera"></i></li>
-										</ul>
-										<h3 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h3>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
-								<!-- /ARTICLE -->
-							
-								<!-- ARTICLE -->
-								<article class="article thumb-article">
-									<div class="article-img">
-										<img src="./img/img-thumb-2.jpg" alt="">
-									</div>
-									<div class="article-body">
-										<ul class="article-info">
-											<li class="article-category"><a href="#">News</a></li>
-											<li class="article-type"><i class="fa fa-video-camera"></i></li>
-										</ul>
-										<h3 class="article-title"><a href="#">Duis urbanitas eam in, tempor consequat.</a></h3>
-										<ul class="article-meta">
-											<li><i class="fa fa-clock-o"></i> January 31, 2017</li>
-											<li><i class="fa fa-comments"></i> 33</li>
-										</ul>
-									</div>
-								</article>
-								<!-- /ARTICLE -->
-							</div>
-							<!-- /owl carousel 4 -->
 						</div>
 						<!-- /article widget -->
 					</div>

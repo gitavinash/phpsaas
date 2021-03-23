@@ -32,7 +32,7 @@
 
 						$resultTags=implode(' OR link_relation_id=', $tagId);
 
-						?>
+					?>
 							
 					</div>
 				</div>

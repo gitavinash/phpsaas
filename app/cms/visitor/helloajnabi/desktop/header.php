@@ -10,6 +10,15 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>owlcarousel2/owlcarousel.min.css" />
 		<link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css"/>
+		<?php
+
+		if(isset($link_type)) {
+
+			echo (($link_type=='page' || $link_type=='category' || $link_type=='tag') ? "<link rel='stylesheet' href='".USER_STYLESHEET."inner-page.min.css'/>" : '');
+
+		}
+
+		?>
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<!-- <link type="text/css" rel="stylesheet" href="<?php echo USER_STYLESHEET ?>inner-page.css"/> -->
 

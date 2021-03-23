@@ -1016,7 +1016,13 @@ ol {
 }
 
 .categories__post__item {
+	float: left;
 	margin-bottom: 45px;
+	width: 50%;
+	max-height: 500px;
+	overflow: hidden;
+	padding: 1%;
+	box-sizing: border-box;
 }
 
 .categories__post__item.categories__post__item--large {
@@ -3112,6 +3118,16 @@ ol {
 	.footer__instagram__item {
 		height: 180px;
 	}
+
+
+.categories__post__item {
+	float: left;
+	margin-bottom: 45px;
+	width: 100%;
+	padding: 1%;
+	box-sizing: border-box;
+}
+
 }
 
 /* Wide Mobile = 480px */
