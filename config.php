@@ -58,6 +58,8 @@
 		define('ACTIVE_URL', ($_SERVER['REQUEST_URI'])); // echo complete url show on the url bar
 
 	}
+
+	define('ACTIVE_SITE_URL', SITE_URL.ACTIVE_URL);
 	define('ACTIVE_URL_NON_QUERY', str_replace('?'.QUERY_URL, '', ACTIVE_URL));
 	define('BASE_URL', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?'))); // return only the actual url and remove query string
 

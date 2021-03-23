@@ -118,7 +118,22 @@
 
 								<h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg"> <span><?php echo $inventory_price ?></span></h2>
 								<h2 class="with-ofer-price"><span><?php echo $inventory_mrp ?></span></h2>
-								<h3 class="remain-days">(<?php echo round((1 - $inventory_price / $inventory_mrp) * 100, 0); ?>% Off)</h3>
+
+								<?php
+
+								if($inventory_mrp!='') {
+
+									if($inventory_mrp!=$inventory_price) {
+
+										$discountPersantage=round((1 - $inventory_price / $inventory_mrp) * 100, 0);
+
+										echo "<h3 class='remain-days'>({$discountPersantage}% OFF)</h3>";
+
+									}
+
+								}
+
+								?>
 
 							<?php
 							}

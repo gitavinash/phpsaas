@@ -20,7 +20,7 @@
 
 			/* Search url in link table  */
 
-			if($checkUrl=mysqli_query($connection, "SELECT link_id, link_relation_id, link_status, link_type, link_is_featured, link_index, link_creation, link_published, link_modified FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+			if($checkUrl=mysqli_query($connection, "SELECT link_id, link_url, link_relation_id, link_status, link_type, link_is_featured, link_index, link_creation, link_published, link_modified FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
 
 				if(mysqli_num_rows($checkUrl)!=0) {
 
