@@ -126,20 +126,22 @@
 												
 												if($i==0) { ?>
 
-													<article class="article">
-														<div class="article-img">
-															<a href="<?php echo $link_url ?>">
-															<img src="<?php echo $post_image ?>" alt="">
-															</a>
-														</div>
-														<div class="article-body">
-															<h3 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h3>
-															<ul class="article-meta">
-																<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
-															</ul>
-															<p><?php echo $meta_description ?></p>
-														</div>
-													</article>
+													<div class="titlealign">
+														<article class="article">
+															<div class="article-img">
+																<a href="<?php echo $link_url ?>">
+																<img src="<?php echo $post_image ?>" alt="">
+																</a>
+															</div>
+															<div class="article-body">
+																<h3 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h3>
+																<ul class="article-meta">
+																	<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
+																</ul>
+																<p><?php echo $meta_description ?></p>
+															</div>
+														</article>
+													</div>
 
 												<?php
 												} else { ?>
@@ -191,20 +193,22 @@
 												
 												if($i==0) { ?>
 
-													<article class="article">
-														<div class="article-img">
-															<a href="<?php echo $link_url ?>">
-															<img src="<?php echo $post_image ?>" alt="">
-															</a>
-														</div>
-														<div class="article-body">
-															<h3 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h3>
-															<ul class="article-meta">
-																<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
-															</ul>
-															<p><?php echo $meta_description ?></p>
-														</div>
-													</article>
+													<div class="titlealign">
+														<article class="article">
+															<div class="article-img">
+																<a href="<?php echo $link_url ?>">
+																<img src="<?php echo $post_image ?>" alt="">
+																</a>
+															</div>
+															<div class="article-body">
+																<h3 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h3>
+																<ul class="article-meta">
+																	<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
+																</ul>
+																<p><?php echo $meta_description ?></p>
+															</div>
+														</article>
+													</div>
 
 												<?php
 												} else { ?>

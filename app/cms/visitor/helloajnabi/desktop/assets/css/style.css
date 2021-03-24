@@ -280,9 +280,18 @@ textarea.input {
 	 
 .article1 { width:300px !important;}
 	 
-	 
----------------------------*/
+.titlealign .article .article-title {
+	font-weight:700;
+	height:70px !important;
+	float:left;
+	overflow:hidden;
 
+}
+.titlealign .article-body  p {
+	display:none !important;
+
+}
+	 
 @media only screen and (max-width: 1201px) {
 	#header #center-header .header-logo , #header #center-header .header-ads {
 		float:none;
