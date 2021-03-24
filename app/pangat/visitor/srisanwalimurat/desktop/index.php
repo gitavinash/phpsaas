@@ -41,7 +41,7 @@
                 <li class="logo"><h1><a href="https://srisanwalimurat.com/">Sri Sanwali Murati</a></h1></li>
                 <li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
                 <li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
-                <li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
+                <li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff" >Request For Pangat</a></li>
             </ul>
             <div class="mobile-menu">
                 <h1><a href="">Sri Sanwali Murati</a></h1>
@@ -54,7 +54,7 @@
 						<li><a href="https://srisanwalimurat.com/events/">Events</a></li>
 						<li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
 						<li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
-						<li><a href="https://pangat.srisanwalimurat.com/<?php echo SITE_DOMAIN ?>" style="color: #fff" >Request For Pangat</a></li>
+						<li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff" >Request For Pangat</a></li>
                     </ul>
                 </div>
             </div>
