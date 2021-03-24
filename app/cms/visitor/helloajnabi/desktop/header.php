@@ -64,15 +64,15 @@
 						<ul class="main-nav nav navbar-nav">
 							<li class="active"><a href="#">Home</a></li>
 							<li><a href="">Bollywood & TV</a></li>
-							<li><a href="http://hello.local/category/sports/">Sports</a></li>
-							<li><a href="http://hello.local/category/breaking-news/">Breaking news</a></li>
-							<li><a href="http://hello.local/category/interesting/">Intersting</a></li>
-							<li><a href="http://hello.local/category/food/">Food</a></li>
-							<li><a href="http://hello.local/category/astrology/">Astrology</a></li>
-							<li><a href="http://hello.local/category/politics/">Politics</a></li>
-							<li><a href="http://hello.local/category/spiritual/">Spiritual</a></li>
+							<li><a href="/category/sports/">Sports</a></li>
+							<li><a href="/category/breaking-news/">Breaking news</a></li>
+							<li><a href="/category/interesting/">Intersting</a></li>
+							<li><a href="/category/food/">Food</a></li>
+							<li><a href="/category/astrology/">Astrology</a></li>
+							<li><a href="/category/politics/">Politics</a></li>
+							<li><a href="/category/spiritual/">Spiritual</a></li>
 							<li><a href="/category/viral/">Viral</a></li>
-							<li><a href="http://hello.local/category/stories/">Stories</a></li>
+							<li><a href="/category/stories/">Stories</a></li>
 						</ul>
 					</nav>
 					<div class="button-nav">
