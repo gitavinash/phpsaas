@@ -67,6 +67,9 @@
                 $('.toggle').click(function() {
                     $('#target').toggle('slow');
                 });
+                $('.pop-up-close').on('click', function() {
+                    $('.live-pop-up').hide();
+                });
             });
         </script>
     </body>

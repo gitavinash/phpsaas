@@ -39,13 +39,21 @@
             <div class="feature-video">
                 <?php
                 
-                    if($checkVideo=mysqli_query($connection, "SELECT link_url, video_title, video_description, video_type FROM ".TABLE_PREFIX."video INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=video_id WHERE video_status=1 AND link_type='video' ORDER BY link_published DESC LIMIT 1")) {
+                    if($checkVideo=mysqli_query($connection, "SELECT link_url, video_title, video_description, video_type, link_published FROM ".TABLE_PREFIX."video INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=video_id WHERE video_status=1 AND link_type='video' ORDER BY link_published DESC LIMIT 1")) {
 
                         if(mysqli_num_rows($checkVideo)!=0) {
 
                             extract(mysqli_fetch_assoc($checkVideo));
 
                             echo '<h2>'.$video_title.'</h2><br />'.$video_description;
+
+                            if($video_type=='live' && (date('d-m-Y', strtotime($link_published))==date('d-m-Y'))) {
+
+                                // Show pop up here
+
+                                echo "<div class='live-pop-up'><div class='pop-up-close'>x</div><div class='pop-up-video'>{$video_description}</div></div>";
+
+                            }
 
                         } else {
 

@@ -242,8 +242,8 @@ main {
 
 .main-right-box .main-right-box-left-section .feature-video iframe {
 	float: left;
-	width: 100% !important;
-	height: 230px !important
+	width: 100%;
+	height: 230px
 }
 
 .main-right-box .main-right-box-right-section {
@@ -292,6 +292,45 @@ main {
 	padding: 20px 0;
 	letter-spacing: 1px;
 	box-sizing: border-box
+}
+
+.live-pop-up {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+}
+
+.pop-up-close {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    color: #fff;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    font-size: 28px;
+    line-height: 43px;
+	background: #000;
+}
+
+.pop-up-video {
+	float: left;
+	width: 100%;
+	height: auto;
+	box-sizing: border-box;
+	padding: 5%;
+}
+
+.pop-up-video iframe {
+	float: left;
+	width: 100% !important;
+	height: 600px !important;
 }
 
 .bhagwat-geeta-left-box {
@@ -386,7 +425,8 @@ main {
 	width: 100%;
 	background: rgba(0, 0, 0, .7);
 	color: #fff;
-	margin-top: -56px
+	margin-top: -150px;
+	height: 150px;
 }
 
 .event-slide .event-box .event-title h3 {
@@ -1629,6 +1669,18 @@ screen and (max-height:300px) {
 	.main-right-box .main-right-box-left-section .feature-video iframe {
 		height: 200px !important;
 	}
+
+	.pop-up-video {
+		padding-top: 40%;
+		box-sizing: border-box;
+	}
+
+	.pop-up-video iframe {
+		float: left;
+		width: 100% !important;
+		height: 300px !important;
+	}
+
 	.gallery{
 		width: 100%;
 		float: left;
