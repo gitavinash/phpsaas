@@ -16,6 +16,105 @@
 				<textarea name="description" class="editor inside-shadow" ></textarea>
 			</div>
 
+			<!-- Product description and other things -->
+
+			<section style="margin-bottom:20px" >
+				<h3>Product Details</h3>
+				<ul class='tabs'>
+					<li id="productGeneral" class='active' >General</li>
+					<li id="productInventory" >Inventory</li>
+					<li id="productShipping" >Shipping</li>
+					<li id="productGallery" >Gallery</li>
+					<li id="productAdditionalDetails" >Additional Details</li>
+				</ul>
+				<div class="productGeneral generalTab">
+					<div class="form-group">
+						<label>Product short description / Highlights</label>
+						<textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights" ></textarea>
+					</div>
+				</div>
+				<div class="productInventory generalTab" style="display: none;">
+					
+					<div class="box-2">
+						<input type="checkbox" name="in_stock" value=1 checked > In Stock
+					</div>
+					<div class="box-2">
+						<input type="checkbox" name="backorder" value=1 checked > Allowed Backorders (if product is out of stock )
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Sale price (₹)</label>
+							<input type="number" class="form-control inside-shadow" name="salePrice" placeholder="Sale price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Regular price (₹)</label>
+							<input type="number" class="form-control inside-shadow" name="mrp" placeholder="Regular price" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>SKU</label>
+							<input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Stock Alert</label>
+							<input type="text" class="form-control inside-shadow" name="stock_warning" placeholder="Stock Alert" >
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Calculate tax</label>
+							<select name="taxStatus" class="form-control inside-shadow" >
+								<option value="0">No</option>
+								<option value="1">Yes</option>
+							</select>
+						</div>
+					</div>
+					<div class="box-2">
+						<div class="form-group">
+							<label>Tax rate ( in % )</label>
+							<input type="number" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow" >
+						</div>
+					</div>
+				</div>
+				<div class="productShipping generalTab" style="display: none;">
+					<div class="box-1">
+						<div class="form-group">
+							<label>Weight (kg)</label>
+							<input type="text" class="form-control inside-shadow" name="weight" placeholder="Weight" >
+						</div>
+					</div>
+					<label>Dimensions (cm)</label>
+					<div class="form-group">
+						<div class="box-3">
+							<label>Lenght</label>
+							<input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght" >
+						</div>
+						<div class="box-3">
+							<label>Width</label>
+							<input type="text" class="form-control inside-shadow" name="width" placeholder="Width" >
+						</div>
+						<div class="box-3">
+							<label>Height</label>
+							<input type="text" class="form-control inside-shadow" name="height" placeholder="Height" >
+						</div>
+					</div>
+				</div>
+				<div class="productGallery generalTab" style="display: none;">
+
+					<div class="input-field">
+						<div class="input-images" style="padding-top: .5rem;"></div>
+					</div>
+
+				</div>
+				<div class="productAdditionalDetails generalTab" style="display: none;">
+				</div>
+			</section>
+
 			<!-- SEO & social media marketing -->
 
 			<section>

@@ -104,7 +104,7 @@
 
 <section>
     <div class="about-us-left-box">
-        <img src="<?php echo USER_IMAGES ?>murat.jpg" alt="">
+        <img src="<?php echo USER_IMAGES ?>mahanubhav-panth.jpg" alt="">
     </div>
     <div class="about-us-right-box">
         <h2>Mahanubhav Panth: An Introduction</h2>
@@ -128,7 +128,7 @@
 
 <section>
     <div class="events">
-        <h2>Recent Events</h2>
+        <!-- <h2>Recent Events</h2> -->
         <div class="event-slider">
             
             <?php
