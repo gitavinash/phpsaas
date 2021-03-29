@@ -1,7 +1,7 @@
 <?php
 
 	if(!isset($_COOKIE['user_data'])) {
-		
+
 		header("Location: /logout/");
 		exit();
 
@@ -32,7 +32,7 @@
 
 					if(!isset($_COOKIE['site_app'])) {
 
-						setcookie('site_app', base64_encode($site_app), time()+30*24*60*60, '/');
+						setcookie('site_app', base64_encode($site_app), time()+30*24*60*60, '/', SITE_DOMAIN);
 						header("Location: /login/");
 						exit();
 
@@ -96,7 +96,7 @@
 
 						/** Set login is valid */
 
-						setcookie('isLogin', 1, time()+30*24*60*60, '/');
+						setcookie('isLogin', 1, time()+30*24*60*60, '/', MAIN_DOMAIN);
 					}
 
 				}
