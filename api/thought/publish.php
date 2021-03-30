@@ -92,9 +92,9 @@
                                 mysqli_query($connection, "COMMIT");
     
                             } else {
-    
+
+                                echo $addNewPost.' && '.$addNewLink.' && '.$addNewMeta.' && '.$addNewTags;
                                 $msg='Something is wrong while adding new post';
-    
                                 mysqli_query($connection, "ROLLBACK");
     
                             }

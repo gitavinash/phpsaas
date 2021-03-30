@@ -8,13 +8,13 @@
         <h2>Thought of The Day</h2>
         <?php
         
-            if($thoughtoOfTheDay=mysqli_query($connection, "SELECT event_description FROM ".TABLE_PREFIX."event INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=event_id WHERE event_type='thought' AND link_type='event' AND link_status=200 AND DATE(link_published) = CURDATE() AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 1")) {
+            if($thoughtoOfTheDay=mysqli_query($connection, "SELECT post_description FROM ".TABLE_PREFIX."post INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=post_id WHERE post_type='thought' AND link_type='post' AND link_status=200 AND DATE(link_published) = CURDATE() AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 1")) {
 
                 if(mysqli_num_rows($thoughtoOfTheDay)!=0) {
 
                     extract(mysqli_fetch_assoc($thoughtoOfTheDay));
 
-                    echo "<p>{$event_description}</p>";
+                    echo "<p>{$post_description}</p>";
 
                 } else {
 
