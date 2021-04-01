@@ -69,7 +69,7 @@
 
             } else {
 
-                $msg=mysqli_error($connection);
+                $msg='Somthing is wrong while fetching category';
 
             }
 
