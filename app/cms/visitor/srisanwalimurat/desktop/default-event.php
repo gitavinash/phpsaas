@@ -7,7 +7,6 @@
 <section>
     <div class="storie-card">
         <div class="story-pg">
-            <span class="catg"><a href=""><?php echo $category_title ?></a></span>
             <h1><?php echo $event_title ?></h1>
             <hr class="rod">
             <span class="pub">By <?php echo $profile_display_name ?></span>
