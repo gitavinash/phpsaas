@@ -2,7 +2,7 @@
 
 	$id=base64_decode($id);
 
-	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND link_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
+	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND product_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($productDetails)!=0) {
 			
 			extract(mysqli_fetch_assoc($productDetails));

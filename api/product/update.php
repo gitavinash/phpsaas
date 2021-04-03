@@ -198,7 +198,7 @@
                         if($updateProduct && $addRedirect && $updateInventtory && $updateMeta && $updateTags && $updateProductMeta) {
 
                             $status=200;
-                            $msg='Product upload successfully';
+                            $msg='Product update successfully';
                             $redirect="/dashboard/product/?type=edit&editor=true&id=".base64_encode($id);
                             mysqli_query($connection, "COMMIT");
 

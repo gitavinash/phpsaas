@@ -39,9 +39,21 @@
 
                         } else {
 
-                            /** Display content in default template */
+                            // Use product type template file
 
-                            require_once USER_PATH.'product.php';
+                            $productTypeTemplate=USER_PATH.$product_type.'-product.php';
+
+                            if(file_exists($productTypeTemplate)) {
+
+                                require_once $productTypeTemplate;
+
+                            } else {
+
+                                /** Display content in default template */
+
+                                require_once USER_PATH.'product.php';
+
+                            }
 
                         }
 
