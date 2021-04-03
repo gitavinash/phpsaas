@@ -18,7 +18,8 @@ p,
 ul {
 	color: inherit;
 	padding: 0;
-	margin: 0 auto
+	margin: 0 auto;
+	text-decoration: none;
 }
 
 button.slick-prev.slick-arrow {
@@ -1118,7 +1119,6 @@ input.lft {
 }
 
 a.image-popup-vertical-fit {
-	cursor: -webkit-zoom-in;
 	display: block
 }
 
@@ -1229,29 +1229,6 @@ button.mfp-arrow {
 .mfp-ajax-holder .mfp-content,
 .mfp-inline-holder .mfp-content {
 	width: 100%;
-	cursor: auto
-}
-
-.mfp-ajax-cur {
-	cursor: progress
-}
-
-.mfp-zoom-out-cur,
-.mfp-zoom-out-cur .mfp-image-holder .mfp-close {
-	cursor: -moz-zoom-out;
-	cursor: -webkit-zoom-out;
-	cursor: zoom-out
-}
-
-.mfp-zoom {
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor: -moz-zoom-in;
-	cursor: zoom-in
-}
-
-.mfp-auto-cursor .mfp-content {
-	cursor: auto
 }
 
 .mfp-arrow,
@@ -1302,7 +1279,6 @@ button.mfp-arrow {
 button.mfp-arrow,
 button.mfp-close {
 	overflow: visible;
-	cursor: pointer;
 	background: 0 0;
 	border: 0;
 	-webkit-appearance: none;
@@ -1522,7 +1498,6 @@ img.mfp-img {
 	top: 100%;
 	left: 0;
 	width: 100%;
-	cursor: auto
 }
 
 .mfp-title {
@@ -1535,10 +1510,6 @@ img.mfp-img {
 
 .mfp-image-holder .mfp-content {
 	max-width: 100%
-}
-
-.mfp-gallery .mfp-image-holder .mfp-figure {
-	cursor: pointer
 }
 
 @media screen and (max-width:800px) and (orientation:landscape),
