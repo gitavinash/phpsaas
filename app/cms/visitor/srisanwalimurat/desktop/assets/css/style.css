@@ -938,6 +938,11 @@ footer {
 	box-sizing: border-box
 }
 
+.about-us p iframe {
+	width: 100% !important;
+	min-height: 600px;
+}
+
 p {
 	text-align: justify;
 	font-size: 16px;
@@ -1726,6 +1731,10 @@ screen and (max-height:300px) {
 	}
 	.event-slider {
 		height: auto
+	}
+	.about-us p iframe {
+		width: 40% !important;
+		height: auto !important;
 	}
 	.about-us-left-box {
 		width: 100%;
