@@ -14,7 +14,7 @@
 
                     extract(mysqli_fetch_assoc($thoughtoOfTheDay));
 
-                    echo "<p>{$post_description}</p>";
+                    echo "<p class='thought-quote' >{$post_description}</p>";
 
                 } else {
 
@@ -72,13 +72,13 @@
 
                 <?php
             
-                    if($newsArticles=mysqli_query($connection, "SELECT news_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id WHERE news_type='news' AND link_type='news' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($newsArticles=mysqli_query($connection, "SELECT news_title FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id WHERE news_type='news' AND link_type='news' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 5")) {
 
                         if(mysqli_num_rows($newsArticles)!=0) {
 
                             while($newdData=mysqli_fetch_assoc($newsArticles)) {
 
-                                echo "<div class='news-slide' ><p>{$newdData['news_description']}</p></div>";
+                                echo "<div class='news-slide' ><p>{$newdData['news_title']}</p></div>";
 
                             }
 
