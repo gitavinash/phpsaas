@@ -8,15 +8,15 @@
 		<base href="/dashboard/">
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="<?php echo SITE_ICON ?>">
-        <title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
-        <link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
-        <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="<?php echo SITE_ICON ?>">
+    <title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
+    <link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
 	</head>
 	<body>
 		
@@ -48,16 +48,18 @@
 						<a href="app.php?type=list"><i class="fas fa-box-open"></i> Apps</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="app.php?type=list"><i class="fas fa-list"></i>  All Apps</a></li>
+								<li><a href="app.php?type=list"><i class="fas fa-list"></i> All Apps</a></li>
+								<li><a href="app.php?type=add"><i class="fas fa-plus"></i> Add new app</a></li>
 								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
-								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i>  My Apps</a></li>
+								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i> My Apps</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="app.php?type=list"><i class="fas fa-list"></i>  All Apps</a></li>
+								<li><a href="app.php?type=list"><i class="fas fa-list"></i> All Apps</a></li>
+								<li><a href="app.php?type=add"><i class="fas fa-plus"></i> Add new app</a></li>
 								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
-								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i>  My Apps</a></li>
+								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i> My Apps</a></li>
 							</ul>
 						</div>
 					</li>
@@ -65,20 +67,20 @@
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="media.php?type=list"><i class="fas fa-list"></i>  All Media</a></li>
-								<li><a href="media.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
+								<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
+								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i>  Videos</a></li>
-								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i>  Documents</a></li>
+								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="media.php?type=list"><i class="fas fa-list"></i>  All Media</a></li>
-								<li><a href="media.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
+								<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
+								<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
 								<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i>  Videos</a></li>
-								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i>  Documents</a></li>
+								<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+								<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 							</ul>
 						</div>
 					</li>
@@ -86,14 +88,14 @@
 						<a href="client.php?type=list"><i class="fas fa-users"></i> Client</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="client.php?type=add"><i class="fas fa-plus"></i>  Add New Client</a></li>
-								<li><a href="client.php?type=list"><i class="fas fa-list"></i>  All Clients</a></li>
+								<li><a href="client.php?type=add"><i class="fas fa-plus"></i> Add New Client</a></li>
+								<li><a href="client.php?type=list"><i class="fas fa-list"></i> All Clients</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="client.php?type=add"><i class="fas fa-plus"></i>  Add New Client</a></li>
-								<li><a href="client.php?type=list"><i class="fas fa-list"></i>  All Clients</a></li>
+								<li><a href="client.php?type=add"><i class="fas fa-plus"></i> Add New Client</a></li>
+								<li><a href="client.php?type=list"><i class="fas fa-list"></i> All Clients</a></li>
 							</ul>
 						</div>
 					</li>
@@ -101,14 +103,14 @@
 						<a href="user.php?type=list"><i class="fas fa-users"></i> Users</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="user.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
-								<li><a href="user.php?type=list"><i class="fas fa-list"></i>  All Users</a></li>
+								<li><a href="user.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="user.php?type=list"><i class="fas fa-list"></i> All Users</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="user.php?type=add"><i class="fas fa-plus"></i>  Add New</a></li>
-								<li><a href="user.php?type=list"><i class="fas fa-list"></i>  All Users</a></li>
+								<li><a href="user.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+								<li><a href="user.php?type=list"><i class="fas fa-list"></i> All Users</a></li>
 							</ul>
 						</div>
 					</li>
@@ -116,14 +118,14 @@
 						<a href="analytics.php?type=report"><i class="fas fa-chart-line"></i> Analytics</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="analytics.php?type=realtime"><i class="fas fa-clock"></i>  Real Time</a></li>
-								<li><a href="analytics.php?type=source"><i class="fas fa-filter"></i>  Traffic Source</a></li>
+								<li><a href="analytics.php?type=realtime"><i class="fas fa-clock"></i> Real Time</a></li>
+								<li><a href="analytics.php?type=source"><i class="fas fa-filter"></i> Traffic Source</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="analytics.php?type=realtime"><i class="fas fa-clock"></i>  Real Time</a></li>
-								<li><a href="analytics.php?type=source"><i class="fas fa-filter"></i>  Traffic Source</a></li>
+								<li><a href="analytics.php?type=realtime"><i class="fas fa-clock"></i> Real Time</a></li>
+								<li><a href="analytics.php?type=source"><i class="fas fa-filter"></i> Traffic Source</a></li>
 							</ul>
 						</div>
 					</li>
@@ -131,14 +133,14 @@
 						<a href="webmaster.php?type=configure"><i class="fas fa-tools"></i> Webmaster</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="webmaster.php?type=configure"><i class="fas fa-wrench"></i>  Configure</a></li>
-								<li><a href="webmaster.php?type=sitemap"><i class="fas fa-sitemap"></i>  Submit Sitemap</a></li>
+								<li><a href="webmaster.php?type=configure"><i class="fas fa-wrench"></i> Configure</a></li>
+								<li><a href="webmaster.php?type=sitemap"><i class="fas fa-sitemap"></i> Submit Sitemap</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="webmaster.php?type=configure"><i class="fas fa-wrench"></i>  Configure</a></li>
-								<li><a href="webmaster.php?type=sitemap"><i class="fas fa-sitemap"></i>  Submit Sitemap</a></li>
+								<li><a href="webmaster.php?type=configure"><i class="fas fa-wrench"></i> Configure</a></li>
+								<li><a href="webmaster.php?type=sitemap"><i class="fas fa-sitemap"></i> Submit Sitemap</a></li>
 							</ul>
 						</div>
 					</li>
@@ -146,18 +148,18 @@
 						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i>  Menu</a></li>
-								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
-								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
-								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
+								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i>  Menu</a></li>
-								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i>  Configuration</a></li>
-								<li><a href="setting/?type=password"><i class="fas fa-key"></i>  Change Password</a></li>
-								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i>  Profile</a></li>
+								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
+								<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+								<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
 							</ul>
 						</div>
 					</li>
@@ -165,14 +167,14 @@
 						<a href="customize.php?type=theme"><i class="fas fa-paint-roller"></i> Customize</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
-								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
+								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i> Theme</a></li>
+								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i> Menu</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i>  Theme</a></li>
-								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i>  Menu</a></li>
+								<li><a href="customize.php?type=theme"><i class="fas fa-palette"></i> Theme</a></li>
+								<li><a href="customize.php?type=menu"><i class="fas fa-bars"></i> Menu</a></li>
 							</ul>
 						</div>
 					</li>

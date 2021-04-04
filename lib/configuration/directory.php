@@ -208,8 +208,8 @@
 
 	/** Site Logo and Icon */
 
-	define('SITE_ICON', SITE_URL.((isset($site_icon)) ? (($site_icon=='') ? IMG_LIBRARY.'favicon.png' : $site_icon ) : IMG_LIBRARY.'favicon.png' ));
-	define('SITE_LOGO', SITE_URL.((isset($site_logo)) ? (($site_logo=='') ? IMG_LIBRARY.'logo.png' : $site_logo )  : IMG_LIBRARY.'logo.png' ));
+	define('SITE_ICON', ((isset($site_icon)) ? (($site_icon=='') ? IMG_LIBRARY.'favicon.png' : $site_icon ) : IMG_LIBRARY.'favicon.png' ));
+	define('SITE_LOGO', ((isset($site_logo)) ? (($site_logo=='') ? IMG_LIBRARY.'logo.png' : $site_logo )  : IMG_LIBRARY.'logo.png' ));
 
 	/** Editor */
 
