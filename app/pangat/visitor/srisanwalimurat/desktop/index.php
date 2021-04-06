@@ -44,7 +44,7 @@
                 <li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff" >Request For Pangat</a></li>
             </ul>
             <div class="mobile-menu">
-                <h1><a href="">Sri Sanwali Murati</a></h1>
+                <h1><a href="http://srisanwalimurat.com/">Sri Sanwali Murati</a></h1>
                 <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
                 <div id="target">
                     <ul>
