@@ -35,6 +35,17 @@
 
 			}
 
+			if($_GET['type']=='list' || $_GET['type']=='manage') { ?>
+
+				<script type='text/javascript'>
+					$(document).ready( function () {
+						$('#table').DataTable();
+					});
+				</script>
+
+			<?php
+			}
+
 		?>
 
 	</body>
