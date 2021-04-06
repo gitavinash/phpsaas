@@ -12,7 +12,7 @@
 					<input type="text" id="url" class="form-control" name="url" >
 				</div>
 			</div>
-			<div class="form-group fullscreen-editor">
+			<div class="form-group fullscreen-editor" style="display:none !important" >
 				<textarea name="description" class="editor inside-shadow" ></textarea>
 			</div>
 

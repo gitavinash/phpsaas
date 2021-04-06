@@ -1,6 +1,6 @@
 <?php
 		
-    /* Update news */
+    /* Update news feed */
     
     require_once LOGIN_CHECK;
 
@@ -62,7 +62,7 @@
                 
                                     $addRedirect=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=301 WHERE link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
                 
-                                    /** Add new active url of the news */
+                                    /** Add new active url of the news feed */
                 
                                     $updateLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, '{$postType}', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), '{$featurePost}')");
                                     $linkID=mysqli_insert_id($connection);
@@ -71,7 +71,7 @@
                 
                                     $addRedirect=FALSE;
                                     $status='warning';
-                                    $msg="Please change news url. Because its already in used";
+                                    $msg="Please change news feed url. Because its already in used";
                 
                                 }
                 
@@ -93,7 +93,7 @@
                 
                         }
                 
-                        /** Update news table */
+                        /** Update news feed table */
                 
                         $updatePost=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_status='1' WHERE news_id='{$id}'");
                 
@@ -128,7 +128,7 @@
                             mysqli_query($connection, 'COMMIT');
                 
                             $status=200;
-                            $msg='News is update successfully';
+                            $msg='News feed is update successfully';
                             $redirect='/dashboard/'.$postType.'/?type=edit&editor=true&id='.base64_encode($id);
                 
                         } else {
@@ -155,7 +155,7 @@
 
         } else {
 
-            $msg='Please enter news title';
+            $msg='Please enter news feed title';
 
         }
 

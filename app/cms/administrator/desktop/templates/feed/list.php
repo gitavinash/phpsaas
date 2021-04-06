@@ -36,15 +36,15 @@
 	<tbody>
 		<?php
 
-				if($dataList=mysqli_query($connection, "SELECT news_id, news_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."news, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE news_owner_id='".USER_ID."' AND link_type='{$postType}' AND link_relation_id=news_id AND link_site_id='".SITE_ID."' AND category_id=news_category AND profile_user_id='".USER_ID."' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+				if($dataList=mysqli_query($connection, "SELECT news_id, news_title, category_title, link_url, link_status, link_creation, profile_display_name FROM ".TABLE_PREFIX."news, ".TABLE_PREFIX."link, ".TABLE_PREFIX."category, ".TABLE_PREFIX."profile WHERE news_owner_id='".USER_ID."' AND link_type='news' AND news_type='{$postType}' AND link_relation_id=news_id AND link_site_id='".SITE_ID."' AND category_id=news_category AND profile_user_id='".USER_ID."' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
 				if(mysqli_num_rows($dataList)!=0) {
 					while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
 						<tr>
 							<td>
-								<p><a href="news.php?type=edit&editor=true&id=<?php echo base64_encode($news_id); ?>" ><?php echo $news_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
+								<p><a href="feed.php?type=edit&editor=true&id=<?php echo base64_encode($news_id); ?>" ><?php echo $news_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a></p>
 								<div class="hover">
-									<a href="news.php?type=edit&editor=true&id=<?php echo base64_encode($news_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
-									<a href="#" id="<?php echo base64_encode($news_id); ?>_post" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
+									<a href="feed.php?type=edit&editor=true&id=<?php echo base64_encode($news_id); ?>" ><i class="fas fa-pencil-alt"></i> Edit</a>
+									<a href="#" id="<?php echo base64_encode($news_id); ?>_news" class="deleteBtn" ><i class="fas fa-trash"></i> Delete</a>
 									<a href="<?php echo $link_url; ?>" target='_blank' ><i class="fas fa-eye"></i> View</a>
 								</div>
 							</td>
