@@ -150,20 +150,20 @@
 									</ul>
 								</div>
 							</li>
-							<li <?php echo (($postType=='news') ? 'class="active"' : '' ) ?> >
-								<a href="news.php?type=list&status=all"><i class="fas fa-newspaper"></i> News</a>
+							<li <?php echo (($postType=='news_feed') ? 'class="active"' : '' ) ?> >
+								<a href="news_feed.php?type=list&status=all"><i class="fas fa-newspaper"></i> News</a>
 								<div class="side-menu">
 									<ul>
-										<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
-										<li><a href="news.php?type=add"><i class="fas fa-plus"></i> Add New news</a></li>
-										<li><a href="news.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+										<li><a href="news_feed.php?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
+										<li><a href="news_feed.php?type=add"><i class="fas fa-plus"></i> Add New news</a></li>
+										<li><a href="news_feed.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
 									</ul>
 								</div>
 								<div class="bottom-menu">
 									<ul>
-										<li><a href="news.php?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
-										<li><a href="news.php?type=add"><i class="fas fa-plus"></i> Add New news</a></li>
-										<li><a href="news.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+										<li><a href="news_feed.php?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
+										<li><a href="news_feed.php?type=add"><i class="fas fa-plus"></i> Add New news</a></li>
+										<li><a href="news_feed.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
 									</ul>
 								</div>
 							</li>

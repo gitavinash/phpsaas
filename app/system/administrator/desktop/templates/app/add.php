@@ -27,6 +27,9 @@
                 </select>
             </div>
             <div class="form-group">
+                <input type="checkbox" name="visiblity" value=1 > Visible to all users
+            </div>
+            <div class="form-group">
 				<input type="hidden" name="website_id" value="<?php echo SITE_ID ?>" >
 				<input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>" >
 				<input type="hidden" name="type" value="website" >
