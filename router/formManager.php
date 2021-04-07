@@ -30,6 +30,8 @@
 
 		$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
 
+		echo "Unable to find current request method 1 -> {$apiCall}";
+
 		if(!file_exists($apiCall)) {
 
 			/** Website APP Api Request */
@@ -38,7 +40,7 @@
 
 		} else {
 
-			echo "Unable to find current request method -> {$apiCall}";
+			echo "Unable to find current request method 2 -> {$apiCall}";
 
 		}
 		
@@ -60,7 +62,7 @@
 
 		} else {
 
-			echo "Unable to find current request method -> {$apiCall}";
+			echo "Unable to find current request method 3 -> {$apiCall}";
 
 			/** Call dedicated api */
 
@@ -82,7 +84,7 @@
 
 			} else {
 
-				echo "Unable to find current request method -> {$apiCall}";
+				echo "Unable to find current request method 4 -> {$apiCall}";
 
 			}
 
