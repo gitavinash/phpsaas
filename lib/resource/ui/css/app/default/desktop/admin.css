@@ -503,6 +503,10 @@ main .container {
 .form-box form {
 	float: left;
 	width: 100%;
+    background: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 4px;
 }
 
 .form-box .left-box {

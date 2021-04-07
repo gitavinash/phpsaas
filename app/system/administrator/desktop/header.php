@@ -15,6 +15,8 @@
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/buttons.min.css" />
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
 	</head>
@@ -48,16 +50,16 @@
 						<a href="app.php?type=list"><i class="fas fa-box-open"></i> Apps</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="app.php?type=list"><i class="fas fa-list"></i> All Apps</a></li>
-								<li><a href="app.php?type=add"><i class="fas fa-plus"></i> Add new app</a></li>
+								<!-- <li><a href="app.php?type=list"><i class="fas fa-list"></i> All Apps</a></li> -->
+								<li><a href="app.php?type=list"><i class="fas fa-plus"></i> Add new app</a></li>
 								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
 								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i> My Apps</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="app.php?type=list"><i class="fas fa-list"></i> All Apps</a></li>
-								<li><a href="app.php?type=add"><i class="fas fa-plus"></i> Add new app</a></li>
+								<!-- <li><a href="app.php?type=list"><i class="fas fa-list"></i> All Apps</a></li> -->
+								<li><a href="app.php?type=list"><i class="fas fa-plus"></i> Add new app</a></li>
 								<li><a href="app.php?type=install"><i class="fas fa-cloud-download-alt"></i>Install New Apps</a></li>
 								<li><a href="app.php?type=installed"><i class="fab fa-dropbox"></i> My Apps</a></li>
 							</ul>
