@@ -36,6 +36,10 @@
 
 			$apiCall=API_MODULES.$type.'/'.$action.'.php';
 
+		} else {
+
+			echo "Unable to find current request method -> {$apiCall}";
+
 		}
 		
 		if(file_exists($apiCall)) {
@@ -55,6 +59,8 @@
 			}
 
 		} else {
+
+			echo "Unable to find current request method -> {$apiCall}";
 
 			/** Call dedicated api */
 
