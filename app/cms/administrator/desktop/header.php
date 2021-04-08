@@ -100,7 +100,7 @@
 								</div>
 							</li>
 							<li <?php echo (($postType=='bhajan' ) ? 'class="active"' : '' ) ?> >
-								<a href="bhajan.php?type=list&status=all"><i class="fas fa-om"></i> Bhajan / Aarti</a>
+								<a href="bhajan.php?type=list&status=all"><i class="fas fa-file-video"></i> Bhajan / Aarti</a>
 								<div class="side-menu">
 									<ul>
 										<li><a href="bhajan.php?type=list&status=all"><i class="fas fa-list"></i> All bhajan / aarti</a></li>
