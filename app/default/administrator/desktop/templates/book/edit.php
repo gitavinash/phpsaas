@@ -26,8 +26,7 @@
 
 				} else {
 
-					$care_n_tips='';
-					$delivery_information='';
+					$author='';
 
 				}
 
@@ -193,13 +192,8 @@
 				<div class="productAdditionalDetails generalTab" style="display: none;">
 					
 					<div class="form-group">
-						<label>Care & Tips</label>
-						<textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..." ><?php echo $care_n_tips ?></textarea>
-					</div>
-					
-					<div class="form-group">
-						<label>Delivery information</label>
-						<textarea name="productMeta[delivery_information]" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..." ><?php echo $delivery_information ?></textarea>
+						<label>Book author</label>
+						<input type="text" name="productMeta[author]" class="form-control inside-shadow" value="<?php echo $author ?>" placeholder="" >
 					</div>
 
 				</div>

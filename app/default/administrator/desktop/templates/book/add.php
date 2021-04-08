@@ -112,6 +112,12 @@
 
 				</div>
 				<div class="productAdditionalDetails generalTab" style="display: none;">
+
+					<div class="form-group">
+						<label>Book author</label>
+						<input type="text" name="productMeta[author]" class="form-control inside-shadow" placeholder="" >
+					</div>
+
 				</div>
 			</section>
 
@@ -204,6 +210,7 @@
 			<h2>Categories</h2>
 			<div class="action-box height-200 inside-shadow">
 				<?php
+
 					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_site_id='".SITE_ID."' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."' AND link_site_id=".SITE_ID)) {
 						while($category=mysqli_fetch_assoc($categoryList)) { ?>
 							<div class="form-group">
