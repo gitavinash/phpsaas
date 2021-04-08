@@ -8,10 +8,21 @@
 
 	/* database connection setting */
 
-	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
-	define('DB_USER', 'root');		// database username ex :- root
-	define('DB_PASS', '');		// datapase user password :- 12345
-	define('DB_NAME', 'isw');		// database name ex :- cms_db
+	if(DEVELOPMENT_MODE==true) {
+
+		define('DB_HOST', 'localhost');		// database hostname ex :- hostname
+		define('DB_USER', 'root');		// database username ex :- root
+		define('DB_PASS', '');		// datapase user password :- 12345
+		define('DB_NAME', 'isw');		// database name ex :- cms_db
+
+	} else {
+
+		define('DB_HOST', 'localhost');		// database hostname ex :- hostname
+		define('DB_USER', 'root');		// database username ex :- root
+		define('DB_PASS', 'A=2ADu5P7WqCPm!Unc6*a?N^8Ka2?Htp');		// datapase user password :- 12345
+		define('DB_NAME', 'isw_saas');		// database name ex :- cms_db
+
+	}
 
 	/* database table prefix */
 

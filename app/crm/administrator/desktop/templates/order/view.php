@@ -212,10 +212,21 @@
 
                                                     extract($orderMetaData);
 
-                                                    echo "<div class='form-group'>
-                                                        <label>".ucwords($order_meta_key)."</label>
-                                                        <input type='text' class='form-control inside-shadow' value='{$order_meta_value}' readonly >
-                                                    </div>";
+                                                    if($order_meta_key=='message') {
+
+                                                        echo "<div class='form-group'>
+                                                            <label>".ucwords($order_meta_key)."</label>
+                                                            <textarea class='form-control inside-shadow' readonly >{$order_meta_value}</textarea>
+                                                        </div>";
+
+                                                    } else {
+
+                                                        echo "<div class='form-group'>
+                                                            <label>".ucwords($order_meta_key)."</label>
+                                                            <input type='text' class='form-control inside-shadow' value='{$order_meta_value}' readonly >
+                                                        </div>";
+
+                                                    }
 
                                                 }
 
