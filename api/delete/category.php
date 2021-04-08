@@ -1,7 +1,7 @@
 <?php
 
     function category($connection, $data) {
-
+        
         extract($data);
 
         if(isset($id)) {
