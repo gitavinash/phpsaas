@@ -216,7 +216,7 @@
 
                                                         echo "<div class='form-group'>
                                                             <label>".ucwords($order_meta_key)."</label>
-                                                            <textarea class='form-control inside-shadow' readonly >{$order_meta_value}</textarea>
+                                                            <textarea class='form-control inside-shadow' style='min-height: 200px' readonly >{$order_meta_value}</textarea>
                                                         </div>";
 
                                                     } else {
