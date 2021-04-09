@@ -10,7 +10,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="<?php echo SITE_ICON ?>">
-		<title><?php echo ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME ); ?></title>
+		<title><?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME )); ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>admin.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
@@ -52,14 +52,16 @@
 							<ul>
 								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a></li>
 								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new product</a></li>
-								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+								<li><a href="product.php?type=category"><i class="fas fa-tag"></i>Categories</a></li>
+								<li><a href="product.php?type=tags"><i class="fas fa-tags"></i>Tags</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
 								<li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a></li>
 								<li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new product</a></li>
-								<li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+								<li><a href="product.php?type=category"><i class="fas fa-tag"></i>Categories</a></li>
+								<li><a href="product.php?type=tags"><i class="fas fa-tags"></i>Tags</a></li>
 							</ul>
 						</div>
 					</li>

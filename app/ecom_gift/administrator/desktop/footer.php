@@ -19,7 +19,7 @@
 		
 			if(isset($_GET['type'])) {
 
-				if($_GET['type']=='list' ||  $_GET['type']=='category') { ?>
+				if($_GET['type']=='list' ||  $_GET['type']=='category' || $_GET['type']=='tags' || $_GET['type']=='category' ) { ?>
 
 					<script>
 						

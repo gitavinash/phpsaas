@@ -352,6 +352,13 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
     ADD INDEX meta_site_id (meta_site_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
+    ADD COLUMN meta_relation_tag varchar(255) NOT NULL AFTER meta_relation_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."meta
+    ADD INDEX meta_relation_tag (meta_relation_tag)");
+
+
   /** Notification Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."notification
