@@ -29,7 +29,7 @@
 	}
 
 ?>
-<h2>Manage <?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>s <?php echo ((isset($_GET['id'])) ? "<span><a href='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."/?type=category' class='btn btn-blue btn-sm' >Add New</a></span>" : '' ) ?></h2>
+<h2>Manage <?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>s <?php echo ((isset($_GET['id'])) ? "<span><a href='".rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')."/?type=list' class='btn btn-blue btn-sm' >Add New</a></span>" : '' ) ?></h2>
 
 <div class="row">
 	<div class="category">
