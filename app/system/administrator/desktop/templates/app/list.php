@@ -54,7 +54,7 @@
 				<div class="form-group">
 					<input type="hidden" name="type" id="type" value="app">
 					<input type="hidden" name="action" value="publish">
-					<input type="hidden" name="appID" id="app_id" value="<?php echo $id; ?>">
+					<input type="hidden" name="appID" id="category_id" value="<?php echo $id; ?>">
 					<input type="submit" id="submitCategory" class="btn btn-green" value="<?php echo (isset($_GET['id']) ? 'Update' : 'Add new' ); ?> app" >
 					<?php
 					if(isset($_GET['id'])) {

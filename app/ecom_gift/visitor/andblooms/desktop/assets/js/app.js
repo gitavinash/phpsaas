@@ -400,6 +400,8 @@ $(document).ready(function() {
         $('.fixedTimeSlots').hide();
         $('.midnightTimeSlots').hide();
         $('.showTimeBox').show();
+
+        console.log('i m here');
     });
 
     /** Special notes */

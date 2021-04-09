@@ -140,9 +140,15 @@
 								<h4 class="heading-2">Select delivery date</h4>
 
 									<div class="row">
-										<div class="col-md-4">
-											<a href="#" id="deliverByToday" class="delivery-btn active" ><?php echo date('jS M, ') ?>Today</a>
-										</div>
+										<?php
+											
+											if(date('H')<23) {
+
+												echo "<a href='#' id='deliverByToday' class='delivery-btn active' >".date('jS M, ')." Today</a>";
+
+											}
+
+										?>
 										<div class="col-md-4">
 											<a href="#" id="deliverByTomorrow" class="delivery-btn" ><?php echo date('jS M, ', strtotime('+1 days')) ?>Tomorrow</a>
 										</div>
