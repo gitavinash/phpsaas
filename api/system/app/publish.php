@@ -23,7 +23,7 @@ function publish($connection, $data) {
                     if($addNewApp=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_title, app_description, app_path, app_status, app_visiblity) VALUES('{$title}', '{$description}', '{$path}', 1, '{$is_public}')")) {
 
                         $appID=mysqli_insert_id($connection);
-                        $redirect='/dashboard/app/?type=add&id='.$appID;
+                        $redirect='/dashboard/app/?type=list&id='.base64_encode($appID);
                         $msg='New app is now ready to install by users';
                         $status=200;
 
