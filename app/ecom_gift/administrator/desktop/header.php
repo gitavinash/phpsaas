@@ -81,7 +81,7 @@
 						</div>
 					</li>
 					<li <?php echo (($postType=='post') ? 'class="active"' : '' ) ?> >
-						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Blog</a>
+						<a href="post.php?type=list&status=all"><i class="fas fa-blog"></i> Blog</a>
 						<div class="side-menu">
 							<ul>
 								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
