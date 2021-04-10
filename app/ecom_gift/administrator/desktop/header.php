@@ -80,6 +80,23 @@
 							</ul>
 						</div>
 					</li>
+					<li <?php echo (($postType=='post') ? 'class="active"' : '' ) ?> >
+						<a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Blog</a>
+						<div class="side-menu">
+							<ul>
+								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+								<li><a href="post.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+							</ul>
+						</div>
+						<div class="bottom-menu">
+							<ul>
+								<li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+								<li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+								<li><a href="post.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+							</ul>
+						</div>
+					</li>
 					<!-- <li <?php echo ((ADMIN_BASE_URL=='/media/') ? 'class="active"' : '' ) ?> >
 						<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
 						<div class="side-menu">

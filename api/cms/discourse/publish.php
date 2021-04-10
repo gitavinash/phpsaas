@@ -105,7 +105,7 @@
 
                 } else {
 
-                    $msg='Please select discourse fearure image.';
+                    $msg='Please select discourse feature image.';
 
                 }
 

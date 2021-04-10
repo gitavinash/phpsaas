@@ -215,7 +215,7 @@
 				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live service</a>
 			</div>
 			<div class="form-group">
-				<h2>Fearure service</h2>
+				<h2>feature service</h2>
 				<div class="action-box inside-shadow">
 					<input type="checkbox" value="1" name='featureservice' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature service
 				</div>

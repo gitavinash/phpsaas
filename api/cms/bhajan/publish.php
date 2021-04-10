@@ -105,7 +105,7 @@
 
                 } else {
 
-                    $msg='Please select bhajan fearure image.';
+                    $msg='Please select bhajan feature image.';
 
                 }
 

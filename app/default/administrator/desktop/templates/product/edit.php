@@ -288,9 +288,9 @@
 				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live product</a>
 			</div>
 			<div class="form-group">
-				<h2>Fearure product</h2>
+				<h2>feature product</h2>
 				<div class="action-box inside-shadow">
-					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as Feature product
+					<input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?> > Mark as feature
 				</div>
 			</div>
 			<h2>Categories</h2>

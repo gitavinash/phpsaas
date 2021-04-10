@@ -135,7 +135,7 @@
 
             } else {
 
-                $msg='Please select book fearure image.';
+                $msg='Please select book feature image.';
 
             }
 

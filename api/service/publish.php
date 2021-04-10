@@ -117,7 +117,7 @@
 
             } else {
 
-                $msg='Please select service fearure image.';
+                $msg='Please select service feature image.';
 
             }
 

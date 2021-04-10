@@ -105,7 +105,7 @@
 
                 } else {
 
-                    $msg='Please select post fearure image.';
+                    $msg='Please select post feature image.';
 
                 }
 

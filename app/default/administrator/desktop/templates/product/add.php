@@ -209,7 +209,7 @@
 			<div class="form-group">
 				<h2>Featured</h2>
 				<div class="action-box inside-shadow" style="padding: 10px" >
-					<input type="checkbox" value="1" name='featurePost' > Mark as feature product
+					<input type="checkbox" value="1" name='featurePost' > Mark as feature
 				</div>
 			</div>
 			<h2>Categories</h2>
