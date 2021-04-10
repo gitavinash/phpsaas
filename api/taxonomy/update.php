@@ -71,6 +71,10 @@
                     $redirect='/dashboard/product/?type=taxonomy_tag&editor=true&id='.base64_encode($id).'=&taxonomy=tag';
                     mysqli_query($connection, 'COMMIT');
 
+                } else {
+
+                    echo $updateMeta.' -> '.$updateTag;
+
                 }
 
             }
