@@ -35,6 +35,46 @@
 
             extract($tagPost[0]); // Extract first result for page meta's
 
+            if($pageDetails=mysqli_query($connection, "SELECT tag_id, tag_title, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID)) {
+
+                if(mysqli_num_rows($pageDetails)!=0) {
+                
+                    extract(mysqli_fetch_assoc($pageDetails));
+
+                    // Fetch tag seo data from database
+        
+                    if($checkTagMeta=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."meta WHERE meta_relation_tag='{$tag_title}' AND meta_type='tag' AND meta_site_id=".SITE_ID)) {
+        
+                        if(mysqli_num_rows($checkTagMeta)!=0) {
+        
+                            extract(mysqli_fetch_assoc($checkTagMeta));
+        
+                        } else {
+
+                            echo 'not found';
+                            exit();
+
+                        }
+        
+                    } else {
+
+                        echo mysqli_error($connection);
+                        exit();
+
+                    }
+                
+                } else { ?>
+        
+                    <script type="text/javascript">
+                        alert('Invalid action found');
+                        window.location.href='/dashboard/product/?type=tags';
+                    </script>
+        
+                <?php
+                }
+        
+            }
+
         } else {
 
             $tagPost='';
