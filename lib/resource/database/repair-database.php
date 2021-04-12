@@ -829,7 +829,22 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
     MODIFY site_configuration_id bigint(20) NOT NULL AUTO_INCREMENT");
- 
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    ADD INDEX site_configuration_site_id (site_configuration_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    ADD INDEX site_configuration_status (site_configuration_status)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    ADD COLUMN site_configuration_global INT(1) NOT NULL DEFAULT 0 AFTER site_configuration_status");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    ADD INDEX site_configuration_global (site_configuration_global)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_configuration
+    CHANGE site_configuration_name site_configuration_key varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL");
+  
   /** Site Setting Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting

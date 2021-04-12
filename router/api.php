@@ -37,32 +37,45 @@
 			
 		default:
 
-			/** Check API request file in system app directory */
+			// Check api as per url request
 
-			$appAPI=API_APP_MODULES.end($urlStructure).'.php';
-			
-			if(file_exists($appAPI)) {
+			$urlAPI=API_APP_MODULES.str_replace('/api/', '', rtrim(BASE_URL, '/')).'.php';
 
-				require_once $appAPI;
+			if(file_exists($urlAPI)) {
+
+				require_once $urlAPI;
 
 			} else {
 
-				// Check Application API Request
+				/** Check API request file in system app directory */
 
-				$systemAPI=API_MODULES.end($urlStructure).'.php';
+				$appAPI=API_APP_MODULES.end($urlStructure).'.php';
+				
+				if(file_exists($appAPI)) {
 
-				if(file_exists($systemAPI)) {
-
-					require_once $systemAPI;
+					require_once $appAPI;
 
 				} else {
 
-					header('Content-Type: text/html; charset=utf-8');
-					require_once ERROR_404;
+					// Check Application API Request
+
+					$systemAPI=API_MODULES.end($urlStructure).'.php';
+
+					if(file_exists($systemAPI)) {
+
+						require_once $systemAPI;
+
+					} else {
+
+						header('Content-Type: text/html; charset=utf-8');
+						require_once ERROR_404;
+
+					}
 
 				}
 
 			}
+			
 			break;
 			
 	}

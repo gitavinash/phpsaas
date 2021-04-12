@@ -10,7 +10,7 @@
 
             /** Check month range setting is already defined or not */
 
-            if($checkSetting=mysqli_query($connection, "SELECT site_configuration_id FROm ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".APP_SITE_ID." AND site_configuration_name='calender_month_visible'")) {
+            if($checkSetting=mysqli_query($connection, "SELECT site_configuration_id FROm ".TABLE_PREFIX."site_configuration WHERE site_configuration_site_id=".APP_SITE_ID." AND site_configuration_key='calender_month_visible'")) {
 
                 if(mysqli_num_rows($checkSetting)!=0) {
 

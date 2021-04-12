@@ -24,6 +24,25 @@
                 if(mysqli_num_rows($checkInstallation)!=0) {
 
                     extract(mysqli_fetch_assoc($checkInstallation));
+
+                    /** Fetch global website configuration settings */
+
+                    if($websiteConfigutration=mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_status=1 AND site_configuration_global=0 AND site_configuration_site_id={$site_owner_id}")) {
+
+                        if(mysqli_num_rows($websiteConfigutration)!=0) {
+
+                            while($websiteConfigutrationData=mysqli_fetch_assoc($websiteConfigutration)) {
+
+                                $websiteConfigutrationList[$websiteConfigutrationData['site_configuration_key']]=$websiteConfigutrationData['site_configuration_value'];
+
+                            }
+
+                            // Convert the website configuration key as a value
+                            extract($websiteConfigutrationList);
+
+                        }
+
+                    }
         
                 } else {
 

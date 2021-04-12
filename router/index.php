@@ -153,7 +153,7 @@
 
 	}
 
-	if(DEVELOPMENT_MODE==TRUE) {
+	if(DEVELOPMENT_MODE==TRUE && $urlStructure[0]!='api') {
 
 		// Display Script End time
 		$scriptEndTime = microtime(true);

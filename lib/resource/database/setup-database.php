@@ -819,7 +819,7 @@
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_configuration (
     site_configuration_id bigint(20) NOT NULL,
     site_configuration_site_id bigint(20) NOT NULL,
-    site_configuration_name varchar(255) NOT NULL,
+    site_configuration_key varchar(255) NOT NULL,
     site_configuration_value longtext NOT NULL,
     site_configuration_status int(1) NOT NULL,
     site_configuration_update timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
