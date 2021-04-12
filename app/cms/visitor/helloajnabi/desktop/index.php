@@ -263,20 +263,22 @@
 											if($i==0 || $i==1) { ?>
 
 												<div class="col-md-6 col-sm-6">
-													<article class="article">
-														<div class="article-img">
-															<a href="<?php echo $link_url ?>">
-																<img src="<?php echo $post_image ?>" alt="">
-															</a>
-														</div>
-														<div class="article-body">
-															<h3 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h3>
-															<ul class="article-meta">
-																<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
-															</ul>
-															<p><?php echo $meta_description ?></p>
-														</div>
-													</article>
+													<div class="titlealign">
+														<article class="article">
+															<div class="article-img">
+																<a href="<?php echo $link_url ?>">
+																	<img src="<?php echo $post_image ?>" alt="">
+																</a>
+															</div>
+															<div class="article-body">
+																<h3 class="article-title"><a href="<?php echo $link_url ?>"><?php echo $post_title ?></a></h3>
+																<ul class="article-meta">
+																	<li><i class="fa fa-clock-o"></i> <?php echo date('F d, Y', strtotime($link_published)) ?></li>
+																</ul>
+																<p><?php echo $meta_description ?></p>
+															</div>
+														</article>
+													</div>
 												</div>
 
 											<?php
@@ -328,9 +330,6 @@
 							
 					</div>
 					<div class="col-md-4">
-						<div class="widget center-block hidden-xs">
-							<img class="center-block" src="<?php echo USER_IMAGES ?>ad-1.jpg" alt=""> 
-						</div>
 						<div class="widget social-widget">
 							<div class="widget-title">
 								<h2 class="title">Stay Connected</h2>
@@ -409,9 +408,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="visible-lg visible-md">
-			<img class="center-block" src="<?php echo USER_IMAGES ?>ad-3.jpg" alt="">
 		</div>
 		<div class="section">
 			<div class="container">

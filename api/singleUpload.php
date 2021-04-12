@@ -2,7 +2,7 @@
 	
 	require_once LOGIN_CHECK;
 
-	function singleUpload($connection) {
+	function upload($connection) {
 
 		global $table_prefix;
 
@@ -105,6 +105,7 @@
 
 							if($insertPost && $createLink) {
 								
+								$status=200;
 								mysqli_query($connection, 'COMMIT');
 								$msg=$uploadURL;
 
@@ -139,8 +140,8 @@
 
 		$result = array (
 
-			'status' 	=> 	$status,
-			'msg'		=>	$msg
+			'status' => ((isset($status)) ? $status : 206 ),
+			'msg' => ((isset($msg)) ? $msg : 'Something is wrong while inserting the media' )
 
 		);
 

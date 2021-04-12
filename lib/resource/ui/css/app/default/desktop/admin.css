@@ -1545,11 +1545,6 @@ ul.tabs li.active {
 	width: 400px;
 }
 
-.category .tag-list {
-	float: right;
-	width: 100%;
-}
-
 .category .category-list {
 	float: right;
 	width: 600px;
