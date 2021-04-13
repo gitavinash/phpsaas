@@ -142,9 +142,9 @@
 									<div class="row">
 										<?php
 											
-											if(date('H')<23) {
+											if(date('H')<21) {
 
-												echo "<a href='#' id='deliverByToday' class='delivery-btn active' >".date('jS M, ')." Today</a>";
+												echo "<div class='col-md-4'><a href='#' id='deliverByToday' class='delivery-btn active' >".date('jS M, ')." Today</a></div>";
 
 											}
 

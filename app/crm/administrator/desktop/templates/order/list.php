@@ -1,7 +1,7 @@
 <?php
 
 	$orderStatus=mysqli_real_escape_string($connection, $_GET['status']);
-	$orderStatus=(($orderStatus=='all') ? '' : "AND order_status='{$orderStatus}'" );
+	$orderStatus=(($orderStatus=='all') ? "" : "AND order_status='{$orderStatus}'" );
 
 ?>
 <h2>All Leads</h2>
@@ -43,7 +43,7 @@
 	<tbody>
 		<?php
 
-			if($dataList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_currency, order_total_price, order_payment_mode, order_generate, order_status, address_mobile FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."address ON address_id=order_address_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=order_user_id WHERE order_site_id=".APP_SITE_ID." {$orderStatus} ORDER BY order_id DESC LIMIT 0, 1000")) {
+			if($dataList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_currency, order_total_price, order_payment_mode, order_generate, order_status, address_mobile FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."address ON address_id=order_address_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=order_user_id WHERE order_site_id=".APP_SITE_ID." AND order_product_id!='' {$orderStatus} ORDER BY order_id DESC LIMIT 0, 1000")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
                         $i=1;

@@ -1,6 +1,5 @@
 <?php
 
-	$totalPrice=0;
 	$id=base64_decode($id);
 
 	include_once 'header.php';
@@ -33,14 +32,12 @@
 
                             <?php
 							
-                                if($checkOrder=mysqli_query($connection, "SELECT order_id, order_currency, order_delivery_charges, order_total_price, order_coupon, order_payment_mode, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_price, cart_status, product_image, product_title, inventory_currency, inventory_price, profile_display_name, profile_mobile, profile_email, address_house_no, address_landmark, address_area, city_name, state_name, address_pin_code, address_mobile FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE inventory_type='product' AND order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2 AND cart_site_id=".SITE_ID)) {
+                                if($checkOrder=mysqli_query($connection, "SELECT order_id, order_currency, SUM(order_delivery_charges) as order_delivery_charges, order_total_price, order_coupon, order_payment_mode, cart_relation_id, cart_relation_type, GROUP_CONCAT(cart_qty) as cart_qty, cart_currency, SUM(cart_price) as cart_price, cart_status, GROUP_CONCAT(product_image) as product_image, GROUP_CONCAT(product_title) as product_title, inventory_currency, inventory_price, profile_display_name, profile_mobile, profile_email, address_house_no, address_landmark, address_area, city_name, state_name, address_pin_code, address_mobile FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."cart ON cart_session_id=order_cart_session_id INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE inventory_type='product' AND order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0 AND cart_status=2 AND cart_site_id=".SITE_ID)) {
 
                                     if(mysqli_num_rows($checkOrder)!=0) {
 										
 										extract(mysqli_fetch_assoc($checkOrder));
 										
-										$totalPrice=$totalPrice+$cart_price;
-
 										if($checkOrderMeta=mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1")) {
 
 											if(mysqli_num_rows($checkOrderMeta)!=0) {
@@ -99,7 +96,6 @@
 														<tr>
 														<th scope="row">Ship to</th>
 														<td id='shippingAddress' ><?php echo $address_house_no.', '.$address_landmark.', '.$address_area.',<br />'.$city_name.', '.$state_name.' - '.$address_pin_code; ?></td>
-														<!-- <td><a href="checkout-detail.html">Change</a></td> -->
 														</tr>
 													</tbody>
 													</table>
@@ -107,12 +103,24 @@
 
 												<h3 class="heading-2">Order summary</h3>
 
-												<div class="row">
-													<div class="col-md-3 col-xs-12">
-														<img src="<?php echo $product_image ?>" width="100px" height="100px" alt="">
-													</div>
-													<div class="col-md-9 col-xs-12"><strong><?php echo $product_title ?></strong><br />Qty: <?php echo $cart_qty ?></div>
-												</div>
+												<?php
+												
+												$productNameList=explode(',', $product_title);
+												$productImageList=explode(',', $product_image);
+												$productQtyList=explode(',', $cart_qty);
+												
+												for($i=0; $i<sizeof($productNameList); $i++) {
+
+													echo "<div class='row' style='margin-bottom: 30px' >
+														<div class='col-md-3 col-xs-12'>
+															<img src='{$productImageList[$i]}' width='100px' height='100px' alt=''>
+														</div>
+														<div class='col-md-9 col-xs-12'><strong>{$productNameList[$i]}</strong><br />Qty: {$productQtyList[$i]}</div>
+													</div>";
+
+												}
+
+												?>
 
 											</div>
 										</div>
@@ -138,7 +146,7 @@
 							<div>
 								<div class="row">
 									<div class="col-8">Subtotal</div>
-									<div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $totalPrice ?></div>
+									<div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $cart_price ?></div>
 								</div>
 								<div class="row" style="margin-bottom: 10px" >
 									<div class="col-8">Delivery charges</div>
@@ -146,7 +154,7 @@
 								</div>
 							</div>
 							<h4>Grand Total</h4>
-							<h5 style="margin-bottom: 10px" ><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $totalPrice+$order_delivery_charges ?></h5>
+							<h5 style="margin-bottom: 10px" ><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $cart_price+$order_delivery_charges ?></h5>
 							<!-- <p>Have a Coupon Code? You can apply the discount coupon in the Checkout Process</p> -->
 							<form>
 								<input type="hidden" name="order" value="<?php echo $id ?>" >

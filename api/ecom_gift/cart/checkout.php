@@ -172,19 +172,26 @@
                                             $addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_address_id, order_status, order_generate) VALUES(".SITE_ID.", '{$user_id}', '".SESSION_ID."', '{$addressID}', 0, NOW())");
                                             $order_id=mysqli_insert_id($connection);
                             
-                                            // if($addUser && $addUserProfile && $addUserSiteAccess && $addNewAddress && $updateCart && $addNewOrder) {
                                             if($error!=TRUE) {
-                            
-                                                $status=200;
-                                                $msg='Cart update successfully';
-                            
-                                                mysqli_query($connection, "COMMIT");
+
+                                                if($addUser && $addUserProfile && $addUserSiteAccess && $addNewAddress && $updateCart && $addNewOrder) {
+
+                                                    $status=200;
+                                                    $msg='Cart update successfully';
+                                
+                                                    mysqli_query($connection, "COMMIT");
+
+                                                } else {
+
+                                                    $msg='Something is wrong while updating cart';
+                                                    mysqli_query($connection, "ROLLBACK");
+
+                                                }
                             
                                             } else {
-                            
-                                                $msg='Something is wrong while updating cart';
-                                                mysqli_query($connection, "ROLLBACK");
-                            
+
+                                                $msg='Error';
+
                                             }
 
                                         } else {

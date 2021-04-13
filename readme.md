@@ -24,3 +24,19 @@ sms_sender
 sms_route
 sms_dlt_sms_id
 sms_gateway
+
+Transaction status 
+
+0 : Initiate
+1 : Success
+2 : Proceed to payment gateway
+3 : Failed
+
+
+Cart Status
+
+0 : Initiate
+1 : Success
+2 : Procced to next step of cart
+3 : 
+4 : Remove from cart
