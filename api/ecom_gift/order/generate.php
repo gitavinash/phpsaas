@@ -2,7 +2,9 @@
 
     function generate($connection, $data) {
 
-        extract($data);
+        // extract($data);
+        print_r($data);
+        exit();
 
         /** Get Product from cart */
 

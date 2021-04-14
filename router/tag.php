@@ -49,11 +49,6 @@
         
                             extract(mysqli_fetch_assoc($checkTagMeta));
         
-                        } else {
-
-                            echo 'not found';
-                            exit();
-
                         }
         
                     } else {

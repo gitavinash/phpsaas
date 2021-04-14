@@ -55,82 +55,8 @@
 
                         $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
 
-                        /** Calling Numbus API */
-                        // curl_setopt($ch, CURLOPT_URL, 'https://ship.nimbuspost.com/api/orders/create');
-                        // curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                        // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        //     "NP-API-KEY: cc13f759563bd6a031e6d51c5e58950325aac6ea1558"
-                        // ));
-
-                        // $payload = Array(
-                        //     'order_number' => 'OD'.$order_id,
-                        //     'payment_method' => 'prepaid',
-                        //     'amount' => $order_total_price,
-                        //     'fname' => $profile_first_name,
-                        //     'lname' => $profile_last_name,
-                        //     'address' => $address_house_no.', '.$address_area,
-                        //     'address_2' => $address_landmark,
-                        //     'phone' => $mobile,
-                        //     'city' => $city_name,
-                        //     'state' => $state_name,
-                        //     'country' => $country_name,
-                        //     'pincode' => $address_pin_code,
-                        //     'products' => array(
-                        //         array(
-                        //         'name' => $productName,
-                        //         'qty' => $order_product_qty,
-                        //         'price' => $order_total_price,
-                        //         )
-                        //     )
-                        // );
-
                     }
 
-                    /** Paramantra API */
-                    curl_setopt($ch, CURLOPT_URL, 'https://cloud.paramantra.com/paramantra/api/data/new/format/json');
-                    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        "X-API-KEY: NDEpNDBNE1CuxpMMBAMECGHupG",
-                        "ACTION-ON: J3tMI",
-                    ));
-                    curl_setopt($ch, CURLOPT_USERPWD,
-                        "NDEpNDBNE1CuxpMMBAMECGHupG" . ':' . "NDEpNDBNE1CuxpMMBAMECGHupG"
-                    );
-
-                    $payload = Array(
-                        'phonefax' => $mobile,
-                        'rep_id' => 'prepaid',
-                        'channel_id' => 'website',
-                        'email' => $profile_email,
-                        'f_name' => $profile_first_name,
-                        'subject' => 'New order received from website',
-                        'queryid' => 'OD'.$order_id,
-                        'notes' => '',
-                        'produ_24453' => $productName,
-                        'quant_24509' => $order_product_qty,
-                        'price_89724' => $order_product_price,
-                        'order_11827' => 'OD'.$order_id,
-                        'payme_12021' => $transaction_method,
-                        'sku_24026' => '',
-                        'coupo_24122' => '',
-                        'shipp_24076' => $order_delivery_charges,
-                        'deliv_26333' => $address_house_no.', '.$address_area.', '.$address_landmark.', '.$city_name.', '.$state_name.', '.$address_pin_code.', '.$country_name,
-                        'total_24157' => $order_total_price,
-                        'shipp_24216' => '',
-                        'awbnu_24187' => '',
-                        'alert_client' => '1',
-                        'alert_rep' => '1',
-                    );
-
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
-                    $response = curl_exec($ch);
-                    curl_close($ch);
-                    
                     /** Update cart table */
 
                     if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
