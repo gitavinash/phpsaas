@@ -71,19 +71,22 @@
 									<form id="shippingForm" class="checkout-form">
 										<ul class="tab-ul-password">
 											<h2 class="inter-heading" style="margin-bottom: 20px" >Contact Information</h2>
-											<li><span>Email</span><input type="email" id="email" name="email" class="input" required ></li>
-											<li><span>Contact No.</span><input type="number" id="mobile" name="mobile" class="input" required ></li>
+											<li><span>First name</span><input type="text" id="first_name" name="first_name" class="input" placeholder="First name" required ></li>
+											<li><span>Last name</span><input type="text" id="last_name" name="last_name" class="input" placeholder="Last name" required ></li>
+											<li><span>Email</span><input type="email" id="email" name="email" class="input" placeholder="Email" required ></li>
+											<li><span>Contact No.</span><input type="number" id="mobile" name="mobile" class="input" placeholder="Contact no." required ></li>
 											<h2 class="inter-heading" style="margin-bottom: 20px" >Enter Shipping Address</h2>
 											<li>
 												<div class="row">
 													<div class="col-md-6">
-														<input type="text" name="first_name" class="form-control" placeholder="First name" style="margin-bottom: 15px" >
+														<input type="text" name="address_first_name" class="form-control" placeholder="First name" style="margin-bottom: 5px" >
 													</div>
 													<div class="col-md-6">
-														<input type="text" name="last_name" class="form-control" placeholder="Last name" >
+														<input type="text" name="address_last_name" class="form-control" placeholder="Last name" >
 													</div>
 												</div>
 											</li>
+											<li><input type="number" id="addressMobile" name="address_mobile" class="form-control" placeholder="Contact no." required ></li>
 											<li><input type="text" name="house_no" placeholder="Flat, House no., Building, Company, Apartment" class="form-control"></li>
 											<li><input type="text" name="area" class="form-control" placeholder="Area, Colony, Street, Sector, Village"></li>
 											<li><input type="text" name="landmark" class="form-control" placeholder="Landmark"></li></li>

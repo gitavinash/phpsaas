@@ -2,9 +2,7 @@
 
     function generate($connection, $data) {
 
-        // extract($data);
-        print_r($data);
-        exit();
+        extract($data);
 
         /** Get Product from cart */
 
@@ -14,7 +12,7 @@
 
                 extract(mysqli_fetch_assoc($checkOrderStatus));
 
-                if($checkCart=mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as cart_price as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=".SITE_ID)) {
+                if($checkCart=mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=".SITE_ID)) {
 
                     if(mysqli_num_rows($checkCart)!=0) {
         

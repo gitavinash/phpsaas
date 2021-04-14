@@ -164,7 +164,10 @@
 
                                             /** Create new order */
 
-                                            $addNewAddress=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."address(address_site_id, address_user_id, address_name, address_house_no, address_area, address_landmark, address_city_id, address_state_id, address_country_id, address_pin_code, address_mobile, address_type, address_status) VALUES(".SITE_ID.", '{$user_id}', '{$display_name}', '{$house_no}', '{$area}', '{$landmark}', '{$city_id}', '{$state}', '{$country}', '{$pincode}', '{$mobile}', 'home', 1)");
+                                            $addressDisplayName=((isset($address_first_name)) ? $address_first_name : $first_name).' '.((isset($address_last_name)) ? $address_last_name : $last_name );
+                                            $addressMobile=ltrim((str_replace('+91', '', ((isset($address_mobile)) ? $address_mobile : $mobile))), 0);
+
+                                            $addNewAddress=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."address(address_site_id, address_user_id, address_name, address_house_no, address_area, address_landmark, address_city_id, address_state_id, address_country_id, address_pin_code, address_mobile, address_type, address_status) VALUES(".SITE_ID.", '{$user_id}', '{$addressDisplayName}', '{$house_no}', '{$area}', '{$landmark}', '{$city_id}', '{$state}', '{$country}', '{$pincode}', '{$addressMobile}', 'home', 1)");
                                             $addressID=mysqli_insert_id($connection);
                             
                                             $updateCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_user_id='{$user_id}', cart_status=2 WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND cart_site_id='".SITE_ID."'");

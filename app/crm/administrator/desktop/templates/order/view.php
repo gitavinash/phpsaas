@@ -21,7 +21,7 @@
 
             }
 
-            if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id WHERE order_id='{$id}' AND order_site_id=".APP_SITE_ID)) {
+            if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN ".TABLE_PREFIX."transaction ON transaction_order_id=order_id WHERE order_id='{$id}' AND order_site_id=".APP_SITE_ID)) {
 
                 if(mysqli_num_rows($checkOrder)!=0) {
                     
@@ -46,7 +46,7 @@
 
                                             echo "<input type='hidden' name='totalProducts' value='".sizeof($productData)."'>";
     
-                                            if($checkProduct=mysqli_query($connection, "SELECT product_id, product_image, product_title FROM ".TABLE_PREFIX."product WHERE product_id='{$productData[$i]}'")) {
+                                            if($checkProduct=mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id=".APP_SITE_ID." AND inventory_site_id=".APP_SITE_ID)) {
     
                                                 if(mysqli_num_rows($checkProduct)!=0) {
     
@@ -122,7 +122,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Mobile No.</label>
-                                        <input type="text" name="mobile" class="form-control inside-shadow" value="<?php echo $address_mobile ?>" >
+                                        <input type="text" name="mobile" class="form-control inside-shadow" value="<?php echo $user_mobile ?>" >
                                     </div>
                                     <div class="form-group">
                                         <label>House No.</label>
@@ -189,17 +189,29 @@
 
                                     <div class="form-group">
                                         <label>Product price</label>
-                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_product_price!='') ? $order_currency.' ' : '' ).$order_product_price ?>' readonly >
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_product_price!='') ? $inventory_currency_symbol.' ' : '' ).$order_product_price ?>' readonly >
                                     </div>
 
                                     <div class="form-group">
                                         <label>Delivery charge</label>
-                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_delivery_charges!='') ? $order_currency.' ' : '' ).$order_delivery_charges ?>' readonly >
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_delivery_charges!='') ? $inventory_currency_symbol.' ' : '' ).$order_delivery_charges ?>' readonly >
                                     </div>
 
                                     <div class="form-group">
                                         <label>Order total</label>
-                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_total_price!='') ? $order_currency.' ' : '' ).$order_total_price ?>' readonly >
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo (($order_total_price!='') ? $inventory_currency_symbol.' ' : '' ).$order_total_price ?>' readonly >
+                                    </div>
+
+                                    <h2>Receiver details</h2>
+
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo $address_name ?>' readonly >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Contact no.</label>
+                                        <input type='text' class='form-control inside-shadow' value='<?php echo $address_mobile ?>' readonly >
                                     </div>
 
                                     <?php
