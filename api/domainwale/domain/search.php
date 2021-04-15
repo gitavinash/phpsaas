@@ -15,12 +15,6 @@
 
         $url = "{$godaddy_url}{$godaddy_api_version}/domains/available";
 
-		$formParameters = "
-			'domains' : [
-				
-			];
-		";
-
 		$domainList=array(
 			"{$domainName}.in",
 			"{$domainName}.com",
@@ -30,7 +24,7 @@
 		
 		$bodyContent=json_encode(array(
 			'domains' => $domainList,
-			'checkType' => 'FAST'
+			'checkType' => 'FULL'
 		), TRUE);
 
 		$header = array(
@@ -47,8 +41,7 @@
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false);
-		// curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); // Values: GET, POST, PUT, DELETE, PATCH, UPDATE
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $bodyContent);
 		$result = curl_exec($ch);
