@@ -1,5 +1,32 @@
 <?php
 
+    $currentTheme=ROOT.'/app/system/visitor/default/desktop/';
+
+    function checkSiteIsExpire($site_expire_date, $currentTheme=ROOT.'/app/system/visitor/default/desktop/') {
+
+        if($site_expire_date<=date('Y-m-d')) {
+
+
+            if(date('Y-m-d', strtotime('+1 month', strtotime($site_expire_date))) >= date('Y-m-d')) {
+
+                // Website expire is less than 1 month
+
+                require_once $currentTheme.'website-suspend.php';
+
+            } else {
+
+                // Website expire is more than 1 month
+
+                require_once $currentTheme.'website-expire.php';
+
+            }
+
+            exit();
+
+        }
+
+    } 
+
     /** Check software is already install or not */
 
 	if($checkInstallation=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site INNER JOIN ".TABLE_PREFIX."site_setting ON site_setting_site_id=site_id INNER JOIN ".TABLE_PREFIX."app ON site_app_id=app_id INNER JOIN ".TABLE_PREFIX."theme ON theme_id=site_theme_id INNER JOIN ".TABLE_PREFIX."site_installation ON site_installation_parent_site_id=site_id WHERE site_url='".SITE_DOMAIN."'")) {
@@ -7,6 +34,8 @@
 		if(mysqli_num_rows($checkInstallation)!=0) {
 
             extract(mysqli_fetch_assoc($checkInstallation));
+
+            checkSiteIsExpire($site_expire_date);
 
             if($site_custom_domain==1) {
 
@@ -16,7 +45,7 @@
             }
 
         } else {
-
+            
             /** Check is Sub Domain is not a main domain of website */
 
             if($checkInstallation=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."site INNER JOIN ".TABLE_PREFIX."site_setting ON site_setting_site_id=site_id INNER JOIN ".TABLE_PREFIX."app ON site_app_id=app_id INNER JOIN ".TABLE_PREFIX."theme ON theme_id=site_theme_id INNER JOIN ".TABLE_PREFIX."site_installation ON site_installation_site_id=site_id WHERE site_domain='".SITE_DOMAIN."'")) {
@@ -24,6 +53,8 @@
                 if(mysqli_num_rows($checkInstallation)!=0) {
 
                     extract(mysqli_fetch_assoc($checkInstallation));
+
+                    checkSiteIsExpire($site_expire_date);
 
                     /** Fetch global website configuration settings */
 
@@ -46,7 +77,7 @@
         
                 } else {
 
-                    require_once ROOT.'/app/system/visitor/default/desktop/domain-not-found.php';
+                    require_once $currentTheme.'domain-not-found.php';
                     exit();
 
                 }
@@ -57,7 +88,7 @@
     
     } else {
 
-        require_once ROOT.'/app/system/visitor/default/desktop/verify-domain.php';
+        require_once $currentTheme.'verify-domain.php';
         exit();
 
     }
