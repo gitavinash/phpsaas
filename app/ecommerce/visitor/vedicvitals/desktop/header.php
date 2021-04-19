@@ -17,7 +17,7 @@
         <!-- SEO -->
 
         <meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
-        <meta name='robots' content='<?php echo $meta_robots ?>' />
+        <meta name='robots' content='<?php echo ((isset($meta_robots)) ? $meta_robots : 'index, follow' ) ?>' />
 		<link rel="manifest" href="mainfest.json">
 		<link rel="apple-touch-icon" href="<?php echo SITE_ICON ?>">
         <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
