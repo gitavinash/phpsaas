@@ -40,3 +40,11 @@ Cart Status
 2 : Procced to next step of cart
 3 : 
 4 : Remove from cart
+
+Website status
+
+0 : Initiate or Not verified
+1 : Website is live
+2 : Website is suspend
+3 : Website is expired
+4 : Payment pending

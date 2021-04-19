@@ -66,11 +66,7 @@
 			
 				$site_app = $app_path;
 
-				if($site_status==0) {
-		
-					die('Something went wrong while installing application on your server. please contact to your system administration');
-
-				} else {
+				if($site_status==1) {
 
 					/** Fetch global website configuration settings */
 
@@ -88,6 +84,20 @@
 							extract($websiteConfigutrationList);
 
 						}
+
+					}
+
+				} else {
+
+					switch ($site_status) {
+
+						case 2:
+							echo 'expire';
+							break;
+							
+						default: 
+							echo "Hello";
+							break;
 
 					}
 
