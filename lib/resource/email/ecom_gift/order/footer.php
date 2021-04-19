@@ -22,7 +22,6 @@
 								<div id='address' class='mktEditable'>
 
 									<p><strong>".SITE_NAME."</strong></p>
-									<p style='float:left; width: 100%; text-align: center' ><strong>Regd Address</strong> - 622 C, Guru Ram Dass Nagar, Laxmi Nagar, Delhi - 110051</p>
 									
 								</div>
 
