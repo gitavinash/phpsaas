@@ -46,6 +46,16 @@
 	
 			$checkDomain = json_decode($result, true);
 
+			if(isset($checkDomain['domains'])) {
+
+				$status=200;
+				$msg='Data fetch successfully';
+
+			} else {
+
+				$msg=$checkDomain['message'];
+
+			}
 
 		} else {
 
@@ -62,7 +72,7 @@
     $result = array(
         'status' => ((isset($status)) ? $status : 'error' ),
         'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-        'is_available' => ((isset($checkDomain)) ? $checkDomain : '' )
+        'domain_list' => ((isset($checkDomain['domains'])) ? $checkDomain['domains'] : '' )
     );
 
     echo json_encode($result, TRUE);
