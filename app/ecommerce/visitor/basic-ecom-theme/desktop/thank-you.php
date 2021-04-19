@@ -48,15 +48,17 @@
                     if($transaction_method=='online') {
 
                         $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
-                        
-                        /** Update cart table */
 
-                        if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
+                    }
 
-                            <section class='continue-shopping' >
-                                <h1>Error<span>Something is wrong while updating cart.</span></h1>
-                                <a href="/" class="btn btn-success" >Continue Shopping</a>
-                            </section>
+                    /** Update cart table */
+
+                    if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
+
+                        <section class='continue-shopping' >
+                            <h1>Error<span>Something is wrong while updating cart.</span></h1>
+                            <a href="/" class="btn btn-success" >Continue Shopping</a>
+                        </section>
 
                     <?php
 
