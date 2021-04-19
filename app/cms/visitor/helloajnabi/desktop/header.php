@@ -62,7 +62,7 @@
 							<a href="/" class="logo"><img src="<?php echo USER_IMAGES ?>logo-alt.png" alt=""></a>
 						</div>
 						<ul class="main-nav nav navbar-nav">
-							<li class="active"><a href="#">Home</a></li>
+							<li class="active"><a href="/">Home</a></li>
 							<li><a href="">Bollywood & TV</a></li>
 							<li><a href="/category/sports/">Sports</a></li>
 							<li><a href="/category/breaking-news/">Breaking news</a></li>
