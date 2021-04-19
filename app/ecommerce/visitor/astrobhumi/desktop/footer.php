@@ -58,7 +58,7 @@
 								<h3>Contact Us</h3>
 								<p>543, Ward no 5,Durjanpura, Nawalgarh, Rajasthan - 333042, India</p>
 								<p>info@astrobhumi.com</p>
-								<p>+91 8053965181</p>
+								<p>+91-8053965181</p>
 
 								<section class="hideOnMobile" >
 									<div class="container-fluid">

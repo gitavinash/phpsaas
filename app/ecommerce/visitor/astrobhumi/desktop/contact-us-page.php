@@ -30,9 +30,9 @@
 					<div class="col-md-6">
 						<div class="contct-info">
 							<ul>
-								<li><i class="fa fa-home" aria-hidden="true"></i> 622-A, Ground Floor, Guru Ram Das Nagar, Laxmi Nagar, DELHI - 110092, India</li>
-								<li><i class="fa fa-phone-alt" aria-hidden="true"></i> +91 9310142836</li>
-								<li><i class="fa fa-envelope" aria-hidden="true"></i> care@vedicvitals.com</li>
+								<li><i class="fa fa-home" aria-hidden="true"></i> 543, Ward no 5,Durjanpura, Nawalgarh, Rajasthan - 333042, India</li>
+								<li><i class="fa fa-phone-alt" aria-hidden="true"></i> +91-8053965181</li>
+								<li><i class="fa fa-envelope" aria-hidden="true"></i> info@astrobhumi.com</li>
 							</ul>
 						</div>
 					</div>
