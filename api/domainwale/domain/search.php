@@ -15,7 +15,7 @@
 	
 			/** Domain search API url */
 	
-			$url = "{$godaddy_url}{$godaddy_api_version}/domains/available";
+			$url = "{$godaddy_url}{$godaddy_api_version}/domains/available?checkType=full";
 
 			$domains=array(
 				"{$domain}.com",
@@ -25,7 +25,7 @@
 			);
 
 			$header = array(
-				'Authorization: sso-key '.$godaddy_api_key.':'.$godaddy_api_salt.'',
+				'Authorization: sso-key '.$godaddy_api_key.':'.$godaddy_api_salt,
 				"Content-Type: application/json",
 				'Accept: application/json'
 			);
