@@ -45,7 +45,7 @@
 					}
 
 				} else {
-						
+
 					require_once 'pagination.php';
 
 				}

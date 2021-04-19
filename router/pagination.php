@@ -3,7 +3,6 @@
 	$themeAuthenticationFile=USER_PATH.$urlStructure[0].'.php';
 
 	if(file_exists($themeAuthenticationFile)) {
-
 		/** Theme page */
 
 		require_once $themeAuthenticationFile;
