@@ -63,10 +63,10 @@
 									  	<li class="nav-item dropdown">
 									      	<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Our Products</a>
 									      	<div class="dropdown-menu">
-												<a class="dropdown-item" href="#">Gemes stone</a>
-												<a class="dropdown-item" href="#">Meru ring</a>
-												<a class="dropdown-item" href="#">Yantra</a>
-												<a class="dropdown-item" href="#">Puja</a>
+												<a class="dropdown-item" href="/product/gems/gemes-stone/">Gemes stone</a>
+												<a class="dropdown-item" href="/product/ring/meru-ring/">Meru ring</a>
+												<a class="dropdown-item" href="/product/yantra/yantra/">Yantra</a>
+												<a class="dropdown-item" href="/product/puja/puja/">Yantra</a>
 									      	</div>
 									  	</li>
 									  	<li class="nav-item"><a class="nav-link" href="/our-services/">Our Services</a></li>

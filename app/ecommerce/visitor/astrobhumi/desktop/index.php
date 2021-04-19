@@ -34,19 +34,18 @@
 
 	<div class="col-md-12">
 		<div class="head-1">
-			<h2>Our Story</h2>
+			<h2>Our Service</h2>
 				</div>
 	</div>
 
 	<div class="col-md-4 bg-white">
-		<img src="<?php echo USER_IMAGES ?>our-story.png" class="w-100" alt="">
+		<!-- <img src="<?php echo USER_IMAGES ?>our-story.png" class="w-100" alt=""> -->
+		<img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>">
 	</div>
 	<div class="col-md-8 story-con bg-white">
-		<p>We live in a country of 1.35 billion people where basic health & sanitation is still a big problem.</p>
-		<p>Today consumption of tobacco, liquor, fast food and exposure to pollution is a common part of our daily life. This unhealthy lifestyle has further impacted on our body and became the root cause of many health problems.</p>
-		<p>Ayurveda - Ancient Age Science for Healing helps in prevention as well as cure of health problems. Ayurveda uses natural herbs for preparing remedies which are safe to consume and does not leave any side effect on the human body.</p>
-		<p>Astro bhumi, a modern age Ayurvedic Company follows the ideology of ”Prevention is better than cure”.</p>
-		<p>Our vision is to impact 50 million Indian citizens by the year 2025 with the aim to provide a healthy lifestyle. </p>
+		<p>ज्योतिष एक विज्ञान है जिसका युगों युगों ऋषि मुनि जीवित प्राणियों पर ग्रहो के प्रभाव से उनके जीवन का आंकलन करते आए है । ग्रहों की स्थिति के अनुसार कुंडली की गणना करते हए भविष्वाणी की जाती है। ASTROBHUMI ज्योतिष संस्थान में पिछले ३  दशकों से लोगों के जीवन की सटीक भविष्वाणी करते हुए एक नए मुकाम पर पहुंचे है। Astrobhumi के आचार्यों द्वारा पूजापाठ और वैदिक मंत्रो द्वारा जीवन में बनने वाले अशुभ योगों को दूर किया जाता है। कुंडली की सटीक भविष्वाणी और बनने वाले अशुभ योग उपायों द्वारा दूर किये जाते है।</p>
+		<p>कर्मकांड पंडितों द्वारा यंत्रों को अभिमंत्रित करने से लेकर पूजा पाठ द्वारा जीवन के कठिन दौर से  निकलने में आसान राह बनाते है।</p>
+		<p>यंत्रो का प्राचीन काल से मानसिक शांति और ध्यान के लिए उपयोग किया जाता रहा है। प्रत्येक यंत्र को ध्यान और मंत्रो द्वारा किसी विशिष्ट लाभ प्राप्त करने के लिए तैयार किया जाता है। यंत्र कुंडली के ग्रह के अनुसार अभिमंत्रित किये जाते है।</p>
 	</div>
 </div>
 		
@@ -54,63 +53,15 @@
 
 </section>
 
-
-
-		<!-- story start -->
-				<section class="section-content our-story-section bg-light">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="head-1">
-							<h2><span style="font-weight:normal">Why Choose</span> Astro bhumi</h2>
-							<p>Astro bhumi is focused on providing high quality Ayurvedic Products for your overall well being. We source best in quality hand picked herbs for our products which are procured at sanitized facilitations and are backed with scientific ancient formulations approved by Govt of India. </p>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="book-am">
-							<div class="icon-b"><img src="<?php echo USER_IMAGES ?>Icons-1.jpg"></div>
-							<div>
-								<h3>High Quality Ingredients</h3>
-								<p>Our each product consists of high quality ingredients for your overall well-being.</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="book-am">
-							<div class="icon-b"><img src="<?php echo USER_IMAGES ?>Icons-2.jpg"></div>
-							<div>
-								<h3>No Side Effects </h3>
-								<p>Our products are made with natural herbs which do not leave any side-effects on your body.</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="book-am">
-							<div class="icon-b"><img src="<?php echo USER_IMAGES ?>Icons-3.jpg"></div>
-							<div>
-								<h3>Made In India</h3>
-								<p>Our all products are backed with Indian ancient science & produced in India with love.</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="book-am">
-							<div class="icon-b"><img src="<?php echo USER_IMAGES ?>Icons-4.jpg"></div>
-							<div>
-								<h3>Spill Proof Packaging</h3>
-								<p>Our products are packed with 3 layer protection to make sure they reach you in best possible manner.</p>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</section>
-		
 		<section class="section-content prodct-section">
 
 			<div class="container">
 				<div class="row">
+					<div class="col-md-12">
+						<div class="head-1">
+							<h2><span style="font-weight:normal">Astrology</span> Service</h2>
+						</div>
+					</div>
 					<div class="col-md-4 col-12 ">
 						<div class="product-feature">
 							<img src="<?php echo USER_IMAGES ?>product/feature.png" title="Astro bhumi, a modern age Ayurvedic Company" alt="Ayurvedic Health Supplements by Astro bhumi">
@@ -154,7 +105,7 @@
 					<div class="col-md-12">
 						<div class="head-1">
 							<h2>Stories To Share</h2>
-							<h5>Want to be featured here? Share your story at care@vedicvitals.com</h5>
+							<h5>Want to be featured here? Share your story at info@astrobhumicom</h5>
 						</div>
 					</div>
 

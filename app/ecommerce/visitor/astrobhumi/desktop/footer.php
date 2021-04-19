@@ -23,6 +23,7 @@
 								<ul class="list-unstyled">
 									<li><a href="/">Home</a></li>
 									<li><a href="/our-story/">Our Story</a></li>
+									<li><a href="/our-services/">Our Services</a></li>
 									<li><a href="/contact-us/">Contact Us</a></li>
 					            </ul>
 							</div>
@@ -32,10 +33,10 @@
 							<div class="fot-box">	
 								<h3>Products</h3>
 								<ul class="list-unstyled">
-									<li><a href="#">Gemes stone</a></li>
-									<li><a href="#">Meru ring</a></li>
-									<li><a href="#">Yantra</a></li>
-									<li><a href="#">Puja</a></li>
+									<li><a href="/product/gems/gemes-stone/">Gemes stone</a></li>
+									<li><a href="/product/ring/meru-ring/">Meru ring</a></li>
+									<li><a href="/product/yantra/yantra/">Yantra</a></li>
+									<li><a href="/product/puja/puja/">Puja</a></li>
 					            </ul>
 							</div>
 						</div>
