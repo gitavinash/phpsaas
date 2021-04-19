@@ -55,37 +55,6 @@
 
                         $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
 
-                        /** Calling Numbus API */
-                        // curl_setopt($ch, CURLOPT_URL, 'https://ship.nimbuspost.com/api/orders/create');
-                        // curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                        // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        //     "NP-API-KEY: cc13f759563bd6a031e6d51c5e58950325aac6ea1558"
-                        // ));
-
-                        // $payload = Array(
-                        //     'order_number' => 'OD'.$order_id,
-                        //     'payment_method' => 'prepaid',
-                        //     'amount' => $order_total_price,
-                        //     'fname' => $profile_first_name,
-                        //     'lname' => $profile_last_name,
-                        //     'address' => $address_house_no.', '.$address_area,
-                        //     'address_2' => $address_landmark,
-                        //     'phone' => $mobile,
-                        //     'city' => $city_name,
-                        //     'state' => $state_name,
-                        //     'country' => $country_name,
-                        //     'pincode' => $address_pin_code,
-                        //     'products' => array(
-                        //         array(
-                        //         'name' => $productName,
-                        //         'qty' => $order_product_qty,
-                        //         'price' => $order_total_price,
-                        //         )
-                        //     )
-                        // );
-
                     }
 
                     /** Paramantra API */

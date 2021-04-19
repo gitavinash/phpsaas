@@ -48,56 +48,15 @@
                     if($transaction_method=='online') {
 
                         $updateOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
+                        
+                        /** Update cart table */
 
-                        /** Calling Numbus API */
+                        if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
 
-                        $ch = curl_init();
-
-                        curl_setopt($ch, CURLOPT_URL, 'https://ship.nimbuspost.com/api/orders/create');
-                        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                            "NP-API-KEY: cc13f759563bd6a031e6d51c5e58950325aac6ea1558"
-                        ));
-
-                        $payload = Array(
-                            'order_number' => 'OD'.$order_id,
-                            'payment_method' => 'prepaid',
-                            'amount' => $order_total_price,
-                            'fname' => $profile_first_name,
-                            'lname' => $profile_last_name,
-                            'address' => $address_house_no.', '.$address_area,
-                            'address_2' => $address_landmark,
-                            'phone' => $mobile,
-                            'city' => $city_name,
-                            'state' => $state_name,
-                            'country' => $country_name,
-                            'pincode' => $address_pin_code,
-                            'products' => array(
-                                array(
-                                'name' => $productName,
-                                'qty' => $order_product_qty,
-                                'price' => $order_total_price,
-                                )
-                            )
-                        );
-
-                        curl_setopt($ch, CURLOPT_POST, true);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
-                        $response = curl_exec($ch);
-                        curl_close($ch);
-
-                    }
-
-                    /** Update cart table */
-
-                    if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
-
-                        <section class='continue-shopping' >
-                            <h1>Error<span>Something is wrong while updating cart.</span></h1>
-                            <a href="/" class="btn btn-success" >Continue Shopping</a>
-                        </section>
+                            <section class='continue-shopping' >
+                                <h1>Error<span>Something is wrong while updating cart.</span></h1>
+                                <a href="/" class="btn btn-success" >Continue Shopping</a>
+                            </section>
 
                     <?php
 

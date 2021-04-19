@@ -45,49 +45,7 @@
                                 if(mysqli_num_rows($checkProductName)!=0) {
 
                                     extract(mysqli_fetch_assoc($checkProductName)); 
-
-                                    /** Calling Numbus API */
-            
-                                    $ch = curl_init();
-            
-                                    curl_setopt($ch, CURLOPT_URL, 'https://ship.nimbuspost.com/api/orders/create');
-                                    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                                        "NP-API-KEY: cc13f759563bd6a031e6d51c5e58950325aac6ea1558"
-                                    ));
-
-                                    $orderID='OD'.$order_id;
-                                    $logisticOrderMode=(($order_payment_mode=='online') ? 'prepaid' : 'COD' );
-
-                                    $payload = Array(
-                                        'order_number' => $orderID,
-                                        'payment_method' => $logisticOrderMode,
-                                        'amount' => $order_total_price,
-                                        'fname' => $profile_first_name,
-                                        'lname' => $profile_last_name,
-                                        'address' => $address_house_no.', '.$address_area,
-                                        'address_2' => $address_landmark,
-                                        'phone' => $profile_mobile,
-                                        'city' => $city_name,
-                                        'state' => $state_name,
-                                        'country' => $country_name,
-                                        'pincode' => $address_pin_code,
-                                        'products' => array(
-                                            array(
-                                            'name' => $productName,
-                                            'qty' => $order_product_qty,
-                                            'price' => $order_total_price,
-                                            )
-                                        )
-                                    );
-            
-                                    curl_setopt($ch, CURLOPT_POST, true);
-                                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
-                                    $response = curl_exec($ch);
-                                    curl_close($ch);
-            
+         
                                     if(mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$id}'")) {
             
                                         $status=200;
