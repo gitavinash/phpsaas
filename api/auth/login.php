@@ -6,7 +6,7 @@
 
 		extract($data);
 
-		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_user_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type WHERE user_email='{$email}' LIMIT 1")) {
+		if($checkUser=mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON user_id=profile_user_id INNER JOIN ".TABLE_PREFIX."site_access ON site_access_user_id=user_id INNER JOIN ".TABLE_PREFIX."site ON site_id=site_access_site_id INNER JOIN ".TABLE_PREFIX."user_type ON user_type_code=site_access_type AND site_access_site_id=".SITE_ID." WHERE user_email='{$email}' LIMIT 1")) {
 
 			if(mysqli_num_rows($checkUser)!=0) {
 
@@ -16,7 +16,7 @@
 
 					/** User has access of this site */
 					
-					if($site_access_status==1) {
+					if($site_access_status==1 && $user_status==1) {
 
 						ob_start();
 
@@ -36,13 +36,19 @@
 
 						if($user_status==0) {
 
-							include_once EMAIL_TEMPLATE.'user-verification.php';
+							/** User verification url using the user salt key */
 
+							$verifyURL=SITE_DOMAIN.'/verify/email.php?user_id='.$user_salt_key.'&email='.base64_encode($email);
+
+							require_once EMAIL_TEMPLATE.'email-verification.php';
+							
 							$msg='Please verify your account';
 
-						}
+						} else {
 
-						$msg='Invalid Access';
+							$msg='No user found';
+
+						}
 
 					}
 
@@ -53,8 +59,11 @@
 
 				}
 
+			} else {
+
+				$msg='No user found';
+
 			}
-	
 
         } else {
 			$status='error';

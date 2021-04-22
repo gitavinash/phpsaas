@@ -64,13 +64,13 @@
                     curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/');
 
                 }
-                
+
                 curl_setopt($ch, CURLOPT_HEADER, FALSE);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    "X-Api-Key:{$pg_api_key}",
-                    "X-Auth-Token:{$pg_auth_token}")
+                    "X-Api-Key: ".PG_API_KEY,
+                    "X-Auth-Token: ".PG_AUTH_TOKEN)
                 );
                 $payload = Array(
                     'purpose' => $cartProduct,

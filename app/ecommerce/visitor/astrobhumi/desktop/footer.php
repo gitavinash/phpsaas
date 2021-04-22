@@ -159,7 +159,7 @@
 	    </div>
 
 		<div class="whatsapp">
-			<a href="https://wa.me/918053965181?text=Hello"><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
+			<a href="https://wa.me/918053965181?text=Hello" target="_blank" ><img src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
 		</div>
 		
 		<!-- sections end -->

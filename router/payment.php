@@ -1,6 +1,6 @@
 <?php
 
-    $pgFile = PAYMENT_GATEWAY.$pg_name.'/'.((isset($urlStructure[1])) ? $urlStructure[1] : 'generate' ).'.php';
+    $pgFile = PAYMENT_GATEWAY.PG_NAME.'/'.((isset($urlStructure[1])) ? $urlStructure[1] : 'generate' ).'.php';
 
     if(file_exists($pgFile)) {
 

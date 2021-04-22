@@ -1,8 +1,8 @@
 <?php
 
-	if(isset($email_enable)) {
+	if(!defined(EMAIL_ENABLE)) {
 
-		if($email_enable==1) {
+		if(EMAIL_ENABLE==1) {
 
 			/** Include email sonfiguration file */
 
@@ -54,4 +54,8 @@
 
 		}
 	
+	} else {
+
+		echo 'not'.EMAIL_ENABLE;
+
 	}

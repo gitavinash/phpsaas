@@ -66,40 +66,24 @@
 			
 				$site_app = $app_path;
 
-				if($site_status==1) {
-
-					/** Fetch global website configuration settings */
-
-					if($websiteConfigutration=mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_status=1 AND site_configuration_global=0 AND site_configuration_site_id={$site_id}")) {
-
-						if(mysqli_num_rows($websiteConfigutration)!=0) {
-
-							while($websiteConfigutrationData=mysqli_fetch_assoc($websiteConfigutration)) {
-
-								$websiteConfigutrationList[$websiteConfigutrationData['site_configuration_key']]=$websiteConfigutrationData['site_configuration_value'];
-
-							}
-
-							// Convert the website configuration key as a value
-							extract($websiteConfigutrationList);
-
-						}
-
-					}
-
-				} else {
+				if($site_status!=1) {
 
 					switch ($site_status) {
 
-						case 2:
-							echo 'expire';
+						case 2: 
+							require_once $currentTheme.'website-expire.php';
+							break;
+	
+						case 3:
+							require_once $currentTheme.'website-suspend.php';
 							break;
 							
 						default: 
-							echo "Hello";
+							require_once $currentTheme.'website-default-status.php';
 							break;
-
+	
 					}
+					exit();
 
 				}
 

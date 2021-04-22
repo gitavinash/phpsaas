@@ -110,11 +110,11 @@
 
         /** Domain purchase API call */
 	
-		$url = "{$godaddy_url}{$godaddy_api_version}/domains/purchase/";
+		$url = "{GODADDY_URL}{GODADDY_API_VERSION}/domains/purchase/";
 
 		$header = array(
             'X-Shopper-Id: '.$godaddy_shopper_id,
-			'Authorization: sso-key '.$godaddy_api_key.':'.$godaddy_api_salt,
+			'Authorization: sso-key '.GODADDY_API_KEY.':'.GODADDY_API_SALT,
 			"Content-Type: application/json",
 			'Accept: application/json'
 		);

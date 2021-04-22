@@ -4,7 +4,7 @@
 
     use Razorpay\Api\Api;
 
-    $api = new Api($pg_key_id, $pg_key_secret);
+    $api = new Api(PG_KEY_ID, PG_KEY_SECRET);
 
     /** Check request is valid or not */
 
@@ -68,7 +68,7 @@
 
                 // Update transaction table
 
-                if(!$updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_gateway='{$pg_name}', transaction_reference_id='{$transaction['id']}', transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID)) {
+                if(!$updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_gateway='{PG_NAME}', transaction_reference_id='{$transaction['id']}', transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=".SITE_ID)) {
 
                     echo 'Something is wrong while generation transaction status';
 
@@ -80,7 +80,7 @@
                 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
                 <script type="text/javascript">
                     var orderValue = {
-                        "key": '<?php echo $pg_key_id ?>',
+                        "key": '<?php echo PG_KEY_ID ?>',
                         "amount": <?php echo str_replace(',', '', number_format($order_total_price, 2))*100 ?>,
                         "currency": '<?php echo $cart_currency ?>',
                         "name": '',

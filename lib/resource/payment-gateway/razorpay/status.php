@@ -3,7 +3,7 @@
     require_once 'razorpay.php';
     use Razorpay\Api\Api;
 
-    $api = new Api($pg_key_id, $pg_key_secret);
+    $api = new Api(PG_KEY_ID, PG_KEY_SECRET);
 
     if(isset($pay_id)) {
 
