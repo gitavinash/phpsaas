@@ -42,7 +42,6 @@
 
 					echo "Message could not be sent. <p>";
 					echo "Mailer Error: " . $mail->ErrorInfo;
-					exit();
 
 				}
 

@@ -121,6 +121,7 @@
 			(d.head || d.body).appendChild(s);
 			})();
 		</script>
+		<script src="https://jsc.mgid.com/h/e/helloajnabi.com.891767.js" async></script>
 		<script src="<?php echo USER_JS ?>app.min.js"></script>
 
 	</body>

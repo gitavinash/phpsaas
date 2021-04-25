@@ -16,11 +16,6 @@
 
                     extract(mysqli_fetch_assoc($checkInstallation));
         
-                } else {
-
-                    echo 'No data found';
-                    exit();
-
                 }
 
             }

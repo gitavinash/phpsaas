@@ -133,10 +133,6 @@
 		case 'feed' :
 			require_once 'feed.php';
 			break;
-
-		case 'redirect' :
-			require_once ROOT.'/redirect.php';
-			break;
 			
 		case 'sitemap' :
 			require_once 'sitemap.php';

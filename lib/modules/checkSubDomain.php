@@ -1,6 +1,6 @@
 <?php
 
-    $currentTheme=ROOT.'/app/system/visitor/default/desktop/';
+    define('SYSTEM_THEME', '/app/system/visitor/default/desktop/');
 
     function checkSiteIsExpire($site_expire_date, $currentTheme=ROOT.'/app/system/visitor/default/desktop/') {
 
@@ -11,13 +11,13 @@
 
                 // Website expire is less than 1 month
 
-                require_once $currentTheme.'website-suspend.php';
+                require_once SYSTEM_THEME.'website-suspend.php';
 
             } else {
 
                 // Website expire is more than 1 month
 
-                require_once $currentTheme.'website-expire.php';
+                require_once SYSTEM_THEME.'website-expire.php';
 
             }
 
@@ -58,7 +58,7 @@
                     
                 } else {
 
-                    require_once $currentTheme.'domain-not-found.php';
+                    require_once SYSTEM_THEME.'domain-not-found.php';
                     exit();
 
                 }
@@ -69,7 +69,7 @@
     
     } else {
 
-        require_once $currentTheme.'verify-domain.php';
+        require_once SYSTEM_THEME.'verify-domain.php';
         exit();
 
     }

@@ -26,6 +26,7 @@
                 if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_payment_id='{$paymentID}', transaction_payment_mode='".strtolower($transactionStatus['method'])."', transaction_status=1 WHERE transaction_reference_id='{$transactionID}'")) {
 
                     $transaction_id=base64_encode($transaction_id);
+                    
                     require_once PAYMENT_GATEWAY.'success.php';
 
                 } else {

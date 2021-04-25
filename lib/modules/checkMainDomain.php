@@ -1,6 +1,6 @@
 <?php
 
-	$currentTheme=ROOT.'/app/system/visitor/default/desktop/';
+	define('SYSTEM_THEME', ROOT.'/app/system/visitor/default/desktop/');
 
 	/** Check software is already install or not */
 
@@ -21,14 +21,14 @@
 
 					} else {
 
-						require_once $currentTheme.'installation-error.php';
+						require_once SYSTEM_THEME.'installation-error.php';
 						exit();
 
 					}
 			
 				} else {
 
-					require_once $currentTheme.'domain-not-found.php';
+					require_once SYSTEM_THEME.'domain-not-found.php';
 					exit();
 
 				}
@@ -50,13 +50,13 @@
 
 					// Website expire is less than 1 month
 
-					require_once $currentTheme.'website-suspend.php';
+					require_once SYSTEM_THEME.'website-suspend.php';
 
 				} else {
 
 					// Website expire is more than 1 month
 
-					require_once $currentTheme.'website-expire.php';
+					require_once SYSTEM_THEME.'website-expire.php';
 
 				}
 
@@ -71,15 +71,15 @@
 					switch ($site_status) {
 
 						case 2: 
-							require_once $currentTheme.'website-expire.php';
+							require_once SYSTEM_THEME.'website-expire.php';
 							break;
 	
 						case 3:
-							require_once $currentTheme.'website-suspend.php';
+							require_once SYSTEM_THEME.'website-suspend.php';
 							break;
 							
 						default: 
-							require_once $currentTheme.'website-default-status.php';
+							require_once SYSTEM_THEME.'website-default-status.php';
 							break;
 	
 					}

@@ -1,14 +1,25 @@
 <?php
 
-    $pgFile = PAYMENT_GATEWAY.PG_NAME.'/'.((isset($urlStructure[1])) ? $urlStructure[1] : 'generate' ).'.php';
+    $paymentGatewayRequestType=((isset($urlStructure[1])) ? $urlStructure[1] : 'generate' );
 
-    if(file_exists($pgFile)) {
+    if($paymentGatewayRequestType=='generate') {
 
-        require_once $pgFile;
+        // Payment gateway generate file
+
+        require_once PAYMENT_GATEWAY.$paymentGatewayRequestType.'.php';
 
     } else {
 
-        // echo 'Something is wrong while calling payment gateway function';
-        echo $pgFile;
+        // fetch payment file according to request type
+
+        if(file_exists(PAYMENT_GATEWAY.PG_NAME.'/'.$paymentGatewayRequestType.'.php')) {
+
+            require_once PAYMENT_GATEWAY.PG_NAME.'/'.$paymentGatewayRequestType.'.php';
+
+        } else {
+
+            SYSTEM_THEME.'payment-gateway-file-missing.php';
+
+        }
 
     }

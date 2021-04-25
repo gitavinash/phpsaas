@@ -31,6 +31,17 @@
 							</div>
 						</article>
 						<!-- /ARTICLE POST -->
+
+						<div id="M575956ScriptRootC891767"></div>
+
+						<!-- This belongs to <body/> -->
+						<fw-embed-feed
+						app_id="oOQUHCT4_aavCGIpi1jCIUqL_liYVxH2"
+						mode="grid"
+						open_in="_iframe"
+						max_videos="10"
+						placement="middle"
+						></fw-embed-feed>
 						
 						<!-- widget tags -->
 						<div class="widget-tags">
