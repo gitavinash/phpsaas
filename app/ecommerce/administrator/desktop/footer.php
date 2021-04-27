@@ -12,7 +12,7 @@
 		<script src='<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js' type='text/javascript' ></script>
 		<script src='<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js' type='text/javascript' ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/datatables.min.js" type="text/javascript" ></script>
-		<script src="<?php echo DEFAULT_ADMIN_JS ?>script.min.js"></script>
+		<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 		<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 
 		<?php

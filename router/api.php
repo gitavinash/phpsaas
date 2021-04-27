@@ -28,7 +28,11 @@
 			break;
 
 		case 'update-database' :
-			require_once RESOURCE.'database/repair-database.php';
+			if(SITE_ID==1) {
+				require_once RESOURCE.'database/repair-database.php';
+			} else {
+				require_once SYSTEM_THEME.'403.php';
+			}
 			break;
 
 		case 'notification' :

@@ -649,6 +649,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
     CHANGE site_index site_index VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'noindex, nofollow'");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    ADD COLUMN site_dashboard_version int(2) NOT NULL DEFAULT 1 COMMENT 'Dedicated admin panel theme version' AFTER site_theme_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+  ADD INDEX site_dashboard_version (site_dashboard_version)");
+
   /** Site Access Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_access

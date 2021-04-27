@@ -93,36 +93,51 @@
 
 	/* Default logged in member user directory managment */
 
-	define('DEFAULT_ADMIN_DIR', '/app/default/'.USER_TYPE.'/'.SITE_VERSION.'/');
-	define('DEFAULT_ADMIN_PATH', ROOT.DEFAULT_ADMIN_DIR);
-	define('DEFAULT_ADMIN_URL', SITE_URL.DEFAULT_ADMIN_DIR);
-	define('DEFAULT_ADMIN_STYLESHEET', CSS_LIBRARY.'app/default/'.SITE_VERSION.'/');
-	define('DEFAULT_ADMIN_JS', JS_LIBRARY.'app/default/'.SITE_VERSION.'/');
-	define('DEFAULT_ADMIN_IMAGES', IMG_LIBRARY.'app/default/'.SITE_VERSION.'/');
+	$tempDashboardDir='/app/dashboard/v'.$site_dashboard_version.'/default/';
 
-	/* App logged in member user directory managment */
+	if(is_dir(ROOT.$tempDashboardDir)) {
 
-	$adminDirectory='/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/';
-	
-	if(is_dir($adminDirectory)) {
+		// Check site version theme is available or not
 
-		/** specific device theme or version of request for visitor website */
+		if(is_dir(ROOT.$tempDashboardDir.SITE_VERSION.'/')) {
 
-		define('ADMIN_DIR', $adminDirectory);
+			// include theme as per site version
+
+			define('ADMIN_DIR', $tempDashboardDir.SITE_VERSION.'/');
+
+		} else {
+
+			// Include the desktop theme
+
+			define('ADMIN_DIR', $tempDashboardDir.'desktop/');
+
+		}
+
+		define('ADMIN_PATH', ROOT.ADMIN_DIR);
+		define('ADMIN_URL', SITE_URL.ADMIN_DIR);
+		define('ADMIN_STYLESHEET', ADMIN_URL.'assets/css/');
+		define('ADMIN_CSS_LIBRARY', CSS_LIBRARY.'app/default/'.SITE_VERSION.'/');
+		define('ADMIN_JS', ADMIN_URL.'assets/js/');
+		define('ADMIN_JS_LIBRARY', JS_LIBRARY.'app/default/'.SITE_VERSION.'/');
+		define('ADMIN_IMAGES', ADMIN_URL.'assets/images/');
+		define('ADMIN_IMG_LIBRARY', IMG_LIBRARY.'app/default/'.SITE_VERSION.'/');
+		define('ADMIN_PLUGIN', ADMIN_URL.'assets/plugins/');
 
 	} else {
 
-		/** define other version to only desktop theme for visitor website */
+		// Default or previous admin dashbaord url
 
-		define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/desktop/');
+		define('ADMIN_DIR', '/app/'.SITE_APP.'/'.USER_TYPE.'/'.SITE_VERSION.'/');
+		define('ADMIN_PATH', ROOT.ADMIN_DIR);
+		define('ADMIN_URL', SITE_URL.ADMIN_DIR);
+		define('ADMIN_STYLESHEET', CSS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+		define('ADMIN_CSS_LIBRARY', CSS_LIBRARY.'app/default/'.SITE_VERSION.'/');
+		define('ADMIN_JS', JS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+		define('ADMIN_JS_LIBRARY', JS_LIBRARY.'app/default/'.SITE_VERSION.'/');
+		define('ADMIN_IMAGES', IMG_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
+		define('ADMIN_IMG_LIBRARY', IMG_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 
 	}
-
-	define('ADMIN_PATH', ROOT.ADMIN_DIR);
-	define('ADMIN_URL', SITE_URL.ADMIN_DIR);
-	define('ADMIN_STYLESHEET', CSS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
-	define('ADMIN_JS', JS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
-	define('ADMIN_IMAGES', IMG_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 
 	/* Visitor directory managment */
 

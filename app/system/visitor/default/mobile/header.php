@@ -27,7 +27,7 @@
         <meta name="theme-color" content="<?php SITE_THEME_COLOUR ?>">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css" >
-        <link rel="stylesheet" href="<?php echo DEFAULT_ADMIN_STYLESHEET ?>login.min.css">
+        <link rel="stylesheet" href="<?php echo ADMIN_CSS_LIBRARY ?>login.min.css">
         <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,700" rel="stylesheet">
     </head>
 
