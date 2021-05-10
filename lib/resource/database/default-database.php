@@ -393,3 +393,5 @@
   /** Updating Database is something is changed from previous version */
 
   require_once 'repair-database.php';
+
+  header("Refresh:0");

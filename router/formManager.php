@@ -24,59 +24,86 @@
 
 		}
 
-		extract($secure);
+		if(isset($secure)) {
 
-		/** Default API Request */
+			extract($secure);
 
-		$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
+			// Call API using the exact url
 
-		if(!file_exists($apiCall)) {
+			$apiCall=API_MODULES.str_replace('/api/', '', rtrim(BASE_URL, '/')).'.php';
 
-			/** Website APP Api Request */
+			if(!file_exists($apiCall)) {
 
-			$apiCall=API_MODULES.$type.'/'.$action.'.php';
+				/** Default API Request */
 
-		}
-		
-		if(file_exists($apiCall)) {
+				$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
 
-			/** Call the API */
+				if(!file_exists($apiCall)) {
 
-			require_once $apiCall;
+					/** Website APP Api Request */
 
-			if(function_exists($action)) {
+					$apiCall=API_MODULES.$type.'/'.$action.'.php';
 
-				call_user_func($action, $connection, $secure);
+					if(file_exists($apiCall)) {
 
-			} else {
-				
-				$msg='<h1>Undefine function '.$type.' -> '.$action.' </h1>';
+						/** Call the API */
+
+						require_once $apiCall;
+
+					} else {
+
+						/** Call dedicated api */
+
+						$apiCall=API_MODULES.$type.'.php';
+
+						if(!file_exists($apiCall)) {
+
+							$displaErrorInJSON=true;
+
+						}
+
+					}
+
+				}
 
 			}
 
 		} else {
 
-			/** Call dedicated api */
+			// Call API using the exact url
+			
+			$apiCall=API_MODULES.str_replace('/api/', '', rtrim(BASE_URL, '/')).'.php';
 
-			$apiCall=API_MODULES.$type.'.php';
+			if(!file_exists($apiCall)) {
 
-			if(file_exists($apiCall)) {
+				$displaErrorInJSON=true;
 
-				require_once $apiCall;
+			}
+
+		}
+
+		if(isset($displaErrorInJSON)) {
+
+			$result = array(
+				'status' => ((isset($status)) ? $status : 'error' ),
+				'msg' => ((DEVELOPMENT_MODE==true) ? "Not found : {$apiCall}" : 'Invalid api request'),
+			);
+		
+			echo json_encode($result, TRUE);
+
+		} else {
+
+			// Include required API file and call the function if required
+
+			require_once $apiCall;
+
+			if(isset($action)) {
 
 				if(function_exists($action)) {
 
 					call_user_func($action, $connection, $secure);
-
-				} else {
 					
-					$msg='<h1>Undefine function '.$type.' -> '.$action.' </h1>';
-
 				}
-
-			} else {
-
-				echo "Unable to find current request method -> {$apiCall}";
 
 			}
 

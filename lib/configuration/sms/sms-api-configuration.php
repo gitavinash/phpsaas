@@ -2,31 +2,31 @@
 
     require_once 'sms-api-configuration.php';
 
-    if($sms_default==1) {
+    if(SMS_DEFAULT==1) {
 
-        $sms_auth_key='';
-        $sms_sender='';
-        $sms_route='';
-        $sms_gateway='msg91';
+        SMS_AUTH_KEY='';
+        SMS_SENDER='';
+        SMS_ROUTE='';
+        SMS_GATEWAY='msg91';
 
     }
 
-    switch($sms_gateway) {
+    switch(SMS_GATEWAY) {
 
         case 'kap' :
-            $smsURL="http://103.16.101.52:8080/sendsms/bulksms?username={$sms_username}&password={$sms_password}&type={$sms_type}&dlr={$sms_delivery_report}&destination=91{$mobile}&source={$sms_sender}&message={$message}&tempid";
+            $smsURL="http://103.16.101.52:8080/sendsms/bulksms?username=".SMS_USERNAME."&password=".SMS_PASSWORD."&type=".SMS_TYPE."&dlr=".SMS_DELIVERY_REPORT."&destination=91{$mobile}&source=".SMS_SENDER."&message={$message}&tempid";
             break;
 
         case 'rock2connect' :
-            $smsURL="http://login.rock2connect.com/MOBILE_APPS_API/sms_api.php?type={$sms_type}&user={$sms_username}&pass={$sms_password}&sender={$sms_sender}&to_mobileno={$mobile}&sms_text={$message}";
+            $smsURL="http://login.rock2connect.com/MOBILE_APPS_API/sms_api.php?type=".SMS_TYPE."&user=".SMS_USERNAME."&pass=".SMS_PASSWORD."&sender=".SMS_SENDER."&to_mobileno={$mobile}&sms_text={$message}";
             break;
 
         case 'textmysms' :
-            $smsURL="http://sms.textmysms.com/app/smsapi/index.php?key={$sms_key}&campaign={$sms_campaign}&routeid={$sms_routeid}&type={$sms_type}&contacts={$mobile}&senderid={$sms_senderid}&msg={$message}&template_id={$dlt_sms_temp_id}";
+            $smsURL="http://sms.textmysms.com/app/smsapi/index.php?key=".SMS_KEY."&campaign=".SMS_CAMPAIGN."&routeid=".SMS_ROUTEID."&type=".SMS_TYPE."&contacts={$mobile}&senderid={$sms_senderid}&msg={$message}&template_id={$dlt_sms_temp_id}";
             break;
 
         default :
-            $smsURL="https://api.msg91.com/api/sendhttp.php?authkey={$sms_auth_key}&mobiles={$mobile}&country=91&message={$message}&sender={$sms_sender}&route={$sms_route}&DLT_TE_ID={$sms_dlt_sms_id}";
+            $smsURL="https://api.msg91.com/api/sendhttp.php?authkey=".SMS_AUTH_KEY."&mobiles={$mobile}&country=91&message={$message}&sender=".SMS_SENDER."&route=".SMS_ROUTE."&DLT_TE_ID={$sms_dlt_sms_id}";
             break;
 
     }

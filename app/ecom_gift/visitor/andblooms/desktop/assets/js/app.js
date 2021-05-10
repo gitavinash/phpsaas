@@ -70,7 +70,7 @@ $(document).ready(function() {
                   window.location.href='/checkout/';
 
               } else {
-                //   console.log(data.msg);
+                  console.log(data.msg);
               }
 
           },

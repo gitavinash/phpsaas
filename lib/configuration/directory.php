@@ -93,8 +93,8 @@
 
 	/* Default logged in member user directory managment */
 
-	$tempDashboardDir='/app/dashboard/v'.((isset($site_dashboard_version)) ? $site_dashboard_version : 1).'/default/';
-
+	$tempDashboardDir='/app/dashboard/v'.((isset($site_dashboard_version)) ? $site_dashboard_version : 1 ).'/default/';
+	
 	if(is_dir(ROOT.$tempDashboardDir)) {
 
 		// Check site version theme is available or not

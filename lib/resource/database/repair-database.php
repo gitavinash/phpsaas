@@ -157,19 +157,7 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."app
     ADD COLUMN app_visiblity INT(1) NOT NULL DEFAULT 1 AFTER app_status");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(1, 'System', 'All in One Control Panel for SaaS Application', 'system', 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(2, 'Content Management System', 'Best suite for blogging website', 'cms', 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(3, 'News Management System', 'Best suite for news publishers', 'nms', 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_launch_time) VALUES(4, 'Customer Relationship Management', 'Best suite all kind of bussiness', 'crm', 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(5, 'The Doctor Zone', 'Customized App for Bharani Clinic', 'thedoctorzone', 1, 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(6, 'Tarot By Sid', 'Customized App for Tarot by Sid', 'tarotbysid', 1, 1, NOW())");
-
-  mysqli_query($connection, "UPDATE ".TABLE_PREFIX."app SET app_visiblity=0 WHERE app_path='system'");
+  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."app(app_id, app_title, app_description, app_path, app_status, app_visiblity, app_launch_time) VALUES(1, 'System', 'All in One Control Panel for SaaS Application', 'system', 1, 0, NOW())");
 
   /** Category Table */
 
@@ -422,14 +410,6 @@
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(1, 1, 'System Default Package', 0, 0, 1, NOW())");
 
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(2, 2, 'Default Package', 0, 0, 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(3, 3, 'Default Package', 0, 0, 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(4, 4, 'Default Package', 0, 0, 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package(package_id, package_app_id, package_title, package_price_inr, package_price_usd, package_status, package_launch_time) VALUES(5, 5, 'Default Package', 0, 0, 1, NOW())");
-
   /** Package Features Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."package_feature(
@@ -480,16 +460,6 @@
     ADD INDEX package_feature_custom_domain (package_feature_custom_domain)");
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id, package_feature_pwa, package_feature_amp, package_feature_android, package_feature_ios, package_feature_update_time) VALUES(1, 1, 1, 1, 1, 1, NOW())");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id) VALUES(2, 2)");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id) VALUES(3, 3)");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id) VALUES(4, 4)");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id) VALUES(5, 5)");
-
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."package_feature(package_feature_id, package_feature_package_id) VALUES(6, 6)");
 
   /* Page Table */
 
@@ -564,6 +534,12 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     CHANGE profile_email profile_email varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     CHANGE profile_alt_email profile_alt_email varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    ADD INDEX profile_id (profile_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
+    CHANGE profile_id profile_id BIGINT(20) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (profile_id);");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."profile
     ADD INDEX profile_mobile (profile_mobile)");
@@ -653,7 +629,10 @@
     ADD COLUMN site_dashboard_version int(2) NOT NULL DEFAULT 1 COMMENT 'Dedicated admin panel theme version' AFTER site_theme_id");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
-  ADD INDEX site_dashboard_version (site_dashboard_version)");
+    ADD INDEX site_dashboard_version (site_dashboard_version)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site
+    DROP site_expire_date");
 
   /** Site Access Table */
 
@@ -702,8 +681,7 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
     ADD KEY site_app_activation_time (site_app_activation_time)");
   
-  
-    mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
     CHANGE site_app_id site_app_id BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'refer to site table site_id'");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_app
@@ -1001,14 +979,6 @@
   MODIFY user_type_id int(11) NOT NULL AUTO_INCREMENT");
 
   mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(1, 1, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(2, 2, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(3, 3, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(4, 4, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(5, 5, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(6, 6, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(7, 7, 'System Administrator', 'administrator', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(8, 5, 'Doctor', 'doctor', 1)");
-  mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_type(user_type_id, user_type_app_id, user_type_name, user_type_code, user_type_status) VALUES(9, 5, 'Member or Patient', 'member', 1)");
  
 
   ########################################################################################################################

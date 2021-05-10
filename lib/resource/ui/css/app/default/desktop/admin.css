@@ -127,6 +127,7 @@ strong {
 .right-side ul li:hover ul li {
 	float: left;
 	width: 100%;
+	box-sizing: border-box;
 }
 
 .right-side ul li:hover ul li a {
@@ -136,6 +137,7 @@ strong {
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 32px;
+	box-sizing: border-box;
 }
 
 .right-side ul li:hover ul li a i {

@@ -2,12 +2,12 @@
 
     define('SYSTEM_THEME', '/app/system/visitor/default/desktop/');
 
-    function checkSiteIsExpire($site_expire_date, $currentTheme=ROOT.'/app/system/visitor/default/desktop/') {
+    function checkSiteIsExpire($site_installation_expiry_date, $currentTheme=ROOT.'/app/system/visitor/default/desktop/') {
 
-        if($site_expire_date<=date('Y-m-d')) {
+        if($site_installation_expiry_date<=date('Y-m-d')) {
 
 
-            if(date('Y-m-d', strtotime('+1 month', strtotime($site_expire_date))) >= date('Y-m-d')) {
+            if(date('Y-m-d', strtotime('+1 month', strtotime($site_installation_expiry_date))) >= date('Y-m-d')) {
 
                 // Website expire is less than 1 month
 
@@ -35,7 +35,7 @@
 
             extract(mysqli_fetch_assoc($checkInstallation));
 
-            checkSiteIsExpire($site_expire_date);
+            checkSiteIsExpire($site_installation_expiry_date);
 
             if($site_custom_domain==1) {
 
@@ -54,7 +54,7 @@
 
                     extract(mysqli_fetch_assoc($checkInstallation));
 
-                    checkSiteIsExpire($site_expire_date);
+                    checkSiteIsExpire($site_installation_expiry_date);
                     
                 } else {
 

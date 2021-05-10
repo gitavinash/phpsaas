@@ -15,8 +15,6 @@
 
     } else {
 
-        echo 'i m hsdfds';
-
         define('SMTP_HOST', 'smtp-relay.sendinblue.com'); // host address of email server like :- mail.isw.one
         define('SMTP_SSL', 'false'); // is email server is using ssl if yes then change to true
         define('SMTP_PORT', '587'); // PORT id of their email server like :- 587, 465

@@ -12,7 +12,7 @@
 
 				if(mysqli_num_rows($checkDomain)==0) {
 					
-					$websiteIntallationFile=ROOT.'/app/install/website.php';
+					$websiteIntallationFile=ROOT.'/app/system/visitor/install/website.php';
 
 					if(file_exists($websiteIntallationFile)) {
 						
@@ -43,10 +43,10 @@
 
 			// Check website is expire or not
 
-			if($site_expire_date<=date('Y-m-d')) {
+			if($site_installation_expiry_date<=date('Y-m-d')) {
 
 
-				if(date('Y-m-d', strtotime('+1 month', strtotime($site_expire_date))) >= date('Y-m-d')) {
+				if(date('Y-m-d', strtotime('+1 month', strtotime($site_installation_expiry_date))) >= date('Y-m-d')) {
 
 					// Website expire is less than 1 month
 
@@ -95,7 +95,7 @@
 
 		/** Import Database */
 
-		require_once  ROOT.'/lib/resource/database/setup-database.php';
+		require_once  ROOT.'/lib/resource/database/default-database.php';
 		exit();
 				
 	}

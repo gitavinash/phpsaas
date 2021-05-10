@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="preconnect" href="https://fonts.gstatic.com">
-		<title>Hello Ajnabi</title>
+		<title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'}.' | '.SITE_NAME ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
 		<meta name="google-site-verification" content="HeLXduc1QTuVs_ZJRPnqJqm0gn-Ztp973cQC95nNjgM" />
         <link href="https://fonts.googleapis.com/css2?family=Mukta&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -20,6 +20,9 @@
 		}
 
 		?>
+
+        <?php require_once DEFAULT_META; ?>
+
 		<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
 		<!-- <link type="text/css" rel="stylesheet" href="<?php echo USER_STYLESHEET ?>inner-page.css"/> -->
 		<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -100,7 +103,7 @@
 						</div>
 						<ul class="main-nav nav navbar-nav">
 							<li class="active"><a href="/">Home</a></li>
-							<li><a href="">Bollywood & TV</a></li>
+							<li><a href="/category/bollywood-and-tv/">Bollywood & TV</a></li>
 							<li><a href="/category/sports/">Sports</a></li>
 							<li><a href="/category/breaking-news/">Breaking news</a></li>
 							<li><a href="/category/interesting/">Intersting</a></li>

@@ -46,7 +46,7 @@
 
 						} else {
 
-							$msg='No user found';
+							$msg='Something is wrong with user profile';
 
 						}
 
