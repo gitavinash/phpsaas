@@ -10,7 +10,7 @@
                 <form method="GET" action="/search/" >
                     <input type="hidden" name="type" value="domain" >
                     <input type="text" id="domain" name="q" class="domain-search" placeholder="Search your domain..." required >
-                    <input type="submit" id="domainSeaarch" class="domain-search-btn" value="Search Domain" >
+                    <input type="submit" class="domain-search-btn" value="Search Domain" >
                 </form>
                 <p><a href="/domain-transfer/">Transfer your Domain name</a> <a href="/domain-price-list/">View Domain price list</a></p>
                 <div class="domain-price">

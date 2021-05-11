@@ -4,7 +4,7 @@ body {
     padding: 0;
     margin: 0 auto;
     background: #F8F8F8;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6, ul, li, p, a, sub, sup {
@@ -120,7 +120,6 @@ header {
     float: left;
     width: 100%;
     height: auto;
-    font-family: 'Lato', sans-serif;
     padding: 10px 0px;
     border-bottom: 1px solid #eee;
 }
@@ -154,21 +153,19 @@ ul.list-menu li i {
     box-sizing: border-box;
 }
 
-.menu {
-    font-family: 'Poppins', sans-serif;
-}
-
 .menu ul.list-menu li {
     margin-right: 0px;
 }
 
 .menu .list-menu li a {
     float: left;
-    font-size: 14px;
-    line-height: 60px;
-    font-weight: 500;
+    font-size: 13px;
+    line-height: 52px;
+    font-weight: 600;
     letter-spacing: 1px;
-    padding: 0px 10px;
+    padding: 0 10px;
+    text-transform: uppercase;
+    padding-top: 6px;
 }
 
 .menu .list-menu li a:hover {
@@ -192,7 +189,6 @@ main {
     margin: 0 auto;
     font-weight: 300;
     padding: 1.4em 0em 0em 0em;
-    font-family: 'Lato', sans-serif;
     color: #868686;
 }
 
@@ -225,8 +221,6 @@ input.domain-search {
     max-width: 500px;
     font-size: 16px;
     font-weight: 400 !important;
-    /* font-family: 'Poppins', sans-serif; */
-    font-family: 'Lato', sans-serif;
     outline: none;
     box-sizing: border-box;
     color: #2b2b2b;
@@ -246,7 +240,6 @@ input.domain-search-btn {
     font-size: 16px;
     font-weight: 500;
     outline: 0;
-    font-family: 'Lato', sans-serif;
     box-sizing: border-box;
     background: #009b72;
     border-color: #009b72;
@@ -298,7 +291,6 @@ input.domain-search-btn {
     font-weight: 500;
     letter-spacing: 1px;
     text-shadow: none;
-    font-family: 'Lato', sans-serif;
 }
 
 .hosting-plan {
@@ -309,13 +301,11 @@ input.domain-search-btn {
 .hosting-plan h2 {
     font-weight: 600;
     font-size: 32px;
-    font-family: 'Lato', sans-serif;
     color: #000;
 }
 
 .hosting-plan p {
     font-weight: 300;
-    font-family: 'Lato', sans-serif;
 }
 
 .hosting-plan p strong {
@@ -361,7 +351,6 @@ input.domain-search-btn {
     letter-spacing: 1px;
     font-size: 18px;
     line-height: 24px;
-    font-family: 'Lato', sans-serif;
 }
 
 .hosting-package .plans {
@@ -476,7 +465,7 @@ footer {
 .service-box .domain-price {
     float: left;
     width: 100%;
-    padding: 10px 0px;
+    padding: 15px 0px;
     box-sizing: border-box;
     border-right: 1px solid #d8d8d8;
 }
@@ -539,7 +528,6 @@ footer {
 
 .main-offer {
     text-align: center;
-    font-family: 'Lato', sans-serif;
     display: flex;
     height: 200px;
     flex-direction: column;
@@ -604,7 +592,6 @@ footer {
 .support p {
     font-size: 24px;
     font-weight: 300;
-    font-family: 'Lato', sans-serif;
     letter-spacing: 1px;
 }
 
@@ -706,21 +693,118 @@ ul.footer-list li a {
 
 .domain-search-box {
     background: #fff;
-    padding: 100px 0px;
+    padding: 50px 0px 0px 0;
     box-sizing: border-box;
-    font-family: 'Lato', sans-serif;
 }
 
 .domain-search-box h1 {
+    float: left;
+    width: 100%;
     color: #009b72;
     font-size: 32px;
     padding: 10px 0px;
-    FONT-WEIGHT: 600;
+    font-weight: 500;
+    padding-top: 50px;
 }
 
 .domain-search-box form {
-    padding: 0px 170px;
+    padding: 0px 168px;
     box-sizing: border-box;
+}
+
+.show-domain-result {
+    background: #fff;
+}
+
+.result-loader {
+    background: #fff;
+    display: none;
+}
+
+.result-loader img {
+    padding: 100px 0px;
+}
+
+.domain-result {
+    padding: 0 20px;
+    box-sizing: border-box;
+    border: 1px solid #b5b5b5;
+    margin-bottom: 50px;
+    border-radius: 4px;
+}
+
+.domain-result-box {
+    float: left;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dedede;
+}
+
+.domain-result-box p {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #2b2b2b;
+    line-height: 42px;
+}
+
+.domain-result-box p.domain-price {
+    float: right;
+    width: 100%;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #2b2b2b;
+    padding: 0;
+    margin: 0 auto;
+    text-align: right;
+    line-height: inherit;
+}
+
+.domain-result-box p.domain-price strike {
+    font-size: 16px;
+    color: #848484;
+}
+
+.domain-result-box p.domain-price strong {
+    font-weight: 600;
+}
+
+.domain-result-box p.domain-price span {
+    float: right;
+    width: 100%;
+    font-size: 12px;
+    color: #848484;
+}
+
+button.add-to-cart {
+    float: right;
+    background: #009b72;
+    border: 1px solid #009b72;
+    border-radius: 4px;
+    padding: 5px 48px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 32px;
+    cursor: pointer;
+    width: 200px;
+}
+
+button:disabled {
+    background: #C70039;
+    border: 1px solid #C70039;
+    cursor: no-drop;
+}
+
+.domain-result-box p strong {
+    font-size: 24px;
+    font-weight: 500;
+    color: #000;
+}
+
+.domain-result-box:last-child {
+    border-bottom: none;
 }
 
 /* CSS code for mobile devices */
@@ -741,12 +825,24 @@ ul.footer-list li a {
         box-sizing: border-box;
     }
 
+    .l-m-w3 {
+        float: left;
+        width: 33.33%;
+        box-sizing: border-box;
+    }
+
+    .l-m-w7 {
+        float: left;
+        width: 66.67%;
+        box-sizing: border-box;
+    }
+
     .mob-show {
-        display: block;
+        display: block !important;
     }
 
     .mob-hide {
-        display: none;
+        display: none !important;
     }
 
     .l-m-w3 {
@@ -789,6 +885,7 @@ ul.footer-list li a {
         transition: .5s;
         padding-top: 40px;
         box-sizing: border-box;
+        overflow: hidden;
     }
 
     .mobile-menu .closebtn {
@@ -804,8 +901,8 @@ ul.footer-list li a {
 
     .mobile-menu .menu {
         margin-right: -4%;
+        padding: 0px 10px 0px 10px;
         box-sizing: border-box;
-        padding: 40px 10px 0px 10px;
     }
 
     .mobile-menu .menu ul.list-menu li {
@@ -821,7 +918,6 @@ ul.footer-list li a {
         box-sizing: border-box;
         font-size: 18px;
         font-weight: 300;
-        padding-bottom: 10px;
     }
 
     .mobile-menu .menu ul.list-menu li i {
@@ -942,7 +1038,7 @@ ul.footer-list li a {
     
     .domain-search-box {
         background: #fff;
-        padding: 20px 0px;
+        padding: 20px 0px 0px 0px;
         box-sizing: border-box;
         font-family: 'Lato', sans-serif;
     }
@@ -950,13 +1046,66 @@ ul.footer-list li a {
     .domain-search-box h1 {
         color: #009b72;
         font-size: 32px;
-        padding: 10px 0px;
-        FONT-WEIGHT: 600;
+        padding: 20px 0 0px 0px;
+        font-weight: 500;
     }
     
     .domain-search-box form {
         padding: 0px 10px;
         box-sizing: border-box;
+    }
+
+    .domain-result {
+        border: none;
+        padding: 0%;
+    }
+
+    .domain-result-box {
+        padding: 10px;
+    }
+
+    .domain-result-box p {
+        font-size: 16px;
+        line-height: 24px;
+        margin-bottom: 5px;
+    }
+
+    .domain-result-box p strong {
+        font-size: 16px;
+    }
+    
+    .domain-result-box p.domain-price {
+        float: left;
+        width: auto;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .domain-result-box p.domain-price strike {
+        color: #848484;
+        font-size: 14px;
+    }
+
+    .domain-result-box p.domain-price strong {
+        font-weight: 600;
+        font-size: 14px;
+        color: #009b72;
+    }
+
+    .domain-result-box p.domain-price span {
+        float: left;
+        width: auto;
+        font-size: 12px;
+        color: #848484;
+    }
+
+    button.add-to-cart {
+        float: right;
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        line-height: 56px;
+        padding: 0px;
     }
 
 }

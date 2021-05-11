@@ -14,4 +14,26 @@ $(document).ready(function() {
         console.log(domain);
     }
 
+    // Call searchDomain function on search result page by default
+
+    if($('.show-domain-result').length > 0) {
+
+        // If .show-domain-result class is found on page
+
+        var domainName = $('#domain').val();
+
+        searchDomain(domainName);
+
+    }
+
+    // Call searchDomain function when user click on search domain button
+
+    $('#domainSearch').click(function(e) {
+        e.preventDefault();
+
+        var domainName = $('#domain').val();
+        searchDomain(domainName);
+
+    });
+
 });
