@@ -1,13 +1,5 @@
 <?php
 
-    $search_type = '';
-    $tag_type='';
-    $tag_description='';
-
-    /** Search query */
-
-    $searchQuery=str_replace('-', ' ', mysqli_real_escape_string($connection, $_GET['q']));
-
     if($queryList=mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchQuery}%' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
 
         if(mysqli_num_rows($queryList)!=0) {

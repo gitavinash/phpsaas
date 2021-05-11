@@ -7,8 +7,9 @@
         <section class="homepage">
             <div class="container">
                 <h1>Every idea needs an<span>Online presence</span></h1>
-                <form method="GET" action="/domain-name-registration/" >
-                    <input type="text" id="domain" name="domain" class="domain-search" placeholder="Search your domain..." required >
+                <form method="GET" action="/search/" >
+                    <input type="hidden" name="type" value="domain" >
+                    <input type="text" id="domain" name="q" class="domain-search" placeholder="Search your domain..." required >
                     <input type="submit" id="domainSeaarch" class="domain-search-btn" value="Search Domain" >
                 </form>
                 <p><a href="/domain-transfer/">Transfer your Domain name</a> <a href="/domain-price-list/">View Domain price list</a></p>

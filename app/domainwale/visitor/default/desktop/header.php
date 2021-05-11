@@ -6,10 +6,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domain Wale</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Poppins:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
+
+    <?php require_once DEFAULT_META ?>
+
 </head>
 <body>
     <header class="l-w1">
@@ -51,7 +53,7 @@
         <section class="mobile">
             <div class="container">
                 <div class="logo l-w3 fl">
-                    <a href="/"><img src="assets/images/logo.png" alt="Oxteal Logo"></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt="Oxteal Logo"></a>
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">

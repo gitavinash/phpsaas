@@ -4,6 +4,11 @@
 
 ?>
 
+<section class="domain-search-box" >
+    <div class="container">
+        
+    </div>
+</section>
 
 <?php
 

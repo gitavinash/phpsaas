@@ -7,7 +7,7 @@
             <div class="container">
                 <div class="l-w4 l-m-w2">
                     <div class="logo">
-                        <a href="#"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
+                        <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
                     </div>
                     <p><i class="fi-rr-marker"></i> <strong>Oxteal</strong><br />A2/5A, WHS Block 2,<br />Kirti Nagar, New Delhi</p>
                     <p><a href="tel:+91-8802026069" target="_blank" ><i class="fi-rr-headset"></i> +91-8802026069</a></p>
@@ -61,7 +61,7 @@
             &copy; Copyright <a href="https://oxteal.com"><strong>Oxteal</strong></a> | A Unit of <a href="https://itssoftworld.com"><strong>ITS Soft World</strong></a>
         </section>
         <section class="whatsapp">
-			<a href="https://wa.me/918802026069?text=Hello%0aI%20need%20a%20help."><img src="assets/images/whatsapp.png" alt=""></a>
+			<a href="https://wa.me/918802026069?text=Hello%0aI%20need%20a%20help."><img src="<?php echo USER_IMAGES ?>whatsapp.png" alt=""></a>
 		</section>
     </footer>
     <?php include_once NOTIFICATION.'index.php'; ?>

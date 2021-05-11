@@ -119,7 +119,7 @@
 			break;
 
 		case 'search' :
-			require_once 'search.php';
+			require_once 'search/index.php';
 			break;
 
 		case 'tag' :

@@ -216,7 +216,7 @@ main {
     box-sizing: border-box;
 }
 
-.homepage input.domain-search {
+input.domain-search {
     float: left;
     padding: 10px 10px;
     width: 60%;
@@ -235,9 +235,11 @@ main {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     letter-spacing: 2px;
+    border: 1px solid #333;
+    cursor: pointer;
 }
 
-.homepage input.domain-search-btn {
+input.domain-search-btn {
     float: left;
     padding: 10px 20px;
     height: 50px;
@@ -687,6 +689,7 @@ ul.footer-list li a {
 
 .not-found {
     padding: 50px 0px;
+    background: #fff;
     box-sizing: border-box;
 }
 
@@ -697,6 +700,27 @@ ul.footer-list li a {
 .not-found h1 span {
     font-size: 32px;
     font-weight: 300;
+}
+
+/* Domain search page styling */
+
+.domain-search-box {
+    background: #fff;
+    padding: 100px 0px;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+}
+
+.domain-search-box h1 {
+    color: #009b72;
+    font-size: 32px;
+    padding: 10px 0px;
+    FONT-WEIGHT: 600;
+}
+
+.domain-search-box form {
+    padding: 0px 170px;
+    box-sizing: border-box;
 }
 
 /* CSS code for mobile devices */
@@ -735,7 +759,7 @@ ul.footer-list li a {
         width: 95%;
     }
 
-    .homepage input.domain-search-btn {
+    input.domain-search-btn {
         width: 100%;
         margin-top: 10px;
     }
@@ -836,12 +860,12 @@ ul.footer-list li a {
         padding: 10px 0px;
     }
 
-    .homepage input.domain-search {
+    input.domain-search {
         border-radius: 4px;
         border: 1px solid #000;
     }
 
-    .homepage input.domain-search-btn {
+    input.domain-search-btn {
         border-radius: 4px;
     }
 
@@ -897,6 +921,42 @@ ul.footer-list li a {
     .whatsapp img {
         width: auto;
         height: 50px;
+    }
+
+    /* Page Not found styling */
+
+    .not-found img {
+        width: 100%;
+    }
+
+    .not-found h1 i {
+        font-size: 72px;
+    }
+
+    .not-found h1 span {
+        font-size: 32px;
+        font-weight: 300;
+    }
+
+    /* Domain search page styling */
+    
+    .domain-search-box {
+        background: #fff;
+        padding: 20px 0px;
+        box-sizing: border-box;
+        font-family: 'Lato', sans-serif;
+    }
+    
+    .domain-search-box h1 {
+        color: #009b72;
+        font-size: 32px;
+        padding: 10px 0px;
+        FONT-WEIGHT: 600;
+    }
+    
+    .domain-search-box form {
+        padding: 0px 10px;
+        box-sizing: border-box;
     }
 
 }
