@@ -1,6 +1,6 @@
 <?php
 
-    define('SYSTEM_THEME', '/app/system/visitor/default/desktop/');
+    define('SYSTEM_THEME', ROOT.'/app/system/visitor/default/desktop/');
 
     function checkSiteIsExpire($site_installation_expiry_date, $currentTheme=ROOT.'/app/system/visitor/default/desktop/') {
 
