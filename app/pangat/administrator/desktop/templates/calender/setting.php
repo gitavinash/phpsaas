@@ -4,7 +4,12 @@
 
     /** Check month range setting is already defined or not */
 
-	$calender_month_visible=((isset($calender_month_visible)) ? $calender_month_visible : 2);
+	if(!defined('CALENDER_MONTH_VISIBLE')) {
+
+		define('CALENDER_MONTH_VISIBLE', 2);
+
+ 	}
+
 
 ?>
 
@@ -15,7 +20,7 @@
 				<h3>Manage calendar</h3>
 				<div class="form-group">
 					<label>Enter how many months visible in the calender</label>
-					<input type="number" name="month" id="month" class="form-control inside-shadow" placeholder="Ex: 1, 3, 5" value="<?php echo $calender_month_visible ?>" autofocus >
+					<input type="number" name="month" id="month" class="form-control inside-shadow" placeholder="Ex: 1, 3, 5" value="<?php echo CALENDER_MONTH_VISIBLE ?>" autofocus >
 				</div>
 				<div class="form-group">
                     <input type="hidden" name="type" value="calender" >

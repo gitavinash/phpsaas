@@ -1,8 +1,12 @@
 <?php
 
-/** Check month range setting is already defined or not */
+	/** Check month range setting is already defined or not */
 
-$calender_month_visible=((isset($calender_month_visible)) ? $calender_month_visible : 2);
+	if(!defined('CALENDER_MONTH_VISIBLE')) {
+
+		define('CALENDER_MONTH_VISIBLE', 2);
+
+ 	}
 
 ?>
 <!DOCTYPE html>
@@ -361,7 +365,7 @@ $calender_month_visible=((isset($calender_month_visible)) ? $calender_month_visi
 						</div>
 						<div class="col-2" style="height: 10px" ></div>
 						<div class="col-md-4 col-xs-12">
-							<input type="hidden" id="calenderMonthLimit" value="<?php echo $calender_month_visible ?>" >
+							<input type="hidden" id="calenderMonthLimit" value="<?php echo CALENDER_MONTH_VISIBLE ?>" >
 							<input type="submit" id="submitForm" class="btn btn-success btn-block" value="" >
 						</div>
 					</div>

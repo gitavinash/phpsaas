@@ -18,13 +18,13 @@
 
                     /** Update query of month setting */
 
-                    $query="UPDATE ".TABLE_PREFIX."site_configuration SET site_configuration_value='{$month}' WHERE site_configuration_id='{$site_configuration_id}'";
+                    $query="UPDATE ".TABLE_PREFIX."site_configuration SET site_configuration_value='{$month}', site_configuration_global=1 WHERE site_configuration_id='{$site_configuration_id}'";
 
                 } else {
 
                     /** Insert query of month setting */
 
-                    $query="INSERT INTO ".TABLE_PREFIX."site_configuration(site_configuration_site_id, site_configuration_name, site_configuration_value, site_configuration_status) VALUES(".APP_SITE_ID.", 'calender_month_visible', '{$month}', 1)";
+                    $query="INSERT INTO ".TABLE_PREFIX."site_configuration(site_configuration_site_id, site_configuration_name, site_configuration_value, site_configuration_global, site_configuration_status) VALUES(".APP_SITE_ID.", 'calender_month_visible', '{$month}', 1, 1)";
 
                 }
 
