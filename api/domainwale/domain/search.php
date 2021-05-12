@@ -12,16 +12,22 @@
 			$domain = str_replace('http', '', $domain);
 			$domain = trim($domain);
 			$domain = filter_var($domain, FILTER_SANITIZE_URL);
+
+			$domain=explode('.', $domain);
+			// $domainExtension=((isset($domain[1])) ? $domain[1] : '' );
+			$domain=$domain[0];
 	
 			/** Domain search API url */
 	
 			$url = GODADDY_URL.GODADDY_API_VERSION."/domains/available?checkType=full";
 
 			$domains=array(
+				// ((($domainExtension!='')) ? $domain.'.'.$domainExtension : $domain.'.com' ),
 				"{$domain}.com",
 				"{$domain}.in",
 				"{$domain}.net",
-				"{$domain}.org"
+				"{$domain}.org",
+				"{$domain}.co.in",
 			);
 
 			$header = array(
@@ -53,7 +59,7 @@
 
 			} else {
 
-				$msg=$checkDomain['message'];
+				$msg=$checkDomain;
 
 			}
 

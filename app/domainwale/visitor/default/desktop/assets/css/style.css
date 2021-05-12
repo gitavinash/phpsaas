@@ -33,6 +33,14 @@ h1, h2, h3, h4, h5, h6, ul, li, p, a, sub, sup {
     padding: 0;
 }
 
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
 .fl {
     float: left;
 }
@@ -736,7 +744,7 @@ ul.footer-list li a {
 .domain-result-box {
     float: left;
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 0px;
     box-sizing: border-box;
     border-bottom: 1px solid #dedede;
 }
@@ -1072,6 +1080,7 @@ button:disabled {
 
     .domain-result-box p strong {
         font-size: 16px;
+        font-weight: 600;
     }
     
     .domain-result-box p.domain-price {
