@@ -4,6 +4,7 @@
 
 		if($domain!='') {
 
+			$domain = str_replace(' ', '', $domain);
 			$domain = str_replace('www.', '', $domain);
 			$domain = str_replace('www', '', $domain);
 			$domain = str_replace('/', '', $domain);

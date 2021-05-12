@@ -12,6 +12,10 @@ $(document).ready(function() {
 
     function searchDomain(domain) {
 
+        // Clean domain result div for fresh result
+
+        $('.domain-result').empty();
+
         // Call Domain search API
 
         $.ajax({
@@ -116,7 +120,6 @@ $(document).ready(function() {
         // If .show-domain-result class is found on page
 
         var domainName = $('#domain').val();
-
         searchDomain(domainName);
 
     }
