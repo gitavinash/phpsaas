@@ -76,7 +76,7 @@ ul.menu li.logo {
 }
 
 ul.menu li.logo a {
-	font-size: 24px;
+	font-size: 18px;
 	font-weight: 600;
 	line-height: 70px;
 	text-transform: uppercase;
@@ -1735,7 +1735,8 @@ screen and (max-height:300px) {
 		height: auto
 	}
 	.about-us p iframe {
-		width: 40% !important;
+		width: 100% !important;
+		min-height: 250px;
 		height: auto !important;
 	}
 	.about-us-left-box {
@@ -1835,5 +1836,9 @@ screen and (max-height:300px) {
 	.video {
 		width: 100%;
 		float: left
+	}
+
+	.about-us {
+		width: 100%;
 	}
 }

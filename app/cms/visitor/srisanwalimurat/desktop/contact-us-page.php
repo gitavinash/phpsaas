@@ -28,7 +28,7 @@
                     <img src="<?php echo USER_IMAGES ?>ping.png"> 36, Gali Number 2, Block 69B, Dori Walan, Karol Bagh, New Delhi, Delhi 110005
                 </li>
                 <li>
-                    <img src="<?php echo USER_IMAGES ?>cal.png"> 011 2367 0506
+                    <img src="<?php echo USER_IMAGES ?>cal.png"> <a href="tel:+91-9821005828">+91-9821005828</a>, <a href="tel:+91-9560849164">+91-9560849164</a>,<br /> <a style="margin-left: 38px" href="tel:011-23670506">011-23670506</a>,<a href="tel:011-47200965">011-47200965</a>
                 </li>
                 <li>
                     <img src="<?php echo USER_IMAGES ?>mail.png"> info@srisanwalimurat.com

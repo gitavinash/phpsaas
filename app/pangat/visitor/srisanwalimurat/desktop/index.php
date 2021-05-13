@@ -29,13 +29,13 @@
 				<li><a href="https://srisanwalimurat.com/publication/">Publication</a></li>
                 <li><a href="https://srisanwalimurat.com/gallery/">Gallery</a></li>
                 <li><a href="https://srisanwalimurat.com/events/">Events</a></li>
-                <li class="logo"><h1><a href="https://srisanwalimurat.com/">Sri Sanwali Murati</a></h1></li>
+                <li class="logo"><h1><a href="https://srisanwalimurat.com/"><?php echo SITE_NAME ?></a></h1></li>
                 <li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
                 <li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
                 <li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff" >Request For Pangat</a></li>
             </ul>
             <div class="mobile-menu">
-                <h1><a href="http://srisanwalimurat.com/">Sri Sanwali Murati</a></h1>
+                <h1><a href="http://srisanwalimurat.com/"><?php echo SITE_NAME ?></a></h1>
                 <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
                 <div id="target">
                     <ul>
@@ -53,7 +53,7 @@
 		<!-- <div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light pt-3 pb-0 pt-md-3 pb-md-0 pl-md-0 pr-md-0">
 	      <a href="/" class="navbar-brand">
-		  	Sri Sanwali Murati
+		  	<?php echo SITE_NAME ?>
 	        <img src="assets/img/logo.png" alt="" class="img-fluid">
 	      </a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -146,7 +146,7 @@
 						</div>
 						<div class="dtl-box">
 							<p>
-								Note: In Case of any issue, please call :  <a href="tel:+91-9821005828">9821005828</a>, <a href="tel:011-23670506">011-23670506</a>, <a href="tel:011-47200965">011-47200965</a>
+								Note: In Case of any issue, please call :  <a href="tel:+91-9821005828">+91-9821005828</a>, <a href="tel:+91-9560849164">+91-9560849164</a>, <a href="tel:011-23670506">011-23670506</a>, <a href="tel:011-47200965">011-47200965</a>
 							</p>
 						</div>
 					</div>

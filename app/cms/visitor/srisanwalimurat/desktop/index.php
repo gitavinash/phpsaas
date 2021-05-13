@@ -43,7 +43,7 @@
     <div class="main-right-box">
         <div class="main-right-box-left-section">
             <div class="sanwali-murat">
-                <img src="<?php echo USER_IMAGES ?>murat.jpg" alt="Sri Sanwali Murati">
+                <img src="<?php echo USER_IMAGES ?>murat.jpg" alt="<?php echo SITE_NAME ?>">
             </div>
             <div class="feature-video">
                 <?php
