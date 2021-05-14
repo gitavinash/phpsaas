@@ -51,21 +51,12 @@
         
                         }
         
-                    } else {
-
-                        echo mysqli_error($connection);
-                        exit();
-
                     }
                 
-                } else { ?>
-        
-                    <script type="text/javascript">
-                        alert('Invalid action found');
-                        window.location.href='/dashboard/product/?type=tags';
-                    </script>
-        
-                <?php
+                } else {
+                    
+
+
                 }
         
             }

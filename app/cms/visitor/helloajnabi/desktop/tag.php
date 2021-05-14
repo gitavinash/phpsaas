@@ -15,60 +15,65 @@
                                 <div class="breadcrumb__option">
                                     <a href="/">Home</a>
                                     <span><?php echo $tag_title ?></span>
-                                    <?php
-
-                                        for($i=0; $i<sizeof($tagPost); $i++) {
-
-                                            $tagId[]=$tagPost[$i]['tag_relation_id'];
-
-                                        }
-
-                                        $resultTags=implode(' OR link_relation_id=', $tagId);
-
-                                    ?>
                                 </div>
                             </div>
                             <div class="row">
                             
                             <?php
 
-                                if($postList=mysqli_query($connection, "SELECT link_url, post_title, post_image, meta_description, profile_display_name, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id INNER JOIN ".TABLE_PREFIX."profile ON post_owner_id=profile_user_id WHERE link_site_id=".SITE_ID." AND link_type='post' AND link_status=200 AND link_relation_id={$resultTags} ORDER BY link_published DESC LIMIT 0, 20")) {
+                                if(is_array($tagPost)) {
+                                    
+                                    for($i=0; $i<sizeof($tagPost); $i++) {
 
-                                    if(mysqli_num_rows($postList)!=0) {
-
-                                        while($postData=mysqli_fetch_assoc($postList)) {
-
-                                            extract($postData);
-
-                                            echo "<div class='categories__post__item'>
-                                                <div class='categories__post__item__pic small__item set-bg' data-setbg='{$post_image}' style='background-image: url(&quot;{$post_image}&quot;);'>
-                                                    <div class='post__meta'>
-                                                        <h4>".date('d', strtotime($link_published))."</h4>
-                                                        <span>".date('M', strtotime($link_published))."</span>
-                                                    </div>
-                                                </div>
-                                                <div class='categories__post__item__text'>
-                                                    <span class='post__label'>{$tag_title}</span>
-                                                    <h3><a href='{$link_url}'>{$post_title}</a></h3>
-                                                    <ul class='post__widget'>
-                                                        <li>by <span>{$profile_display_name}</span></li>
-                                                    </ul>
-                                                    <p>{$meta_description}</p>
-                                                </div>
-                                            </div>";
-
-                                        }
+                                        $tagId[]=$tagPost[$i]['tag_relation_id'];
 
                                     }
 
+                                    $resultTags=implode(' OR link_relation_id=', $tagId);
+
+                                    if($postList=mysqli_query($connection, "SELECT link_url, post_title, post_image, meta_description, profile_display_name, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id INNER JOIN ".TABLE_PREFIX."profile ON post_owner_id=profile_user_id WHERE link_site_id=".SITE_ID." AND link_type='post' AND link_status=200 AND link_relation_id={$resultTags} ORDER BY link_published DESC LIMIT 0, 20")) {
+
+                                        if(mysqli_num_rows($postList)!=0) {
+
+                                            while($postData=mysqli_fetch_assoc($postList)) {
+
+                                                extract($postData);
+
+                                                echo "<div class='categories__post__item'>
+                                                    <div class='categories__post__item__pic small__item set-bg' data-setbg='{$post_image}' style='background-image: url(&quot;{$post_image}&quot;);'>
+                                                        <div class='post__meta'>
+                                                            <h4>".date('d', strtotime($link_published))."</h4>
+                                                            <span>".date('M', strtotime($link_published))."</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class='categories__post__item__text'>
+                                                        <span class='post__label'>{$tag_title}</span>
+                                                        <h3><a href='{$link_url}'>{$post_title}</a></h3>
+                                                        <ul class='post__widget'>
+                                                            <li>by <span>{$profile_display_name}</span></li>
+                                                        </ul>
+                                                        <p>{$meta_description}</p>
+                                                    </div>
+                                                </div>";
+
+                                            }
+
+                                        }
+
+                                    } else {
+
+                                        echo '<h3 style="float: left; width: 100%; text-align: center; padding: 100px 0px" >No tag result found</h3>';
+                                        
+                                    }
+
+
                                 } else {
 
-                                    echo mysqli_error($connection);
-                                    exit();
-
+                                    echo '<h3 style="float: left; width: 100%; text-align: center; padding: 100px 0px" >No tag result found</h3>';
+                                    
                                 }
 
-                                ?>
+                            ?>
 
                             </div>
                         </div>
