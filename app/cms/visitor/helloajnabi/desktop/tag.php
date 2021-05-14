@@ -41,21 +41,21 @@
                                             extract($postData);
 
                                             echo "<div class='categories__post__item'>
-                                            <div class='categories__post__item__pic small__item set-bg' data-setbg='{$post_image}' style='background-image: url(&quot;{$post_image}&quot;);'>
-                                                <div class='post__meta'>
-                                                    <h4>".date('d', strtotime($link_published))."</h4>
-                                                    <span>".date('M', strtotime($link_published))."</span>
+                                                <div class='categories__post__item__pic small__item set-bg' data-setbg='{$post_image}' style='background-image: url(&quot;{$post_image}&quot;);'>
+                                                    <div class='post__meta'>
+                                                        <h4>".date('d', strtotime($link_published))."</h4>
+                                                        <span>".date('M', strtotime($link_published))."</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class='categories__post__item__text'>
-                                                <span class='post__label'>{$tag_title}</span>
-                                                <h3><a href='{$link_url}'>{$post_title}</a></h3>
-                                                <ul class='post__widget'>
-                                                    <li>by <span>{$profile_display_name}</span></li>
-                                                </ul>
-                                                <p>{$meta_description}</p>
-                                            </div>
-                                        </div>";
+                                                <div class='categories__post__item__text'>
+                                                    <span class='post__label'>{$tag_title}</span>
+                                                    <h3><a href='{$link_url}'>{$post_title}</a></h3>
+                                                    <ul class='post__widget'>
+                                                        <li>by <span>{$profile_display_name}</span></li>
+                                                    </ul>
+                                                    <p>{$meta_description}</p>
+                                                </div>
+                                            </div>";
 
                                         }
 

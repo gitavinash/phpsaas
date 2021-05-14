@@ -1,6 +1,6 @@
 <?php
 
-    $type = ((isset($type)) ? $type : 'default' );
+    $link_type = $type = ((isset($type)) ? $type : 'default' );
     $tag_type='';
     $tag_description='';
 

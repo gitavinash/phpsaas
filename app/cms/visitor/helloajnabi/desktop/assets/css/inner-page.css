@@ -1530,7 +1530,7 @@ ol {
 }
 
 .sidebar__feature__item__large .sidebar__feature__item__large--text h5 a {
-	color: #ffffff;
+	color: #000;
 	line-height: 23px;
 	font-weight: 700;
 	letter-spacing: 0.5px;

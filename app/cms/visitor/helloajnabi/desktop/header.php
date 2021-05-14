@@ -15,7 +15,7 @@
 
 		if(isset($link_type)) {
 
-			echo (($link_type=='page' || $link_type=='category' || $link_type=='tag') ? "<link rel='stylesheet' href='".USER_STYLESHEET."inner-page.min.css'/>" : '');
+			echo (($link_type!='post') ? "<link rel='stylesheet' href='".USER_STYLESHEET."inner-page.min.css'/>" : '');
 
 		}
 
