@@ -46,6 +46,23 @@
         <script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js" type="text/javascript" ></script>
         <script type="text/javascript" >
             $(document).ready(function(e) {
+                
+                // Search box
+                $('.openSearchForm').click(function(e) {
+                    e.preventDefault();
+                    $('#target').hide();
+                    $('.openSearchFormBox').show();
+                    $('.search-bar').focus();
+
+                });
+
+                $('.closeSearchFormBtn').click(function(e) {
+                    e.preventDefault();
+                    $('.show').show(0);
+                    $('.hide').hide(0);
+                    $('.openSearchFormBox').hide();
+                });
+
                 $('.news-slider').slick({
                     arrows: false,
                     autoplay: true,

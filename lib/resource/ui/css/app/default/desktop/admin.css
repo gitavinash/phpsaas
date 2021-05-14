@@ -337,6 +337,7 @@ main .container {
 	vertical-align: top;
   	text-align: left;
   	padding: 8px 10px 35px 10px;
+	height: 35px;
 	font-weight: 400;
 	font-size: 13px;
 	line-height: 18px;

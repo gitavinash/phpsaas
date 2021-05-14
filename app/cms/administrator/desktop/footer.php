@@ -12,6 +12,7 @@
 		<script src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js" type="text/javascript" ></script>
 		<script src="<?php echo PLUGIN_LIBRARY ?>image-uploader/js/image-uploader.min.js" type="text/javascript" ></script>
+		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/datatables.min.js" type="text/javascript" ></script>
 		<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 		<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 
@@ -27,6 +28,42 @@
 					</script>
 				<?php
 				}
+
+			}
+
+
+			if($_GET['type']=='list') { ?>
+
+				<script type='text/javascript'>
+					$(document).ready( function () {
+						$('#table').DataTable({
+							"createdRow": function(row, data, dataIndex) {
+							if (data[6] == "Confirm") {
+								$(row).css({
+									"background-color": "#FFFFFF",
+									"color": "#333"
+								})
+							} else if (data[6] == "Cancel") {
+								$(row).css({
+									"background-color": "#C70039",
+									"color": "#333"
+								})
+							} else if (data[6] == "Delivered") {
+								$(row).css({
+									"background-color": "#FFFFFF",
+									"color": "#333"
+								})
+							} else {
+								$(row).css({
+									"background-color": "#E6E6FA",
+									"color": "#333"
+								})
+							}
+						},
+						});
+					});
+					</script>
+				<?php
 
 			}
 

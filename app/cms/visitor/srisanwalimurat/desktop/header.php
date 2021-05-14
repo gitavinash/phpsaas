@@ -3,11 +3,14 @@
         <base href="<?php echo SITE_URL ?>">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title><?php echo SITE_NAME ?></title>
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
         <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.css">
         <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick-theme.css">
+
+        <?php require_once DEFAULT_META ?>
+
     </head>
     <body>
         <header>
@@ -19,11 +22,11 @@
                 <li><a href="discourses/" <?php echo ((ACTIVE_URL=='/discourses/') ? 'class="active"' : '' ) ?>>Discourses</a></li>
                 <li><a href="bhajan/" <?php echo ((ACTIVE_URL=='/bhajan/') ? 'class="active"' : '' ) ?>>Bhajan/Aarti</a></li>
                 <li><a href="//pangat.<?php echo SITE_DOMAIN ?>">Request For Pangat</a></li>
-                <!-- <li><a href="">Account</a></li> -->
+                <li><a href="#" class="openSearchForm" ><i class="fas fa-search"></i> Search</a></li>
             </ul>
             <div class="mobile-menu">
                 <h1><a href=""><?php echo SITE_NAME ?></a></h1>
-                <div class="menu-box " id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
+                <div class="menu-box" id="menu-box" ><img src="<?php echo IMG_LIBRARY ?>menu-icon.png" alt="" class="show"></div>
                 <div id="target">
                     <ul>
                         <span class="hide"><img src="<?php echo USER_IMAGES ?>cancel.png"></span>
@@ -33,8 +36,15 @@
                         <li><a href="discourses/">Discourses</a></li>
                         <li><a href="bhajan/">Bhajan/Aarti</a></li>
                         <li><a href="//pangat.<?php echo SITE_DOMAIN ?>">Request For Pangat</a></li>
+                        <li><a href="#" class="openSearchForm" >Search</a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="openSearchFormBox" style="display:none" >
+                <span class="closeSearchFormBtn"><img src="<?php echo USER_IMAGES ?>cancel.png"></span>
+                <form action="/search/">
+                    <input type="text" class="search-bar" name="q" placeholder="Press enter after typing..." >
+                </form>
             </div>
         </header>
         <main>

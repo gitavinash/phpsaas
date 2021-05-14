@@ -32,7 +32,7 @@
                             
                             <?php
 
-                                if($postList=mysqli_query($connection, "SELECT link_url, post_title, post_image, meta_description, profile_display_name, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id INNER JOIN ".TABLE_PREFIX."profile ON post_owner_id=profile_user_id WHERE link_site_id=".SITE_ID." AND link_type='post' AND link_status=200 AND link_relation_id={$resultTags} ORDER BY link_is_featured DESC LIMIT 0, 20")) {
+                                if($postList=mysqli_query($connection, "SELECT link_url, post_title, post_image, meta_description, profile_display_name, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."post ON link_relation_id=post_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id INNER JOIN ".TABLE_PREFIX."profile ON post_owner_id=profile_user_id WHERE link_site_id=".SITE_ID." AND link_type='post' AND link_status=200 AND link_relation_id={$resultTags} ORDER BY link_published DESC LIMIT 0, 20")) {
 
                                     if(mysqli_num_rows($postList)!=0) {
 

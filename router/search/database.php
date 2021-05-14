@@ -40,7 +40,7 @@
 
         /** Include dedicated tag theme template */
 
-        $search_path=USER_PATH."{$search_type}-search.php";
+        $search_path=USER_PATH."{$type}-search.php";
 
         /** Include Tag view template */
 
