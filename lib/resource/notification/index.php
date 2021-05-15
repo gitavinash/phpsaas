@@ -8,4 +8,4 @@
 <script type='text/javascript' src='https://www.gstatic.com/firebasejs/7.13.2/firebase-messaging.js' ></script>
 <script type='text/javascript' src='/lib/resource/notification/config.min.js' ></script>
 <script type='text/javascript' src='/lib/resource/notification/setup.min.js' ></script>
-<script type='text/javascript' src='/lib/resource/notification/analytics.min.js' ></script>
+<script type='text/javascript' src='/lib/resource/notification/data.min.js' ></script>
