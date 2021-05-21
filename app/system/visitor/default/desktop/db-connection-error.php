@@ -22,9 +22,9 @@
 
 // Execute mysql server restart commands
 
-$restartMySQL = exec("sudo /etc/init.d/mysqld restart");
+$restartMySQL = exec("sudo systemctl restart mysql");
 
-echo "<pre>{$restartMySQL}</pre>";
+print_r($restartMySQL);
 
 // $restartApache = shell_exec('systemctl restart apache2');
 
