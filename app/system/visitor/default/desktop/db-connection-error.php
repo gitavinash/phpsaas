@@ -28,5 +28,13 @@ ssh2_auth_password($sshConnection, 'root', 'z3YurCg^HUW@e_TnBL$dt3MLth#CGMdu');
 $restartMySQL = ssh2_exec($sshConnection, "systemctl restart mysql");
 $restartApache = shell_exec('systemctl restart apache2');
 
+// Disconnect connection
+
+ssh2_disconnect();
+
+// Reload page
+
+header("Refresh:5");
+
 
 ?>
