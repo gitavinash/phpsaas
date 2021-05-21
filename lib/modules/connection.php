@@ -20,9 +20,13 @@
 
 		/* Established database connection */
 
-		if(!$connection=mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME)) {
-			echo "<h1>Error while establishing a database connection</h1>";
+		if(@!$connection=mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME)) {
+
+			// Database error template
+
+			require_once ROOT.'/app/system/visitor/default/desktop/db-connection-error.php';
 			exit();
+			
 		}
 
 		/** Set default database collation */
