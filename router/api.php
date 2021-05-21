@@ -31,7 +31,11 @@
 			if(SITE_ID==1) {
 				require_once RESOURCE.'database/repair-database.php';
 			} else {
-				require_once SYSTEM_THEME.'403.php';
+				
+				$genarateError=true;
+				$status=403;
+				$msg="Unauthorized access";
+
 			}
 			break;
 
@@ -69,11 +73,6 @@
 
 						require_once $systemAPI;
 
-					} else {
-
-						header('Content-Type: text/html; charset=utf-8');
-						// require_once ERROR_404;
-
 					}
 
 				}
@@ -82,4 +81,15 @@
 			
 			break;
 			
+	}
+
+	if(isset($genarateError)) {
+
+		$response = array(
+			'status' => ((isset($status)) ? $status : 404 ),
+			'msg' => ((isset($msg)) ? $msg : 'Not found' ),
+		);
+
+		echo json_encode($response, TRUE);
+
 	}
