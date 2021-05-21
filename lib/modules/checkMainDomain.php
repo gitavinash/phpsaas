@@ -50,13 +50,13 @@
 
 					// Website expire is less than 1 month
 
-					require_once SYSTEM_THEME.'website-suspend.php';
+					require_once SYSTEM_THEME.'website-expire.php';
 
 				} else {
 
 					// Website expire is more than 1 month
 
-					require_once SYSTEM_THEME.'website-expire.php';
+					require_once SYSTEM_THEME.'website-suspend.php';
 
 				}
 

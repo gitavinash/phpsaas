@@ -51,10 +51,10 @@
                                 <li><strong>1</strong> Website</li>
                                 <li><strong>5 GB</strong> SSD Storage</li>
                                 <li><strong>10k</strong> Monthly visitors<sup>1</sup></li>
-                                <li><strong>Unlimited</strong> Bandwidth</li>
+                                <li><strong>50 GB</strong> Bandwidth</li>
                                 <li><strong>1</strong> Database</li>
                                 <li><strong>5</strong> Email</li>
-                                <li><strong>1</strong> Free SSL</li>
+                                <li><strong>Free</strong> SSL</li>
                                 <li>Free <strong>.in</strong> Domain<sup>2</sup></li>
                                 <li><strong>Free</strong> Control Panel<sup>4</sup></li>
                                 <li>Server location in <strong>India</strong></li>
@@ -78,10 +78,10 @@
                                 <li><strong>5</strong> Website</li>
                                 <li><strong>10 GB</strong> SSD Storage</li>
                                 <li><strong>50k</strong> Monthly visitors<sup>1</sup></li>
-                                <li><strong>Unlimited</strong> Bandwidth</li>
+                                <li><strong>100 GB</strong> Bandwidth</li>
                                 <li><strong>10</strong> Database</li>
                                 <li><strong>5</strong> Email</li>
-                                <li><strong>5</strong> Free SSL</li>
+                                <li><strong>Free</strong> SSL</li>
                                 <li>Free <strong>.com</strong> Domain<sup>2</sup></li>
                                 <li><strong>Free</strong> Control Panel<sup>4</sup></li>
                                 <li>Server location in <strong>India</strong></li>
@@ -99,13 +99,13 @@
                                 <a href="#" class="buy-now-btn l-w1 center" id="">Buy Now</a>
                             </div>
                             <ul class="list-item l-w1 center" >
-                                <li><strong>Unlimited</strong> Website</li>
-                                <li><strong>50 GB</strong> SSD Storage</li>
+                                <li><strong>10</strong> Website</li>
+                                <li><strong>25 GB</strong> SSD Storage</li>
                                 <li><strong>100k</strong> Monthly visitors<sup>1</sup></li>
-                                <li><strong>Unlimited</strong> Bandwidth</li>
-                                <li><strong>Unlimited</strong> Database</li>
-                                <li><strong>Unlimited</strong> Email</li>
-                                <li><strong>Unlimited</strong> Free SSL</li>
+                                <li><strong>250 GB</strong> Bandwidth</li>
+                                <li><strong>20</strong> Database</li>
+                                <li><strong>20</strong> Email</li>
+                                <li><strong>Free</strong> SSL</li>
                                 <li>Free <strong>.com</strong> Domain<sup>2</sup></li>
                                 <li><strong>Free</strong> Control Panel<sup>4</sup></li>
                                 <li>Server location in <strong>India</strong></li>

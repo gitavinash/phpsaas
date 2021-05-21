@@ -35,6 +35,10 @@
 			$mail->AddAddress($toAddress);
 			$mail->Subject = $subject;
 			$mail->Body = $email_body;
+
+			echo '';
+
+			exit();
 			
 			if(DEVELOPMENT_MODE==true) {
 

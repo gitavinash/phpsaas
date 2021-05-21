@@ -25,7 +25,7 @@
 
                     // Call generate user library
 
-                    require_once MODULES.'user/generate.php';
+                    require_once API_LIB_MODULES.'user/add/generate.php';
 
                     // Create site configuration
 

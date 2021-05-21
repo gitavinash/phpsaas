@@ -34,7 +34,11 @@
 
 				while($websiteConfigutrationData=mysqli_fetch_assoc($websiteConfigutration)) {
 
-					define(strtoupper($websiteConfigutrationData['site_configuration_key']), $websiteConfigutrationData['site_configuration_value']);
+					if($websiteConfigutrationData['site_configuration_key']!='') {
+
+						define(strtoupper($websiteConfigutrationData['site_configuration_key']), $websiteConfigutrationData['site_configuration_value']);
+					
+					}
 
 				}
 

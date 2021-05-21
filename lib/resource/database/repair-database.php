@@ -878,6 +878,20 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting 
     ADD INDEX site_setting_site_id (site_setting_site_id");
 
+  // Drop column
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting 
+    DROP site_ga_id");
+    
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting 
+    DROP site_fb_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting 
+    DROP site_fb_app_id");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."site_setting 
+    DROP site_tw_id");
+
   /** State Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."state

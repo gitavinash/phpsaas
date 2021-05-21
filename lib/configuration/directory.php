@@ -51,14 +51,15 @@
 
 	/** System default and usefull modules */
 
-	define('APP_MODULES', ROOT.'/lib/modules/'.SITE_APP.'/');
+	define('APP_MODULES', MODULES.SITE_APP.'/');
 	define('IMAGE_UPLOADER', MODULES.'imageUploader.php');
 	define('LOGIN_CHECK', MODULES.'isLogin.php');
 	define('SITE_STATUS', MODULES.'siteStatus.php');
 
 	/** API Directory */
 
-	define('API_APP_MODULES', API_MODULES.SITE_APP.'/');
+	define('API_APP_MODULES', API_MODULES.SITE_APP.'/');	// Use for API router
+	define('API_LIB_MODULES', MODULES.'api/');	// User for API function and other resource
 	
 	/* Email Directory Configuration */
 

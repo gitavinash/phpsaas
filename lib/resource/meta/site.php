@@ -8,17 +8,27 @@
 <link rel="manifest" href="/mainfest.json">
 <link rel="apple-touch-icon" href="<?php echo SITE_ICON ?>">
 <meta name="apple-mobile-web-app-status-bar" content="<?php echo SITE_THEME_COLOUR ?>">
-<meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
+
+
 <?php
 
-    if(SITE_VERSION=='amp') {
-        
-        echo "<link rel='alternate' href='{$canonicalURL}' />";
+    if(defined('ENABLE_AMP')) {
+
+        // AMP
     
-    } else {
+        if(SITE_VERSION=='amp') {
+
+            // AMP site tag
+            
+            echo "<link rel='alternate' href='{$canonicalURL}' />";
         
-        // AMP site
-        echo "<link rel='amphtml' href='".str_replace(SITE_URL, SITE_URL.'/amp', $canonicalURL)."' >";
+        } else {
+            
+            // Non AMP site tag
+    
+            echo "<link rel='amphtml' href='".str_replace(SITE_URL, SITE_URL.'/amp', $canonicalURL)."' >";
+    
+        }
 
     }
 

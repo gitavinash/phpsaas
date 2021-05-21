@@ -69,7 +69,7 @@ $(document).ready(function() {
                                             '<p class="domain-price" ><strike>₹'+ domainPriceMRP +'</strike> <strong>₹ '+ domainPrice +'</strong><span class="fr" >Renewal ₹ '+ domainPrice +'</span></p>' +
                                         '</div>' +
                                         '<div class="l-w2 l-m-w1">' +
-                                            '<button href="#" class="add-to-cart" id="'+domainResult.domain+'_'+domainPrice+'_1" ><i class="fi-rr-shopping-cart-add"></i> Add to Cart</button>' +
+                                            '<button href="#" class="add-to-cart addToCart" id="'+domainResult.domain+'_'+domainPrice+'_1" ><i class="icon fi-rr-shopping-cart-add"></i> Add to Cart</button>' +
                                         '</div>' +
                                     '</div>' +
                                 '</div>';
@@ -141,6 +141,55 @@ $(document).ready(function() {
 
         var domainName = $('#domain').val();
         searchDomain(domainName);
+
+    });
+
+    // Add to cart function on search result page add to cart btn click
+
+    $(document).on('click','.addToCart',function(){
+
+        // Hide current clicked button
+
+        var selectedBtn = this;
+
+        $(selectedBtn).hide();
+
+        var domainValue = $(this).attr('id');
+
+        var qty = domainValue.split('_');
+
+        var id = qty[0];
+        var price = qty[2];
+        var qty = qty[1];
+
+        // Call add to cart API
+
+        $.ajax({
+            type: 'POST',
+			dataType: 'json',
+            data: {
+                'id' : id,
+                'quantity' : qty,
+                'price' : price,
+                'type' : 'cart',
+                'action' : 'add',
+                'cartType' : 'domain'
+            },
+            success: function(data) {
+
+                console.log(data);
+
+            },
+            error: function(data) {
+                
+                // $('#'+domainValue).show();
+                $(selectedBtn).show();
+                console.log('Error');
+                console.log(data);
+
+
+            }
+        });
 
     });
 
