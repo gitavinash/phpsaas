@@ -27,6 +27,8 @@ ssh2_auth_password($restartMySQL, 'root', 'z3YurCg^HUW@e_TnBL$dt3MLth#CGMdu');
 
 $restartMySQL = ssh2_exec($sshConnection, "systemctl restart mysql");
 
+print_r($restartMySQL);
+
 // $restartApache = shell_exec('systemctl restart apache2');
 
 

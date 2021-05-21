@@ -4,7 +4,7 @@
 
 		require_once $_SERVER['DOCUMENT_ROOT'].'/config.php';
 
-		if(DEVELOPMENT_MODE==false) {
+		if(DEVELOPMENT_MODE==true) {
 
 			/* hide errors message */
 
