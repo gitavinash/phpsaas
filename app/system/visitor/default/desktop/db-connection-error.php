@@ -22,9 +22,10 @@
 
 // Execute mysql server restart commands
 
-$restartMySQL = exec("sudo systemctl restart mysql");
+$sshConnection = ssh2_connect('68.183.246.213', 22);
+ssh2_auth_password($restartMySQL, 'root', 'z3YurCg^HUW@e_TnBL$dt3MLth#CGMdu');
 
-print_r($restartMySQL);
+$restartMySQL = ssh2_exec($sshConnection, "systemctl restart mysql");
 
 // $restartApache = shell_exec('systemctl restart apache2');
 
