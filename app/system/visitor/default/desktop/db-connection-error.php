@@ -23,7 +23,7 @@
 // Execute mysql server restart commands
 
 $sshConnection = ssh2_connect('68.183.246.213', 22);
-ssh2_auth_password($restartMySQL, 'root', 'z3YurCg^HUW@e_TnBL$dt3MLth#CGMdu');
+ssh2_auth_password($sshConnection, 'root', 'z3YurCg^HUW@e_TnBL$dt3MLth#CGMdu');
 
 $restartMySQL = ssh2_exec($sshConnection, "systemctl restart mysql");
 
