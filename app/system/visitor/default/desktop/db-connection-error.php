@@ -14,7 +14,9 @@
 
 <body>
     <img src="/app/system/visitor/default/desktop/assets/images/database-maintenance.png" alt="">
-    <h1>Database Error <span>Error while establishing a database connection</span></h1>
+    <h1>Database Error <span>Error while establishing a database connection | <strong>Please wait!</strong> this page
+            will reload
+            automatic.</span></h1>
 </body>
 
 </html>
@@ -34,7 +36,7 @@ ssh2_disconnect();
 
 // Reload page
 
-header("Refresh:5");
+header("Refresh:2");
 
 
 ?>
