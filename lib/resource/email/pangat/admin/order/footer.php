@@ -49,8 +49,6 @@
 
 	$email_body = $email_header.$email_body.$email_footer;
 
-	// echo $email_body;
-
 	/* Send email */
 
 	$toAddress = ADMIN_EMAIL; // Email receiver id
