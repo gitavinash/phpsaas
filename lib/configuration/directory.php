@@ -65,13 +65,15 @@
 
 	define('SEND_EMAIL', CONFIG.'mail/send-email.php');
 	define('EMAIL_TEMPLATE', RESOURCE.'email/');
-	define('APP_EMAIL_TEMPLATE', EMAIL_TEMPLATE.SITE_APP.'/');
+	define('APP_EMAIL_TEMPLATE', EMAIL_TEMPLATE.SITE_APP.'/default/');
+	define('ADMIN_EMAIL_TEMPLATE', EMAIL_TEMPLATE.SITE_APP.'/admin/');
 	
 	/* SMS Directory Configuration */
 
 	define('SEND_SMS', CONFIG.'sms/send-sms.php');
 	define('SMS_TEMPLATE', RESOURCE.'sms/');
-	define('APP_SMS_TEMPLATE', SMS_TEMPLATE.SITE_APP.'/');
+	define('APP_SMS_TEMPLATE', SMS_TEMPLATE.SITE_APP.'/default/');
+	define('ADMIN_SMS_TEMPLATE', SMS_TEMPLATE.SITE_APP.'/admin/');
 
 	/* Installation Directory  */
 

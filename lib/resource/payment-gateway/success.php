@@ -14,7 +14,7 @@
 
         case 'booking':
             
-            $validTransactionCheckQuery="SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, cart_id, cart_relation_id, cart_relation_type, booking_id, booking_enquiry_id, booking_date, booking_time, enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_email as email, enquiry_mobile as mobile, enquiry_query as guest FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."cart ON cart_id=transaction_cart_id INNER JOIN ".TABLE_PREFIX."booking ON cart_relation_id=booking_id INNER JOIN ".TABLE_PREFIX."enquiry ON booking_enquiry_id=enquiry_id WHERE transaction_id='{$transaction_id}' AND cart_relation_type='booking' AND transaction_site_id=".SITE_ID;
+            $validTransactionCheckQuery="SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, cart_id, cart_relation_id, cart_relation_type, booking_id, booking_enquiry_id, booking_date, booking_time, enquiry_id, CONCAT(enquiry_first_name, enquiry_last_name) as enquiry_display_name, enquiry_email as email, enquiry_mobile as mobile, enquiry_query as guest FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."cart ON cart_id=transaction_cart_id INNER JOIN ".TABLE_PREFIX."booking ON cart_relation_id=booking_id INNER JOIN ".TABLE_PREFIX."enquiry ON booking_enquiry_id=enquiry_id WHERE transaction_id='{$transaction_id}' AND cart_relation_type='booking' AND transaction_site_id=".SITE_ID;
             break;
 
         default : 
@@ -69,11 +69,25 @@
                                                     
                         require_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
 
+                        // Send copy email is admin email notification is enable 
+
+                        if(defined('ADMIN_EMAIL_NOTIFICATION')) {
+                                
+                            if(ADMIN_EMAIL_NOTIFICATION==1) {
+
+                                // Send booking confirmation email notice to admin
+
+                                include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+
+                            }
+
+                        }
+
                         mysqli_query($connection, "COMMIT");
 
                     } else {
 
-                        echo 'Something is wrong while updating the status';
+                        $msg='Something is wrong while updating the status';
                         mysqli_query($connection, "ROLLBACK");
                         
 

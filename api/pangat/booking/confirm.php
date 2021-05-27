@@ -11,8 +11,8 @@
             if($id!='') {
 
                 $id=base64_decode($id);
-                
-                if($checkEnquiry=mysqli_query($connection, "SELECT booking_enquiry_id, booking_date, booking_time, enquiry_email as email, enquiry_mobile as mobile FROM isw_booking INNER JOIN isw_enquiry ON booking_enquiry_id=enquiry_id WHERE booking_enquiry_id={$id} AND booking_site_id=".APP_SITE_ID)) {
+
+                if($checkEnquiry=mysqli_query($connection, "SELECT booking_enquiry_id, booking_date, booking_time, CONCAT(enquiry_first_name, enquiry_last_name) as enquiry_display_name, enquiry_first_name, enquiry_last_name, enquiry_email as email, enquiry_mobile as mobile, enquiry_query as guest FROM isw_booking INNER JOIN isw_enquiry ON booking_enquiry_id=enquiry_id WHERE booking_enquiry_id={$id} AND booking_site_id=".APP_SITE_ID)) {
 
                     if(mysqli_num_rows($checkEnquiry)!=0) {
                     
@@ -61,7 +61,21 @@
                     
                             /** Send Email and SMS to User of confirmation */
                     
-                            include_once APP_EMAIL_TEMPLATE.'booking-confirmation.php';
+                            include_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+
+                            // Send copy email is admin email notification is enable 
+
+                            if(defined('ADMIN_EMAIL_NOTIFICATION')) {
+                                
+                                if(ADMIN_EMAIL_NOTIFICATION==1) {
+
+                                    // Send booking confirmation email notice to admin
+
+                                    include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+
+                                }
+
+                            }
                     
                         } else {
                     

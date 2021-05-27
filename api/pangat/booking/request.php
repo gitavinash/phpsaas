@@ -120,8 +120,6 @@
 
                                                             $error=TRUE;
                                                             $msg='Something is wrong while adding alternate mobile number';
-                                                            
-                                                            echo 'i m here';
 
                                                         } else {
 
@@ -192,14 +190,6 @@
                                 $bookingID=mysqli_insert_id($connection);
 
                                 if($newEnquiry && $newBooking) {
-
-                                    /** Send sms */
-
-                                    require_once APP_SMS_TEMPLATE.'order/booking-request.php';
-
-                                    /** Send email */
-
-                                    require_once APP_EMAIL_TEMPLATE.'order/booking-request.php';
 
                                     if(isset($acceptPayment)) {
 

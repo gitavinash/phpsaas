@@ -8,7 +8,7 @@
 
 		$expireDate=date('Y-m-d', strtotime('+10 years'));
 
-		if($checkUser=mysqli_query($connection, "SELECT user_email FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
+		if($checkUser=mysqli_query($connection, "SELECT user_email, user_status FROM ".TABLE_PREFIX."user WHERE user_email='{$email}'")) {
             
             if(mysqli_num_rows($checkUser)!=0) {
 

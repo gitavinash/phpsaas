@@ -77,7 +77,7 @@
 		case '' :
 			require_once 'homepage.php';
 			break;
-
+		
 		case str_replace('/', '', LOGIN_PATH) :
 			require_once 'login.php';
 			exit();
