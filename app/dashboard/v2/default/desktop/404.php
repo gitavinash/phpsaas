@@ -1,13 +1,4 @@
-<div class="page-wrapper compact-wrapper" id="pageWrapper">
-  <div class="error-wrapper">
-    <div class="container"><img class="img-100" src="../assets/images/other-images/sad.png" alt="">
-      <div class="error-heading">
-        <h2 class="headline font-danger">404</h2>
-      </div>
-      <div class="col-md-8 offset-md-2">
-        <p class="sub-content">The page you are attempting to reach is currently not available. This may be because the page does not exist or has been moved.</p>
-      </div>
-      <div><a class="btn btn-danger-gradien btn-lg" href="#" onclick="window.history.back()" >BACK.</a></div>
-    </div>
-  </div>
+<div class="page-not-found">
+    <img src="<?php echo IMG_LIBRARY ?>freepik/404-not-found.jpeg" alt="">
+    <!-- <h1>404<span>Page Not Found</span></h1> -->
 </div>

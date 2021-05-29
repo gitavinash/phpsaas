@@ -56,8 +56,13 @@
 
 	// User for detect while type of page is load
 
-	$postType=mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') );
+	$postType=explode('/', mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') ));
+	$postType=end($postType);
+	
+	// html title tag value
 
+	$dashboardPageTitle=ucwords(str_replace('/', ' &#8702; ', mysqli_real_escape_string($connection, ((rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')!='') ? rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') : 'Dashboard' ) )).((isset($type)) ? ' &#8702; '.$type : '' ));
+	
 	// Call dashboard theme file header, footer and main required file as per uri
 
 	require_once $dashboardDirectory.'/header.php';
