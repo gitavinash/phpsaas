@@ -17,7 +17,7 @@
 			$dashboardDirectory=str_replace('/default/', '/default/', ADMIN_PATH);
 
 		}
-		
+
 	} else {
 
 		// Latest dashboard directory 
@@ -30,11 +30,13 @@
 
 		}
 
+
 	}
 
-	// Request url file path 
 
-	$dashboardFilePath=((isset($_GET['type'])) ? 'templates'.ADMIN_BASE_URL.mysqli_real_escape_string($connection, $_GET['type']) : ltrim(rtrim(ADMIN_BASE_URL, '/'), '/').'dashboard' ).'.php';
+	// v2 Request url file path 
+
+	$dashboardFilePath = ((isset($type)) ? 'templates'.ADMIN_BASE_URL.$type : ((ADMIN_BASE_URL!='/') ? ltrim(rtrim(ADMIN_BASE_URL, '/'), '/') : 'dashboard' ) ).'.php';
 
 	$dashboardFile=$dashboardDirectory.$dashboardFilePath;
 
