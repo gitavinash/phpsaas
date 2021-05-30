@@ -4,6 +4,8 @@
 
 	$urlStructure=explode('/', rtrim(ltrim(ACTIVE_URL_NON_QUERY, '/'), '/'));
 
+    $deviceOS=$_SERVER['HTTP_USER_AGENT'];
+
 	/** Defining Site Version  */
 
 	switch($urlStructure[0]) {
@@ -48,8 +50,6 @@
 
     } else {
 
-        $deviceOS=$_SERVER['HTTP_USER_AGENT'];
-
         switch($deviceOS) {
 
             case (preg_match('/Mac/', $deviceOS) ? true : false) :
@@ -64,5 +64,35 @@
                 define('DEVICE_OS', 'Windows');
                 break;
         }
+
+    }
+
+    // Detect Browser
+    
+    switch($deviceOS) {
+
+        case (preg_match('/Edg/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'Edge');
+            break;
+
+        case (preg_match('/OPR/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'Opera');
+            break;
+
+        case (preg_match('/Firefox/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'Firefox');
+            break;
+
+        case (preg_match('/Chrome/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'Chrome');
+            break;
+
+        case (preg_match('/Safari/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'Safari');
+            break;
+
+        default:
+            $browserName = '';
+            break;
 
     }
