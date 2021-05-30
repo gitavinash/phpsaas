@@ -90,9 +90,8 @@
         case (preg_match('/Firefox/', $deviceOS) ? true : false) :
             define('DEVICE_BROWSER', 'firefox');
             break;
-            break;
 
-        case (preg_match('/Mozilla/', $deviceOS) ? true : false) :
+        case (preg_match('/Rocket/', $deviceOS) ? true : false) :
             define('DEVICE_BROWSER', 'firefox lite');
             break;
 
