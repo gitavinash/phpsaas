@@ -71,12 +71,12 @@
     
     switch($deviceOS) {
 
-        case (preg_match('/Edg/', $deviceOS) ? true : false) :
-            define('DEVICE_BROWSER', 'edge');
-            break;
-
         case (preg_match('/EdgA/', $deviceOS) ? true : false) :
             define('DEVICE_BROWSER', 'edge mobile');
+            break;
+            
+        case (preg_match('/Edg/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'edge');
             break;
 
         case (preg_match('/OPR/', $deviceOS) ? true : false) :
