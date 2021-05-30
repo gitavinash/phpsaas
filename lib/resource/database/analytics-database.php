@@ -20,6 +20,14 @@
         ADD KEY ip_state (ip_state),
         ADD KEY ip_city (ip_city)");
 
+    mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."ip
+        ADD ip_continent VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER ip_address");
+
+    mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."ip
+        ADD ip_isp VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER ip_longitude");
+
+    mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."ip
+        ADD ip_company VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER ip_isp");
         
     mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."ip
         MODIFY ip_id bigint(20) NOT NULL AUTO_INCREMENT");

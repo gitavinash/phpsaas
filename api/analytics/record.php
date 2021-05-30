@@ -24,12 +24,12 @@
 
                 // Fetch IP location data from api
                 
-                $fetchIPData=file_get_contents("https://geolocation-db.com/json/".GEOLOCATION_API."/".IP);
+                $fetchIPData=file_get_contents("http://ip-api.com/json/".IP."?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
                 extract(json_decode($fetchIPData, TRUE));
 
                 // Add IP location data into IP table
-
-                $recordIPData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."ip(ip_address, ip_country, ip_state, ip_city, ip_postal, ip_latitude, ip_longitude) VALUES('".IP."', '{$country_name}', '{$state}', '{$city}', '{$postal}', '{$latitude}', '{$longitude}')");
+                
+                $recordIPData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."ip(ip_address, ip_continent, ip_country, ip_state, ip_city, ip_postal, ip_latitude, ip_longitude, ip_isp, ip_company) VALUES('".IP."', '{$continent}', '{$country}', '{$regionName}', '{$city}', '{$zip}', '{$lat}', '{$lon}', '{$isp}', '{$org}')");
 
             } else {
 
