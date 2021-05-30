@@ -36,7 +36,7 @@
 	
         if($deviceType->isiOS()) {
 
-            define('DEVICE_OS', 'iOS');
+            define('DEVICE_OS', 'ios');
             
         }
 
@@ -44,7 +44,7 @@
 
         if($deviceType->isAndroidOS()) {
 
-            define('DEVICE_OS', 'Android');
+            define('DEVICE_OS', 'android');
 
         }
 
@@ -53,15 +53,15 @@
         switch($deviceOS) {
 
             case (preg_match('/Mac/', $deviceOS) ? true : false) :
-                define('DEVICE_OS', 'Mac');
+                define('DEVICE_OS', 'mac');
                 break;
 
             case stristr($deviceOS, 'Linux') :
-                define('DEVICE_OS', 'Linux');
+                define('DEVICE_OS', 'linux');
                 break;
 
             default:
-                define('DEVICE_OS', 'Windows');
+                define('DEVICE_OS', 'windows');
                 break;
         }
 
@@ -72,23 +72,36 @@
     switch($deviceOS) {
 
         case (preg_match('/Edg/', $deviceOS) ? true : false) :
-            define('DEVICE_BROWSER', 'Edge');
+            define('DEVICE_BROWSER', 'edge');
             break;
 
         case (preg_match('/OPR/', $deviceOS) ? true : false) :
-            define('DEVICE_BROWSER', 'Opera');
+            define('DEVICE_BROWSER', 'opera');
+            break;
+
+        case (preg_match('/UCTurbo/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'uc turbo');
+            break;
+
+        case (preg_match('/UCBrowser/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'uc browser');
             break;
 
         case (preg_match('/Firefox/', $deviceOS) ? true : false) :
-            define('DEVICE_BROWSER', 'Firefox');
+            define('DEVICE_BROWSER', 'firefox');
+            break;
+            break;
+
+        case (preg_match('/Mozilla/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'firefox lite');
             break;
 
         case (preg_match('/Chrome/', $deviceOS) ? true : false) :
-            define('DEVICE_BROWSER', 'Chrome');
+            define('DEVICE_BROWSER', 'chrome');
             break;
 
         case (preg_match('/Safari/', $deviceOS) ? true : false) :
-            define('DEVICE_BROWSER', 'Safari');
+            define('DEVICE_BROWSER', 'safari');
             break;
 
         default:
