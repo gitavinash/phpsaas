@@ -2,24 +2,22 @@
 
     // User selected theme login template
 
-    $themeLoginFile=USER_PATH.$urlStructure[0].'.php';
+    $themeLoginFile=str_replace('/default/', '/'.USER_TYPE.'/', ADMIN_PATH).$urlStructure[0].'.php';
         
-    if(file_exists($themeLoginFile)) {
+    if(!file_exists($themeLoginFile)) {
 
-        require_once $themeLoginFile;
+        $themeLoginFile=ADMIN_PATH.$urlStructure[0].'.php';
 
-    } else if(file_exists(ADMIN_PATH.'login.php')) {
-
-        // Current admin login template
-
-        require_once ADMIN_PATH.'login.php';
-
-    } else {
+    }
+    
+    if(!file_exists($themeLoginFile)) {
 
         // Default dashboard theme login template
 
-        require_once DEFAULT_VISITOR_PATH.'login.php';
+        $themeLoginFile=DEFAULT_VISITOR_PATH.$urlStructure[0].'.php';
 
     }
+
+    require_once $themeLoginFile;
     
     exit();

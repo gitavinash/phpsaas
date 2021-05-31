@@ -20,7 +20,8 @@
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
+        media="screen">
 
 </head>
 
@@ -53,10 +54,10 @@
     </header>
 
     <aside>
-        <div class="logo"><a href="index"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+        <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index"><i
+                <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="/dashboard/"><i
                             class="fi-rr-home"></i> Dashboard</a></li>
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/product/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="product/list/"><i class="fi-rr-box"></i> Product</a>
