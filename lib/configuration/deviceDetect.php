@@ -108,7 +108,7 @@
             break;
 
         default:
-            $browserName = '';
+            define('DEVICE_BROWSER', 'Unknown');
             break;
 
     }
