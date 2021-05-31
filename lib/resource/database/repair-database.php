@@ -133,6 +133,15 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
     DROP analytics_device");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    DROP analytics_country");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    DROP analytics_state");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."analytics
+    DROP analytics_city");
+
   /** App Table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."app(
@@ -1036,6 +1045,7 @@
   require_once 'event-database.php';
   require_once 'news-database.php';
   require_once 'view-database.php';
+  require_once 'analytics-database.php';
 
   $result = array(
     'status' => 200,
