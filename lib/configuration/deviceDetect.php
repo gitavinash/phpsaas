@@ -99,6 +99,10 @@
             define('DEVICE_BROWSER', 'firefox lite');
             break;
 
+        case (preg_match('/Pinterestbot/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'pinterest bot');
+            break;
+
         case (preg_match('/Chrome/', $deviceOS) ? true : false) :
             define('DEVICE_BROWSER', 'chrome');
             break;
