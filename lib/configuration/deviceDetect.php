@@ -108,7 +108,7 @@
             break;
 
         default:
-            define('DEVICE_BROWSER', 'Unknown');
+            define('DEVICE_BROWSER', 'Unknown | '.$deviceOS);
             break;
 
     }
