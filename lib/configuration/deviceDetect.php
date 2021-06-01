@@ -103,6 +103,14 @@
             define('DEVICE_BROWSER', 'pinterest bot');
             break;
 
+        case (preg_match('/facebookexternalhit/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'facebook bot');
+            break;
+
+        case (preg_match('/Instagram/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'instagram');
+            break;
+
         case (preg_match('/Chrome/', $deviceOS) ? true : false) :
             define('DEVICE_BROWSER', 'chrome');
             break;
