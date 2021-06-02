@@ -45,6 +45,8 @@
 	
 	define('LOGIN_PATH', '/login/');
 	define('LOGOUT_PATH', '/logout/');
+	define('FORGOT_PASSWORD_PATH', '/forgot-password/');
+	define('REGISTRATION_PATH', '/register/');
 
 	#############################################################################################
 	############################  DO NOT CHANGE CODE BELOW THIS LINE  ###########################

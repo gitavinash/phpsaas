@@ -77,10 +77,28 @@
 		case '' :
 			require_once 'homepage.php';
 			break;
+
+		/** For Dashboard activity process */
+	
+		case 'dashboard' :
+			require_once 'admin.php';
+			break;
+	
+		case str_replace('/', '', LOGOUT_PATH) :
+			require_once 'logout.php';
+			break;
 		
 		case str_replace('/', '', LOGIN_PATH) :
 			require_once 'login.php';
-			exit();
+			break;
+		
+		case str_replace('/', '', FORGOT_PASSWORD_PATH) :
+			require_once 'forgot-password.php';
+			break;
+		
+		case str_replace('/', '', REGISTRATION_PATH) :
+			require_once 'register.php';
+			break;
 			
 		case 'api' :
 			require_once 'api.php';
@@ -96,16 +114,6 @@
 
 		case 'install' :
 			require_once 'install.php';
-			break;
-
-		/** For Dashboard activity process */
-
-		case 'dashboard' :
-			require_once 'admin.php';
-			break;
-
-		case str_replace('/', '', LOGOUT_PATH) :
-			require_once 'logout.php';
 			break;
 
 		/** For all type of verification process */
