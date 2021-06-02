@@ -115,6 +115,14 @@
             define('DEVICE_BROWSER', 'chrome');
             break;
 
+        case (preg_match('/e.ventures/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'e.ventures bot');
+            break;
+
+        case (preg_match('/Mozilla/', $deviceOS) ? true : false) :
+            define('DEVICE_BROWSER', 'mozilla');
+            break;
+
         case (preg_match('/Safari/', $deviceOS) ? true : false) :
             define('DEVICE_BROWSER', 'safari');
             break;
