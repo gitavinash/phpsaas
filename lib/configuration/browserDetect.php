@@ -65,7 +65,7 @@
             break;
 
         default:
-            define('DEVICE_BROWSER', $deviceOS);
+            define('DEVICE_BROWSER', strtolower($deviceOS));
             break;
 
     }
