@@ -31,7 +31,7 @@
 							<td style='float: left; margin-left: 20px;' >".date('d M Y', strtotime($booking_date))."</td>
 						</tr>
 						<tr>
-							<td>Pangat booking time</td>
+							<td>Pangat booking type</td>
 							<td style='float: left; margin-left: 20px;' >{$booking_time}</td>
 						</tr>
 						<tr>
