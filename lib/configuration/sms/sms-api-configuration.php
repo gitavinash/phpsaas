@@ -1,13 +1,12 @@
 <?php
 
-    require_once 'sms-api-configuration.php';
+    // require_once 'sms-api-configuration.php';
 
     if(SMS_DEFAULT==1) {
 
-        SMS_AUTH_KEY='';
-        SMS_SENDER='';
-        SMS_ROUTE='';
-        SMS_GATEWAY='msg91';
+        define('SMS_AUTH_KEY', '');
+        define('SMS_SENDER', '');
+        define('SMS_ROUTE', '');
 
     }
 
@@ -22,7 +21,7 @@
             break;
 
         case 'textmysms' :
-            $smsURL="http://sms.textmysms.com/app/smsapi/index.php?key=".SMS_KEY."&campaign=".SMS_CAMPAIGN."&routeid=".SMS_ROUTEID."&type=".SMS_TYPE."&contacts={$mobile}&senderid={$sms_senderid}&msg={$message}&template_id={$dlt_sms_temp_id}";
+            $smsURL="http://sms.textmysms.com/app/smsapi/index.php?key=".SMS_KEY."&campaign=".SMS_CAMPAIGN."&routeid=".SMS_ROUTEID."&type=".SMS_TYPE."&contacts={$mobile}&senderid=".SMS_SENDER."&msg={$message}&template_id={$dlt_sms_temp_id}";
             break;
 
         default :

@@ -77,7 +77,7 @@
 
                                 // Send booking confirmation email notice to admin
 
-                                include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+                                include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php'; 
 
                             }
 

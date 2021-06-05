@@ -53,4 +53,4 @@
 
 	$toAddress = ADMIN_EMAIL; // Email receiver id
 	
-	require_once SEND_EMAIL;
+	require SEND_EMAIL;
