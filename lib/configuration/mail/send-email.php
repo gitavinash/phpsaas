@@ -43,10 +43,6 @@
 					echo "Message could not be sent. <p>";
 					echo "Mailer Error: " . $mail->ErrorInfo;
 
-				} else {
-
-					echo "Email sent to {$toAddress}";
-
 				}
 
 			} else {

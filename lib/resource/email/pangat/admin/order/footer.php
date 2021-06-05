@@ -52,5 +52,5 @@
 	/* Send email */
 
 	$toAddress = ADMIN_EMAIL; // Email receiver id
-	
+
 	require SEND_EMAIL;
