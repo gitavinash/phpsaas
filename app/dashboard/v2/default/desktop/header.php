@@ -19,7 +19,6 @@
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>chartist/chartist.min.js">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
         media="screen">
 
@@ -31,14 +30,15 @@
         <div class="left-side">
             <ul>
                 <li>
-
+                    <a href="#" class="close-nav" id="closeNav"><i class="fi-rr-settings-sliders"></i></a>
                 </li>
             </ul>
         </div>
         <div class="right-side">
             <ul>
+                <li><a href="#"><i class="fi-rr-bell"></i></a></li>
                 <li>
-                    <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
+                    <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
                                 src="<?php echo ((PROFILE_IMAGE!='') ? PROFILE_IMAGE : IMG_LIBRARY.'default-profile.png' ); ?>"
                                 alt=""></div>
@@ -59,6 +59,31 @@
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="/dashboard/"><i
                             class="fi-rr-home"></i> Dashboard</a></li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/orders/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="orders/"><i class="fi-rr-box-alt"></i> Manage Order</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All order</a></li>
+                            <li><a href="orders/list/?status=1"><i class="fi-rr-check"></i>
+                                    Confirm order</a>
+                            </li>
+                            <li><a href="orders/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending Order</a>
+                            </li>
+                            <li><a href="orders/list/?status=3"><i class="fi-rr-cross"></i> Cancel order</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All order</a></li>
+                            <li><a href="orders/list/?status=1"><i class="fi-rr-check"></i>
+                                    Confirm order</a>
+                            </li>
+                            <li><a href="orders/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending Order</a>
+                            </li>
+                            <li><a href="orders/list/?status=3"><i class="fi-rr-cross"></i> Cancel order</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/product/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="product/list/"><i class="fi-rr-box"></i> Product</a>
                     <div class="side-menu">
@@ -113,10 +138,10 @@
                                     media</a>
                             </li>
                             <li><a href="media/add/"><i class="fi-rr-add"></i> Add new media</a></li>
-                            <li><a href="media/list/&type=image"><i class="fi-rr-picture"></i> Images</a>
+                            <li><a href="media/list/?type=image"><i class="fi-rr-picture"></i> Images</a>
                             </li>
-                            <li><a href="media/list/&type=video"><i class="fi-rr-film"></i> Videos</a></li>
-                            <li><a href="media/list/&type=docs"><i class="fi-rr-document"></i>
+                            <li><a href="media/list/?type=video"><i class="fi-rr-film"></i> Videos</a></li>
+                            <li><a href="media/list/?type=docs"><i class="fi-rr-document"></i>
                                     Documents</a>
                             </li>
                         </ul>
@@ -169,11 +194,13 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="import/product/"><i class="fi-rr-box"></i> Products</a></li>
+                            <li><a href="import/post/"><i class="fi-rr-document"></i> Posts</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="import/product/"><i class="fi-rr-box"></i> Products</a></li>
+                            <li><a href="import/post/"><i class="fi-rr-document"></i> Posts</a></li>
                         </ul>
                     </div>
                 </li>
@@ -212,3 +239,21 @@
     <main>
 
         <div class="container">
+
+            <div class="i-m-here-pagination">
+                <ul>
+                    <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
+                    <?php
+                    
+                        $paginationURL='';
+
+                        for($i=0; $i<sizeof($urlStructure); $i++) {
+
+                            $paginationURL=$paginationURL.'/'.strtolower($urlStructure[$i]);
+                            echo "<li><a href='{$paginationURL}/'>".ucwords($urlStructure[$i])."</a></li>";
+
+                        }
+
+                    ?>
+                </ul>
+            </div>

@@ -1,21 +1,222 @@
-new Chartist.Line('.chart-box', {
-    labels: [1, 2, 3, 4, 5, 6, 7, 8],
-    series: [
-      [5, 9, 7, 8, 5, 3, 5, 4]
-    ]
-},
-{
-    fullWidth: true,
-    low: 0,
-    showArea: true,axisX: {
-        showLabel: false,
-        offset: 0
-      },
-      axisY: {
-        showLabel: false,
-        offset: 0
-      }
-},{
-    width: '10%',
-    height: 50
-});
+function createLineChart(objectID, chartLabel = '', currentDataLabel, currentData, currentDataColor, previousDataLabel, previousData, previousDataColor, showBackGroundAreaColor = true, lineCurveTension = 0.4, border = 1, animationDuration = 1000, showTopLabel = false, showXLable = false, showYLable = false) {
+
+    var myChart = new Chart(document.getElementById(objectID).getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: chartLabel,
+            datasets: [
+                {
+                    label: currentDataLabel,
+                    data: currentData,
+                    lineTension: lineCurveTension,
+                    fill: showBackGroundAreaColor,
+                    backgroundColor: [
+                        currentDataColor,
+                    ],
+                    borderColor: [
+                        currentDataColor,
+                    ],
+                    borderWidth: border
+                },
+                {
+                    label: previousDataLabel,
+                    data: previousData,
+                    lineTension: lineCurveTension,
+                    fill: showBackGroundAreaColor,
+                    backgroundColor: [
+                        previousDataColor,
+                    ],
+                    borderColor: [
+                        previousDataColor,
+                    ],
+                    borderWidth: border
+                }
+            ]
+        },
+        options: {
+            animations: {
+                tension: {
+                    duration: animationDuration,
+                }
+            },
+            plugins: {
+                legend: {
+                    display: showTopLabel
+                },
+            },
+            scales: {
+                x: {
+                    display: showXLable,
+                },
+                y: {
+                    display: showYLable,
+                }
+            },
+            // manage dots in lines
+            elements: {
+                point:{
+                    radius: 0
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+
+}
+
+// Counting number animation
+
+function increaseCountingNumberAnimation(objectID, start, end, duration, percentage) {
+    if (start === end) return;
+    var range = end - start;
+    var current = start;
+    var increment = end > start? 1 : +1;
+    var stepTime = Math.abs(Math.floor(duration / range));
+    var obj = document.getElementById(objectID);
+    var timer = setInterval(function() {
+        current += increment;
+        obj.innerHTML = '₹ ' + current + '<span class="danger"><i class="fi-rr-arrow-small-down"></i>'+percentage+'%';
+        if (current == end) {
+            clearInterval(timer);
+        }
+    }, stepTime);
+}
+
+function decreaseCountingNumberAnimation(objectID, start, end, duration, percentage) {
+    if (start === end) return;
+    var range = end - start;
+    var current = start;
+    var increment = end > start? 1 : -1;
+    var stepTime = Math.abs(Math.floor(duration / range));
+    var obj = document.getElementById(objectID);
+    var timer = setInterval(function() {
+        current += increment;
+        obj.innerHTML = '₹ ' + current + '<span class="danger"><i class="fi-rr-arrow-small-down"></i>'+percentage+'%';
+        if (current == end) {
+            clearInterval(timer);
+        }
+    }, stepTime);
+}
+
+// Total Order
+
+if($('#totalOrder').length) {
+    increaseCountingNumberAnimation('totalOrderValue', 500-100, 500, 1, 86);
+    createLineChart(
+        objectID = 'totalOrderChart',
+        chartLabel = [
+            'Monday',
+            'Tueday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+        ],
+        currentDataLabel = '1st May 2021 - 8th May 2021',
+        currentData = [
+            '20',
+            '24', 
+            '13',
+            '50',
+            '5',
+            '40',
+            '24'
+        ],
+        currentDataColor= '#239B56',
+        previousDataLabel = '1st May 2021 - 8th May 2021',
+        previousData = [
+            '20',
+            '24', 
+            '13',
+            '13',
+            '50',
+            '40',
+            '45'
+        ],
+        previousDataColor= '#D1F9D1',
+    );
+}
+
+// Total Amount of sale
+
+if($('#totalOrderAmount').length) {
+    increaseCountingNumberAnimation('totalOrderAmountValue', 500-100, 500, 1, 86);
+    createLineChart(
+        objectID = 'totalOrderAmountChart',
+        chartLabel = [
+            'Monday',
+            'Tueday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+        ],
+        currentDataLabel = '1st May 2021 - 8th May 2021',
+        currentData = [
+            '20',
+            '24', 
+            '13',
+            '50',
+            '5',
+            '40',
+            '24'
+        ],
+        currentDataColor= '#E74C3C',
+        previousDataLabel = '1st May 2021 - 8th May 2021',
+        previousData = [
+            '20',
+            '24', 
+            '13',
+            '13',
+            '50',
+            '40',
+            '45'
+        ],
+        previousDataColor= '#F9D1D1',
+    );
+}
+
+// Recent orders
+
+if($('#recentOrderAmount').length) {
+    
+    increaseCountingNumberAnimation('recentOrderAmountValue', 500-100, 500, 1, 86);
+    createLineChart(
+        objectID = 'recentOrderAmountChart',
+        chartLabel = [
+            'Monday',
+            'Tueday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+        ],
+        currentDataLabel = '1st May 2021 - 8th May 2021',
+        currentData = [
+            '20',
+            '24', 
+            '13',
+            '50',
+            '5',
+            '40',
+            '24'
+        ],
+        currentDataColor= '#F1C40F',
+        previousDataLabel = '1st May 2021 - 8th May 2021',
+        previousData = [
+            '20',
+            '24', 
+            '13',
+            '13',
+            '50',
+            '40',
+            '45'
+        ],
+        previousDataColor= '#F9EFD1',
+    );
+
+}

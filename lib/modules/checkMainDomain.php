@@ -45,7 +45,6 @@
 
 			if($site_installation_expiry_date<=date('Y-m-d')) {
 
-
 				if(date('Y-m-d', strtotime('+1 month', strtotime($site_installation_expiry_date))) >= date('Y-m-d')) {
 
 					// Website expire is less than 1 month
