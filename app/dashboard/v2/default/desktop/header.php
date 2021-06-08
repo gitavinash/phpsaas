@@ -30,13 +30,13 @@
         <div class="left-side">
             <ul>
                 <li>
-                    <a href="#" class="close-nav" id="closeNav"><i class="fi-rr-settings-sliders"></i></a>
+                    <!-- <a href="#" class="close-nav" id="closeNav"><i class="fi-rr-settings-sliders"></i></a> -->
                 </li>
             </ul>
         </div>
         <div class="right-side">
             <ul>
-                <li><a href="#"><i class="fi-rr-bell"></i></a></li>
+                <!-- <li><a href="#"><i class="fi-rr-bell"></i></a></li> -->
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
