@@ -48,9 +48,7 @@
                             <input type="hidden" name="type" value="enquiry">
                             <input type="hidden" name="action" value="franchise">
                             <input type="hidden" name="redirect_url" value="/thank-you/?form_type=franchise_form">
-                            <!-- <input type="hidden" name="sender" value="<?php echo base64_encode('sd@andblooms.com') ?>"> -->
-                            <input type="hidden" name="sender"
-                                value="<?php echo base64_encode('avinashsharma114@gmail.com') ?>">
+                            <input type="hidden" name="sender" value="<?php echo base64_encode('sd@andblooms.com') ?>">
                             <input type="submit" class="btn-bloom purchase-btn" value="Send">
                         </div>
                     </form>
