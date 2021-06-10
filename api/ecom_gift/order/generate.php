@@ -47,7 +47,7 @@
             
                                     } else {
             
-                                        $url='/payment/generate/?id='.$transaction_id.'&type=order';
+                                        $url='/payment/generate/?id='.$transaction_id.'&pg_type=order';
             
                                     }
             

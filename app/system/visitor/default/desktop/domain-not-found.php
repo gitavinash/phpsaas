@@ -13,8 +13,8 @@
 </head>
 
 <body>
-    <img src="<?php echo str_replace(ROOT, '', SYSTEM_THEME) ?>assets/images/not-found.png" alt="">
-    <h1>Error 404 <span>Request website is not found on server</span></h1>
+    <img src="<?php echo str_replace(ROOT, '', SYSTEM_THEME) ?>assets/images/domain-not-found.jpg" alt="">
+    <h1>Invalid Domain <span>Request website is not found on server</span></h1>
 </body>
 
 </html>

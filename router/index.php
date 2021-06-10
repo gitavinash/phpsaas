@@ -21,27 +21,30 @@
 
 	}
 	
-	/** Manage All POST method request */
+	/** Convert all request method type parameter into strings */
 
-	if($_SERVER['REQUEST_METHOD']=="POST") {
+	if(sizeof($_REQUEST)!=0) {
+
+		foreach($_REQUEST as $key => $value) {
+
+			$secure[$key]=mysqli_real_escape_string($connection, $value);
+	
+		}
+
+		extract($secure);
+		
+	}
+
+
+	if(isset($type)) {
+
+		/** For all type of form process */
 
 		require_once 'formManager.php';
 		exit();
 
-	} else {
-
-		/** Secure all GET mathod parameters */
-
-		foreach($_GET as $key => $value) {
-
-			$secure[$key]=mysqli_real_escape_string($connection, $value);
-
-		}
-
-		((isset($secure)) ? extract($secure) : '' );
-
 	}
-	
+
 	/** Redirect all double slash url request to single slash */
 
 	if(strpos(BASE_URL, '//')!==FALSE) {
@@ -126,6 +129,8 @@
 			require_once 'email.php';
 			break;
 
+		/** For all type of search process */
+
 		case 'search' :
 			require_once 'search/index.php';
 			break;
@@ -145,7 +150,9 @@
 		case 'sitemap' :
 			require_once 'sitemap.php';
 			break;
-			
+
+		/** For all type of payment process */
+	
 		case 'payment' :
 			require_once 'payment.php';
 			break;

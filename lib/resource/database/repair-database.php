@@ -304,6 +304,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
     ADD INDEX enquiry_user_id (enquiry_user_id)");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
+    DROP enquiry_label");
+
   /* Link Table */
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."link

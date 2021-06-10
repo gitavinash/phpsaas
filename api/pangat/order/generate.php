@@ -35,7 +35,7 @@
 
                     $status=200;
                     $msg='Booking successfully add into cart';
-                    $url='/payment/generate/?id='.$transaction_id.'&type=order&orderType=booking';
+                    $url='/payment/generate/?id='.$transaction_id.'&pg_type=order&orderType=booking';
 
 
                 } else {
