@@ -48,7 +48,7 @@
 
         } else {
 
-            echo 'Something is wrong while generation transaction status';
+            $msg='Something is wrong while generation transaction status';
 
         }
 

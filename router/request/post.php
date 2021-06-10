@@ -104,7 +104,7 @@
 					
 			} else {
 
-                if($action!='enquiry') {
+                if($type=='enquiry') {
 
 					$displaErrorInJSON=TRUE;
                 	$msg=$action.' method not found';

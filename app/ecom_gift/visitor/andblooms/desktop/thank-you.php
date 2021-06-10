@@ -42,24 +42,25 @@
 
                     if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_session_id='".SESSION_ID."'")) { ?>
 
-                        <section class='continue-shopping' >
-                            <h1>Error<span>Something is wrong while updating cart.</span></h1>
-                            <a href="/" class="btn btn-success" >Continue Shopping</a>
-                        </section>
+<section class='continue-shopping'>
+    <h1>Error<span>Something is wrong while updating cart.</span></h1>
+    <a href="/" class="btn btn-success">Continue Shopping</a>
+</section>
 
-                    <?php
+<?php
 
                     echo mysqli_error($connection);
 
                     } else {
                         
                         ?>
-                    
-                        <section class='continue-shopping' >
-                            <h1>Thank You<span>Your order number <strong>OD<?php echo $order_id; ?></strong> is successfully received. You may get a confirmation call in a while.</span></h1>
-                            <a href="/" class="btn btn-success" >Continue Shopping</a>
-                        </section>
-                        <?php
+
+<section class='continue-shopping'>
+    <h1>Thank You<span>Your order number <strong>OD<?php echo $order_id; ?></strong> is successfully received. You may
+            get a confirmation call in a while.</span></h1>
+    <a href="/" class="btn btn-success">Continue Shopping</a>
+</section>
+<?php
                         
                     }
 
@@ -71,12 +72,12 @@
 
             } else { ?>
 
-                <section class='continue-shopping' >
-                    <h1>Error<span>Something is wrong while generate a order request.</span></h1>
-                    <a href="/" class="btn btn-success" >Continue Shopping</a>
-                </section>
+<section class='continue-shopping'>
+    <h1>Error<span>Something is wrong while generate a order request.</span></h1>
+    <a href="/" class="btn btn-success">Continue Shopping</a>
+</section>
 
-            <?php
+<?php
             }
             
         } else {
@@ -86,6 +87,16 @@
 
         }
         
+    }
+
+    if(isset($form_type)) { ?>
+
+<section class='continue-shopping'>
+    <h1>Thanks for contacting us.<span>We'll get back to you as soon as possible.</span></h1>
+    <a href="/" class="btn btn-success">Continue Shopping</a>
+</section>
+
+<?php
     }
 
 	require_once 'footer.php';

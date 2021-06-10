@@ -53,8 +53,4 @@
 
 		}
 	
-	} else {
-
-		echo 'not'.EMAIL_ENABLE;
-
 	}

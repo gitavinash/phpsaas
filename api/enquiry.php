@@ -1,93 +1,167 @@
 <?php
 
-    // function enquiry($connection, $data) {
+    unset($_REQUEST['type']);
+    unset($_REQUEST['action']);
 
-        // Detect prefix enquiry table fields and remove from array
+    // Define action parameter as form type
 
-        if(isset($name)) {
+    $type=$action;
 
-            // Remove name varible from array
+    // Detect prefix enquiry table fields and remove from array
 
-            unset($_REQUEST['name']);
+    if(isset($name)) {
+
+        // Remove name varible from array
+
+        unset($_REQUEST['name']);
+
+    }
+
+    if(isset($first_name)) {
+
+        // Remove first name varible from array
+
+        unset($_REQUEST['first_name']);
+
+    }
+
+    if(isset($last_name)) {
+
+        // Remove last name varible from array
+
+        unset($_REQUEST['last_name']);
+
+    }
+
+    if(isset($email)) {
+
+        // Remove email varible from array
+
+        unset($_REQUEST['email']);
+
+    }
+
+    if(isset($mobile)) {
+
+        // Remove mobile varible from array
+
+        unset($_REQUEST['mobile']);
+
+    }
+
+    if(isset($message)) {
+
+        // Remove message varible from array
+
+        unset($_REQUEST['message']);
+
+    }
+
+    if(isset($source)) {
+
+        // Remove enquiry source varible from array
+
+        unset($_REQUEST['source']);
+
+    } else {
+
+        $source='';
+
+    }
+
+    if(isset($medium)) {
+
+        // Remove enquiry medium varible from array
+
+        unset($_REQUEST['medium']);
+
+    } else {
+
+        $medium='';
+
+    }
+
+    if(isset($campaign)) {
+
+        // Remove enquiry campaign varible from array
+
+        unset($_REQUEST['campaign']);
+
+    } else {
+
+        $campaign='';
+
+    }
+
+    if(isset($sender)) {
+
+        // Remove enquiry campaign varible from array
+
+        unset($_REQUEST['sender']);
+        
+        // Admin email id or where email will be send
+    
+        $toAddress = base64_decode($sender);
+
+    } else {
+
+        echo $msg='Sender email is not found';
+        exit();
+
+    }
+    
+    if(sizeof($_REQUEST)!=0) {
+
+        foreach($_REQUEST as $key => $value) {
+
+            $enquiryMeta[$key] = $value;
 
         }
 
-        if(isset($first_name)) {
+    }
 
-            // Remove first name varible from array
+    // Start record enquiry data into table
 
-            unset($_REQUEST['first_name']);
+    // mysqli_query($connection, "START TRANSACTION");
 
-        }
+    // $addNewEnquiry=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry() VALEUS()");
+    // $enquiryID=mysqli_insert_id($addNewEnquiry);
 
-        if(isset($last_name)) {
+    // if(isset($enquiryMeta)) {
 
-            // Remove last name varible from array
+                
 
-            unset($_REQUEST['last_name']);
+    // } else {
 
-        }
-
-        if(isset($email)) {
-
-            // Remove email varible from array
-
-            unset($_REQUEST['email']);
-
-        }
-
-        if(isset($mobile)) {
-
-            // Remove mobile varible from array
-
-            unset($_REQUEST['mobile']);
-
-        }
-
-        if(isset($message)) {
-
-            // Remove message varible from array
-
-            unset($_REQUEST['message']);
-
-        }
-
-        if(isset($message)) {
-
-            // Remove enquiry source varible from array
-
-            unset($_REQUEST['source']);
-
-        }
-
-        if(isset($message)) {
-
-            // Remove enquiry medium varible from array
-
-            unset($_REQUEST['medium']);
-
-        }
-
-        if(isset($message)) {
-
-            // Remove enquiry campaign varible from array
-
-            unset($_REQUEST['campaign']);
-
-        }
-
-        // Now assing a action value as a enquiry type 
-
-        if($_SERVER['REQUEST_METHOD']=='POST') {
-
-            $includeFile = "I am POST methood";
-
-        } else {
-
-            $includeFile = "I am GET method";
-
-        }
-
-        echo $includeFile;
+    //     $addEnquiryMeta=TRUE;
 
     // }
+
+    $subject = 'Franchise enquiry';
+
+    $email_body="
+    <h2>New enquiry for Franchise</h2>
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td>{$name}</td>
+        </tr>
+        <tr>
+            <td>Email: </td>
+            <td>{$email}</td>
+        </tr>
+        <tr>
+            <td>Mobile: </td>
+            <td>{$mobile}</td>
+        </tr>
+        <tr>
+            <td>Message: </td>
+            <td>{$message}</td>
+        </tr>
+    </table>
+    ";
+
+    require SEND_EMAIL;
+
+    header("Location: ".$redirect_url, TRUE, 301);
+    exit();
