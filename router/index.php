@@ -36,12 +36,11 @@
 	}
 
 
-	if(isset($type)) {
+	if((isset($type))) {
 
 		/** For all type of form process */
 
 		require_once 'formManager.php';
-		exit();
 
 	}
 
