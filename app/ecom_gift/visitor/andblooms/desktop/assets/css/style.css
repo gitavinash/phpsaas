@@ -4286,3 +4286,7 @@ form.franchise textarea {
   border-radius: 4px;
   min-height: 100px;
 }
+
+.select2 {
+  width: 100% !important;
+}
