@@ -6,6 +6,10 @@
 				                    class="fi-rr-heart"></i> in India.</a></p>
 				    </div>
 				</footer>
+				<div class="shortcut">
+				    <a href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL.ACTIVE_URL.'&domain='.SITE_DOMAIN) ?>"
+				        target="_blank" title="Support"><i class="fi-rr-headset"></i></a>
+				</div>
 				</main>
 
 				<script src="<?php echo JS_LIBRARY ?>jquery.min.js" type="text/javascript"></script>

@@ -935,3 +935,46 @@ table.dataTable thead th {
 .daterangepicker td.active:hover {
   background: #6452eb !important;
 }
+
+/* Shortcut */
+
+.shortcut {
+  position: fixed;
+  border: none;
+  border-radius: 100%;
+  background: #6452eb;
+  text-align: center;
+  right: 2%;
+  bottom: 3%;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+.shortcut a {
+  width: 60px;
+  height: 60px;
+  float: left;
+  color: #fff;
+  font-size: 32px;
+  padding: 15px;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+}
+
+.shortcut a[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: -30px;
+  padding: 3px 2px;
+  left: 0;
+  background: #333;
+  right: 0;
+  font-size: 12px;
+  border-radius: 7px;
+  box-sizing: border-box;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
