@@ -13,7 +13,6 @@
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title><?php echo $dashboardPageTitle.' | '.SITE_NAME; ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_v2.min.css">
-    <!-- <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css"> -->
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
