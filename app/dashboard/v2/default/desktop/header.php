@@ -60,7 +60,7 @@
                 <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="/dashboard/"><i
                             class="fi-rr-home"></i> Dashboard</a></li>
                 <li class="header-section-name">
-                    <p>CRM<span>Client Relationship Management</span></p>
+                    <p>CRM<span>Customer relationship Management</span></p>
                 </li>
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/orders/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="orders/"><i class="fi-rr-box-alt"></i> Manage Order</a>

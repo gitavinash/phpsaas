@@ -133,7 +133,7 @@ strong {
 .left-side {
   float: left;
   width: auto;
-  padding-left: 220px;
+  padding-left: 240px;
 }
 
 .left-side ul {
@@ -258,7 +258,7 @@ strong {
 aside {
   position: fixed;
   float: left;
-  width: 220px;
+  width: 240px;
   top: 0;
   bottom: 0;
   height: 100vh;
@@ -395,9 +395,9 @@ nav.side-nav ul li ul {
 nav.side-nav ul li:hover > .side-menu ul {
   display: block;
   position: absolute;
-  width: 220px;
+  width: 240px;
   background: #7c74dc;
-  left: 220px;
+  left: 240px;
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
 }
@@ -440,11 +440,11 @@ nav.side-nav ul li:hover .side-menu ul li a:hover i {
 }
 
 nav .header-section-name {
-  margin: 10px 5%;
+  margin: 10px 3%;
   padding: 10px 10px;
   box-sizing: border-box;
   background: #e7e5f5;
-  width: 90% !important;
+  width: 94% !important;
   border-radius: 7px;
 }
 
@@ -466,7 +466,7 @@ main {
   float: left;
   width: 100%;
   display: block;
-  padding: 70px 10px 0 240px;
+  padding: 70px 10px 0 250px;
   box-sizing: border-box;
 }
 
@@ -747,11 +747,20 @@ main .container .heading span {
 .main-box {
   float: left;
   width: 100%;
-  background: #fff;
   border-radius: 4px;
   padding: 10px;
   margin: 10px 0px;
   box-sizing: border-box;
+}
+
+.main-box section {
+  background: #fff;
+  float: left;
+  width: 100%;
+  padding: 10px;
+  border-radius: 7px;
+  box-sizing: border-box;
+  border: 1px solid #dedede;
 }
 
 .filters {
@@ -778,22 +787,23 @@ main .container .heading span {
 .filters .form-group input {
   float: left;
   width: auto;
-  width: 200px;
+  width: 100%;
   padding: 7px 10px;
-  border: 1px solid #a5a0a0;
-  border-radius: 7px;
+  border: 1px solid #c7c7c7;
+  border-radius: 4px;
   outline: none;
   box-sizing: border-box;
+  height: 33px;
 }
 
 .filters .form-group select {
   float: left;
-  width: auto;
   width: 200px;
   padding: 7px 10px;
-  border: 1px solid #a5a0a0;
-  border-radius: 7px;
+  border: 1px solid #c7c7c7;
+  border-radius: 4px;
   box-sizing: border-box;
+  outline: none;
 }
 
 .list-box {
@@ -824,4 +834,104 @@ footer p i {
 footer p a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Datatables */
+
+table.dataTable thead td,
+table.dataTable thead {
+  background: #e7e5f5;
+}
+
+table.dataTable thead td,
+table.dataTable thead th {
+  text-align: left;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.dataTables_length {
+  float: left;
+  position: absolute;
+  margin-top: -30px;
+  margin-left: 220px;
+}
+
+.dataTables_length label {
+  float: left;
+  width: 100%;
+  color: #333;
+  font-size: 13px;
+  margin-top: -20px;
+}
+
+.dataTables_wrapper .dataTables_length select {
+  float: left !important;
+  width: 200px !important;
+  padding: 7px 10px !important;
+  border: 1px solid #c7c7c7 !important;
+  border-radius: 4px !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  width: 100% !important;
+  margin-top: 2px !important;
+}
+
+.dataTables_filter {
+  float: left;
+  position: absolute;
+  margin-top: -30px;
+  margin-left: 400px;
+}
+
+.dataTables_filter label {
+  float: left;
+  width: 100%;
+  color: #333;
+  font-size: 13px;
+  margin-top: -20px;
+  text-align: left;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  float: left !important;
+  width: 200px !important;
+  padding: 7px 10px !important;
+  border: 1px solid #c7c7c7 !important;
+  border-radius: 4px !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  width: 100% !important;
+  height: 33px !important;
+  margin-top: 2px !important;
+  margin-left: 0px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: #e7e5f5 !important;
+  border: 1px solid #e7e5f5 !important;
+  border-radius: 4px !important;
+}
+
+/* Date range picker */
+
+.daterangepicker td.in-range {
+  background: #e7e5f5 !important;
+}
+
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+  background: #fff !important;
+}
+
+.daterangepicker .ranges li.active {
+  background: #6452eb !important;
+}
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+  background: #6452eb !important;
 }
