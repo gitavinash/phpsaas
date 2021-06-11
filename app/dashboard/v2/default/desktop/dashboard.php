@@ -39,6 +39,23 @@
     </div>
 </div>
 
+<div class="widget box-3-1">
+    <div class="widget-info">
+        <div class="info-box">
+            <p>Daily Visitors<span class="right">Last 30 Days</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="widget box-3-2">
+    <div class="widget-info">
+        <div class="info-box">
+            <p>Recent added products</p>
+        </div>
+    </div>
+</div>
+
+
 <div class="widget box-2">
     <div class="widget-info">
         <div class="info-box">
@@ -47,7 +64,7 @@
     </div>
 </div>
 
-<div class="widget box-3">
+<div class="widget box-2">
     <div class="widget-info">
         <div class="info-box">
             <p>Recent added products</p>

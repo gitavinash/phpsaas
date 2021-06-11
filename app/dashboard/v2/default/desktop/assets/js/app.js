@@ -220,3 +220,11 @@ if($('#recentOrderAmount').length) {
     );
 
 }
+
+// Order List
+
+if($('#orderList').length) {
+
+    console.log('i m ready to tock');
+
+}

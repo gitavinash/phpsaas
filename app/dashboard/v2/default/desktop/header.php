@@ -59,179 +59,71 @@
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="/dashboard/"><i
                             class="fi-rr-home"></i> Dashboard</a></li>
+                <li class="header-section-name">
+                    <p>CRM<span>Client Relationship Management</span></p>
+                </li>
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/orders/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="orders/"><i class="fi-rr-box-alt"></i> Manage Order</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All order</a></li>
+                            <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All Orders</a></li>
                             <li><a href="orders/list/?status=1"><i class="fi-rr-check"></i>
-                                    Confirm order</a>
+                                    Confirm Orders</a>
                             </li>
-                            <li><a href="orders/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending Order</a>
+                            <li><a href="orders/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending Orders</a>
                             </li>
-                            <li><a href="orders/list/?status=3"><i class="fi-rr-cross"></i> Cancel order</a></li>
+                            <li><a href="orders/list/?status=3"><i class="fi-rr-cross"></i> Cancelled Orders</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All order</a></li>
+                            <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All Orders</a></li>
                             <li><a href="orders/list/?status=1"><i class="fi-rr-check"></i>
-                                    Confirm order</a>
+                                    Confirm Orders</a>
                             </li>
-                            <li><a href="orders/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending Order</a>
+                            <li><a href="orders/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending Orders</a>
                             </li>
-                            <li><a href="orders/list/?status=3"><i class="fi-rr-cross"></i> Cancel order</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/product/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="product/list/"><i class="fi-rr-box"></i> Product</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="product/list/"><i class="fi-rr-apps-sort"></i> All
-                                    product</a>
-                            </li>
-                            <li><a href="product/add/"><i class="fi-rr-add"></i>Add new
-                                    product</a></li>
-                            <li><a href="product/category/"><i class="fi-rr-bookmark"></i>Categories</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="product/list/"><i class="fi-rr-apps-sort"></i> All
-                                    product</a>
-                            </li>
-                            <li><a href="product/add/"><i class="fi-rr-add"></i>Add new
-                                    product</a></li>
-                            <li><a href="product/category/"><i class="fi-rr-bookmark"></i>Categories</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/page/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="page/list/"><i class="fi-rr-file"></i> Page</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="page/list/"><i class="fi-rr-apps-sort"></i> All
-                                    pages</a>
-                            </li>
-                            <li><a href="page/add/"><i class="fi-rr-add"></i>Add new page</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="page/list/"><i class="fi-rr-apps-sort"></i> All
-                                    pages</a>
-                            </li>
-                            <li><a href="page/add/"><i class="fi-rr-add"></i>Add new page</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/media/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="media/list/"><i class="fi-rr-gallery"></i> Media</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="media/list/"><i class="fi-rr-apps-sort"></i> All
-                                    media</a>
-                            </li>
-                            <li><a href="media/add/"><i class="fi-rr-add"></i> Add new media</a></li>
-                            <li><a href="media/list/?type=image"><i class="fi-rr-picture"></i> Images</a>
-                            </li>
-                            <li><a href="media/list/?type=video"><i class="fi-rr-film"></i> Videos</a></li>
-                            <li><a href="media/list/?type=docs"><i class="fi-rr-document"></i>
-                                    Documents</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="media/list/"><i class="fi-rr-apps-sort"></i> All
-                                    media</a>
-                            </li>
-                            <li><a href="media/add/"><i class="fi-rr-add"></i> Add new media</a></li>
-                            <li><a href="media/list/?type=image"><i class="fi-rr-picture"></i> Images</a>
-                            </li>
-                            <li><a href="media/list/?type=video"><i class="fi-rr-film"></i> Videos</a></li>
-                            <li><a href="media/list/?type=docs"><i class="fi-rr-document"></i>
-                                    Documents</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <?php
-					
-					if(SITE_ID!=22) { ?>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/coupon/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="coupon/list/"><i class="fi-rr-ticket"></i> Coupon</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="coupon/list/"><i class="fi-rr-apps-sort"></i> All
-                                    coupons</a>
-                            </li>
-                            <li><a href="coupon/add/"><i class="fi-rr-add"></i> Add new coupon</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="coupon/list/"><i class="fi-rr-apps-sort"></i> All
-                                    coupons</a>
-                            </li>
-                            <li><a href="coupon/add/"><i class="fi-rr-add"></i> Add new coupon</a></li>
+                            <li><a href="orders/list/?status=3"><i class="fi-rr-cross"></i> Cancelled Orders</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <?php
-					}
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/subscriptions/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="subscriptions/"><i class="fi-rr-crown"></i> Manage Subscriptions</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
+                            <li><a href="subscriptions/list/?status=1"><i class="fi-rr-check"></i>
+                                    Confirm Subscriptions</a>
+                            </li>
+                            <li><a href="subscriptions/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending
+                                    Subscriptions</a>
+                            </li>
+                            <li><a href="subscriptions/list/?status=3"><i class="fi-rr-cross"></i> Cancelled
+                                    Subscriptions</a></li>
+                            <li><a href="subscriptions/list/?status=4"><i class="fi-rr-time-delete"></i> Expired
+                                    Subscriptions</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
+                            <li><a href="subscriptions/list/?status=1"><i class="fi-rr-check"></i>
+                                    Confirm Subscriptions</a>
+                            </li>
+                            <li><a href="subscriptions/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending
+                                    Subscriptions</a>
+                            </li>
+                            <li><a href="subscriptions/list/?status=3"><i class="fi-rr-cross"></i> Cancelled
+                                    Subscriptions</a>
+                            </li>
+                            <li><a href="subscriptions/list/?status=4"><i class="fi-rr-time-delete"></i> Expired
+                                    Subscriptions</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-					?>
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/import/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="import/"><i class="fi-rr-upload"></i> Import</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="import/product/"><i class="fi-rr-box"></i> Products</a></li>
-                            <li><a href="import/post/"><i class="fi-rr-document"></i> Posts</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="import/product/"><i class="fi-rr-box"></i> Products</a></li>
-                            <li><a href="import/post/"><i class="fi-rr-document"></i> Posts</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/settings/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="settings/"><i class="fi-rr-settings"></i> Settings</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="settings/menu/"><i class="fi-rr-menu-burger"></i> Menu</a></li>
-                            <li><a href="settings/configuration/"><i class="fi-rr-settings-sliders"></i>
-                                    Configuration</a>
-                            </li>
-                            <li><a href="settings/password/"><i class="fi-rr-key"></i> Change password</a></li>
-                            <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                            <li><a href="settings/redirection/"><i class="fi-rr-rotate-right"></i>
-                                    URL
-                                    redirection</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="settings/menu/"><i class="fi-rr-menu-burger"></i> Menu</a></li>
-                            <li><a href="settings/configuration/"><i class="fi-rr-settings-sliders"></i>
-                                    Configuration</a>
-                            </li>
-                            <li><a href="settings/password/"><i class="fi-rr-key"></i> Change Password</a></li>
-                            <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                            <li><a href="settings/redirection/"><i class="fi-rr-link"></i> URL
-                                    redirection</a></li>
-                        </ul>
-                    </div>
-                </li>
+
             </ul>
         </nav>
     </aside>
