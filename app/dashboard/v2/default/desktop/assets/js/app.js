@@ -262,3 +262,21 @@ if($('#dateRangePicker').length) {
 
     cb(start, end);
 }
+
+// Main Box tabs
+
+if($('.steps-tab').length) {
+
+    $('.step-box').click(function(e) {
+
+        e.preventDefault();
+        currentElementID=$(this).attr('id');
+
+        $('.step-open-box').hide();
+        showCurrentBox = currentElementID+'_box';
+        console.log(currentElementID + ' -> ' + showCurrentBox);
+        $('.'+showCurrentBox).show();
+
+    });
+
+}

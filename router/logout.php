@@ -24,7 +24,8 @@
 
 	} else {
 
-		header("Location: /login/?logout=true");
+		$redirect_url=urlencode((isset($redirect_url)) ? (($redirect_url!='') ? $redirect_url : '/dashboard/' ) : '/dashboard/' );
+		header("Location: /login/?logout=true&redirect_url=".urlencode($redirect_url)."&timestamp=".time());
 		exit();
 
 	}

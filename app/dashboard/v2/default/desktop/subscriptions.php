@@ -1,4 +1,5 @@
-<h2 class="heading">Subscriptions <span>Single line intro about this section</span></h2>
+<h2 class="heading">Subscriptions <span>Create new subscription packages and manage previous subscription
+        packages.</span></h2>
 <div class="main-menu-list">
     <div class="widget box-3">
         <a href="subscriptions/list/">
@@ -8,59 +9,20 @@
                 </div>
                 <div class="about-feature">
                     <h3>All Subscriptions</h3>
-                    <!-- <p>this feature is used</p> -->
+                    <p>All Active Subscription list package</p>
                 </div>
             </div>
         </a>
     </div>
     <div class="widget box-3">
-        <a href="subscriptions/list/?status=1">
+        <a href="subscriptions/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
-                    <i class="fi-rr-check"></i>
+                    <i class="fi-rr-add"></i>
                 </div>
                 <div class="about-feature">
-                    <h3>Confirm Subscriptions</h3>
+                    <h3>Add New Subscriptions</h3>
                     <!-- <p>this feature is used</p> -->
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="widget box-3">
-        <a href="subscriptions/list/?status=2">
-            <div class="widget-setting-info">
-                <div class="feature-icon">
-                    <i class="fi-rr-hourglass-end"></i>
-                </div>
-                <div class="about-feature">
-                    <h3>Pending Subscriptions</h3>
-                    <!-- <p>this feature is used</p> -->
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="widget box-3">
-        <a href="subscriptions/list/?status=3">
-            <div class="widget-setting-info">
-                <div class="feature-icon">
-                    <i class="fi-rr-cross"></i>
-                </div>
-                <div class="about-feature">
-                    <h3>Cancelled Subscriptions</h3>
-                    <!-- <p>this feature is used</p> -->
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="widget box-3">
-        <a href="subscriptions/list/?status=4">
-            <div class="widget-setting-info">
-                <div class="feature-icon">
-                    <i class="fi-rr-time-delete"></i>
-                </div>
-                <div class="about-feature">
-                    <h3>Expired Subscriptions</h3>
-                    <p>this feature is used</p>
                 </div>
             </div>
         </a>

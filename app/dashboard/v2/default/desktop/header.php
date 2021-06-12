@@ -17,9 +17,9 @@
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_v2.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
         media="screen">
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_v2.min.css">
 
 </head>
 
@@ -45,7 +45,9 @@
                     <ul>
                         <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
                         <li><a href="settings/password/"><i class="fi-rr-key"></i> Change Password</a></li>
-                        <li><a href="/logout/"><i class="fi-rr-power"></i> Log Out</a></li>
+                        <li><a href="/logout/?redirect_url=<?php echo ACTIVE_URL ?>"><i class="fi-rr-power"></i> Log
+                                Out</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -87,41 +89,91 @@
                     </div>
                 </li>
 
+                <li class="header-section-name">
+                    <p>Subscriptions<span>Manage subscriptions and members.</span></p>
+                </li>
+
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/subscriptions/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="subscriptions/"><i class="fi-rr-crown"></i> Manage Subscriptions</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
-                            <li><a href="subscriptions/list/?status=1"><i class="fi-rr-check"></i>
-                                    Confirm Subscriptions</a>
-                            </li>
-                            <li><a href="subscriptions/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending
-                                    Subscriptions</a>
-                            </li>
-                            <li><a href="subscriptions/list/?status=3"><i class="fi-rr-cross"></i> Cancelled
-                                    Subscriptions</a></li>
-                            <li><a href="subscriptions/list/?status=4"><i class="fi-rr-time-delete"></i> Expired
-                                    Subscriptions</a></li>
+                            <li><a href="subscriptions/add/"><i class="fi-rr-add"></i>Add New Subscription</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
-                            <li><a href="subscriptions/list/?status=1"><i class="fi-rr-check"></i>
-                                    Confirm Subscriptions</a>
-                            </li>
-                            <li><a href="subscriptions/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending
-                                    Subscriptions</a>
-                            </li>
-                            <li><a href="subscriptions/list/?status=3"><i class="fi-rr-cross"></i> Cancelled
-                                    Subscriptions</a>
-                            </li>
-                            <li><a href="subscriptions/list/?status=4"><i class="fi-rr-time-delete"></i> Expired
-                                    Subscriptions</a></li>
+                            <li><a href="subscriptions/add/"><i class="fi-rr-add"></i>Add New Subscription</a></li>
                         </ul>
                     </div>
                 </li>
 
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/subscribers/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="subscribers/"><i class="fi-rr-following"></i> Manage Subscribers</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="subscribers/list/"><i class="fi-rr-apps-sort"></i> All Subscribers</a></li>
+                            <li><a href="subscribers/list/?status=1"><i class="fi-rr-check"></i>
+                                    Confirm Subscribers</a>
+                            </li>
+                            <li><a href="subscribers/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending
+                                    Subscribers</a>
+                            </li>
+                            <li><a href="subscribers/list/?status=3"><i class="fi-rr-cross"></i> Cancelled
+                                    Subscribers</a></li>
+                            <li><a href="subscribers/list/?status=4"><i class="fi-rr-time-delete"></i> Expired
+                                    Subscribers</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="subscribers/list/"><i class="fi-rr-apps-sort"></i> All Subscribers</a></li>
+                            <li><a href="subscribers/list/?status=1"><i class="fi-rr-check"></i>
+                                    Confirm Subscribers</a>
+                            </li>
+                            <li><a href="subscribers/list/?status=2"><i class="fi-rr-hourglass-end"></i> Pending
+                                    Subscribers</a>
+                            </li>
+                            <li><a href="subscribers/list/?status=3"><i class="fi-rr-cross"></i> Cancelled
+                                    Subscribers</a>
+                            </li>
+                            <li><a href="subscribers/list/?status=4"><i class="fi-rr-time-delete"></i> Expired
+                                    Subscribers</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- 
+                <li class="header-section-name">
+                    <p>General<span>Comman options like: Setting etc.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/settings/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="settings/"><i class="fi-rr-settings"></i> Settings</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="settings/menu/"><i class="fi-rr-menu-burger"></i> Menu</a></li>
+                            <li><a href="settings/configuration/"><i class="fi-rr-settings-sliders"></i>
+                                    Configuration</a>
+                            </li>
+                            <li><a href="settings/password/"><i class="fi-rr-key"></i> Change password</a></li>
+                            <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                            <li><a href="settings/redirection/"><i class="fi-rr-link"></i>
+                                    URL Redirection</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="settings/menu/"><i class="fi-rr-menu-burger"></i> Menu</a></li>
+                            <li><a href="settings/configuration/"><i class="fi-rr-settings-sliders"></i>
+                                    Configuration</a>
+                            </li>
+                            <li><a href="settings/password/"><i class="fi-rr-key"></i> Change Password</a></li>
+                            <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                            <li><a href="settings/redirection/"><i class="fi-rr-link"></i> URL Redirection</a></li>
+                        </ul>
+                    </div>
+                </li> -->
 
             </ul>
         </nav>

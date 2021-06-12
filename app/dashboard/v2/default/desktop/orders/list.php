@@ -1,4 +1,5 @@
-<h2 class="heading">Orders List<span>All orders list will be displayed here.</span></h2>
+<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All orders list will be displayed here.</span>
+</h2>
 <div class="main-box">
     <section>
         <div class="filters">

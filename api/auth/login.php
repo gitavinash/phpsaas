@@ -30,7 +30,7 @@
 
 						$status='success';
 						$msg='Login Successfully';
-						$url='/dashboard/';
+						$url=urldecode((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
 
 					} else {
 

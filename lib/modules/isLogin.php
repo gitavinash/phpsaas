@@ -2,7 +2,7 @@
 
 	if(!isset($_COOKIE['user_data'])) {
 
-		header("Location: /logout/");
+		header("Location: /logout/?redirect_url=".ACTIVE_URL);
 		exit();
 
 	} else {
