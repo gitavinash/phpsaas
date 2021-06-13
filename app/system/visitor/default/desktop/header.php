@@ -1,8 +1,10 @@
 <?php
 
+  $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
+
   if(isset($_COOKIE['isLogin'])) {
     
-    header("Location: /dashboard/");
+    header("Location: {$redirect_url}");
     exit();
 
   }
