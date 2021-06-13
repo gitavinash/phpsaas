@@ -37,6 +37,7 @@
 	define('CSS_LIBRARY', UI_LIBRARY.'css/');
 	define('APP_CSS_LIBRARY', CSS_LIBRARY.APP_LIBRARY);
 	define('IMG_LIBRARY', UI_LIBRARY.'img/');
+	define('VIDEO_LIBRARY', UI_LIBRARY.'video/');
 	define('APP_IMG_LIBRARY', IMG_LIBRARY.APP_LIBRARY);
 	define('PLUGIN_LIBRARY', UI_LIBRARY.'plugin/');
 	define('APP_PLUGIN_LIBRARY', PLUGIN_LIBRARY.APP_LIBRARY);
@@ -123,7 +124,6 @@
 		define('ADMIN_JS', ADMIN_URL.'assets/js/');
 		define('ADMIN_JS_LIBRARY', JS_LIBRARY.'app/default/'.SITE_VERSION.'/');
 		define('ADMIN_IMAGES', ADMIN_URL.'assets/images/');
-		define('ADMIN_IMG_LIBRARY', IMG_LIBRARY.'app/default/'.SITE_VERSION.'/');
 		define('ADMIN_PLUGIN', ADMIN_URL.'assets/plugins/');
 
 	} else {
@@ -138,7 +138,6 @@
 		define('ADMIN_JS', JS_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 		define('ADMIN_JS_LIBRARY', JS_LIBRARY.'app/default/'.SITE_VERSION.'/');
 		define('ADMIN_IMAGES', IMG_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
-		define('ADMIN_IMG_LIBRARY', IMG_LIBRARY.'app/'.SITE_APP.'/'.SITE_VERSION.'/');
 
 	}
 

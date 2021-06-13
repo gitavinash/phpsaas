@@ -280,3 +280,20 @@ if($('.steps-tab').length) {
     });
 
 }
+
+// Material CSS like input
+
+$(".form-control").change(function() {
+
+    currentClickID=$(this).attr('id');
+    currentValue = $(this).val();
+    
+    console.log('Current value : ' + currentValue);
+    
+    if(currentValue!='') {
+        
+        $("#"+currentClickID+"Label").addClass('heading');
+        
+    }
+    
+});

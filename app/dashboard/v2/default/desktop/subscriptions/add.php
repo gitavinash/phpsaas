@@ -4,24 +4,44 @@
 <div class="main-box">
     <section>
         <ul class="steps-tab">
-            <li class="step-box active" id="step_1"><span>1</span>About Subscription</li>
-            <li class="step-box" id="step_2"><span>2</span>Subscription Validity</li>
+            <li class="step-box active" id="step_1"><span>1</span>Subscription details</li>
+            <!-- <li class="step-box" id="step_2"><span>2</span>Subscription validity</li> -->
         </ul>
         <div class="steps-box">
-            <form class="main-form" action="#" id="addNewSubscriptionForm">
-                <div class="step-open-box step_1_box">
-                    <div class="form-group">
-                        <input class="form-control" type="text" id="name" />
-                        <label for="name">Name</label>
+            <form action="#" id="addNewSubscriptionForm">
+                <section class="form">
+                    <div class="step-open-box step_1_box">
+                        <div class="form-header">
+                            <h1>Subscription details</h1>
+                            <img src="<?php echo IMG_LIBRARY ?>storyset/subscriber.gif" alt="Subscription detail">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="name" type="text" />
+                            <label id="nameLabel">Subscription package name.</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" id="textarea"></textarea>
+                            <label id="textareaLabel">Subscription details</label>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="select">
+                                <option value="">Hello</option>
+                                <option value="2">Hello 2</option>
+                            </select>
+                            <label class="heading" id="selectLabel">Select drop down</label>
+                        </div>
+                        <div class="form-radio-group">
+                            <p class="heading">Validation</p>
+                            <input type="radio" name="validity" id="1Week">
+                            <label for="1Week">Select drop down</label>
+                            <input type="radio" name="validity" id="2Week">
+                            <label for="2Week">Select drop down</label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="" id="text"></textarea>
-                        <label for="text">Name</label>
+                    <div class="step-open-box step_2_box" style="display:none">
+                        Hello i'm step 2
                     </div>
-                </div>
-                <div class="step-open-box step_2_box" style="display:none">
-                    Hello i'm step 2
-                </div>
+                </section>
             </form>
         </div>
     </section>
