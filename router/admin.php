@@ -48,7 +48,7 @@
 		
 		if(!file_exists($dashboardFile)) {
 
-			$dashboardFile=$dashboardDirectory.'404.php';
+			echo $dashboardFile=$dashboardDirectory.'404.php';
 
 		}
 
