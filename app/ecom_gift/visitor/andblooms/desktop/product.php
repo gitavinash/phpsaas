@@ -25,26 +25,26 @@
 
 <!-- section global platform start -->
 <section class="banner-section pro-galery">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="brdcrum">
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-						    <li class="breadcrumb-item"><a href="#">Home</a></li>
-							<li class="breadcrumb-item"><a href="#">Product</a></li>
-						    <li class="breadcrumb-item active" aria-current="page"><?php echo $product_title ?></li>
-						</ol>
-					</nav>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="gallery-carousel">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="brdcrum">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a href="#">Product</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo $product_title ?></li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="gallery-carousel">
 
-					<div class="lg-carousel-box" id="sticky">
+                    <div class="lg-carousel-box" id="sticky">
 
-					<div class="product-main-slider">
-							<?php
+                        <div class="product-main-slider">
+                            <?php
 							
 							$galleryImages=json_decode($product_gallery, TRUE);
 							
@@ -66,10 +66,10 @@
 							}
 
 							?>
-						</div>
-						
-						<div class="product-main-slider-nav">
-							<?php
+                        </div>
+
+                        <div class="product-main-slider-nav">
+                            <?php
 							
 							$galleryImages=json_decode($product_gallery, TRUE);
 							
@@ -87,28 +87,30 @@
 							}
 
 							?>
-						</div>
+                        </div>
 
-					</div>
+                    </div>
 
-				</div>
-			</div>
-			<div class="col-md-6">
-			
-				<div class="prod-detail" id="productDetails" >
-					<h2><?php echo $product_title ?></h2>
-					<?php
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="prod-detail" id="productDetails">
+                    <h2><?php echo $product_title ?></h2>
+                    <?php
 					
 						echo (($inventory_in_stock==0) ? "<h5 class='outStock'>Out of Stock</h5>" : "<h5 class='stock'>In Stock</h5>" );
 
 					?>
-					<p class="catag-lbel">Product Contains </p>
-					<p class="catg-info"><?php echo $product_highlight ?></p>
-					<div class="price-tg">
+                    <p class="catag-lbel">Product Contains </p>
+                    <p class="catg-info"><?php echo $product_highlight ?></p>
+                    <div class="price-tg">
 
-						<p style="display:none" id="productInfo" ><?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?></p>
+                        <p style="display:none" id="productInfo">
+                            <?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>
+                        </p>
 
-						<?php
+                        <?php
 						
 							if($inventory_price==0) {
 
@@ -116,10 +118,12 @@
 
 							} else { ?>
 
-								<h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg"> <span><?php echo $inventory_price ?></span></h2>
-								<h2 class="with-ofer-price"><span><?php echo $inventory_mrp ?></span></h2>
+                        <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
+                            <span><?php echo $inventory_price ?></span>
+                        </h2>
+                        <h2 class="with-ofer-price"><span><?php echo $inventory_mrp ?></span></h2>
 
-								<?php
+                        <?php
 
 								if($inventory_mrp!='') {
 
@@ -135,7 +139,7 @@
 
 								?>
 
-							<?php
+                        <?php
 							}
 
 						?>
@@ -151,27 +155,28 @@
 							</form>
 						</div>
 					</div> -->
-					<div class="cart-box">
-						<input type="hidden" id="qty" value="<?php echo $product_id.'_1_'.(($inventory_price!=0) ? $inventory_price : $inventory_mrp) ?>" >
-						<!-- <span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date: <?php echo date('d M Y', strtotime('+1 days')) ?></span> -->
-						<span><img src="<?php echo USER_IMAGES ?>van.svg">Same day delivery</span>
-						
-						<?php
+                    <div class="cart-box">
+                        <input type="hidden" id="qty"
+                            value="<?php echo $product_id.'_1_'.(($inventory_price!=0) ? $inventory_price : $inventory_mrp) ?>">
+                        <!-- <span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date: <?php echo date('d M Y', strtotime('+1 days')) ?></span> -->
+                        <span><img src="<?php echo USER_IMAGES ?>van.svg">Same day delivery</span>
+
+                        <?php
 					
 							echo (($inventory_in_stock==0) ? "<a class='out-of-stock'>Out of stock</a>" : "<a href='#' id='addToCart' class='cart-ad-btn'>Buy Now</a>" );
 
 						?>
 
-						<!-- <div class="deliver">
+                        <!-- <div class="deliver">
 							<img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
 						</div> -->
-					</div>
-					<div class="similar-product">
+                    </div>
+                    <div class="similar-product">
                         <h2>Product Description</h2>
-						<p><?php echo $product_description ?></p>
-						<h2>Care & Tips</h2>
-						<div class="care_n_tips">
-							<?php
+                        <p><?php echo $product_description ?></p>
+                        <h2>Care & Tips</h2>
+                        <div class="care_n_tips">
+                            <?php
 							
 							if(isset($care_n_tips)) {
 
@@ -179,23 +184,24 @@
 
 							} else { ?>
 
-								<ul>
-									<li>Start by removing the bouquet wrapper.</li>
-									<li>Cut the stems by one or two inches from the bottom to ensure better water intake.</li>
-									<li>Choose a vase and fill it with water.</li>
-									<li>Remove the leaves below the water level to prevent bacterial growth.</li>
-									<li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-									<li>Make sure to place the vase in indirect sunlight.</li>
-								</ul>
+                            <ul>
+                                <li>Start by removing the bouquet wrapper.</li>
+                                <li>Cut the stems by one or two inches from the bottom to ensure better water intake.
+                                </li>
+                                <li>Choose a vase and fill it with water.</li>
+                                <li>Remove the leaves below the water level to prevent bacterial growth.</li>
+                                <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
+                                <li>Make sure to place the vase in indirect sunlight.</li>
+                            </ul>
 
-							<?php
+                            <?php
 							}
 
 							?>
-						</div>
-						<h2>Delivery Information</h2>
-						<div class="care_n_tips">
-							<?php
+                        </div>
+                        <h2>Delivery Information</h2>
+                        <div class="care_n_tips">
+                            <?php
 							
 							if(isset($delivery_information)) {
 
@@ -203,50 +209,51 @@
 
 							} else { ?>
 
-								<ul>
-									<li>The image displayed is indicative. Actual product may vary in design & shape</li>
-									<li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
-									<li>The chosen delivery time is an estimate.</li>
-									<li>Since flowers are perishable in nature, we will be able to attempt delivery of your order once.</li>
-									<li>Occasionally, substitution of flowers is necessary due unavailability issues.</li>
-								</ul>
+                            <ul>
+                                <li>The image displayed is indicative. Actual product may vary in design & shape</li>
+                                <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
+                                <li>The chosen delivery time is an estimate.</li>
+                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of your
+                                    order once.</li>
+                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.</li>
+                            </ul>
 
-							<?php
+                            <?php
 							}
 
 							?>
-						</div>
-						<div class="sku">
-							<h4>SKU:</h4>
-							<h3><?php echo $inventory_sku ?></h3>
-						</div>
+                        </div>
+                        <div class="sku">
+                            <h4>SKU:</h4>
+                            <h3><?php echo $inventory_sku ?></h3>
+                        </div>
                         <!-- <h2>Reviews for Enticing Red Roses</h2>
 						<div class="recomnd">
 							<p class="star-rate"><img src="<?php echo USER_IMAGES ?>stars.svg"> 4.6 out of 5</p>
 							<p class="star-recom"><img src="<?php echo USER_IMAGES ?>recomended.svg"> 4.6 out of 5</p>
 						</div> -->
-					</div>
-				</div>
-			</div>
-	    </div>
-	</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section class="section-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="head-1">
-					<h2>Similar Products</h2>
-					<span class="cart-bodr-h2"></span>
-				</div>
-			</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head-1">
+                    <h2>Similar Products</h2>
+                    <span class="cart-bodr-h2"></span>
+                </div>
+            </div>
 
-			<div class="col-md-12">
-				<div class="product-slider">
-							
+            <div class="col-md-12">
+                <div class="product-slider">
 
-				<?php
+
+                    <?php
 				
 				if($tagListData=mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
 
@@ -296,65 +303,133 @@
 				}
 
 				?>
-				
-				</div>
-			</div>
-		</div>
 
-	</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </section>
 
 <section class="section-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="head-2">
-					<h2>Why & Blooms?</h2>
-					<hr class="border-tp">
-				</div>
-			</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head-2">
+                    <h2>Why & Blooms?</h2>
+                    <hr class="border-tp">
+                </div>
+            </div>
 
-			<div class="col-md-12">
-				<div class="why-bloom">
-					<div class="flower-box">
-						<div class="img-why box-b">
-							<img src="<?php echo USER_IMAGES; ?>Freshness-Guranteed.jpg">
-						</div>
-						<div class="why-cont box-b">
-							<h3>Freshness Guaranteed</h3>
-							<h2>We deliver the finest & freshest</h2>
-						</div>
-					</div>
+            <div class="col-md-12">
+                <div class="why-bloom">
+                    <div class="flower-box">
+                        <div class="img-why box-b">
+                            <img src="<?php echo USER_IMAGES; ?>Freshness-Guranteed.jpg">
+                        </div>
+                        <div class="why-cont box-b">
+                            <h3>Freshness Guaranteed</h3>
+                            <h2>We deliver the finest & freshest</h2>
+                        </div>
+                    </div>
 
-					<div class="flower-box">
-						<div class="why-cont box-b dn-s">
-							<h3>Delivery In 3 Hours</h3>
-							<h2>Racing quick to win you love</h2>
-						</div>
-						<div class="img-why box-b">
-							<img src="<?php echo USER_IMAGES; ?>delivery_in_3hours.jpg">
-						</div>
-						<div class="why-cont box-b dn-l">
-							<h3>Delivery In 3 Hours</h3>
-							<h2>Racing quick to win you love</h2>
-						</div>
-							
-					</div>
+                    <div class="flower-box">
+                        <div class="why-cont box-b dn-s">
+                            <h3>Delivery In 3 Hours</h3>
+                            <h2>Racing quick to win you love</h2>
+                        </div>
+                        <div class="img-why box-b">
+                            <img src="<?php echo USER_IMAGES; ?>delivery_in_3hours.jpg">
+                        </div>
+                        <div class="why-cont box-b dn-l">
+                            <h3>Delivery In 3 Hours</h3>
+                            <h2>Racing quick to win you love</h2>
+                        </div>
 
-					<div class="flower-box">
-						<div class="img-why box-b">
-							<img src="<?php echo USER_IMAGES; ?>_dedicated-efforts.jpg">
-						</div>
-						<div class="why-cont box-b">
-							<h3>Dedicated Efforts</h3>
-							<h2>Over 1 Million Smiles delivered</h2>
-						</div>
-					</div>
+                    </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                    <div class="flower-box">
+                        <div class="img-why box-b">
+                            <img src="<?php echo USER_IMAGES; ?>_dedicated-efforts.jpg">
+                        </div>
+                        <div class="why-cont box-b">
+                            <h3>Dedicated Efforts</h3>
+                            <h2>Over 1 Million Smiles delivered</h2>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-content cloth-card" style="padding: 0px 0px 20px 0px">
+    <div class="container">
+        <div class="row">
+            <div class="head-1">
+                <h2>Quick Links</h2>
+                <span class="cart-bodr-h2"></span>
+            </div>
+            <div class="main-card">
+
+                <a href="/tag/love/" class="card-link">
+                    <div class="acce-card">
+                        <div class="img-acc">
+                            <img src="<?php echo USER_IMAGES ?>love.png">
+                        </div>
+                        <div class="acc-card-head">
+                            <h4>Love collection</h4>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/tag/anniversary/" class="card-link">
+                    <div class="acce-card">
+                        <div class="img-acc">
+                            <img src="<?php echo USER_IMAGES ?>anniversary.jpg">
+                        </div>
+                        <div class="acc-card-head">
+                            <h4>Anniversary</h4>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/tag/birthday/" class="card-link">
+                    <div class="acce-card">
+                        <div class="img-acc">
+                            <img src="<?php echo USER_IMAGES ?>birthday.jpg">
+                        </div>
+                        <div class="acc-card-head">
+                            <h4>Birthday</h4>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/tag/luxury/" class="card-link">
+                    <div class="acce-card">
+                        <div class="img-acc">
+                            <img src="<?php echo USER_IMAGES ?>luxury.jpeg">
+                        </div>
+                        <div class="acc-card-head">
+                            <h4>Luxury</h4>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/category/cake/" class="card-link">
+                    <div class="acce-card">
+                        <div class="img-acc">
+                            <img src="<?php echo USER_IMAGES ?>cake.jpg">
+                        </div>
+                        <div class="acc-card-head">
+                            <h4>Cake</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 </section>
 
 <?php

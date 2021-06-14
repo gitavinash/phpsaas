@@ -5,20 +5,20 @@
 ?>
 
 
-		<!-- section global platform start -->
-		<section class="banner-section baner-bg">
-			<div class="overlay-bner"></div>
-			<div class="container">
-				<div class="row ">
-					<div class="col-md-12">
-						
-						<div class="bg-content">
-							<h1><?php echo ucwords($tag_title) ?></h1>
-							<h3><?php echo $tag_description ?></h3>
-						</div>
-					</div>
-					
-					<?php
+<!-- section global platform start -->
+<section class="banner-section baner-bg">
+    <div class="overlay-bner"></div>
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-12">
+
+                <div class="bg-content">
+                    <h1><?php echo ucwords($tag_title) ?></h1>
+                    <h3><?php echo $tag_description ?></h3>
+                </div>
+            </div>
+
+            <?php
 
 						for($i=0; $i<sizeof($tagPost); $i++) {
 
@@ -29,39 +29,117 @@
 						$resultTags=implode(' OR link_relation_id=', $tagId);
 
 						?>
-							
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- section global platform end -->
 
-		<section class="section-content">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="brdcrum">
-							<nav aria-label="breadcrumb">
-							  <ol class="breadcrumb">
-							    <li class="breadcrumb-item"><a href="/">Home</a></li>
-							    <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li>
-							    <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($tag_title) ?></li>
-							  </ol>
-							</nav>
-						</div>
-					</div>
-				</div>
-				<div class="row">
+        </div>
+    </div>
+    </div>
+</section>
+<!-- section global platform end -->
 
-                    <?php
+<section class="section-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="brdcrum">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($tag_title) ?>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <?php
 
 						if($tagResults=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND (link_relation_id={$resultTags}) AND link_site_id=".SITE_ID." AND inventory_type='product' ORDER BY link_is_featured, link_published DESC LIMIT 0, 100")) {
 
 							if(mysqli_num_rows($tagResults)!=0) {
 
+								$i=0;
+
 								while($tagResultsData=mysqli_fetch_assoc($tagResults)) {
 
 									extract($tagResultsData);
+
+
+									if(($i/4)==3) {
+
+										$i=0;
+
+										?>
+
+            <section class="section-content cloth-card" style="padding: 0px 0px 20px 0px">
+                <div class="container">
+                    <div class="row">
+                        <div class="main-card">
+
+                            <a href="/tag/love/" class="card-link">
+                                <div class="acce-card">
+                                    <div class="img-acc">
+                                        <img src="<?php echo USER_IMAGES ?>love.png">
+                                    </div>
+                                    <div class="acc-card-head">
+                                        <h4>Love collection</h4>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="/tag/anniversary/" class="card-link">
+                                <div class="acce-card">
+                                    <div class="img-acc">
+                                        <img src="<?php echo USER_IMAGES ?>anniversary.jpg">
+                                    </div>
+                                    <div class="acc-card-head">
+                                        <h4>Anniversary</h4>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="/tag/birthday/" class="card-link">
+                                <div class="acce-card">
+                                    <div class="img-acc">
+                                        <img src="<?php echo USER_IMAGES ?>birthday.jpg">
+                                    </div>
+                                    <div class="acc-card-head">
+                                        <h4>Birthday</h4>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="/tag/luxury/" class="card-link">
+                                <div class="acce-card">
+                                    <div class="img-acc">
+                                        <img src="<?php echo USER_IMAGES ?>luxury.jpeg">
+                                    </div>
+                                    <div class="acc-card-head">
+                                        <h4>Luxury</h4>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="/category/cake/" class="card-link">
+                                <div class="acce-card">
+                                    <div class="img-acc">
+                                        <img src="<?php echo USER_IMAGES ?>cake.jpg">
+                                    </div>
+                                    <div class="acc-card-head">
+                                        <h4>Cake</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <?php
+
+									}
 
 									echo "<div class='col-md-3 col-6'>
 											<a href='{$link_url}'>
@@ -78,6 +156,8 @@
 											</a>
 										</div>";
 
+									$i++;
+
 								}
 
 							}
@@ -86,9 +166,9 @@
 
                     ?>
 
-				</div>
-			</div>
-		</section>
+        </div>
+    </div>
+</section>
 
 <?php
 

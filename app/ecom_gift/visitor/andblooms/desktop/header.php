@@ -211,7 +211,7 @@
                             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                                 <ul class="navbar-nav menu-ul">
 
-                                    <li class="nav-item active">
+                                    <li class="nav-item">
                                         <a class="nav-link" href="/">Home</a>
                                     </li>
                                     <li class="nav-item dropdown">
@@ -281,6 +281,9 @@
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/franchise/">Franchise</a>
+                                    </li>
+                                    <li class="nav-item active">
+                                        <a class="nav-link " href="/tag/just-because/">Father's Day</a>
                                     </li>
 
                                     <div class="dn-l log-in">
