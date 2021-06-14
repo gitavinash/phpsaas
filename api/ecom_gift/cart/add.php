@@ -18,7 +18,7 @@
                     $price=(($inventory_price!=0) ? $inventory_price : $inventory_mrp );
                 }
 
-                if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".SITE_ID.", '{$id}', '{$itemType}', '{$quantity}', '{$price}', 0, NOW())")) {
+                if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".SITE_ID.", '".base64_decode($id)."', '{$itemType}', '{$quantity}', '{$price}', 0, NOW())")) {
 
                     $status=200;
                     $msg=ucfirst($itemType).' add to card is successful';
