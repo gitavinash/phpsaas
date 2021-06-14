@@ -6,8 +6,6 @@
 
         $itemType=mysqli_real_escape_string($connection, ((isset($itemType)) ? $itemType : 'product' ));
 
-        $product_id=base64_decode($id);
-
         if($checkProduct=mysqli_query($connection, "SELECT product_title as productName, product_thumbnail as productImage, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE product_id='".base64_decode($id)."' AND product_status=1 AND link_status=200 AND link_type='product' AND link_site_id=".SITE_ID)) {
 
             if(mysqli_num_rows($checkProduct)!=0) {
@@ -18,7 +16,7 @@
                     $price=(($inventory_price!=0) ? $inventory_price : $inventory_mrp );
                 }
 
-                if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".SITE_ID.", '".base64_decode($id)."', '{$itemType}', '{$quantity}', '{$price}', 0, NOW())")) {
+                if($addToCart=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('".SESSION_ID."', ".SITE_ID.", '{$id}', '{$itemType}', '{$quantity}', '{$price}', 0, NOW())")) {
 
                     $status=200;
                     $msg=ucfirst($itemType).' add to card is successful';
@@ -31,10 +29,13 @@
 
             } else {
 
-                $msg="SELECT product_title as productName, product_thumbnail as productImage, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE product_id='".base64_decode($id)."' AND product_status=1 AND link_status=200 AND link_type='product' AND link_site_id=".SITE_ID;
-                // $msg='Invalid response found';
+                $msg='Invalid response found';
 
             }
+
+        } else {
+
+            $msg=mysqli_error($connection);
 
         }
     
