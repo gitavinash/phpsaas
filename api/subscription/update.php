@@ -128,11 +128,11 @@
                     
                             if($postStatus==0) {
                     
-                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
+                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='product' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
                     
                             } else {
                     
-                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
+                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='product' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
                     
                             }
                     
@@ -198,14 +198,14 @@
                         if($updateProduct && $addRedirect && $updateInventtory && $updateMeta && $updateTags && $updateProductMeta) {
 
                             $status=200;
-                            $msg='Product update successfully';
-                            $redirect="/dashboard/product/?type=edit&editor=true&id=".base64_encode($id);
+                            $msg='Subscription update successfully';
+                            $redirect="/dashboard/subscription/?type=edit&editor=true&id=".base64_encode($id);
                             mysqli_query($connection, "COMMIT");
 
                         } else {
 
                             echo $updateProduct.' && '.$addRedirect.' && '.$updateInventtory.' && '.$updateMeta.' && '.$updateTags.' && '.$updateProductMeta;
-                            $msg='Something is wrong while updateing product';
+                            $msg='Something is wrong while updateing subscription';
                             mysqli_query($connection, "ROLLBACK");
 
                         }
