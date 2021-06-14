@@ -30,16 +30,22 @@
                             </select>
                             <label class="heading" id="selectLabel">Select drop down</label>
                         </div>
-                        <div class="form-radio-group">
-                            <p class="heading">Validation</p>
-                            <input type="radio" name="validity" id="1Week">
-                            <label for="1Week">Select drop down</label>
-                            <input type="radio" name="validity" id="2Week">
-                            <label for="2Week">Select drop down</label>
-                        </div>
-                    </div>
-                    <div class="step-open-box step_2_box" style="display:none">
-                        Hello i'm step 2
+                        <!-- <div class="form-group">
+                            <p><strong>Select radio button ( any one )</strong></p>
+
+                            <div class="radio-group">
+                                <input type="radio" class="hide" id="option1">
+                                <label for="option1" class="radio-lable">
+                                    <div>Option 1</div>
+                                </label>
+                            </div>
+                            <div class="radio-group">
+                                <input type="radio" class="hide" id="option2">
+                                <label for="option2" class="radio-lable">
+                                    <div>Option 2</div>
+                                </label>
+                            </div>
+                        </div> -->
                     </div>
                 </section>
             </form>

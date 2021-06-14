@@ -27,7 +27,21 @@
 
 		foreach($_REQUEST as $key => $value) {
 
-			$secure[$key]=mysqli_real_escape_string($connection, $value);
+			if(!is_array($value)) {
+
+				$secure[$key]=mysqli_real_escape_string($connection, $value);
+
+			} else {
+
+				/** Convert string array to string  */
+
+				foreach($value as $arrayKey => $arrayValue) {
+
+					$secure[$arrayKey]=mysqli_real_escape_string($connection, $arrayValue);
+
+				}
+
+			}
 	
 		}
 
