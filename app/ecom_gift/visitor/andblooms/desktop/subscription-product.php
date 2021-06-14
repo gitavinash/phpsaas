@@ -206,13 +206,21 @@
 					if(mysqli_num_rows($tagListData)!=0) {
 
 						extract(mysqli_fetch_assoc($tagListData));
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1  AND product_id!={$product_id} GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
 					
 					} else {
 
-						$productRelated=explode(' ', $product_title);
-					
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+                        if($product_type=='subscription') {
+
+                            $relatedProductQuery="SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_link INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_type='subscription' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 AND product_id!={$product_id} ORDER BY RAND() LIMIT 0, 10";
+
+                        } else {
+
+                            $productRelated=explode(' ', $product_title);
+                        
+                            $relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1  AND product_id!={$product_id} GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+
+                        }
 					
 					}
 				
@@ -247,7 +255,7 @@
 					} else {
 
                         echo $relatedProductQuery;
-                        // exit();
+                        exit();
 
                     }
 
