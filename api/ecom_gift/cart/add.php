@@ -2,8 +2,6 @@
 
     function add($connection, $data) {
         
-        print_r($data);
-        exit();
         extract($data);
 
         $itemType=mysqli_real_escape_string($connection, ((isset($itemType)) ? $itemType : 'product' ));

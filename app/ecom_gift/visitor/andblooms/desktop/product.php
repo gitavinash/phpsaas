@@ -106,8 +106,9 @@
                     <p class="catg-info"><?php echo $product_highlight ?></p>
                     <div class="price-tg">
 
-                        <p style="display:none" id="productInfo">
-                            <?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>
+                        <p style="display:none" id="productInfo"
+                            value="<?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>">
+
                         </p>
 
                         <?php

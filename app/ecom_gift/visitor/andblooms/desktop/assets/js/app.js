@@ -35,7 +35,7 @@ $(document).ready(function() {
     $('#addToCart').click(function(e) {
       e.preventDefault();
       $('#addToCart').hide();
-      var productInfo = $('#productInfo').text();
+      var productInfo = $("#productInfo").attr('value');
       var qty = productInfo.split('_');
       var id = qty[0];
       var price = qty[1];
