@@ -108,7 +108,6 @@
 
                         <p style="display:none" id="productInfo"
                             value="<?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>">
-
                         </p>
 
                         <?php
