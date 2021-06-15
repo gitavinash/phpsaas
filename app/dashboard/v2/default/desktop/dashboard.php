@@ -1,3 +1,10 @@
+<div class="box-1 dashboard-datepicker">
+    <div class="form-group right">
+        <label>Reporting period</label>
+        <input type="text" class="dateRangePicker" id="dashboardReportingDateRangePicker"
+            placeholder="Select date range">
+    </div>
+</div>
 <div class="widget box-3">
     <div class="widget-info" id="totalOrder">
         <div class="info-box">

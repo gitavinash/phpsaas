@@ -578,6 +578,28 @@ main .container .heading span {
 
 /* Widget */
 
+.dashboard-datepicker {
+  float: left;
+  margin-bottom: 10px;
+}
+
+.dashboard-datepicker label {
+  float: left;
+  line-height: 33px;
+  padding: 0px 10px;
+}
+
+.dashboard-datepicker input[type="text"] {
+  float: left;
+  width: auto;
+  padding: 7px 10px;
+  border: 1px solid #c7c7c7;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+  height: 33px;
+}
+
 .widget {
   float: left;
   padding: 0px 10px;
@@ -818,7 +840,10 @@ main .container .heading span {
   border: 1px solid #c7c7c7;
   border-radius: 4px;
   box-sizing: border-box;
-  outline: none;
+  outline: 0;
+  height: 33px !important;
+  font-size: 14px;
+  background: no-repeat;
 }
 
 .list-box {
@@ -890,6 +915,8 @@ table.dataTable thead th {
   outline: none !important;
   width: 100% !important;
   margin-top: 2px !important;
+  height: 33px !important;
+  font-size: 14px;
 }
 
 .dataTables_filter {

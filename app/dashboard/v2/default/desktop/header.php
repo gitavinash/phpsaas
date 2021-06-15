@@ -183,20 +183,29 @@
 
         <div class="container">
 
+            <?php
+            
+            if(ADMIN_BASE_URL!='/') { ?>
+
             <div class="i-m-here-pagination">
                 <ul>
                     <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
                     <?php
-                    
-                        $paginationURL='';
+                        
+                            $paginationURL='';
 
-                        for($i=0; $i<sizeof($urlStructure); $i++) {
+                            for($i=0; $i<sizeof($urlStructure); $i++) {
 
-                            $paginationURL=$paginationURL.'/'.strtolower($urlStructure[$i]);
-                            echo "<li><a href='{$paginationURL}/'>".ucwords($urlStructure[$i])."</a></li>";
+                                $paginationURL=$paginationURL.'/'.strtolower($urlStructure[$i]);
+                                echo "<li><a href='{$paginationURL}/'>".ucwords($urlStructure[$i])."</a></li>";
 
-                        }
+                            }
 
-                    ?>
+                        ?>
                 </ul>
             </div>
+
+            <?php
+            }
+
+            ?>

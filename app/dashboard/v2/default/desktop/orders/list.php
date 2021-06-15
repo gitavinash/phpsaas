@@ -14,7 +14,7 @@
             </div>
             <div class="form-group right">
                 <label>Date</label>
-                <input type="text" id="dateRangePicker" placeholder="Select date range">
+                <input type="text" class="dateRangePicker" placeholder="Select date range">
             </div>
         </div>
         <div class="list-box">

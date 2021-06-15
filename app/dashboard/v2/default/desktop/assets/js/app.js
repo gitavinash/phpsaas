@@ -238,16 +238,22 @@ if($('#orderList').length) {
 
 // Date Range picker
 
-if($('#dateRangePicker').length) {
+if($('.dateRangePicker').length) {
 
-    var start = moment().subtract(29, 'days');
-    var end = moment();
+    // Last 30 Days
+    // var start = moment().subtract(29, 'days');
+    // var end = moment();
+    
+    // Date range start from current month
+    var start = moment().startOf('month');
+    var end = moment().endOf('month');
+    
 
     function cb(start, end) {
-        $('#dateRangePicker span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('.dateRangePicker span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
     }
 
-    $('#dateRangePicker').daterangepicker({
+    $('.dateRangePicker').daterangepicker({
         startDate: start,
         endDate: end,
         ranges: {
@@ -257,6 +263,8 @@ if($('#dateRangePicker').length) {
            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
            'This Month': [moment().startOf('month'), moment().endOf('month')],
            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },locale: {
+            format: 'DD-MMM-YYYY'
         }
     }, cb);
 
