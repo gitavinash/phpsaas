@@ -13,7 +13,8 @@
             <div class="col-md-12">
 
                 <div class="bg-content">
-                    <h1><?php echo ucwords($tag_title) ?></h1>
+                    <h1><?php echo str_replace("\'", "'", ucwords(((isset($page_title)) ? $page_title : $tag_title))) ?>
+                    </h1>
                     <h3><?php echo $tag_description ?></h3>
                 </div>
             </div>
@@ -44,8 +45,9 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($tag_title) ?>
+                            <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Tag</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <?php echo str_replace("\'", "'", ucwords(((isset($page_title)) ? $page_title : $tag_title))) ?>
                             </li>
                         </ol>
                     </nav>

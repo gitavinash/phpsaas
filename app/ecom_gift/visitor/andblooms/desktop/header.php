@@ -283,14 +283,16 @@
                                         <a class="nav-link " href="/franchise/">Franchise</a>
                                     </li>
                                     <li class="nav-item active">
-                                        <a class="nav-link " href="/tag/just-because/">Father's Day</a>
+                                        <a class="nav-link " href="/tag/just-because/?page_title=father's day"
+                                            style="font-weight: 600; color: #D4946E">Father's
+                                            Day</a>
                                     </li>
 
-                                    <div class="dn-l log-in">
+                                    <!-- <div class=" dn-l log-in">
                                         <li class="nav-item">
                                             <a class="nav-link" href="/login/">Login</a>
                                         </li>
-                                    </div>
+                                    </div> -->
                                     <!-- <li class="nav-item dropdown">
 									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Birthday
 									      </a>
