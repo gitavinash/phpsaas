@@ -1,5 +1,7 @@
 <?php
 
+    $link_type=((isset($link_type)) ? $link_type : 'homepage' );
+
     /** Default site information meta data */
 
     require_once 'site.php';
