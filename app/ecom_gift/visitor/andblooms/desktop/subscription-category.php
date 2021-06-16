@@ -97,9 +97,9 @@
                     <h6>Subscribe To Happiness</h6>
                     <p>Need a thoughtful gift or want to treat yourself? Fresh flowers delivered on your schedule. Save
                         20% + free shipping every time. The best part? The flowers keep coming.</p>
-                    <p><a href="https://andblooms.com/category/subscription/"><img
+                    <!-- <p><a href="https://andblooms.com/category/subscription/"><img
                                 src="/upload/2021/06/1623694292_whatsapp_image_2021_06_11_at_1.13.19_pm.jpeg"
-                                width="100%"></a></p>
+                                width="100%"></a></p> -->
                 </div>
 
             </div>
