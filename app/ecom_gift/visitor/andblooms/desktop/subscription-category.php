@@ -40,7 +40,7 @@
 
             <?php
 
-					if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_currency_symbol, inventory_in_stock, inventory_mrp, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN isw_category ON category_id=product_category WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND inventory_type='product' AND product_category={$category_id} ORDER BY inventory_price ASC DESC LIMIT 0, 100")) {
+					if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_currency_symbol, inventory_in_stock, inventory_mrp, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN isw_category ON category_id=product_category WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND product_type='subscription' AND inventory_type='product' AND product_category={$category_id} ORDER BY inventory_price+0 ASC LIMIT 0, 100")) {
 
 						if(mysqli_num_rows($productList)!=0) {
 
