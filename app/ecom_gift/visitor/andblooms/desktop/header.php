@@ -277,7 +277,7 @@
                                         <a class="nav-link" href="/category/planters/">Planters</a>
                                     </li>
                                     <li class="nav-item ">
-                                        <a class="nav-link " href="/subscription/">Subscription</a>
+                                        <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/franchise/">Franchise</a>
