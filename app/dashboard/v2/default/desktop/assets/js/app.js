@@ -271,6 +271,14 @@ if($('.dateRangePicker').length) {
     cb(start, end);
 }
 
+// Select js 2
+
+if($('.selectJS').length) {
+    $('.selectJS').select2({
+        placeholder: "Select drop down placeholder"
+    });
+}
+
 // Main Box tabs
 
 if($('.steps-tab').length) {
