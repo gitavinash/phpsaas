@@ -308,6 +308,7 @@ nav.side-nav {
   float: left;
   width: 100%;
   margin-top: 10px;
+  position: relative;
 }
 
 nav.side-nav ul {
@@ -316,6 +317,13 @@ nav.side-nav ul {
   margin: 0 auto;
   list-style: none;
   width: 100%;
+  height: calc(100vh - 105px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+nav.side-nav ul::-webkit-scrollbar {
+  width: 0px !important;
 }
 
 nav.side-nav ul li {
@@ -1077,8 +1085,13 @@ table.dataTable thead th {
 
 /* New main form style */
 
+.list-add-new-btn {
+  background: #6452ea;
+  color: #fff;
+}
+
 form {
-  width: 640px; /* Can be in percentage also. */
+  width: 700px; /* Can be in percentage also. */
   height: auto;
   margin: 0 auto;
   padding: 10px;

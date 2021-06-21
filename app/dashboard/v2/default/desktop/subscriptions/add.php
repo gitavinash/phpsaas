@@ -8,7 +8,7 @@
             <!-- <li class="step-box" id="step_2"><span>2</span>Subscription validity</li> -->
         </ul>
         <div class="steps-box">
-            <form action="#" id="addNewSubscriptionForm">
+            <form action="#" id="addNewForm">
                 <section class="form">
                     <div class="step-open-box step_1_box">
                         <div class="form-header">

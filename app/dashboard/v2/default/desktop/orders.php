@@ -1,4 +1,4 @@
-<h2 class="heading">Orders <span>Single line intro about this section</span></h2>
+<h2 class="heading"><?php echo ucwords($postType) ?> <span>Single line intro about this section</span></h2>
 <div class="main-menu-list">
     <div class="widget box-3">
         <a href="orders/list/">

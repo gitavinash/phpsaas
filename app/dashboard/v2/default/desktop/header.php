@@ -64,7 +64,7 @@
                     <p>CRM<span>Customer relationship Management</span></p>
                 </li>
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/orders/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="orders/"><i class="fi-rr-box-alt"></i> Manage Order</a>
+                    <a href="orders/"><i class="fi-rr-box-alt"></i> Orders</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="orders/list/"><i class="fi-rr-apps-sort"></i> All Orders</a></li>
@@ -88,13 +88,156 @@
                         </ul>
                     </div>
                 </li>
+                <li class="header-section-name">
+                    <p>Packages<span>Manage website package.</span></p>
+                </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hostings/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="hostings/"><i class="fi-rr-database"></i> Hosting</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hostings/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="hostings/"><i class="fi-rr-database"></i> Hosting</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hostings/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="hostings/"><i class="fi-rr-database"></i> Hosting</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hostings/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="hostings/"><i class="fi-rr-database"></i> Hosting</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hostings/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="hostings/"><i class="fi-rr-database"></i> Hosting</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/domains/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="domains/"><i class="fi-rr-globe"></i> Domains</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="domains/list/"><i class="fi-rr-apps-sort"></i> All Domains TLDs</a></li>
+                            <li><a href="domains/add/"><i class="fi-rr-add"></i> Add New Domains TLD</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="domains/list/"><i class="fi-rr-apps-sort"></i> All Domains TLDs</a></li>
+                            <li><a href="domains/add/"><i class="fi-rr-add"></i> Add New Domains TLD</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="header-section-name">
+                    <p>Website<span>Manage layout and other options.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/notifications/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="notifications/"><i class="fi-rr-bell"></i> Notifications</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="notifications/list/"><i class="fi-rr-apps-sort"></i> All Notifications</a></li>
+                            <li><a href="notifications/add/"><i class="fi-rr-paper-plane"></i>Send New Notification</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="notifications/list/"><i class="fi-rr-apps-sort"></i> All Notifications</a></li>
+                            <li><a href="notifications/add/"><i class="fi-rr-paper-plane"></i>Send New Notification</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/appearance/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="appearance/"><i class="fi-rr-brush"></i> Appearance</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="appearance/themes/"><i class="fi-rr-broom"></i> Themes</a></li>
+                            <li><a href="appearance/menus/"><i class="fi-rr-menu-burger"></i> Menus</a></li>
+                            <li><a href="appearance/widgets/"><i class="fi-rr-layout-fluid"></i> Widgets</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="appearance/themes/"><i class="fi-rr-broom"></i> Themes</a></li>
+                            <li><a href="appearance/menus/"><i class="fi-rr-menu-burger"></i> Menus</a></li>
+                            <li><a href="appearance/widgets/"><i class="fi-rr-layout-fluid"></i> Widgets</a></li>
+                        </ul>
+                    </div>
+                </li>
 
                 <li class="header-section-name">
                     <p>Subscriptions<span>Manage subscriptions and members.</span></p>
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/subscriptions/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="subscriptions/"><i class="fi-rr-crown"></i> Manage Subscriptions</a>
+                    <a href="subscriptions/"><i class="fi-rr-crown"></i> Subscriptions</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
@@ -110,7 +253,7 @@
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/subscribers/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="subscribers/"><i class="fi-rr-following"></i> Manage Subscribers</a>
+                    <a href="subscribers/"><i class="fi-rr-following"></i> Subscribers</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="subscribers/list/"><i class="fi-rr-apps-sort"></i> All Subscribers</a></li>
@@ -143,7 +286,7 @@
                         </ul>
                     </div>
                 </li>
-                <!-- 
+
                 <li class="header-section-name">
                     <p>General<span>Comman options like: Setting etc.</span></p>
                 </li>
@@ -173,7 +316,7 @@
                             <li><a href="settings/redirection/"><i class="fi-rr-link"></i> URL Redirection</a></li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
 
             </ul>
         </nav>

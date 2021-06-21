@@ -1,4 +1,5 @@
-<h2 class="heading">Subscribers <span>Manage members who have purchased a subscription package.</span></h2>
+<h2 class="heading"><?php echo ucwords($postType) ?> <span>Manage members who have purchased a subscription
+        package.</span></h2>
 <div class="main-menu-list">
     <div class="widget box-3">
         <a href="subscribers/list/">

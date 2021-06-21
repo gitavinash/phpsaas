@@ -1,4 +1,5 @@
-<h2 class="heading">Subscriptions <span>Create new subscription packages and manage previous subscription
+<h2 class="heading"><?php echo ucwords($postType) ?> <span>Create new subscription packages and manage previous
+        subscription
         packages.</span></h2>
 <div class="main-menu-list">
     <div class="widget box-3">

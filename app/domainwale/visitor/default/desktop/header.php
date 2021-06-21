@@ -19,7 +19,7 @@
 
 <body>
     <header class="l-w1">
-        <div class="notification-bar center">Welcome to Domain Wale.</div>
+        <div class="notification-bar center">Welcome to <?php echo SITE_NAME ?>.</div>
         <section class="desktop">
             <div class="main-bar l-w1">
                 <div class="container">
@@ -41,7 +41,7 @@
             </div>
             <div class="container">
                 <div class="logo l-w3 fl">
-                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt="Oxteal logo"></a>
+                    <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> logo"></a>
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">
@@ -59,7 +59,7 @@
         <section class="mobile">
             <div class="container">
                 <div class="logo l-w3 fl">
-                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt="Oxteal Logo"></a>
+                    <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo"></a>
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">
