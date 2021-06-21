@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="list-box">
-            <table id="orderList">
+            <table id="showTableList">
                 <thead>
                     <tr>
                         <th>Order No.</th>

@@ -223,9 +223,9 @@ if($('#recentOrderAmount').length) {
 
 // Order List
 
-if($('#orderList').length) {
+if($('#showTableList').length) {
 
-    $('#orderList').DataTable({
+    $('#showTableList').DataTable({
         scrollY: 400,
         "language": {
             "search": "Filter Table",
