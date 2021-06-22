@@ -8,7 +8,7 @@
 
     /** Search query */
 
-    $searchQuery=str_replace('-', ' ', mysqli_real_escape_string($connection, $q));
+    $searchKeyword=str_replace('-', ' ', mysqli_real_escape_string($connection, $q));
 
     switch($type) {
 

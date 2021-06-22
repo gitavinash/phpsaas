@@ -11,11 +11,11 @@
         <div class="row">
             <div class="col-lg-8 col-md-8">
                 <div class="breadcrumb__text">
-                    <h2>Search: <span><?php echo $searchQuery ?></span></h2>
+                    <h2>Search: <span><?php echo $searchKeyword ?></span></h2>
                     <div class="breadcrumb__option">
                         <a href="/">Home</a>
-                        <a href="#" class="search-collapse-btn" >Search</a>
-                        <span><?php echo $searchQuery ?></span>
+                        <a href="#" class="search-collapse-btn">Search</a>
+                        <span><?php echo $searchKeyword ?></span>
                     </div>
                 </div>
                 <div class="row">

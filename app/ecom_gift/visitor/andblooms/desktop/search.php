@@ -5,40 +5,41 @@
 ?>
 
 
-		<!-- section global platform start -->
-		<section class="banner-section baner-bg">
-			<div class="overlay-bner"></div>
-			<div class="container">
-				<div class="row ">
-					<div class="col-md-12">
-						<div class="bg-content">
-							<h1><?php echo str_replace('-', ' ', ucwords($searchQuery)); ?></h1>
-							<h3><?php echo $tag_description ?></h3>
-						</div>
-					</div>						
-				</div>
-			</div>
-		</section>
-		<!-- section global platform end -->
+<!-- section global platform start -->
+<section class="banner-section baner-bg">
+    <div class="overlay-bner"></div>
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="bg-content">
+                    <h1><?php echo str_replace('-', ' ', ucwords($searchKeyword)); ?></h1>
+                    <h3><?php echo $tag_description ?></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- section global platform end -->
 
-		<section class="section-content">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="brdcrum">
-							<nav aria-label="breadcrumb">
-							  <ol class="breadcrumb">
-							    <li class="breadcrumb-item"><a href="/">Home</a></li>
-							    <!-- <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li> -->
-							    <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($searchQuery) ?></li>
-							  </ol>
-							</nav>
-						</div>
-					</div>
-				</div>
-				<div class="row">
+<section class="section-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="brdcrum">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <!-- <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li> -->
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($searchKeyword) ?>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="row">
 
-                    <?php
+            <?php
 
 						if(is_array($queryPost)) {
 
@@ -108,21 +109,21 @@
 
 						} else { ?>
 
-							<!-- No Result found -->
+            <!-- No Result found -->
 
-							<section class='continue-shopping' >
-								<h1><span>No product found</span></h1>
-								<a href="/" class="btn btn-success" >Go to homepage</a>
-							</section>
+            <section class='continue-shopping'>
+                <h1><span>No product found</span></h1>
+                <a href="/" class="btn btn-success">Go to homepage</a>
+            </section>
 
-						<?php
+            <?php
 						}
 
                     ?>
 
-				</div>
-			</div>
-		</section>
+        </div>
+    </div>
+</section>
 
 <?php
 

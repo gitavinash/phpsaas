@@ -185,6 +185,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
     ADD category_thumbnail VARCHAR(255) NOT NULL AFTER category_parent_id");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."category
+    ADD INDEX(category_title)");
+
   /** City Table */
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."city ADD city_status INT(1) NOT NULL DEFAULT '1' AFTER city_state_id");
@@ -515,6 +518,9 @@
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
     ADD INDEX page_site_id (page_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."page
+    ADD INDEX(page_title)");
 
   /** Professional Table */
 
@@ -1036,6 +1042,9 @@
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post
     ADD INDEX post_site_id (post_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."post
+    ADD INDEX(post_title)");
   
 
   ########################################################################################################################
