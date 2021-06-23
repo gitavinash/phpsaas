@@ -53,3 +53,6 @@
   
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
     ADD INDEX news_site_id (news_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."news
+    ADD INDEX(news_title)");

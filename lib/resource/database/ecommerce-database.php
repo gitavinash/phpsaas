@@ -193,6 +193,9 @@
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
     ADD product_review INT(1) NOT NULL AFTER product_category");
 
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."product
+    ADD INDEX(product_title)");
+
   /** Service table */
 
   mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."service (
@@ -223,6 +226,9 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
     MODIFY service_id bigint(20) NOT NULL AUTO_INCREMENT");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."service
+    ADD INDEX(service_title)");
 
   /** Transaction Table */
 

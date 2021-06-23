@@ -81,3 +81,6 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."video
     ADD INDEX video_site_id (video_site_id)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."video
+    ADD INDEX(video_title)");
