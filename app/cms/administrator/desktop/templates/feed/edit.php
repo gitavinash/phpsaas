@@ -9,7 +9,7 @@
 			?>
 <script type="text/javascript">
 alert('Invalid action found');
-window.location.href = 'dashboard/news/?type=list&status=all';
+window.location.href = 'dashboard/feed/?type=list&status=all';
 </script>
 <?php
 		}
