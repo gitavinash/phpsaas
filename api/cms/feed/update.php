@@ -64,7 +64,7 @@
                 
                                     /** Add new active url of the news feed */
                 
-                                    $updateLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, '{$postType}', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), '{$featurePost}')");
+                                    $updateLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, 'news', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), '{$featurePost}')");
                                     $linkID=mysqli_insert_id($connection);
                 
                                 } else {
