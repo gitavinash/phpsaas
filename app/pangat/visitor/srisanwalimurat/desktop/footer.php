@@ -49,6 +49,21 @@
 <script type="text/javascript" src="<?php echo USER_JS ?>script.min.js"></script>
 
 <script type="text/javascript">
+// Search box
+$('.openSearchForm').click(function(e) {
+    e.preventDefault();
+    $('#target').hide();
+    $('.openSearchFormBox').show();
+    $('.search-bar').focus();
+    console.log('sdgdsf');
+});
+
+$('.closeSearchFormBtn').click(function(e) {
+    e.preventDefault();
+    $('.show').show(0);
+    $('.hide').hide(0);
+    $('.openSearchFormBox').hide();
+});
 $('.show').click(function() {
     $('#target').show(200);
     $('.show').hide(0);

@@ -7,14 +7,14 @@ ul.menu {
   font-family: "Oswald", sans-serif;
 }
 
-ul.menu li:last-child {
+ul.menu li.active {
   background: #946e3e;
   color: #fff !important;
 }
 
 ul.menu li {
   float: left;
-  width: 13%;
+  width: 11%;
   padding: 0;
   margin: 0 auto;
   box-sizing: border-box;
@@ -51,7 +51,7 @@ ul.menu li a:hover {
 ul.menu li a {
   float: left;
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 0px;
   text-align: center;
   box-sizing: border-box;
   text-decoration: none;
@@ -459,6 +459,49 @@ footer {
   padding-bottom: 0px;
   text-align: center;
   font-family: "Oswald", sans-serif;
+}
+
+.openSearchFormBox {
+  display: none;
+  position: fixed;
+  background: #805e34;
+  width: 100%;
+  padding: 0px 10%;
+  box-sizing: border-box;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.closeSearchFormBtn {
+  position: absolute;
+  color: #fff;
+  right: 5%;
+  top: 5%;
+}
+
+.openSearchFormBox form {
+  float: left;
+  width: 100%;
+}
+
+.search-bar {
+  float: left;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  background: none;
+  color: #fff;
+  font-size: 18px;
+  outline: none;
+  letter-spacing: 2px;
+}
+
+.search-bar::placeholder {
+  color: #fff;
 }
 
 @media (orientation: portrait) {
