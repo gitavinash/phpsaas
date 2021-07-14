@@ -69,7 +69,7 @@
                 <a href="/tag/everlasting/" class="card-link">
                     <div class="acce-card">
                         <div class="img-acc">
-                            <img src="/upload/2021/02/1612253362_img_1849.jpg">
+                            <img src="/upload/2021/02/1612253362_img_1849.jpg" style="margin-left: -20px">
                         </div>
                         <div class="acc-card-head">
                             <h4>Everlasting</h4>
