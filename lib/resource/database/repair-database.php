@@ -311,7 +311,7 @@
     DROP enquiry_label");
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."enquiry
-    CHANGE enquiry_query enquiry_subject VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
+    CHANGE enquiry_subject enquiry_query VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL");
 
   /* Link Table */
   

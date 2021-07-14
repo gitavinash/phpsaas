@@ -182,7 +182,7 @@
                                     }
 
                                 }
-                
+
                                 $newEnquiry=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_query, enquiry_message, enquiry_type, enquiry_status) VALUES(".APP_SITE_ID.", '{$user_id}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$noOfGuest}', '{$details}', 'pangat', 0)");
                                 $enquiryID=mysqli_insert_id($connection);
 
@@ -237,6 +237,7 @@
 
                                 } else {
 
+                                    echo mysqli_error($connection);
                                     $msg='Somthing is wrong while trying to book pangat';
                                     mysqli_query($connection, "ROLLBACK");
 

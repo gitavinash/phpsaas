@@ -277,6 +277,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="/category/planters/">Planters</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link " href="/category/cake/">Cake</a>
+                                        <!-- <a class="nav-link " href="/tag/everlasting/"
+                                            style="font-weight: 600; color: #D4946E">New Collection</a> -->
+                                    </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/cake/">Cake</a>
                                     </li>
@@ -286,6 +291,7 @@
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/franchise/">Franchise</a>
                                     </li>
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     <li class="nav-item active">
                                         <a class="nav-link " href="/tag/just-because/?page_title=New Collection"
@@ -298,6 +304,8 @@
                                             Day</a>
                                     </li> -->
 >>>>>>> 0951eea25c667fbb69f2a3ab4e68f425f789acb7
+=======
+>>>>>>> 565499a67fefab55238b3f0b046e932571d9e3ce
 
                                     <!-- <div class=" dn-l log-in">
                                         <li class="nav-item">

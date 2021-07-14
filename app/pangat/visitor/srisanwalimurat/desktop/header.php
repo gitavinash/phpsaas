@@ -37,7 +37,9 @@
                 </li>
                 <li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
                 <li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
-                <li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff">Request For Pangat</a></li>
+                <li class="active"><a href="https://pangat.srisanwalimurat.com/" style="color: #fff">Request For
+                        Pangat</a></li>
+                <li><a href="#" class="openSearchForm"><i class="fas fa-search"></i> Search</a></li>
             </ul>
             <div class="mobile-menu">
                 <h1><a href="http://srisanwalimurat.com/"><?php echo SITE_NAME ?></a></h1>
@@ -52,10 +54,19 @@
                         <li><a href="https://srisanwalimurat.com/discourses/">Discourses</a></li>
                         <li><a href="https://srisanwalimurat.com/bhajan/">Bhajan/Aarti</a></li>
                         <li><a href="https://pangat.srisanwalimurat.com/" style="color: #fff">Request For Pangat</a>
+                        <li><a href="#" class="openSearchForm">Search</a></li>
                         </li>
                     </ul>
                 </div>
             </div>
+        </div>
+
+
+        <div class="openSearchFormBox" style="display:none">
+            <span class="closeSearchFormBtn"><img src="<?php echo USER_IMAGES ?>cancel.png"></span>
+            <form action="https://srisanwalimurat.com/search/">
+                <input type="text" class="search-bar" name="q" placeholder="Press enter after typing...">
+            </form>
         </div>
 
     </header>

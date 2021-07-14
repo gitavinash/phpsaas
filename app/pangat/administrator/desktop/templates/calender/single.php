@@ -23,27 +23,40 @@
             <div class="calendar-body-wraper d-none">
                 <ul class="calendar-dates vanilla-calendar-body m-0 p-0" id="calendardates"></ul>
             </div>
+            <div class="slots">
+                <select class="form-control" name="" id="slots"
+                    style="border: 1px solid #333; border-radius: 4px; margin-bottom: 20px">
+                    <option value="#">Block slots</option>
+                    <option value="all">All slots</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
+            </div>
             <button id="blockDate" class="submit-data">Block calender date</button>
         </div>
     </div>
     <div class="block-dates">
+        <h2 style="margin-bottom: 20px">Block Dates</h2>
         <table id="table">
             <thead>
                 <tr>
                     <th>Booked Date</th>
+                    <th>Booked Slot</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <?php
 
-					if($dataList=mysqli_query($connection, "SELECT booking_date FROM ".TABLE_PREFIX."booking WHERE booking_status=4 AND booking_date >= CURDATE() GROUP BY booking_date ORDER BY booking_date ASC")) {
+					if($dataList=mysqli_query($connection, "SELECT booking_date, booking_time FROM ".TABLE_PREFIX."booking WHERE (booking_status=4 || booking_status=5) AND booking_date >= CURDATE() AND booking_details='' GROUP BY booking_date ORDER BY booking_date ASC")) {
 
 						if(mysqli_num_rows($dataList)!=0) {
 								
 							while($data=mysqli_fetch_assoc($dataList)) { extract($data) ?>
                 <tr>
                     <td><?php echo date('d-M-Y', strtotime($booking_date))?></td>
+                    <td><?php echo (($booking_time!='') ? $booking_time : 'All Slots' ) ?></td>
                     <td><button class="unblockDate btn btn-sm btn-green"
                             id="<?php echo date('Y-m-d', strtotime($booking_date)) ?>">Unblock</button></td>
                 </tr>
