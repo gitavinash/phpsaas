@@ -458,6 +458,65 @@ $(document).ready(function() {
 
         });
 
-    })
+    });
+
+    // Product Gallery
+
+    if($('#productGalleryImages').length) {
+
+        $('#productGallery').ezPlus({
+            gallery: 'productGalleryImages',
+            cursor: 'pointer',
+            galleryActiveClass: "active",
+            imageCrossfade: true,
+            // loadingIcon: "images/spinner.gif"
+        });
+
+        $("#productGallery").bind("click", function (e) {
+            var ez = $('#productGalleryZoom').data('ezPlus');
+            ez.closeAll();
+            return false;
+        });
+
+    }
+
+//     if($('#productGallery').length) {
+
+//         $('#productGallery').zoom({
+            
+//             // the width/height of the zoomed image
+//             source_image_width: 1500, 
+//             source_image_height: 1500, 
+//             // zoom_area_width: 500,
+//             // zoom_area_height: 500,
+//             zoom_area_distance: 300,
+
+//             // enable fade in/out transitions    
+//             // zoom_easing: true,  
+
+//             // click to zoom or hover to zoom
+//             // click_to_zoom: true,
+
+//             // zoom_element: "auto",
+//             // show_descriptions: true,
+//             // description_location: "bottom",
+//             // description_opacity: 0.7,
+// //             hide_cursor: false, 
+// // speed: 600, 
+// // autoplay: false,      
+// // autoplay_interval: 6000,
+// // keyboard: true,
+// // right_to_left: false,
+// small_thumbs: 1,  
+//         })
+
+//     }
+
+$(".xzoom, .xzoom-gallery").xzoom({
+    smoothZoomMove: 3,
+    defaultScale: '50%',
+    lensOpacity: 0.5,
+    lensShape: 'circle'
+});
 
 });

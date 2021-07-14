@@ -680,9 +680,10 @@ img.mega-img {
 
 .product-main-slider {
   float: left;
-  width: 100%;
-  height: 500px;
+  width: 500px;
+  height: 620px;
   margin-bottom: 20px;
+  background: #fff;
 }
 
 .product-main-slider .slide {
@@ -4289,4 +4290,19 @@ form.franchise textarea {
 
 .select2 {
   width: 100% !important;
+}
+
+/* BZoom  */
+.xzoom-source {
+  z-index: 9999;
+  width: 100px;
+  height: 100px;
+}
+
+.xzoom-thumbs a {
+  text-decoration: none;
+}
+.xzoom-thumbs img {
+  width: 100px;
+  height: 100px;
 }

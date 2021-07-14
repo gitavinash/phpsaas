@@ -39,59 +39,50 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="gallery-carousel">
 
-                    <div class="lg-carousel-box" id="sticky">
+                <div class="product-main-slider">
+                    <div class="xzoom-container">
 
-                        <div class="product-main-slider">
-                            <?php
-							
-							$galleryImages=json_decode($product_gallery, TRUE);
-							
-							if($galleryImages!='') {
+                        <?php
+                                    
+                            $galleryImages=json_decode($product_gallery, TRUE);
+                                            
+                            if($galleryImages!='') {
 
-								echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
+                                echo "<img class='xzoom' id='xzoom-default' src='{$product_image}' xoriginal='{$product_image}'/><div class='xzoom-thumbs'>";
 
-								for($i=0; $i<sizeof($galleryImages); $i++) {
+                                if(sizeof($galleryImages)!=0) {
 
-									extract($galleryImages[$i]);
-									echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
+                                    echo "<a href='".$product_image."'><img class='xzoom-gallery' width='100' src='{$product_image}' xpreview='{$product_image}' title='{$product_title}'></a>";
+                                    
+                                    for($i=0; $i<sizeof($galleryImages); $i++) {
+                                        
+                                        
+                                        if($galleryImages[$i]!='' ) {
 
-								}
+                                            extract($galleryImages[$i]);
 
-							} else {
+                                            echo "<a href='".$path."'><img class='xzoom-gallery' width='100' src='{$path}' xpreview='{$path}' title='{$name}'></a>";
 
-								echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
+                                        }
+                                    }
+                                
+                                }
+                                
+                                echo "</div>" ;
+                            
+                            }
+                            
+                        ?>
 
-							}
-
-							?>
-                        </div>
-
-                        <div class="product-main-slider-nav">
-                            <?php
-							
-							$galleryImages=json_decode($product_gallery, TRUE);
-							
-							if($galleryImages!='') {
-
-								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
-
-								for($i=0; $i<sizeof($galleryImages); $i++) {
-
-									extract($galleryImages[$i]);
-									echo "<div class='slide'><div class='img'><img src='{$path}'></div></div>";
-
-								}
-
-							}
-
-							?>
-                        </div>
-
+                        <!-- </div> -->
+                        <!-- </div> -->
                     </div>
-
                 </div>
+
+                <!-- </div>
+
+                </div> -->
             </div>
             <div class="col-md-6">
 
