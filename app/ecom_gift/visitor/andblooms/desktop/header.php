@@ -278,16 +278,19 @@
                                         <a class="nav-link" href="/category/planters/">Planters</a>
                                     </li>
                                     <li class="nav-item ">
+                                        <a class="nav-link " href="/category/cake/">Cake</a>
+                                    </li>
+                                    <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/franchise/">Franchise</a>
                                     </li>
-                                    <li class="nav-item active">
+                                    <!-- <li class="nav-item active">
                                         <a class="nav-link " href="/tag/just-because/?page_title=father's day"
                                             style="font-weight: 600; color: #D4946E">Father's
                                             Day</a>
-                                    </li>
+                                    </li> -->
 
                                     <!-- <div class=" dn-l log-in">
                                         <li class="nav-item">
