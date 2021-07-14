@@ -235,6 +235,9 @@ ul.menu li a {
 .flex-it > span[data="4"] {
   background-color: #000;
 }
+.flex-it > span[data="5"] {
+  background-color: #000;
+}
 .dtl-box {
   font-size: 12px;
 }

@@ -282,9 +282,10 @@
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/franchise/">Franchise</a>
                                     </li>
-                                    <li class="nav-item active">
-                                        <a class="nav-link " href="/tag/just-because/?page_title=New Collection"
-                                            style="font-weight: 600; color: #D4946E">New Collection</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link " href="/category/cake/">Cake</a>
+                                        <!-- <a class="nav-link " href="/tag/everlasting/"
+                                            style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
 
                                     <!-- <div class=" dn-l log-in">

@@ -66,13 +66,13 @@
                     </div>
                 </a>
 
-                <a href="/category/cake/" class="card-link">
+                <a href="/tag/everlasting/" class="card-link">
                     <div class="acce-card">
                         <div class="img-acc">
-                            <img src="<?php echo USER_IMAGES ?>cake.jpg">
+                            <img src="<?php echo USER_IMAGES ?>everlasting.jpg">
                         </div>
                         <div class="acc-card-head">
-                            <h4>Cake</h4>
+                            <h4>Everlasting</h4>
                         </div>
                     </div>
                 </a>

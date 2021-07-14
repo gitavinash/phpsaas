@@ -14,7 +14,11 @@
 
 		if(!is_dir($dashboardDirectory)) {
 
-			$dashboardDirectory=str_replace('/default/', '/default/', ADMIN_PATH);
+			if(!is_dir($dashboardDirectory=str_replace('/default/', '/default/', ADMIN_PATH))) {
+
+				$dashboardDirectory=str_replace('/mobile/', '/desktop/', $dashboardDirectory);
+
+			}
 
 		}
 

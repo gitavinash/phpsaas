@@ -55,3 +55,10 @@ Availability status
 2 : Slot available
 3 : Slot available ( but booking is cancelled )
 4 : Slot blocked by admin
+
+Availablity status type
+
+0 : Booked or blocked by date
+1 : Booked or blocked by dynamic range
+2 : Booked or blocked by week ( in Booking table : booking_details = block by week )
+4 : Booked or blocked by month ( in Booking table : booking_details = block by month )
