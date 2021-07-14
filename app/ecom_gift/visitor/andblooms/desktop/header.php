@@ -283,9 +283,6 @@
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
                                     <li class="nav-item ">
-                                        <a class="nav-link " href="/category/cake/">Cake</a>
-                                    </li>
-                                    <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
                                     <li class="nav-item ">

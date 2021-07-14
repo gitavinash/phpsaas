@@ -69,7 +69,7 @@
                 <a href="/tag/everlasting/" class="card-link">
                     <div class="acce-card">
                         <div class="img-acc">
-                            <img src="<?php echo USER_IMAGES ?>everlasting.jpg">
+                            <img src="/upload/2021/02/1612253362_img_1849.jpg">
                         </div>
                         <div class="acc-card-head">
                             <h4>Everlasting</h4>
