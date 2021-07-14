@@ -278,15 +278,26 @@
                                         <a class="nav-link" href="/category/planters/">Planters</a>
                                     </li>
                                     <li class="nav-item ">
+                                        <a class="nav-link " href="/category/cake/">Cake</a>
+                                    </li>
+                                    <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/franchise/">Franchise</a>
                                     </li>
+<<<<<<< HEAD
                                     <li class="nav-item active">
                                         <a class="nav-link " href="/tag/just-because/?page_title=New Collection"
                                             style="font-weight: 600; color: #D4946E">New Collection</a>
                                     </li>
+=======
+                                    <!-- <li class="nav-item active">
+                                        <a class="nav-link " href="/tag/just-because/?page_title=father's day"
+                                            style="font-weight: 600; color: #D4946E">Father's
+                                            Day</a>
+                                    </li> -->
+>>>>>>> 0951eea25c667fbb69f2a3ab4e68f425f789acb7
 
                                     <!-- <div class=" dn-l log-in">
                                         <li class="nav-item">
