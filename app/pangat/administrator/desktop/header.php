@@ -85,6 +85,8 @@
                             <!-- <li><a href="calender.php?type=multiple"><i class="fas fa-calendar-week"></i> Multiple
                                     Dates</a></li> -->
                             <li><a href="calender.php?type=month"><i class="fas fa-calendar-alt"></i> Months</a></li>
+                            <li><a href="calender.php?type=start"><i class="fas fa-calendar-alt"></i> Calender Start</a>
+                            </li>
                             <li><a href="calender.php?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
                         </ul>
                     </div>
@@ -95,6 +97,7 @@
                             <!-- <li><a href="calender.php?type=multiple"><i class="fas fa-calendar-week"></i> Multiple
                                     Dates</a></li> -->
                             <li><a href="calender.php?type=month"><i class="fas fa-calendar-alt"></i> Months</a></li>
+                            <li><a href="calender.php?type=start"><i class="fas fa-calendar-alt"></i> Calender Start</a>
                             <li><a href="calender.php?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
                         </ul>
                     </div>
