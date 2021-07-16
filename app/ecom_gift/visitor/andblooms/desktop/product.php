@@ -214,10 +214,8 @@
 
 							?>
                         </div>
-                        <div class="sku">
-                            <h4>SKU:</h4>
-                            <h3><?php echo $inventory_sku ?></h3>
-                        </div>
+                        <!-- SKU  -->
+                        <?php echo (($inventory_sku!='') ? "<div class='sku'><h4>SKU:</h4><h3>{$inventory_sku}</h3></div>" : "") ?>
                         <!-- <h2>Reviews for Enticing Red Roses</h2>
 						<div class="recomnd">
 							<p class="star-rate"><img src="<?php echo USER_IMAGES ?>stars.svg"> 4.6 out of 5</p>
