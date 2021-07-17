@@ -46,6 +46,13 @@
 <script src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
 <script src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
+
+
+<script type="text/javascript">
+var calenderStartMonth = <?php echo $month; ?>;
+var calenderStartYear = <?php echo $year; ?>;
+</script>
+
 <script type="text/javascript" src="<?php echo USER_JS ?>script.min.js"></script>
 
 <script type="text/javascript">

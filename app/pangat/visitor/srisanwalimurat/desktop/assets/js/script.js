@@ -1,10 +1,13 @@
+
+
 var previousmonth = "";
 var nexttmonth = "";
 var dates = new Date();
-var month = dates.getMonth();
-var year = dates.getFullYear();
-var onGoingMonth = dates.getMonth();
-var onGoingYear = dates.getFullYear();
+
+var month = calenderStartMonth;
+var year = calenderStartYear;
+var onGoingMonth = calenderStartMonth;
+var onGoingYear = calenderStartYear;
 var isPrevAllowed = 0;
 var isNextAllowed = $('#calenderMonthLimit').val();
 var dataIndexer = 0;
