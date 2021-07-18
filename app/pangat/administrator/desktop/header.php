@@ -77,7 +77,7 @@
 						<a href="calender.php?type=manage"><i class="fas fa-calendar-alt"></i> Manage calender</a>
 					</li> -->
                 <li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?>>
-                    <a href="calender.php?type=manage"><i class="fas fa-calendar"></i> Manage calender</a>
+                    <a href="calender.php?type=single"><i class="fas fa-calendar"></i> Manage calender</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="calender.php?type=single"><i class="fas fa-calendar-day"></i> Single Date
