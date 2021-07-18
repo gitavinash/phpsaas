@@ -51,6 +51,7 @@
 <script type="text/javascript">
 var calenderStartMonth = <?php echo $month; ?>;
 var calenderStartYear = <?php echo $year; ?>;
+var calenderDateStartFrom = <?php echo $day; ?>;
 var breakfastBookingAmount = <?php echo ((defined('BREAKFAST_SLOT_PRICE')) ? BREAKFAST_SLOT_PRICE : 1500 ) ?>;
 var lunchBookingAmount = <?php echo ((defined('LUNCH_SLOT_PRICE')) ? LUNCH_SLOT_PRICE : 3100 ) ?>;
 var dinnerBookingAmount = <?php echo ((defined('DINNER_SLOT_PRICE')) ? DINNER_SLOT_PRICE : 3100 ) ?>;

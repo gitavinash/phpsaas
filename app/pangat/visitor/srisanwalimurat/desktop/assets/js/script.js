@@ -1,9 +1,6 @@
-
-
 var previousmonth = "";
 var nexttmonth = "";
 var dates = new Date();
-
 var month = calenderStartMonth;
 var year = calenderStartYear;
 var onGoingMonth = calenderStartMonth;
@@ -86,9 +83,9 @@ var calendar = function (y, m) {
         // run for 6 weeks to get full month
 
         // creates a table row
-
         for (var j = 0; j < 7; j++) {
             // run for 7 days of month
+
 
             if (i === 0 && j < selectedFirstDay) {
                 prev = getprevdate(y, m, selectedFirstDay - j - 1);
@@ -113,7 +110,8 @@ var calendar = function (y, m) {
                     dummydata["availablity"][number - 1]["dinner"] +
                     "'></span></div></li > ";
             } else {
-                if (number + 1 < dates.getDate() && isPrevAllowed <= 0) {
+                if (number + 1 < calenderDateStartFrom && isPrevAllowed <= 0) {
+                    console.log(dates.getDate());
                     // console.log(number, 'Number')
                     number++;
                     calendardates += " <li class='weekday prev-dates'> <p class='cal-day' id='" + number + "'>" + number + " </p></li > ";
@@ -158,9 +156,13 @@ var calendar = function (y, m) {
 
     $("#month").html(months[m] + " " + y); //write current month and year in div
     $("#calendardates").html(calendardates); // writes current month calendar in html table with id calendar
+    // console.log(calendardates);
 };
 
-var callingData = { type: "booking", action: "availability" };
+var callingMonthAPI = calenderStartMonth+1; // Sending a month in API
+var callingDateAPI = calenderDateStartFrom+'-'+callingMonthAPI+'-'+calenderStartYear;
+
+var callingData = { type: "booking", action: "availability", date: callingDateAPI };
 
 function callTheBackednData() {
     $.ajax({
@@ -169,6 +171,7 @@ function callTheBackednData() {
         data: callingData,
         // url: 'https://pangat.srisanwalimurat.com/',
         success: function (ret) {
+            // console.log(ret);
             dummydata = ret;
             // console.log(dummydata);
             calendar(onGoingYear, onGoingMonth);
@@ -233,7 +236,6 @@ $("body").delegate('.clkAlw[bookingAllowed="1"]', "click", function (argument) {
     // let y = nexttmonth.split(', ')
     // $(this).attr(date)
     $(".no-booking span").html($(this).attr("date") + " " + months[onGoingMonth] + " " + onGoingYear);
-    // console.log(onGoingYear)
     $(".bookingSlots").removeClass("active");
 });
 
@@ -501,7 +503,6 @@ function formSubmission(sendingData) {
             dataType: "json",
             data: sendingData,
             success: function (ret) {
-
                 console.log(ret);
                 
                 if (ret.status == 200) {

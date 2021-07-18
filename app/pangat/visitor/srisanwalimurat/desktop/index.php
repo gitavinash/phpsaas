@@ -2,6 +2,7 @@
 
     if(defined('CALENDER_START')) {
 
+        $day=1;
         $month=date('m', strtotime(CALENDER_START))-1;
         $year=date('Y', strtotime(CALENDER_START));
 
@@ -9,6 +10,7 @@
 
         $month='';
         $year='';
+        $day=date('d');
 
     }
 
