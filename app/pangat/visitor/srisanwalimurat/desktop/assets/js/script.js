@@ -401,13 +401,19 @@ $("body").delegate(".submit-data", "click", function (argument) {
 
     if(bookingData.bookingTime=='breakfast') {
 
+        bookingSlotAmount = '₹ ' + breakfastBookingAmount;
+
+    }
+    if(bookingData.bookingTime=='lunch') {
+
         bookingAmount = 1500;
-        bookingSlotAmount = '₹ ' + bookingAmount;
+        bookingSlotAmount = '₹ ' + lunchBookingAmount;
 
-    } else {
+    }
+    if(bookingData.bookingTime=='dinner') {
 
-        bookingAmount = 3100;
-        bookingSlotAmount = '₹ ' + bookingAmount;
+        bookingAmount = 1500;
+        bookingSlotAmount = '₹ ' + dinnerBookingAmount;
 
     }
 

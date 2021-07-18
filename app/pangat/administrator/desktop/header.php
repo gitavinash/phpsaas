@@ -102,6 +102,9 @@
                         </ul>
                     </div>
                 </li>
+                <li <?php echo ((ADMIN_BASE_URL=='/amount/') ? 'class="active"' : '' ) ?>>
+                    <a href="amount.php?type=manage"><i class="fas fa-rupee-sign"></i> Manage Amount</a>
+                </li>
                 <li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?>>
                     <a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">

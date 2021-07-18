@@ -16,7 +16,7 @@
 
                 // Update calender start variable 
 
-                if($updateCalenderStartDate=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_configuration SET site_configuration_key='{$calenderStartDate}' WHERE site_configuration_key='calender_start' AND site_configuration_site_id=".SITE_ID)) {
+                if($updateCalenderStartDate=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_configuration SET site_configuration_value='{$calenderStartDate}' WHERE site_configuration_key='calender_start' AND site_configuration_site_id=".SITE_ID)) {
 
                     $status=200;
                     $msg='Calender start date update successfully';

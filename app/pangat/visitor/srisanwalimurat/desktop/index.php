@@ -1,20 +1,14 @@
 <?php
 
-    if($checkCalenderStartDate=mysqli_query($connection, "SELECT site_configuration_value FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_key='calender_start' AND site_configuration_site_id=".SITE_ID)) {
+    if(defined('CALENDER_START')) {
 
-        if(mysqli_num_rows($checkCalenderStartDate)!=0) {
+        $month=date('m', strtotime(CALENDER_START))-1;
+        $year=date('Y', strtotime(CALENDER_START));
 
-            extract(mysqli_fetch_assoc($checkCalenderStartDate));
+    } else {
 
-            $month=date('m', strtotime($site_configuration_value));
-            $year=date('Y', strtotime($site_configuration_value));
-                
-        } else {
-
-            $month=date('m');
-            $year=date('Y');
-
-        }
+        $month='';
+        $year='';
 
     }
 
