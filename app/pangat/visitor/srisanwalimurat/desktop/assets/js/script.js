@@ -441,13 +441,19 @@ $('#donationAmount').on('change', function(e) {
 
     var donationAmount = $('#donationAmount').val();
 
-    if(bookingData.bookingTime=='breakfast') {
+        if(bookingData.bookingTime=='breakfast') {
 
-        bookingAmount = 1500;
+        bookingSlotAmount = breakfastBookingAmount;
 
-    } else {
+    }
+    if(bookingData.bookingTime=='lunch') {
 
-        bookingAmount = 3100;
+        bookingAmount = lunchBookingAmount;
+
+    }
+    if(bookingData.bookingTime=='dinner') {
+
+        bookingAmount = dinnerBookingAmount;
 
     }
 
