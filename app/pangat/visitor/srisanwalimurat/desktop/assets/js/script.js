@@ -404,16 +404,19 @@ $("body").delegate(".submit-data", "click", function (argument) {
     if(bookingData.bookingTime=='breakfast') {
 
         bookingSlotAmount = breakfastBookingAmount;
+        bookingAmount = breakfastBookingAmount;
 
     }
     if(bookingData.bookingTime=='lunch') {
 
         bookingSlotAmount = lunchBookingAmount;
+        bookingAmount = lunchBookingAmount;
 
     }
     if(bookingData.bookingTime=='dinner') {
 
         bookingSlotAmount = dinnerBookingAmount;
+        bookingAmount =dinnerBookingAmount;
 
     }
 
