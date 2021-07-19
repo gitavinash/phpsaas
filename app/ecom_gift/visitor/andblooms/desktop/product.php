@@ -158,9 +158,17 @@
 
 						?>
 
+                        <p style="margin-top:5px">
+                            <span>Availability in
+                                <strong
+                                    style="color: #2F9100"><?php echo ((isset($availability_cities)) ? $availability_cities : 'Delhi' ) ?></strong>
+                                only</span>
+
+                        </p>
+
                         <!-- <div class="deliver">
-							<img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
-						</div> -->
+                            <img src="<?php echo USER_IMAGES ?>deliver.png" alt="deliver">
+                        </div> -->
                     </div>
                     <div class="similar-product">
                         <h2>Product Description</h2>
