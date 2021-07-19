@@ -115,8 +115,7 @@
                     <div class="form-group">
                         <label>Available cities</label>
                         <textarea name="productMeta[availability_cities]" id="care_n_tips"
-                            class="form-control inside-shadow"
-                            placeholder="Care & tips..."><?php echo $availability_cities ?></textarea>
+                            class="form-control inside-shadow" placeholder="Availability cities">Delhi</textarea>
                     </div>
                 </div>
                 <div class="productGallery generalTab" style="display: none;">

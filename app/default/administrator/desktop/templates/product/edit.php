@@ -181,7 +181,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                         <label>Available cities</label>
                         <textarea name="productMeta[availability_cities]" id="care_n_tips"
                             class="form-control inside-shadow"
-                            placeholder="Care & tips..."><?php echo $availability_cities ?></textarea>
+                            placeholder="Availability cities"><?php echo $availability_cities ?></textarea>
                     </div>
                 </div>
                 <div class="productGallery generalTab" style="display: none;">
