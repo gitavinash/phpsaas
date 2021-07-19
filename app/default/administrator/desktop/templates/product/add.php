@@ -114,7 +114,7 @@
                     <label>Availability</label>
                     <div class="form-group">
                         <label>Available cities</label>
-                        <textarea name="productMeta[availability_cities]" id="care_n_tips"
+                        <textarea name="productMeta[availability_cities]" id="availability_cities"
                             class="form-control inside-shadow" placeholder="Availability cities">Delhi</textarea>
                     </div>
                 </div>

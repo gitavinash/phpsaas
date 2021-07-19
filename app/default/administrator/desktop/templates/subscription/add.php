@@ -111,6 +111,13 @@
                             <input type="text" class="form-control inside-shadow" name="height" placeholder="Height">
                         </div>
                     </div>
+                    <div class="box-1">
+                        <div class="form-group">
+                            <label>Maximum Delivery Options</label>
+                            <input type="number" class="form-control inside-shadow" name="productMeta[max_delivery]"
+                                placeholder="Maximum Delivery Options... Ex: 4">
+                        </div>
+                    </div>
                 </div>
                 <div class="productGallery generalTab" style="display: none;">
 

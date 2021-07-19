@@ -179,7 +179,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <label>Availability</label>
                     <div class="form-group">
                         <label>Available cities</label>
-                        <textarea name="productMeta[availability_cities]" id="care_n_tips"
+                        <textarea name="productMeta[availability_cities]" id="availability_cities"
                             class="form-control inside-shadow"
                             placeholder="Availability cities"><?php echo $availability_cities ?></textarea>
                     </div>

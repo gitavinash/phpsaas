@@ -24,10 +24,13 @@
 
 					extract($productMetaArray);
 
+                    $max_delivery=((isset($max_delivery)) ? $max_delivery : 1 );
+
 				} else {
 
 					$care_n_tips='';
 					$delivery_information='';
+                    $max_delivery=1;
 
 				}
 
@@ -171,6 +174,13 @@ window.location.href = 'dashboard/subscription/?type=list&status=all';
                             <label>Height</label>
                             <input type="text" class="form-control inside-shadow"
                                 value="<?php echo $inventory_height ?>" name="height" placeholder="Height">
+                        </div>
+                    </div>
+                    <div class="box-1">
+                        <div class="form-group">
+                            <label>Maximum Delivery Options</label>
+                            <input type="number" class="form-control inside-shadow" name="productMeta[max_delivery]"
+                                placeholder="Maximum Delivery Options..." value="<?php echo $max_delivery ?>">
                         </div>
                     </div>
                 </div>
