@@ -416,7 +416,7 @@ $("body").delegate(".submit-data", "click", function (argument) {
     if(bookingData.bookingTime=='dinner') {
 
         bookingSlotAmount = dinnerBookingAmount;
-        bookingAmount =dinnerBookingAmount;
+        bookingAmount = dinnerBookingAmount;
 
     }
 
@@ -444,9 +444,9 @@ $('#donationAmount').on('change', function(e) {
 
     var donationAmount = $('#donationAmount').val();
 
-        if(bookingData.bookingTime=='breakfast') {
+    if(bookingData.bookingTime=='breakfast') {
 
-        bookingSlotAmount = breakfastBookingAmount;
+        bookingAmount = breakfastBookingAmount;
 
     }
     if(bookingData.bookingTime=='lunch') {
