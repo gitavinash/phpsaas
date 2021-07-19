@@ -459,6 +459,8 @@ $('#donationAmount').on('change', function(e) {
 
     var totalAmount = parseInt(bookingAmount) + parseInt(donationAmount);
 
+    console.log(totalAmount);
+
     $('#submitForm').val('Pay ₹ ' + totalAmount);
 
 })
