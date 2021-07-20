@@ -681,8 +681,8 @@ img.mega-img {
 .product-main-slider {
   float: left;
   width: 500px;
-  height: 620px;
-  margin-bottom: 20px;
+  /* height: 620px;
+  margin-bottom: 20px; */
   background: #fff;
 }
 
