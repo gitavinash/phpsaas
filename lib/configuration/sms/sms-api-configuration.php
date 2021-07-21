@@ -13,7 +13,7 @@
     switch(SMS_GATEWAY) {
 
         case 'kap' :
-            $smsURL="http://103.16.101.52:8080/sendsms/bulksms?username=".SMS_USERNAME."&password=".SMS_PASSWORD."&type=".SMS_TYPE."&dlr=".SMS_DELIVERY_REPORT."&destination=91{$mobile}&source=".SMS_SENDER."&message={$message}&tempid";
+            $smsURL="http://103.16.101.52:8080/sendsms/bulksms?username=".SMS_USERNAME."&password=".SMS_PASSWORD."&type=".SMS_TYPE."&dlr=".SMS_DELIVERY_REPORT."&destination=91{$mobile}&source=".SMS_SENDER."&message={$message}&tempid={$dlt_sms_temp_id}";
             break;
 
         case 'rock2connect' :

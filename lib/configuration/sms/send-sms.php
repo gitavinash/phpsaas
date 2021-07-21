@@ -6,7 +6,7 @@
 
         if(SMS_ENABLE==1) {
 
-            require_once 'sms-api-configuration.php';
+            require 'sms-api-configuration.php';
             $smsStatus=file_get_contents($smsURL);
     
         }

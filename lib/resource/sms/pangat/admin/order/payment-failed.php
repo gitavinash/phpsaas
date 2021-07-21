@@ -4,4 +4,4 @@
 
     $message=urlencode("Hello {$enquiry_first_name},\nYour payment has been failed. Please try again.");
     
-    require_once SEND_SMS;
+    require SEND_SMS;

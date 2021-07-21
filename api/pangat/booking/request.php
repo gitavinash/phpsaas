@@ -202,11 +202,15 @@
                                             switch($bookingTime) {
 
                                                 case 'breakfast':
-                                                    $amount=1500;
+                                                    $amount=BREAKFAST_SLOT_PRICE;
                                                     break;
 
-                                                default:
-                                                    $amount=3100;
+                                                case 'lunch':
+                                                    $amount=LUNCH_SLOT_PRICE;
+                                                    break;
+
+                                                case 'dinner':
+                                                    $amount=DINNER_SLOT_PRICE;
                                                     break;
 
                                             }

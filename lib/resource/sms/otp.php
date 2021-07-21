@@ -2,4 +2,4 @@
 
     $message=urlencode("Dear user, you verification code is {$otpCode}");
 
-    require_once SEND_SMS;
+    require SEND_SMS;

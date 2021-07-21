@@ -4,4 +4,4 @@
 
     $message=urlencode("Hello {$first_name}, your request for ".date('d M Y', strtotime($bookingDate))." {$bookingTime} pangat has been received.");
     
-    require_once SEND_SMS;
+    require SEND_SMS;

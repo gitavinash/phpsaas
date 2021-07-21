@@ -32,7 +32,7 @@
             extract(mysqli_fetch_assoc($checkTransaction));
 
             mysqli_query($connection, "START TRANSACTION");
-            
+
             switch($transaction_type) {
 
                 case 'booking':
@@ -78,6 +78,7 @@
                                 // Send booking confirmation email notice to admin
 
                                 include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php'; 
+                                include_once ADMIN_SMS_TEMPLATE.'order/booking-confirmation.php';
 
                             }
 
