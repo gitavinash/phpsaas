@@ -61,7 +61,8 @@
                     
                             /** Send Email and SMS to User of confirmation */
                     
-                            include_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+                            include APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+                            include APP_SMS_TEMPLATE.'order/booking-confirmation.php';
 
                             // Send copy email is admin email notification is enable 
 
@@ -71,7 +72,8 @@
 
                                     // Send booking confirmation email notice to admin
 
-                                    include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+                                    include ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+                                    include ADMIN_SMS_TEMPLATE.'order/booking-confirmation.php';
 
                                 }
 

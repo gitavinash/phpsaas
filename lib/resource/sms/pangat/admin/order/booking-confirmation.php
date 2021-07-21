@@ -1,8 +1,7 @@
 <?php
 
-    $dlt_sms_temp_id='1107161484353124853';
+    $dlt_sms_temp_id='1107162486494502411';
 
-    // $message=urlencode("You have successfully booked Pangat for {$bookingDate} {$bookingTime} {$guestNumbers}. Please call 011-23670506 in case of any issue.");
-    $message=urlencode("Hello {$enquiry_first_name},\nYour pangat for ".date('d M Y', strtotime($booking_date))." {$booking_time} has been successfully booked.");
+    $message=urlencode("Name: {$enquiry_display_name}, Mob No: {$mobile}, Email: {$email}, BKG DT: ".date('d M Y').", BKG TMEI: ".date('h:i:s A').", TYPE: {$booking_time}, PNGT DT: ".date('d M Y', strtotime($booking_date)).", AMT: {$transaction_currency} {$transaction_amount}");
     
     require_once SEND_SMS;
