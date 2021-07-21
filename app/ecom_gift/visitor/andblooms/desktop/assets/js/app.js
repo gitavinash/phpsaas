@@ -529,7 +529,7 @@ function imageZoom(imgID, resultID, previewBoxMagnifierId) {
   /*create lens:*/
   lens = document.createElement("DIV");
   lens.setAttribute("class", "img-zoom");
-  lens.setAttribute("id", previewBoxMagnifierId);
+//   lens.setAttribute("id", previewBoxMagnifierId);
   /*insert lens:*/
   img.parentElement.insertBefore(lens, img);
   /*calculate the ratio between result DIV and lens:*/
@@ -600,17 +600,18 @@ function imageZoom(imgID, resultID, previewBoxMagnifierId) {
         
 // }
 
-$('.zoomImage').hover(function(e) {
+$('.img').hover(function(e) {
     e.preventDefault();
-    var previewBoxId = $(this).attr('id');
-    var previewBoxZoomId = $(this).attr('id')+'Preview';
-    var previewBoxMagnifierId = $(this).attr('id')+'Magnifier';
+    var previewBoxId = $('.img :first-child').attr('id');
+    var previewBoxZoomId = previewBoxId+'Preview';
+    var previewBoxMagnifierId = previewBoxId+'Magnifier';
     $('#'+previewBoxZoomId).show();
+    $('#'+previewBoxMagnifierId).show();
+    $('.img-zoom').show();
     imageZoom(previewBoxId, previewBoxZoomId, previewBoxMagnifierId);
-    // $('.img-zoom').show();
 }, function(e) {
-    // $('.productZoomImagePreview').hide();
-    // $('.img-zoom').remove();
+    $('.productZoomImagePreview').hide();
+    $('.img-zoom').remove();
 });
 
 });

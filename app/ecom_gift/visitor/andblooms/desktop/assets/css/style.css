@@ -4332,4 +4332,5 @@ form.franchise textarea {
   /*set the size of the lens:*/
   width: 100px;
   height: 100px;
+  /* display: none; */
 }
