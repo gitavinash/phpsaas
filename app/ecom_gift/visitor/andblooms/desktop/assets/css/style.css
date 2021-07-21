@@ -4306,3 +4306,30 @@ form.franchise textarea {
   width: 100px;
   height: 100px;
 }
+
+.productZoomImagePreview {
+  float: right;
+  position: fixed;
+  right: 20%;
+  width: 400px;
+  height: 400px;
+  /* background: #fff;
+  border: 1px solid #333; */
+  z-index: 9999;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.img-zoom-container {
+  position: relative;
+}
+
+.img-zoom {
+  position: absolute;
+  border: 1px solid #909090;
+  /*set the size of the lens:*/
+  width: 100px;
+  height: 100px;
+}

@@ -27,7 +27,7 @@
 
             if(date('Y-m-d')<=$calenderDate) {
 
-                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}' AND booking_site_id=".APP_SITE_ID." GROUP BY booking_time ORDER BY booking_status ASC")) {
+                if($checkDateAvailablity=mysqli_query($connection, "SELECT booking_date, booking_time, booking_status FROM (SELECT booking_date, booking_time, MIN(booking_status) as booking_status FROM ".TABLE_PREFIX."booking WHERE booking_date='{$calenderDate}' AND booking_site_id=".APP_SITE_ID." ORDER BY booking_status ASC) as booking_table GROUP BY booking_time")) {
 
                     if(mysqli_num_rows($checkDateAvailablity)!=0) {
                         

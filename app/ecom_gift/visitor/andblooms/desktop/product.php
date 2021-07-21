@@ -51,14 +51,18 @@
 							
 							if($galleryImages!='') {
 
-								echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
+								// echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
+                                echo "<div class='slide'><div class='img'><img id='mainProductGalleryImage1' src='{$product_image}' class='zoomImage' alt='{$product_title}' /></div></div>";
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
-									echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
+                                    $imageNo=(($i==0) ? 2 : $i+2 );
+									// echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
+                                    echo "<div class='slide'><div class='img'><img src='{$path}' class='zoomImage' id='mainProductGalleryImage{$imageNo}' alt='' /></div></div>";
 
 								}
+
 
 							} else {
 
@@ -89,6 +93,23 @@
 
 							?>
                         </div>
+
+                        <?php
+                        
+                            if($galleryImages!='') {
+
+								echo "<div id='mainProductGalleryImage1Preview' class='productZoomImagePreview'></div>";
+
+								for($i=0; $i<sizeof($galleryImages); $i++) {
+
+                                    $imageNo=(($i==0) ? 2 : $i+2 );
+									echo "<div id='mainProductGalleryImage{$imageNo}Preview' class='productZoomImagePreview'></div>";
+
+								}
+
+							}
+
+                        ?>
 
                     </div>
 
