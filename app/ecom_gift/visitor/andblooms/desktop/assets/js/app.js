@@ -600,7 +600,7 @@ function imageZoom(imgID, resultID, previewBoxMagnifierId) {
         
 // }
 
-$('.img').hover(function(e) {
+$('.zoomImage').hover(function(e) {
     e.preventDefault();
     var previewBoxId = $('.img :first-child').attr('id');
     var previewBoxZoomId = previewBoxId+'Preview';
