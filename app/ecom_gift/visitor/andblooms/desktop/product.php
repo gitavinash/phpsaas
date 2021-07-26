@@ -393,36 +393,36 @@
                 <div class="why-bloom">
                     <div class="flower-box">
                         <div class="img-why box-b">
-                            <img src="<?php echo USER_IMAGES; ?>Freshness-Guranteed.jpg">
+                            <img src="<?php echo USER_IMAGES; ?>artistic-flowers.jpg">
                         </div>
                         <div class="why-cont box-b">
-                            <h3>Freshness Guaranteed</h3>
-                            <h2>We deliver the finest & freshest</h2>
+                            <h3>Artistic Flowers</h3>
+                            <!-- <h2>We deliver the finest & freshest</h2> -->
                         </div>
                     </div>
 
                     <div class="flower-box">
                         <div class="why-cont box-b dn-s">
-                            <h3>Delivery In 3 Hours</h3>
-                            <h2>Racing quick to win you love</h2>
+                            <h3>Freshness Flower</h3>
+                            <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
                         <div class="img-why box-b">
-                            <img src="<?php echo USER_IMAGES; ?>delivery_in_3hours.jpg">
+                            <img src="<?php echo USER_IMAGES; ?>freshness-flower.jpg">
                         </div>
                         <div class="why-cont box-b dn-l">
-                            <h3>Delivery In 3 Hours</h3>
-                            <h2>Racing quick to win you love</h2>
+                            <h3>Freshness Flower</h3>
+                            <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
 
                     </div>
 
                     <div class="flower-box">
                         <div class="img-why box-b">
-                            <img src="<?php echo USER_IMAGES; ?>_dedicated-efforts.jpg">
+                            <img src="<?php echo USER_IMAGES; ?>vases-an-accessories.jpg">
                         </div>
                         <div class="why-cont box-b">
-                            <h3>Dedicated Efforts</h3>
-                            <h2>Over 1 Million Smiles delivered</h2>
+                            <h3>Vases & accessories</h3>
+                            <!-- <h2>Over 1 Million Smiles delivered</h2> -->
                         </div>
                     </div>
 
