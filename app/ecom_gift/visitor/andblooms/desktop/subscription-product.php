@@ -275,7 +275,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="head-2">
-                    <h2>Why & Blooms?</h2>
+                    <h2>&Blooms</h2>
                     <hr class="border-tp">
                 </div>
             </div>
@@ -287,21 +287,21 @@
                             <img src="<?php echo USER_IMAGES; ?>artistic-flowers.jpg">
                         </div>
                         <div class="why-cont box-b">
-                            <h3>Artistic Flowers</h3>
+                            <h3>Freshness Flower</h3>
                             <!-- <h2>We deliver the finest & freshest</h2> -->
                         </div>
                     </div>
 
                     <div class="flower-box">
                         <div class="why-cont box-b dn-s">
-                            <h3>Freshness Flower</h3>
+                            <h3>Artistic Flowers</h3>
                             <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
                         <div class="img-why box-b">
                             <img src="<?php echo USER_IMAGES; ?>freshness-flower.jpg">
                         </div>
                         <div class="why-cont box-b dn-l">
-                            <h3>Freshness Flower</h3>
+                            <h3>Artistic Flowers</h3>
                             <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
 

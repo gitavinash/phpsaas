@@ -52,21 +52,21 @@
 							if($galleryImages!='') {
 
 								// echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
-                                echo "<div class='slide'><div class='img'><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /></div></div>";
+                                echo "<div class='slide'><div class='img' ><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /></div></div>";
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
                                     $imageNo=(($i==0) ? 2 : $i+2 );
 									// echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
-                                    echo "<div class='slide'><div class='img'><img src='{$path}' id='mainProductGalleryImage{$imageNo}' alt='' /></div></div>";
+                                    echo "<div class='slide'><div class='img zoomImage'><img src='{$path}' id='mainProductGalleryImage{$imageNo}' alt='' /></div></div>";
 
 								}
 
 
 							} else {
 
-								echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
+								echo "<div class='slide'><div class='img zoomImage'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
 
 							}
 
@@ -384,7 +384,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="head-2">
-                    <h2>Why & Blooms?</h2>
+                    <h2>&Blooms</h2>
                     <hr class="border-tp">
                 </div>
             </div>
@@ -396,21 +396,21 @@
                             <img src="<?php echo USER_IMAGES; ?>artistic-flowers.jpg">
                         </div>
                         <div class="why-cont box-b">
-                            <h3>Artistic Flowers</h3>
+                            <h3>Freshness Flower</h3>
                             <!-- <h2>We deliver the finest & freshest</h2> -->
                         </div>
                     </div>
 
                     <div class="flower-box">
                         <div class="why-cont box-b dn-s">
-                            <h3>Freshness Flower</h3>
+                            <h3>Artistic Flowers</h3>
                             <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
                         <div class="img-why box-b">
                             <img src="<?php echo USER_IMAGES; ?>freshness-flower.jpg">
                         </div>
                         <div class="why-cont box-b dn-l">
-                            <h3>Freshness Flower</h3>
+                            <h3>Artistic Flowers</h3>
                             <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
 
