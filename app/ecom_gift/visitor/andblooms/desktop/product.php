@@ -396,7 +396,7 @@
                             <img src="<?php echo USER_IMAGES; ?>artistic-flowers.jpg">
                         </div>
                         <div class="why-cont box-b">
-                            <h3>Freshness Flower</h3>
+                            <h3>Fresh Flower</h3>
                             <!-- <h2>We deliver the finest & freshest</h2> -->
                         </div>
                     </div>
