@@ -617,6 +617,19 @@ function imageZoom(imgID, resultID) {
 
 // Only For single image
 
-imageZoom('mainProductGalleryImage1', 'mainProductGalleryImage1Preview');
+$('#mainProductGalleryImage1').hover(function(e) {
+    e.preventDefault();
+    var previewBoxId = $('.img :first-child').attr('id');
+    var previewBoxZoomId = previewBoxId+'Preview';
+    var previewBoxMagnifierId = previewBoxId+'Magnifier';
+    $('#'+previewBoxZoomId).show();
+    $('#'+previewBoxMagnifierId).show();
+    $('.img-zoom').show();
+    imageZoom('mainProductGalleryImage1', 'mainProductGalleryImage1Preview');
+}, function(e) {
+    $('.productZoomImagePreview').hide();
+    $('.img-zoom').remove();
+});
+
 
 });

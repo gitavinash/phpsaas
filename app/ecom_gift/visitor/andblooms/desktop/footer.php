@@ -153,6 +153,7 @@
 <!-- <script src="<?php echo PLUGIN_LIBRARY ?>fancybox/js/fancybox.min.js"></script> -->
 <!-- <script src="<?php echo PLUGIN_LIBRARY ?>ezplus/ezplus.min.js"></script> -->
 <!-- <script src="<?php echo PLUGIN_LIBRARY ?>bzoom/js/bzoom.min.js"></script> -->
+<!-- <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
 
 <script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
 
