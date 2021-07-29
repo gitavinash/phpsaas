@@ -52,21 +52,22 @@
 							if($galleryImages!='') {
 
 								// echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
-                                echo "<div class='slide'><div class='img' ><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /></div></div>";
+                                echo "<div class='slide'><div class='img' ><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /><div id='mainProductGalleryImage1Preview' class='productZoomImagePreview'></div></div></div>";
+
 
 								for($i=0; $i<sizeof($galleryImages); $i++) {
 
 									extract($galleryImages[$i]);
                                     $imageNo=(($i==0) ? 2 : $i+2 );
 									// echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
-                                    echo "<div class='slide'><div class='img zoomImage'><img src='{$path}' alt='' /></div></div>";
+                                    echo "<div class='slide'><div class='img'><img src='{$path}' alt='' /></div></div>";
 
 								}
 
 
 							} else {
 
-								echo "<div class='slide'><div class='img zoomImage'><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /></div></div>";
+								echo "<div class='slide'><div class='img'><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /></div></div>";
 
 							}
 
@@ -96,18 +97,18 @@
 
                         <?php
                         
-                            if($galleryImages!='') {
+                            // if($galleryImages!='') {
 
-								echo "<div id='mainProductGalleryImage1Preview' class='productZoomImagePreview'></div>";
+							// 	echo "<div id='mainProductGalleryImage1Preview' class='productZoomImagePreview'></div>";
 
-								for($i=0; $i<sizeof($galleryImages); $i++) {
+							// 	for($i=0; $i<sizeof($galleryImages); $i++) {
 
-                                    $imageNo=(($i==0) ? 2 : $i+2 );
-									echo "<div class='productZoomImagePreview'></div>";
+                            //         $imageNo=(($i==0) ? 2 : $i+2 );
+							// 		echo "<div class='productZoomImagePreview'></div>";
 
-								}
+							// 	}
 
-							}
+							// }
 
                         ?>
 

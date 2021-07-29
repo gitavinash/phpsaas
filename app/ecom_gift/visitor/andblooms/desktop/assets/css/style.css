@@ -4311,10 +4311,9 @@ form.franchise textarea {
   float: right;
   position: fixed;
   right: 20%;
+  top: 30%;
   width: 400px;
   height: 400px;
-  /* background: #fff;
-  border: 1px solid #333; */
   z-index: 9999;
 }
 
@@ -4330,8 +4329,8 @@ form.franchise textarea {
   position: absolute;
   border: 1px solid #909090;
   /*set the size of the lens:*/
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   /* display: none; */
 }
 
