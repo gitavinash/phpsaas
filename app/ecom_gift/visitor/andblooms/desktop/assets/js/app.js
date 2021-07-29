@@ -619,15 +619,11 @@ function imageZoom(imgID, resultID) {
 
 $('#mainProductGalleryImage1').hover(function(e) {
     e.preventDefault();
-    var previewBoxId = $('.img :first-child').attr('id');
-    var previewBoxZoomId = previewBoxId+'Preview';
-    var previewBoxMagnifierId = previewBoxId+'Magnifier';
-    $('#'+previewBoxZoomId).show();
-    $('#'+previewBoxMagnifierId).show();
+    $('#mainProductGalleryImage1Preview').show();
     $('.img-zoom').show();
     imageZoom('mainProductGalleryImage1', 'mainProductGalleryImage1Preview');
 }, function(e) {
-    $('.productZoomImagePreview').hide();
+    // $('.productZoomImagePreview').hide();
     $('.img-zoom').remove();
 });
 
