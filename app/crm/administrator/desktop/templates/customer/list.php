@@ -42,7 +42,7 @@
     <tbody>
         <?php
 
-			if($dataList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=order_user_id WHERE order_site_id=".APP_SITE_ID." {$orderStatus} ORDER BY order_id DESC")) {
+			if($dataList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=order_user_id WHERE order_site_id=".APP_SITE_ID." {$orderStatus} GROUP BY order_user_id ORDER BY order_id DESC")) {
 
 					if(mysqli_num_rows($dataList)!=0) {
                         $i=1;
