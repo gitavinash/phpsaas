@@ -430,27 +430,31 @@ main .container {
 }
 
 .btn-red {
-  background: #dc3545;
+  background: #dc3545 !important;
   color: #fff;
-  border: #dc3545;
+  border: #dc3545 !important;
+  cursor: pointer !important;
 }
 
 .btn-green {
-  background: #28a745;
+  background: #28a745 !important;
   color: #fff;
-  border: #28a745;
+  border: #28a745 !important;
+  cursor: pointer !important;
 }
 
 .btn-yellow {
-  background: #ffc107;
+  background: #ffc107 !important;
   color: #fff;
-  border: #ffc107;
+  border: #ffc107 !important;
+  cursor: pointer !important;
 }
 
 .btn-blue {
-  background: #006cd1;
+  background: #006cd1 !important;
   color: #fff;
-  border: #006cd1;
+  border: #006cd1 !important;
+  cursor: pointer !important;
 }
 
 .btn-sm {

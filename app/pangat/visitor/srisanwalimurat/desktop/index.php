@@ -316,7 +316,7 @@ include_once 'header.php';
                     </div>
                     <div class="col-2" style="height: 10px"></div>
                     <div class="col-md-4 col-xs-12">
-                        <input type="hidden" id="calenderMonthLimit" value="<?php echo CALENDER_MONTH_VISIBLE ?>">
+                        <input type="hidden" id="calenderMonthLimit" value="<?php echo CALENDER_MONTH_VISIBLE-1 ?>">
                         <input type="submit" id="submitForm" class="btn btn-success btn-block" value="">
                     </div>
                 </div>
