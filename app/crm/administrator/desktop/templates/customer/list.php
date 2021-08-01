@@ -62,7 +62,7 @@
             <td><?php echo $order_payment_mode ?></td>
             <td><?php echo (($order_status==1) ? 'Confirm' : ((($order_status)==0) ? 'Pending' : 'Reject') ); ?></td>
             <td>
-                <a href="order.php?type=profile&id=<?php echo base64_encode($order_id); ?>"
+                <a href="customer.php?type=profile&id=<?php echo base64_encode($order_id); ?>"
                     class="btn btn-sm btn-blue"><i class="fas fa-eye"></i> View</a>
             </td>
         </tr>
