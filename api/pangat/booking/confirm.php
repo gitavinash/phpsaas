@@ -23,8 +23,8 @@
                         $updateEnquiryStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status=1 WHERE enquiry_id='{$id}' AND enquiry_site_id=".APP_SITE_ID);
                     
                         $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=1 WHERE booking_enquiry_id='{$id}' AND booking_site_id=".APP_SITE_ID);
-                    
-                        if($checkOtherBooking=mysqli_query($connection, "SELECT booking_enquiry_id FROM ".TABLE_PREFIX."booking WHERE booking_date='{$date}' AND booking_time='{$time}' AND booking_enquiry_id!='{$booking_enquiry_id}' AND booking_site_id=".APP_SITE_ID)) {
+                        
+                        if($checkOtherBooking=mysqli_query($connection, "SELECT booking_enquiry_id FROM ".TABLE_PREFIX."booking WHERE booking_date='{$booking_date}' AND booking_time='{$time}' AND booking_enquiry_id!='{$booking_enquiry_id}' AND booking_site_id=".APP_SITE_ID)) {
                     
                             if(mysqli_num_rows($checkOtherBooking)!=0) {
                     
@@ -62,20 +62,6 @@
                             /** Send Email and SMS to User of confirmation */
                     
                             include APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
-
-                            // Send copy email is admin email notification is enable 
-
-                            if(defined('ADMIN_EMAIL_NOTIFICATION')) {
-                                
-                                if(ADMIN_EMAIL_NOTIFICATION==1) {
-
-                                    // Send booking confirmation email notice to admin
-
-                                    include ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
-
-                                }
-
-                            }
                     
                         } else {
                     

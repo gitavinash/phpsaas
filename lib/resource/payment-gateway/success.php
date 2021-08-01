@@ -51,6 +51,10 @@
 
                     $updateCartStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_id='{$cart_id}'");
 
+                    // Cancel all previous booking request
+
+                    $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=5 WHERE booking_date='{$booking_date}' AND booking_time='{$booking_time}'");
+
                     // Update booking table
 
                     $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=1 WHERE booking_id='{$booking_id}'");

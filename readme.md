@@ -55,6 +55,7 @@ Availability status
 2 : Slot available
 3 : Slot available ( but booking is cancelled )
 4 : Slot blocked by admin
+5 : Slot cancel automatically
 
 Availablity status type
 

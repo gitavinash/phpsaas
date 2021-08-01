@@ -36,20 +36,20 @@
 			$mail->Subject = $subject;
 			$mail->Body = $email_body;
 			
-			if(DEVELOPMENT_MODE==true) {
+			// if(DEVELOPMENT_MODE==true) {
 
-				if(!$mail->Send()) {
+			// 	if(!$mail->Send()) {
 
-					echo "Message could not be sent. <p>";
-					echo "Mailer Error: " . $mail->ErrorInfo;
+			// 		echo "Message could not be sent. <p>";
+			// 		echo "Mailer Error: " . $mail->ErrorInfo;
 
-				}
+			// 	}
 
-			} else {
+			// } else {
 
-				$mail->Send();
+			// 	$mail->Send();
 
-			}
+			// }
 
 		}
 	

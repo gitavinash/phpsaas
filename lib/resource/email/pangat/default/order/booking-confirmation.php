@@ -4,7 +4,12 @@
 	
 	include_once 'header.php';
 
+	$noOfGuest=((isset($noOfGuest)) ? $noOfGuest : '' );
 	$guestNumbers=(($guest==1) ? "with {$noOfGuest} guests" : "" );
+	$transaction_time=((isset($transaction_time)) ? $transaction_time : '' );
+	$transaction_currency=((isset($transaction_currency)) ? $transaction_currency : '' );
+	$transaction_amount=((isset($transaction_amount)) ? $transaction_amount : '' );
+	$transaction_payment_mode=((isset($transaction_payment_mode)) ? $transaction_payment_mode : '' );
 
 	$email_body = "
 		
