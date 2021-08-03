@@ -4327,11 +4327,11 @@ form.franchise textarea {
 
 .img-zoom {
   position: absolute;
-  border: 1px solid #909090;
-  /*set the size of the lens:*/
-  width: 150px;
-  height: 150px;
-  /* display: none; */
+  border: 1px solid hsla(0, 0%, 66.7%, 0.7);
+  box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.4);
 }
 
 @media only screen and (min-width: 320px) and (max-width: 768px) {
