@@ -26,7 +26,7 @@
             <div class="slots">
                 <select class="form-control" name="" id="slots"
                     style="border: 1px solid #333; border-radius: 4px; margin-bottom: 20px">
-                    <option value="">Block slots</option>
+                    <option value="all">Block slots</option>
                     <option value="all">All slots</option>
                     <option value="breakfast">Breakfast</option>
                     <option value="lunch">Lunch</option>
