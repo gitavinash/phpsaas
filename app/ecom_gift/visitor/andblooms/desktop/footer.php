@@ -149,11 +149,7 @@
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
-<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>xzoom/xzoom.min.js"></script>
-<!-- <script src="<?php echo PLUGIN_LIBRARY ?>fancybox/js/fancybox.min.js"></script> -->
-<!-- <script src="<?php echo PLUGIN_LIBRARY ?>ezplus/ezplus.min.js"></script> -->
-<!-- <script src="<?php echo PLUGIN_LIBRARY ?>bzoom/js/bzoom.min.js"></script> -->
-<!-- <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>zoom-gallery/zoom.min.js"></script>
 
 <script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
 
@@ -309,6 +305,11 @@ function sticky_relocate() {
     }
 
 }
+
+// Product Zoom
+
+$('.picZoomer').picZoomer();
+
 
 $(function() {
     $(window).scroll(sticky_relocate);

@@ -1421,3 +1421,12 @@ section.form
   .select2-results__option--highlighted[aria-selected] {
   background: #6452ea;
 }
+
+.btn {
+  background: #6452eb;
+  border: 1px solid #6452eb;
+  color: #fff;
+  font-weight: 300;
+  letter-spacing: 1px;
+  border-radius: 4px;
+}

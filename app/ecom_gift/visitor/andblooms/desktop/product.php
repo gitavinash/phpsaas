@@ -38,83 +38,41 @@
                     </nav>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 product-gallery">
 
-                <div class="gallery-carousel">
+                <!-- Product gallery -->
 
-                    <div class="lg-carousel-box" id="sticky">
-
-                        <div class="product-main-slider">
-                            <?php
-							
-							$galleryImages=json_decode($product_gallery, TRUE);
-							
-							if($galleryImages!='') {
-
-								// echo "<div class='slide'><div class='img' style='background: url({$product_image}) center center no-repeat' ></div></div>";
-                                echo "<div class='slide'><div class='img' ><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /><div id='mainProductGalleryImage1Preview' class='productZoomImagePreview'></div></div></div>";
-
-
-								for($i=0; $i<sizeof($galleryImages); $i++) {
-
-									extract($galleryImages[$i]);
-                                    $imageNo=(($i==0) ? 2 : $i+2 );
-									// echo "<div class='slide'><div class='img' style='background: url({$path}) center center no-repeat'></div></div>";
-                                    echo "<div class='slide'><div class='img'><img src='{$path}' alt='' /></div></div>";
-
-								}
-
-
-							} else {
-
-								echo "<div class='slide'><div class='img'><img id='mainProductGalleryImage1' src='{$product_image}' alt='{$product_title}' /></div></div>";
-
-							}
-
-							?>
-                        </div>
-
-                        <div class="product-main-slider-nav">
-                            <?php
-							
-							$galleryImages=json_decode($product_gallery, TRUE);
-							
-							if($galleryImages!='') {
-
-								echo "<div class='slide'><div class='img'><img src='{$product_image}'></div></div>";
-
-								for($i=0; $i<sizeof($galleryImages); $i++) {
-
-									extract($galleryImages[$i]);
-									echo "<div class='slide'><div class='img'><img src='{$path}'></div></div>";
-
-								}
-
-							}
-
-							?>
-                        </div>
-
-                        <?php
-                        
-                            // if($galleryImages!='') {
-
-							// 	echo "<div id='mainProductGalleryImage1Preview' class='productZoomImagePreview'></div>";
-
-							// 	for($i=0; $i<sizeof($galleryImages); $i++) {
-
-                            //         $imageNo=(($i==0) ? 2 : $i+2 );
-							// 		echo "<div class='productZoomImagePreview'></div>";
-
-							// 	}
-
-							// }
-
-                        ?>
-
-                    </div>
-
+                <div class="picZoomer">
+                    <img src="<?php echo $product_image ?>" alt="">
                 </div>
+                <?php
+                
+                    if($product_gallery!='') {
+
+                        $galleryImages=json_decode($product_gallery, TRUE);
+
+                        if($galleryImages!='') {
+
+                            echo "<ul class='piclist' ><li><img src='{$product_image}' /></li>";
+
+							for($i=0; $i<sizeof($galleryImages); $i++) {
+
+								extract($galleryImages[$i]);
+								echo "<li><img src='{$path}' /></li>";
+
+						    }
+
+                            echo '</ul>';
+
+						} else {
+
+							echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
+
+						}
+
+                    }
+
+                ?>
 
             </div>
             <div class="col-md-6">
@@ -222,7 +180,8 @@
 
                             <ul>
                                 <li>Start by removing the bouquet wrapper.</li>
-                                <li>Cut the stems by one or two inches from the bottom to ensure better water intake.
+                                <li>Cut the stems by one or two inches from the bottom to ensure better water
+                                    intake.
                                 </li>
                                 <li>Choose a vase and fill it with water.</li>
                                 <li>Remove the leaves below the water level to prevent bacterial growth.</li>
@@ -238,7 +197,8 @@
 
                             <ul>
                                 <li>Start by removing the bouquet wrapper.</li>
-                                <li>Cut the stems by one or two inches from the bottom to ensure better water intake.
+                                <li>Cut the stems by one or two inches from the bottom to ensure better water
+                                    intake.
                                 </li>
                                 <li>Choose a vase and fill it with water.</li>
                                 <li>Remove the leaves below the water level to prevent bacterial growth.</li>
@@ -266,12 +226,15 @@
                                      ?>
 
                             <ul>
-                                <li>The image displayed is indicative. Actual product may vary in design & shape</li>
+                                <li>The image displayed is indicative. Actual product may vary in design & shape
+                                </li>
                                 <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
                                 <li>The chosen delivery time is an estimate.</li>
-                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of your
+                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of
+                                    your
                                     order once.</li>
-                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.</li>
+                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.
+                                </li>
                             </ul>
 
                             <?php
@@ -281,12 +244,15 @@
 							} else { ?>
 
                             <ul>
-                                <li>The image displayed is indicative. Actual product may vary in design & shape</li>
+                                <li>The image displayed is indicative. Actual product may vary in design & shape
+                                </li>
                                 <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
                                 <li>The chosen delivery time is an estimate.</li>
-                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of your
+                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of
+                                    your
                                     order once.</li>
-                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.</li>
+                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.
+                                </li>
                             </ul>
 
                             <?php
@@ -405,14 +371,12 @@
                     <div class="flower-box">
                         <div class="why-cont box-b dn-s">
                             <h3>Artistic Flowers</h3>
-                            <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
                         <div class="img-why box-b">
                             <img src="<?php echo USER_IMAGES; ?>freshness-flower.jpg">
                         </div>
                         <div class="why-cont box-b dn-l">
                             <h3>Artistic Flowers</h3>
-                            <!-- <h2>Racing quick to win you love</h2> -->
                         </div>
 
                     </div>
@@ -422,8 +386,7 @@
                             <img src="<?php echo USER_IMAGES; ?>vases-an-accessories.jpg">
                         </div>
                         <div class="why-cont box-b">
-                            <h3>Vases & accessories</h3>
-                            <!-- <h2>Over 1 Million Smiles delivered</h2> -->
+                            <h3>Vases & Accessories</h3>
                         </div>
                     </div>
 
