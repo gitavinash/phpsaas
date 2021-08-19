@@ -39,97 +39,17 @@
         <div class="row">
 
             <?php
+            
+                for($i=0; $i<sizeof($categorySinglePost); $i++) {
 
-					if($productList=mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_price, inventory_currency_symbol, inventory_in_stock, inventory_mrp, link_published FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."product ON link_relation_id=product_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id INNER JOIN isw_category ON category_id=product_category WHERE link_site_id=".SITE_ID." AND link_type='product' AND link_status=200 AND inventory_type='product' AND product_category={$category_id} ORDER BY link_is_featured DESC LIMIT 0, 100")) {
+                    extract($categorySinglePost[$i]);
 
-						if(mysqli_num_rows($productList)!=0) {
-
-							$i=0;
-
-							while($productData=mysqli_fetch_assoc($productList)) {
-
-								extract($productData);
-
-								if(($i/4)==3) {
-
-									$i=0;
-
-									?>
-
-            <section class="section-content cloth-card" style="padding: 0px 0px 20px 0px">
-                <div class="container">
-                    <div class="row">
-                        <div class="main-card">
-
-                            <a href="/tag/love/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>love.png">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Love collection</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/tag/anniversary/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>anniversary.jpg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Anniversary</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/tag/birthday/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>birthday.jpg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Birthday</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/tag/luxury/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>luxury.jpeg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Luxury</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/category/cake/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>cake.jpg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Cake</h4>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <?php
-
-								}
-
-								echo "<div class='col-md-3 col-6'>
-										<a href='{$link_url}'>
-											<div class='col-card-3'>
-												<div class='event-card'>
-													<div class='img-cd'>
-														<img src='{$product_image}'>
+                    echo "<div class='col-md-3 col-6'>
+							<a href='{$link_url}'>
+								<div class='col-card-3'>
+								    <div class='event-card'>
+										<div class='img-cd'>
+											<img src='{$product_image}'>
 														".(($link_published>date('Y-m-d', strtotime('-7 days'))) ? "<span style='position: absolute;right: 0px;background: #D4946D;padding: 2px 15px;border-bottom-right-radius: 4px;color: #fff;font-size: 13px;margin-right: 20px;border-bottom-left-radius: 4px;' >New</span>" : '' )."
 													</div>
 													<h4>{$product_title}</h4>
@@ -139,47 +59,13 @@
 										</a>
 									</div>";
 
-									$i++;
+                }
 
-							}
-
-						} else {
-
-							echo 'No product found';
-
-						}
-
-					}
-
-				?>
+            ?>
 
         </div>
     </div>
 </section>
-
-<!-- <section class="section-content info-setion" >
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="about-info">
-							<h1>#1 Online Flower Delivery Portal In India</h1>
-							<p>Is there anyone in this world who does not like flowers? Anyone who does not admire the beauty of flowers? Of course not! Because flowers undoubtedly bring a smile on everyone's face, they add the warmth of sunshine to the day and make the soul feel calm and peaceful. And so to speak the language of flowers and express emotions when words are just not enough, FlowerAura has taken the responsibility to become your messenger of Emotions, Send flower bouquet online and add more smiles to your loved one's face.</p>
-
-							<p>But finding a beautiful bunch of flower that speaks your emotions perfectly might be a tough task. That is when FlowerAura steps in with amazing flower gifts of amazing varieties so that you don't have to hop to florist shops around you and be settled with a limited choice. FlowerAura shall be your reliable online florist shop in India so that you can sit at the comfort of your home and order amazing flowers and gifts with a few taps of your finger.</p>
-
-							<p>So, what is their favorite flower? Does your recipient love Roses, Carnations, Gerberas, Anthuriums, orchids, Lilies or? Whichever be the flower of their choice, find it at the best online florist in India- FlowerAura. We deliver freshly cut flowers in the most beautiful and classic arrangements. Wrapped beautifully in different designs and colorful paper, these flower arrangements are the best quality products which shall make your loved one's face shine even brighter.</p>
-
-							<p>So the next time you need to send flowers online in India, you know where to head to.</p>
-
-							<h2>Send Flowers Online from FlowerAura - India's No. 1 Online Florist</h2>
-							<p>FlowerAura stands as a No. 1 online flower shop that doesn't only deliver flowers, gifts, and cakes but makes sure that each of the hampers is wrapped in love too. Along with the pocket-friendly deals come the free shipping that makes FlowerAura top the charts and establishing itself as one of the most reliable online florists in the country.</p>
-
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</section> -->
 
 <?php
 

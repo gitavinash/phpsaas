@@ -16,8 +16,6 @@
 
 	}
 
-	$postFrom=(($currentPage==0) ? 0 : ($currentPage-1)*PER_PAGE_LIMIT );
-
 	if($checkUrl=mysqli_query($connection, "SELECT link_id, category_id, category_title, category_image, category_description, category_type, link_id, link_url as categoryLink, link_status, link_type, link_relation_id, link_site_id, link_published, link_modified, meta_title, meta_description, meta_keyword, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."category ON link_relation_id=category_id INNER JOIN ".TABLE_PREFIX."meta ON link_id=meta_relation_id WHERE link_url='{$categoryURL}' AND link_type='category' AND link_site_id=".SITE_ID." AND meta_type='category' LIMIT 0, 1")) {
 
 		if(mysqli_num_rows($checkUrl)!=0) {
@@ -32,7 +30,7 @@
 
 				/** Fetching post of the category */
 
-				if($categoryPost=mysqli_query($connection, "SELECT link_url, {$category_type}_image, {$category_type}_title, meta_description FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."{$category_type} ON link_relation_id={$category_type}_id INNER JOIN ".TABLE_PREFIX."meta ON {$category_type}_id=meta_relation_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY link_published DESC LIMIT {$postFrom}, ".PER_PAGE_LIMIT)) {
+				if($categoryPost=mysqli_query($connection, "SELECT link_url, {$category_type}_image, {$category_type}_title, meta_description, inventory_price, inventory_mrp, inventory_currency_symbol, inventory_in_stock FROM ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."{$category_type} ON link_relation_id={$category_type}_id INNER JOIN ".TABLE_PREFIX."meta ON {$category_type}_id=meta_relation_id INNER JOIN ".TABLE_PREFIX."inventory ON inventory_relation_id=product_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY link_published DESC ".PAGINATION)) {
 
 					if(mysqli_num_rows($categoryPost)!=0) {
 						while($categoryPostData=mysqli_fetch_assoc($categoryPost)) {
