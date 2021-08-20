@@ -47,15 +47,15 @@
 	define('API_BASE_URL', str_replace('/api', '', str_replace(QUERY_URL, '', strtok(ACTIVE_URL, '?')))); // return only the actual url and remove query string
 
 	/** Pagination Sitemap and Feed Configuration */
-
+	
 	define('PER_PAGE_LIMIT', ((isset($site_pagination_limit)) ? $site_pagination_limit : 10 )); // Per Page Pagination limit
 	define('SITEMAP_LIMIT', ((isset($site_sitemap_limit)) ? $site_sitemap_limit : 1000 )); // total links show on sitemap
 	define('FEED_LIMIT', ((isset($site_feed_limit)) ? $site_feed_limit : 10 )); // total links show on feeds
 
 	// Pagination starting from
 
-	define('PAGE_NO', ((isset($_GET['pg'])) ? mysqli_real_escape_string($connection, $_GET['pg'])-1 : 0)*PER_PAGE_LIMIT);
-	define('PAGINATION', "LIMIT ".PAGE_NO.", ".PER_PAGE_LIMIT);
+	define('PAGE_NO', ((isset($_GET['pg'])) ? mysqli_real_escape_string($connection, $_GET['pg'])-1 : 0));
+	define('PAGINATION', "LIMIT ".PAGE_NO*PER_PAGE_LIMIT.", ".PER_PAGE_LIMIT);
 	define('NEXT_PAGE', ((PAGE_NO==0) ? 2 : PAGE_NO+2 ));
 	define('PREVIOUS_PAGE', PAGE_NO);
 

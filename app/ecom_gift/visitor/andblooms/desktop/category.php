@@ -22,6 +22,7 @@
 <!-- section global platform end -->
 
 <section class="section-content">
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -36,34 +37,65 @@
                 </div>
             </div>
         </div>
+        <?php
+        
+            if(isset($categorySinglePost)) { ?>
+
+
         <div class="row">
 
             <?php
-            
-                for($i=0; $i<sizeof($categorySinglePost); $i++) {
+                    
+                        for($i=0; $i<sizeof($categorySinglePost); $i++) {
 
-                    extract($categorySinglePost[$i]);
+                            extract($categorySinglePost[$i]);
 
-                    echo "<div class='col-md-3 col-6'>
-							<a href='{$link_url}'>
-								<div class='col-card-3'>
-								    <div class='event-card'>
-										<div class='img-cd'>
-											<img src='{$product_image}'>
-														".(($link_published>date('Y-m-d', strtotime('-7 days'))) ? "<span style='position: absolute;right: 0px;background: #D4946D;padding: 2px 15px;border-bottom-right-radius: 4px;color: #fff;font-size: 13px;margin-right: 20px;border-bottom-left-radius: 4px;' >New</span>" : '' )."
-													</div>
-													<h4>{$product_title}</h4>
-													<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp).(($inventory_in_stock!=1) ? '<span style="color: red; margin-left: 20px" >( Out of stock )</span>' : '' )."</p>
-												</div>
-											</div>
-										</a>
-									</div>";
+                            echo "<div class='col-md-3 col-6'>
+                                    <a href='{$link_url}'>
+                                        <div class='col-card-3'>
+                                            <div class='event-card'>
+                                                <div class='img-cd'>
+                                                    <img src='{$product_image}'>
+                                                                ".(($link_published>date('Y-m-d', strtotime('-7 days'))) ? "<span style='position: absolute;right: 0px;background: #D4946D;padding: 2px 15px;border-bottom-right-radius: 4px;color: #fff;font-size: 13px;margin-right: 20px;border-bottom-left-radius: 4px;' >New</span>" : '' )."
+                                                            </div>
+                                                            <h4>{$product_title}</h4>
+                                                            <p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp).(($inventory_in_stock!=1) ? '<span style="color: red; margin-left: 20px" >( Out of stock )</span>' : '' )."</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>";
 
-                }
+                        }
 
-            ?>
+                    ?>
 
         </div>
+        <div class="center">
+            <div class="pagination">
+                <?php
+                
+                    if(PAGE_NO!=0) {
+                        echo "<a href='".BASE_URL."?pg=".PREVIOUS_PAGE."'>Previous page</a>";
+                    }
+                                
+                    if(NEXT_PAGE<=TOTAL_PAGE) {
+                        echo "<a href='".BASE_URL."?pg=".NEXT_PAGE."'>Next page &raquo;</a>";
+                    }
+                    
+                ?>
+            </div>
+        </div>
+
+        <?php
+            } else {
+
+echo "<section class='continue-shopping'>
+    <h1><span>No product found</span></h1>
+    <a href='/' class='btn btn-success'>Go to homepage</a>
+</section>";
+            }
+
+        ?>
     </div>
 </section>
 

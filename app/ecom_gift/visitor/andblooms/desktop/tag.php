@@ -95,8 +95,29 @@
                     ?>
 
         </div>
+        <div class="row">
+            <div class="center">
+                <div class="pagination">
+                    <?php
+
+                                if(PAGE_NO!=0) {
+                                    echo "<a href='".BASE_URL."?pg=".PREVIOUS_PAGE."'>Previous page</a>";
+                                }
+                                
+                                if((PAGE_NO+1)!=TOTAL_PAGE) {
+                                    echo "<a href='".BASE_URL."?pg=".NEXT_PAGE."'>Next page ".TOTAL_PAGE." - ".NEXT_PAGE." &raquo;</a>";
+                                }
+
+                                echo 'Pagination = '.PAGE_NO.' = '.TOTAL_PAGE.' | '.NEXT_PAGE.' = '.TOTAL_PAGE;
+
+
+                            ?>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
 
 <?php
 

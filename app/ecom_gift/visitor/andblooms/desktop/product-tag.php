@@ -172,6 +172,28 @@
     </div>
 </section>
 
+<section class="section-content">
+    <div class="container">
+        <div class="row">
+            <div class="center">
+                <div class="pagination">
+                    <?php
+
+                        if(PAGE_NO!=0) {
+                            echo "<a href='".BASE_URL."?pg=".PREVIOUS_PAGE."'>Previous page</a>";
+                        }
+                                
+                        if(NEXT_PAGE<=TOTAL_PAGE) {
+                            echo "<a href='".BASE_URL."?pg=".NEXT_PAGE."'>Next page &raquo;</a>";
+                        }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <?php
 
     include_once 'footer.php';

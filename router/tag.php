@@ -33,7 +33,23 @@
 
             }
 
-            extract($tagPost[0]); // Extract first result for page meta's
+            extract($tagPost[0]);
+
+            // Count total result for pagination
+				
+			if($totalCategoryPost=mysqli_query($connection, "SELECT count(tag_id) as total_result FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID." ORDER BY tag_time DESC")) {
+
+				if(mysqli_num_rows($totalCategoryPost)!=0) {
+						
+					extract(mysqli_fetch_assoc($totalCategoryPost));
+
+					define('TOTAL_PAGE', round($total_result/PER_PAGE_LIMIT));
+					define('TOTAL_RESULT', $total_result);
+					
+				}
+			}
+            
+            // Extract first result for page meta's
 
             if($pageDetails=mysqli_query($connection, "SELECT tag_id, tag_title, tag_image, tag_description, tag_type FROM ".TABLE_PREFIX."tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=".SITE_ID)) {
 
