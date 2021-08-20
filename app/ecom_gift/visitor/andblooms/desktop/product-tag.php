@@ -149,10 +149,10 @@
 													<div class='event-card'>
 														<div class='img-cd'>
 															<img src='{$product_image}'>
-															".(($link_published>date('Y-m-d', strtotime('-7 days'))) ? "<span style='position: absolute;right: 0px;background: #D4946D;padding: 2px 15px;border-bottom-right-radius: 4px;color: #fff;font-size: 13px;margin-right: 20px;border-bottom-left-radius: 4px;' >New</span>" : '' )."
-														</div>
+                                                        </div>
+                                                        ".(($inventory_in_stock==0) ? "<div class='out-of-stock' ><img src='".USER_IMAGES."sold-out.png' ></div>" : "" )."
 														<h4>{$product_title}</h4>
-														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp).(($inventory_in_stock!=1) ? '<span style="color: red; margin-left: 20px" >( Out of stock )</span>' : '' )."</p>
+														<p class='rate'>".$inventory_currency_symbol.' '.(($inventory_price!=0) ? $inventory_price : $inventory_mrp)."</p>
 													</div>
 												</div>
 											</a>

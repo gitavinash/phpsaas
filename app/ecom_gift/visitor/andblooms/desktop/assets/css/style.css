@@ -1236,7 +1236,8 @@ a.card-link:hover .img-acc img {
 }
 
 .img-cd {
-  height: 250px;
+  width: 220px;
+  height: 220px;
   overflow: hidden;
   position: relative;
 }
@@ -4013,7 +4014,8 @@ footer {
     width: 98%;
   }
   .img-cd {
-    height: 160px;
+    width: 150px;
+    height: 150px;
   }
   .fot-box ul li:before {
     display: none;
@@ -4353,4 +4355,27 @@ form.franchise textarea {
 
 .pagination a:hover:not(.active) {
   background-color: #ddd;
+}
+
+.out-of-stock {
+  position: absolute;
+  float: left;
+  margin-top: -160px;
+  text-align: center;
+  width: 100%;
+  margin-left: -25px;
+}
+
+.out-of-stock img {
+  width: 155px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 768px) {
+  .out-of-stock {
+    margin-top: -120px;
+    /* margin-left: -25px; */
+  }
+  .out-of-stock img {
+    width: 140px;
+  }
 }
