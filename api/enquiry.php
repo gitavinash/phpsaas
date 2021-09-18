@@ -137,10 +137,8 @@
 
     // }
 
-    $subject = 'Franchise enquiry';
-
     $email_body="
-    <h2>New enquiry for Franchise</h2>
+    <h2>{$subject}</h2>
     <table>
         <tr>
             <td>Name: </td>

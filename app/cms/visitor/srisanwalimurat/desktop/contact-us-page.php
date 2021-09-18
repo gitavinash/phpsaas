@@ -14,12 +14,15 @@
         <div class="box-cont-1">
             <h1>Need a Solution</h1>
             <form action="" method="POST">
-                <input type="text" name="" placeholder="Name">
-                <input type="email" name="" placeholder="Email" class="lft">
-                <input type="tel" name="" placeholder="Mobile" class="lft">
-                <textarea placeholder="Enter Message"></textarea>
+                <input type="text" name="name" placeholder="Name">
+                <input type="email" name="email" placeholder="Email" class="lft">
+                <input type="tel" name="mobile" placeholder="Mobile" class="lft">
+                <textarea name="message" placeholder="Enter Message"></textarea>
                 <input type="hidden" name="type" value="enquiry">
                 <input type="hidden" name="action" value="new">
+                <input type="hidden" name="subject" value="Contact us form">
+                <input type="hidden" name="sender" value="c2hyaXNhbndhbGltdXJhdEBnbWFpbC5jb20=">
+                <input type="hidden" name="redirect_url" value="/">
                 <input type="submit" value="Send Your Message">
             </form>
         </div>
