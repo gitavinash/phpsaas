@@ -40,6 +40,10 @@
     </div>
 </footer>
 
+<div class="whatsapp">
+    <a href="https://wa.me/919821005828?text=Hello" target="_blank"><img
+            src="<?php echo SITE_URL ?>/lib/resource/ui/img/whatsapp.png" alt=""></a>
+</div>
 <?php include_once NOTIFICATION.'index.php' ?>
 
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>

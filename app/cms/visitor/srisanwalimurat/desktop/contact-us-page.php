@@ -22,7 +22,8 @@
                 <input type="hidden" name="action" value="new">
                 <input type="hidden" name="subject" value="Contact us form">
                 <input type="hidden" name="sender" value="c2hyaXNhbndhbGltdXJhdEBnbWFpbC5jb20=">
-                <input type="hidden" name="redirect_url" value="/">
+                <input type="hidden" name="redirect_url"
+                    value="/thank-you/?msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                 <input type="submit" value="Send Your Message">
             </form>
         </div>

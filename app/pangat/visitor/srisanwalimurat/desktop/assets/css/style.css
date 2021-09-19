@@ -606,3 +606,14 @@ footer {
     padding: 0px 2%;
   }
 }
+
+.whatsapp {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+}
+
+.whatsapp img {
+  float: left;
+  width: 50px;
+}
