@@ -55,6 +55,15 @@
                         
                         ?>
 
+<script>
+gtag('event', 'conversion', {
+    'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
+    'value': <?php echo $order_total_price ?>,
+    'currency': 'INR',
+    'transaction_id': <?php echo 'OD'.$order_id ?>
+});
+</script>
+
 <section class='continue-shopping'>
     <h1>Thank You<span>Your order number <strong>OD<?php echo $order_id; ?></strong> is successfully received. You may
             get a confirmation call in a while.</span></h1>
