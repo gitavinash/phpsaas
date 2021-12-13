@@ -1,4 +1,5 @@
-<h2 class="heading">Hosting Category <span>All hostings
+<h2 class="heading">Hosting Category <a href="#" class="heading-btn"><i class="fi fi-rr-add"></i> Add new
+        category</a><span>All hostings
         list will be displayed
         here.</span>
 </h2>

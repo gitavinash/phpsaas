@@ -126,6 +126,26 @@
                 </li>
 
                 <li class="header-section-name">
+                    <p>Clients<span>Manage clients.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="notifications/"><i class="fi fi-rr-following"></i> Clients</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All Clients</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New Client</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All Clients</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New Client</a>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="header-section-name">
                     <p>Website<span>Manage layout and other options.</span></p>
                 </li>
 

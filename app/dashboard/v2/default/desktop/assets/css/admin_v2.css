@@ -1430,3 +1430,21 @@ section.form
   letter-spacing: 1px;
   border-radius: 4px;
 }
+
+.heading-btn {
+  background: #4caf50;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 10 px;
+  padding: 5 px 10 px;
+  font-weight: 400;
+  line-height: 24px;
+  float: right;
+}
+
+.heading-btn i {
+  line-height: 18px;
+  float: left;
+  margin-top: 4 px;
+  margin-right: 10 px;
+}
