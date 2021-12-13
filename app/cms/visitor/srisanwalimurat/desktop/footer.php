@@ -70,7 +70,7 @@ $(document).ready(function(e) {
         arrows: false,
         autoplay: true,
         autoplaySpeed: 5000,
-        speed: 8000,
+        speed: 5000,
         infinite: true,
         slidesToShow: 1,
         slidesToScroll: 1
