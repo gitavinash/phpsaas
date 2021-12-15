@@ -51,6 +51,34 @@
     gtag('config', 'AW-628904231');
     </script>
 
+    <?php
+    
+        if(BASE_URL=='/thank-you/') {
+
+            if(isset($id)) {
+
+                if($id!='') {
+
+                    ?>
+
+    <script>
+    gtag('event', 'conversion', {
+        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
+        'value': 1,
+        'currency': 'INR',
+        'transaction_id': ''
+    });
+    </script>
+    <?php
+
+                }
+                
+            }
+
+        }
+
+    ?>
+
 </head>
 
 <body>
