@@ -94,6 +94,8 @@
 			'msg' => ((isset($msg)) ? $msg : 'Not found' ),
 		);
 
+		http_response_code($response['status']);
+
 		echo json_encode($response, TRUE);
 
 	}

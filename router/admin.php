@@ -52,6 +52,7 @@
 		
 		if(!file_exists($dashboardFile)) {
 
+			http_response_code(404);
 			$dashboardFile=$dashboardDirectory.'404.php';
 
 		}

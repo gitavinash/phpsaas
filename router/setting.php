@@ -11,7 +11,8 @@
         require_once $settingPath;
 
     } else {
-
+        
+        http_response_code(404);
         require_once ERROR_404;
 
     }

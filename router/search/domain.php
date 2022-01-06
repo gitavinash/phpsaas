@@ -15,7 +15,7 @@
     if(!file_exists($domainSearchTemplate)) {
 
         // Error 404 template
-
+        http_response_code(404);
         $domainSearchTemplate=ERROR_404;
 
     }

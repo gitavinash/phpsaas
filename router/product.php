@@ -64,7 +64,8 @@
                     }
 
                 } else {
-
+                    
+                    http_response_code(404);
                     include_once ERROR_404;
 
                 }
