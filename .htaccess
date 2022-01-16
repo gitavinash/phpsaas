@@ -2,6 +2,7 @@
     Header set Access-Control-Allow-Origin "*"
 </IfModule>
 
+Options -Indexes
 Options +FollowSymLinks
 
 RewriteEngine On
