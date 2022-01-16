@@ -79,6 +79,8 @@
                         </ul>
                     </div>
                 </li>
+                <li <?php echo ((ADMIN_BASE_URL=='/brand/') ? 'class="active"' : '' ) ?>><a
+                        href="brand.php?type=category"><i class="fas fa-asterisk"></i> Brand</a></li>
                 <li <?php echo ((ADMIN_BASE_URL=='/page/') ? 'class="active"' : '' ) ?>>
                     <a href="page.php?type=list"><i class="fas fa-file"></i> Page</a>
                     <div class="side-menu">
