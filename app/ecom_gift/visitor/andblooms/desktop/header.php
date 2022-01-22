@@ -325,11 +325,12 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="/category/subscription/">Subscription</a>
+                                    <li class="nav-item " style="border-bottom: 3px solid #d4946d;">
+                                        <a class="nav-link" style="color: #d4946d" href="/tag/love/"><b>Valentine's
+                                                Day</b></a>
                                     </li>
                                     <li class="nav-item ">
-                                        <a class="nav-link " href="/franchise/">Franchise</a>
+                                        <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
                                     <!-- <div class=" dn-l log-in">
                                         <li class="nav-item">

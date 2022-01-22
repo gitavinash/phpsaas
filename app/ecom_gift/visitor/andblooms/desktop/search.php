@@ -43,6 +43,7 @@
 
 						if(is_array($queryPost)) {
 
+
 							if(!isset($productListType)) {
 
 								for($i=0; $i<sizeof($queryPost); $i++) {
