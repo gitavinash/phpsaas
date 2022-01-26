@@ -4,6 +4,8 @@
 
         // Call API using the exact url
 
+		$action=((isset($action)) ? $action : '');
+
 		$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
 
 		if(!file_exists($apiCall)) {

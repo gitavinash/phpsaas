@@ -26,7 +26,7 @@
                             <label class="form-lable" id="textareaLabel">Domain details</label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="mrpPrice" type="email" />
+                            <input class="form-control" id="mrpPrice" type="number" />
                             <label class="form-lable" id="mrpPriceLabel">MRP price. ( in ₹ ) <sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <!-- </div>
                         <div class="form-group-box">
                             <p>Select Multiple button ( any one )</p>
                             <div class="box-2 left p-right-10">
@@ -89,13 +89,13 @@
                                 <option value="2">Hello 27</option>
                                 <option value="2">Hello 28</option>
                             </select>
-                        </div>
-                        <div class="box-2">
-                            <div class="form-group">
-                                <button>Next</button>
+                        </div> -->
+                            <div class="box-2">
+                                <div class="form-group">
+                                    <button id="publish">Add new Domain TLD's</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </section>
             </form>
         </div>

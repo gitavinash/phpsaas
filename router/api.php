@@ -1,8 +1,5 @@
 <?php
 
-	echo 'i m here in API';
-	exit();
-
 	/* url router for admin dashboard */
 	
 	header("Content-type: application/json; charset=utf-8");
