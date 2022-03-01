@@ -13,7 +13,7 @@
             <div class="col-md-12">
 
                 <div class="bg-content">
-                    <h1><?php echo str_replace("\'", "'", ucwords(((isset($page_title)) ? $page_title : $tag_title))) ?>
+                    <h1><?php echo str_replace("39s", "'s", str_replace("\'", "'", ucwords(((isset($page_title)) ? $page_title : $tag_title)))) ?>
                     </h1>
                     <h3><?php echo $tag_description ?></h3>
                 </div>

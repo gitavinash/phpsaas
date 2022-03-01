@@ -326,53 +326,12 @@
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
                                     <li class="nav-item " style="border-bottom: 3px solid #d4946d;">
-                                        <a class="nav-link" style="color: #d4946d" href="/tag/love/"><b>Valentine's
+                                        <a class="nav-link" style="color: #d4946d" href="/tag/women/"><b>Women's
                                                 Day</b></a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
-                                    <!-- <div class=" dn-l log-in">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/login/">Login</a>
-                                        </li>
-                                    </div> -->
-                                    <!-- <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Birthday
-									      </a>
-									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									      </div> 
-									  </li>
-									  <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Occasions
-									      </a>
-									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									      </div> 
-									  </li>
-									  <li class="nav-item dropdown">
-									    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Corporate Gifts
-									      </a>
-									      <div class="dropdown-menu">
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									        <a class="dropdown-item" href="#">Link 1</a>
-									      </div> 
-									  </li> -->
                                 </ul>
 
                                 <a href="/contact/" class="cont-menu">Contact Us</a>
