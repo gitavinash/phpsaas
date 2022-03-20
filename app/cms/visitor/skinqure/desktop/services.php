@@ -1,0 +1,508 @@
+<?php
+
+    require_once 'header.php';
+
+?>
+<section>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center p-0">
+                <div class="inner_page_banner contact_banner_bg">
+                    <div class="inner_content">
+                        <p>Service Skin Clinic</p>
+                        <div class="text-start"><a href="index.html">Home</a> <span><i
+                                    class="fa fa-chevron-right"></i></span><span>Service Skin Clinic</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section_spacing_top section_spacing_bottom">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="section_heading mb-md-4">
+                            <p class="text-center">Our Process</p>
+                            <h3 class="text-center">How to do the Service?</h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
+                        <div class="w-100 relative service_box">
+                            <figure class="m-0">
+                                <img src="<?php echo USER_IMAGES ?>ser-1.jpg" alt="" class="img-fluid w-100">
+                            </figure>
+                            <div class="written_text p-3">
+                                <h5>
+                                    Appointment
+                                </h5>
+                                <p class="m-0">
+                                    Totam ex amet consectetur adipisicing elit. Totam ex molestias nemo
+                                    culpa debitis labore .
+                                </p>
+                                <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
+                                    Learn More
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
+                        <div class="w-100 relative service_box">
+                            <figure class="m-0">
+                                <img src="<?php echo USER_IMAGES ?>ser-2.jpg" alt="" class="img-fluid w-100">
+                            </figure>
+                            <div class="written_text p-3">
+                                <h5>
+                                    Appointment
+                                </h5>
+                                <p class="m-0">
+                                    Totam ex amet consectetur adipisicing elit. Totam ex molestias nemo
+                                    culpa debitis labore .
+                                </p>
+                                <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
+                                    Learn More
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
+                        <div class="w-100 relative service_box">
+                            <figure class="m-0">
+                                <img src="<?php echo USER_IMAGES ?>ser-3.jpg" alt="" class="img-fluid w-100">
+                            </figure>
+                            <div class="written_text p-3">
+                                <h5>
+                                    Appointment
+                                </h5>
+                                <p class="m-0">
+                                    Totam ex amet consectetur adipisicing elit. Totam ex molestias nemo
+                                    culpa debitis labore .
+                                </p>
+                                <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
+                                    Learn More
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section_spacing_top">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
+                        <div class="w-100 second_img service_first relative">
+                            <img src="<?php echo USER_IMAGES ?>img-04.jpg" alt="" class="img-fluid ">
+                            <div class="top_img">
+                                <img src="<?php echo USER_IMAGES ?>ser-5.jpg" alt="" class="img-fluid w-100">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
+                        <div class="w-100 secondaboutpage ">
+                            <div class="section_heading">
+                                <p class="text-start">Extraordinary Services</p>
+                                <h3 class="text-start mb-md-5">Why You Should Choose Cura?</h3>
+                            </div>
+                            <div class="d-flex w-100 align-items-center mb-5">
+                                <div class="icon me-2">
+                                    <img src="<?php echo USER_IMAGES ?>calendar.png" alt="" class="img-fluid">
+                                </div>
+                                <div class="text text-start">
+                                    <h5>
+                                        10 Years of Experience
+                                    </h5>
+                                    <p class="m-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
+                                        ullamcorper.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 align-items-center mb-5">
+                                <div class="icon me-2">
+                                    <img src="<?php echo USER_IMAGES ?>consultation.png" alt="" class="img-fluid">
+                                </div>
+                                <div class="text text-start">
+                                    <h5>
+                                        Free Consultation
+                                    </h5>
+                                    <p class="m-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
+                                        ullamcorper.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 align-items-center mb-4">
+                                <div class="icon me-2">
+                                    <img src="<?php echo USER_IMAGES ?>customer-satisfaction.png" alt=""
+                                        class="img-fluid">
+                                </div>
+                                <div class="text text-start">
+                                    <h5>
+                                        100% Guaranteed
+                                    </h5>
+                                    <p class="m-0 text-start">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
+                                        ullamcorper.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="greenbg  section_spacing_top sectionpadding">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <div class="row">
+
+                    <div class="col-md-4 position-relative">
+                        <div class="section_heading">
+                            <p class="text-start">See Our Work</p>
+                            <h3 class="text-start">Ready to Transform Yourself?</h3>
+                        </div>
+
+                        <p class="separate_quote">
+                            <img src="<?php echo USER_IMAGES ?>left-quote.png">
+                            Incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exrcitation ullamco laboris nisi ut aliquip ex ea commodo consequat auteirure dolor in
+                            reprehen derit in volup tate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </p>
+                        <a href="" class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="bimg">
+                            <a class="lightbox" href="#before">
+                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/photoshop-face-before.jpg"
+                                    class="w-100">
+                                <h4>Before</h4>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="bimg">
+                            <a class="lightbox" href="#after">
+                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/photoshop-face-after.jpg"
+                                    class="w-100">
+                                <h4>After</h4>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="lightbox-target" id="before">
+                        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/photoshop-face-before.jpg" />
+                        <a class="lightbox-close" href="#"></a>
+                    </div>
+                    <div class="lightbox-target" id="after">
+                        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/photoshop-face-after.jpg" />
+                        <a class="lightbox-close" href="#"></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="sectionpadding youtube_testimonial">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <div class="w-100 video-box relative">
+                    <div class="section_heading">
+                        <p class="text-center text-white">Watch Video</p>
+                        <h3 class="text-center mb-md-4 text-white">Video Demo of a particular treatment/service</h3>
+                    </div>
+                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
+                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
+                    <a class="btn youtube youtubbtn" data-youtube="https://youtube.com/embed/G9uhEmQtlps" href="#">
+                        <i class="md hydrated fa fa-play"> </i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="video-modal d-flex justify-content-center align-items-center d-none v-none" id="video-modal">
+    <div class="video-body relative p-md-4 p-1">
+        <div class="close-video">X</div>
+        <div class="youtub-link w-100 h100">
+            <iframe src="https://youtube.com/embed/-_xPGQnljT4" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+</div>
+<section class="">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 h-100 formfield relative">
+                            <img src="<?php echo USER_IMAGES ?>08.jpg" alt="" class="img-fluid w-100 h100 cover">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 bg-primary formfield text-white form-box ">
+                            <h4>
+                                Get Started with Cura Today !
+                            </h4>
+                            <p class="mb-md-4">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto expedita
+                                dignissimos odit in quisquam libero corrupti, pariatur magni officiis minima.
+                            </p>
+                            <form action="" class="w-100">
+                                <div class="row ">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="First Name"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="Last Name"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="Contact Number"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="Email Address"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <div class="w-100 form-group">
+                                            <textarea name="" id="" placeholder="Your Message"
+                                                class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="w-100 d-flex justify-content-center">
+                                            <input type="submit" value="Get Consultation" class="btn text-white">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section_spacing_top ">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="w-100 h100 p-md-3">
+                            <div class="section_heading">
+                                <p class="text-start">Welcome to Cura</p>
+                                <h3 class="text-start mb-md-4">Our Promise to our Clients in transforming their skin
+                                </h3>
+                            </div>
+                            <p class="text-start servicep">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis culpa aspernatur
+                                harum animi necessitatibus rem est quo, amet, repellat fugiat libero, assumenda
+                                facere. Ullam, minus assumenda delectus ipsum eos illum neque, ex eligendi ut,
+                                eveniet fuga sequi laboriosam enim rem at consectetur. Sapiente error cupiditate
+
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="w-100 h100">
+                            <img src="<?php echo USER_IMAGES ?>doctor-1.jpg" alt="" class="img-fluid w-100 h100 cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section_spacing_top section_spacing_bottom">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="row">
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="w-100 bg-white shadow subscription_box">
+                            <div class="sub_tag">
+                                <p class="m-0">
+                                    $ 0
+                                </p>
+                                <p class="m-0">
+                                    Month
+                                </p>
+                            </div>
+                            <div class="sub_tag_shadow"></div>
+                            <div class="sub-header w-100">
+                                <img src="<?php echo USER_IMAGES ?>makeup.png" alt="" class="img-fluid">
+                            </div>
+                            <div class="subscription_body">
+                                <h5>
+                                    FREE PLAN
+                                </h5>
+                                <h2>
+                                    Basic
+                                </h2>
+                                <ul>
+                                    <li>
+                                        3 user report
+                                    </li>
+                                    <li>
+                                        10 downloads per day
+                                    </li>
+                                    <li>
+                                        Daily content Update
+                                    </li>
+                                    <li>
+                                        Full support
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="sub_footer  ">
+                                <a href="" class="btn  w-100">
+                                    Choose the Plan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="w-100 bg-white shadow subscription_box">
+                            <div class="sub_tag">
+                                <p class="m-0">
+                                    $ 0
+                                </p>
+                                <p class="m-0">
+                                    Month
+                                </p>
+                            </div>
+                            <div class="sub_tag_shadow"></div>
+                            <div class="sub-header w-100">
+                                <img src="<?php echo USER_IMAGES ?>makeup.png" alt="" class="img-fluid">
+                            </div>
+                            <div class="subscription_body">
+                                <h5>
+                                    FREE PLAN
+                                </h5>
+                                <h2>
+                                    Basic
+                                </h2>
+                                <ul>
+                                    <li>
+                                        3 user report
+                                    </li>
+                                    <li>
+                                        10 downloads per day
+                                    </li>
+                                    <li>
+                                        Daily content Update
+                                    </li>
+                                    <li>
+                                        Full support
+                                    </li>
+                                    <li>
+                                        Daily content Update
+                                    </li>
+                                    <li>
+                                        Full support
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="sub_footer ">
+                                <a href="" class="btn  w-100">
+                                    Choose the Plan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="w-100 bg-white shadow subscription_box">
+                            <div class="sub_tag">
+                                <p class="m-0">
+                                    $ 0
+                                </p>
+                                <p class="m-0">
+                                    Month
+                                </p>
+                            </div>
+                            <div class="sub_tag_shadow"></div>
+                            <div class="sub-header w-100">
+                                <img src="<?php echo USER_IMAGES ?>makeup.png" alt="" class="img-fluid">
+                            </div>
+                            <div class="subscription_body">
+                                <h5>
+                                    FREE PLAN
+                                </h5>
+                                <h2>
+                                    Basic
+                                </h2>
+                                <ul>
+                                    <li>
+                                        3 user report
+                                    </li>
+                                    <li>
+                                        10 downloads per day
+                                    </li>
+                                    <li>
+                                        Daily content Update
+                                    </li>
+                                    <li>
+                                        Full support
+                                    </li>
+                                    <li>
+                                        3 user report
+                                    </li>
+                                    <li>
+                                        10 downloads per day
+                                    </li>
+                                    <li>
+                                        Daily content Update
+                                    </li>
+                                    <li>
+                                        Full support
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="sub_footer  ">
+                                <a href="" class="btn  w-100">
+                                    Choose the Plan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<?php
+
+require_once 'footer.php';
+
+?>
