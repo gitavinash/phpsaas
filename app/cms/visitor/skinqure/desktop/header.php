@@ -48,6 +48,9 @@
                                         </ul>
                                     </li>
                                     <li class="nav-item">
+                                        <a class="nav-link" href="/pricing/">Pricing</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" href="/why-us/">Why Us</a>
                                     </li>
                                     <li class="nav-item">

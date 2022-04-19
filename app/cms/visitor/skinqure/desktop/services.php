@@ -24,17 +24,21 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="row">
-                    <p>Laser hair Reduction is used to reduce unwanted hair. Common treatment locations include legs,
+                    <p class="service-heading">Laser hair Reduction is used to reduce unwanted hair. Common treatment
+                        locations include legs,
                         armpits, upper lip, chin and the bikini line. However, it's possible to treat unwanted hair in
                         nearly any area, except the eyelid or surrounding area. </p>
-                    <p>During laser hair removal, a laser emits a light that is absorbed by the pigment (melanin) in the
+                    <p class="service-heading">During laser hair removal, a laser emits a light that is absorbed by the
+                        pigment (melanin) in the
                         hair. The light energy is converted to heat, which damages the tube-shaped sacs within the skin
                         (hair follicles) that produce hairs. This damage inhibits or delays future hair growth.</p>
-                    <p>Laser hair reduction usually requires six to 8 sessions. The interval between treatments will
+                    <p class="service-heading">Laser hair reduction usually requires six to 8 sessions. The interval
+                        between treatments will
                         vary depending on the location. On areas where hair grows quickly, such as the upper lip, the
                         treatment might be repeated in four to eight weeks. On areas of slow hair growth, such as the
                         back, the treatment might be every 12 to 16 weeks.</p>
-                    <p>Plan your consultation today and get smooth skin for yourself, leaving behind the worry of
+                    <p class="service-heading">Plan your consultation today and get smooth skin for yourself, leaving
+                        behind the worry of
                         unwanted hair on your body. No waxing, No hair removal creams! </p>
                 </div>
             </div>
