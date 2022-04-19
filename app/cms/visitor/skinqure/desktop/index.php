@@ -20,34 +20,37 @@
                         </div>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="<?php echo USER_IMAGES ?>banner1.png" class="d-block w-100" alt="...">
-                                <div class="carousel-caption d-md-block">
+                                <img src="<?php echo USER_IMAGES ?>banner/banner_1.jpeg" class="d-block w-100"
+                                    alt="...">
+                                <!-- <div class="carousel-caption d-md-block">
                                     <h5 class="animated slideInUp">Welcome To Cura</h5>
                                     <h3 class="animated slideInUp">Improving Looks <br> Changing Lives</h3>
                                     <p class="animated slideInUp">Lorem ipsum dolor sit, consectetur elit, incididunt
                                         dolore derit in voluptate.</p>
                                     <a href="" class="btn carouselbtn animated slideInUp">Make An Appointment</a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="carousel-item">
-                                <img src="<?php echo USER_IMAGES ?>banner2.jpg" class="d-block w-100" alt="...">
-                                <div class="carousel-caption d-md-block">
+                                <img src="<?php echo USER_IMAGES ?>banner/banner_2.jpeg" class="d-block w-100"
+                                    alt="...">
+                                <!-- <div class="carousel-caption d-md-block">
                                     <h5 class="animated slideInUp">Welcome To Cura</h5>
                                     <h3 class="animated slideInUp">Shining Face <br> Brings Happiness</h3>
                                     <p class="animated slideInUp">Lorem ipsum dolor sit, consectetur elit, incididunt
                                         dolore derit in voluptate.</p>
                                     <a href="" class="btn carouselbtn animated slideInUp">Make An Appointment</a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="carousel-item">
-                                <img src="<?php echo USER_IMAGES ?>banner3.jpg" class="d-block w-100" alt="...">
-                                <div class="carousel-caption d-md-block">
+                                <img src="<?php echo USER_IMAGES ?>banner/banner_3.jpeg" class="d-block w-100"
+                                    alt="...">
+                                <!-- <div class="carousel-caption d-md-block">
                                     <h5 class="animated slideInUp">Welcome To Cura</h5>
                                     <h3 class="animated slideInUp">Healthy Skin is a <br> Key to Wellness</h3>
                                     <p class="animated slideInUp">Lorem ipsum dolor sit, consectetur elit, incididunt
                                         dolore derit in voluptate.</p>
                                     <a href="" class="btn carouselbtn animated slideInUp">Make An Appointment</a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
