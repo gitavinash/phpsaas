@@ -5,35 +5,35 @@
                 <div class="row justify-content-center">
                     <div class="col-md-3">
                         <img src="<?php echo USER_IMAGES ?>logo.png" class="footer_logo">
-                        <p>121 King St, Melbourne VIC 3000, Australia</p>
-                        <p>Phone: 888-123-45678</p>
-                        <p>Email: Info@example.com</p>
+                        <p>J-215, Saket, New Delhi-17</p>
+                        <p>Phone: +91 92665 55500</p>
+                        <p>Email: info@skinqure.in</p>
                     </div>
                     <div class="col-md-3">
                         <h3 class="footer_heading">Quick Links</h3>
 
                         <ul>
                             <li><a href="/">Home</a></li>
-                            <li><a href="/about/">About Us</a></li>
-                            <li><a href="">Blogs</a></li>
-                            <li><a href="/contact/">Contact Us</a></li>
+                            <li><a href="/about-us/">About Us</a></li>
+                            <li><a href="/blogs/">Blogs</a></li>
+                            <li><a href="/contact-us/">Contact Us</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
-                        <h3 class="footer_heading">Quick Links</h3>
+                        <h3 class="footer_heading">About Team</h3>
 
                         <ul>
-                            <li><a href="">Doctors</a></li>
-                            <li><a href="">Book Appointment</a></li>
-                            <li><a href="">Blogs</a></li>
-                            <li><a href="/contact/">Contact Us</a></li>
+                            <li><a href="#">Our Dermatologists</a></li>
+                            <li><a href="#">Aestheticians</a></li>
+                            <li><a href="#">Managers</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
-                        <h3 class="footer_heading">Contact Us</h3>
-                        <p>121 King St, Melbourne VIC 3000, Australia</p>
-                        <p>Phone: 888-123-45678</p>
-                        <p>Email: Info@example.com</p>
+                        <h3 class="footer_heading">Services</h3>
+                        <ul>
+                            <li><a href="">Laser Hair reduction</a></li>
+                            <li><a href="">Laser for acne scars</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
 <div class="container-fluid copyright">
     <div class="row justify-content-center">
         <div class="col-md-10 text-center">
-            <p>Copyright @2022. All Rights Reserved</p>
+            <p>Copyright @ <?php echo date('Y') ?>. All Rights Reserved</p>
         </div>
     </div>
 </div>
