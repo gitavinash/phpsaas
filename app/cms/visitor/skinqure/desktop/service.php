@@ -9,19 +9,13 @@
             <div class="col-md-12 text-center p-0">
                 <div class="inner_page_banner" style="background-image: url(<?php echo $service_image ?>)">
                     <div class="inner_content">
-                        <<<<<<< HEAD:app/cms/visitor/skinqure/desktop/service.php <p>
+                        <p>
                             <?php echo ucwords($service_title) ?></p>
-                            <div class="text-start"><a href="index.html">Home</a> <span><i
-                                        class="fa fa-chevron-right"></i></span><span>Service</span>
-                                <span><i
-                                        class="fa fa-chevron-right"></i></span><span><?php echo ucwords($service_title) ?></span>
-                            </div>
-                            =======
-                            <p>Laser Hair reduction</p>
-                            <div class="text-start"><a href="index.html">Home</a> <span><i
-                                        class="fa fa-chevron-right"></i></span><span>Laser Hair reduction</span></div>
-                            >>>>>>>
-                            60e009d620323788b36fa66e64521e25545da723:app/cms/visitor/skinqure/desktop/services.php
+                        <div class="text-start"><a href="index.html">Home</a> <span><i
+                                    class="fa fa-chevron-right"></i></span><span>Service</span>
+                            <span><i
+                                    class="fa fa-chevron-right"></i></span><span><?php echo ucwords($service_title) ?></span>
+                        </div>
                     </div>
                 </div>
             </div>

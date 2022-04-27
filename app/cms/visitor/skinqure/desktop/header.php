@@ -32,35 +32,30 @@
                                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/about/">About</a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="nav-link" href="/services/">Services</a>
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">
-                                            Doctors
+                                            About Team
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <li><a class="dropdown-item" href="#">Our Doctors</a></li>
-                                            <li><a class="dropdown-item" href="#">Doctor Details</a></li>
+                                            <li><a class="dropdown-item" href="#">Our Dermatologists</a></li>
+                                            <li><a class="dropdown-item" href="#">Aestheticians</a></li>
+                                            <li><a class="dropdown-item" href="#">Managers</a></li>
                                         </ul>
                                     </li>
-                                    <li class="nav-item">
+                                    <!-- <li class="nav-item">
                                         <a class="nav-link" href="/pricing/">Pricing</a>
-                                    </li>
+                                    </li> -->
                                     <li class="nav-item">
                                         <a class="nav-link" href="/why-us/">Why Us</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">Blog</a>
+                                        <a class="nav-link" href="#">WOW inclusive</a>
                                     </li>
-                                    <!-- <li class="nav-item">
-                                        <a class="nav-link" href="/contact/">Contact</a>
-                                    </li> -->
                                 </ul>
-                                <a href="" class="btn book_appoint">Book An Appointment</a>
+                                <!-- <a href="" class="btn book_appoint">Book An Appointment</a> -->
 
                             </div>
                         </div>
