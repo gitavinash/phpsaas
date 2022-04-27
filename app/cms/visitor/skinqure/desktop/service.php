@@ -9,12 +9,19 @@
             <div class="col-md-12 text-center p-0">
                 <div class="inner_page_banner" style="background-image: url(<?php echo $service_image ?>)">
                     <div class="inner_content">
-                        <p><?php echo ucwords($service_title) ?></p>
-                        <div class="text-start"><a href="index.html">Home</a> <span><i
-                                    class="fa fa-chevron-right"></i></span><span>Service</span>
-                            <span><i
-                                    class="fa fa-chevron-right"></i></span><span><?php echo ucwords($service_title) ?></span>
-                        </div>
+                        <<<<<<< HEAD:app/cms/visitor/skinqure/desktop/service.php <p>
+                            <?php echo ucwords($service_title) ?></p>
+                            <div class="text-start"><a href="index.html">Home</a> <span><i
+                                        class="fa fa-chevron-right"></i></span><span>Service</span>
+                                <span><i
+                                        class="fa fa-chevron-right"></i></span><span><?php echo ucwords($service_title) ?></span>
+                            </div>
+                            =======
+                            <p>Laser Hair reduction</p>
+                            <div class="text-start"><a href="index.html">Home</a> <span><i
+                                        class="fa fa-chevron-right"></i></span><span>Laser Hair reduction</span></div>
+                            >>>>>>>
+                            60e009d620323788b36fa66e64521e25545da723:app/cms/visitor/skinqure/desktop/services.php
                     </div>
                 </div>
             </div>
@@ -67,13 +74,13 @@
                                 <h5>
                                     Appointment
                                 </h5>
-                                <p class="m-0">
+                                <!-- <p class="m-0">
                                     Totam ex amet consectetur adipisicing elit. Totam ex molestias nemo
                                     culpa debitis labore .
                                 </p>
                                 <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
                                     Learn More
-                                </a>
+                                </a> -->
 
                             </div>
                         </div>
@@ -85,15 +92,15 @@
                             </figure>
                             <div class="written_text p-3">
                                 <h5>
-                                    Appointment
+                                    Meet Dermatologist for your session protocols
                                 </h5>
-                                <p class="m-0">
+                                <!-- <p class="m-0">
                                     Totam ex amet consectetur adipisicing elit. Totam ex molestias nemo
                                     culpa debitis labore .
-                                </p>
-                                <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
+                                </p> -->
+                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
                                     Learn More
-                                </a>
+                                </a> -->
 
                             </div>
                         </div>
@@ -105,15 +112,15 @@
                             </figure>
                             <div class="written_text p-3">
                                 <h5>
-                                    Appointment
+                                    Smooth skin
                                 </h5>
-                                <p class="m-0">
+                                <!-- <p class="m-0">
                                     Totam ex amet consectetur adipisicing elit. Totam ex molestias nemo
                                     culpa debitis labore .
-                                </p>
-                                <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
+                                </p> -->
+                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
                                     Learn More
-                                </a>
+                                </a> -->
 
                             </div>
                         </div>
@@ -140,7 +147,7 @@
                         <div class="w-100 secondaboutpage ">
                             <div class="section_heading">
                                 <p class="text-start">Extraordinary Services</p>
-                                <h3 class="text-start mb-md-5">Why You Should Choose Cura?</h3>
+                                <h3 class="text-start mb-md-5">Why chose SkinQure for Laser Hair Reduction? </h3>
                             </div>
                             <div class="d-flex w-100 align-items-center mb-5">
                                 <div class="icon me-2">
@@ -148,12 +155,12 @@
                                 </div>
                                 <div class="text text-start">
                                     <h5>
-                                        10 Years of Experience
+                                        More than 13 Years of Experience
                                     </h5>
-                                    <p class="m-0">
+                                    <!-- <p class="m-0">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
                                         ullamcorper.
-                                    </p>
+                                    </p> -->
                                 </div>
                             </div>
                             <div class="d-flex w-100 align-items-center mb-5">
@@ -162,12 +169,12 @@
                                 </div>
                                 <div class="text text-start">
                                     <h5>
-                                        Free Consultation
+                                        World-Class technology
                                     </h5>
-                                    <p class="m-0">
+                                    <!-- <p class="m-0">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
                                         ullamcorper.
-                                    </p>
+                                    </p> -->
                                 </div>
                             </div>
                             <div class="d-flex w-100 align-items-center mb-4">
@@ -177,12 +184,12 @@
                                 </div>
                                 <div class="text text-start">
                                     <h5>
-                                        100% Guaranteed
+                                        Procedures sone by Dermatologists or aestheticians.
                                     </h5>
-                                    <p class="m-0 text-start">
+                                    <!-- <p class="m-0 text-start">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
                                         ullamcorper.
-                                    </p>
+                                    </p> -->
                                 </div>
                             </div>
                         </div>
@@ -257,7 +264,8 @@
                     </div>
                     <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
                         incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
-                    <a class="btn youtube youtubbtn" data-youtube="https://youtube.com/embed/G9uhEmQtlps" href="#">
+                    <a class="btn youtube youtubbtn" data-youtube="https://youtube.com/embed/y3oRIIk3TD4"
+                        href="https://www.youtube.com/watch?v=y3oRIIk3TD4">
                         <i class="md hydrated fa fa-play"> </i>
                     </a>
 
@@ -348,16 +356,20 @@
                     <div class="col-md-6">
                         <div class="w-100 h100 p-md-3">
                             <div class="section_heading">
-                                <p class="text-start">Welcome to Cura</p>
+                                <p class="text-start">Welcome to <?php echo SITE_NAME ?></p>
                                 <h3 class="text-start mb-md-4">Our Promise to our Clients in transforming their skin
                                 </h3>
                             </div>
                             <p class="text-start servicep">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis culpa aspernatur
-                                harum animi necessitatibus rem est quo, amet, repellat fugiat libero, assumenda
-                                facere. Ullam, minus assumenda delectus ipsum eos illum neque, ex eligendi ut,
-                                eveniet fuga sequi laboriosam enim rem at consectetur. Sapiente error cupiditate
-
+                                SkinQure clinic is the torch bearer of the latest technology and state of the art
+                                equipment for all your requirements for skin care and hair treatments. Our team of
+                                experienced and qualified doctors are able to provide the best in class services to
+                                our
+                                patients. Our list of satisfied customers is the testimony to the care and attention
+                                to
+                                detail that every member of our staff provide to our patients in our quest to make
+                                them
+                                more beautiful.
                             </p>
 
                         </div>

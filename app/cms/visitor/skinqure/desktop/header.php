@@ -19,7 +19,7 @@
                 <div class="col-12 col-md-10 text-center">
                     <nav class="navbar navbar-expand-lg navbar-light">
                         <div class="container-fluid">
-                            <a class="navbar-brand" href="#"><img src="<?php echo USER_IMAGES ?>logo.png"
+                            <a class="navbar-brand" href="/"><img src="<?php echo USER_IMAGES ?>logo.png"
                                     class="logo_img"></a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -46,6 +46,9 @@
                                             <li><a class="dropdown-item" href="#">Our Doctors</a></li>
                                             <li><a class="dropdown-item" href="#">Doctor Details</a></li>
                                         </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/pricing/">Pricing</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="/why-us/">Why Us</a>

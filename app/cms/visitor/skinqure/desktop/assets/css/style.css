@@ -1011,6 +1011,10 @@ footer ul li a {
   color: #959595;
 }
 
+p.service-heading {
+  font-size: 19px;
+}
+
 /*--------about & service------------*/
 /* -about page start --*/
 
