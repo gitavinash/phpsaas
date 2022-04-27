@@ -31,7 +31,7 @@
                             </div>
                             <div class="contact_content">
                                 <h5>Address</h5>
-                                <p>121 King St, Melbourne VIC 3000, Australia</p>
+                                <p>J-215, Saket, New Delhi-17</p>
                             </div>
                         </div>
                     </div>
@@ -42,8 +42,8 @@
                             </div>
                             <div class="contact_content">
                                 <h5>Contact</h5>
-                                <p>Mobile: <b>(888)-123-4587</b></p>
-                                <p>Mail: <b>info@example.com</b></p>
+                                <p>Mobile: <b>+91 92665 55500</b></p>
+                                <p>Mail: <b>info@skinqure.in</b></p>
                             </div>
                         </div>
                     </div>
@@ -54,8 +54,7 @@
                             </div>
                             <div class="contact_content">
                                 <h5>Hour of Operation</h5>
-                                <p>Monday - Friday: 09:00 - 20:00</p>
-                                <p>Sunday & Saturday: 10:00 - 18:00</p>
+                                <p>Monday - Sunday: 10:00 AM - 07:00 PM</p>
                             </div>
                         </div>
                     </div>
@@ -76,7 +75,7 @@
                         <p class="text-start contact_para">Incididunt ut labore et dolore magna aliqua. Ut enim ad minim
                         </p>
                         <iframe class="contact_frame"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d448183.7390930067!2d76.81307038634928!3d28.646677254552095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x37205b715389640!2sDelhi!5e0!3m2!1sen!2sin!4v1645540364497!5m2!1sen!2sin"
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14022.362361377878!2d77.215978!3d28.521963!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x41aadc03fd71030!2sSkinQure!5e0!3m2!1sen!2sin!4v1651023163939!5m2!1sen!2sin"
                             style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                     <div class="col-md-5">
@@ -101,6 +100,7 @@
                             <div class="form-group">
                                 <input type="submit" class="btn btncontact" value="Submit Now and Get Consultation"
                                     name="">
+                                <p style="margin-top: 10px"><strong>Note :</strong> Consultation fees is ₹ 900/-</p>
                             </div>
                         </form>
                     </div>
