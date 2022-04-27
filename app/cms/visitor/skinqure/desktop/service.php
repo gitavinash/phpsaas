@@ -7,12 +7,41 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12 text-center p-0">
-                <div class="inner_page_banner contact_banner_bg">
+                <div class="inner_page_banner" style="background-image: url(<?php echo $service_image ?>)">
                     <div class="inner_content">
-                        <p>Service Skin Clinic</p>
+                        <p><?php echo ucwords($service_title) ?></p>
                         <div class="text-start"><a href="index.html">Home</a> <span><i
-                                    class="fa fa-chevron-right"></i></span><span>Service Skin Clinic</span></div>
+                                    class="fa fa-chevron-right"></i></span><span>Service</span>
+                            <span><i
+                                    class="fa fa-chevron-right"></i></span><span><?php echo ucwords($service_title) ?></span>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section_spacing_top ">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="w-100 h100">
+                            <div class="section_heading">
+                                <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
+                            </div>
+
+                            <?php echo ucwords($service_description) ?>
+
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6">
+                        <div class="w-100 h100">
+                            <img src="<?php echo USER_IMAGES ?>doctor-1.jpg" alt="" class="img-fluid w-100 h100 cover">
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>
