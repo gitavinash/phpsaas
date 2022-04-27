@@ -9,9 +9,10 @@
             <div class="col-md-12 text-center p-0">
                 <div class="inner_page_banner contact_banner_bg">
                     <div class="inner_content">
-                        <p>Why Skin Clinic</p>
+                        <p><?php echo ucwords($page_title) ?></p>
                         <div class="text-start"><a href="index.html">Home</a> <span><i
-                                    class="fa fa-chevron-right"></i></span><span>Why Choose Us</span></div>
+                                    class="fa fa-chevron-right"></i></span><span><?php echo ucwords($page_title) ?></span>
+                        </div>
                     </div>
                 </div>
             </div>

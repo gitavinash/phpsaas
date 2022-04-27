@@ -15,6 +15,7 @@
                         <ul>
                             <li><a href="/">Home</a></li>
                             <li><a href="/about-us/">About Us</a></li>
+                            <li><a href="/why-us/">Why Us</a></li>
                             <li><a href="/blogs/">Blogs</a></li>
                             <li><a href="/contact-us/">Contact Us</a></li>
                         </ul>
@@ -23,9 +24,10 @@
                         <h3 class="footer_heading">About Team</h3>
 
                         <ul>
-                            <li><a href="#">Our Dermatologists</a></li>
-                            <li><a href="#">Aestheticians</a></li>
-                            <li><a href="#">Managers</a></li>
+                            <li><a href="/dr-jangid/">Dr. Jangid</a></li>
+                            <li><a href="/our-dermatologists/">Our Dermatologists</a></li>
+                            <li><a href="/aestheticians/">Aestheticians</a></li>
+                            <li><a href="/managers/">Managers</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">

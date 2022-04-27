@@ -40,9 +40,10 @@
                                             About Team
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <li><a class="dropdown-item" href="#">Our Dermatologists</a></li>
-                                            <li><a class="dropdown-item" href="#">Aestheticians</a></li>
-                                            <li><a class="dropdown-item" href="#">Managers</a></li>
+                                            <li><a class="dropdown-item" href="/our-dermatologists/">Our
+                                                    Dermatologists</a></li>
+                                            <li><a class="dropdown-item" href="/aestheticians/">Aestheticians</a></li>
+                                            <li><a class="dropdown-item" href="/managers/">Managers</a></li>
                                         </ul>
                                     </li>
                                     <!-- <li class="nav-item">
@@ -52,10 +53,10 @@
                                         <a class="nav-link" href="/why-us/">Why Us</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">WOW inclusive</a>
+                                        <a class="nav-link" href="/wow-inclusive/">WOW inclusive</a>
                                     </li>
                                 </ul>
-                                <!-- <a href="" class="btn book_appoint">Book An Appointment</a> -->
+                                <a href="#" class="btn book_appoint">Book An Appointment</a>
 
                             </div>
                         </div>

@@ -378,7 +378,7 @@
         </div>
     </div>
 </section>
-<section class="section_spacing_top section_spacing_bottom">
+<!-- <section class="section_spacing_top section_spacing_bottom">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
@@ -535,7 +535,7 @@
         </div>
     </div>
 
-</section>
+</section> -->
 <?php
 
 require_once 'footer.php';
