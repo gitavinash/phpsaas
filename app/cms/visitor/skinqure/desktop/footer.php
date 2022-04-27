@@ -33,8 +33,7 @@
                     <div class="col-md-3">
                         <h3 class="footer_heading">Services</h3>
                         <ul>
-                            <li><a href="">Laser Hair reduction</a></li>
-                            <li><a href="">Laser for acne scars</a></li>
+                            <li><a href="/service/default/laser-hair-reduction/">Laser Hair reduction</a></li>
                         </ul>
                     </div>
                 </div>
