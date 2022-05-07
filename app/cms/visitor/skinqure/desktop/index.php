@@ -20,37 +20,39 @@
                         </div>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="<?php echo USER_IMAGES ?>banner/banner_1.jpeg" class="d-block w-100"
-                                    alt="...">
-                                <!-- <div class="carousel-caption d-md-block">
-                                    <h5 class="animated slideInUp">Welcome To Cura</h5>
-                                    <h3 class="animated slideInUp">Improving Looks <br> Changing Lives</h3>
-                                    <p class="animated slideInUp">Lorem ipsum dolor sit, consectetur elit, incididunt
-                                        dolore derit in voluptate.</p>
-                                    <a href="" class="btn carouselbtn animated slideInUp">Make An Appointment</a>
-                                </div> -->
+                                <img src="<?php echo USER_IMAGES ?>banner1.png" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-md-block">
+                                    <h3 class="animated slideInUp">Making What's <br />Good Even Batter With Our
+                                        Cosmetic
+                                        Treatments!</h3>
+                                    <p class="animated slideInUp">Advanced Cosmetic Treatments Are Available at Skinqure
+                                        to Make You Gorgeous
+                                        and Gives You the Beausy Which you Deserve.</p>
+                                    <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
+                                </div>
                             </div>
                             <div class="carousel-item">
-                                <img src="<?php echo USER_IMAGES ?>banner/banner_2.jpeg" class="d-block w-100"
-                                    alt="...">
-                                <!-- <div class="carousel-caption d-md-block">
-                                    <h5 class="animated slideInUp">Welcome To Cura</h5>
-                                    <h3 class="animated slideInUp">Shining Face <br> Brings Happiness</h3>
-                                    <p class="animated slideInUp">Lorem ipsum dolor sit, consectetur elit, incididunt
-                                        dolore derit in voluptate.</p>
-                                    <a href="" class="btn carouselbtn animated slideInUp">Make An Appointment</a>
-                                </div> -->
+                                <img src="<?php echo USER_IMAGES ?>banner2.jpg" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-md-block">
+                                    <h3 class="animated slideInUp">Hair Transplant <br />
+                                        With State of the Art
+                                        3D Approach</h3>
+                                    <p class="animated slideInUp">Get Your Hair Transplant Done at SkinQure and Boost
+                                        Your
+                                        Confidence</p>
+                                    <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
+                                </div>
                             </div>
                             <div class="carousel-item">
-                                <img src="<?php echo USER_IMAGES ?>banner/banner_3.jpeg" class="d-block w-100"
-                                    alt="...">
-                                <!-- <div class="carousel-caption d-md-block">
-                                    <h5 class="animated slideInUp">Welcome To Cura</h5>
-                                    <h3 class="animated slideInUp">Healthy Skin is a <br> Key to Wellness</h3>
-                                    <p class="animated slideInUp">Lorem ipsum dolor sit, consectetur elit, incididunt
-                                        dolore derit in voluptate.</p>
-                                    <a href="" class="btn carouselbtn animated slideInUp">Make An Appointment</a>
-                                </div> -->
+                                <img src="<?php echo USER_IMAGES ?>banner3.jpg" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-md-block">
+                                    <h3 class="animated slideInUp">Laser Off<br />
+                                        Your Extra Hair!</h3>
+                                    <p class="animated slideInUp">Goodbye to All the Unwanted Hairs With SkinQure. We
+                                        Will Ensure You Have a
+                                        Pain Free Experience</p>
+                                    <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
+                                </div>
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
@@ -78,19 +80,21 @@
                 <div class="row">
                     <div class="col-md-4 mb-3 mb-md-0">
                         <div class="bespoke_package bespoke_package1">
-                            <h5 class="title text-end">Boost Your<br>Confidence</h5>
+                            <h5 class="title text-end">Improving looks<br />Changing Lives</h5>
                             <a href="#" class="text-end float-end link">Know More</a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3 mb-md-0">
                         <div class="bespoke_package bespoke_package2">
-                            <h5 class="title text-start">Top Laser<br>Treatment</h5>
+                            <h5 class="title text-start">Best In class
+                                <br>Laser Treatment
+                            </h5>
                             <a href="#" class="text-start float-start link">Know More</a>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="bespoke_package bespoke_package3">
-                            <h5 class="title text-start">Boost Your<br>Confidence</h5>
+                            <h5 class="title text-start">Healthy Skin<br>Key to wellness</h5>
                             <a href="#" class="text-start float-start link">Know More</a>
                         </div>
                     </div>
@@ -112,7 +116,8 @@
                     <div class="col-md-12">
                         <div class="section_heading">
                             <p class="text-start">How It Works</p>
-                            <h3 class="text-start">Simple Step to Get Beautiful Skin</h3>
+                            <h3 class="text-start">Becomes: Meet our Dermatologists<strong>Experience SkinQure
+                                    Clinics</strong></h3>
                         </div>
                     </div>
                 </div>
@@ -132,9 +137,9 @@
                             </div>
                             <div class="col-10 col-md-8">
                                 <div class="process_div">
-                                    <h6 class="text-start title">Make A Decision</h6>
-                                    <p class="text-start process_para">Lorem ipsum dolor sit amet, consectetur
-                                        adipisicing elit, sed do eismod incididunt.</p>
+                                    <h6 class="text-start title">Book an Appointment</h6>
+                                    <p class="text-start process_para">Call or email us with your contact details and
+                                        your concerns, our patient relationship manager will be in touch with you</p>
                                 </div>
                             </div>
                             <div class="d-none col-md-2">
@@ -150,9 +155,9 @@
                             </div>
                             <div class="col-10 col-md-8">
                                 <div class="process_div">
-                                    <h6 class="text-start title">Make A Decision</h6>
-                                    <p class="text-start process_para">Lorem ipsum dolor sit amet, consectetur
-                                        adipisicing elit, sed do eismod incididunt.</p>
+                                    <h6 class="text-start title">Meet Experienced Dermatologist</h6>
+                                    <p class="text-start process_para">Have a detailed discussion with our Dermatologist
+                                        or Cosmetologist about your concerns and get a treatment protocols</p>
                                 </div>
                             </div>
                             <div class="d-none col-md-2">
@@ -168,9 +173,10 @@
                             </div>
                             <div class="col-10 col-md-8">
                                 <div class="process_div">
-                                    <h6 class="text-start title">Make A Decision</h6>
-                                    <p class="text-start process_para">Lorem ipsum dolor sit amet, consectetur
-                                        adipisicing elit, sed do eismod incididunt.</p>
+                                    <h6 class="text-start title">Get the desired results</h6>
+                                    <p class="text-start process_para">Feel good with the desired results and healthy
+                                        hair & skin. Connect with patient relationship manager for any future concerns.
+                                    </p>
                                 </div>
                             </div>
                             <div class="d-none col-md-2">
@@ -180,8 +186,8 @@
 
                         <div class="row mt-md-5">
                             <div class="col-12">
-                                <p class="ready_to_start textcolor text-start">Ready to Start? <span><a href="">Let's
-                                            Talk</a></span></p>
+                                <p class="ready_to_start textcolor text-start">Ready to book an appointment? <span><a
+                                            href="">Click here</a></span></p>
                             </div>
                         </div>
                     </div>
@@ -214,21 +220,26 @@
                     </div>
                     <div class="col-md-6 position-relative">
                         <div class="section_heading">
-                            <p class="text-start">See Our Work</p>
-                            <h3 class="text-start">Ready to Transform Yourself?</h3>
+                            <!-- <p class="text-start">About SkinQure</p> -->
+                            <h3 class="text-start">About SkinQure</h3>
                         </div>
 
-                        <p class="ready_para">Incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exrcitation ullamco laboris nisi ut aliquip ex ea commodo consequat auteirure dolor
-                            in reprehen derit in volup tate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                        <p class="ready_para">SkinQure is known for it’s patient oriented approach, every team is
+                            committed to patient’s satisfaction. SkinQure clinic, under the guidance of Dr Jangid has
+                            continuously evolved and offered best possible treatments & procedures to patients.
+                            Technology used at SkinQure is World-Class that can only be experienced in very few
+                            dermatology & cosmetic centres in North India.</p>
 
                         <p class="separate_quote">
-                            <img src="<?php echo USER_IMAGES ?>left-quote.png">
-                            Incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exrcitation ullamco laboris nisi ut aliquip ex ea commodo consequat auteirure dolor in
-                            reprehen derit in volup tate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Currently SkinQure stands with trust of over 5 lac patients world-wide and it is growing at
+                            a great pace, providing patients Skin and Hair services at its state-of-the-art clinic;
+                            geared for comfort. As a recognized expert in both medical and cosmetic skin care
+                            treatments, SkinQure is uniquely positioned to provide the best, safest, most effective
+                            treatment for a wide range of issues based on each patient’s skin type, health history and
+                            objectives. Working with both adult and paediatric patients of all skin types, SkinQure
+                            specializes in creating one-of-a-kind treatment approaches designed to achieve optimal
+                            results.
                         </p>
-                        <a href="" class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
                     </div>
                 </div>
             </div>
@@ -247,9 +258,6 @@
                     <h3 class="text-center mb-md-4">Discover a New You</h3>
                 </div>
 
-
-
-
             </div>
             <div class="col-md-12 text-center p-0">
                 <div class="swiper-container">
@@ -258,7 +266,7 @@
                             <div class="card-image">
                                 <img src="<?php echo USER_IMAGES ?>service1.jpg" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Acne Scarring</h2>
+                                    <h2>Laser Hair Reduction</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
@@ -270,7 +278,7 @@
                             <div class="card-image">
                                 <img src="<?php echo USER_IMAGES ?>service2.jpg" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Acne Scarring</h2>
+                                    <h2>Acne Scars</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
@@ -282,7 +290,7 @@
                             <div class="card-image">
                                 <img src="<?php echo USER_IMAGES ?>service3.jpg" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Acne Scarring</h2>
+                                    <h2>Tattoo Removal</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
@@ -294,7 +302,7 @@
                             <div class="card-image">
                                 <img src="<?php echo USER_IMAGES ?>service4.jpg" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Acne Scarring</h2>
+                                    <h2>Carbon Laser Toning</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
@@ -306,7 +314,211 @@
                             <div class="card-image">
                                 <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Acne Scarring</h2>
+                                    <h2>Chemical Peels / Organic Peels</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Open Pore Treatments</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Under Eye Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Lip Enhancement</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Double Chin Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Filler Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>HIFU Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Laser Resurfacing</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Fillers Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Facelift</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Birth Mark Removal</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Acne Treatments</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Acne Scar Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Melasma Pigmentation Treatment</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Allergy Treatments</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Mole Removal</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Cyst Removal</h2>
+                                </div>
+                                <div class="data-box1">
+                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <a href="">Make An Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="card-image">
+                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <div class="data-box">
+                                    <h2>Nail Surgery</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
@@ -347,27 +559,15 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active testimonial-item">
                                     <h3>Service is Outstanding!</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
-                                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
-                                    <h5>John Miller</h5>
-                                    <h6>New York</h6>
-                                </div>
-                                <div class="carousel-item testimonial-item">
-                                    <h3>Service is Outstanding!</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
-                                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
-                                    <h5>John Miller</h5>
-                                    <h6>New York</h6>
-                                </div>
-                                <div class="carousel-item testimonial-item">
-                                    <h3>Service is Outstanding!</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
-                                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
-                                    <h5>John Miller</h5>
-                                    <h6>New York</h6>
+                                    <p>It was a blessing when my friend recommended me to visit Dr Jangid at SkinQure
+                                        back in 2016.</p>
+                                    <p>In my profession, looks have been one of the driving factor in career growth. I
+                                        regularly take recommended procedures at SkinQure & some elective ones that help
+                                        me to maintain confidence in professional as we as personal life!</p>
+                                    <h5>Harshita Sharma</h5>
                                 </div>
                             </div>
-                            <div class="carousel-indicators">
+                            <!-- <div class="carousel-indicators">
                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
                                     class="active" aria-current="true" aria-label="Slide 1"></button>
                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
@@ -384,11 +584,11 @@
                                 data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Next</span>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class="col-md-6 testimonialimg_div">
-                        <img src="<?php echo USER_IMAGES ?>testimonialimg.jpg" class="w-100">
+                        <img src="<?php echo USER_IMAGES ?>harshita_sharma.jpg" class="w-100">
                     </div>
                 </div>
             </div>
@@ -402,23 +602,23 @@
             <div class="col-md-10 text-center">
                 <div class="row">
                     <div class="col-6 col-lg-3 stats">
-                        <div class="counting" data-count="2507">0</div>
+                        <div class="counting" data-count="25000">0</div>
                         <h5>Non-Surgical</h5>
                     </div>
 
                     <div class="col-6 col-lg-3 stats">
-                        <div class="counting" data-count="5238">0</div>
-                        <h5>Happy Customers</h5>
+                        <div class="counting" data-count="30000">0</div>
+                        <h5>Laser Hair Reduction</h5>
                     </div>
 
                     <div class="col-6 col-lg-3 stats">
-                        <div class="counting" data-count="1275">0</div>
-                        <h5>Face Surgery</h5>
+                        <div class="counting" data-count="10000">0</div>
+                        <h5>Hair Transplant</h5>
                     </div>
 
                     <div class="col-6 col-lg-3 stats">
-                        <div class="counting" data-count="100">0</div>
-                        <h5>Acne Treatment</h5>
+                        <div class="counting" data-count="100000">0</div>
+                        <h5>General Dermatology</h5>
                     </div>
                 </div>
             </div>
@@ -436,7 +636,7 @@
                     <div class="col-md-3">
                         <div class="app_img position-relative mt-md-5">
                             <div class="app_experience">
-                                <p>20 Yrs<br>Experience</p>
+                                <p>13 Yrs<br>Experience</p>
                             </div>
                             <img src="<?php echo USER_IMAGES ?>08.jpg">
                         </div>
@@ -445,12 +645,20 @@
                         <div class="middle_para">
                             <div class="section_heading">
                                 <p class="text-start">Why Choose Us</p>
-                                <h3 class="text-start mb-md-4">Why Clients Choose Our Clinic</h3>
+                                <h3 class="text-start mb-md-4">Why Patient prefer SkinQure Clinic</h3>
                             </div>
 
-                            <p class="text-start middle_p">Incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                veniam, quis nostrud exrcitation. ullamco laboris nisi ut aliquip ex ea commodo.
-                                consequat auteirure dolor in reprehen derit in volup tate velit esse cillum dolore.</p>
+                            <p class="text-start middle_p">Beauty lies in beholder’s eyes is what they say. But what if
+                                your own eyes do not like what they see in the mirror? Maybe its time for that long due
+                                visit to the SkinQure skin clinic– the first choice for all the skincare and hair
+                                treatments.</p>
+                            <p class="text-start middle_p">SkinQure clinic is the torch bearer of the latest technology
+                                and state of the art
+                                equipment for all your requirements for skin care and hair treatments. Our team of
+                                experienced and qualified doctors are able to provide the best in class services to our
+                                patients. Our list of satisfied customers is the testimony to the care and attention to
+                                detail that every member of our staff provide to our patients in our quest to make them
+                                more beautiful.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -485,6 +693,6 @@
 </section>
 <?php
 
-  require_once 'footer.php';
+  require_once 'footer.php'
 
 ?>
