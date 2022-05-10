@@ -8,9 +8,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="card-ban">
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>1.png"></div>
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>2.png"></div>
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>3.png"></div>
+                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/1.png"></div>
+                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/2.png"></div>
+                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/3.png"></div>
             </div>
         </div>
     </div>
