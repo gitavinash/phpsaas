@@ -1,0 +1,17 @@
+.blog_section{
+    background-color: #0f0f0f;
+}
+section{
+    padding: 100px 0;
+}
+.blog_section  .blog_box {
+    text-align: left;
+    padding-bottom: 30px;
+    margin: 20px;
+}
+.blog_box .excerpt{
+    font-size: 18px;
+    color: #dfdfdf;
+    line-height: 30px;
+    margin-bottom: 30px;
+}

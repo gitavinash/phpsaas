@@ -1,0 +1,133 @@
+.about_section{
+    background-color: #0f0f0f;
+}
+.about_section .beardcrumb{
+    background-image: url(../images/breadcrumb_bg_image.webp);
+}
+
+.about_section .about_us .img{
+    background: none;
+    background-size: 100% 50%;
+    background-repeat: no-repeat;
+    padding: 30px;
+}
+.about_section .about_us .next:hover .img{
+    background-image: url(../images/aboutbg.png);
+}
+.about_us {
+    transition: all .5s;
+    background-color: #0f0f0f;
+    padding: 100px 0;
+}
+.about_us .content{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    text-align: left;
+}
+.about_us .content i{
+    font-size: 26px;
+    color: #e2a53f;
+    margin-bottom: 20px;
+}
+.about_us .content p  {
+    font-size: 18px;
+    line-height: 25px;
+}
+
+
+.about_section .about_us .next{
+    margin-bottom: 40px;
+}
+.about_section .about_us .next:nth-child(even){
+    flex-direction: row-reverse;
+}
+
+.testimonials .content p  {
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.testimonials .box{
+    padding: 20px;
+    display: flex;
+}
+.testimonials .box .img{
+    max-width: 200px;
+    width: 100%;
+}
+.testimonials img{
+    filter: grayscale(100%);
+}
+.testimonials .box .content{
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.testimonials .slick-slider >  button{
+    display: none !important;
+}
+.testimonials  .slick-dots{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.testimonials  .slick-dots button{
+    height: 20px;
+    width: 20px;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    margin-right: 10px;
+}
+.testimonials{
+    padding-bottom: 60px;
+}
+.testimonials .name{
+    margin: 10px 0;
+}
+
+.testimonials .slick-dots .slick-active button{
+    background-color: #e2a53f;
+    color: #e2a53f;
+}
+.team .overlay li{
+    background: #333;
+    padding: 10px;
+    margin: 0 10px;
+    height: 35px;
+    width: 36px;
+    line-height: 0;
+}
+.team .overlay li a{
+    color: #fff;
+}
+.team .wrapperclass{
+    position: relative;
+}
+.team .wrapperclass .overlay {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #e2a53f6e;
+    transform: scale(0);
+    transition: all .6s;
+}
+
+.team .box:hover .overlay{ 
+    opacity: 1;
+    transform: scale(1);
+}
+.team {
+    padding: 100px 0;
+}

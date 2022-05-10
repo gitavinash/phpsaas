@@ -1,0 +1,131 @@
+.blog_section{
+    background-color: #0f0f0f;
+}
+section{
+    padding: 100px 0 0;
+}
+.head{
+    font-family: 'ZCOOL XiaoWei', serif;
+    color: #7e7e7e;
+    font-size: 20px;
+}
+.accordian .box{
+    position: relative;
+    margin-bottom: 10px;
+}
+.accordian .box a{
+    font-family: 'Catamaran', sans-serif;
+    color: #7e7e7e;
+    font-size: 18px;
+}
+.accordian .box a:hover{
+    color: #e2a53f;
+}
+.accordian .answer{
+    display: none;
+    width: 100%;
+}
+
+
+.accordian .ques{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.accordian .span:hover ~ .answer{
+    background-color: white;
+}
+.accordian .answer{
+    margin: 5px 0 10px;
+}
+
+/* slider */
+.slider .product{
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+.slider .product > *{
+    margin-bottom: 10px;
+}
+.rating i{
+    margin-right: 5px;
+}
+
+.slider .product .rate{
+    margin-bottom: 10px;
+}
+.products .product{
+    margin-bottom: 60px;
+}
+.box-border{
+    border: 1px solid #dfdfdf;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+.box-border p{
+    margin-bottom: 0px;
+}
+.box-border select{
+    background: transparent;
+    border: 1px solid #dfdfdf;
+    color: #dfdfdf;
+    border-radius: 0px;
+}
+.box-border option{
+    background: #7e7e7e;
+}
+.name a{
+    color: white;
+}
+.name a:hover{
+    color: #e2a53f;
+}
+
+/* slider css */
+.carousel-control-next-icon, .carousel-control-prev-icon{
+    position: absolute;
+    bottom: -95px;
+    margin-bottom: 40px;
+    padding: 10px;
+    border: 1px solid #e2a53f;
+    background-size: 60%;
+}
+.carousel-control-next-icon{
+    left: -150%;
+    transform: translateX(-100%);
+}
+.carousel-control-prev-icon{
+    left: 100%;
+    transform: translateX(100%);
+}
+.sidebttn{
+    display: none;
+}
+.sidebars{
+    transition: all .5s linear;
+}
+@media (max-width : 768px){
+    .sidebars{
+        background-color: #0f0f0f;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 99;
+        padding-top: 5%;
+    }
+    .sidebttn{
+        display: block;
+        position: fixed;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        border: 1px solid #e2a53f;
+        padding: 20px;
+        width: fit-content;
+    }
+}

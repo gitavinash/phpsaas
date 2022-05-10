@@ -1,0 +1,182 @@
+@media (min-width: 769px) and (max-width: 1500px) {
+  .brands .product .content .bttn {
+    padding: 8px 16px;
+  }
+
+  .contact_section {
+    padding: 20px;
+  }
+
+  .products .product {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    margin: 0 20px;
+  }
+
+  .large_head {
+    font-size: 40px;
+  }
+
+  .banner_section {
+    margin: 0;
+  }
+
+  .header_section .container {
+    max-width: 100%;
+  }
+
+  .banner_section .carousel-inner .first,
+  .banner_section .carousel-inner .second {
+    background-size: cover;
+    padding: 80px 0;
+  }
+
+  .banner_section .right {
+    padding: 0;
+  }
+
+  .banner_section .carousel-inner .content {
+    height: unset;
+  }
+
+  .banner_section .carousel-inner .left {
+    display: none;
+  }
+
+  .banner_section .carousel-indicators {
+    bottom: 0;
+    left: 0;
+    flex-direction: row;
+  }
+
+  .newdesign .row img {
+    width: 100%;
+  }
+
+  .knowme .large_head {
+    display: none;
+  }
+
+  .knowme .row {
+    margin: 0;
+  }
+
+  .knowme .row .img {
+    position: unset;
+    padding: 40px;
+  }
+
+  .knowme .row .content {
+    text-align: center;
+  }
+
+  .knowme .content p {
+    margin-bottom: 45px;
+  }
+
+  .about .content p,
+  .knowme .content p,
+  .brands .med_head~p {
+    font-size: 20px;
+  }
+
+  .brands .product {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .brands .product .content {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .banner_video {
+    padding: 80px 0;
+    min-height: unset;
+  }
+
+  .large_head {
+    color: #7f7f7f;
+  }
+
+  .newdesign {
+    padding-top: unset !important;
+  }
+
+  .newdesign>h1 {
+    margin-top: unset !important;
+  }
+
+  .newdesign .container {
+    margin-top: 100px;
+  }
+
+  .newdesign .container>.row {
+    padding: 30px;
+  }
+
+  .blog .blog_box {
+    margin-bottom: 60px;
+  }
+
+  .header_section i {
+    color: white;
+  }
+
+  .faqs {
+    margin: 20px;
+  }
+
+  /* about us page */
+  .about_us .content {
+    padding: 30px;
+  }
+
+  .testimonials .box {
+    flex-direction: column;
+  }
+
+  .testimonials .box .img {
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .testimonials .box .content {
+    padding: 20px;
+  }
+
+  .testimonials .wrapperclass {
+    padding: 20px;
+  }
+
+  .details .row {
+    --bs-gutter-x: 0;
+  }
+
+  .contact_section .details .box,
+  .contact_section .form form {
+    margin: 20px;
+  }
+
+  .beardcrumb div {
+    text-align: center;
+  }
+
+  .subblog_section {
+    padding: 20px;
+  }
+
+  .products .product {
+    margin-bottom: 30px;
+  }
+  .labelbox p span , .labelbox>div span{
+    margin-left: 50px;
+  }
+  .labelbox p .value{
+    margin-left: 60px;
+  }
+}
