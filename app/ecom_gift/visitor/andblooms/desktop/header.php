@@ -325,10 +325,10 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <li class="nav-item " style="border-bottom: 3px solid #d4946d;">
-                                        <a class="nav-link" style="color: #d4946d" href="/tag/mother/"><b>Mother's
+                                    <!-- <li class="nav-item " style="border-bottom: 3px solid #d4946d;">
+                                        <a class="nav-link" style="color: #d4946d" href="/tag/women/"><b>Women's
                                                 Day</b></a>
-                                    </li>
+                                    </li> -->
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
