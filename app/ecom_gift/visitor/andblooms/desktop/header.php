@@ -321,7 +321,7 @@
                                         <a class="nav-link" href="/category/planters/">Planters</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link " href="/category/cake/">Cake</a>
+                                        <a class="nav-link " href="/category/cake/">Cakes &amp; Hampers</a>
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
