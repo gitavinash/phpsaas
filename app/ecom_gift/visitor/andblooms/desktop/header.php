@@ -326,7 +326,7 @@
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
                                     <li class="nav-item " style="border-bottom: 3px solid #d4946d;">
-                                        <a class="nav-link" style="color: #d4946d" href="/tag/women/"><b>Women's
+                                        <a class="nav-link" style="color: #d4946d" href="/tag/father/"><b>Father's
                                                 Day</b></a>
                                     </li>
                                     <li class="nav-item ">
