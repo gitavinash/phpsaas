@@ -41,12 +41,13 @@
         <tr style="height: 80px">
             <td>
                 <p><a
-                        href="service.php?type=edit&editor=true&id=<?php echo $service_id; ?>"><?php echo $service_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a>
+                        href="service.php?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><?php echo $service_title.(($link_status!='200') ? '<strong> — Draft </strong>' : '' ); ?></a>
                 </p>
                 <div class="hover">
-                    <a href="service.php?type=edit&editor=true&id=<?php echo $service_id; ?>"><i
+                    <a href="service.php?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><i
                             class="fas fa-pencil-alt"></i> Edit</a>
-                    <a href="service.php?type=service&id=<?php echo $service_id; ?>"><i class="fas fa-trash"></i>
+                    <a href="service.php?type=service&id=<?php echo base64_encode($service_id); ?>"><i
+                            class="fas fa-trash"></i>
                         Delete</a>
                     <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
                 </div>

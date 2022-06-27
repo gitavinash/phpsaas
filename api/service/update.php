@@ -141,7 +141,7 @@
 
                             $status=200;
                             $msg='service upload successfully';
-                            $redirect="/dashboard/service/?type=edit&editor=true&id={$id}";
+                            $redirect="/dashboard/service/?type=edit&editor=true&id=".base64_encode($id);
                             mysqli_query($connection, "COMMIT");
 
                         } else {

@@ -91,7 +91,7 @@
 
                                 $status=200;
                                 $msg='Service add successfully';
-                                $redirect='/dashboard/service/?type=edit&editor=true&id='.$serviceID;
+                                $redirect='/dashboard/service/?type=edit&editor=true&id='.base64_encode($serviceID);
                                 mysqli_query($connection, "COMMIT");
 
                             } else {
