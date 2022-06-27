@@ -1303,8 +1303,7 @@ footer ul li a{
         transform: translateY(-50%);
     }
     
-    .service_box::before {
-        content: "Book Appointment";
+    .service_box .service-title {
         position: absolute;
         top: 0;
         left: 0;
@@ -1318,6 +1317,11 @@ footer ul li a{
         transition: all 0.3s;
         font-size: 20px;
         font-weight: 600;
+    }
+
+    .service_box:hover .service-title {
+        transform: translateY(0px);
+        opacity: 0;
     }
     
     .service_box figure {
