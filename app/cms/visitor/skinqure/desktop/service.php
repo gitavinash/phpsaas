@@ -55,8 +55,8 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <div class="section_heading mb-md-4">
-                            <p class="text-center">Our Process</p>
-                            <h3 class="text-center">How to do the Service?</h3>
+                            <p class="text-center">Treatment options</p>
+                            <h3 class="text-center">How we treat Acne!</h3>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
@@ -89,7 +89,7 @@
                             <div class="written_text p-3">
                                 <p class="m-0">
                                     We have specialised chemical peels for treating acne conditions. They are used as
-                                    per dermatologistâ€™s recommendation.
+                                    per dermatologist’s recommendation.
                                 </p>
                                 <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
                                     Learn More
@@ -209,7 +209,7 @@
                             video, click to hear her SkinQure experience.
                         </p>
                         <a href="https://www.youtube.com/watch?v=VUA4SVORS50" target="_blank" class="btn btn_quote"><i
-                                class="fa fa-play-circle"></i> Watch Full Video</a>
+                                class="fa fa-play-circle"></i> Watch Video</a>
                     </div>
                     <div class="col-6 col-md-4">
                         <div class="bimg">
@@ -251,8 +251,7 @@
                         <p class="text-center text-white">Watch Video</p>
                         <h3 class="text-center mb-md-4 text-white">Video Demo of a particular treatment/service</h3>
                     </div>
-                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
-                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
+                    <p class="text-white">Dr Jangid explains about Acne, skincare and treatment options</p>
                     <a class="btn youtube youtubbtn" target="_blank"
                         data-youtube="https://youtube.com/embed/76oQSWR6b-M"
                         href="https://www.youtube.com/watch?v=76oQSWR6b-M">
