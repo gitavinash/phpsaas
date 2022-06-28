@@ -358,7 +358,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="w-100 h100">
-                            <img src="<?php echo USER_IMAGES ?>doctor-1.jpg" alt="" class="img-fluid w-100 h100 cover">
+                            <img src="<?php echo USER_IMAGES ?>our-commitment.jpg" alt=""
+                                class="img-fluid w-100 h100 cover">
                         </div>
                     </div>
                 </div>
