@@ -1387,6 +1387,27 @@ footer ul li a{
     background-color: #e69472;
     font-weight: 600;
 }
+
+.treatment {
+    padding: 120px 0px;
+}
+
+.treatment .service_box {
+    background: #EFF0F2;
+    min-height: 450px;
+    max-height: 450px;
+}
+.treatment .service_box h4 {
+    padding: 10px;
+}
+.treatment .service_box p {
+    padding: 10px;
+}
+
+.treatment img {
+    box-shadow: 0px 0px 8px rgb(0 0 0 / 30%);
+}
+
 .secondaboutpage .icon img
 {
     width: 4rem;
@@ -1593,6 +1614,10 @@ footer ul li a{
 
     @media(max-width: 600px)
     {
+
+.treatment {
+    padding: 500px 0px;
+}
         .logo_img {
     width: 8rem;
 }
@@ -1985,6 +2010,9 @@ footer ul li {
     }
 }
 @media screen and (max-width: 610px){
+    .treatment {
+        padding: 50px 0px;
+    }
     .book_appoint{
         padding: 0.5rem 1rem;
     }
@@ -1993,6 +2021,9 @@ footer ul li {
     }
 }
 @media screen and (max-width: 480px) {
+    .treatment {
+        padding: 40px 0px;
+    }
     .header .item-right {
         flex: 0 0 60% !important;
     }
@@ -2001,7 +2032,48 @@ footer ul li {
     }
 }
 @media screen and (max-width: 400px) {
+    .treatment {
+        padding: 30px 0px;
+    }
     .book_appoint{
         display: none;
     }
+}
+
+.owl-carousel .owl-item img {
+    display: block;
+    width: 17%;
+    float: left;
+    border: 5px solid #fff;
+    border-radius: 20px;
+    margin-left: 54px;
+    margin-right: 35px;
+    margin-top: 15px;
+}
+.testimonial-item.equal-height.style-6 {
+    background-color: #eee;
+    border-radius: 10px;
+    margin: 10px;
+}
+.cell-right {
+    text-align: center;
+    margin-right: 80px;
+    padding-top: 35px;
+    padding-bottom: 20px;
+}
+.testimonial-name {
+    font-weight: 600;
+}
+.testimonial-content.quote {
+    padding: 17px 55px;
+}
+.et_right_sidebar #main-content .container:before{
+    display: none;
+}
+#main-content .container {
+    padding-top: 10px;
+}
+i.fa.fa-quote-left {
+    padding: 0px 10px;
+    color: #999;
 }
