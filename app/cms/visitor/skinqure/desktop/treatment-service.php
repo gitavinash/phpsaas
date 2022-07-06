@@ -41,79 +41,6 @@
     </div>
 </section>
 
-<section class="section_spacing_top section_spacing_bottom">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <div class="section_heading mb-md-4">
-                            <!-- <p class="text-center">Condition</p> -->
-                            <h3 class="text-center">Condition</h3>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
-                        <div class="w-100 relative service_box">
-                            <figure class="m-0">
-                                <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="service-title">
-                                <h3>Medication</h3>
-                            </div>
-                            <div class="written_text p-3">
-                                <p class="m-0">
-                                    Assessing your condition, our dermatologist will recommend you a course of
-                                    medications
-                                </p>
-                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
-                                    Learn More
-                                </a> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
-                        <div class="w-100 relative service_box">
-                            <figure class="m-0">
-                                <img src="<?php echo USER_IMAGES ?>service-steps/2.png" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="service-title">
-                                <h3>Chemical Peels</h3>
-                            </div>
-                            <div class="written_text p-3">
-                                <p class="m-0">
-                                    We have specialised chemical peels for treating acne conditions. They are used as
-                                    per dermatologist’s recommendation.
-                                </p>
-                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
-                                    Learn More
-                                </a> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
-                        <div class="w-100 relative service_box">
-                            <figure class="m-0">
-                                <img src="<?php echo USER_IMAGES ?>service-steps/3.png" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="service-title">
-                                <h3>Lasers</h3>
-                            </div>
-                            <div class="written_text p-3">
-                                <p class="m-0">
-                                    SkinQure being the pioneer in Lasers technology, we have machines available that
-                                    help you get rid of Acne problems.
-                                </p>
-                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
-                                    Learn More
-                                </a> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 <section class="greenbg section_spacing_top section_spacing_bottom treatment">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -122,7 +49,7 @@
                     <div class="col-md-12 text-center">
                         <div class="section_heading mb-md-4">
                             <!-- <p class="text-center">Condition</p> -->
-                            <h3 class="text-center">Treatment</h3>
+                            <h3 class="text-center">Treatment Options</h3>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 mb-lg-0 mb-md-0 mb-3">
@@ -131,8 +58,13 @@
                                 <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt="" class="img-fluid w-100">
                             </figure>
                             <h4 class="text-center">AcneQure Priming Treatment</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit.</p>
+                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                                white heads, Dull and oily skin.</p>
+                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                                of sunscreen
+                            </p>
+                            <p><strong>Duration </strong>20 -30 min</p>
+                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 mb-lg-0 mb-md-0 mb-3">
@@ -141,8 +73,13 @@
                                 <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt="" class="img-fluid w-100">
                             </figure>
                             <h4 class="text-center">AcneQure Cleansing facial</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit.</p>
+                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                                white heads, Dull and oily skin.</p>
+                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                                of sunscreen
+                            </p>
+                            <p><strong>Duration </strong>20 -30 min</p>
+                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 mb-lg-0 mb-md-0 mb-3">
@@ -151,8 +88,13 @@
                                 <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt="" class="img-fluid w-100">
                             </figure>
                             <h4 class="text-center">AcneQure BetaPeel</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit.</p>
+                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                                white heads, Dull and oily skin.</p>
+                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                                of sunscreen
+                            </p>
+                            <p><strong>Duration </strong>20 -30 min</p>
+                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 mb-lg-0 mb-md-0 mb-3">
@@ -161,8 +103,13 @@
                                 <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt="" class="img-fluid w-100">
                             </figure>
                             <h4 class="text-center">AcneQure R-Peel</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit.</p>
+                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                                white heads, Dull and oily skin.</p>
+                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                                of sunscreen
+                            </p>
+                            <p><strong>Duration </strong>20 -30 min</p>
+                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
                         </div>
                     </div>
                 </div>
@@ -170,67 +117,62 @@
         </div>
     </div>
 </section>
-<section class="section_spacing_top">
+
+<section class="treatment" style="padding: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
+            <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
-                        <div class="w-100 second_img service_first relative">
-                            <img src="<?php echo USER_IMAGES ?>img-04.jpg" alt="" class="img-fluid ">
-                            <div class="top_img">
-                                <img src="<?php echo USER_IMAGES ?>ser-5.jpg" alt="" class="img-fluid w-100">
-                            </div>
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 h-100 formfield relative">
+                            <img src="<?php echo USER_IMAGES ?>08.jpg" alt="" class="img-fluid w-100 h100 cover">
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
-                        <div class="w-100 secondaboutpage ">
-                            <div class="section_heading">
-                                <p class="text-start">Committed to patient satisfaction</p>
-                                <h3 class="text-start mb-md-5">Why Chose SkinQure for Acne Treatments:</h3>
-                            </div>
-                            <div class="d-flex w-100 align-items-center mb-5">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>calendar.png" alt="" class="img-fluid">
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 bg-primary formfield text-white form-box ">
+                            <h4>Reveal The NU in You:</h4>
+                            <p class="mb-md-4">Book your appointment today with our expert dermatologist for a perfect
+                                diagnosis & medical advice at SkinQure Clinic. Consultation is available both online and
+                                offline.</p>
+                            <form action="" class="w-100">
+                                <div class="row ">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="First Name"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="Last Name"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="Contact Number"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="w-100 form-group">
+                                            <input type="text" name="" id="name" placeholder="Email Address"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <div class="w-100 form-group">
+                                            <textarea name="" id="" placeholder="Your Message"
+                                                class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="w-100 d-flex justify-content-center">
+                                            <input type="submit" value="Book an Experience" class="btn text-white">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        More than 13 Years of Experience
-                                    </h5>
-                                    <!-- <p class="m-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p> -->
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 align-items-center mb-5">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>consultation.png" alt="" class="img-fluid">
-                                </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        World-Class technology
-                                    </h5>
-                                    <!-- <p class="m-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p> -->
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 align-items-center mb-4">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>customer-satisfaction.png" alt=""
-                                        class="img-fluid">
-                                </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        Treatments & Procudures done by Expert Dermatologist</h5>
-                                    <!-- <p class="m-0 text-start">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p> -->
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
 
@@ -239,7 +181,7 @@
         </div>
     </div>
 </section>
-<section class="greenbg  section_spacing_top sectionpadding">
+<section class="greenbg ection_spacing_top sectionpadding" style="margin: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 text-center">
@@ -300,8 +242,7 @@
                         <p class="text-center text-white">Watch Video</p>
                         <h3 class="text-center mb-md-4 text-white">Video Demo of a particular treatment/service</h3>
                     </div>
-                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
-                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
+                    <p class="text-white">Dr Jangid explains about Acne, skincare and treatment options</p>
                     <a class="btn youtube youtubbtn" target="_blank"
                         data-youtube="https://youtube.com/embed/76oQSWR6b-M"
                         href="https://www.youtube.com/watch?v=76oQSWR6b-M">
@@ -321,69 +262,6 @@
         </div>
     </div>
 </div>
-<section class="">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 h-100 formfield relative">
-                            <img src="<?php echo USER_IMAGES ?>08.jpg" alt="" class="img-fluid w-100 h100 cover">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 bg-primary formfield text-white form-box ">
-                            <h4>Reveal The NU in You:</h4>
-                            <p class="mb-md-4">Book your appointment today with our expert dermatologist for a perfect
-                                diagnosis & medical advice at SkinQure Clinic. Consultation is available both online and
-                                offline.</p>
-                            <form action="" class="w-100">
-                                <div class="row ">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="First Name"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Last Name"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Contact Number"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Email Address"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 mb-4">
-                                        <div class="w-100 form-group">
-                                            <textarea name="" id="" placeholder="Your Message"
-                                                class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="w-100 d-flex justify-content-center">
-                                            <input type="submit" value="Book Consultation" class="btn text-white">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 <!-- <section class="section_spacing_top ">
     <div class="row">
         <div class="col-md-12">
@@ -512,6 +390,76 @@
         </div>
     </div>
 </section> -->
+
+<section class="section_spacing_top">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
+                        <div class="w-100 second_img service_first relative">
+                            <img src="<?php echo USER_IMAGES ?>img-04.jpg" alt="" class="img-fluid ">
+                            <div class="top_img">
+                                <img src="<?php echo USER_IMAGES ?>ser-5.jpg" alt="" class="img-fluid w-100">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
+                        <div class="w-100 secondaboutpage ">
+                            <div class="section_heading">
+                                <p class="text-start">Committed to patient satisfaction</p>
+                                <h3 class="text-start mb-md-5">Why Chose SkinQure for Acne Treatments:</h3>
+                            </div>
+                            <div class="d-flex w-100 align-items-center mb-5">
+                                <div class="icon me-2">
+                                    <img src="<?php echo USER_IMAGES ?>calendar.png" alt="" class="img-fluid">
+                                </div>
+                                <div class="text text-start">
+                                    <h5>
+                                        More than 13 Years of Experience
+                                    </h5>
+                                    <!-- <p class="m-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
+                                        ullamcorper.
+                                    </p> -->
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 align-items-center mb-5">
+                                <div class="icon me-2">
+                                    <img src="<?php echo USER_IMAGES ?>consultation.png" alt="" class="img-fluid">
+                                </div>
+                                <div class="text text-start">
+                                    <h5>
+                                        World-Class technology
+                                    </h5>
+                                    <!-- <p class="m-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
+                                        ullamcorper.
+                                    </p> -->
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 align-items-center mb-4">
+                                <div class="icon me-2">
+                                    <img src="<?php echo USER_IMAGES ?>customer-satisfaction.png" alt=""
+                                        class="img-fluid">
+                                </div>
+                                <div class="text text-start">
+                                    <h5>
+                                        Treatments & Procudures done by Expert Dermatologist</h5>
+                                    <!-- <p class="m-0 text-start">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
+                                        ullamcorper.
+                                    </p> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="section_spacing_top ">
     <div class="container-fluid">
         <div class="row justify-content-center">
