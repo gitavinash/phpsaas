@@ -1390,12 +1390,13 @@ footer ul li a{
 
 .treatment {
     padding: 120px 0px;
+    margin-bottom: 0px;
 }
 
 .treatment .service_box {
     background: #EFF0F2;
-    min-height: 450px;
-    max-height: 450px;
+    min-height: 720px;
+    max-height: 720px;
 }
 .treatment .service_box h4 {
     padding: 10px;

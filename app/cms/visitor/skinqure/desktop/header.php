@@ -39,7 +39,7 @@
                                 <a href="#">Home</a>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">Services<i class="fa fa-angle-down ms-2"></i></a>
+                                <a href="#">Conditions<i class="fa fa-angle-down ms-2"></i></a>
                                 <div class="sub-menu mega-menu mega-menu-column-4 text-start">
                                     <div class="list-item">
                                         <h4 class="title">Facial Cosmetic Treatment</h4>
@@ -250,6 +250,9 @@
                                         </ul>
                                     </div>
                                 </div>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="/why-us/">Treatments</a>
                             </li>
                             <li class="menu-item-has-children">
                                 <a href="#">About Team <i class="fa fa-angle-down ms-2"></i></a>
