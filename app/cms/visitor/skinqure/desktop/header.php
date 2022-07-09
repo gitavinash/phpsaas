@@ -21,7 +21,7 @@
             <div class="row v-center justify-content-center">
                 <div class="header-item item-left">
                     <div class="logo">
-                        <a href="#"><img src="<?php echo USER_IMAGES ?>logo.png" class="logo_img"></a>
+                        <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" class="logo_img"></a>
                     </div>
                 </div>
                 <!-- menu start here -->
@@ -36,7 +36,7 @@
                         </div>
                         <ul class="menu-main">
                             <li class="menu-item-has-children">
-                                <a href="#">Home</a>
+                                <a href="/">Home</a>
                             </li>
                             <li class="menu-item-has-children">
                                 <a href="#">Conditions<i class="fa fa-angle-down ms-2"></i></a>

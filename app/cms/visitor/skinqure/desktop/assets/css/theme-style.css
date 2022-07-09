@@ -43,6 +43,10 @@ body
 {
     background-color: #C9DDD2;
 }
+.yellowbg
+{
+    background-color: #E1C39D;
+}
 .sectionpadding
 {
     padding: 100px 0px;
@@ -1426,6 +1430,23 @@ footer ul li a{
         width: calc(100% - 50px);
     }
     
+    .treatment-box {
+        height: 100%;
+    padding: 4rem 9rem 4rem 4rem;
+    }
+
+    .treatment-box h4 {
+        color: #212529;
+    }
+
+    .treatment-box p {
+        color: rgb(28 28 28 / 90%);
+    }
+
+    .treatment-box p strong {
+        color: #000;
+    }
+
     .form-box {
         height: 100%;
     padding: 4rem 9rem 4rem 4rem;
