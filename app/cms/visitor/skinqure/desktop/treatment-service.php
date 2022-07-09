@@ -41,7 +41,24 @@
     </div>
 </section>
 
-<section class="treatment" style="padding: 0px; margin-top: 50px">
+<section class="section_spacing_top ">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="w-100 h100">
+                            <div class="section_heading">
+                                <h3 class="text-start mb-md-12 text-center">Treatment options</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="treatment" style="padding: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
