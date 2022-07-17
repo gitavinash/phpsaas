@@ -29,12 +29,13 @@
                     <h3>Treatment Option</h3>
                     <hr>
                     <label>Treatment title</label>
-                    <input type="text" class="form-control inside-shadow" name="treatment_header" placeholder="Title">
+                    <input type="text" class="form-control inside-shadow" name="treatment_header"
+                        placeholder="Treatment title">
                 </div>
                 <div class="form-group">
                     <label>Treatment Description</label>
                     <input type="text" class="form-control inside-shadow" name="treatment_description"
-                        placeholder="Description">
+                        placeholder="Treatment description">
                 </div>
                 <div class="row">
                     <div class="col-4">
@@ -46,12 +47,12 @@
                         <div class="form-group">
                             <label>Header</label>
                             <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
-                                placeholder="Title">
+                                placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
-                                placeholder="Title">
+                                placeholder="Description">
                         </div>
                     </div>
                     <div class="col-4">
@@ -63,12 +64,12 @@
                         <div class="form-group">
                             <label>Header</label>
                             <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
-                                placeholder="Title">
+                                placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
-                                placeholder="Title">
+                                placeholder="Description">
                         </div>
                     </div>
                     <div class="col-4">
@@ -80,12 +81,12 @@
                         <div class="form-group">
                             <label>Header</label>
                             <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
-                                placeholder="Title">
+                                placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
-                                placeholder="Title">
+                                placeholder="Description">
                         </div>
                     </div>
                 </div>
@@ -102,12 +103,12 @@
                 <div class="form-group">
                     <label>Header</label>
                     <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
-                        placeholder="Title">
+                        placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
                     <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
-                        placeholder="Title">
+                        placeholder="Description">
                 </div>
 
                 <div class="row">
@@ -121,7 +122,7 @@
                         <div class="form-group">
                             <label>Step 1 Description</label>
                             <input type="text" class="form-control inside-shadow" name="stepHeader[]"
-                                placeholder="Title">
+                                placeholder="Step 1 Description">
                         </div>
                     </div>
                     <div class="col-4">
@@ -134,7 +135,7 @@
                         <div class="form-group">
                             <label>Step 1 Description</label>
                             <input type="text" class="form-control inside-shadow" name="stepHeader[]"
-                                placeholder="Title">
+                                placeholder="Step 2 Description">
                         </div>
                     </div>
                     <div class="col-4">
@@ -147,7 +148,7 @@
                         <div class="form-group">
                             <label>Step 3 Description</label>
                             <input type="text" class="form-control inside-shadow" name="stepHeader[]"
-                                placeholder="Title">
+                                placeholder="Step 3 Description">
                         </div>
                     </div>
                 </div>
@@ -158,17 +159,18 @@
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" name="berforeAfterHeader" placeholder="Title">
+                    <input type="text" class="form-control inside-shadow" name="berforeAfterHeader"
+                        placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
                     <textarea name="berforeAfterDescription" class="form-control inside-shadow"
-                        placeholder="description"></textarea>
+                        placeholder="Description"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Video link</label>
                     <input type="text" class="form-control inside-shadow" name="berforeAfterVideLink"
-                        placeholder="Title">
+                        placeholder="Video link">
                 </div>
                 <div class="row">
 
@@ -196,21 +198,47 @@
                 <h3>Watch video</h3>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" name="watchVideoHeader" placeholder="Title">
+                    <input type="text" class="form-control inside-shadow" name="watchVideoHeader" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
                     <input type="text" class="form-control inside-shadow" name="watchVideoDescription"
-                        placeholder="Title">
+                        placeholder="Description">
                 </div>
                 <div class="form-group">
-                    <label>SubDescription</label>
+                    <label>Sub Description</label>
                     <input type="text" class="form-control inside-shadow" name="watchVideoSubDescription"
-                        placeholder="Title">
+                        placeholder="Sub Description">
                 </div>
                 <div class="form-group">
                     <label>Video link</label>
-                    <input type="text" class="form-control inside-shadow" name="watchVideoLink" placeholder="Title">
+                    <input type="text" class="form-control inside-shadow" name="watchVideoLink"
+                        placeholder="Video link">
+                </div>
+            </section>
+
+            <section style="margin-top:30px">
+                <h3>Our Commitment</h3>
+                <div class="form-group">
+                    <label>Header</label>
+                    <input type="text" class="form-control inside-shadow" name="commitmentHeader" placeholder="Header">
+                </div>
+                <div class="form-group">
+                    <label>Sub Header</label>
+                    <input type="text" class="form-control inside-shadow" name="commitmentDescription"
+                        placeholder="Sub Header">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="commitmentDescription" class="form-control inside-shadow"
+                        placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>Feature image</label>
+                        <input type="file" name="commitmentImage" class="full-width"
+                            accept="image/x-png, image/gif, image/jpeg">
+                    </div>
                 </div>
             </section>
 
