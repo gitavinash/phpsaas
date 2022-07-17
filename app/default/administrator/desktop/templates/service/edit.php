@@ -37,6 +37,15 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                     <input type="hidden" name='oldURL' value='<?php echo $link_url ?>'>
                 </div>
             </div>
+
+            <?php
+            
+            if($site_id==31) {
+
+            } else {
+                ?>
+
+
             <div class="form-group fullscreen-editor">
                 <textarea name="description"
                     class="editor inside-shadow"><?php echo html_entity_decode($service_description); ?></textarea>
@@ -123,6 +132,12 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                     </div>
                 </div>
             </section>
+
+            <?php
+            }
+
+            ?>
+
         </div>
         <div class="right-box">
             <div class="action-box inside-shadow">
