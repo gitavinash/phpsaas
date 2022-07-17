@@ -10,6 +10,7 @@ body {
 
 #url {
   text-transform: lowercase;
+  border-bottom: 1px solid #333;
 }
 
 ::placeholder {
