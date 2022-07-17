@@ -1812,3 +1812,22 @@ ul.tabs li.active {
   height: 32px;
   border: none !important;
 }
+
+.col-4 {
+  float: left;
+  width: 33.33%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.col-6 {
+  float: left;
+  width: 50%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.full-width {
+  float: left;
+  width: 100%;
+}
