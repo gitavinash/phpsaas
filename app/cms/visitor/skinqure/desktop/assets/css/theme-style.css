@@ -43,9 +43,25 @@ body
 {
     background-color: #C9DDD2;
 }
+.bluebg
+{
+    background-color: #0d415f;
+}
+.bluebg a, p, h1, h2, h3, h4, h6 {
+    color: #fff;
+}
+.bluebg p.text-start {
+    color: #fff;
+}
+.bluebg h3.text-start {
+    color: #fff;
+}
+.bluebg .bimg h4 {
+    color: #fff;
+}
 .yellowbg
 {
-    background-color: #E1C39D;
+    background-color: #FCD299;
 }
 .sectionpadding
 {
@@ -1436,11 +1452,76 @@ footer ul li a{
     }
 
     .treatment-box h4 {
-        color: #212529;
+        text-align: center;
+        padding: 10px;
+        background: #0D415F;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .treatment-box h4 {
+        text-align: center;
+        padding: 10px;
+        background: #0D415F;
+        border-radius: 10px;
+    }
+
+    .quote-box {
+        background: url('../images/icon/quote.png') center center no-repeat;
+        height: 150px;
+        padding: 40px 50px;
+        color: #333 !important;
+    }
+
+    .quote-box p {
+        color: #0d415f;
+        float: left;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 500;
+        width: 100%;
+        line-height: 32px;
+    }
+
+    h4.yellow  {
+        color: #FCD299;
+    }
+
+    img.treatment-icon {
+        border: none;
+        height: 32px !important;
+        margin-right: 10px;
+        box-shadow: none;
+        width: auto !important;
+    }
+
+    img.treatment-btn {
+        border: none;
+        height: 50px !important;
+        margin-right: 10px;
+        box-shadow: none;
+        width: auto !important;
+        margin-top: 30px;
+    }
+
+    .treatment-section-img {
+        height: 400px;
+        width: 400px;
+        margin: 10% 19%;
+        box-sizing: content-box;
+        background: #0d415f;
+        padding: 15px 15px 4px 4px;
+        border-radius: 10px
+    }
+
+    .treatment-section-img img {
+        border-radius: 10px;
     }
 
     .treatment-box p {
         color: rgb(28 28 28 / 90%);
+        line-height: 28px;
+        font-size: 18px;
     }
 
     .treatment-box p strong {
@@ -1636,6 +1717,32 @@ footer ul li a{
 
     @media(max-width: 600px)
     {
+        .quote-box {
+            padding: 50px 30px;
+            background-size: cover;
+        }
+    
+        .quote-box p {
+            font-size: 16px;
+            line-height: 28px;
+        }
+        .treatment-box {
+            padding: 10%;
+        }
+
+        .treatment-section-img {
+            height: 80%;
+            width: 80%;
+            margin: 10% 10%;
+            box-sizing: content-box;
+            background: #0d415f;
+            padding: 15px 15px 4px 4px;
+            border-radius: 10px
+        }
+    
+        .treatment-section-img img {
+            border-radius: 10px;
+        }
 
 .treatment {
     padding: 500px 0px;
