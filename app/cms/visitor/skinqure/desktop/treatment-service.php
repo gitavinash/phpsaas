@@ -27,11 +27,24 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="w-100 h100">
-                            <div class="section_heading">
-                                <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
-                            </div>
 
-                            <?php echo ucwords($service_description) ?>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="quote-box">
+                                            <p>Acne can now be a thing of the past!<br />Thanks to various acne
+                                                treatments!
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="section_heading">
+                                            <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
+                                        </div>
+                                        <?php echo ucwords($service_description) ?>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -49,7 +62,8 @@
                     <div class="col-md-12">
                         <div class="w-100 h100">
                             <div class="section_heading">
-                                <h3 class="text-start mb-md-12 text-center">Treatment options</h3>
+                                <h3 class="text-start mb-md-12 text-center"
+                                    style="text-transform: uppercase;color: #0d415f">Treatment options</h3>
                             </div>
                         </div>
                     </div>
@@ -58,27 +72,45 @@
         </div>
     </div>
 </section>
-<section class="treatment" style="padding: 0px;">
+<section class="treatment yellowbg" style="padding: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
-                            <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
-                                class="img-fluid w-100 h100 cover">
+                            <div class="treatment-section-img">
+                                <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
+                                    class="img-fluid w-100 h100 cover">
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 yellowbg formfield treatment-box text-white">
-                            <h4>AcneQure Priming Treatment</h4>
-                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                        <div class="w-100 formfield treatment-box text-white">
+                            <h4 class="yellow">AcneQure Priming Treatment</h4>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/forward.png"
+                                    class="treatment-icon"><strong>Indications </strong>Best treatment for primary stage
+                                of acne like black and
                                 white heads, Dull and oily skin.</p>
-                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                            <p><img src="<?php echo USER_IMAGES ?>icon/process.png"
+                                    class="treatment-icon"><strong>Process </strong>a cleaning followed by peeling
+                                treatment and finally a coating
                                 of sunscreen
                             </p>
-                            <p><strong>Duration </strong>20 -30 min</p>
-                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/clock.png"
+                                    class="treatment-icon"><strong>Duration </strong>20 -30 min</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/calender.png" class="treatment-icon"><strong>No.
+                                    of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/book-now.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/watch-video.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -95,19 +127,39 @@
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 formfield treatment-box text-white">
                             <h4>AcneQure Cleansing facial</h4>
-                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                            <p><img src="<?php echo USER_IMAGES ?>icon/forward.png"
+                                    class="treatment-icon"><strong>Indications </strong>Best
+                                treatment for
+                                primary stage of acne like
+                                black and
                                 white heads, Dull and oily skin.</p>
-                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                            <p><img src="<?php echo USER_IMAGES ?>icon/process.png"
+                                    class="treatment-icon"><strong>Process </strong>a cleaning followed by peeling
+                                treatment and finally a coating
                                 of sunscreen
                             </p>
-                            <p><strong>Duration </strong>20 -30 min</p>
-                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/clock.png"
+                                    class="treatment-icon"><strong>Duration </strong>20 -30 min</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/calender.png" class="treatment-icon"><strong>No.
+                                    of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/book-now.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/watch-video.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
-                            <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
-                                class="img-fluid w-100 h100 cover">
+                            <div class="treatment-section-img">
+                                <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
+                                    class="img-fluid w-100 h100 cover">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,27 +169,45 @@
 </section>
 
 
-<section class="treatment" style="padding: 0px;">
+<section class="treatment yellowbg" style="padding: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
-                            <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
-                                class="img-fluid w-100 h100 cover">
+                            <div class="treatment-section-img">
+                                <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
+                                    class="img-fluid w-100 h100 cover">
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 yellowbg formfield treatment-box text-white">
-                            <h4>AcneQure BetaPeel</h4>
-                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                        <div class="w-100 formfield treatment-box text-white">
+                            <h4 class="yellow">AcneQure BetaPeel</h4>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/forward.png"
+                                    class="treatment-icon"><strong>Indications </strong>Best treatment for primary stage
+                                of acne like black and
                                 white heads, Dull and oily skin.</p>
-                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                            <p><img src="<?php echo USER_IMAGES ?>icon/process.png"
+                                    class="treatment-icon"><strong>Process </strong>a cleaning followed by peeling
+                                treatment and finally a coating
                                 of sunscreen
                             </p>
-                            <p><strong>Duration </strong>20 -30 min</p>
-                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/clock.png"
+                                    class="treatment-icon"><strong>Duration </strong>20 -30 min</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/calender.png" class="treatment-icon"><strong>No.
+                                    of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/book-now.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/watch-video.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,19 +224,37 @@
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 formfield treatment-box text-white">
                             <h4>AcneQure R-Peel</h4>
-                            <p><strong>Indications </strong>Best treatment for primary stage of acne like black and
+                            <p><img src="<?php echo USER_IMAGES ?>icon/forward.png"
+                                    class="treatment-icon"><strong>Indications </strong>Best treatment for primary stage
+                                of acne like black and
                                 white heads, Dull and oily skin.</p>
-                            <p><strong>Process </strong>a cleaning followed by peeling treatment and finally a coating
+                            <p><img src="<?php echo USER_IMAGES ?>icon/process.png"
+                                    class="treatment-icon"><strong>Process </strong>a cleaning followed by peeling
+                                treatment and finally a coating
                                 of sunscreen
                             </p>
-                            <p><strong>Duration </strong>20 -30 min</p>
-                            <p><strong>No. of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/clock.png"
+                                    class="treatment-icon"><strong>Duration </strong>20 -30 min</p>
+                            <p><img src="<?php echo USER_IMAGES ?>icon/calender.png" class="treatment-icon"><strong>No.
+                                    of sittings </strong>1-3 sittings, once in 15 days</p>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/book-now.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <a href=""><img src="<?php echo USER_IMAGES ?>icon/watch-video.png"
+                                            class="treatment-btn" alt=""></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
-                            <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
-                                class="img-fluid w-100 h100 cover">
+                            <div class="treatment-section-img">
+                                <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt=""
+                                    class="img-fluid w-100 h100 cover">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -175,7 +263,7 @@
     </div>
 </section>
 
-<section class="greenbg ection_spacing_top sectionpadding" style="margin: 0px;">
+<section class="bluebg ection_spacing_top sectionpadding" style="margin: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 text-center">
