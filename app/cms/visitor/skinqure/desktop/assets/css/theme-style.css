@@ -61,7 +61,7 @@ body
 }
 .yellowbg
 {
-    background-color: #FCD299;
+    background-color: #E8B05D;
 }
 .sectionpadding
 {
@@ -552,7 +552,7 @@ top: 0;
 
 #comparison figure {
   position: absolute;
-  background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/photoshop-face-before.jpg);
+  background-image: url(../images/before-after/3.png);
   background-size: cover;
   font-size: 0;
   width: 100%;
@@ -561,7 +561,7 @@ top: 0;
 }
 
 #divisor {
-  background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/photoshop-face-after.jpg);
+  background-image: url(../images/before-after/4.png);
   background-size: cover;
   position: absolute;
   width: 50%;
@@ -767,7 +767,7 @@ input[type=range]::-moz-range-track {
     background-size: cover;
     background-position: 100% 100%;
     padding: 6rem 0rem;
-    width: 70%;
+    width: 100%;
     min-height: 585px;
 }
 .testimonial-item h3
@@ -780,12 +780,13 @@ input[type=range]::-moz-range-track {
 .testimonial-item p{
     font-size: 17px;
     text-align: left;
-    color: #3d3c37;
+    color: #fff;
     font-weight: 400;
     margin-bottom: 2rem;
 }
 .testimonial-item h5
 {
+    color: #fff;
         text-align: left;
     font-size: 18px;
     font-weight: 600;
@@ -1084,7 +1085,7 @@ content: "+";
 /*------------------------Footer Styling---------------------*/
 footer
 {
-    background-color: #1C1917;
+    background-color: #E8B05D;
         padding: 5rem 0rem;
 }
 .footer_logo
@@ -1094,7 +1095,7 @@ footer
     margin-bottom: 1rem;
 }
 footer p{
-    color: #959595;
+    color: #fff;
     text-align: left;
 }
 .footer_heading
@@ -1114,16 +1115,16 @@ footer ul li{
 }
 
 footer ul li a{
-    color: #959595;
+    color: #fff;
     text-decoration: none;
 }
 .copyright
 {
-    background-color: #1C1917;
+    background-color: #E8B05D;
 }
 .copyright p{
 
-    color: #959595;
+    color: #fff;
 }
 
 
@@ -1531,7 +1532,7 @@ footer ul li a{
     .form-box {
         height: 100%;
     padding: 4rem 9rem 4rem 4rem;
-    background-color: #e69472 !important;
+    background-color: #E8B05D !important;
     }
     
     .form-box .form-control {
