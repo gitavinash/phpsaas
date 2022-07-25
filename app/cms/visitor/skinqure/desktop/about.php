@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12 text-center p-0">
-                <div class="inner_page_banner contact_banner_bg">
+                <div class="inner_page_banner about_banner_bg">
                     <div class="inner_content">
                         <p>About Skin Clinic</p>
                         <div class="text-start"><a href="index.html">Home</a> <span><i

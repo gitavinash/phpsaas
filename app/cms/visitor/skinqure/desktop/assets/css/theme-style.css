@@ -947,6 +947,12 @@ content: "+";
 {
     height: 300px;
 }
+.about_banner_bg
+{
+    background-image: url(../images/testimonial.jpg);
+    background-attachment: fixed;
+    background-size: contain;
+}
 .contact_banner_bg
 {
     background-image: url(../images/inner_banner.jpg);
@@ -1663,6 +1669,7 @@ footer ul li a{
     }
     .abt_p
     {
+        color: #333;
             text-align: left;
     font-size: 17px;
     line-height: 31px;
@@ -1799,6 +1806,12 @@ padding-top:1rem;
     height: 190px;
     background-size: cover;
     background-position: 26% 100%;
+}
+.about_banner_bg
+{
+    background-image: url(../images/testimonial.jpg);
+    background-attachment: fixed;
+    background-size: contain;
 }
 .contact_banner_bg {
     background-image: url(../images/inner_banner.jpg);
