@@ -40,8 +40,14 @@ window.location.href = 'dashboard/service/?type=list&status=all';
 
             <?php
             
-            if($site_id==31) {
+            if($site_id==31) {?>
 
+            <div class="form-group fullscreen-editor">
+                <textarea name="description"
+                    class="editor inside-shadow"><?php echo html_entity_decode($service_description); ?></textarea>
+            </div>
+
+            <?php
             } else {
                 ?>
 
