@@ -59,6 +59,9 @@ body
 .bluebg .bimg h4 {
     color: #fff;
 }
+.description {
+    color: #222327 !important;
+}
 .yellowbg
 {
     background-color: #E8B05D;
