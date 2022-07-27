@@ -62,6 +62,12 @@ body
 .description {
     color: #222327 !important;
 }
+.description .p {
+    color: #222327 !important;
+}
+.description .h4 {
+    color: #222327 !important;
+}
 .yellowbg
 {
     background-color: #E8B05D;
