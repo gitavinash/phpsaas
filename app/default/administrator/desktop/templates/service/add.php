@@ -19,9 +19,9 @@
 			
 			if($site_id==31) { ?>
             <div class="form-group">
-                <h3>Service Description</h3>
-                <textarea name="description" class="form-control inside-shadow"
-                    placeholder="Service description"></textarea>
+                <div class="form-group fullscreen-editor">
+                    <textarea name="description" class="editor inside-shadow"></textarea>
+                </div>
             </div>
 
             <section style="margin-top: 30px">
