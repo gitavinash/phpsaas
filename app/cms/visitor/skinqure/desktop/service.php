@@ -251,10 +251,9 @@
                 <div class="w-100 video-box relative">
                     <div class="section_heading">
                         <p class="text-center text-white">Watch Video</p>
-                        <h3 class="text-center mb-md-4 text-white">Video Demo of a particular treatment/service</h3>
+                        <h3 class="text-center mb-md-4 text-white">Dr Jangid explains about Acne, skincare and treatment
+                            options</h3>
                     </div>
-                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eismod
-                        incididunt ut labore et dolore derit in voluptate.velit esse cillum.</p>
                     <a class="btn youtube youtubbtn" target="_blank"
                         data-youtube="https://youtube.com/embed/76oQSWR6b-M"
                         href="https://www.youtube.com/watch?v=76oQSWR6b-M">
