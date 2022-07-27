@@ -34,7 +34,9 @@
                                 <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
                             </div>
 
-                            <?php echo ucwords($service_description) ?>
+                            <div class="description">
+                                <?php echo ucwords($service_description) ?>
+                            </div>
 
                         </div>
                     </div>
