@@ -1,7 +1,6 @@
 <?php
 
     function publish($connection, $data) {
-
         extract($data);
         
         if($title!='') {
@@ -19,24 +18,89 @@
                 $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
                 $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));
 
+                $gallery = '';
+
+                $service_section = json_encode(array(
+                    'treatment_steps' => array(
+                        'title' => $treatment_header,
+                        'description' => $treatment_description,
+                        array(
+                            'image' => $treatmentImage_1,
+                            'header' => $treatmentImageHeader_1,
+                            'description' => $treatmentImageDescription_1
+                        ),
+                        array(
+                            'image' => $treatmentImage_2,
+                            'header' => $treatmentImageHeader_2,
+                            'description' => $treatmentImageDescription_2
+                        ),
+                        array(
+                            'image' => $treatmentImage_3,
+                            'header' => $treatmentImageHeader_3,
+                            'description' => $treatmentImageDescription_3
+                        )
+                    ),
+                    'why_choose_us' => array(
+                        'image' => $whyChooseUs,
+                        'header' => $whyChooseTitle,
+                        'description' => $whyChooseDescription,
+                        'steps' => array(
+                            array(
+                                'icon' => $stepIcon_1,
+                                'description'=> $stepHeader_1
+                            ),
+                            array(
+                                'icon' => $stepIcon_2,
+                                'description'=> $stepHeader_2
+                            ),
+                            array(
+                                'icon' => $stepIcon_3,
+                                'description'=> $stepHeader_3
+                            ),
+                        )
+                    ),
+                    'before_after' => array(
+                        'header' => $berforeAfterHeader,
+                        'description' => $berforeAfterDescription,
+                        'videoLink' => $berforeAfterVideLink,
+                        'images' => array(
+                            'before' => $before,
+                            'after' => $after
+                        )
+                    ),
+                    'watch_video' => array(
+                        'header' => $watchVideoHeader,
+                        'description' => $watchVideoDescription,
+                        'subDescription' => $watchVideoSubDescription,
+                        'videoLink' => $watchVideoLink
+                    ),
+                    'our_commitment' => array(
+                        'header' => $commitmentHeader,
+                        'subHeader' => $commitmentSubHeader,
+                        'descripton' => $commitmentDescription
+                    )
+                ));
+                
                 if(isset($_FILES['gallery'])) {
         
                     require_once MODULES.'galleryUploader.php';
 
-                    /** Category */
+                }
 
-                    if(isset($category)) {
+                 /** Category */
 
-                        $category=explode('_', $category);
-                        $categoryURL=$category[1];
-                        $category=$category[0];
+                if(isset($category)) {
 
-                    } else {
+                    $category=explode('_', $category);
+                    $categoryURL=$category[1];
+                    $category=$category[0];
 
-                        $category=0;
-                        $categoryURL='/';
+                } else {
 
-                    }
+                    $category=0;
+                    $categoryURL='/';
+
+                }
 
                     /** service page url */
 
@@ -59,13 +123,13 @@
 
                             /* Insert data into link table */
 
-                            $addNewservice=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."service(service_site_id, service_image, service_thumbnail, service_gallery, service_title, service_description, service_highlight, service_category, service_owner_id, service_status, service_type) VALUES(".SITE_ID.", '{$featureImage}', '{$thumbnailImage}', '{$gallery}', '{$title}', '{$description}', '{$highlight}', '{$category}', ".USER_ID.",'1', 'service')");
+                            $addNewservice=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."service(service_site_id, service_image, service_thumbnail, service_gallery, service_title, service_description, service_highlight, service_category, service_owner_id, service_status, service_type, service_section) VALUES(".SITE_ID.", '{$featureImage}', '{$thumbnailImage}', '{$gallery}', '{$title}', '{$description}', '', '{$category}', ".USER_ID.",'1', 'service', '{$service_section}')");
                             $serviceID=mysqli_insert_id($connection);
 
                             $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$serviceID}', '200', 'service', '{$featurePost}', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
                             $linkID=mysqli_insert_id($connection);
 
-                            $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_type, inventory_status, inventory_update) VALUES ('{$serviceID}', '{$sku}', 'INR', '{$salePrice}', '{$mrp}', 'service', '1', current_timestamp())");
+                            $addNewInventory=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."inventory(inventory_relation_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_type, inventory_status, inventory_update) VALUES ('{$serviceID}', '', 'INR', '', '', 'service', '1', current_timestamp())");
 
                             $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".SITE_ID.", '{$meta_title}', 'service', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 
@@ -113,7 +177,6 @@
 
                     }
             
-                }
 
             } else {
 
