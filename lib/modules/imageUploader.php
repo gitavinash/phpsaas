@@ -78,7 +78,7 @@
 										
 									/** Compressing PNG Image and save it */
 	
-									$compressImage=imagecreatefrompng($imageValue['tmp_name']);
+									$compressImage=@imagecreatefrompng($imageValue['tmp_name']);
 									imagepng($compressImage, $uploadFile, 9);
 										
 									/** Creating image thumbnail */
@@ -148,6 +148,10 @@
 	
 						}
 	
+					} else {
+
+						echo 'File not uploaded';
+						
 					}
 	
 					$image[$imageName]=$uploadMediaPath;

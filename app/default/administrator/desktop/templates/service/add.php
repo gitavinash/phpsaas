@@ -41,51 +41,51 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label>Background image</label>
-                            <input type="file" name="treatmentImage[]" class="full-width"
+                            <input type="file" name="treatmentImage_1" class="full-width"
                                 accept="image/x-png, image/gif, image/jpeg">
                         </div>
                         <div class="form-group">
                             <label>Header</label>
-                            <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
+                            <input type="text" class="form-control inside-shadow" name="treatmentImageHeader_1"
                                 placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
+                            <input type="text" class="form-control inside-shadow" name="treatmentImageDescription_1"
                                 placeholder="Description">
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             <label>Background image</label>
-                            <input type="file" name="treatmentImage[]" class="full-width"
+                            <input type="file" name="treatmentImage_2" class="full-width"
                                 accept="image/x-png, image/gif, image/jpeg">
                         </div>
                         <div class="form-group">
                             <label>Header</label>
-                            <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
+                            <input type="text" class="form-control inside-shadow" name="treatmentImageHeader_2"
                                 placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
+                            <input type="text" class="form-control inside-shadow" name="treatmentImageDescription_2"
                                 placeholder="Description">
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             <label>Background image</label>
-                            <input type="file" name="treatmentImage[]" class="full-width"
+                            <input type="file" name="treatmentImage_3" class="full-width"
                                 accept="image/x-png, image/gif, image/jpeg">
                         </div>
                         <div class="form-group">
                             <label>Header</label>
-                            <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
+                            <input type="text" class="form-control inside-shadow" name="treatmentImageHeader_3"
                                 placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
+                            <input type="text" class="form-control inside-shadow" name="treatmentImageDescription_3"
                                 placeholder="Description">
                         </div>
                     </div>
@@ -102,12 +102,11 @@
                 </div>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" name="treatmentImageHeader[]"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow" name="whyChooseTitle" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <input type="text" class="form-control inside-shadow" name="treatmentImageDescription[]"
+                    <input type="text" class="form-control inside-shadow" name="whyChooseDescription"
                         placeholder="Description">
                 </div>
 
@@ -116,12 +115,12 @@
                         <h4>Step 1</h4>
                         <div class="form-group">
                             <label>Step 1 icon</label>
-                            <input type="file" name="step[]" class="full-width"
+                            <input type="file" name="stepIcon_1" class="full-width"
                                 accept="image/x-png, image/gif, image/jpeg">
                         </div>
                         <div class="form-group">
                             <label>Step 1 Description</label>
-                            <input type="text" class="form-control inside-shadow" name="stepHeader[]"
+                            <input type="text" class="form-control inside-shadow" name="stepHeader_1"
                                 placeholder="Step 1 Description">
                         </div>
                     </div>
@@ -129,12 +128,12 @@
                         <h4>Step 2</h4>
                         <div class="form-group">
                             <label>Step 2 icon</label>
-                            <input type="file" name="step[]" class="full-width"
+                            <input type="file" name="stepIcon_2" class="full-width"
                                 accept="image/x-png, image/gif, image/jpeg">
                         </div>
                         <div class="form-group">
-                            <label>Step 1 Description</label>
-                            <input type="text" class="form-control inside-shadow" name="stepHeader[]"
+                            <label>Step 2 Description</label>
+                            <input type="text" class="form-control inside-shadow" name="stepHeader_2"
                                 placeholder="Step 2 Description">
                         </div>
                     </div>
@@ -142,12 +141,12 @@
                         <h4>Step 3</h4>
                         <div class="form-group">
                             <label>Step 3 icon</label>
-                            <input type="file" name="step[]" class="full-width"
+                            <input type="file" name="stepIcon_3" class="full-width"
                                 accept="image/x-png, image/gif, image/jpeg">
                         </div>
                         <div class="form-group">
                             <label>Step 3 Description</label>
-                            <input type="text" class="form-control inside-shadow" name="stepHeader[]"
+                            <input type="text" class="form-control inside-shadow" name="stepHeader_3"
                                 placeholder="Step 3 Description">
                         </div>
                     </div>
@@ -225,7 +224,7 @@
                 </div>
                 <div class="form-group">
                     <label>Sub Header</label>
-                    <input type="text" class="form-control inside-shadow" name="commitmentDescription"
+                    <input type="text" class="form-control inside-shadow" name="commitmentSubHeader"
                         placeholder="Sub Header">
                 </div>
                 <div class="form-group">

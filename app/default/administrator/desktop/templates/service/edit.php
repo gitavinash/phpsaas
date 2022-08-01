@@ -5,6 +5,9 @@
 	if($serviceDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."service, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE link_type='service' AND link_relation_id=service_id AND meta_relation_id=link_id AND service_id='{$service_id}' AND link_status!=301 AND link_type='service' AND service_type='service' AND link_site_id=".SITE_ID." LIMIT 1")) {
 		if(mysqli_num_rows($serviceDetails)!=0) {
 			extract(mysqli_fetch_assoc($serviceDetails));
+
+            $serviceSection = json_decode($service_section);
+
 		} else { ?>
 <script type="text/javascript">
 alert('Invalid action found');
@@ -42,10 +45,255 @@ window.location.href = 'dashboard/service/?type=list&status=all';
             
             if($site_id==31) {?>
 
-            <div class="form-group fullscreen-editor">
-                <textarea name="description"
-                    class="editor inside-shadow"><?php echo html_entity_decode($service_description); ?></textarea>
+            <div class="form-group">
+                <div class="form-group fullscreen-editor">
+                    <textarea name="description"
+                        class="editor inside-shadow"><?php echo $service_description ?></textarea>
+                </div>
             </div>
+
+            <section style="margin-top: 30px">
+                <div class="form-group">
+                    <h3>Treatment Option</h3>
+                    <hr>
+                    <label>Treatment title</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->treatment_steps->treatment_header ?>" name="treatment_header"
+                        placeholder="Treatment title">
+                </div>
+                <div class="form-group">
+                    <label>Treatment Description</label>
+                    <input type="text" value="<?php echo $serviceSection->treatment_steps->treatment_description ?>"
+                        class="form-control inside-shadow" name="treatment_description"
+                        placeholder="Treatment description">
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Background image</label>
+                            <input type="file" name="treatmentImage_1" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Header</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->treatment_steps[0]->header ?>"
+                                name="treatmentImageHeader_1" placeholder="Header">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->treatment_steps[0]->description ?>"
+                                name="treatmentImageDescription_1" placeholder="Description">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Background image</label>
+                            <input type="file" name="treatmentImage_2" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Header</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->treatment_steps[1]->header ?>"
+                                name="treatmentImageHeader_2" placeholder="Header">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->treatment_steps[1]->description ?>"
+                                name="treatmentImageDescription_2" placeholder="Description">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Background image</label>
+                            <input type="file" name="treatmentImage_3" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Header</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->treatment_steps[2]->header ?>"
+                                name="treatmentImageHeader_3" placeholder="Header">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->treatment_steps[2]->description ?>"
+                                name="treatmentImageDescription_3" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section style="margin-top: 30px">
+                <h3>Why Choose Us</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Feature image</label>
+                    <input type="file" name="whyChooseUs" class="full-width"
+                        accept="image/x-png, image/gif, image/jpeg">
+                </div>
+                <div class="form-group">
+                    <label>Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->why_choose_us->header ?>" name="whyChooseTitle"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->why_choose_us->description ?>" name="whyChooseDescription"
+                        placeholder="Description">
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <h4>Step 1</h4>
+                        <div class="form-group">
+                            <label>Step 1 icon</label>
+                            <input type="file" name="stepIcon_1" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Step 1 Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->why_choose_us->steps[0]->description ?>"
+                                name="stepHeader_1" placeholder="Step 1 Description">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h4>Step 2</h4>
+                        <div class="form-group">
+                            <label>Step 2 icon</label>
+                            <input type="file" name="stepIcon_2" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Step 2 Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->why_choose_us->steps[1]->description ?>"
+                                name="stepHeader_2" placeholder="Step 2 Description">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h4>Step 3</h4>
+                        <div class="form-group">
+                            <label>Step 3 icon</label>
+                            <input type="file" name="stepIcon_3" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Step 3 Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo $serviceSection->why_choose_us->steps[2]->description ?>"
+                                name="stepHeader_3" placeholder="Step 3 Description">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section style="margin-top:30px">
+                <h3>Before After</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->before_after->header ?>" name="berforeAfterHeader"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="berforeAfterDescription"
+                        value="<?php echo $serviceSection->before_after->description ?>"
+                        class="form-control inside-shadow" placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Video link</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->before_after->videoLink ?>" name="berforeAfterVideLink"
+                        placeholder="Video link">
+                </div>
+                <div class="row">
+
+                    <div class="col-6">
+                        <h4>Before Image</h4>
+                        <div class="form-group">
+                            <label>Before image</label>
+                            <input type="file" name="before" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <h4>After Image</h4>
+                        <div class="form-group">
+                            <label>After image</label>
+                            <input type="file" name="after" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section style="margin-top:30px">
+                <h3>Watch video</h3>
+                <div class="form-group">
+                    <label>Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->watch_video->header ?>" name="watchVideoHeader"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->watch_video->description ?>" name="watchVideoDescription"
+                        placeholder="Description">
+                </div>
+                <div class="form-group">
+                    <label>Sub Description</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->watch_video->subDescription ?>"
+                        name="watchVideoSubDescription" placeholder="Sub Description">
+                </div>
+                <div class="form-group">
+                    <label>Video link</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->watch_video->videoLink ?>" name="watchVideoLink"
+                        placeholder="Video link">
+                </div>
+            </section>
+
+            <section style="margin-top:30px">
+                <h3>Our Commitment</h3>
+                <div class="form-group">
+                    <label>Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->our_commitment->header ?>" name="commitmentHeader"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
+                    <label>Sub Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->our_commitment->subHeader ?>" name="commitmentSubHeader"
+                        placeholder="Sub Header">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="commitmentDescription"
+                        value="<?php echo $serviceSection->our_commitment->descripton ?>"
+                        class="form-control inside-shadow" placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>Feature image</label>
+                        <input type="file" name="commitmentImage" class="full-width"
+                            accept="image/x-png, image/gif, image/jpeg">
+                    </div>
+                </div>
+            </section>
 
             <?php
             } else {
@@ -143,6 +391,88 @@ window.location.href = 'dashboard/service/?type=list&status=all';
             }
 
             ?>
+            <section>
+                <h3>Advance Options for digital marketing</h3>
+                <ul class='tabs'>
+                    <li id="seo" class='active'>Search Engine Optimization</li>
+                    <li id="fb">Facebook</li>
+                    <li id="tw">Twitter</li>
+                </ul>
+                <div class="seo generalTab">
+                    <div class="form-group">
+                        <label>Meta Title</label>
+                        <input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title"
+                            class="form-control inside-shadow" placeholder="Meta title">
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Description</label>
+                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow"
+                            placeholder="Meta Description"><?php echo $meta_description ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Keywords</label>
+                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
+                            placeholder="Enter keywords of the post ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Canonical URL</label>
+                        <input type="text" name="canonical" class="form-control inside-shadow"
+                            value="<?php echo $meta_canonical; ?>" id="canonical"
+                            placeholder="Actual URL of the <?php echo $postType ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Allow search engines to show this post in search results?</label>
+                        <select name="robots" class="form-control inside-shadow">
+                            <option value="index, follow"
+                                <?php echo (($meta_robots=='index, follow') ? 'selected' : '' ) ?>>Yes</option>
+                            <option value="noindex, nofollow"
+                                <?php echo (($meta_robots=='noindex, nofollow') ? 'selected' : '' ) ?>>No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="fb generalTab" style="display: none;">
+                    <div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+                        <input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
+                        <div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
+                        <p id="facebookChangeImage" class='changeImage'>Remove facebook feature image</p>
+                    </div>
+                    <div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
+                        <span>Set facebook feature image</span>
+                        <input type='file' id="facebookImage" name='facebookImage' />
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Title</label>
+                        <input type="text" name="fb_title" class="form-control inside-shadow"
+                            value="<?php echo $fb_title ?>" placeholder="Facebook title">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Description</label>
+                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow"
+                            placeholder="Facebook Description"><?php echo $fb_desc ?></textarea>
+                    </div>
+                </div>
+                <div class="tw generalTab" style="display: none;">
+                    <div class="twitterPreviewBox" style="display: <?php echo (($tw_img=='') ? 'none' : 'block' ) ?>;">
+                        <input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
+                        <div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
+                        <p id="twitterChangeImage" class="changeImage">Remove twitter feature image</p>
+                    </div>
+                    <div class="twitterUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
+                        <span>Set Twitter feature image</span>
+                        <input type='file' id="twitterImage" name='twitterImage' />
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter Title</label>
+                        <input type="text" name="tw_title" class="form-control inside-shadow"
+                            value="<?php echo $tw_title; ?>" placeholder="Twitter title">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter Description</label>
+                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow"
+                            placeholder="Twitter Description"><?php echo $tw_desc ?></textarea>
+                    </div>
+                </div>
+            </section>
 
         </div>
         <div class="right-box">
