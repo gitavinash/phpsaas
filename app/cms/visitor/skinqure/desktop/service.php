@@ -91,7 +91,7 @@
                             <div class="written_text p-3">
                                 <p class="m-0">
                                     We have specialised chemical peels for treating acne conditions. They are used as
-                                    per dermatologist’s recommendation.
+                                    per dermatologistï¿½s recommendation.
                                 </p>
                                 <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
                                     Learn More
@@ -251,9 +251,9 @@
                 <div class="w-100 video-box relative">
                     <div class="section_heading">
                         <p class="text-center text-white">Watch Video</p>
-                        <h3 class="text-center mb-md-4 text-white">Video Demo of a particular treatment/service</h3>
+                        <h3 class="text-center mb-md-4 text-white">Dr Jangid explains about Acne, skincare and treatment
+                            options</h3>
                     </div>
-                    <p class="text-white">Dr Jangid explains about Acne, skincare and treatment options</p>
                     <a class="btn youtube youtubbtn" target="_blank"
                         data-youtube="https://youtube.com/embed/76oQSWR6b-M"
                         href="https://www.youtube.com/watch?v=76oQSWR6b-M">
