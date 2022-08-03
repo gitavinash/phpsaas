@@ -22,22 +22,24 @@
 
                 $service_section = json_encode(array(
                     'treatment_steps' => array(
-                        'title' => $treatment_header,
+                        'header' => $treatment_header,
                         'description' => $treatment_description,
-                        array(
-                            'image' => $treatmentImage_1,
-                            'header' => $treatmentImageHeader_1,
-                            'description' => $treatmentImageDescription_1
-                        ),
-                        array(
-                            'image' => $treatmentImage_2,
-                            'header' => $treatmentImageHeader_2,
-                            'description' => $treatmentImageDescription_2
-                        ),
-                        array(
-                            'image' => $treatmentImage_3,
-                            'header' => $treatmentImageHeader_3,
-                            'description' => $treatmentImageDescription_3
+                        'steps' => array(
+                            array(
+                                'image' => $treatmentImage_1,
+                                'header' => $treatmentImageHeader_1,
+                                'description' => $treatmentImageDescription_1
+                            ),
+                            array(
+                                'image' => $treatmentImage_2,
+                                'header' => $treatmentImageHeader_2,
+                                'description' => $treatmentImageDescription_2
+                            ),
+                            array(
+                                'image' => $treatmentImage_3,
+                                'header' => $treatmentImageHeader_3,
+                                'description' => $treatmentImageDescription_3
+                            )
                         )
                     ),
                     'why_choose_us' => array(

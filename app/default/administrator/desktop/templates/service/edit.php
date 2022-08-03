@@ -7,7 +7,7 @@
 			extract(mysqli_fetch_assoc($serviceDetails));
 
             $serviceSection = json_decode($service_section);
-
+            
 		} else { ?>
 <script type="text/javascript">
 alert('Invalid action found');
@@ -58,12 +58,12 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                     <hr>
                     <label>Treatment title</label>
                     <input type="text" class="form-control inside-shadow"
-                        value="<?php echo $serviceSection->treatment_steps->treatment_header ?>" name="treatment_header"
+                        value="<?php echo $serviceSection->treatment_steps->header ?>" name="treatment_header"
                         placeholder="Treatment title">
                 </div>
                 <div class="form-group">
                     <label>Treatment Description</label>
-                    <input type="text" value="<?php echo $serviceSection->treatment_steps->treatment_description ?>"
+                    <input type="text" value="<?php echo $serviceSection->treatment_steps->description ?>"
                         class="form-control inside-shadow" name="treatment_description"
                         placeholder="Treatment description">
                 </div>
@@ -77,13 +77,13 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                         <div class="form-group">
                             <label>Header</label>
                             <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $serviceSection->treatment_steps[0]->header ?>"
+                                value="<?php echo $serviceSection->treatment_steps->steps[0]->header ?>"
                                 name="treatmentImageHeader_1" placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $serviceSection->treatment_steps[0]->description ?>"
+                                value="<?php echo $serviceSection->treatment_steps->steps[0]->description ?>"
                                 name="treatmentImageDescription_1" placeholder="Description">
                         </div>
                     </div>
@@ -96,13 +96,13 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                         <div class="form-group">
                             <label>Header</label>
                             <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $serviceSection->treatment_steps[1]->header ?>"
+                                value="<?php echo $serviceSection->treatment_steps->steps[1]->header ?>"
                                 name="treatmentImageHeader_2" placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $serviceSection->treatment_steps[1]->description ?>"
+                                value="<?php echo $serviceSection->treatment_steps->steps[1]->description ?>"
                                 name="treatmentImageDescription_2" placeholder="Description">
                         </div>
                     </div>
@@ -115,13 +115,13 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                         <div class="form-group">
                             <label>Header</label>
                             <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $serviceSection->treatment_steps[2]->header ?>"
+                                value="<?php echo $serviceSection->treatment_steps->steps[2]->header ?>"
                                 name="treatmentImageHeader_3" placeholder="Header">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $serviceSection->treatment_steps[2]->description ?>"
+                                value="<?php echo $serviceSection->treatment_steps->steps[2]->description ?>"
                                 name="treatmentImageDescription_3" placeholder="Description">
                         </div>
                     </div>
