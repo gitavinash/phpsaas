@@ -162,6 +162,11 @@
                         placeholder="Header">
                 </div>
                 <div class="form-group">
+                    <label>Sub Header</label>
+                    <input type="text" class="form-control inside-shadow" name="berforeAfterSubHeader"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
                     <label>Description</label>
                     <textarea name="berforeAfterDescription" class="form-control inside-shadow"
                         placeholder="Description"></textarea>
@@ -203,11 +208,6 @@
                     <label>Description</label>
                     <input type="text" class="form-control inside-shadow" name="watchVideoDescription"
                         placeholder="Description">
-                </div>
-                <div class="form-group">
-                    <label>Sub Description</label>
-                    <input type="text" class="form-control inside-shadow" name="watchVideoSubDescription"
-                        placeholder="Sub Description">
                 </div>
                 <div class="form-group">
                     <label>Video link</label>

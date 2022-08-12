@@ -205,6 +205,12 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                         placeholder="Header">
                 </div>
                 <div class="form-group">
+                    <label>Sub Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->before_after->subHeader ?>" name="berforeAfterSubHeader"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
                     <label>Description</label>
                     <textarea name="berforeAfterDescription"
                         value="<?php echo $serviceSection->before_after->description ?>"
@@ -251,12 +257,6 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                     <input type="text" class="form-control inside-shadow"
                         value="<?php echo $serviceSection->watch_video->description ?>" name="watchVideoDescription"
                         placeholder="Description">
-                </div>
-                <div class="form-group">
-                    <label>Sub Description</label>
-                    <input type="text" class="form-control inside-shadow"
-                        value="<?php echo $serviceSection->watch_video->subDescription ?>"
-                        name="watchVideoSubDescription" placeholder="Sub Description">
                 </div>
                 <div class="form-group">
                     <label>Video link</label>

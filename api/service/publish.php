@@ -63,6 +63,7 @@
                     ),
                     'before_after' => array(
                         'header' => $berforeAfterHeader,
+                        'subHeader' => $berforeAfterSubHeader,
                         'description' => $berforeAfterDescription,
                         'videoLink' => $berforeAfterVideLink,
                         'images' => array(
@@ -81,7 +82,7 @@
                         'subHeader' => $commitmentSubHeader,
                         'descripton' => $commitmentDescription
                     )
-                ));
+                ), true);
                 
                 if(isset($_FILES['gallery'])) {
         
