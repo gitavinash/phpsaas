@@ -40,6 +40,70 @@
                         $postType=((isset($postType)) ? $postType : $type );
                         $currentStock=((isset($currentStock)) ? $currentStock : 0 );
 
+                        $service_section = json_encode(array(
+                            'treatment_steps' => array(
+                                'header' => $treatment_header,
+                                'description' => $treatment_description,
+                                'steps' => array(
+                                    array(
+                                        'image' => $treatmentImage_1,
+                                        'header' => $treatmentImageHeader_1,
+                                        'description' => $treatmentImageDescription_1
+                                    ),
+                                    array(
+                                        'image' => $treatmentImage_2,
+                                        'header' => $treatmentImageHeader_2,
+                                        'description' => $treatmentImageDescription_2
+                                    ),
+                                    array(
+                                        'image' => $treatmentImage_3,
+                                        'header' => $treatmentImageHeader_3,
+                                        'description' => $treatmentImageDescription_3
+                                    )
+                                )
+                            ),
+                            'why_choose_us' => array(
+                                'image' => $whyChooseUs,
+                                'header' => $whyChooseTitle,
+                                'description' => $whyChooseDescription,
+                                'steps' => array(
+                                    array(
+                                        'icon' => $stepIcon_1,
+                                        'description'=> $stepHeader_1
+                                    ),
+                                    array(
+                                        'icon' => $stepIcon_2,
+                                        'description'=> $stepHeader_2
+                                    ),
+                                    array(
+                                        'icon' => $stepIcon_3,
+                                        'description'=> $stepHeader_3
+                                    ),
+                                )
+                            ),
+                            'before_after' => array(
+                                'header' => $berforeAfterHeader,
+                                'subHeader' => $berforeAfterSubHeader,
+                                'description' => $berforeAfterDescription,
+                                'videoLink' => $berforeAfterVideLink,
+                                'images' => array(
+                                    'before' => $before,
+                                    'after' => $after
+                                )
+                            ),
+                            'watch_video' => array(
+                                'header' => $watchVideoHeader,
+                                'description' => $watchVideoDescription,
+                                'subDescription' => $watchVideoSubDescription,
+                                'videoLink' => $watchVideoLink
+                            ),
+                            'our_commitment' => array(
+                                'header' => $commitmentHeader,
+                                'subHeader' => $commitmentSubHeader,
+                                'descripton' => $commitmentDescription
+                            )
+                        ), true);
+
                         if(isset($_FILES['gallery'])) {
                 
                             require_once MODULES.'galleryUploader.php';
@@ -110,7 +174,7 @@
                     
                         }
 
-                        $updateservice=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$gallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='".USER_ID."', service_status=1, service_type='{$postType}' WHERE service_id='{$id}'");
+                        $updateservice=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$gallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='".USER_ID."', service_status=1, service_type='{$postType}', service_section='{$service_section}' WHERE service_id='{$id}'");
 
                         $updateInventtory=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1 WHERE inventory_relation_id='{$id}'");
 
