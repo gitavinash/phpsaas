@@ -4,11 +4,11 @@
 
 	define('ROOT', dirname(__FILE__));
 
-	define('DEVELOPMENT_MODE', false); // Error reporting true to show error or false to hide error
+	define('DEVELOPMENT_MODE', true); // Error reporting true to show error or false to hide error
 
 	/* database connection setting */
 
-	if(DEVELOPMENT_MODE==false) {
+	if(DEVELOPMENT_MODE==true) {
 
 		define('DB_HOST', 'localhost');		// database hostname ex :- hostname
 		define('DB_USER', 'root');		// database username ex :- root
