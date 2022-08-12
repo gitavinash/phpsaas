@@ -334,6 +334,7 @@
 <?php
 
     if(isset($serviceSection['our_commitment'])) { ?>
+
 <section class="section_spacing_top ">
     <div class="container-fluid">
         <div class="row justify-content-center">
