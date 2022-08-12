@@ -1,6 +1,9 @@
 <?php
 
+    $serviceSection = json_decode($service_section, true);
+
     require_once 'header.php';
+
 
 ?>
 <section>
@@ -50,6 +53,11 @@
         </div>
     </div>
 </section>
+
+<?php
+
+    if(isset($serviceSection['treatment_steps'])) { ?>
+
 <section class="section_spacing_top section_spacing_bottom">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -57,72 +65,52 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <div class="section_heading mb-md-4">
-                            <p class="text-center">Our Process</p>
-                            <h3 class="text-center">How to do the Service?</h3>
+                            <p class="text-center"><?php echo $serviceSection['treatment_steps']['header'] ?></p>
+                            <h3 class="text-center"><?php echo $serviceSection['treatment_steps']['description'] ?></h3>
                         </div>
                     </div>
+                    <?php
+                    
+                    for($i=0; $i<sizeof($serviceSection['treatment_steps']['steps']); $i++) { ?>
+
                     <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
                         <div class="w-100 relative service_box">
                             <figure class="m-0">
-                                <img src="<?php echo USER_IMAGES ?>service-steps/1.png" alt="" class="img-fluid w-100">
+                                <img src="<?php echo $serviceSection['treatment_steps']['steps'][$i]['image'] ?>" alt=""
+                                    class="img-fluid w-100">
                             </figure>
                             <div class="service-title">
-                                <h3>Medication</h3>
+                                <h3><?php echo $serviceSection['treatment_steps']['steps'][$i]['header'] ?></h3>
                             </div>
                             <div class="written_text p-3">
                                 <p class="m-0">
-                                    Assessing your condition, our dermatologist will recommend you a course of
-                                    medications
+                                    <?php echo $serviceSection['treatment_steps']['steps'][$i]['description'] ?>
                                 </p>
-                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
-                                    Learn More
-                                </a> -->
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
-                        <div class="w-100 relative service_box">
-                            <figure class="m-0">
-                                <img src="<?php echo USER_IMAGES ?>service-steps/2.png" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="service-title">
-                                <h3>Chemical Peels</h3>
-                            </div>
-                            <div class="written_text p-3">
-                                <p class="m-0">
-                                    We have specialised chemical peels for treating acne conditions. They are used as
-                                    per dermatologist’s recommendation.
-                                </p>
-                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
-                                    Learn More
-                                </a> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
-                        <div class="w-100 relative service_box">
-                            <figure class="m-0">
-                                <img src="<?php echo USER_IMAGES ?>service-steps/3.png" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="service-title">
-                                <h3>Lasers</h3>
-                            </div>
-                            <div class="written_text p-3">
-                                <p class="m-0">
-                                    SkinQure being the pioneer in Lasers technology, we have machines available that
-                                    help you get rid of Acne problems.
-                                </p>
-                                <!-- <a href="" class="btn mt-3 px-4 bg-pink text-white rounded-0">
-                                    Learn More
-                                </a> -->
-                            </div>
-                        </div>
-                    </div>
+
+                    <?php
+                    }
+
+                    ?>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<?php
+    }
+
+?>
+
+
+<?php
+
+    if(isset($serviceSection['why_choose_us'])) { ?>
+
+
 <section class="section_spacing_top">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -130,60 +118,36 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
                         <div class="w-100 second_img service_first relative">
-                            <img src="<?php echo USER_IMAGES ?>img-04.jpg" alt="" class="img-fluid ">
-                            <div class="top_img">
-                                <img src="<?php echo USER_IMAGES ?>ser-5.jpg" alt="" class="img-fluid w-100">
-                            </div>
+                            <img src="<?php echo $serviceSection['why_choose_us']['image'] ?>" alt=""
+                                class="img-fluid ">
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
                         <div class="w-100 secondaboutpage ">
                             <div class="section_heading">
-                                <p class="text-start">Committed to patient satisfaction</p>
-                                <h3 class="text-start mb-md-5">Why Chose SkinQure for Acne Treatments:</h3>
+                                <p class="text-start"><?php echo $serviceSection['why_choose_us']['header'] ?></p>
+                                <h3 class="text-start mb-md-5">
+                                    <?php echo $serviceSection['why_choose_us']['description'] ?>
+                                </h3>
                             </div>
+                            <?php
+                            
+                                for($i=0; $i<sizeof($serviceSection['why_choose_us']['steps']); $i++) { ?>
+
                             <div class="d-flex w-100 align-items-center mb-5">
                                 <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>calendar.png" alt="" class="img-fluid">
+                                    <img src="<?php echo $serviceSection['why_choose_us']['steps'][$i]['icon'] ?>"
+                                        alt="" class="img-fluid">
                                 </div>
                                 <div class="text text-start">
-                                    <h5>
-                                        More than 13 Years of Experience
-                                    </h5>
-                                    <!-- <p class="m-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p> -->
+                                    <h5><?php echo $serviceSection['why_choose_us']['steps'][$i]['description'] ?></h5>
                                 </div>
                             </div>
-                            <div class="d-flex w-100 align-items-center mb-5">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>consultation.png" alt="" class="img-fluid">
-                                </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        World-Class technology
-                                    </h5>
-                                    <!-- <p class="m-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p> -->
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 align-items-center mb-4">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>customer-satisfaction.png" alt=""
-                                        class="img-fluid">
-                                </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        Treatments & Procudures done by Expert Dermatologist</h5>
-                                    <!-- <p class="m-0 text-start">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p> -->
-                                </div>
-                            </div>
+
+                            <?php
+                                }
+
+                            ?>
                         </div>
                     </div>
 
@@ -192,6 +156,17 @@
         </div>
     </div>
 </section>
+
+<?php
+    }
+
+?>
+
+<?php
+
+    if(isset($serviceSection['before_after'])) { ?>
+
+
 <section class="greenbg  section_spacing_top sectionpadding">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -200,23 +175,22 @@
 
                     <div class="col-md-4 position-relative">
                         <div class="section_heading">
-                            <p class="text-start">See our Results</p>
-                            <h3 class="text-start">Ready to Transform Yourself?</h3>
+                            <h3 class="text-start"><?php echo $serviceSection['before_after']['header'] ?></h3>
+                            <h3 class="text-start"><?php echo $serviceSection['before_after']['subHeader'] ?></h3>
                         </div>
 
                         <p class="separate_quote">
                             <img src="<?php echo USER_IMAGES ?>left-quote.png">
-                            One of our patient, Ms. Harshita sharma finally got rid of acne and she is very happy with
-                            her smooth skin and the way she looks. She has shared her overall experience in a short
-                            video, click to hear her SkinQure experience.
+                            <?php echo $serviceSection['before_after']['description'] ?>
                         </p>
-                        <a href="https://www.youtube.com/watch?v=VUA4SVORS50" target="_blank" class="btn btn_quote"><i
-                                class="fa fa-play-circle"></i> Watch Full Video</a>
+                        <a href="<?php echo $serviceSection['before_after']['videoLink'] ?>" target="_blank"
+                            class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
                     </div>
                     <div class="col-6 col-md-4">
                         <div class="bimg">
                             <a class="lightbox" href="#before">
-                                <img src="<?php echo USER_IMAGES ?>before-after/1.jpg" class="w-100">
+                                <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>"
+                                    class="w-100">
                                 <h4>Before</h4>
                             </a>
                         </div>
@@ -224,18 +198,19 @@
                     <div class="col-6 col-md-4">
                         <div class="bimg">
                             <a class="lightbox" href="#after">
-                                <img src="<?php echo USER_IMAGES ?>before-after/2.jpg" class="w-100">
+                                <img src="<?php echo $serviceSection['before_after']['images']['after'] ?>"
+                                    class="w-100">
                                 <h4>After</h4>
                             </a>
                         </div>
                     </div>
 
                     <div class="lightbox-target" id="before">
-                        <img src="<?php echo USER_IMAGES ?>before-after/1.jpg" />
+                        <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>" />
                         <a class="lightbox-close" href="#"></a>
                     </div>
                     <div class="lightbox-target" id="after">
-                        <img src="<?php echo USER_IMAGES ?>before-after/2.jpg" />
+                        <img src="<?php echo $serviceSection['before_after']['images']['after']  ?>" />
                         <a class="lightbox-close" href="#"></a>
                     </div>
 
@@ -244,19 +219,29 @@
         </div>
     </div>
 </section>
+
+<?php
+    }
+
+?>
+
+<?php
+
+    if(isset($serviceSection['watch_video'])) { ?>
+
 <section class="sectionpadding youtube_testimonial">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 text-center">
                 <div class="w-100 video-box relative">
                     <div class="section_heading">
-                        <p class="text-center text-white">Watch Video</p>
-                        <h3 class="text-center mb-md-4 text-white">Dr Jangid explains about Acne, skincare and treatment
-                            options</h3>
+                        <p class="text-center text-white"><?php echo $serviceSection['watch_video']['header'] ?></p>
+                        <h3 class="text-center mb-md-4 text-white">
+                            <?php echo $serviceSection['watch_video']['description'] ?></h3>
                     </div>
                     <a class="btn youtube youtubbtn" target="_blank"
-                        data-youtube="https://youtube.com/embed/76oQSWR6b-M"
-                        href="https://www.youtube.com/watch?v=76oQSWR6b-M">
+                        data-youtube="<?php echo $serviceSection['watch_video']['videoLink'] ?>"
+                        href="<?php echo $serviceSection['watch_video']['videoLink'] ?>">
                         <i class="md hydrated fa fa-play"> </i>
                     </a>
 
@@ -265,14 +250,23 @@
         </div>
     </div>
 </section>
+
 <div class="video-modal d-flex justify-content-center align-items-center d-none v-none" id="video-modal">
     <div class="video-body relative p-md-4 p-1">
         <div class="close-video">X</div>
         <div class="youtub-link w-100 h100">
-            <iframe src="https://youtube.com/embed/-_xPGQnljT4" width="100%" height="100%"></iframe>
+            <iframe src="<?php echo $serviceSection['watch_video']['videoLink'] ?>" width="100%" height="100%"></iframe>
         </div>
     </div>
 </div>
+
+<?php
+    }
+
+?>
+
+<!-- Contact form -->
+
 <section class="">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -336,6 +330,10 @@
         </div>
     </div>
 </section>
+
+<?php
+
+    if(isset($serviceSection['our_commitment'])) { ?>
 <section class="section_spacing_top ">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -344,16 +342,12 @@
                     <div class="col-md-6">
                         <div class="w-100 h100 p-md-3">
                             <div class="section_heading">
-                                <p class="text-start">Our commitment</p>
-                                <h3 class="text-start mb-md-4">Our Promise to our Clients in transforming their skin
-                                </h3>
+                                <p class="text-start"><?php echo $serviceSection['our_commitment']['header'] ?></p>
+                                <h3 class="text-start mb-md-4">
+                                    <?php echo $serviceSection['our_commitment']['subHeader'] ?></h3>
                             </div>
-                            <p class="text-start servicep">SkinQure clinic is the torch bearer of the latest technology
-                                and state of the art equipment for all your requirements for skin care and hair
-                                treatments. Our team of experienced and qualified doctors are able to provide the best
-                                in class services to our patients. Our list of satisfied customers is the testimony to
-                                the care and attention to detail that every member of our staff provide to our patients
-                                in our quest to make them more beautiful.</p>
+                            <p class="text-start servicep"><?php echo $serviceSection['our_commitment']['descripton'] ?>
+                            </p>
 
                         </div>
                     </div>
@@ -368,164 +362,11 @@
         </div>
     </div>
 </section>
-<!-- <section class="section_spacing_top section_spacing_bottom">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <div class="row">
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <div class="w-100 bg-white shadow subscription_box">
-                            <div class="sub_tag">
-                                <p class="m-0">
-                                    $ 0
-                                </p>
-                                <p class="m-0">
-                                    Month
-                                </p>
-                            </div>
-                            <div class="sub_tag_shadow"></div>
-                            <div class="sub-header w-100">
-                                <img src="<?php echo USER_IMAGES ?>makeup.png" alt="" class="img-fluid">
-                            </div>
-                            <div class="subscription_body">
-                                <h5>
-                                    FREE PLAN
-                                </h5>
-                                <h2>
-                                    Basic
-                                </h2>
-                                <ul>
-                                    <li>
-                                        3 user report
-                                    </li>
-                                    <li>
-                                        10 downloads per day
-                                    </li>
-                                    <li>
-                                        Daily content Update
-                                    </li>
-                                    <li>
-                                        Full support
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="sub_footer  ">
-                                <a href="" class="btn  w-100">
-                                    Choose the Plan
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <div class="w-100 bg-white shadow subscription_box">
-                            <div class="sub_tag">
-                                <p class="m-0">
-                                    $ 0
-                                </p>
-                                <p class="m-0">
-                                    Month
-                                </p>
-                            </div>
-                            <div class="sub_tag_shadow"></div>
-                            <div class="sub-header w-100">
-                                <img src="<?php echo USER_IMAGES ?>makeup.png" alt="" class="img-fluid">
-                            </div>
-                            <div class="subscription_body">
-                                <h5>
-                                    FREE PLAN
-                                </h5>
-                                <h2>
-                                    Basic
-                                </h2>
-                                <ul>
-                                    <li>
-                                        3 user report
-                                    </li>
-                                    <li>
-                                        10 downloads per day
-                                    </li>
-                                    <li>
-                                        Daily content Update
-                                    </li>
-                                    <li>
-                                        Full support
-                                    </li>
-                                    <li>
-                                        Daily content Update
-                                    </li>
-                                    <li>
-                                        Full support
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="sub_footer ">
-                                <a href="" class="btn  w-100">
-                                    Choose the Plan
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <div class="w-100 bg-white shadow subscription_box">
-                            <div class="sub_tag">
-                                <p class="m-0">
-                                    $ 0
-                                </p>
-                                <p class="m-0">
-                                    Month
-                                </p>
-                            </div>
-                            <div class="sub_tag_shadow"></div>
-                            <div class="sub-header w-100">
-                                <img src="<?php echo USER_IMAGES ?>makeup.png" alt="" class="img-fluid">
-                            </div>
-                            <div class="subscription_body">
-                                <h5>
-                                    FREE PLAN
-                                </h5>
-                                <h2>
-                                    Basic
-                                </h2>
-                                <ul>
-                                    <li>
-                                        3 user report
-                                    </li>
-                                    <li>
-                                        10 downloads per day
-                                    </li>
-                                    <li>
-                                        Daily content Update
-                                    </li>
-                                    <li>
-                                        Full support
-                                    </li>
-                                    <li>
-                                        3 user report
-                                    </li>
-                                    <li>
-                                        10 downloads per day
-                                    </li>
-                                    <li>
-                                        Daily content Update
-                                    </li>
-                                    <li>
-                                        Full support
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="sub_footer  ">
-                                <a href="" class="btn  w-100">
-                                    Choose the Plan
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<?php
+    }
 
-</section> -->
+?>
+
 <?php
 
 require_once 'footer.php';
