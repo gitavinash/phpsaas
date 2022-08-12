@@ -1,0 +1,37 @@
+.details-bg {
+  background: url("../assest/img/details.png");
+}
+
+.paginration {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
+
+.paginration ul li {
+  margin: 20px 30px;
+  color: #fff;
+  list-style: none;
+  padding: 15px;
+  border: 1px solid var(--golden);
+  border-radius: 30%;
+  transition: 0.6s ease;
+}
+
+.paginration ul li:hover {
+  background: var(--golden);
+}
+
+.cate .content {
+  margin-top: -250px;
+  text-align: end;
+}
+
+@media (max-width: 568px) {
+  .paginration {
+    overflow-x: scroll;
+  }
+  .paginration ul li {
+    margin: 10px 10px;
+  }
+}
