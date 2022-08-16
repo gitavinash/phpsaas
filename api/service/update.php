@@ -8,18 +8,19 @@
 
             if(isset($category)) {
 
-                if($checkservice=mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID FROM ".TABLE_PREFIX."service INNER JOIN ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
+                if($checkservice=mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, service_section FROM ".TABLE_PREFIX."service INNER JOIN ".TABLE_PREFIX."link INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
 
                     if(mysqli_num_rows($checkservice)!=0) {
 
                         extract(mysqli_fetch_assoc($checkservice));
+
+                        $serviceSection = json_decode($service_section, true);
 
                         require_once MODULES.'imageUploader.php';
 
                         if(isset($image)) {
                             
                             // Extract the single upload image string to variables
-
                             
                             $thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $featureImage ));
                             $facebookImage=(((isset($facebookImage)) ? $facebookImage : $oldFacebookImage ));
@@ -40,23 +41,23 @@
                         $postType=((isset($postType)) ? $postType : $type );
                         $currentStock=((isset($currentStock)) ? $currentStock : 0 );
 
-                        $service_section = json_encode(array(
+                        $updatedServiceSection = json_encode(array(
                             'treatment_steps' => array(
                                 'header' => $treatment_header,
                                 'description' => $treatment_description,
                                 'steps' => array(
                                     array(
-                                        'image' => $treatmentImage_1,
+                                        'image' => (($treatmentImage_1!='') ? $treatmentImage_1 : $serviceSection['treatment_steps']['steps'][0]['image']),
                                         'header' => $treatmentImageHeader_1,
                                         'description' => $treatmentImageDescription_1
                                     ),
                                     array(
-                                        'image' => $treatmentImage_2,
+                                        'image' => (($treatmentImage_2!='') ? $treatmentImage_2 : $serviceSection['treatment_steps']['steps'][1]['image']),
                                         'header' => $treatmentImageHeader_2,
                                         'description' => $treatmentImageDescription_2
                                     ),
                                     array(
-                                        'image' => $treatmentImage_3,
+                                        'image' => (($treatmentImage_3!='') ? $treatmentImage_3 : $serviceSection['treatment_steps']['steps'][2]['image']),
                                         'header' => $treatmentImageHeader_3,
                                         'description' => $treatmentImageDescription_3
                                     )
@@ -68,15 +69,15 @@
                                 'description' => $whyChooseDescription,
                                 'steps' => array(
                                     array(
-                                        'icon' => $stepIcon_1,
+                                        'icon' => (($stepIcon_1!='') ? $stepIcon_1 : $serviceSection['why_choose_us']['steps'][0]['icon']),
                                         'description'=> $stepHeader_1
                                     ),
                                     array(
-                                        'icon' => $stepIcon_2,
+                                        'icon' => (($stepIcon_2!='') ? $stepIcon_2 : $serviceSection['why_choose_us']['steps'][1]['icon']),
                                         'description'=> $stepHeader_2
                                     ),
                                     array(
-                                        'icon' => $stepIcon_3,
+                                        'icon' => (($stepIcon_3!='') ? $stepIcon_3 : $serviceSection['why_choose_us']['steps'][2]['icon']),
                                         'description'=> $stepHeader_3
                                     ),
                                 )
@@ -87,8 +88,8 @@
                                 'description' => $berforeAfterDescription,
                                 'videoLink' => $berforeAfterVideLink,
                                 'images' => array(
-                                    'before' => $before,
-                                    'after' => $after
+                                    'before' => (($before!='') ? $before : $serviceSection['before_after']['images']['before']),
+                                    'after' => (($after!='') ? $after : $serviceSection['before_after']['images']['after'])
                                 )
                             ),
                             'watch_video' => array(
@@ -174,7 +175,7 @@
                     
                         }
 
-                        $updateservice=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$gallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='".USER_ID."', service_status=1, service_type='{$postType}', service_section='{$service_section}' WHERE service_id='{$id}'");
+                        $updateservice=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$gallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='".USER_ID."', service_status=1, service_type='{$postType}', service_section='{$updatedServiceSection}' WHERE service_id='{$id}'");
 
                         $updateInventtory=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1 WHERE inventory_relation_id='{$id}'");
 
