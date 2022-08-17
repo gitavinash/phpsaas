@@ -64,7 +64,7 @@
                                 )
                             ),
                             'why_choose_us' => array(
-                                'image' => $whyChooseUs,
+                                'image' => (($whyChooseUs!='') ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
                                 'header' => $whyChooseTitle,
                                 'description' => $whyChooseDescription,
                                 'steps' => array(
@@ -99,6 +99,7 @@
                                 'videoLink' => $watchVideoLink
                             ),
                             'our_commitment' => array(
+                                'image' => (($commitmentImage!='') ? $commitmentImage : $serviceSection['our_commitment']['image']),
                                 'header' => $commitmentHeader,
                                 'subHeader' => $commitmentSubHeader,
                                 'descripton' => $commitmentDescription

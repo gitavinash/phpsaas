@@ -78,6 +78,7 @@
                         'videoLink' => $watchVideoLink
                     ),
                     'our_commitment' => array(
+                        'image' => $commitmentImage,
                         'header' => $commitmentHeader,
                         'subHeader' => $commitmentSubHeader,
                         'descripton' => $commitmentDescription

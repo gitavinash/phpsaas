@@ -354,7 +354,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="w-100 h100">
-                            <img src="<?php echo USER_IMAGES ?>our-commitment.jpg" alt=""
+                            <img src="<?php echo $serviceSection['our_commitment']['image'] ?>" alt=""
                                 class="img-fluid w-100 h100 cover">
                         </div>
                     </div>
