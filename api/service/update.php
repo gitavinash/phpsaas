@@ -22,6 +22,7 @@
                             
                             // Extract the single upload image string to variables
                             
+                            $featureImage=(((isset($featureImage)) ? $featureImage : $oldFeatureImage ));
                             $thumbnailImage=(((isset($thumbnailImage)) ? $featureImage : $featureImage ));
                             $facebookImage=(((isset($facebookImage)) ? $facebookImage : $oldFacebookImage ));
                             $twitterImage=(((isset($twitterImage)) ? $twitterImage : $oldTwitterImage ));
