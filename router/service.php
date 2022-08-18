@@ -29,22 +29,33 @@
 
                         /** Check category template is avilable or not */
 
-                        $category_title=((isset($category_title)) ? $category_title.'-' : '' );
+                        $serviceTypeTemplate=USER_PATH.strtolower($service_type).'.php';
 
-                        $categoryTemplate=USER_PATH.strtolower($category_title).'service.php';
+                        if(file_exists($serviceTypeTemplate)) {
 
-                        if(file_exists($categoryTemplate)) {
+                            /** Opening service type template */
 
-                            /** Opening category service template */
-
-                            require_once $categoryTemplate;
+                            require_once $serviceTypeTemplate;
 
                         } else {
 
-                            /** Display content in default template */
+                            $category_title=((isset($category_title)) ? $category_title.'-' : '' );
 
-                            require_once USER_PATH.'service.php';
+                            $categoryTemplate=USER_PATH.strtolower($category_title).'service.php';
 
+                            if(file_exists($categoryTemplate)) {
+
+                                /** Opening category service template */
+
+                                require_once $categoryTemplate;
+
+                            } else {
+
+                                /** Display content in default template */
+
+                                require_once USER_PATH.'service.php';
+
+                            }
                         }
 
                         $cached = fopen(CACHE_FILE, 'w');

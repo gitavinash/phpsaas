@@ -207,7 +207,7 @@
                         if($updateservice && $addRedirect && $updateInventtory && $updateMeta && $updateTags) {
 
                             $status=200;
-                            $msg='service upload successfully';
+                            $msg='Service upload successfully';
                             $redirect="/dashboard/service/?type=edit&editor=true&id=".base64_encode($id);
                             mysqli_query($connection, "COMMIT");
 
