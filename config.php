@@ -8,7 +8,7 @@
 
 	/* database connection setting */
 
-	if(DEVELOPMENT_MODE==true) {
+	if(DEVELOPMENT_MODE==false) {
 
 		define('DB_HOST', 'localhost');		// database hostname ex :- hostname
 		define('DB_USER', 'root');		// database username ex :- root
