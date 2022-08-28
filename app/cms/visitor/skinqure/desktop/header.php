@@ -42,89 +42,176 @@
                                 <a href="#">Conditions<i class="fa fa-angle-down ms-2"></i></a>
                                 <div class="sub-menu mega-menu mega-menu-column-4 text-start">
                                     <div class="list-item">
-                                        <h4 class="title">Facial Cosmetic Treatment</h4>
+                                        <h4 class="title">Dermatology</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/chemical-peels-organic-peels/">Chemical
-                                                    Peels / Organic Peels</a>
+                                                <a href="">Acne</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/open-pore-treatment-in-delhi/">Open
-                                                    Pore Treatments</a>
+                                                <a href="">Acne Scar</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/under-eye-treatment-in-delhi/">Under
-                                                    Eye Treatment</a>
+                                                <a href="">Melasma Pigmentation</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/lip-lightening-treatment-in-delhi/">Lip
-                                                    Lightening</a>
+                                                <a href="">Allergy / Eczema</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/lip-enhancement-treatment-in-delhi/">Lip
-                                                    Enhancement</a>
+                                                <a href="">Psoriasis</a>
                                             </li>
                                             <li>
-                                                <a href="/service/facial-cosmetic-treatment/nose-enhancement/">Nose
-                                                    Enhancement</a>
+                                                <a href="">Vitiligo</a>
                                             </li>
                                             <li>
-                                                <a href="/service/facial-cosmetic-treatment/medi-facial/">Medi
-                                                    Facials</a>
+                                                <a href="">Tinea</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/skin-glow-treatment-in-delhi/">Skin
-                                                    Glow Treatment</a>
+                                                <a href="">Open Pores</a>
                                             </li>
                                             <li>
-                                                <a href="/service/facial-cosmetic-treatment/double-chin-removal/">Double
-                                                    Chin Treatment</a>
+                                                <a href="">Moles</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Warts</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Skin Tags</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Acne Scar</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Ear Lobe</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Cyst</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Nail</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Vitiligo</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Lipoma</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="list-item">
-                                        <h4 class="title">Anti-ageing Treatments</h4>
+                                        <h4 class="title">Face Cosmetic</h4>
                                         <ul>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/filler-treatment/">BTX
-                                                    -A Treatment</a>
+                                                <a href="">Wrinkles</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/filler-treatment/">Filler
-                                                    Treatment</a>
+                                                <a href="">Crowfeet</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/hifu-treatment/">HIFU
-                                                    Treatment</a>
+                                                <a href="">Double Chin</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/thread-lift-treatment/">Thread
-                                                    Lift Treatment</a>
+                                                <a href="">Under Eye</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/vampire-facelift-treatment/">Vampire
-                                                    Facelift</a>
+                                                <a href="">Face Drooping</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/ultracel-treatment/">UltraCel
-                                                    Treatment</a>
+                                                <a href="">Fine Lines</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="list-item">
+                                        <h4 class="title">Body Cosmetic</h4>
+                                        <ul>
+                                            <li>
+                                                <a href="">Strech Marks</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/laser-resurfacing-treatment/">Laser
-                                                    Resurfacing</a>
+                                                <a href="">Body Pigmentation</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/filler-treatment/">Fillers
-                                                    Treatment</a>
+                                                <a href="">Tanning</a>
                                             </li>
                                             <li>
-                                                <a href="/service/anti-ageing-treatments/facelift/">Facelift</a>
+                                                <a href="">Birthmark</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Tattoo</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Eczema</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Treatments<i class="fa fa-angle-down ms-2"></i></a>
+                                <div class="sub-menu mega-menu mega-menu-column-4 text-start">
+                                    <div class="list-item">
+                                        <h4 class="title">Dermatology</h4>
+                                        <ul>
+                                            <li>
+                                                <a href=""></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="list-item">
+                                        <h4 class="title">Face cosmetics</h4>
+                                        <ul>
+                                            <li>
+                                                <a href="">Acne Treatments</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Acne Scar Treatments</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Melasma Pigmentation Treatments</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Allergy / Eczema Treatments</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Psoriasis Treatment</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Skin Biopsy</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Vitiligo Treatments</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Tinea Treatment</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Mole Removal</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Wart Removal</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Skin Tag Removal</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Acne Scar Surgeries</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Ear Lobe Repair</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Cyst Removal</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Nail Surgery</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Vitiligo Surgery</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Cryosurgery</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Lipoma Treatment</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -132,127 +219,97 @@
                                         <h4 class="title">Body Cosmetic Treatment</h4>
                                         <ul>
                                             <li>
-                                                <a href="/service/body-cosmetic-treatment/skin-whitening-treatment/">Skin
-                                                    Whitening Treatment</a>
+                                                <a href="">Chemical Peels / Organic Peels</a>
                                             </li>
                                             <li>
-                                                <a href="/service/body-cosmetic-treatment/stretch-mark-treatment/">Stretch
-                                                    Mark Treatments</a>
+                                                <a href="">Open Pore Treatments</a>
                                             </li>
                                             <li>
-                                                <a href="/service/body-cosmetic-treatment/de-tan-treatment/">De-tan
-                                                    Treatment</a>
+                                                <a href="">Under Eye Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/underarm-treatments/">Underarm
-                                                    Treatments</a>
+                                                <a href="">Lip Lightening</a>
                                             </li>
                                             <li>
-                                                <a href="/service/body-cosmetic-treatment/birth-mark-removal/">Birth
-                                                    Mark Removal</a>
+                                                <a href="">Lip Enhancement</a>
                                             </li>
                                             <li>
-                                                <a href="/service/body-cosmetic-treatment/cellulite-treatment/">Cellulite
-                                                    Treatment</a>
+                                                <a href="">Nose Enhancement</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/dashboard/service/?type=list&status=all#:~:text=Delete-,View,-Body%20Cosmetic%20Treatment">Hand
-                                                    Rejuvenation</a>
+                                                <a href="">Medi Facials</a>
                                             </li>
                                             <li>
-                                                <a href="/service/body-cosmetic-treatment/fat-reduction-surgery/">Fat
-                                                    Reduction</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="list-item">
-                                        <h4 class="title">Dermatology</h4>
-                                        <ul>
-                                            <li>
-                                                <a href="/service/dermatology/acne-treatments/">Acne
-                                                    Treatments</a>
+                                                <a href="">Skin Glow Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/acne-scar-treatment/">Acne
-                                                    Scar
-                                                    Treatment</a>
+                                                <a href="">Double Chin Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/skin-pigmentation-treatment/">Melasma
-                                                    Pigmentation Treatment</a>
+                                                <a href="">Btx-a Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/allergy-eczema-treatment/">Allergy
-                                                    / Eczema Treatments</a>
+                                                <a href="">Filler Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/psoriasis-treatment/">Psoriasis
-                                                    Treatment</a>
+                                                <a href="">Hifu Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/skin-biopsy-treatment/">Skin
-                                                    Biopsy</a>
+                                                <a href="">Thread Lift Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/vitiligo-treatments/">Vitiligo
-                                                    Treatments</a>
+                                                <a href="">Vampire Facelift</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/tinea-treatment/">Tinea
-                                                    Treatment</a>
+                                                <a href="">Ultracel Treatment</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Laser Resurfacing</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Fillers Treatment</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Facelift</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Skin Whitening Treatment</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="list-item">
-                                        <div class="title">Dermatosurgery</div>
+                                        <h4 class="title">Body Cosmetics</h4>
                                         <ul>
                                             <li>
-                                                <a href="/service/dermato-surgery/mole-removal-surgery/">Mole
-                                                    Removal</a>
+                                                <a href="">Stretch Mark Treatments</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermato-surgery/wart-removal-treatment/">Wart
-                                                    Removal</a>
+                                                <a href="">De-tan Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermato-surgery/skin-tag-removal/">Skin
-                                                    Tag Removal</a>
+                                                <a href="">Underarm Treatments</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermato-surgery/acne-scar-surgery/">Acne
-                                                    Scar surgeries</a>
+                                                <a href="">Birth Mark Removal</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermato-surgery/ear-lobe-repair-surgery/">Ear
-                                                    Lobe Repair</a>
+                                                <a href="">Cellulite Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermato-surgery/cyst-removal-treatment/">Cyst
-                                                    Removal</a>
+                                                <a href="">Hand Rejuvenation</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermato-surgery/ingrown-toenail-surgery/">Nail
-                                                    Surgery</a>
+                                                <a href="">Fat Reduction</a>
                                             </li>
                                             <li>
-                                                <a href="/service/dermatology/vitiligo-treatments/">Vitiligo
-                                                    Surgery</a>
+                                                <a href="">Tattoo Removal</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/dermato-surgery/cryosurgery-treatment/">Cryosurgery</a>
-                                            </li>
-                                            <li>
-                                                <a href="/service/dermato-surgery/lipoma-treatment/">Lipoma
-                                                    Treatment</a>
+                                                <a href="">Laser Hair Reduction</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="/why-us/">Treatments</a>
                             </li>
                             <li class="menu-item-has-children">
                                 <a href="#">About Team <i class="fa fa-angle-down ms-2"></i></a>
