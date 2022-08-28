@@ -152,14 +152,6 @@
                                         <h4 class="title">Dermatology</h4>
                                         <ul>
                                             <li>
-                                                <a href=""></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="list-item">
-                                        <h4 class="title">Face cosmetics</h4>
-                                        <ul>
-                                            <li>
                                                 <a href="">Acne Treatments</a>
                                             </li>
                                             <li>
@@ -216,7 +208,7 @@
                                         </ul>
                                     </div>
                                     <div class="list-item">
-                                        <h4 class="title">Body Cosmetic Treatment</h4>
+                                        <h4 class="title">Face cosmetics</h4>
                                         <ul>
                                             <li>
                                                 <a href="">Chemical Peels / Organic Peels</a>
