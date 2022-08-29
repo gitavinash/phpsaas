@@ -74,6 +74,10 @@
                                             <li>
                                                 <a href="">Warts</a>
                                             </li>
+                                        </ul>
+                                    </div>
+                                    <div class="list-item">
+                                        <ul>
                                             <li>
                                                 <a href="">Skin Tags</a>
                                             </li>
@@ -175,6 +179,10 @@
                                             <li>
                                                 <a href="">Tinea Treatment</a>
                                             </li>
+                                        </ul>
+                                    </div>
+                                    <div class="list-item">
+                                        <ul>
                                             <li>
                                                 <a href="">Mole Removal</a>
                                             </li>
@@ -234,6 +242,10 @@
                                             <li>
                                                 <a href="">Skin Glow Treatment</a>
                                             </li>
+                                        </ul>
+                                    </div>
+                                    <div class="list-item">
+                                        <ul>
                                             <li>
                                                 <a href="">Double Chin Treatment</a>
                                             </li>
