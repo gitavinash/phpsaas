@@ -316,21 +316,33 @@
                                 </div>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">About Team <i class="fa fa-angle-down ms-2"></i></a>
+                                <a href="#">Why Us <i class="fa fa-angle-down ms-2"></i></a>
                                 <div class="sub-menu single-column-menu">
                                     <ul class="text-start">
-                                        <li><a href="/dr-jangid/">Dr. Jangid</a></li>
-                                        <li><a href="/our-dermatologists/">Our Dermatologists</a></li>
-                                        <li><a href="/aestheticians/">Aestheticians</a></li>
-                                        <li><a href="/managers/">Managers</a></li>
+                                        <li><a href="">Technology</a></li>
+                                        <li><a href="">Media</a></li>
                                     </ul>
                                 </div>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="/why-us/">Why Us</a>
+                                <a href="#">About Team <i class="fa fa-angle-down ms-2"></i></a>
+                                <div class="sub-menu single-column-menu">
+                                    <ul class="text-start">
+                                        <li><a href="/dr-jangid/">Dr. Jangid</a></li>
+                                        <li><a href="/aestheticians/">Aestheticians</a></li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="/wow-inclusive/">Wow Inclusive</a>
+                                <a href="#">About Team <i class="fa fa-angle-down ms-2"></i></a>
+                                <div class="sub-menu single-column-menu">
+                                    <ul class="text-start">
+                                        <li><a href="">Packages</a></li>
+                                        <li><a href="">WOW inclusive</a></li>
+                                        <li><a href="">Latest Offers</a></li>
+                                        <li><a href="">Bridal Packages</a></li>
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                     </nav>
