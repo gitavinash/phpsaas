@@ -334,7 +334,7 @@
                                 </div>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">About Team <i class="fa fa-angle-down ms-2"></i></a>
+                                <a href="#">Offers <i class="fa fa-angle-down ms-2"></i></a>
                                 <div class="sub-menu single-column-menu">
                                     <ul class="text-start">
                                         <li><a href="">Packages</a></li>
