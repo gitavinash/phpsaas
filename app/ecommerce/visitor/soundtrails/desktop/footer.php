@@ -1,4 +1,20 @@
-<!-- treding -end -->
+<section class="vertical-padding sidepadding d-flex align-content-center">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center text-center">
+            <div class="col-12 col-lg-6">
+                <h5 class="text-white font-size-25">
+                    Stay Connected With Our Email Updates
+                </h5>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="newsleeter d-flex m-0 justify-content-center mt-3 mt-md-0">
+                    <input type="search" class="newsleeter-bar m-0" placeholder="Enter Your Email" />
+                    <button class="btn1 m-0">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <footer class="vertical-padding sidepadding ">
     <div class="container-fluid">
         <div class="row">
@@ -69,7 +85,8 @@
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
 
-<script src="<?php echo USER_JS ?>app.js"></script>
+<script src="./js/App.js"></script>
+<script src="./js/popup.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -126,6 +143,46 @@ $('.testi').slick({
         // settings: "unslick"
         // instead of a settings object
     ]
+});
+</script>
+
+
+<script>
+$(".slider").slick({
+    dots: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    responsive: [{
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true,
+            },
+        },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+            },
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            },
+        },
+        // You can unslick at a given breakpoint now by adding:
+        // settings: "unslick"
+        // instead of a settings object
+    ],
 });
 </script>
 

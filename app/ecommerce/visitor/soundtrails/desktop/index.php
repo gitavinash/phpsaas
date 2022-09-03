@@ -3,6 +3,9 @@
     require_once('header.php');
 
 ?>
+
+<!-- navbar -->
+
 <!-- hero -->
 <div class="container-fluid">
     <div class="row">
@@ -63,6 +66,25 @@
 </div>
 
 </div>
+<!-- <div class="row sidepadding hero align-items-center">
+          <div class="col-6">
+            <h3 class="text-white fontibm">
+              How Sound <br />
+              Should <span style="color: #da9c65">Sound</span>
+            </h3>
+            <p class="text-white my-3 fontibm">
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid
+              officia impedit maiores totam soluta, magnam officiis amet
+              consequuntur eius, distinctio incidunt sapiente cum vero sint
+              necessitatibus assumenda quasi dicta fugit!
+            </p>
+            <button class="btn1 my-3">Buy Now</button>
+          </div>
+
+          <div class="col-6">
+            <img src="<?php echo USER_IMAGES ?>p1.png" alt="" class="img-fluid" />
+          </div>
+        </div> -->
 </div>
 
 <!-- end -->
@@ -100,39 +122,42 @@
                         <ul class="nav nav-pills d-flex justify-content-center d-none d-md-flex " id="pills-tab"
                             role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                <button class="nav-link active" id="product-data" data-bs-toggle="pill"
+                                    data-bs-target="#product" type="button" role="tab" aria-controls="pills-home"
                                     aria-selected="true">All product</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-profile" type="button" role="tab"
-                                    aria-controls="pills-profile" aria-selected="false">Home theater</button>
+                                <button class="nav-link" id="Home-theater" data-bs-toggle="pill"
+                                    data-bs-target="#Hometheater" type="button" role="tab" aria-controls="pills-profile"
+                                    aria-selected="false">Home theater</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-contact" type="button" role="tab"
-                                    aria-controls="pills-contact" aria-selected="false">Speaker</button>
-                            </li>
-
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-contact" type="button" role="tab"
-                                    aria-controls="pills-contact" aria-selected="false">Sound bar</button>
+                                <button class="nav-link" id="Speaker-data" data-bs-toggle="pill"
+                                    data-bs-target="#Speaker" type="button" role="tab" aria-controls="pills-contact"
+                                    aria-selected="false">Speaker</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-contact" type="button" role="tab"
-                                    aria-controls="pills-contact" aria-selected="false">Home cinema</button>
+                                <button class="nav-link" id="sound-system" data-bs-toggle="pill" data-bs-target="#sound"
+                                    type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Sound
+                                    bar</button>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="Home-cinema" data-bs-toggle="pill"
+                                    data-bs-target="#Homecinema" type="button" role="tab" aria-controls="pills-contact"
+                                    aria-selected="false">Home cinema</button>
                             </li>
                         </ul>
+
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                            <div class="tab-pane fade show active" id="product" role="tabpanel"
+                                aria-labelledby="product-data">
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 23.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt=""
                                                 class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -154,7 +179,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 23.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -176,7 +201,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 24.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -198,7 +223,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 25.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -221,11 +246,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                            <div class="tab-pane fade" id="Hometheater" role="tabpanel" aria-labelledby="Home-theater">
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 26.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt=""
                                                 class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -247,7 +273,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 27.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 33.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -269,7 +295,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 29.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 23.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -291,7 +317,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 30.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -314,11 +340,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+                            <!-- second-------------------------------------------------------------------------------- -->
+                            <div class="tab-pane fade" id="Speaker" role="tabpanel" aria-labelledby="Speaker-data">
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 31.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt=""
                                                 class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -340,7 +368,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 33.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -362,7 +390,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 23.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -384,7 +412,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>image 24.png" alt=""
+                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt=""
                                                 class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
@@ -407,100 +435,204 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="tab-pane fade" id="sound" role="tabpanel" aria-labelledby="sound-system">
+                                <div class="">
+                                    <div class="row products my-5 p-0 mx-0">
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt=""
+                                                class="img-fluid mx-auto d-block " />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans ">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt=""
+                                                class="img-fluid  mx-auto d-block" />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt=""
+                                                class="img-fluid  mx-auto d-block" />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt=""
+                                                class="img-fluid  mx-auto d-block" />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="Homecinema" role="tabpanel" aria-labelledby="Home-cinema">
+                                <div class="">
+                                    <div class="row products my-5 p-0 mx-0">
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt=""
+                                                class="img-fluid mx-auto d-block " />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans ">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 33.png" alt=""
+                                                class="img-fluid  mx-auto d-block" />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 23.png" alt=""
+                                                class="img-fluid  mx-auto d-block" />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
+                                            <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt=""
+                                                class="img-fluid  mx-auto d-block" />
+                                            <div class="product-details">
+                                                <p class="text-white font-size-20 font-family-sans text-center">
+                                                    Blaupunkt Germany's SBW200
+                                                </p>
+                                            </div>
+                                            <div class="rating-price d-flex justify-content-around">
+                                                <div class="price text-white font-size-20 font-family-sans">
+                                                    $122.00
+                                                </div>
+                                                <div class="rating d-flex">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
                         </div>
-
 
 
                     </div>
                 </div>
-
-                <!-- <div class="row products my-5 p-0 mx-0">
-                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                            <img src="<?php echo USER_IMAGES ?>image 28.png" alt="" class="img-fluid mx-auto d-block " />
-                            <div class="product-details">
-                                <p class="text-white font-size-20 font-family-sans text-center">
-                                    Blaupunkt Germany's SBW200
-                                </p>
-                            </div>
-                            <div class="rating-price d-flex justify-content-around">
-                                <div class="price text-white font-size-20 font-family-sans ">
-                                    $122.00
-                                </div>
-                                <div class="rating d-flex">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                            <img src="<?php echo USER_IMAGES ?>image 28.png" alt="" class="img-fluid  mx-auto d-block" />
-                            <div class="product-details">
-                                <p class="text-white font-size-20 font-family-sans text-center">
-                                    Blaupunkt Germany's SBW200
-                                </p>
-                            </div>
-                            <div class="rating-price d-flex justify-content-around">
-                                <div class="price text-white font-size-20 font-family-sans">
-                                    $122.00
-                                </div>
-                                <div class="rating d-flex">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                            <img src="<?php echo USER_IMAGES ?>image 28.png" alt="" class="img-fluid  mx-auto d-block" />
-                            <div class="product-details">
-                                <p class="text-white font-size-20 font-family-sans text-center">
-                                    Blaupunkt Germany's SBW200
-                                </p>
-                            </div>
-                            <div class="rating-price d-flex justify-content-around">
-                                <div class="price text-white font-size-20 font-family-sans">
-                                    $122.00
-                                </div>
-                                <div class="rating d-flex">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                            <img src="<?php echo USER_IMAGES ?>image 28.png" alt="" class="img-fluid  mx-auto d-block" />
-                            <div class="product-details">
-                                <p class="text-white font-size-20 font-family-sans text-center">
-                                    Blaupunkt Germany's SBW200
-                                </p>
-                            </div>
-                            <div class="rating-price d-flex justify-content-around">
-                                <div class="price text-white font-size-20 font-family-sans">
-                                    $122.00
-                                </div>
-                                <div class="rating d-flex">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-            </div>
-        </div>
     </section>
 
 </main>
@@ -576,7 +708,7 @@
         <div class="row products my-5">
 
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 26.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -597,7 +729,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 28.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 28.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -618,7 +750,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 29.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -639,7 +771,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 30.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -662,7 +794,7 @@
 
         <div class="row products my-5 ">
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 31.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -682,7 +814,7 @@
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 24.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -702,7 +834,7 @@
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 25.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 25.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -722,7 +854,7 @@
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                <img src="<?php echo USER_IMAGES ?>image 27.png" alt="" class="img-fluid mx-auto d-block " />
+                <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt="" class="img-fluid mx-auto d-block " />
                 <div class="product-details">
                     <p class="text-white font-size-20 font-family-sans text-center">
                         Blaupunkt Germany's SBW200
@@ -933,25 +1065,7 @@
 
 </Section>
 
-<!-- /testimonial -->
-
-<section class="vertical-padding sidepadding d-flex align-content-center ">
-    <div class="container-fluid">
-        <div class="row d-flex justify-content-center text-center">
-            <div class="col-12 col-lg-6">
-                <h5 class="text-white font-size-25">Stay Connected With Our Email Updates</h5>
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="newsleeter d-flex m-0 justify-content-center  mt-3 mt-md-0">
-                    <input type="search" class="newsleeter-bar m-0" placeholder="Enter Your Email">
-                    <button class="btn1 m-0">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- treding -end -->
 <?php
-
     require_once('footer.php');
-
 ?>

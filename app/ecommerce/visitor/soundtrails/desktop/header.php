@@ -23,10 +23,7 @@
         integrity="sha512-wR4oNhLBHf7smjy0K4oqzdWumd+r5/+6QO/vDda76MW5iug4PT7v86FoEkySIJft3XA0Ae6axhIvHrqwm793Nw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>global.css" />
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>Home.css" />
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>navbar.css" />
-
-    <title>Hello, world!</title>
+    <?php require_once DEFAULT_META ?>
 </head>
 
 <body>
@@ -46,17 +43,17 @@
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav ms-auto align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                                <a class="nav-link active" aria-current="page" href="./index.php">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/about">About us</a>
+                                <a class="nav-link" href="./About.php">About us</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="/product">Product</a>
+                                <a class="nav-link" href="./Product-details.php">Product</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/contact">Contact us</a>
+                                <a class="nav-link" href="./contact.php">Contact us</a>
                             </li>
                         </ul>
 
@@ -73,20 +70,19 @@
 
                 <ul class="navbar-nav ms-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link active" aria-current="page" href="./index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About us</a>
+                        <a class="nav-link" href="./About.php">About us</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/product">Product</a>
+                        <a class="nav-link" href="./Product-details.php">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact">Contact us</a>
+                        <a class="nav-link" href="./contact.php">Contact us</a>
                     </li>
                 </ul>
 
             </div>
         </header>
-        <!-- navbar -->
