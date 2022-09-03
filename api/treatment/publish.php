@@ -21,6 +21,9 @@
                 $gallery = '';
 
                 $service_section = json_encode(array(
+                    'feature_video' => array(
+                        'url' => $featureVideo
+                    ),
                     'quote' => array(
                         'quote' => $quote
                     ),

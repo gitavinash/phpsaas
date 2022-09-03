@@ -72,6 +72,7 @@
                         )
                     ),
                     'watch_video' => array(
+                        'image' => $watchVideoImage,
                         'header' => $watchVideoHeader,
                         'description' => $watchVideoDescription,
                         'subDescription' => $watchVideoSubDescription,

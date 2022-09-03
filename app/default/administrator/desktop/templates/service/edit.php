@@ -264,6 +264,11 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                         value="<?php echo $serviceSection->watch_video->videoLink ?>" name="watchVideoLink"
                         placeholder="Video link">
                 </div>
+                <div class="form-group">
+                    <label>Background image</label>
+                    <input type="file" name="watchVideoImage" class="full-width"
+                        accept="image/x-png, image/gif, image/jpeg">
+                </div>
             </section>
 
             <section style="margin-top:30px">

@@ -43,6 +43,9 @@
                         $currentStock=((isset($currentStock)) ? $currentStock : 0 );
 
                         $updatedServiceSection = json_encode(array(
+                            'feature_video' => array(
+                                'url' => $featureVideo
+                            ),
                             'quote' => array(
                                 'quote' => $quote
                             ),

@@ -12,7 +12,8 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="row">
-                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/k8V3CmRzI3I"
+                    <iframe width="100%" height="315"
+                        src="https://www.youtube.com/embed/<?php echo str_replace('https://www.youtube.com/watch?v=', '', $serviceSection['feature_video']['url']) ?>"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>

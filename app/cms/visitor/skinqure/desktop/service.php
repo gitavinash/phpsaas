@@ -10,7 +10,8 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12 text-center p-0">
-                <div class="inner_page_banner" style="background-image: url(<?php echo $service_image ?>)">
+                <div class="inner_page_banner"
+                    style="background-image: url(<?php echo $service_image ?>); background-size: cover; background-position: 100% 100%">
                     <div class="inner_content">
                         <p>
                             <?php echo ucwords($service_title) ?></p>
@@ -229,7 +230,8 @@
 
     if(isset($serviceSection['watch_video'])) { ?>
 
-<section class="sectionpadding youtube_testimonial">
+<section class="sectionpadding youtube_testimonial"
+    style="background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(<?php echo $serviceSection['watch_video']['image'] ?>); background-size: cover; background-position: 100% 100%">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 text-center">

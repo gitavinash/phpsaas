@@ -53,6 +53,17 @@ window.location.href = 'dashboard/service/?type=list&status=all';
             </div>
 
             <section style="margin-top:30px">
+                <h3>Feature Video</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Youtube video url</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo $serviceSection->feature_video->url ?>" name="featureVideo"
+                        placeholder="Feature video">
+                </div>
+            </section>
+
+            <section style="margin-top:30px">
                 <h3>Quote</h3>
                 <hr>
                 <div class="form-group">

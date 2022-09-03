@@ -214,6 +214,11 @@
                     <input type="text" class="form-control inside-shadow" name="watchVideoLink"
                         placeholder="Video link">
                 </div>
+                <div class="form-group">
+                    <label>Background image</label>
+                    <input type="file" name="watchVideoImage" class="full-width"
+                        accept="image/x-png, image/gif, image/jpeg">
+                </div>
             </section>
 
             <section style="margin-top:30px">
