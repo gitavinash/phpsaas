@@ -43,24 +43,24 @@
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav ms-auto align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="./index.php">Home</a>
+                                <a class="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./About.php">About us</a>
+                                <a class="nav-link" href="/about-us/">About us</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="./Product-details.php">Product</a>
+                                <a class="nav-link" href="/products/">Product</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./contact.php">Contact us</a>
+                                <a class="nav-link" href="/contact-us/">Contact us</a>
                             </li>
                         </ul>
 
                         <div class="icons d-flex justify-content-center mb-3 mt-3 mt-xl-0 mb-xl-0">
-                            <i class="fa-solid fa-user"></i>
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <!-- <a href="#"><i class="fa-solid fa-user"></i></a> -->
+                            <a href="/checkout/"><i class="fa-solid fa-cart-shopping"></i></a>
+                            <a href=""><i class="fa-solid fa-magnifying-glass"></i></a>
                         </div>
                     </div>
                 </div>
@@ -70,17 +70,17 @@
 
                 <ul class="navbar-nav ms-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="./index.php">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./About.php">About us</a>
+                        <a class="nav-link" href="/about-us/">About us</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="./Product-details.php">Product</a>
+                        <a class="nav-link" href="/products/">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./contact.php">Contact us</a>
+                        <a class="nav-link" href="/contact-us/">Contact us</a>
                     </li>
                 </ul>
 

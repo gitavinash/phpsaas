@@ -35,11 +35,11 @@
             <div class="col-md-6 col-lg-2 px-2  fotter-margin">
                 <h3 class="text-white font-size-25">INFORMATION</h3>
                 <ul>
-                    <li><a href="#">About Us</a> </li>
-                    <li><a href="#">Delivery Information`</a> </li>
-                    <li><a href="#">Privacy Policy</a> </li>
-                    <li><a href="#">Terms & Conditions</a> </li>
-                    <li><a href="#">Site Map</a> </li>
+                    <li><a href="/about-us/">About Us</a> </li>
+                    <li><a href="/delivery-information/">Delivery Information</a> </li>
+                    <li><a href="/privacy-policy/">Privacy Policy</a> </li>
+                    <li><a href="/terms-and-conditions/">Terms & Conditions</a> </li>
+                    <li><a href="/sitemap/">Site Map</a> </li>
 
                 </ul>
             </div>
@@ -48,9 +48,9 @@
                 <h3 class="text-white font-size-25">Extras
                 </h3>
                 <ul>
-                    <li><a href="#">Gift Certificates</a> </li>
-                    <li><a href="#">Specials</a> </li>
-                    <li><a href="#">Contact Us</a> </li>
+                    <li><a href="/gift-certificates/">Gift Certificates</a> </li>
+                    <li><a href="/specials/">Specials</a> </li>
+                    <li><a href="/contact-us/">Contact Us</a> </li>
 
 
                 </ul>
