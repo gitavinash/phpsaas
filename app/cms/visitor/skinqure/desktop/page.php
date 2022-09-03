@@ -29,7 +29,7 @@
                     <div class="col-md-12 text-center mb-lg-5">
                         <div class="section_heading">
                             <h3 class="text-center">About Dr Jangid</h3>
-                            <p class="text-center">Ex-Sr. Dermatologist AIIMS, New Delhi,</p>
+                            <!-- <p class="text-center">Ex-Sr. Dermatologist AIIMS, New Delhi,</p> -->
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
