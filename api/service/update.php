@@ -105,6 +105,28 @@
                                 'header' => $commitmentHeader,
                                 'subHeader' => $commitmentSubHeader,
                                 'descripton' => $commitmentDescription
+                            ),
+                            'faq' => array(
+                                0 => array(
+                                    'question' => $faqQuestion1,
+                                    'answer' => $faqAnswer1
+                                ),
+                                1 => array(
+                                    'question' => $faqQuestion2,
+                                    'answer' => $faqAnswer2
+                                ),
+                                2 => array(
+                                    'question' => $faqQuestion3,
+                                    'answer' => $faqAnswer3
+                                ),
+                                3 => array(
+                                    'question' => $faqQuestion4,
+                                    'answer' => $faqAnswer4
+                                ),
+                                4 => array(
+                                    'question' => $faqQuestion5,
+                                    'answer' => $faqAnswer5
+                                )
                             )
                         ), true);
 

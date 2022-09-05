@@ -246,6 +246,50 @@
                 </div>
             </section>
 
+            <section style="margin-top:30px">
+                <h3>FAQ</h3>
+                <div class="form-group">
+                    <label>Question 1</label>
+                    <input type="text" class="form-control inside-shadow" name="faqQuestion1" placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer1" class="form-control inside-shadow" placeholder="Answer"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 2</label>
+                    <input type="text" class="form-control inside-shadow" name="faqQuestion2" placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer2" class="form-control inside-shadow" placeholder="Answer"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 3</label>
+                    <input type="text" class="form-control inside-shadow" name="faqQuestion3" placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer3" class="form-control inside-shadow" placeholder="Answer"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 4</label>
+                    <input type="text" class="form-control inside-shadow" name="faqQuestion4" placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer4" class="form-control inside-shadow" placeholder="Answer"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 5</label>
+                    <input type="text" class="form-control inside-shadow" name="faqQuestion5" placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer5" class="form-control inside-shadow" placeholder="Answer"></textarea>
+                </div>
+            </section>
+
             <?php
 			} else {
 				?>
