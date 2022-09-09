@@ -94,7 +94,7 @@
                                 )
                             ),
                             'watch_video' => array(
-                                'image' => $watchVideoImage,
+                                'image' => (($watchVideoImage!='') ? $watchVideoImage : $serviceSection['watch_video']['image']),
                                 'header' => $watchVideoHeader,
                                 'description' => $watchVideoDescription,
                                 'subDescription' => $watchVideoSubDescription,
@@ -129,6 +129,9 @@
                                 )
                             )
                         ), true);
+
+                        echo $updatedServiceSection;
+                        exit();
 
                         if(isset($_FILES['gallery'])) {
                 
