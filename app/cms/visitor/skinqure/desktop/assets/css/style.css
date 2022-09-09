@@ -404,4 +404,17 @@ a{
 	}
 }
 
+button.accordion-button {
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
 
+.accordion-button:not(.collapsed) {
+	color: #000000;
+	background-color: #C9DDD2 !important;
+}
+
+.accordion-body {
+	text-align: left !important;
+}
