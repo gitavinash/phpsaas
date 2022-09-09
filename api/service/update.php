@@ -130,9 +130,6 @@
                             )
                         ), true);
 
-                        echo $updatedServiceSection;
-                        exit();
-
                         if(isset($_FILES['gallery'])) {
                 
                             require_once MODULES.'galleryUploader.php';
