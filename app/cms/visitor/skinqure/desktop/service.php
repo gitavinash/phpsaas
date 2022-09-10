@@ -247,7 +247,9 @@
                         <?php
                     
                     for($i=0; $i<sizeof($serviceSection['faq']); $i++) { 
-                        if($i===0) {?>
+                        
+                        if($serviceSection['faq'][$i]['question']!='') {
+                            if($i===0) {?>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?php echo $i ?>">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -264,7 +266,7 @@
                             </div>
                         </div>
                         <?php
-                        } else { ?>
+                                } else { ?>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?php echo $i ?>">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -281,7 +283,9 @@
                             </div>
                         </div>
                         <?php
+                                }
                         }
+                        
                         }
 
                         ?>
