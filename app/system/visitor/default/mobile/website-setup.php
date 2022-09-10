@@ -72,8 +72,8 @@
                        </select>
                      </div>
                      <div class="form-group">
-                      <input type="hidden" name="type" value="setting" >
-                      <input type="hidden" name="action" value="website_setup" >
+                      <input type="hidden" name="type" value="install" >
+                      <input type="hidden" name="action" value="domain" >
                       <input type="hidden" name="username" value="<?php echo $user_username ?>" >
                       <input type="submit" id="websiteSetupBtn" class="btn btn-block btn-success" value="Finish Setup">
                      </div>
