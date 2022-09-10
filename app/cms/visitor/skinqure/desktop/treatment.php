@@ -42,7 +42,7 @@
                                         <div class="section_heading">
                                             <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
                                         </div>
-                                        <?php echo ucwords($service_description) ?>
+                                        <?php echo $service_description ?>
                                     </div>
                                 </div>
                             </div>

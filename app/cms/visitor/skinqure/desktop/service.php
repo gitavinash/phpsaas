@@ -39,7 +39,7 @@
                             </div>
 
                             <div class="description">
-                                <?php echo ucwords($service_description) ?>
+                                <?php echo $service_description ?>
                             </div>
 
                         </div>
