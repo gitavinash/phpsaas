@@ -1,4 +1,4 @@
-<?php require_once('./header.php') ?>
+<?php require_once('header.php') ?>
 <!-- navbar -->
 <div class="container-fluid">
     <div class="row product_banner_section sidepadding hero align-items-center py-5">
@@ -36,7 +36,7 @@
 
                 <div class="row vertical-padding">
                     <div class="col-12 col-md-12 col-lg-6">
-                        <img src="<?php echo USER_IMAGES ?>About-us.png" alt="" class="img-fluid m-auto d-block" />
+                        <img src="./assest/img/About-us.png" alt="" class="img-fluid m-auto d-block" />
                     </div>
                     <div class="col-12 col-md-12 col-lg-6 mt-5 mt-lg-0">
                         <p class="text-white px-3 lh-base font-size-20">
@@ -53,7 +53,7 @@
                             <div
                                 class="col-12 col-md-6 col-lg-12 col-xl-5 d-flex justify-content-center border border-light">
                                 <div class="p-3 text-center">
-                                    <img src="<?php echo USER_IMAGES ?>ri_medal-line.png" alt="" />
+                                    <img src="./assest/img/ri_medal-line.png" alt="" />
 
                                     <h4 class="font-size-57 fw-bold mt-3 text-white text-center">
                                         12 <span class="goldan-clr">+</span>
@@ -94,7 +94,7 @@
             <div class="row">
                 <div class="col-12 col-sm-4 cardss mt-sm-4 col-md-4 d-flex justify-content-center text-center">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>fa-solid_award.png" alt="" class="img-fluid" />
+                        <img src="./assest/img/fa-solid_award.png" alt="" class="img-fluid" />
                         <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                             99 <span class="goldan-clr">%</span>
                         </h4>
@@ -103,7 +103,7 @@
                 </div>
                 <div class="col-12 col-sm-4 cardss mt-sm-4 col-md-4 d-flex justify-content-center text-center">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>Vector.png" alt="" class="img-fluid" />
+                        <img src="./assest/img/Vector.png" alt="" class="img-fluid" />
                         <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                             578 <span class="goldan-clr">+</span>
                         </h4>
@@ -113,7 +113,7 @@
 
                 <div class="col-12 col-sm-4 cardss mt-sm-4 col-md-4 d-flex justify-content-center text-center">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>Vector (1).png" alt="" class="img-fluid" />
+                        <img src="./assest/img/Vector (1).png" alt="" class="img-fluid" />
                         <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                             99 <span class="goldan-clr">%</span>
                         </h4>
@@ -213,10 +213,10 @@
                     <div class="col-12 col-lg-6">
                         <div class="row my-5 my-lg-0">
                             <div class="col-6">
-                                <img src="<?php echo USER_IMAGES ?>Rectangle 314.png" alt="" class="img-fluid" />
+                                <img src="./assest/img/Rectangle 314.png" alt="" class="img-fluid" />
                             </div>
                             <div class="col-6">
-                                <img src="<?php echo USER_IMAGES ?>Rectangle 314.png" alt="" class="img-fluid" />
+                                <img src="./assest/img/Rectangle 314.png" alt="" class="img-fluid" />
                             </div>
                         </div>
                     </div>
@@ -259,5 +259,29 @@
         </div>
     </section>
 </main>
+<!-- treding product -->
 
-<?php require_once('./footer.php') ?>
+<!-- testimonail -->
+
+<!-- /testimonial -->
+
+<section class="vertical-padding sidepadding d-flex align-content-center">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center text-center">
+            <div class="col-12 col-lg-6">
+                <h5 class="text-white font-size-25">
+                    Stay Connected With Our Email Updates
+                </h5>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="newsleeter d-flex m-0 justify-content-center mt-5 mt-md-0">
+                    <input type="search" class="newsleeter-bar m-0" placeholder="Enter Your Email" />
+                    <button class="btn1 m-0">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- treding -end -->
+<?php require_once('footer.php') ?>

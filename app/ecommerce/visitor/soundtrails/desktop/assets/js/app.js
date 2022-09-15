@@ -1,7 +1,23 @@
 let allimg = document.querySelectorAll('.sm-image-group img');
 let productimg = document.querySelector('.product_image img')
 let popup = document.querySelector('.popup');
-console.log(allimg);
+const serachIcon = document.querySelector('.serach-icon');
+const serachBox =document.querySelector('.serach-box');
+const serachCross = document.querySelector('.serach-cross');
+
+console.log(serachIcon)
+
+serachIcon.addEventListener('click', ()=>{
+  serachBox.classList.toggle('active')
+})
+
+
+serachCross.addEventListener('click', ()=>{
+  serachBox.classList.remove('active')
+})
+
+// 
+
 
 allimg.forEach(el=>{
     el.addEventListener('click',()=>{

@@ -23,6 +23,7 @@
         integrity="sha512-wR4oNhLBHf7smjy0K4oqzdWumd+r5/+6QO/vDda76MW5iug4PT7v86FoEkySIJft3XA0Ae6axhIvHrqwm793Nw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>global.css" />
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>checkout.css">
     <?php require_once DEFAULT_META ?>
 </head>
 
@@ -46,43 +47,77 @@
                                 <a class="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/about-us/">About us</a>
+                                <a class="nav-link" href="./About.php">About us</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="/products/">Product</a>
+                                <a class="nav-link" href="./Product-details.php">Product</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/contact-us/">Contact us</a>
+                                <a class="nav-link" href="./contact.php">Contact us</a>
                             </li>
                         </ul>
 
                         <div class="icons d-flex justify-content-center mb-3 mt-3 mt-xl-0 mb-xl-0">
-                            <!-- <a href="#"><i class="fa-solid fa-user"></i></a> -->
-                            <a href="/checkout/"><i class="fa-solid fa-cart-shopping"></i></a>
-                            <a href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+                            <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <i class="fa-solid fa-magnifying-glass serach-icon"></i>
                         </div>
+
+
                     </div>
                 </div>
+
             </nav>
 
             <div class="side-nav ">
 
                 <ul class="navbar-nav ms-3">
+
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about-us/">About us</a>
+                        <a class="nav-link" href="./About.php">About us</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/products/">Product</a>
+                        <a class="nav-link" href="./Product-details.php">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact-us/">Contact us</a>
+                        <a class="nav-link" href="./contact.php">Contact us</a>
                     </li>
                 </ul>
 
+            </div>
+
+            <div class="bg-white serach-box d-none d-lg-block">
+                <div>
+
+                    <nav class="navbar ">
+                        <div class="container-fluid">
+                            <a class="navbar-brand d-none d-lg-block" href="/"><img
+                                    src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid" /></a>
+                            <div class="row align-items-center d-flex w-75">
+                                <div class="col-8 col-lg-8">
+                                    <input type="text" class="forms text-white " placeholder=" Search your product" />
+                                </div>
+                                <div class="col-4 col-lg-4">
+                                    <button class="btn1 text-white rounded-pill w-100">Serach</button>
+                                </div>
+
+
+                            </div>
+                            <div class="serach-cross  text-white d-none d-sm-block">
+                                <i class="fa-solid fa-xmark "></i>
+                            </div>
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            </div>
             </div>
         </header>

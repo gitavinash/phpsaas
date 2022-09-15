@@ -6,7 +6,6 @@
 
 ?>
 
-
 <section class="section_spacing_top ">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -320,7 +319,6 @@ $backGroundColor = 'light';
     }
 
 ?>
-
 
 <section class="">
     <div class="container-fluid">

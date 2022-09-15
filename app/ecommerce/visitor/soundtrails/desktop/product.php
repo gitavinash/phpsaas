@@ -1,4 +1,4 @@
-<?php require_once('./header.php') ?>
+<?php require_once('header.php') ?>
 <!-- navbar -->
 <div class="container-fluid">
     <div class="row product_banner_section sidepadding hero align-items-center py-5">
@@ -22,16 +22,16 @@
                         <div
                             class="col-12 col-sm-12 col-md-12 col-xl-4 col-xxl-2 order-2 order-xxl-1 mt-2 mt-xxl-0 d-none d-lg-block flex_div">
                             <div class="sm-image-group mt-4 mt-xl-0">
-                                <img src="<?php echo USER_IMAGES ?>grou1.png" class="img-fluid" alt="" />
+                                <img src="./assest/img/grou1.png" class="img-fluid" alt="" />
                             </div>
                             <div class="sm-image-group mt-4">
-                                <img src="<?php echo USER_IMAGES ?>grou2.png" class="img-fluid" alt="" />
+                                <img src="./assest/img/grou2.png" class="img-fluid" alt="" />
                             </div>
                             <div class="sm-image-group mt-4">
-                                <img src="<?php echo USER_IMAGES ?>grou3.png" class="img-fluid" alt="" />
+                                <img src="./assest/img/grou3.png" class="img-fluid" alt="" />
                             </div>
                             <div class="sm-image-group mt-4">
-                                <img src="<?php echo USER_IMAGES ?>grou4.png" class="img-fluid" alt="" />
+                                <img src="./assest/img/grou4.png" class="img-fluid" alt="" />
                             </div>
                         </div>
 
@@ -40,23 +40,19 @@
                             class="col-12 col-sm-12 col-md-12 col-xl-4 col-xxl-2 order-2 order-xxl-1 mt-2 mt-xxl-0 flex_div d-block d-xl-none">
                             <div class="slider">
                                 <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="<?php echo USER_IMAGES ?>grou1.png" class="img-fluid d-block m-auto"
-                                        alt="" />
+                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
                                 </div>
 
                                 <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="<?php echo USER_IMAGES ?>grou1.png" class="img-fluid d-block m-auto"
-                                        alt="" />
+                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
                                 </div>
 
                                 <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="<?php echo USER_IMAGES ?>grou1.png" class="img-fluid d-block m-auto"
-                                        alt="" />
+                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
                                 </div>
 
                                 <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="<?php echo USER_IMAGES ?>grou1.png" class="img-fluid d-block m-auto"
-                                        alt="" />
+                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -64,14 +60,14 @@
                         <!-- mobile slider -->
                         <div class="col-12 col-sm-12 col-md-12 col-xl-7 col-xxl-9 order-1 order-xxl-2">
                             <div class="product_image">
-                                <img src="<?php echo USER_IMAGES ?>oriduct.png" class="img-fluid" alt="" />
+                                <img src="./assest/img/oriduct.png" class="img-fluid" alt="" />
                             </div>
-                            <div class="d-flex align-items-center justify-content-center mt-4 qustion">
-                                <img src="<?php echo USER_IMAGES ?>queston.png" alt="" />
-                                <p class="mb-0 ms-3">
-                                    <span id="test">Have Questions?</span> Ask An Expert
-                                </p>
-                            </div>
+                            <!-- <div class="d-flex align-items-center justify-content-center mt-4 qustion">
+                <img src="./assest/img/queston.png" alt="" />
+                <p class="mb-0 ms-3">
+                  <span id="test">Have Questions?</span> Ask An Expert
+                </p>
+              </div> -->
                         </div>
                     </div>
                 </div>
@@ -81,11 +77,11 @@
 
                 <!-- <div class="d-flex align-items-center py-3">
             <div>
-              <img src='<?php echo USER_IMAGES ?>str1.png' alt="">
-              <img src='<?php echo USER_IMAGES ?>str1.png' alt="">
-              <img src='<?php echo USER_IMAGES ?>str1.png' alt="">
-              <img src='<?php echo USER_IMAGES ?>str1.png' alt="">
-              <img src='<?php echo USER_IMAGES ?>Star 5.png' alt="">
+              <img src='assest/img/str1.png' alt="">
+              <img src='assest/img/str1.png' alt="">
+              <img src='assest/img/str1.png' alt="">
+              <img src='assest/img/str1.png' alt="">
+              <img src='assest/img/Star 5.png' alt="">
             </div>
             <p class="mb-0 ms-5 mt-2">16 reviews</p>
           </div> -->
@@ -205,7 +201,7 @@
                             <div
                                 class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6 d-flex align-content-center mt-4 mt-xxl-0">
                                 <div class="d-flex align-items-center">
-                                    <img src="<?php echo USER_IMAGES ?>fire.png" alt="" />
+                                    <img src="./assest/img/fire.png" alt="" />
                                     <p class="mb-0 ms-2">8 sold in last 18 hours</p>
                                 </div>
                             </div>
@@ -216,7 +212,7 @@
                 <div class="d-flex align-items-center cart_div">
                     <button class="add_to_cart">ADD TO CART</button>
                     <div class="like ms-3">
-                        <img src="<?php echo USER_IMAGES ?>heart.png" alt="" />
+                        <img src="./assest/img/heart.png" alt="" />
                     </div>
                 </div>
             </div>
@@ -621,4 +617,4 @@
 
 <!-- treding -end -->
 
-<?php require_once('./footer.php') ?>
+<?php require_once('footer.php') ?>

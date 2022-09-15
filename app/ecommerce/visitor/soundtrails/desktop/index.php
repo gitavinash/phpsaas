@@ -1,9 +1,4 @@
-<?php
-
-    require_once('header.php');
-
-?>
-
+<?php require_once('header.php') ?>
 <!-- navbar -->
 
 <!-- hero -->
@@ -1065,7 +1060,23 @@
 
 </Section>
 
+<!-- /testimonial -->
+
+<section class="vertical-padding sidepadding d-flex align-content-center ">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center text-center">
+            <div class="col-12 col-lg-6">
+                <h5 class="text-white font-size-25">Stay Connected With Our Email Updates</h5>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="newsleeter d-flex m-0 justify-content-center  mt-3 mt-md-0">
+                    <input type="search" class="newsleeter-bar m-0" placeholder="Enter Your Email">
+                    <button class="btn1 m-0">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- treding -end -->
-<?php
-    require_once('footer.php');
-?>
+<?php require_once('footer.php') ?>

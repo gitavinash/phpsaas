@@ -27,8 +27,8 @@ body {
 }
 
 .sidepadding {
-  padding-left: 150px;
-  padding-right: 150px;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 .vertical-padding {
@@ -81,7 +81,7 @@ body {
   font-size: 20px;
 }
 .font-size-25 {
-  font-size: 25px;
+  font-size: 1.563rem;
 }
 .font-family-sans {
   font-family: var(--font-work-sans);
@@ -138,11 +138,12 @@ footer ul li {
 footer ul li a {
   text-decoration: none;
   color: #fff;
-  font-size: 18px;
+  font-size: 1.1rem;
 }
 
 footer ul li i {
   margin: 0 10px;
+  cursor: pointer;
 }
 
 footer ul li a:hover {
@@ -151,6 +152,9 @@ footer ul li a:hover {
 
 /* navbar */
 
+header {
+  position: relative;
+}
 .nav-padding {
   padding-top: 50px;
 }
@@ -168,9 +172,32 @@ footer ul li a:hover {
   font-size: var(--psm);
 }
 
+.serach-box {
+  width: 100%;
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000 !important;
+  z-index: 100;
+  transition: 0.3s ease;
+}
+
+.serach-box.active {
+  top: 0;
+}
+.serach-cross {
+  cursor: pointer;
+}
+.serach-box .navbar > .container-fluid {
+  justify-content: space-around !important;
+}
+
 .icons i {
   color: var(--white);
   margin: 0 20px;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -427,11 +454,12 @@ main {
 
 /* contact  */
 .form-data input,
-.form-data textarea {
+.form-data textarea,
+.form-data select {
   margin: 10px 0;
-  padding: 15px 20px;
+  padding: 10px 20px;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 1rem;
   background: #fff;
 }
 
@@ -504,6 +532,142 @@ main {
   }
   .paginration ul li {
     margin: 10px 10px;
+  }
+
+  .font-size-25 {
+    font-size: 1.4rem;
+  }
+}
+
+.payment-container {
+  display: block;
+  /* margin: 0 auto; */
+  max-width: auto;
+  /* padding: 40px 20px; */
+  width: 100%;
+}
+.payment-container header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+.payment-container header h2 {
+  font-size: 24px;
+  line-height: 24px;
+}
+.payment-container header h3 {
+  font-size: 16px;
+  font-weight: 300;
+}
+.payment-container .payment-item {
+  background: transparent;
+  /* border: 1px solid #dcdcdc; */
+  border-radius: 5px;
+  display: block;
+  margin: 0 0 20px;
+
+  width: 100%;
+}
+.payment-container .payment-item:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.payment-container .payment-item .item-title,
+.payment-container .payment-item .item-options {
+  display: inline-block;
+  margin-right: -4px;
+  position: relative;
+  vertical-align: top;
+}
+.payment-container .payment-item .item-title {
+  font-weight: 600;
+  width: 40%;
+}
+.payment-container .payment-item .item-title span {
+  color: #d0021b;
+}
+.payment-container .payment-item .item-options {
+  width: 60%;
+}
+.payment-container .payment-item .item-options .selection {
+  cursor: pointer;
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.payment-container .payment-item .item-options .selection .check,
+.payment-container .payment-item .item-options .selection label {
+  transition: 250ms ease all;
+}
+.payment-container .payment-item .item-options .selection .check {
+  background: #fff;
+  border: 1px solid #d2d2d2;
+  border-radius: 100px;
+  content: "";
+  height: 14px;
+  left: 10px;
+  position: absolute;
+  top: 18px;
+  width: 14px;
+}
+.payment-container .payment-item .item-options .selection label {
+  background: #f7f7f7;
+  border: 1px solid #d2d2d2;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 0 0 10px 0;
+  padding: 10px 10px 10px 30px;
+  position: relative;
+  width: 100%;
+}
+.payment-container .payment-item .item-options .selection label:hover {
+  background: #fff;
+}
+.payment-container .payment-item .item-options .selection span {
+  float: right;
+}
+.payment-container .payment-item .item-options input {
+  display: none;
+}
+.payment-container
+  .payment-item
+  .item-options
+  input[type="radio"]:checked
+  ~ .check {
+  border-color: #000;
+}
+.payment-container
+  .payment-item
+  .item-options
+  input[type="radio"]:checked
+  ~ .check:before {
+  background: #000;
+  border-radius: 100px;
+  content: "";
+  height: 6px;
+  left: 3px;
+  position: absolute;
+  top: 3px;
+  width: 6px;
+}
+.payment-container
+  .payment-item
+  .item-options
+  input[type="radio"]:checked
+  ~ label {
+  background: var(--golden);
+  border-color: #000;
+  color: #fff;
+}
+@media (max-width: 600px) {
+  .payment-container .payment-item .item-title,
+  .payment-container .payment-item .item-options {
+    display: block;
+    width: 100%;
+  }
+  .payment-container .payment-item .item-title {
+    margin-bottom: 20px;
   }
 }
 
@@ -834,7 +998,7 @@ input[type="number"] {
 }
 .singel_product .product_image {
   width: 100%;
-  height: 900px;
+  height: 700px;
   background: #fbeee2;
   padding: 1rem;
   display: flex;
@@ -944,20 +1108,20 @@ form {
   text-align: center;
 }
 
-button,
+/* button,
 input,
 select,
 textarea {
   font-size: 100%;
   margin: 0;
   vertical-align: baseline;
-}
+} */
 
-button::-moz-focus-inner,
+/* button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
-}
+} */
 
 textarea {
   overflow: auto;
@@ -1005,7 +1169,7 @@ textarea {
   opacity: 0.2 !important;
 }
 
-label {
+/* label {
   display: inline-block;
   position: absolute;
   margin-top: -64px;
@@ -1018,7 +1182,7 @@ label {
     color 200ms ease-out, margin 200ms ease-out;
   transition: transform 100ms ease-out, opacity 300ms ease-in-out,
     color 200ms ease-out, margin 200ms ease-out;
-}
+} */
 
 input,
 textarea {
@@ -1083,7 +1247,7 @@ textarea {
   resize: none;
 }
 
-input[type="submit"] {
+/* input[type="submit"] {
   margin-top: 2.2em;
   margin-bottom: 1em;
   padding: 0.7em 1em;
@@ -1099,7 +1263,7 @@ input[type="submit"] {
   text-indent: 0;
   -webkit-transform: none;
   transform: none;
-}
+} */
 
 /*NOTIFICATIONS*/
 .required {
@@ -1285,8 +1449,8 @@ input[type="submit"] {
 }
 @media (max-width: 1000px) {
   .sidepadding {
-    padding-left: 80px;
-    padding-right: 80px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
   .products h3 {
     font-size: 29px;
@@ -1294,8 +1458,8 @@ input[type="submit"] {
 }
 @media (max-width: 500px) {
   .sidepadding {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 25px;
+    padding-right: 25px;
   }
   .singel_product h1 {
     font-size: 24px;
