@@ -631,9 +631,8 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea name="berforeAfterDescription"
-                        value="<?php echo $serviceSection->before_after->description ?>"
-                        class="form-control inside-shadow" placeholder="Description"></textarea>
+                    <textarea name="berforeAfterDescription" class="form-control inside-shadow"
+                        placeholder="Description"><?php echo $serviceSection->before_after->description ?></textarea>
                 </div>
                 <div class="form-group">
                     <label>Video link</label>
