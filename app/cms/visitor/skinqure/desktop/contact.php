@@ -65,7 +65,7 @@
           <div class="inner_page_banner contact_banner_bg">
             <div class="inner_content">
               <p>Contact Skin Clinic</p>
-              <div class="text-start"><a href="index.html">Home</a> <span><i class="fa fa-chevron-right"></i></span><span>Contact Skin Clinic</span></div>
+              <div class="text-start"><a href="/">Home</a> <span><i class="fa fa-chevron-right"></i></span><span>Contact Skin Clinic</span></div>
             </div>
           </div>
       </div>

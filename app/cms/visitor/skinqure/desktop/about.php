@@ -10,7 +10,7 @@
                 <div class="inner_page_banner about_banner_bg">
                     <div class="inner_content">
                         <p>About Skin Clinic</p>
-                        <div class="text-start"><a href="index.html">Home</a> <span><i
+                        <div class="text-start"><a href="/">Home</a> <span><i
                                     class="fa fa-chevron-right"></i></span><span>About Skin Clinic</span></div>
                     </div>
                 </div>

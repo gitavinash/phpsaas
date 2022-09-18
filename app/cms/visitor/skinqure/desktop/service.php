@@ -15,7 +15,7 @@
                     <div class="inner_content">
                         <p>
                             <?php echo ucwords($service_title) ?></p>
-                        <div class="text-start"><a href="index.html">Home</a> <span><i
+                        <div class="text-start"><a href="/">Home</a> <span><i
                                     class="fa fa-chevron-right"></i></span><span>Service</span>
                             <span><i
                                     class="fa fa-chevron-right"></i></span><span><?php echo ucwords($service_title) ?></span>

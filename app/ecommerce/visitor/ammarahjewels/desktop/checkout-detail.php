@@ -196,7 +196,7 @@
 						<div class="main-left">
 							<!-- <div class="check-head dn-s">
 								<div class="logo">
-									<a href="index.html" ><img src="image/logo.png" class="logo-mb"></a>
+									<a href="/" ><img src="image/logo.png" class="logo-mb"></a>
 								</div>
 							</div> -->
 							<!-- <div class="brdcrum check-bread dn-s">

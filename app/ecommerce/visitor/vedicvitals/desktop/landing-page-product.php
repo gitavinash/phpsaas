@@ -56,7 +56,7 @@
 						<div class="col-md-12">
 							<nav class="navbar navbar-expand-lg menu-top ">
 								<div class="logo">
-									<a href="index.html" ><img src="<?php echo USER_IMAGES ?>landing-page/logo.png" class="logo-mb"></a>
+									<a href="/" ><img src="<?php echo USER_IMAGES ?>landing-page/logo.png" class="logo-mb"></a>
 								</div>
 								<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 								<span class="navbar-icon"></span>
