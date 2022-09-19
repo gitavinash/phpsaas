@@ -55,6 +55,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js'></script>
 <script src="<?php echo USER_JS ?>app.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>lightbox/jquery-rbox.js"></script>
 <script type="text/javascript">
 var divisor = document.getElementById("divisor"),
     handle = document.getElementById("handle"),
@@ -68,6 +69,10 @@ function moveDivisor() {
 window.onload = function() {
     moveDivisor();
 };
+
+$(".mediaGallery").rbox({
+    'type': 'image',
+});
 </script>
 <script>
 // Swiper Configuration

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css'>
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>lightbox/jquery-rbox.css">
 
     <?php require_once DEFAULT_META; ?>
 
@@ -321,8 +322,8 @@
                                 <a href="#">Why Us <i class="fa fa-angle-down ms-2"></i></a>
                                 <div class="sub-menu single-column-menu">
                                     <ul class="text-start">
-                                        <li><a href="">Technology</a></li>
-                                        <li><a href="">Media</a></li>
+                                        <li><a href="/technology/">Technology</a></li>
+                                        <li><a href="/media/">Media</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -339,10 +340,10 @@
                                 <a href="#">Offers <i class="fa fa-angle-down ms-2"></i></a>
                                 <div class="sub-menu single-column-menu">
                                     <ul class="text-start">
-                                        <li><a href="">Packages</a></li>
-                                        <li><a href="">WOW inclusive</a></li>
-                                        <li><a href="">Latest Offers</a></li>
-                                        <li><a href="">Bridal Packages</a></li>
+                                        <li><a href="/packages/">Packages</a></li>
+                                        <li><a href="/wow-inclusive/">WOW inclusive</a></li>
+                                        <li><a href="/latest-offers/">Latest Offers</a></li>
+                                        <li><a href="/bridal-packages/">Bridal Packages</a></li>
                                     </ul>
                                 </div>
                             </li>

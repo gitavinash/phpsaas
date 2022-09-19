@@ -418,3 +418,20 @@ button.accordion-button {
 .accordion-body {
 	text-align: left !important;
 }
+
+.galleryBox {
+	float: left;
+	width: 100%;
+}
+
+.mediaGallery {
+	float: left;
+	width: 100%;
+	padding: 5%;
+	box-sizing: content-box;
+}
+
+.mediaGallery img {
+	float: left;
+	width: 100%;
+}

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>jQuery rbox Responsive Lightbox Plugin Examples</title>
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<style>
+    html,* { font-family: 'Inter'; box-sizing: border-box; }
+body { background-color: #fafafa; line-height:1.6;}
+.lead { font-size: 1.5rem; font-weight: 300; }
+.container { margin: 150px auto; max-width: 960px; }
+.btn { padding: 1.25rem; border: 0; border-radius: 3px; background-color: #4F46E5; color: #fff; cursor: pointer; }
+#element-hidden { display: none; }
+</style>
+<link rel="stylesheet" href="jquery-rbox.css" />
+
+</head>
+
+<body><div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="https://www.jqueryscript.net/lightbox/full-featured-rbox.html">Download This Plugin</a></li>
+<li><a href="https://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul><div id="carbon-block"></div>
+<div class="jquery-script-ads"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2783044520727903"
+     crossorigin="anonymous"></script>
+<!-- jQuery_demo -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2783044520727903"
+     data-ad-slot="2780937993"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+<div class="container">
+    <h1>jQuery rbox Responsive Lightbox Plugin Examples</h1>
+    <h2>Single Image</h2>
+    <a href="" class="with-caption" data-rbox-image="https://source.unsplash.com/anf6TFflWyw/400x300" data-rbox-caption="Captions support <strong>HTML</strong>">
+    <img src="https://source.unsplash.com/anf6TFflWyw/400x300" alt="Test Image" width="100"></a>
+    <h2>Image Gallery</h2>
+    <a href="" class="gal" data-rbox-image="https://source.unsplash.com/anf6TFflWyw/400x300" data-rbox-caption="Captions support <strong>HTML</strong>" data-rbox-series="gallery">
+    <img src="https://source.unsplash.com/anf6TFflWyw/400x300" alt="Test Image" width="100"></a>
+    <a href="" class="gal" data-rbox-image="https://source.unsplash.com/FCcr45uwU8I/400x300" data-rbox-caption="Captions support <strong>HTML</strong>" data-rbox-series="gallery">
+    <img src="https://source.unsplash.com/FCcr45uwU8I/400x300" alt="Test Image" width="100"></a>
+    <a href="" class="gal" data-rbox-image="https://source.unsplash.com/BnPVVqzxsVA/400x300" data-rbox-caption="Captions support <strong>HTML</strong>" data-rbox-series="gallery">
+    <img src="https://source.unsplash.com/BnPVVqzxsVA/400x300" alt="Test Image" width="100"></a>
+    <h2>HTML Content</h2>
+    <a class="rbox-html" data-rbox-html="<p><em>HTML</em> elements can be added <strong>here</strong>.</p>">
+    Click Me</a>
+    <h2>AJAX Content</h2>
+    <a href="" class="rbox-ajax" data-rbox-type="ajax" data-rbox-ajax="test.html">Click Me</a>
+    <h2>Inline Content</h2>
+    <a href="" class="rbox-inline" data-rbox-type="inline" data-rbox-inline="#element-hidden">
+Hidden Element on page</a>
+<div id="element-hidden">Inline Content Here</div>
+<h2>HTML5 Video</h2>
+<a href="" class="rbox-video-autoplay" data-rbox-type="video" data-rbox-video="https://www.jqueryscript.net/dummy/1.mp4" data-rbox-autoplay="true">
+Video with autoplay</a>
+<h2>IFrame Content (Youtube Video)</h2>
+<a href="" class="rbox-iframe" data-rbox-type="iframe" data-rbox-iframe=
+"https://www.youtube.com/embed/Y2j8bLCGx1U?rel=0&controls=0&showinfo"
+data-rbox-width="560" data-rbox-height="315">Demo: Iframe (YouTube Video)</a>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="jquery-rbox.js"></script>
+<script>
+$(".with-caption").rbox({
+'type': 'image',
+'bgcustom': 'rgba(0, 0, 0, 0.5)'
+});
+$(".gal").rbox({
+    'type': 'image',
+});
+$(".rbox-html").rbox({
+'type': 'html',
+});
+$(".rbox-ajax").rbox({
+'type': 'ajax',
+});
+$(".rbox-inline").rbox({
+'type': 'inline',
+});
+$(".rbox-video-autoplay").rbox({
+'type': 'video',
+});
+$(".rbox-iframe").rbox({
+'type': 'iframe',
+});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1VDDWMRSTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1VDDWMRSTH');
+</script>
+<script>
+try {
+  fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
+    return true;
+  }).catch(function(e) {
+    var carbonScript = document.createElement("script");
+    carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CK7DKKQU&placement=wwwjqueryscriptnet";
+    carbonScript.id = "_carbonads_js";
+    document.getElementById("carbon-block").appendChild(carbonScript);
+  });
+} catch (error) {
+  console.log(error);
+}
+</script>
+</body>
+</html>
