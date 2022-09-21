@@ -24,7 +24,7 @@
 <section>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-4 col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="galleryBox">
                     <a href="" class="mediaGallery"
                         data-rbox-image="https://www.skinqure.in/wp-content/uploads/2019/11/skin-5.jpg"
@@ -33,7 +33,7 @@
                     </a>
                 </div>
             </div>
-            <div class="col-4 col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="galleryBox">
                     <a href="" class="mediaGallery"
                         data-rbox-image="https://www.skinqure.in/wp-content/uploads/2019/11/skin-4.jpg"

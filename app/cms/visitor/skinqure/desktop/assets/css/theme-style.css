@@ -1550,6 +1550,11 @@ footer ul li a{
     padding: 4rem 9rem 4rem 4rem;
     background-color: #E8B05D !important;
     }
+
+    .form-box-non-bg {
+        height: 100%;
+    padding: 4rem 9rem 4rem 4rem;
+    }
     
     .form-box .form-control {
             border-radius: 0;

@@ -566,24 +566,6 @@
                                     <h5>Harshita Sharma</h5>
                                 </div>
                             </div>
-                            <!-- <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                                    class="active" aria-current="true" aria-label="Slide 1"></button>
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                                    aria-label="Slide 2"></button>
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                                    aria-label="Slide 3"></button>
-                            </div>
-                            <button class="carousel-control-prev" type="button"
-                                data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button"
-                                data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button> -->
                         </div>
                     </div>
                     <div class="col-md-6 testimonialimg_div">
@@ -627,69 +609,6 @@
     <!-- end container -->
 
 </section>
-<!-- <section class="section_spacing_top section_spacing_bottom">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-10 text-center">
-                <div class="row justify-content-center">
-                    <div class="col-md-3">
-                        <div class="app_img position-relative mt-md-5">
-                            <div class="app_experience">
-                                <p>13 Yrs<br>Experience</p>
-                            </div>
-                            <img src="<?php echo USER_IMAGES ?>08.jpg">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="middle_para">
-                            <div class="section_heading">
-                                <p class="text-start">Why Choose Us</p>
-                                <h3 class="text-start mb-md-4">Why Patient prefer SkinQure Clinic</h3>
-                            </div>
-
-                            <p class="text-start middle_p">Beauty lies in beholder’s eyes is what they say. But what if
-                                your own eyes do not like what they see in the mirror? Maybe its time for that long due
-                                visit to the SkinQure skin clinic– the first choice for all the skincare and hair
-                                treatments.</p>
-                            <p class="text-start middle_p">SkinQure clinic is the torch bearer of the latest technology
-                                and state of the art
-                                equipment for all your requirements for skin care and hair treatments. Our team of
-                                experienced and qualified doctors are able to provide the best in class services to our
-                                patients. Our list of satisfied customers is the testimony to the care and attention to
-                                detail that every member of our staff provide to our patients in our quest to make them
-                                more beautiful.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <form class="contact_forms">
-                            <h4>Get A Quote</h4>
-                            <h2>Book an Appointment</h2>
-
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Full Name">
-                            </div>
-                            <div class="form-group">
-                                <input type="number" class="form-control" placeholder="Phone No">
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Email Address">
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control">
-                                    <option>I am interested in Skincare</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btn btncontact" value="Submit Now and Get Consultation"
-                                    name="">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> -->
 
 
 <section class="">
