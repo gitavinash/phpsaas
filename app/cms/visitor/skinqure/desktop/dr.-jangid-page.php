@@ -20,7 +20,7 @@
     </div>
 </section>
 
-<section class="section_spacing_top ">
+<section class="section_spacing_top section_spacing_bottom">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
@@ -47,7 +47,45 @@
                                 transplant and restoration, Dr. Jangid has managed to establish himself as a leading
                                 name, relinquishing SkinQure as a renowned clinic for every hair restoration procedure.
                             </p>
-                            <!-- <a href="" class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a> -->
+
+
+                            <div class="accordion" id="faqAccordion">
+
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading<?php echo $i ?>">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse<?php echo $i ?>" aria-expanded="true"
+                                            aria-controls="collapse<?php echo $i ?>">
+                                            <?php echo $serviceSection['faq'][$i]['question'] ?>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse show"
+                                        aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <?php echo $serviceSection['faq'][$i]['answer'] ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading<?php echo $i ?>">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $i ?>"
+                                            aria-expanded="false" aria-controls="collapse<?php echo $i ?>">
+                                            <?php echo $serviceSection['faq'][$i]['question'] ?>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse"
+                                        aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <?php echo $serviceSection['faq'][$i]['answer'] ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
 
                         </div>
                     </div>
@@ -56,67 +94,6 @@
         </div>
     </div>
 
-</section>
-<section class="section_spacing_top">
-    <div class="container-fluid">
-        <!-- <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <div class="row justify-content-center">
-                    <div class="col-12 mb-md-4">
-                        <div class="section_heading">
-                            <p class="text-center">Dermatologists</p>
-                            <h3 class="text-center">Our Dermatologists Team</h3>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-6 mb-4">
-                        <div class="w-100 relative   team_box">
-                            <figure class="mb-0">
-                                <img src="<?php echo USER_IMAGES ?>Team-01.jpg" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="written">
-                                <h4>
-                                    Skin Doctor
-                                </h4>
-                                <h5>
-                                    Doctor Reyan
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-6 mb-4">
-                        <div class="w-100 relative   team_box">
-                            <figure class="mb-0">
-                                <img src="<?php echo USER_IMAGES ?>Team-02.jpg" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="written">
-                                <h4>
-                                    Skin Doctor
-                                </h4>
-                                <h5>
-                                    Doctor Reyan
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-6 mb-4">
-                        <div class="w-100 relative   team_box">
-                            <figure class="mb-0">
-                                <img src="<?php echo USER_IMAGES ?>Team-03.jpg" alt="" class="img-fluid w-100">
-                            </figure>
-                            <div class="written">
-                                <h4>
-                                    Skin Doctor
-                                </h4>
-                                <h5>
-                                    Doctor Reyan
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    </div>
 </section>
 
 <?php
