@@ -17,7 +17,7 @@
 				$categoryURL='/';
 			}
 
-			$url=strtolower('/'.$postType.$categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url).'/');
+			$url=strtolower('/'.'category'.$categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url).'/');
 
 			mysqli_query($connection, 'START TRANSACTION');
 
@@ -25,13 +25,27 @@
 			
 			if($oldURL!=$url) {
 				
-				/** Update URL if user change old url */
+				$checkLink = mysqli_query($connection, "SELECT link_id as link_meta_ref_id FROM ".TABLE_PREFIX."link WHERE link_url='{$oldURL}' AND link_site_id=".SITE_ID);
+				
+				if(mysqli_num_rows($checkLink)!=0) {
 
-				$redirectURL=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=301 WHERE link_url='{$oldURL}' AND link_relation_id='{$categoryID}' AND link_type='category' AND link_status=200 AND link_site_id=".APP_SITE_ID);
-				$insertNewURL=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$categoryID}', 200, 'category', '".USER_ID."', '".SITE_ID."', NOW(), NOW())");
+					$linkInfo = mysqli_fetch_assoc($checkLink);
+					extract($linkInfo);
 
-				if($updateCategory && $redirectURL && $insertNewURL) {
+					/** Update URL if user change old url */
+
+					$redirectURL=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=301 WHERE link_url='{$oldURL}' AND link_relation_id='{$categoryID}' AND link_type='category' AND link_status=200 AND link_site_id=".APP_SITE_ID);
 					
+					$insertNewURL=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$categoryID}', 200, 'category', '".USER_ID."', '".SITE_ID."', NOW(), NOW())");
+
+					$newLinkId=mysqli_insert_id($connection);
+
+					$updateMeta=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."meta SET meta_relation_id='{$newLinkId}' WHERE meta_relation_id='{$link_meta_ref_id}' AND meta_site_id=".SITE_ID);
+
+				}
+				
+				if($updateCategory && $redirectURL && $insertNewURL && $updateMeta) {
+						
 					$status=200;
 					$msg='Category update successfully';
 					mysqli_query($connection, 'COMMIT');
