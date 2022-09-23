@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Astroaayu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
 
@@ -21,6 +20,9 @@
         integrity="sha512-wR4oNhLBHf7smjy0K4oqzdWumd+r5/+6QO/vDda76MW5iug4PT7v86FoEkySIJft3XA0Ae6axhIvHrqwm793Nw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://kit.fontawesome.com/da7bbb41f1.js" crossorigin="anonymous"></script>
+
+    <?php require_once DEFAULT_META; ?>
+
 </head>
 
 <body>
@@ -31,7 +33,7 @@
                     <span class="material-symbols-sharp"> call </span>
                 </div>
                 <p>
-                    <span class="font_weight">Talk to our astro</span> - 8505850919
+                    <a href='tel:91-8505850919'><span class="font_weight">Talk to our astro</span> - 8505850919</a>
                 </p>
             </div>
             <div class="icon_container ms-3 ms-md-5">
@@ -39,8 +41,8 @@
                     <span class="material-symbols-sharp"> mail </span>
                 </div>
                 <p>
-                    <span class="font_weight">Talk to our astro</span> -
-                    support@astroaayu.com
+                    <a hrfe='mailto:support@astroaayu.com'><span class="font_weight">Talk to our astro</span> -
+                        support@astroaayu.com</a>
                 </p>
             </div>
             <div class="sub_buttons ms-3 ms-md-5 d-flex align-items-center d-none">
@@ -60,11 +62,18 @@
             <div class="d-flex align-items-center">
                 <div class="nav_container nav_res">
                     <ul class="d-flex align-items-center relative">
-                        <li><a href="/" class="active_link">Home</a></li>
-                        <li><a href="/about/">About Us</a></li>
-                        <li><a href="/numerology/">Numerology</a></li>
-                        <li><a href="/contact/">Contact Us</a></li>
-                        <li><a href="/shop/">Shop</a></li>
+                        <li><a href="/" <?php echo ((ACTIVE_URL=='/') ? 'class="active_link"' : '') ?>>Home</a></li>
+                        <li><a href="/about/" <?php echo ((ACTIVE_URL=='/about/') ? 'class="active_link"' : '') ?>>About
+                                Us</a></li>
+                        <li><a href="/numerology/"
+                                <?php echo ((ACTIVE_URL=='/numerology/') ? 'class="active_link"' : '') ?>>Numerology</a>
+                        </li>
+                        <li><a href="/contact/"
+                                <?php echo ((ACTIVE_URL=='/contact/') ? 'class="active_link"' : '') ?>>Contact
+                                Us</a></li>
+                        <li><a href="/shop/"
+                                <?php echo ((ACTIVE_URL=='/shop/') ? 'class="active_link"' : '') ?>>Shop</a>
+                        </li>
                         <li>
                             <a href="/appointment/" class="display_prop">Book An Appointment</a>
                         </li>
@@ -72,7 +81,7 @@
                     </ul>
                 </div>
                 <div class="nav_container2">
-                    <img src="<?php echo USER_IMAGES ?>search_icon.png" class="search_icon" />
+                    <!-- <img src="<?php echo USER_IMAGES ?>search_icon.png" class="search_icon" /> -->
                     <a class="common_btn d-inline-block ms-4 btn_margin" href="/appointment/">Book Appointment</a>
 
                     <span class="material-symbols-sharp toggler"> menu </span>

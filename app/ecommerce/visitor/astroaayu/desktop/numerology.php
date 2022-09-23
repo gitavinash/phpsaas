@@ -105,7 +105,7 @@
                         whatever be their occupation, they overcome all hurdles and impediments and more often than not,
                         rise to the top.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -121,7 +121,7 @@
                         emotional. They are guided and swayed by their emotions, rather than by strength of their will
                         and easily influenced by others.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -138,7 +138,7 @@
                         also stands for manifestation and procreation of life. In Hinduism, Tantras, the triangle is
                         treated as a holy symbol of the Supreme power.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -153,7 +153,7 @@
                         may have many sudden surprises in their lives. Number 4 persons are honest, balanced and
                         practical. This is a good number, it brings luck and money.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -169,7 +169,7 @@
                         Number 5 is the number for family and people with this number have good support from their
                         family most of the times.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -187,7 +187,7 @@
                         attractive surroundings and with attractive people. They love art, perfumes, music, good
                         clothes, finery, and scenic beauty.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -205,7 +205,7 @@
                         during their life, they show a philosophical outlook towards life. They are very independent and
                         have strongly marked individuality.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -222,7 +222,7 @@
                         strength of individuality; and they generally play some important role on life's stage. They are
                         misunderstood many times, number 8 people tend to be profound but, at the same time, sensitive.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
             <div class="num_card">
@@ -240,7 +240,7 @@
                         enormous ego and tend to dominate with their opinions and authority. They may be warm hearted
                         but they do have a temper due to their ruling planet Mars.
                     </p>
-                    <a href="contact.html" class="common_btn common_btn_2 my-4">Book Appointment</a>
+                    <a href="/appointment/" class="common_btn common_btn_2 my-4">Book Appointment</a>
                 </div>
             </div>
         </div>

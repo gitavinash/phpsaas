@@ -72,7 +72,7 @@
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab"
                     tabindex="0">
                     <div class="products_container">
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s1.png" />
                             </div>
@@ -89,7 +89,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s2.png" />
                             </div>
@@ -106,7 +106,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s3.png" />
                             </div>
@@ -123,7 +123,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s4.png" />
                             </div>
@@ -140,7 +140,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s5.png" />
                             </div>
@@ -157,7 +157,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s6.png" />
                             </div>
@@ -174,7 +174,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s2.png" />
                             </div>
@@ -191,7 +191,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s1.png" />
                             </div>
@@ -208,7 +208,7 @@
                                 <p><span class="color_red">Offers</span> Special Price</p>
                             </div>
                         </a>
-                        <a class="product_box" href="productdetail.html">
+                        <a class="product_box" href="/product/">
                             <div class="product_box_bg">
                                 <img src="<?php echo USER_IMAGES ?>s3.png" />
                             </div>

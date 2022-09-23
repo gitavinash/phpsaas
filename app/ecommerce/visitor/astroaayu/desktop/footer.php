@@ -21,10 +21,10 @@
         <div class="col-12 col-sm-4 col-lg-2">
             <h3 class="color_blue footer_title">Astroaayu</h3>
             <ul class="footer_list">
-                <li><a href="#">Yantra</a></li>
-                <li><a href="/numerology/">Gem Stones</a></li>
-                <li><a href="#">Hawan </a></li>
-                <li><a href="#">Upay </a></li>
+                <li><a href="/category/yantra/">Yantra</a></li>
+                <li><a href="/category/gem-stones/">Gem Stones</a></li>
+                <li><a href="/category/hawan/">Hawan</a></li>
+                <li><a href="/category/upay/">Upay</a></li>
             </ul>
         </div>
         <div class="col-12 col-sm-4 col-xl-3">

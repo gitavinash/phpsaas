@@ -45,7 +45,7 @@
 
 
                 </p>
-                <a href="#" class="primary-btn text-center mt-3">Call Now</a>
+                <a href="tel:91-8505850919" class="primary-btn text-center mt-3">Call Now</a>
             </div>
         </div>
     </div>

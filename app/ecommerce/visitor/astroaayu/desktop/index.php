@@ -14,45 +14,11 @@
                     Changes</span>
                 Your Life
             </h1>
-            <!-- <p class="semi_para">
-          Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin,
-          lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis
-        </p>
-        <a class="common_btn common_btn_2 mt-2 mt-sm-4" href="#">Enquire Now</a> -->
         </div>
         <div class="col-12 col-md-6 mt-3 mt-md-0">
             <img src="<?php echo USER_IMAGES ?>hero_img.png" class="astro_img" />
         </div>
     </div>
-    <!-- <div class="row common_margin bg_form p-3 p-sm-4 align-items-center">
-      <div class="col-12 col-xxl-4 text-center text-xxl-start">
-        <p class="semi_title">Your Personal Astrology Calculator</p>
-      </div>
-      <div class="col-12 col-xxl-8">
-        <form class="row justify-content-center">
-          <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-1 mb-sm-3">
-            <label for="first_name" class="form-label form_label">Enter your Full Name</label>
-            <input type="email" class="form-control form_control" id="first_name" placeholder="First Middle LastName" />
-          </div>
-          <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-1 mb-sm-3">
-            <label for="date" class="form-label form_label">Enter Your DOB</label>
-            <input type="date" class="form-control form_control" id="date" />
-          </div>
-          <div class="col-12 col-md-4 col-xl-3 mb-1 mb-sm-3">
-            <label for="number" class="form-label form_label">Mobile Number</label>
-            <div class="d-flex align-items-center number_cont">
-              <input type="tel" class="form-control form_control number_cont1" id="number" placeholder="+91" />
-              <input type="tel" class="form-control form_control" id="number" placeholder="Mobile Number" />
-            </div>
-          </div>
-          <div class="col-12 col-lg-2 col-xl-1 d-flex align-items-center">
-            <button class="common_btn common_btn_3 mt-2" type="submit">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    </div> -->
     <!--Your Consultant-->
     <div class="row common_padding align-items-center cons_bg py-3 py-md-5">
         <div class="col-12 col-md-6">
@@ -92,7 +58,7 @@
                 and by adding colors to their life as well. </p>
 
             <div class="mt-4 d-flex align-items-center">
-                <a href="about.html" class="common_btn common_btn d-inline-flex align-items-center">
+                <a href="/about/" class="common_btn common_btn d-inline-flex align-items-center">
                     Read More <span class="material-symbols-sharp ms-2">
                         east
                     </span></a>
@@ -453,7 +419,7 @@
                 Lal Kitab and you will get 100% results from the solutions provided.</p>
             <p class="semi_para mt-2">Always remember that we are always here to help you please don’t hesitate to reach
                 us out.</p>
-            <a class="common_btn common_btn_2 mt-2 mt-sm-4" href="contact.html">Enquire Now</a>
+            <a class="common_btn common_btn_2 mt-2 mt-sm-4" href="/contact/">Enquire Now</a>
         </div>
         <div class="col-12 col-md-6 col-xl-4 d-flex justify-content-start justify-content-md-center mt-3 mt-md-0">
             <div>
@@ -524,13 +490,14 @@
         </div>
         <div class="col-12 mt-3 mt-md-5">
             <div class="grid_grid_pro">
-                <div class="product_box">
-                    <div class="product_box_bg">
-                        <img src="<?php echo USER_IMAGES ?>s1.png" />
-                    </div>
-                    <div class="product_contents text-center mt-3">
-                        <h4 class="m-0">Yantra</h4>
-                        <p><span class="color_red me-1">$20</span><del>$60</del></p>
+                <a href='/category/yantra/'>
+                    <div class="product_box">
+                        <div class="product_box_bg">
+                            <img src="<?php echo USER_IMAGES ?>s1.png" />
+                        </div>
+                        <div class="product_contents text-center mt-3">
+                            <h4 class="m-0">Yantra</h4>
+                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
                         <div class="ratings mt-1">
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp yellow"> star </span>
@@ -538,16 +505,18 @@
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp"> star </span>
                         </div>
-                        <p><span class="color_red">Offers</span> Special Price</p>
+                        <p><span class="color_red">Offers</span> Special Price</p> -->
+                        </div>
                     </div>
-                </div>
-                <div class="product_box">
-                    <div class="product_box_bg">
-                        <img src="<?php echo USER_IMAGES ?>s2.png" />
-                    </div>
-                    <div class="product_contents text-center mt-3">
-                        <h4 class="m-0">Gem Stones</h4>
-                        <p><span class="color_red me-1">$20</span><del>$60</del></p>
+                </a>
+                <a href='/category/gem-stones/'>
+                    <div class="product_box">
+                        <div class="product_box_bg">
+                            <img src="<?php echo USER_IMAGES ?>s2.png" />
+                        </div>
+                        <div class="product_contents text-center mt-3">
+                            <h4 class="m-0">Gem Stones</h4>
+                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
                         <div class="ratings mt-1">
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp yellow"> star </span>
@@ -555,16 +524,18 @@
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp"> star </span>
                         </div>
-                        <p><span class="color_red">Offers</span> Special Price</p>
+                        <p><span class="color_red">Offers</span> Special Price</p> -->
+                        </div>
                     </div>
-                </div>
-                <div class="product_box">
-                    <div class="product_box_bg">
-                        <img src="<?php echo USER_IMAGES ?>s3.png" />
-                    </div>
-                    <div class="product_contents text-center mt-3">
-                        <h4 class="m-0">Hawan</h4>
-                        <p><span class="color_red me-1">$20</span><del>$60</del></p>
+                </a>
+                <a href='/category/hawan/'>
+                    <div class="product_box">
+                        <div class="product_box_bg">
+                            <img src="<?php echo USER_IMAGES ?>s3.png" />
+                        </div>
+                        <div class="product_contents text-center mt-3">
+                            <h4 class="m-0">Hawan</h4>
+                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
                         <div class="ratings mt-1">
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp yellow"> star </span>
@@ -572,16 +543,18 @@
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp"> star </span>
                         </div>
-                        <p><span class="color_red">Offers</span> Special Price</p>
+                        <p><span class="color_red">Offers</span> Special Price</p> -->
+                        </div>
                     </div>
-                </div>
-                <div class="product_box">
-                    <div class="product_box_bg">
-                        <img src="<?php echo USER_IMAGES ?>s4.png" />
-                    </div>
-                    <div class="product_contents text-center mt-3">
-                        <h4 class="m-0">Upay</h4>
-                        <p><span class="color_red me-1">$20</span><del>$60</del></p>
+                </a>
+                <a href='/category/upay/'>
+                    <div class="product_box">
+                        <div class="product_box_bg">
+                            <img src="<?php echo USER_IMAGES ?>s4.png" />
+                        </div>
+                        <div class="product_contents text-center mt-3">
+                            <h4 class="m-0">Upay</h4>
+                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
                         <div class="ratings mt-1">
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp yellow"> star </span>
@@ -589,125 +562,12 @@
                             <span class="material-symbols-sharp yellow"> star </span>
                             <span class="material-symbols-sharp"> star </span>
                         </div>
-                        <p><span class="color_red">Offers</span> Special Price</p>
+                        <p><span class="color_red">Offers</span> Special Price</p> -->
+                        </div>
                     </div>
-                </div>
+                </a>
 
             </div>
-            <!-- <div class="row justify-content-center">
-          <div class="col-12 col-md-5 col-xxl-3 card_cost relative margin_right">
-            <div class="relative">
-              <img src="<?php echo USER_IMAGES ?>card_img_b.png" />
-              <img src="<?php echo USER_IMAGES ?>card_img_b_i1.png" class="card_icon" />
-            </div>
-            <div class="card_content text-center">
-              <p class="card_semi_title text-center">
-                No Structrual Changes or Demolitions
-              </p>
-              <p class="mt-2 mb-4">
-                We have the World Famous Vastu on the Best Vastu Website in
-                India, practising both Indian Vastu and Western Astro
-                for astrology today...
-              </p>
-            </div>
-            <div class="card_icon_box">
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-          <div class="col-12 col-md-5 col-xxl-3 card_cost relative mx-xxl-5 mt-4 mt-md-0 margin_left">
-            <div class="relative">
-              <img src="<?php echo USER_IMAGES ?>card_img_b2.png" />
-              <img src="<?php echo USER_IMAGES ?>card_img_b_i2.png" class="card_icon" />
-            </div>
-            <div class="card_content text-center">
-              <p class="card_semi_title text-center">
-                Customized Solutions as per Astrological Chart
-              </p>
-              <p class="mt-2 mb-4">
-                We have the World Famous Vastu on the Best Vastu Website in
-                India, practising both Indian Vastu and Western Astro
-                for astrology today.
-              </p>
-            </div>
-            <div class="card_icon_box">
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-          <div class="col-12 col-md-5 col-xxl-3 card_cost relative mt-4 mt-md-5 mt-xxl-0 margin_right">
-            <div class="relative">
-              <img src="<?php echo USER_IMAGES ?>card_img_b3.png" />
-              <img src="<?php echo USER_IMAGES ?>card_img_b_i3.png" class="card_icon" />
-            </div>
-            <div class="card_content text-center">
-              <p class="card_semi_title text-center">
-                Advanced Knowledge of Invisible Earth Energies
-              </p>
-              <p class="mt-2 mb-4">
-                We have the World Famous Vastu on the Best Vastu Website in
-                India, practising both Indian Vastu and Western Astro
-                for astrology today.
-              </p>
-            </div>
-            <div class="card_icon_box">
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-          <div class="col-12 col-md-5 col-xxl-3 card_cost relative mt-4 mt-md-5 margin_left">
-            <div class="relative">
-              <img src="<?php echo USER_IMAGES ?>card_img_b4.png" />
-              <img src="<?php echo USER_IMAGES ?>card_img_b_i4.png" class="card_icon" />
-            </div>
-            <div class="card_content text-center">
-              <p class="card_semi_title text-center">No Expensive Remedies</p>
-              <p class="mt-2 mb-4">
-                We have the World Famous Vastu on the Best Vastu Website in
-                India, practising both Indian Vastu and Western Astro
-                for astrology today.
-              </p>
-            </div>
-            <div class="card_icon_box">
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-          <div class="col-12 col-md-5 col-xxl-3 card_cost relative mx-xxl-5 mt-4 mt-md-5 margin_right">
-            <div class="relative">
-              <img src="<?php echo USER_IMAGES ?>card_img_b5.png" />
-              <img src="<?php echo USER_IMAGES ?>card_img_b_i5.png" class="card_icon" />
-            </div>
-            <div class="card_content text-center">
-              <p class="card_semi_title text-center">
-                Holistic Approach Integrating Yoga & Ayurveda
-              </p>
-              <p class="mt-2 mb-4">
-                We have the World Famous Vastu on the Best Vastu Website in
-                India, practising both Indian Vastu and Western Astro
-                for astrology today.
-              </p>
-            </div>
-            <div class="card_icon_box">
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-          <div class="col-12 col-md-5 col-xxl-3 card_cost relative mt-4 mt-md-5 margin_left">
-            <div class="relative">
-              <img src="<?php echo USER_IMAGES ?>card_img_b6.png" />
-              <img src="<?php echo USER_IMAGES ?>card_img_b_i6.png" class="card_icon" />
-            </div>
-            <div class="card_content text-center">
-              <p class="card_semi_title text-center">
-                Scientific Research Based Solutions
-              </p>
-              <p class="mt-2 mb-4">
-                We have the World Famous Vastu on the Best Vastu Website in
-                India, practising both Indian Vastu and Western Astro
-                for astrology today.
-              </p>
-            </div>
-            <div class="card_icon_box">
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-        </div> -->
         </div>
     </div>
 
@@ -769,7 +629,7 @@
         </div>
     </div>
     <!--Blogs-->
-    <div class="row common_padding mt-4 mt-xl-0">
+    <!-- <div class="row common_padding mt-4 mt-xl-0">
         <div class="col-12 d-flex justify-content-center flex-column align-items-center">
             <p class="title_semi text_center">
                 <span class="title_semi_line2"></span> Our Latest Blog
@@ -840,6 +700,7 @@
             </div>
         </div>
     </div>
+     -->
     <!--Accordin-->
     <div class="margin_top common_padding">
         <div class="col-12 d-flex justify-content-center flex-column align-items-center">

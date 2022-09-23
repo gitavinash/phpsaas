@@ -833,6 +833,10 @@ img{
 /* anchor tags */
 a{
   text-decoration: none;
+  color: inherit;
+}
+a:hover{
+color: inherit;
 }
 /* about-banner */
 .about_banner{
