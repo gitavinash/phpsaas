@@ -7,47 +7,22 @@
     <div class="row common_padding margin_top align-items-center">
         <div class="col-12 col-lg-5">
             <div class="product_box_detail py-5">
-                <img src="<?php echo USER_IMAGES ?>s5.png">
+                <img src="<?php echo $product_image ?>">
             </div>
         </div>
         <div class="col-12 col-lg-7 ps-0 ps-lg-5 mt-3 mt-lg-0">
             <h1 class="product_title">Yantra</h1>
-            <div class="d-flex align-items-center">
-                <div class="d-flex align-items-center ">
-                    <div class="rating_star">
-                        <span class="material-symbols-sharp yellow">
-                            star
-                        </span>
-                        <span class="material-symbols-sharp yellow">
-                            star
-                        </span>
-                        <span class="material-symbols-sharp yellow">
-                            star
-                        </span>
-                        <span class="material-symbols-sharp yellow">
-                            star
-                        </span>
-                        <span class="material-symbols-sharp">
-                            star
-                        </span>
-                    </div>
-                    <p>4 Reviews</p>
-                </div>
-                <div class="ms-3 ms-sm-5">
-                    <p><b>SKU:</b>2034</p>
-                </div>
-                <div class="ms-3 ms-sm-5">
-                    <p> <b>Category:</b>2034</p>
-                </div>
+            <div class="d-flex">
+                <p> <b>Category:</b> <?php echo $category_title ?></p>
             </div>
             <div class="d-flex align-items-center mt-1">
-                <p class="title_semi">$20 <del>$60</del></p>
-                <div class="off">64% Off</div>
+                <p class="title_semi">₹ <?php echo $inventory_price ?> <del>₹ <?php echo $inventory_mrp ?></del></p>
+                <div class="off">
+                    <?php $discountPerstange = (1-$inventory_price/$inventory_mrp)*100; echo intval($discountPerstange) ?>%
+                    Off</div>
             </div>
             <hr>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam rem repellat totam, recusandae sint
-                eius. Officiis autem id dolores eos asperiores, eius ab pariatur tenetur eligendi quo itaque et
-                placeat aperiam nemo aspernatur est atque ea expedita ex? Natus, eos.</p>
+            <p><?php echo $product_description ?></p>
             <div class="mt-3 add_container">
                 <div class="quantity">
                     <span class="material-symbols-sharp plus_icon">
@@ -58,177 +33,77 @@
                         remove
                     </span>
                 </div>
-                <button class="add_cart">Add To Cart <span class="material-symbols-sharp">
+                <button class="add_cart">Buy Now <span class="material-symbols-sharp">
                         shopping_bag
                     </span></button>
-                <div class="share_icon"><span class="material-symbols-sharp">
+                <!-- <div class="share_icon"><span class="material-symbols-sharp">
                         outgoing_mail
-                    </span></div>
+                    </span></div> -->
             </div>
             <hr>
         </div>
     </div>
-    <div class="row common_padding margin_top">
+    <div class="row common_padding margin_top margin_bottom">
         <div class="col-12 text-center">
             <h1 class="title_section">Related Products</h1>
         </div>
+
+
         <div class="products_container2 mt-2 mt-md-4">
-            <div class="product_box">
-                <div class="product_box_bg">
-                    <img src="<?php echo USER_IMAGES ?>s1.png" />
-                </div>
-                <div class="product_contents text-center mt-3">
-                    <h4 class="m-0">Yantra</h4>
-                    <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                    <div class="ratings mt-1">
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp"> star </span>
-                    </div>
-                    <p><span class="color_red">Offers</span> Special Price</p>
-                </div>
-            </div>
-            <div class="product_box">
-                <div class="product_box_bg">
-                    <img src="<?php echo USER_IMAGES ?>s2.png" />
-                </div>
-                <div class="product_contents text-center mt-3">
-                    <h4 class="m-0">Yantra</h4>
-                    <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                    <div class="ratings mt-1">
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp"> star </span>
-                    </div>
-                    <p><span class="color_red">Offers</span> Special Price</p>
-                </div>
-            </div>
-            <div class="product_box">
-                <div class="product_box_bg">
-                    <img src="<?php echo USER_IMAGES ?>s3.png" />
-                </div>
-                <div class="product_contents text-center mt-3">
-                    <h4 class="m-0">Yantra</h4>
-                    <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                    <div class="ratings mt-1">
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp"> star </span>
-                    </div>
-                    <p><span class="color_red">Offers</span> Special Price</p>
-                </div>
-            </div>
-            <div class="product_box">
-                <div class="product_box_bg">
-                    <img src="<?php echo USER_IMAGES ?>s4.png" />
-                </div>
-                <div class="product_contents text-center mt-3">
-                    <h4 class="m-0">Yantra</h4>
-                    <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                    <div class="ratings mt-1">
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp yellow"> star </span>
-                        <span class="material-symbols-sharp"> star </span>
-                    </div>
-                    <p><span class="color_red">Offers</span> Special Price</p>
-                </div>
-            </div>
+
+            <?php
+				
+				if($tagListData=mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
+
+					if(mysqli_num_rows($tagListData)!=0) {
+					
+						extract(mysqli_fetch_assoc($tagListData));
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+					
+					} else {
+
+						$productRelated=explode(' ', $product_title);
+					
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+					
+					}
+				
+				}
+
+				if($relatedProductsData=mysqli_query($connection, $relatedProductQuery)) {
+
+					if(mysqli_num_rows($relatedProductsData)!=0) {
+					
+						while($relatedProducts=mysqli_fetch_assoc($relatedProductsData)) {
+					
+							extract($relatedProducts);
+
+                            
+							echo "
+                            <div class='product_box'>
+                                <div class='product_box_bg'>
+                                    <img src='{$product_image}' />
+        </div>
+        <div class='product_contents text-center mt-3'>
+            <h4 class='m-0'>{$product_title}</h4>
+            <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>".((1-$inventory_price/$inventory_mrp)*100)."% Off</div></p>
+        </div>
+    </div>
+    ";
+
+    }
+
+    }
+
+    }
+
+    ?>
+
         </div>
     </div>
 </main>
+<?php
 
-<footer class="container-fluid">
-    <div class="row common_padding footer_sub justify-content-between pt-3 pt-lg-5 pb-3">
-        <div class="col-12 col-lg-3 mb-3 mb-lg-0">
-            <a href="/"><img src="<?php echo USER_IMAGES ?>logo_astro.png" class="logo_astro" /></a>
-            <p>
-                We have the World Famous Astroaayu on the Best Astrology Website in India, practicing both Indian
-                Astrology
-                and Western Astrology for astrology today.
-            </p>
-        </div>
-        <div class="col-12 col-sm-4 col-lg-2">
-            <h3 class="color_blue footer_title">Useful Links</h3>
-            <ul class="footer_list">
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms Of Use</a></li>
-                <li><a href="shop.html">Shop</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
-            </ul>
-        </div>
-        <div class="col-12 col-sm-4 col-lg-2">
-            <h3 class="color_blue footer_title">Astroaayu</h3>
-            <ul class="footer_list">
-                <li><a href="#">Yantra</a></li>
-                <li><a href="numerology.html">Gem Stones</a></li>
-                <li><a href="#">Hawan </a></li>
-                <li><a href="#">Upay </a></li>
-            </ul>
-        </div>
-        <div class="col-12 col-sm-4 col-xl-3">
-            <h3 class="color_blue footer_title">Address</h3>
-            <div>
-                <p>Astroaayu Pvt. Ltd.</p>
-                <a href="https://goo.gl/maps/RLKBsXvwD2YsLsdc8" class="aa" target="_blank">
-                    Mohit Aggarwal Red Book Expert
-                    H 52
-                    DAKSHINPURI
-                    DR AMBEDKAR NAGAR
-                    SEC 5 New Delhi 110062
+    require_once('footer.php');
 
-                    Land mark
-                    Pani ki tanki
-                    Ajay Dutt MLA Office
-                </a>
-                <div class="mt-2 mt-sm-3 footer_btn_b">
-                    <a class="footer_btn" href="contact.html">Ask Your Question</a>
-                    <a class="footer_btn" href="appointment.html">Book An Appointment</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row common_padding footer_dark white py-3 align-items-center">
-        <div class="col-12 col-sm-6 text-center text-sm-start">
-            <p>© 2021 Astroaayu Rights Reserved.</p>
-        </div>
-        <div class="col-12 col-sm-6 d-flex justify-content-center justify-content-sm-end mt-2 mt-sm-0">
-            <div class="footer_icon">
-                <a href="https://www.facebook.com/Astroaayu4u ">
-                    <i class="fa-brands fa-facebook-f"></i>
-                </a>
-            </div>
-            <div class="footer_icon mx-3">
-                <a href="https://twitter.com/astroaayu ">
-                    <i class="fa-brands fa-twitter"></i>
-                </a>
-            </div>
-            <div class="footer_icon">
-                <a href="https://www.instagram.com/astroaayu">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</footer>
-<script src="js/app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
-</script>
-<!--Jquery Cdn-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!--Slick Slider Cdn-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
-    integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</body>
-
-</html>
+?>

@@ -82,6 +82,9 @@ a {
 .margin_top {
   margin-top: 80px;
 }
+.margin_bottom {
+  margin-bottom: 80px;
+}
 /*header*/
 header {
   z-index: 99;
@@ -1460,11 +1463,19 @@ background-color: var(--color-red);
   font-weight: 600;
 }
 .filter_box_ul li{
-  padding: 15px 25px;
-  border-bottom: 1px dashed rgba(0,0,0,0.5);
+  float: left;
+  width: 100%;
+  border: 1px dashed rgba(0,0,0,0.5);
   cursor: pointer;
   transition: 0.3s;
 }
+
+.filter_box_ul li a {
+  float: left;
+  width: 100%;
+  padding: 15px 25px;
+}
+
 .filter_box_ul li:hover{
   background-color: var(--color-red);
   color: var(--color-white);
