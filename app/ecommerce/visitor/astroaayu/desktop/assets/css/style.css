@@ -2783,3 +2783,30 @@ a.delet:hover span {
 .ad-card .paymnet-section {
   margin-top: 0;
 }
+
+.continue-shopping {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 100px 20px;
+  box-sizing: border-box;
+}
+
+.continue-shopping h1 {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+.continue-shopping h1 span {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 300;
+  color: #a7a7a7;
+  padding: 20px 0;
+  box-sizing: border-box;
+}

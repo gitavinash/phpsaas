@@ -85,7 +85,7 @@ $('#addToCart').click(function(e) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        data = {
+        data: {
             type: 'cart',
             action: 'remove',
             id: id
