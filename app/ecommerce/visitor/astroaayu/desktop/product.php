@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="col-12 col-lg-7 ps-0 ps-lg-5 mt-3 mt-lg-0">
-            <h1 class="product_title">Yantra</h1>
+            <h1 class="product_title"><?php echo  $product_title ?></h1>
             <div class="d-flex">
                 <p> <b>Category:</b> <?php echo $category_title ?></p>
             </div>
@@ -33,7 +33,10 @@
                         remove
                     </span>
                 </div>
-                <button class="add_cart">Buy Now <span class="material-symbols-sharp">
+                <p style="display:none" id="productInfo"
+                    value="<?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>">
+                </p>
+                <button class="add_cart" id="addToCart">Buy Now <span class="material-symbols-sharp">
                         shopping_bag
                     </span></button>
                 <!-- <div class="share_icon"><span class="material-symbols-sharp">
@@ -58,13 +61,13 @@
 					if(mysqli_num_rows($tagListData)!=0) {
 					
 						extract(mysqli_fetch_assoc($tagListData));
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 AND product_id!={$product_id} GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
 					
 					} else {
 
 						$productRelated=explode(' ', $product_title);
 					
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 AND product_id!={$product_id}  GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
 					
 					}
 				
@@ -92,6 +95,10 @@
     ";
 
     }
+
+    } else {
+
+        echo "<h4 class='m-0'>No product found</h4>";
 
     }
 

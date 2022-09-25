@@ -71,7 +71,8 @@
                         <li><a href="/contact/"
                                 <?php echo ((ACTIVE_URL=='/contact/') ? 'class="active_link"' : '') ?>>Contact
                                 Us</a></li>
-                        <li><a href="/category/yantra/">Shop</a>
+                        <li><a href="/shop/"
+                                <?php echo ((ACTIVE_URL=='/shop/') ? 'class="active_link"' : '') ?>>Shop</a>
                         </li>
                         <li>
                             <a href="/appointment/" class="display_prop">Book An Appointment</a>

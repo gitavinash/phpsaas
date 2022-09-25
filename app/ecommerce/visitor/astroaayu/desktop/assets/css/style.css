@@ -2596,3 +2596,190 @@ background-color: var(--color-red);
       grid-template-columns: repeat(2,1fr);
   }
 }
+
+.cart-area {
+  width: 100%;
+  float: left;
+}
+.heading-1 {
+  font-size: 24px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.heading-2 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+
+.ad-card {
+  width: 100%;
+  float: left;
+  box-shadow: 0 1px 8px #00000021;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.cart-img {
+  width: 100px;
+  float: left;
+}
+
+.cart-img img {
+  width: 100%;
+}
+
+.prodct-nme {
+  width: calc(100% - 120px);
+  float: left;
+  padding-left: 20px;
+  position: relative;
+}
+
+.prodct-nme a h2 {
+  font-size: 20px;
+  font-weight: 300;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.prodct-nme img {
+  width: 24px;
+  padding-right: 7px;
+}
+
+.prodct-nme h5 {
+  font-size: 19px;
+  font-weight: 500;
+  color: #000;
+}
+
+a.delet {
+  position: absolute;
+  right: 20px;
+}
+
+a.delet span {
+  color: #333;
+  font-size: 30px;
+}
+
+a.delet:hover span {
+  color: #f90c0c;
+}
+
+.product-quantity {
+  margin: 10px 0;
+}
+
+.product-quantity input {
+  width: 50px;
+  font-weight: 500;
+  color: #d4946d;
+  padding-left: 10px;
+}
+
+.remove-product {
+  border: 0;
+  padding: 4px 8px;
+  background-color: #c66;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 3px;
+}
+
+.cart-purchase {
+  width: 100%;
+  float: left;
+  box-shadow: 0 1px 8px #00000021;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 20px;
+  margin-top: 80px;
+}
+
+.cart-purchase h2 {
+  font-size: 20px;
+  color: #000;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.cart-purchase h4 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.cart-purchase h5 img {
+  width: 38px;
+  padding-right: 10px;
+}
+
+.cart-purchase h5 {
+  font-size: 35px;
+  color: #43ba7c;
+  margin-bottom: 20px;
+}
+
+.cart-purchase p {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin: 10px 0;
+}
+
+.btn-bloom {
+  display: block;
+  background: #949494;
+  text-align: center;
+  color: #fff;
+  padding: 10px;
+  font-weight: 500;
+}
+
+.purchase-btn {
+  background: #199100;
+}
+
+.conti-shop {
+  width: 100%;
+  float: left;
+  padding: 20px;
+}
+
+.shop-btn {
+  background: #d4946d;
+}
+
+.site-feature {
+  width: 100%;
+  float: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.site-feature ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.site-feature ul li {
+  display: inline-block;
+  width: 48%;
+  font-size: 14px;
+}
+
+.site-feature ul li span {
+  float: left;
+  padding-right: 5px;
+}
+
+.ad-card .paymnet-section {
+  margin-top: 0;
+}

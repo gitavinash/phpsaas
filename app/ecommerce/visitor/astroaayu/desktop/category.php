@@ -80,369 +80,44 @@
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab"
                     tabindex="0">
                     <div class="products_container">
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s1.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s2.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s3.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s4.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s5.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s6.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s2.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s1.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
-                        <a class="product_box" href="/product/">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s3.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </a>
+
+                        <?php
+                        
+                            $productList = mysqli_query($connection, "SELECT link_url, product_thumbnail, product_title, inventory_price, inventory_mrp FROM isw_product INNER JOIN isw_link ON link_relation_id=product_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_category='{$category_id}' AND product_site_id=".SITE_ID." LIMIT 30");
+
+                            if(mysqli_num_rows($productList)!=0) {
+
+                                while($productListData = mysqli_fetch_assoc($productList)) {
+
+                                    extract($productListData);
+
+                                    echo "<a class='product_box' href='{$link_url}'>
+                                    <div class='product_box_bg'>
+                                        <img src='{$product_thumbnail}' />
+                    </div>
+                    <div class='product_contents text-center mt-3'>
+                        <h4 class='m-0'>{$product_title}</h4>
+                        <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>".((1-$inventory_price/$inventory_mrp)*100)."% Off</div></p>
+                    </div>
+                    </a>";
+
+                    }
+
+                    } else {
+
+                        echo "<h4 class='m-0'>No product found</h4>";
+
+                    }
+
+                    ?>
+
                     </div>
                 </div>
-                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"
-                    tabindex="0">
-                    <div class="products_container">
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s1.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s2.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s3.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab"
-                    tabindex="0">
-                    <div class="products_container">
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s3.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s4.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s5.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s6.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab"
-                    tabindex="0">
-                    <div class="products_container">
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s6.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s2.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s1.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                        <div class="product_box">
-                            <div class="product_box_bg">
-                                <img src="<?php echo USER_IMAGES ?>s3.png" />
-                            </div>
-                            <div class="product_contents text-center mt-3">
-                                <h4 class="m-0">Yantra</h4>
-                                <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                                <div class="ratings mt-1">
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp yellow"> star </span>
-                                    <span class="material-symbols-sharp"> star </span>
-                                </div>
-                                <p><span class="color_red">Offers</span> Special Price</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-3 mt-sm-5">
-                <button class="see_more_btn">See More</button>
+                <!-- <div class="text-center mt-3 mt-sm-5">
+                    <button class="see_more_btn">See More</button>
+                </div> -->
             </div>
         </div>
-    </div>
 </main>
 
 <?php require_once 'footer.php' ?>
