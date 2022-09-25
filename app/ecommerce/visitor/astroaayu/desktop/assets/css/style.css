@@ -2810,3 +2810,36 @@ a.delet:hover span {
   padding: 20px 0;
   box-sizing: border-box;
 }
+
+.password-box {
+  width: 100%;
+  float: left;
+}
+
+.tab-ul-password {
+  float: left;
+  width: 100%;
+  padding: 30px 0;
+}
+
+.tab-ul-password li span {
+  font-size: 15px !important;
+  width: 180px;
+  float: left;
+}
+
+.tab-ul-password li {
+  margin-bottom: 15px;
+}
+
+.input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 35px;
+  width: 300px;
+  text-indent: 10px;
+}
+
+.tab-ul-password textarea {
+  height: 100px;
+}
