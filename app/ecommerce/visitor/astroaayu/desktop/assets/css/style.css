@@ -1376,6 +1376,14 @@ background-color: var(--color-red);
 .share_icon:hover{
   background-color: var(--color-red);
 }
+.select-product-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 50px;
+  min-width: 150px;
+  padding: 6px;
+}
 .quantity{
   border: 1px solid rgba(0,0,0,0.4);
   display: flex;
