@@ -50,17 +50,17 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/acne-treatments/">Acne
+                                                    href="/treatment/treatment-dermatology/acne-treatments/">Acne
                                                     Treatments</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/acne-scar-treatments/">Acne
+                                                    href="/treatment/treatment-dermatology/acne-scar-treatments/">Acne
                                                     Scar Treatments</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/melasma-pigmentation-treatments/">Melasma
+                                                    href="/treatment/treatment-dermatology/melasma-pigmentation-treatments/">Melasma
                                                     Pigmentation Treatments</a>
                                             </li>
                                             <li>
@@ -94,43 +94,43 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/mole-removal/">Mole
+                                                    href="/treatment/treatment-dermatology/mole-removal/">Mole
                                                     Removal</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/wart-removal/">Wart
+                                                    href="/treatment/treatment-dermatology/wart-removal/">Wart
                                                     Removal</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/skin-tag-removal/">Skin
+                                                    href="/treatment/treatment-dermatology/skin-tag-removal/">Skin
                                                     Tag Removal</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/acne-scar-surgeries/">Acne
+                                                    href="/treatment/treatment-dermatology/acne-scar-surgeries/">Acne
                                                     Scar Surgeries
                                                 </a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/ear-lobe-repair/">Ear
+                                                    href="/treatment/treatment-dermatology/ear-lobe-repair/">Ear
                                                     Lobe Repair</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/cyst-removal/">Cyst
+                                                    href="/treatment/treatment-dermatology/cyst-removal/">Cyst
                                                     Removal</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/nail-surgery/">Nail
+                                                    href="/treatment/treatment-dermatology/nail-surgery/">Nail
                                                     Surgery</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/treatment-dermatology/lipoma-treatment/">Lipoma
+                                                    href="/treatment/treatment-dermatology/lipoma-treatment/">Lipoma
                                                     Treatment</a>
                                             </li>
                                         </ul>
@@ -140,22 +140,22 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/chemical-peels---organic-peels/">Chemical
+                                                    href="/treatment/face-cosmetics/chemical-peels---organic-peels/">Chemical
                                                     Peels</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/open-pore-treatments/">Open
+                                                    href="/treatment/face-cosmetics/open-pore-treatments/">Open
                                                     Pore Treatment</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/under-eye-treatment/">Undereye
+                                                    href="/treatment/face-cosmetics/under-eye-treatment/">Undereye
                                                     Treatment</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/lip-lightening/">Lip
+                                                    href="/treatment/face-cosmetics/lip-lightening/">Lip
                                                     Lightening Treatment</a>
                                             </li>
                                             <li>
@@ -163,12 +163,12 @@
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/skin-glow-treatment/">Skin
+                                                    href="/treatment/face-cosmetics/skin-glow-treatment/">Skin
                                                     Glow Treatments</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/medi-facials/">Medifacials</a>
+                                                    href="/treatment/face-cosmetics/medi-facials/">Medifacials</a>
                                             </li>
                                             <li>
                                                 <a href="">Hydrafacial Md Elite</a>
@@ -178,12 +178,12 @@
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/lip-enhancement/">Lip
+                                                    href="/treatment/face-cosmetics/lip-enhancement/">Lip
                                                     Enhancement</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/nose-enhancement/">Nose
+                                                    href="/treatment/face-cosmetics/nose-enhancement/">Nose
                                                     Enhancement</a>
                                             </li>
                                         </ul>
@@ -193,17 +193,17 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/btx--a-treatment/">BTX-A
+                                                    href="/treatment/face-cosmetics/btx--a-treatment/">BTX-A
                                                     Treatment</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/fillers-treatment/">Filler
+                                                    href="/treatment/face-cosmetics/fillers-treatment/">Filler
                                                     Treatment</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/vampire-facelift/">Vampire
+                                                    href="/treatment/face-cosmetics/vampire-facelift/">Vampire
                                                     Facelift</a>
                                             </li>
                                             <li>
@@ -228,17 +228,17 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/face-cosmetics/skin-whitening-treatment/">Skin
+                                                    href="/treatment/face-cosmetics/skin-whitening-treatment/">Skin
                                                     Whitening Treatments</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/body-cosmetics/stretch-mark-treatments/">Stretch
+                                                    href="/treatment/body-cosmetics/stretch-mark-treatments/">Stretch
                                                     Marks Treatments</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/body-cosmetics/underarm-treatments/">Underarm
+                                                    href="/treatment/body-cosmetics/underarm-treatments/">Underarm
                                                     Lightening Treatment</a>
                                             </li>
                                             <li>
@@ -246,7 +246,7 @@
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/treatment/body-cosmetics/de-tan-treatment/">De-Taning
+                                                    href="/treatment/body-cosmetics/de-tan-treatment/">De-Taning
                                                     Treatment</a>
                                             </li>
                                             <li>
@@ -286,29 +286,29 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/dermatology/acne/">Acne</a>
+                                                    href="/service/dermatology/acne/">Acne</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/dermatology/acne-scar/">Acne
+                                                    href="/service/dermatology/acne-scar/">Acne
                                                     Scars</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/dermatology/melasma-pigmentation/">Melasma
+                                                    href="/service/dermatology/melasma-pigmentation/">Melasma
                                                     And Pigmentation</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/dermatology/allergy-eczema/">Allergy</a>
+                                                    href="/service/dermatology/allergy-eczema/">Allergy</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/dermatology/psoriasis/">Psoriasis</a>
+                                                    href="/service/dermatology/psoriasis/">Psoriasis</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/dermatology/vitiligo-surgery/">Vitiligo</a>
+                                                    href="/service/dermatology/vitiligo-surgery/">Vitiligo</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -317,7 +317,7 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/facial-cosmetic-treatment/open-pores/">Open
+                                                    href="/service/facial-cosmetic-treatment/open-pores/">Open
                                                     Pores</a>
                                             </li>
                                             <li>
@@ -328,7 +328,7 @@
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/facial-cosmetic-treatment/chemical-peels-organic-peels/">Chemical
+                                                    href="/service/facial-cosmetic-treatment/chemical-peels-organic-peels/">Chemical
                                                     Peels</a>
                                             </li>
                                             <li>
@@ -353,7 +353,7 @@
                                         <ul>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/body-cosmetic-treatment/stretch-marks/">Stretch
+                                                    href="/service/body-cosmetic-treatment/stretch-marks/">Stretch
                                                     Marks</a>
                                             </li>
                                             <li>
@@ -361,7 +361,7 @@
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/body-cosmetic-treatment/cellulite-treatment/">Cellulite</a>
+                                                    href="/service/body-cosmetic-treatment/cellulite-treatment/">Cellulite</a>
                                             </li>
                                             <li>
                                                 <a href="">Hesitational Marks</a>
@@ -371,7 +371,7 @@
                                             </li>
                                             <li>
                                                 <a
-                                                    href="https://skinqure.itssoftworld.com/service/body-cosmetic-treatment/birth-mark/">Birth
+                                                    href="/service/body-cosmetic-treatment/birth-mark/">Birth
                                                     Marks</a>
                                             </li>
                                         </ul>
