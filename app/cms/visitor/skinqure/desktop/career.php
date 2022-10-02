@@ -27,15 +27,14 @@
             <div class="col-12">
                 <div class="w-100 formfield text-white form-box-non-bg">
                     <div class="section_heading">
-                        <h3 class="text-start">Testimonials</h3>
+                        <h3 class="text-start">Job Title</h3>
                     </div>
                     <p class="abt_p">
-                        Dr. Jangid swears by his knowledge of the “3D’s of Hair Transplant”, which emphasizes
-                        three important cornerstones to this procedure. It includes the design of the hairline,
-                        the Direction of the transplanted hair follicles, and the Density of the transplanted
-                        hair for optimal coverage. With just a few years of expertise in the field of hair
-                        transplant and restoration, Dr. Jangid has managed to establish himself as a leading
-                        name, relinquishing SkinQure as a renowned clinic for every hair restoration procedure.
+                        Aliquam erat volutpat. Nam sit amet porta tellus. Proin congue malesuada lacus in finibus. Morbi
+                        a erat nec elit rutrum lobortis eget vitae ligula. Nulla sit amet arcu eget ex egestas laoreet.
+                        Sed in est tortor. Mauris in metus vulputate, convallis elit in, congue nulla. Pellentesque
+                        pulvinar lacus ac mi varius, vitae ullamcorper enim egestas. Curabitur a bibendum tortor.
+                        Integer ac arcu laoreet mauris tempor varius. Nulla a magna massa.
                     </p>
                     <a href="#" target="_blank" class="btn btn_quote">Apply Now</a>
                 </div>
@@ -46,15 +45,14 @@
             <div class="col-12">
                 <div class="w-100 formfield text-white form-box-non-bg">
                     <div class="section_heading">
-                        <h3 class="text-start">Testimonials</h3>
+                        <h3 class="text-start">Job Title</h3>
                     </div>
                     <p class="abt_p">
-                        Dr. Jangid swears by his knowledge of the “3D’s of Hair Transplant”, which emphasizes
-                        three important cornerstones to this procedure. It includes the design of the hairline,
-                        the Direction of the transplanted hair follicles, and the Density of the transplanted
-                        hair for optimal coverage. With just a few years of expertise in the field of hair
-                        transplant and restoration, Dr. Jangid has managed to establish himself as a leading
-                        name, relinquishing SkinQure as a renowned clinic for every hair restoration procedure.
+                        Aliquam erat volutpat. Nam sit amet porta tellus. Proin congue malesuada lacus in finibus. Morbi
+                        a erat nec elit rutrum lobortis eget vitae ligula. Nulla sit amet arcu eget ex egestas laoreet.
+                        Sed in est tortor. Mauris in metus vulputate, convallis elit in, congue nulla. Pellentesque
+                        pulvinar lacus ac mi varius, vitae ullamcorper enim egestas. Curabitur a bibendum tortor.
+                        Integer ac arcu laoreet mauris tempor varius. Nulla a magna massa.
                     </p>
                     <a href="#" target="_blank" class="btn btn_quote">Apply Now</a>
                 </div>
@@ -65,15 +63,14 @@
             <div class="col-12">
                 <div class="w-100 formfield text-white form-box-non-bg">
                     <div class="section_heading">
-                        <h3 class="text-start">Testimonials</h3>
+                        <h3 class="text-start">Job Title</h3>
                     </div>
                     <p class="abt_p">
-                        Dr. Jangid swears by his knowledge of the “3D’s of Hair Transplant”, which emphasizes
-                        three important cornerstones to this procedure. It includes the design of the hairline,
-                        the Direction of the transplanted hair follicles, and the Density of the transplanted
-                        hair for optimal coverage. With just a few years of expertise in the field of hair
-                        transplant and restoration, Dr. Jangid has managed to establish himself as a leading
-                        name, relinquishing SkinQure as a renowned clinic for every hair restoration procedure.
+                        Aliquam erat volutpat. Nam sit amet porta tellus. Proin congue malesuada lacus in finibus. Morbi
+                        a erat nec elit rutrum lobortis eget vitae ligula. Nulla sit amet arcu eget ex egestas laoreet.
+                        Sed in est tortor. Mauris in metus vulputate, convallis elit in, congue nulla. Pellentesque
+                        pulvinar lacus ac mi varius, vitae ullamcorper enim egestas. Curabitur a bibendum tortor.
+                        Integer ac arcu laoreet mauris tempor varius. Nulla a magna massa.
                     </p>
                     <a href="#" target="_blank" class="btn btn_quote">Apply Now</a>
                 </div>
