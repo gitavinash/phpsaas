@@ -23,59 +23,46 @@
 <section class="section_spacing_top section_spacing_bottom">
     <div class="container">
 
-        <div class="row section_spacing_bottom">
-            <div class="col-12">
-                <div class="w-100 formfield text-white form-box-non-bg">
-                    <div class="section_heading">
-                        <h3 class="text-start">Job Title</h3>
-                    </div>
-                    <p class="abt_p">
-                        Aliquam erat volutpat. Nam sit amet porta tellus. Proin congue malesuada lacus in finibus. Morbi
-                        a erat nec elit rutrum lobortis eget vitae ligula. Nulla sit amet arcu eget ex egestas laoreet.
-                        Sed in est tortor. Mauris in metus vulputate, convallis elit in, congue nulla. Pellentesque
-                        pulvinar lacus ac mi varius, vitae ullamcorper enim egestas. Curabitur a bibendum tortor.
-                        Integer ac arcu laoreet mauris tempor varius. Nulla a magna massa.
-                    </p>
-                    <a href="#" target="_blank" class="btn btn_quote">Apply Now</a>
-                </div>
-            </div>
-        </div>
+        <?php
+        
+            $careerList = mysqli_query($connection, "SELECT page_title, link_url FROM ".TABLE_PREFIX."page INNER JOIN ".TABLE_PREFIX."link on link_relation_id=page_id WHERE link_type='page' AND page_type='career' AND link_status=200 AND link_site_id=".SITE_ID);
+
+            if(mysqli_num_rows($careerList)!=0) {
+
+                while($careerData = mysqli_fetch_assoc($careerList)) {
+
+                    extract($careerData); ?>
 
         <div class="row section_spacing_bottom">
             <div class="col-12">
                 <div class="w-100 formfield text-white form-box-non-bg">
                     <div class="section_heading">
-                        <h3 class="text-start">Job Title</h3>
+                        <h3 class="text-start"><?php echo $page_title ?></h3>
                     </div>
-                    <p class="abt_p">
-                        Aliquam erat volutpat. Nam sit amet porta tellus. Proin congue malesuada lacus in finibus. Morbi
-                        a erat nec elit rutrum lobortis eget vitae ligula. Nulla sit amet arcu eget ex egestas laoreet.
-                        Sed in est tortor. Mauris in metus vulputate, convallis elit in, congue nulla. Pellentesque
-                        pulvinar lacus ac mi varius, vitae ullamcorper enim egestas. Curabitur a bibendum tortor.
-                        Integer ac arcu laoreet mauris tempor varius. Nulla a magna massa.
-                    </p>
-                    <a href="#" target="_blank" class="btn btn_quote">Apply Now</a>
+                    <a href="<?php echo $link_url ?>" target="_blank" class="btn btn_quote">View Now</a>
                 </div>
             </div>
         </div>
+
+        <?php
+        }
+
+        } else { ?>
 
         <div class="row section_spacing_bottom">
             <div class="col-12">
                 <div class="w-100 formfield text-white form-box-non-bg">
                     <div class="section_heading">
-                        <h3 class="text-start">Job Title</h3>
+                        <h3 class="text-start">No vacancy available.</h3>
                     </div>
-                    <p class="abt_p">
-                        Aliquam erat volutpat. Nam sit amet porta tellus. Proin congue malesuada lacus in finibus. Morbi
-                        a erat nec elit rutrum lobortis eget vitae ligula. Nulla sit amet arcu eget ex egestas laoreet.
-                        Sed in est tortor. Mauris in metus vulputate, convallis elit in, congue nulla. Pellentesque
-                        pulvinar lacus ac mi varius, vitae ullamcorper enim egestas. Curabitur a bibendum tortor.
-                        Integer ac arcu laoreet mauris tempor varius. Nulla a magna massa.
-                    </p>
-                    <a href="#" target="_blank" class="btn btn_quote">Apply Now</a>
                 </div>
             </div>
         </div>
+
+        <?php
+            }
+
+        ?>
 
     </div>
 </section>

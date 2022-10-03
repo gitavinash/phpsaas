@@ -62,8 +62,11 @@
                         <ul>
                             <li><a href="gallery.php?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
                             </li>
-                            <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    gallery</a></li>
+                            <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
+                                    image gallery</a></li>
+                            <li><a href="gallery.php?type=add&editor=true&galleryType=youtube"><i
+                                        class="fas fa-plus"></i>Add
+                                    YouTube gallery</a></li>
                             <li><a href="gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
@@ -71,8 +74,11 @@
                         <ul>
                             <li><a href="gallery.php?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
                             </li>
-                            <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    gallery</a></li>
+                            <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
+                                    image gallery</a></li>
+                            <li><a href="gallery.php?type=add&editor=true&galleryType=youtube"><i
+                                        class="fas fa-plus"></i>Add
+                                    YouTube gallery</a></li>
                             <li><a href="gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
@@ -305,6 +311,28 @@
 							}
 
 							?>
+
+
+
+                <li <?php echo (($postType=='career') ? 'class="active"' : '' ) ?>>
+                    <a href="career.php?type=list&status=all"><i class="fas fa-briefcase"></i> Careers</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="career.php?type=list&status=all"><i class="fas fa-list"></i> All careers</a>
+                            </li>
+                            <li><a href="career.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    career</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="career.php?type=list&status=all"><i class="fas fa-list"></i> All Careers</a>
+                            </li>
+                            <li><a href="career.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    career</a></li>
+                        </ul>
+                    </div>
+                </li>
 
                 <li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?>>
                     <a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
