@@ -117,7 +117,7 @@
 				<input type="hidden" name='postStatus' value='<?php echo $event_status ?>' >
 				<input type="hidden" name="id" value="<?php echo $event_id ?>" >
 				<input type="hidden" name="postType" value="<?php echo $event_type ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live event</a>
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live event</a>
 			</div>
 			<div class="form-group">
 				<h2>Featured</h2>

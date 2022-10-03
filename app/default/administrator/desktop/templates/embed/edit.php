@@ -118,7 +118,7 @@
 				<input type="hidden" name='postStatus' value='<?php echo $video_status ?>' >
 				<input type="hidden" name="id" value="<?php echo $video_id ?>" >
 				<input type="hidden" name="postType" value="<?php echo $video_type ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live video</a>
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live video</a>
 			</div>
 			<div class="form-group">
 				<h2>Featured</h2>

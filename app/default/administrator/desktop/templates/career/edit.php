@@ -15,7 +15,7 @@ window.location.href = 'dashboard/career/?type=list&status=all';
 	}
 
 ?>
-<h2>Update page <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add
+<h2>Update career <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add
             New</a></span></h2>
 
 <div class="form-box">
@@ -134,7 +134,7 @@ window.location.href = 'dashboard/career/?type=list&status=all';
                 <input type="hidden" name="id" value="<?php echo $id ?>">
                 <input type="hidden" name="postType" value="<?php echo $page_type ?>">
                 <a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
-                    post</a>
+                    career</a>
             </div>
             <h2>Feature Image</h2>
             <div class="form-group featureImageUploadBox upload-btn"

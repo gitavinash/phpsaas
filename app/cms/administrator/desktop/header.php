@@ -306,13 +306,49 @@
                         </ul>
                     </div>
                 </li>
+                <li <?php echo (($postType=='package') ? 'class="active"' : '' ) ?>>
+                    <a href="package.php?type=list&status=all"><i class="fas fa-cubes"></i> Packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="package.php?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            </li>
+                            <li><a href="package.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New
+                                    package</a>
+                            </li>
+                            <li><a href="package.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="package.php?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            </li>
+                            <li><a href="package.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New
+                                    package</a>
+                            </li>
+                            <li><a href="package.php?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-                <?php
-							}
-
-							?>
-
-
+                <li <?php echo (($postType=='offer') ? 'class="active"' : '' ) ?>>
+                    <a href="offer.php?type=list&status=all"><i class="fas fa-percent"></i> Latest Offers</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="offer.php?type=list&status=all"><i class="fas fa-list"></i> All offers</a>
+                            </li>
+                            <li><a href="offer.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    offer</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="offer.php?type=list&status=all"><i class="fas fa-list"></i> All offers</a>
+                            </li>
+                            <li><a href="offer.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    offer</a></li>
+                        </ul>
+                    </div>
+                </li>
 
                 <li <?php echo (($postType=='career') ? 'class="active"' : '' ) ?>>
                     <a href="career.php?type=list&status=all"><i class="fas fa-briefcase"></i> Careers</a>
@@ -333,6 +369,11 @@
                         </ul>
                     </div>
                 </li>
+
+                <?php
+							}
+
+							?>
 
                 <li <?php echo ((ADMIN_BASE_URL=='/import/') ? 'class="active"' : '' ) ?>>
                     <a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>

@@ -919,7 +919,7 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                 <input type="hidden" name='serviceStatus' value='<?php echo $service_status ?>'>
                 <input type="hidden" name="id" value="<?php echo $service_id ?>">
                 <input type="hidden" name="postType" value="<?php echo $service_type ?>">
-                <a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View Live
+                <a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
                     treatment</a>
             </div>
             <div class="form-group">

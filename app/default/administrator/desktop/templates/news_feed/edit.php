@@ -118,7 +118,7 @@
 				<input type="hidden" name='postStatus' value='<?php echo $news_status ?>' >
 				<input type="hidden" name="id" value="<?php echo $news_id ?>" >
 				<input type="hidden" name="postType" value="<?php echo $news_type ?>" >
-				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View Live news</a>
+				<a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank' >View live news</a>
 			</div>
 			<div class="form-group">
 				<h2>Featured</h2>

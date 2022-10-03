@@ -43,30 +43,20 @@
     </div>
 </section>
 
-<section class="treatment yellowbg" style="padding: 0px;">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 formfield treatment-box text-white">
-                            <h4></h4>
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 h-100 formfield relative">
-                            <div class="treatment-section-img">
-                                <img src="<?php echo $serviceSection['treatment_option'][$i]['image'] ?>" alt=""
-                                    class="img-fluid w-100 h100 cover">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<?php
+
+    $backGroundColor = 'dark';
+
+    $offerList = mysqli_query($connection, "SELECT page_image, page_title, page_description FROM ".TABLE_PREFIX."page INNER JOIN ".TABLE_PREFIX."link on link_relation_id=page_id WHERE page_type='offer' AND link_status=200 AND page_status=1 AND link_type='page' AND link_site_id=".SITE_ID." LIMIT 0, 10");
+
+    if(mysqli_num_rows($offerList)!=0) {
+
+        while($offerData = mysqli_fetch_assoc($offerList)) {
+
+            extract($offerData);
+
+            if($backGroundColor==='light') { ?>
+
 
 <section class="treatment" style="padding: 0px;">
     <div class="container-fluid">
@@ -76,15 +66,14 @@
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
                             <div class="treatment-section-img">
-                                <img src="<?php echo $serviceSection['treatment_option'][$i]['image'] ?>" alt=""
-                                    class="img-fluid w-100 h100 cover">
+                                <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100 h100 cover">
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 formfield treatment-box text-white">
-                            <h4></h4>
-                            <p></p>
+                            <h4><?php echo $page_title ?></h4>
+                            <p><?php echo $page_description ?></p>
                         </div>
                     </div>
                 </div>
@@ -92,6 +81,61 @@
         </div>
     </div>
 </section>
+
+<?php
+
+                $backGroundColor='dark';
+
+            } else { ?>
+
+<section class="treatment yellowbg" style="padding: 0px;">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 h-100 formfield relative">
+                            <div class="treatment-section-img">
+                                <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100 h100 cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 formfield treatment-box text-white">
+                            <h4><?php echo $page_title ?></h4>
+                            <p><?php echo $page_description ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php
+$backGroundColor='light';
+}
+
+}
+} else { ?>
+<section class="treatment yellowbg" style="padding: 0px;">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-12 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 formfield treatment-box text-white">
+                            <h4>No offer found</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php
+}
+
+?>
 
 <section class="">
     <div class="container-fluid">
