@@ -35,6 +35,9 @@
                         <textarea name="highlight" class="form-control inside-shadow"
                             placeholder="Product short description / Highlights"></textarea>
                     </div>
+                    <div class="box-1">
+                        <input type="checkbox" name="sell_online" value=0> Product is only for display purposes.
+                    </div>
                 </div>
                 <div class="productInventory generalTab" style="display: none;">
 

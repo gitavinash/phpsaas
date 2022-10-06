@@ -90,6 +90,13 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                         <textarea name="highlight" class="form-control inside-shadow"
                             placeholder="Product short description / Highlights"><?php echo $product_highlight ?></textarea>
                     </div>
+                    <div class="box-1">
+                        <input type="checkbox" name="sell_online" value=0
+                            <?php echo (($inventory_sell_online==0) ? 'checked' : '' ) ?>>
+                        Product is
+                        only for
+                        display purposes.
+                    </div>
                 </div>
                 <div class="productInventory generalTab" style="display: none;">
 

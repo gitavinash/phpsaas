@@ -100,6 +100,9 @@
 
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
     ADD inventory_type VARCHAR(10) NOT NULL DEFAULT 'product' AFTER inventory_height");
+    
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD inventory_sell_online INT(1) NOT NULL DEFAULT '1' AFTER inventory_update, ADD INDEX (inventory_sell_online)");
   
   /** Order Table */
 
