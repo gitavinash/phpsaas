@@ -83,7 +83,7 @@
 
                         <?php
                         
-                            $productList = mysqli_query($connection, "SELECT link_url, product_thumbnail, product_title, inventory_price, inventory_mrp FROM isw_product INNER JOIN isw_link ON link_relation_id=product_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_category='{$category_id}' AND product_site_id=".SITE_ID." LIMIT 30");
+                            $productList = mysqli_query($connection, "SELECT link_url, product_thumbnail, product_title, inventory_price, inventory_mrp FROM isw_product INNER JOIN isw_link ON link_relation_id=product_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE link_status=200 AND product_category='{$category_id}' AND product_site_id=".SITE_ID." LIMIT 30");
 
                             if(mysqli_num_rows($productList)!=0) {
 
