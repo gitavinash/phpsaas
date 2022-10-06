@@ -137,8 +137,8 @@
 
                 <div class="price_div py-3 mt-4 prive_top_bodder">
                     <div class="d-flex align-items-center">
-                        <h4>$202.00</h4>
-                        <p class="ms-5 line">$210.00</p>
+                        <h4>₹202.00</h4>
+                        <p class="ms-5 line">₹210.00</p>
                     </div>
                 </div>
                 <!-- 
@@ -529,7 +529,7 @@
                         </div>
                         <div class="rating-price d-flex justify-content-between">
                             <div class="price text-white font-size-20 font-family-sans">
-                                $122.00
+                                ₹122.00
                             </div>
                             <div class="rating d-flex">
                                 <i class="fa-solid fa-star"></i>
@@ -550,7 +550,7 @@
                         </div>
                         <div class="rating-price d-flex justify-content-between">
                             <div class="price text-white font-size-20 font-family-sans">
-                                $122.00
+                                ₹122.00
                             </div>
                             <div class="rating d-flex">
                                 <i class="fa-solid fa-star"></i>
@@ -571,7 +571,7 @@
                         </div>
                         <div class="rating-price d-flex justify-content-between">
                             <div class="price text-white font-size-20 font-family-sans">
-                                $122.00
+                                ₹122.00
                             </div>
                             <div class="rating d-flex">
                                 <i class="fa-solid fa-star"></i>
@@ -592,7 +592,7 @@
                         </div>
                         <div class="rating-price d-flex justify-content-between">
                             <div class="price text-white font-size-20 font-family-sans">
-                                $122.00
+                                ₹122.00
                             </div>
                             <div class="rating d-flex">
                                 <i class="fa-solid fa-star"></i>

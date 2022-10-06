@@ -3,51 +3,52 @@
         <div class="row align-items-top">
             <div class=" col-12  col-sm-6 col-md-6 col-lg-4   fotter-margin  px=5">
                 <div class="">
-                    <img src="./assest/img/logo.png" alt="" class="img-fluid">
-                    <p class="text-white py-3 ">Lorem Ipsum is simply dummy text of the printing and typesetting
-                        industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when
-                        an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
+                    <img src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid">
+                    <p class="text-white py-3 ">At SoundTrails, we love sound. We really do! Whether it is for a hom.
+                        theater system or for acoustic solutions or even if it is to create an alluring sensory
+                        environment, we believe, we are the right people for the job. Because we help create a
+                        customized immersive experience that includes the best of audio and video. All this, at a cost
+                        that’s truly affordable!</p>
                     <div class="social text-white d-flex">
-                        <i class="fa-brands fa-facebook"></i>
-                        <i class="fa-brands fa-instagram"></i>
-                        <i class="fa-brands fa-twitter"></i>
+                        <a href="https://www.facebook.com/soundtrailsindia/"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/soundtrailsindia/"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
                     </div>
                 </div>
             </div>
 
             <div class=" col-6 col-sm-6 col-md-6 col-lg-2 px-2  fotter-margin">
-                <h3 class="text-white font-size-25">INFORMATION</h3>
+                <h3 class="text-white font-size-25">Quick Links</h3>
                 <ul>
-                    <li><a href="#">About Us</a> </li>
-                    <li><a href="#">Delivery Information`</a> </li>
-                    <li><a href="#">Privacy Policy</a> </li>
-                    <li><a href="#">Terms & Conditions</a> </li>
-                    <li><a href="#">Site Map</a> </li>
-
+                    <li><a href="/about-us/">About Us</a> </li>
+                    <li><a href="/shop/">Our Products</a> </li>
+                    <li><a href="/brands/">Brands</a> </li>
+                    <li><a href="/contact-us/">Contact Us</a> </li>
+                    <li><a href="/checkout/">Checkout</a> </li>
                 </ul>
             </div>
 
             <div class="col-6  col-sm-6 col-md-6 col-lg-2 px-4  fotter-margin">
-                <h3 class="text-white font-size-25">Extras
-                </h3>
+                <h3 class="text-white font-size-25" style="height: 30px"></h3>
                 <ul>
-                    <li><a href="#">Gift Certificates</a> </li>
-                    <li><a href="#">Specials</a> </li>
-                    <li><a href="#">Contact Us</a> </li>
-
-
+                    <li><a href="#">Terms & Conditions</a> </li>
+                    <li><a href="/privacy-policy/">Privacy Policy</a> </li>
+                    <li><a href="/cancellation-and-refund-policy/">Cancellation Policy</a> </li>
+                    <li><a href="/shipping-policies/">Shipping Policies</a> </li>
+                    <li><a href="/sitemap/">Site Map</a> </li>
                 </ul>
             </div>
             <div class=" col-12  col-sm-6 col-md-6 col-lg-4 px-2  .fotter-margin">
-                <h3 class="text-white font-size-25 ms-3 ms-sm-0">Contact</h3>
+                <h3 class="text-white font-size-25 ms-3 ms-sm-0">Contact Us</h3>
                 <ul>
-                    <li><a href="#" class="d-flex align-items-center"><i class="fa-solid fa-location-dot"></i> Lorem
-                            ipsum dolor sit amet, c ,
-                            4022 Akouda, Tunisie</a> </li>
-                    <li><a href="#" class="d-flex align-items-center"><i class="fa-solid fa-phone"></i>12 324 334
-                            26 456 600</a> </li>
-                    <li><a href="#" class="d-flex align-items-center"><i class="fa-solid fa-envelope"></i>
-                            conatact@mail.com</a> </li>
+                    <li><a href="#" class="d-flex align-items-center"><i class="fa-solid fa-location-dot"></i> Ground
+                            Floor
+                            A-92,Sushant Lok III Extension, Sector 57, Gurugram- 122003</a> </li>
+                    <li><a href="mailto:contact@soundtrails.in" class="d-flex align-items-center"><i
+                                class="fa-solid fa-envelope"></i>
+                            contact@soundtrails.in</a> </li>
+                    <li><a href="tel:+91-9560030646" class="d-flex align-items-center"><i
+                                class="fa-solid fa-phone"></i>+91-9560030646</a> </li>
 
 
                 </ul>
@@ -58,7 +59,7 @@
             <!-- <div class="row">
                 <div class="col-6"></div>
                 <div class="col-6 text-end">
-                    <img src="./assest/img/payment.png" alt="" class="img-fluid">
+                    <img src="<?php echo USER_IMAGES ?>payment.png" alt="" class="img-fluid">
                 </div>
             </div> -->
 

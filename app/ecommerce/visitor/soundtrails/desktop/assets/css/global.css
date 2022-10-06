@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+a, a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
 :root {
   --white: #fff;
   --golden: #da9c65;
@@ -117,7 +122,7 @@ body {
 }
 
 footer {
-  background: url("../assest/img/footer-bg\ 1.png");
+  background: url("../images/footer-bg_1.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -242,7 +247,7 @@ header {
   image-rendering: crisp-edges;
 } */
 main {
-  background: url("../assest/img/bg222.png");
+  background: url("../images/bg222.png");
 
   background-size: cover;
 
@@ -498,7 +503,7 @@ main {
 
 /* details */
 .details-bg {
-  background: url("../assest/img/details.png");
+  /* background: url("../images/details.png"); */
 }
 
 .paginration {
@@ -675,7 +680,7 @@ main {
 
 /* home */
 .home-hero {
-  background: url("../assest/img/homehero.png");
+  background: url("../images/homehero.png");
   background-position: center;
   background-size: cover;
 }

@@ -11,8 +11,10 @@
                 <div class="py-5 text-center">
 
                     <h2 class="text-white">Checkout form</h2>
-                    <p class="lead goldan-clr mt-3 lh-base">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a
-                        <br>validation state that can be triggered by attempting to submit the form without completing it.
+                    <p class="lead goldan-clr mt-3 lh-base">Below is an example form built entirely with Bootstrap’s
+                        form controls. Each required form group has a
+                        <br>validation state that can be triggered by attempting to submit the form without completing
+                        it.
                     </p>
                 </div>
 
@@ -28,32 +30,32 @@
                                     <h6 class="my-0">Product name</h6>
                                     <small class="text-muted">Brief description</small>
                                 </div>
-                                <span class="text-muted">$12</span>
+                                <span class="text-muted">₹12</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between lh-condensed">
                                 <div>
                                     <h6 class="my-0">Second product</h6>
                                     <small class="text-muted">Brief description</small>
                                 </div>
-                                <span class="text-muted">$8</span>
+                                <span class="text-muted">₹8</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between lh-condensed">
                                 <div>
                                     <h6 class="my-0">Third item</h6>
                                     <small class="text-muted">Brief description</small>
                                 </div>
-                                <span class="text-muted">$5</span>
+                                <span class="text-muted">₹5</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between bg-light">
                                 <div class="text-success">
                                     <h6 class="my-0">Promo code</h6>
                                     <small>EXAMPLECODE</small>
                                 </div>
-                                <span class="text-success">-$5</span>
+                                <span class="text-success">-₹5</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Total (USD)</span>
-                                <strong>$20</strong>
+                                <strong>₹20</strong>
                             </li>
                         </ul>
                         <form class="  p-2 form-data">
@@ -94,7 +96,8 @@
                                     <div class="col-12 mt-2">
                                         <div class="row align-items-center">
                                             <div class="col-md-12 col-sm-4">
-                                                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                <select class="form-select" id="floatingSelect"
+                                                    aria-label="Floating label select example">
                                                     <option selected>Countary</option>
                                                     <option value="1">India</option>
                                                     <option value="2">Us</option>
@@ -103,7 +106,8 @@
                                             </div>
 
                                             <div class="col-md-12 col-sm-4">
-                                                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                <select class="form-select" id="floatingSelect"
+                                                    aria-label="Floating label select example">
                                                     <option selected>State</option>
                                                     <option value="1">Delhi</option>
                                                     <option value="2">Mumbai</option>
@@ -121,18 +125,21 @@
                                     <div class="col-12">
                                         <div class="col-12">
                                             <div class="payment-container">
-                                                <h4 class="item-title text-white py-3 mt-2"> <span></span>Payment-Method</h4>
+                                                <h4 class="item-title text-white py-3 mt-2"> <span></span>Payment-Method
+                                                </h4>
                                                 <div class="payment-item py-3">
 
                                                     <div class="item-options">
                                                         <div class="selection">
-                                                            <input id="subscription" type="radio" name="subscription" checked="checked" />
-                                                            <label for="subscription">Cash<span>$20</span></label>
+                                                            <input id="subscription" type="radio" name="subscription"
+                                                                checked="checked" />
+                                                            <label for="subscription">Cash<span>₹20</span></label>
                                                             <div class="check"></div>
                                                         </div>
                                                         <div class="selection">
-                                                            <input id="subscription-2" type="radio" name="subscription" />
-                                                            <label for="subscription-2">Paypal<span>$20</span></label>
+                                                            <input id="subscription-2" type="radio"
+                                                                name="subscription" />
+                                                            <label for="subscription-2">Paypal<span>₹20</span></label>
                                                             <div class="check"></div>
                                                         </div>
                                                     </div>
@@ -142,26 +149,31 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <!-- <label for="cc-name">Name on card</label> -->
-                                                    <input type="text" class="form-control" id="cc-name" placeholder="Name on credit card" required="">
+                                                    <input type="text" class="form-control" id="cc-name"
+                                                        placeholder="Name on credit card" required="">
                                                     <small class="text-muted ">Full name as displayed on card</small>
                                                     <div class="invalid-feedback "> Name on card is required </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <!-- <label for="cc-number">Credit card number</label> -->
-                                                    <input type="text" class="form-control" id="cc-number" placeholder="Credit card number" required="">
+                                                    <input type="text" class="form-control" id="cc-number"
+                                                        placeholder="Credit card number" required="">
                                                     <small class="text-muted ">Credit card number is required </small>
-                                                    <div class="invalid-feedback goldan-clr "> Credit card number is required </div>
+                                                    <div class="invalid-feedback goldan-clr "> Credit card number is
+                                                        required </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-3 mb-3">
                                                     <!-- <label for="cc-expiration te">Expiration</label> -->
-                                                    <input type="text" class="form-control" id="cc-expiration" placeholder="Expiration" required="">
+                                                    <input type="text" class="form-control" id="cc-expiration"
+                                                        placeholder="Expiration" required="">
                                                     <div class="invalid-feedback"> Expiration date required </div>
                                                 </div>
                                                 <div class="col-md-3 mb-3">
                                                     <!-- <label for="cc-cvv">CVV</label> -->
-                                                    <input type="text" class="form-control" id="cc-cvv" placeholder="Cvv" required="">
+                                                    <input type="text" class="form-control" id="cc-cvv"
+                                                        placeholder="Cvv" required="">
                                                     <div class="invalid-feedback"> Security code required </div>
                                                 </div>
                                             </div>

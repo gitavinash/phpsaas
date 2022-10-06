@@ -47,20 +47,20 @@
                                 <a class="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./About.php">About us</a>
+                                <a class="nav-link" href="/about-us/">About us</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="./Product-details.php">Product</a>
+                                <a class="nav-link" href="/shop/">Product</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./contact.php">Contact us</a>
+                                <a class="nav-link" href="/contact-us/">Contact us</a>
                             </li>
                         </ul>
 
                         <div class="icons d-flex justify-content-center mb-3 mt-3 mt-xl-0 mb-xl-0">
-                            <i class="fa-solid fa-user"></i>
-                            <i class="fa-solid fa-cart-shopping"></i>
+                            <!-- <i class="fa-solid fa-user"></i> -->
+                            <!-- <i class="fa-solid fa-cart-shopping"></i> -->
                             <i class="fa-solid fa-magnifying-glass serach-icon"></i>
                         </div>
 

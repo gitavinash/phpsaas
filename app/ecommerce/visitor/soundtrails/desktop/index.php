@@ -161,7 +161,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans ">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -183,7 +183,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -205,7 +205,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -227,7 +227,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -255,7 +255,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans ">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -277,7 +277,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -299,7 +299,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -321,7 +321,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -350,7 +350,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans ">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -372,7 +372,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -394,7 +394,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -416,7 +416,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -444,7 +444,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans ">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -466,7 +466,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -488,7 +488,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -510,7 +510,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -538,7 +538,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans ">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -560,7 +560,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -582,7 +582,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -604,7 +604,7 @@
                                             </div>
                                             <div class="rating-price d-flex justify-content-around">
                                                 <div class="price text-white font-size-20 font-family-sans">
-                                                    $122.00
+                                                    ₹122.00
                                                 </div>
                                                 <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
@@ -640,7 +640,7 @@
             </div>
 
             <div class=" col-12 col-md-6 col-lg-6 col-xl-4">
-                <img src="<?php echo USER_IMAGES ?>im1 (6).png" alt="" class="img-fluid d-block m-auto my-2" />
+                <img src="<?php echo USER_IMAGES ?>im1 (3).png" alt="" class="img-fluid d-block m-auto my-2 top-less" />
             </div>
 
             <div class=" col-12 col-md-6 col-lg-6 col-xl-4">
@@ -652,7 +652,7 @@
             </div>
 
             <div class=" col-12 col-md-6 col-lg-6 col-xl-4">
-                <img src="<?php echo USER_IMAGES ?>im1 (3).png" alt="" class="img-fluid d-block m-auto my-2 top-less" />
+                <img src="<?php echo USER_IMAGES ?>im1 (6).png" alt="" class="img-fluid d-block m-auto my-2" />
             </div>
 
             <div class=" col-12 col-md-6 col-lg-6 col-xl-4">
@@ -680,7 +680,7 @@
                         customized immersive experience that includes the best of audio
                         and video. All this, at a cost that’s truly affordable!...
                     </p>
-                    <button class="btn1 rounded-pill">Read More</button>
+                    <a href="/about-us/" class="btn1 rounded-pill">Read More</a>
                 </div>
             </div>
 
@@ -711,7 +711,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -732,7 +732,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -753,7 +753,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -774,7 +774,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -797,7 +797,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -817,7 +817,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -837,7 +837,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
@@ -857,7 +857,7 @@
                 </div>
                 <div class="rating-price d-flex justify-content-around">
                     <div class="price text-white font-size-20 font-family-sans ">
-                        $122.00
+                        ₹122.00
                     </div>
                     <div class="rating d-flex">
                         <i class="fa-solid fa-star"></i>
