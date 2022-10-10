@@ -208,7 +208,7 @@ $backGroundColor = 'light';
     if(isset($serviceSection['before_after'])) { ?>
 
 
-<section class="bluebg  section_spacing_top sectionpadding">
+<section class="bluebg beforeAfterSection section_spacing_top sectionpadding">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 text-center">
@@ -227,7 +227,39 @@ $backGroundColor = 'light';
                         <a href="<?php echo $serviceSection['before_after']['videoLink'] ?>" target="_blank"
                             class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
                     </div>
-                    <div class="col-6 col-md-4">
+
+                    <div class="col-md-6 col-12">
+                        <div class="slider beforeAfterSlider">
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_19.jpg" alt="">
+                            </div>
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_20.jpg" alt="">
+                            </div>
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_38.jpg" alt="">
+                            </div>
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_37.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="slider beforeAfterSliderNav">
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_19.jpg" alt="">
+                            </div>
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_20.jpg" alt="">
+                            </div>
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_38.jpg" alt="">
+                            </div>
+                            <div>
+                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_37.jpg" alt="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-6 col-md-4">
                         <div class="bimg">
                             <a class="lightbox" href="#before">
                                 <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>"
@@ -244,16 +276,16 @@ $backGroundColor = 'light';
                                 <h4>After</h4>
                             </a>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="lightbox-target" id="before">
+                    <!-- <div class="lightbox-target" id="before">
                         <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>" />
                         <a class="lightbox-close" href="#"></a>
                     </div>
                     <div class="lightbox-target" id="after">
                         <img src="<?php echo $serviceSection['before_after']['images']['after']  ?>" />
                         <a class="lightbox-close" href="#"></a>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>

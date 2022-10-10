@@ -11,6 +11,8 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css'>
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>lightbox/jquery-rbox.css">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
 
     <?php require_once DEFAULT_META; ?>
 
@@ -49,13 +51,11 @@
                                         <h4 class="title">Dermatology</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/acne-treatments/">Acne
+                                                <a href="/treatment/treatment-dermatology/acne-treatments/">Acne
                                                     Treatments</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/acne-scar-treatments/">Acne
+                                                <a href="/treatment/treatment-dermatology/acne-scar-treatments/">Acne
                                                     Scar Treatments</a>
                                             </li>
                                             <li>
@@ -93,44 +93,36 @@
                                         <h4 class="title">Dermatosurgery</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/mole-removal/">Mole
+                                                <a href="/treatment/treatment-dermatology/mole-removal/">Mole
                                                     Removal</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/wart-removal/">Wart
+                                                <a href="/treatment/treatment-dermatology/wart-removal/">Wart
                                                     Removal</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/skin-tag-removal/">Skin
+                                                <a href="/treatment/treatment-dermatology/skin-tag-removal/">Skin
                                                     Tag Removal</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/acne-scar-surgeries/">Acne
+                                                <a href="/treatment/treatment-dermatology/acne-scar-surgeries/">Acne
                                                     Scar Surgeries
                                                 </a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/ear-lobe-repair/">Ear
+                                                <a href="/treatment/treatment-dermatology/ear-lobe-repair/">Ear
                                                     Lobe Repair</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/cyst-removal/">Cyst
+                                                <a href="/treatment/treatment-dermatology/cyst-removal/">Cyst
                                                     Removal</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/nail-surgery/">Nail
+                                                <a href="/treatment/treatment-dermatology/nail-surgery/">Nail
                                                     Surgery</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/treatment-dermatology/lipoma-treatment/">Lipoma
+                                                <a href="/treatment/treatment-dermatology/lipoma-treatment/">Lipoma
                                                     Treatment</a>
                                             </li>
                                         </ul>
@@ -139,36 +131,30 @@
                                         <h4 class="title">Face Cosmetics</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/chemical-peels---organic-peels/">Chemical
+                                                <a href="/treatment/face-cosmetics/chemical-peels---organic-peels/">Chemical
                                                     Peels</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/open-pore-treatments/">Open
+                                                <a href="/treatment/face-cosmetics/open-pore-treatments/">Open
                                                     Pore Treatment</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/under-eye-treatment/">Undereye
+                                                <a href="/treatment/face-cosmetics/under-eye-treatment/">Undereye
                                                     Treatment</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/lip-lightening/">Lip
+                                                <a href="/treatment/face-cosmetics/lip-lightening/">Lip
                                                     Lightening Treatment</a>
                                             </li>
                                             <li>
                                                 <a href="">Freckles / Blemmishes Treatment</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/skin-glow-treatment/">Skin
+                                                <a href="/treatment/face-cosmetics/skin-glow-treatment/">Skin
                                                     Glow Treatments</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/medi-facials/">Medifacials</a>
+                                                <a href="/treatment/face-cosmetics/medi-facials/">Medifacials</a>
                                             </li>
                                             <li>
                                                 <a href="">Hydrafacial Md Elite</a>
@@ -177,13 +163,11 @@
                                                 <a href="">Carbon Laser Facial</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/lip-enhancement/">Lip
+                                                <a href="/treatment/face-cosmetics/lip-enhancement/">Lip
                                                     Enhancement</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/nose-enhancement/">Nose
+                                                <a href="/treatment/face-cosmetics/nose-enhancement/">Nose
                                                     Enhancement</a>
                                             </li>
                                         </ul>
@@ -192,18 +176,15 @@
                                         <h4 class="title">Anti-Aging Treatments</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/btx--a-treatment/">BTX-A
+                                                <a href="/treatment/face-cosmetics/btx--a-treatment/">BTX-A
                                                     Treatment</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/fillers-treatment/">Filler
+                                                <a href="/treatment/face-cosmetics/fillers-treatment/">Filler
                                                     Treatment</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/vampire-facelift/">Vampire
+                                                <a href="/treatment/face-cosmetics/vampire-facelift/">Vampire
                                                     Facelift</a>
                                             </li>
                                             <li>
@@ -227,26 +208,22 @@
                                         <h4 class="title">Body Cosmetic Treatments</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/treatment/face-cosmetics/skin-whitening-treatment/">Skin
+                                                <a href="/treatment/face-cosmetics/skin-whitening-treatment/">Skin
                                                     Whitening Treatments</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/body-cosmetics/stretch-mark-treatments/">Stretch
+                                                <a href="/treatment/body-cosmetics/stretch-mark-treatments/">Stretch
                                                     Marks Treatments</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/body-cosmetics/underarm-treatments/">Underarm
+                                                <a href="/treatment/body-cosmetics/underarm-treatments/">Underarm
                                                     Lightening Treatment</a>
                                             </li>
                                             <li>
                                                 <a href="">Intimate Part Lightening Treatment</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/treatment/body-cosmetics/de-tan-treatment/">De-Taning
+                                                <a href="/treatment/body-cosmetics/de-tan-treatment/">De-Taning
                                                     Treatment</a>
                                             </li>
                                             <li>
@@ -285,30 +262,24 @@
                                         <h4 class="title">Dermatology</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/service/dermatology/acne/">Acne</a>
+                                                <a href="/service/dermatology/acne/">Acne</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/dermatology/acne-scar/">Acne
+                                                <a href="/service/dermatology/acne-scar/">Acne
                                                     Scars</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/dermatology/melasma-pigmentation/">Melasma
+                                                <a href="/service/dermatology/melasma-pigmentation/">Melasma
                                                     And Pigmentation</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/dermatology/allergy-eczema/">Allergy</a>
+                                                <a href="/service/dermatology/allergy-eczema/">Allergy</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/dermatology/psoriasis/">Psoriasis</a>
+                                                <a href="/service/dermatology/psoriasis/">Psoriasis</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/dermatology/vitiligo-surgery/">Vitiligo</a>
+                                                <a href="/service/dermatology/vitiligo-surgery/">Vitiligo</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -316,8 +287,7 @@
                                         <h4 class="title">Face Cosmetics</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/service/facial-cosmetic-treatment/open-pores/">Open
+                                                <a href="/service/facial-cosmetic-treatment/open-pores/">Open
                                                     Pores</a>
                                             </li>
                                             <li>
@@ -352,8 +322,7 @@
                                         <h4 class="title">Body Cosmetics</h4>
                                         <ul>
                                             <li>
-                                                <a
-                                                    href="/service/body-cosmetic-treatment/stretch-marks/">Stretch
+                                                <a href="/service/body-cosmetic-treatment/stretch-marks/">Stretch
                                                     Marks</a>
                                             </li>
                                             <li>
@@ -370,8 +339,7 @@
                                                 <a href="">Body Tanning</a>
                                             </li>
                                             <li>
-                                                <a
-                                                    href="/service/body-cosmetic-treatment/birth-mark/">Birth
+                                                <a href="/service/body-cosmetic-treatment/birth-mark/">Birth
                                                     Marks</a>
                                             </li>
                                         </ul>

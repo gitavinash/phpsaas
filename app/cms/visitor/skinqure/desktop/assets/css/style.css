@@ -435,3 +435,40 @@ button.accordion-button {
 	float: left;
 	width: 100%;
 }
+
+/* the slides */
+.slick-slide {
+	margin: 0 27px !important;
+}
+
+/* the parent */
+.slick-list {
+	margin: 15px -35px 0px -35px !important;
+}
+
+.beforeAfterSection {
+	overflow: hidden;
+}
+
+.beforeAfterSlider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+}
+
+.beforeAfterSlider img {
+	height: 400px;
+}
+
+.beforeAfterSliderNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+}
+
+.beforeAfterSliderNav img {
+	float: left;
+	height: 80px;
+}
