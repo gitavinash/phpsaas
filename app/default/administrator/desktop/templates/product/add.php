@@ -27,6 +27,7 @@
                     <li id="productInventory">Inventory</li>
                     <li id="productShipping">Shipping</li>
                     <li id="productGallery">Gallery</li>
+                    <li id="productAttributesDetails">Attributes</li>
                     <li id="productAdditionalDetails">Additional Details</li>
                 </ul>
                 <div class="productGeneral generalTab">
@@ -125,6 +126,15 @@
 
                     <div class="input-field">
                         <div class="input-images" style="padding-top: .5rem;"></div>
+                    </div>
+
+                </div>
+                <div class="productAttributesDetails generalTab" style="display: none;">
+
+                    <div class="form-group">
+                        <label>Care & Tips</label>
+                        <textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow"
+                            placeholder="Care & tips..."></textarea>
                     </div>
 
                 </div>

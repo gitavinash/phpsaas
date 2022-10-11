@@ -18,7 +18,7 @@
 
 	/** Defualt UI Resource */
 
-	define('UI_LIBRARY', SITE_URL.str_replace(ROOT, '', RESOURCE).'ui/');
+	define('UI_LIBRARY', str_replace(ROOT, '', RESOURCE).'ui/');
 
 	if(!is_dir('app/'.SITE_APP.'/'.SITE_VERSION.'/')) {
 
