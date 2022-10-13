@@ -36,8 +36,6 @@
                     if($inventory_variation!='') {
                         $varition = json_decode($inventory_variation, TRUE);
 
-                        print_r($varition);
-                        
                         for($i=0; $i<sizeof($varition); $i++) {
 
                             echo "<div class='col-md-4 col-6' >
