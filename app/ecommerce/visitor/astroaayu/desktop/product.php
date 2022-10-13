@@ -16,23 +16,54 @@
                 <p> <b>Category:</b> <?php echo $category_title ?></p>
             </div>
             <div class="d-flex align-items-center mt-1">
-                <p class="title_semi">₹ <?php echo $inventory_price ?> <del>₹ <?php echo $inventory_mrp ?></del></p>
+                <p class="title_semi">₹ <?php echo $inventory_price ?>
+                    <?php echo (($inventory_mrp!='') ? "<del>₹ {$inventory_mrp} </del>" : "" ) ?></p>
+                <?php 
+                    if($inventory_mrp!='') { ?>
                 <div class="off">
                     <?php $discountPerstange = (1-$inventory_price/$inventory_mrp)*100; echo intval($discountPerstange) ?>%
                     Off</div>
+                <?php
+                    }
+                    ?>
             </div>
             <hr>
-            <p><?php echo $product_description ?></p>
+            <p><?php echo $product_highlight ?></p>
+            <hr>
             <div class="mt-3 add_container">
-                <div class="quantity">
-                    <span class="material-symbols-sharp plus_icon">
-                        add
-                    </span>
-                    <input type="number" value="1">
-                    <span class="material-symbols-sharp minus_icon">
-                        remove
-                    </span>
+                <div class="row">
+                    <?php
+                    if($inventory_variation!='') {
+                        $varition = json_decode($inventory_variation, TRUE);
+
+                        print_r($varition);
+                        
+                        for($i=0; $i<sizeof($varition); $i++) {
+
+                            echo "<div class='col-md-4 col-6' >
+                                <div class='row'>
+                                    <a href='{$varition[$i][3]}'>
+                                        <div class='col-12'>
+                                            <div class='card'>
+                                                <img src='{$varition[$i][2]}' class='card-img-top' />
+                                                    <div class='card-body'>
+                                                        <h5 class='card-title'>{$varition[$i][1]}</h5>
+                                                        <p class='card-text'>
+                                                        </p>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                        </div>";
+
+                        }
+
+                    }
+                    ?>
                 </div>
+            </div>
+            <div class="mt-3 add_container">
                 <p style="display:none" id="productInfo"
                     value="<?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>">
                 </p>
@@ -44,6 +75,11 @@
                     </span></div> -->
             </div>
             <hr>
+        </div>
+    </div>
+    <div class="row common_padding margin_top margin_bottom">
+        <div class="col-12">
+            <p><?php echo $product_description ?></p>
         </div>
     </div>
     <div class="row common_padding margin_top margin_bottom">
