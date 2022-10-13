@@ -237,41 +237,34 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                                 multiple="multiple">
                                 <?php
                                 
-                                $allProductList=mysqli_query($connection, "SELECT product_id, product_title, product_thumbnail, link_url FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=".SITE_ID);
+                                $allProductList=mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=".SITE_ID." ORDER BY product_title ASC");
                                 $allProductOptionsDropDown = '';
                             
                                 if($inventory_variation!='') {
                             
                                     $similarProductsList = json_decode($inventory_variation, TRUE);
-                            
+
+                                    for($i=0; $i<sizeof($similarProductsList); $i++) {
+
+                                        $selectedIds[] = $similarProductsList[$i][0]; 
+
+                                    }
+
                                     while($productData = mysqli_fetch_assoc($allProductList)) {
                             
                                         extract($productData);
-                            
-                                        for($i=0; $i<sizeof($similarProductsList); $i++) {
-                            
-                                            if($similarProductsList[$i][0]==$product_id) {
-                                                
-                                                echo 'Compare => '.$similarProductsList[$i][0]==$product_id.'\n\n';
-                            
-                                                echo "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}' selected='selected' >{$product_title}</option>";
-                            
-                                            } else {
-                            
-                                                $allProductOptionsDropDown = $allProductOptionsDropDown. "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
-                            
-                                            }
-                                            
-                                        }
+                                        $varientProductList[]="<option value='{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}'>{$varientProductTitle}</option>";
                             
                                     }
+
+                                    echo implode('', $varientProductList);
                             
                                 } else {
 
                                     while($productData = mysqli_fetch_assoc($allProductList)) {
                             
                                         extract($productData);
-                                        echo "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
+                                        echo "<option value='{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}'>{$varientProductTitle}</option>";
                                                 
                                     }
                                     
