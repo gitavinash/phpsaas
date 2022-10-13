@@ -1831,3 +1831,20 @@ ul.tabs li.active {
   float: left;
   width: 100%;
 }
+
+.productDiv .form-group span {
+  padding: 0%;
+}
+
+.select2 {
+  float: left !important;
+  width: 100% !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  color: #000;
+}
+
+.select2-selection__choice__remove {
+  background: none !important;
+}

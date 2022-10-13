@@ -1,5 +1,12 @@
 <?php
 
+    $allProductList=mysqli_query($connection, "SELECT product_id, product_title, product_thumbnail, link_url FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=".SITE_ID);
+    $allProductOptionsDropDown = '';
+
+    if(mysqli_num_rows(($allProductList))==0) {
+        $allProductOptionsDropDown="<option value='0'>No Product Found</option>";
+    }
+
 	$id=base64_decode($id);
 
 	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND product_type='product' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
@@ -7,6 +14,41 @@
 			
 			extract(mysqli_fetch_assoc($productDetails));
 
+            if($inventory_variation!='') {
+
+                $similarProductsList = json_decode($inventory_variation, TRUE);
+
+                while($productData = mysqli_fetch_assoc($allProductList)) {
+
+                    extract($productData);
+
+                    for($i=0; $i<sizeof($similarProductsList); $i++) {
+   
+                        if($similarProductsList[$i][0]==$product_id) {
+                            
+                            echo 'Compare => '.$similarProductsList[$i][0]==$product_id.'\n\n';
+
+                            $allProductOptionsDropDown = $allProductOptionsDropDown. "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}' selected='selected' >{$product_title}</option>";
+
+                        } else {
+
+                            $allProductOptionsDropDown = $allProductOptionsDropDown. "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
+
+                        }
+                        
+                    }
+        
+                }
+
+            } else {
+                while($productData = mysqli_fetch_assoc($allProductList)) {
+
+                    extract($productData);
+                    $allProductOptionsDropDown = $allProductOptionsDropDown. "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
+                            
+                }
+            }
+ 
 			// Fetch product meta details
 
 			if($productMeta=mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".SITE_ID)) {
@@ -82,6 +124,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <li id="productInventory">Inventory</li>
                     <li id="productShipping">Shipping</li>
                     <li id="productGallery">Gallery</li>
+                    <li id="productAttributesDetails">Attributes</li>
                     <li id="productAdditionalDetails">Additional Details</li>
                 </ul>
                 <div class="productGeneral generalTab">
@@ -227,6 +270,18 @@ window.location.href = 'dashboard/product/?type=list&status=all';
 					echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
 					
 					?>
+                </div>
+                <div class="productAttributesDetails generalTab" style="display: none;">
+                    <div class="productDiv">
+                        <div class="form-group">
+                            <label>Select product varients</label>
+                            <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct"
+                                multiple="multiple">
+                                <?php echo $allProductOptionsDropDown ?>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="productAdditionalDetails generalTab" style="display: none;">
 

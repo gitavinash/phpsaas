@@ -14,6 +14,7 @@
 			<script src='<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js' type='text/javascript'></script>
 			<script src="<?php echo PLUGIN_LIBRARY ?>image-uploader/js/image-uploader.min.js" type="text/javascript"></script>
 			<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/datatables.min.js" type="text/javascript"></script>
+			<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 			<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 			<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 
@@ -39,7 +40,15 @@ $(document).ready(function() {
 			</script>
 
 			<?php
-				} ?>
+				} else { ?>
+
+			<script>
+$(document).ready(function() {
+    $('.selectSimilarProduct').select2();
+})
+			</script>
+			<?php
+				}?>
 
 			<?php
 

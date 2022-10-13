@@ -8,7 +8,7 @@
 
   /* Alliance Party Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_alliance_party (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_alliance_party (
     alliance_id bigint(20) NOT NULL,
     alliance_election bigint(20) NOT NULL,
     alliance_code varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -31,7 +31,7 @@
 
   /* Candidate Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_candidate (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_candidate (
     candidate_id bigint(20) NOT NULL,
     candidate_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     candidate_photo varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -52,7 +52,7 @@
 
   /* Constituency Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_constituency (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_constituency (
     constituency_id bigint(20) NOT NULL,
     constituency_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     constituency_state varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -71,7 +71,7 @@
 
   /* Election Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_list (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_list (
     election_id bigint(20) NOT NULL,
     election_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     election_state varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -99,7 +99,7 @@
 
   /* Party Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_party (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_party (
     party_id bigint(20) NOT NULL,
     party_code varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     party_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -117,7 +117,7 @@
 
   /* Result Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_result (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_result (
     result_id bigint(20) NOT NULL,
     result_election_id bigint(20) NOT NULL,
     result_party_1 int(11) NOT NULL,
@@ -139,7 +139,7 @@
 
   /* Result Summary Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."election_result_summary (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."election_result_summary (
     result_summary_id bigint(20) NOT NULL,
     result_summary_election_id bigint(20) NOT NULL,
     result_summary_constituency bigint(20) NOT NULL,

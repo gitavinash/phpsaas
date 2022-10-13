@@ -8,7 +8,7 @@
 
   // Gallery table
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."gallery (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."gallery (
     gallery_id bigint(20) NOT NULL,
     gallery_parent_id bigint(20) NOT NULL,
     gallery_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -42,7 +42,7 @@
 
   // Video table
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."video (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."video (
     video_id bigint(20) NOT NULL,
     video_parent_id bigint(20) NOT NULL,
     video_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,

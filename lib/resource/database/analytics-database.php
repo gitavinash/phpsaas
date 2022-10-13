@@ -2,7 +2,7 @@
     
     // IP Table
 
-    mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."ip(
+    mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."ip(
         ip_id bigint(20) NOT NULL,
         ip_address VARCHAR(50) NOT NULL,
         ip_country VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,

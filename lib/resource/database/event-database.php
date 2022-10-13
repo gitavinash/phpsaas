@@ -8,7 +8,7 @@
 
   // Event table
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."event (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."event (
     event_id bigint(20) NOT NULL,
     event_parent_id bigint(20) NOT NULL,
     event_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,

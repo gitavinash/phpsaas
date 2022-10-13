@@ -10,7 +10,7 @@
 
   /** appointment Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."appointment (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."appointment (
     appointment_id bigint(20) NOT NULL,
     appointment_site_id bigint(20) NOT NULL,
     appointment_days varchar(10) NOT NULL,

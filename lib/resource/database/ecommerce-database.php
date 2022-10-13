@@ -8,7 +8,7 @@
 
   // Cart table
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."cart (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."cart (
     cart_id bigint(20) NOT NULL,
     cart_site_id bigint(20) NOT NULL,
     cart_user_id bigint(20) NOT NULL,
@@ -30,7 +30,7 @@
 
   // Coupon code table
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."coupon (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."coupon (
     coupon_id int(11) NOT NULL,
     coupon_relation_id bigint(20) NOT NULL,
     coupon_site_id bigint(20) NOT NULL,
@@ -56,7 +56,7 @@
 
   /** Inventory table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."inventory (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."inventory (
     inventory_id bigint(20) NOT NULL,
     inventory_relation_id bigint(20) NOT NULL,
     inventory_sku varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -103,10 +103,13 @@
     
   mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
     ADD inventory_sell_online INT(1) NOT NULL DEFAULT '1' AFTER inventory_update, ADD INDEX (inventory_sell_online)");
+
+  mysqli_query($connection, "ALTER TABLE ".TABLE_PREFIX."inventory
+    ADD inventory_variation VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER inventory_sell_online");
   
   /** Order Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."order (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."order (
     order_id bigint(20) NOT NULL,
     order_site_id bigint(20) NOT NULL,
     order_user_id bigint(20) NOT NULL,
@@ -144,7 +147,7 @@
 
   // Order meta table
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."order_meta (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."order_meta (
     order_meta_id bigint(20) NOT NULL,
     order_relation_id bigint(20) NOT NULL,
     order_meta_key varchar(255) NOT NULL,
@@ -163,7 +166,7 @@
 
   /** Product table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."product (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."product (
     product_id bigint(20) NOT NULL,
     product_parent_id bigint(20) NOT NULL,
     product_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -201,7 +204,7 @@
 
   /** Service table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."service (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."service (
     service_id bigint(20) NOT NULL,
     service_parent_id bigint(20) NOT NULL,
     service_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -235,7 +238,7 @@
 
   /** Transaction Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."transaction (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."transaction (
     transaction_id bigint(11) NOT NULL,
     transaction_site_id bigint(20) NOT NULL,
     transaction_user_id bigint(20) NOT NULL,
@@ -422,7 +425,7 @@
 
   /** Create product meta table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."product_meta (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."product_meta (
     product_meta_id bigint(20) NOT NULL,
     product_meta_relation_id bigint(20) NOT NULL,
     product_meta_site_id bigint(20) NOT NULL,

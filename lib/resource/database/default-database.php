@@ -34,7 +34,7 @@
 
   /* Device Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."device (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."device (
     device_id bigint(20) NOT NULL,
     device_site_id bigint(20) NOT NULL,
     device_token varchar(255) NOT NULL,
@@ -61,7 +61,7 @@
 
   /* Directory Table */
 
-  // mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."directory(
+  // mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."directory(
   //   directory_id int(11) NOT NULL,
   //   directory_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   //   directory_path varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -79,7 +79,7 @@
 
   /* Link Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."link(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."link(
     link_id bigint(20) NOT NULL,
     link_url varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     link_relation_id bigint(20) NOT NULL,
@@ -108,7 +108,7 @@
 
   /* Media Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."media(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."media(
     media_id bigint(20) NOT NULL,
     media_url varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     media_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -130,7 +130,7 @@
 
   /* Meta Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."meta(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."meta(
     meta_id bigint(20) NOT NULL,
     meta_relation_id bigint(20) NOT NULL,
     meta_type varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'post',
@@ -160,7 +160,7 @@
 
   /* Notification Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."notification (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."notification (
     notification_id int(11) NOT NULL,
     notification_site_id bigint(20) NOT NULL,
     notification_icon varchar(255) NOT NULL,
@@ -187,7 +187,7 @@
 
   /* Profile Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."profile(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."profile(
     profile_id bigint(20) NOT NULL,
     profile_owner_id bigint(20) NOT NULL,
     profile_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -210,7 +210,7 @@
 
   /* Site Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."site(
     site_id bigint(20) NOT NULL,
     site_owner_id bigint(20) NOT NULL,
     site_lang varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en',
@@ -240,7 +240,7 @@
 
   /** Site Access Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_access(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."site_access(
     site_access_id bigint(20) NOT NULL,
     site_access_site_id bigint(20) NOT NULL,
     site_access_user_id bigint(20) NOT NULL,
@@ -257,7 +257,7 @@
   
   /** Site Setting Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_setting(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."site_setting(
     site_setting_id bigint(20) NOT NULL,
     site_custom_domain int(1) NOT NULL,
     site_pagination_limit bigint(20) NOT NULL,
@@ -277,7 +277,7 @@
 
   /* Tag Table */
   
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."tag(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."tag(
     tag_id bigint(20) NOT NULL,
     tag_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     tag_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -304,7 +304,7 @@
 
   /* User Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."user(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."user(
     user_id bigint(20) NOT NULL,
     user_parent_id bigint(20) NOT NULL,
     user_username varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -341,7 +341,7 @@
   
   /* Category Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."category(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."category(
     category_id bigint(20) NOT NULL,
     category_parent_id bigint(20) NOT NULL,
     category_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -363,7 +363,7 @@
 
   /* Post Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."post(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."post(
     post_id bigint(20) NOT NULL,
     post_parent_id bigint(20) NOT NULL,
     post_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,

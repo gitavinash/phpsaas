@@ -6,7 +6,7 @@
   ##                                                                                                                    ##
   ########################################################################################################################
   
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."redirection (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."redirection (
     redirection_id bigint(20) NOT NULL,
     redirection_code varchar(10) NOT NULL,
     redirection_parent_id bigint(20) NOT NULL,

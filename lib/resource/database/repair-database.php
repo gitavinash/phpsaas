@@ -2,7 +2,7 @@
 
   /** Address Table */ 
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."address (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."address (
     address_id bigint(20) NOT NULL,
     address_relation_id bigint(20) NOT NULL,
     address_house_no varchar(255) NOT NULL,
@@ -67,7 +67,7 @@
 
   /** Analytics Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."analytics(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."analytics(
     analytics_id bigint(20) NOT NULL,
     analytics_link_id bigint(20) NOT NULL,
     analytics_site_id bigint(20) NOT NULL,
@@ -144,7 +144,7 @@
 
   /** App Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."app(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."app(
     app_id bigint(20) NOT NULL,
     app_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     app_description LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -202,7 +202,7 @@
 
   /** Company Table */
   
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."company (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."company (
     company_id bigint(20) NOT NULL,
     company_site_id int(11) NOT NULL,
     company_user_id int(11) NOT NULL,
@@ -267,7 +267,7 @@
 
   /* Enquiry Table  */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."enquiry(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."enquiry(
     enquiry_id bigint(20) NOT NULL,
     enquiry_first_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     enquiry_last_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -385,7 +385,7 @@
 
   /** OTP Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."otp (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."otp (
     otp_id bigint(20) NOT NULL,
     otp_user_id bigint(20) NOT NULL,
     otp_site_id varchar(10) NOT NULL,
@@ -407,7 +407,7 @@
   
   /** Package Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."package(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."package(
     package_id bigint(20) NOT NULL,
     package_app_id bigint(20) NOT NULL,
     package_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -430,7 +430,7 @@
 
   /** Package Features Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."package_feature(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."package_feature(
     package_feature_id bigint(20) NOT NULL,
     package_feature_package_id bigint(20) NOT NULL,
     package_feature_pwa int(1) NOT NULL DEFAULT 0,
@@ -481,7 +481,7 @@
 
   /* Page Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."page(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."page(
     page_id bigint(20) NOT NULL,
     page_parent_id bigint(20) NOT NULL,
     page_image varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -524,7 +524,7 @@
 
   /** Professional Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."professional (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."professional (
     professional_id bigint(20) NOT NULL,
     professional_site_id bigint(20) NOT NULL,
     professional_user_id bigint(20) NOT NULL,
@@ -582,7 +582,7 @@
 
   /** Profile meta table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."profile_meta (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."profile_meta (
     profile_meta_id bigint(20) NOT NULL,
     profile_meta_profile_id bigint(20) NOT NULL,
     profile_meta_key varchar(255) NOT NULL,
@@ -662,7 +662,7 @@
 
   /** Site App Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_app(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."site_app(
     site_app_id bigint(20) NOT NULL,
     site_app_app_id bigint(20) NOT NULL,
     site_app_site_id bigint(20) NOT NULL,
@@ -820,7 +820,7 @@
 
   /** Site Configuration Table ( for SMS, E-Mail, Payment Gateway and other things ) */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."site_configuration (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."site_configuration (
     site_configuration_id bigint(20) NOT NULL,
     site_configuration_site_id bigint(20) NOT NULL,
     site_configuration_name varchar(255) NOT NULL,
@@ -924,7 +924,7 @@
 
   /** Subscription Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."subscription (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."subscription (
     subscription_id bigint(20) NOT NULL,
     subscription_site_id bigint(20) NOT NULL,
     subscription_user_id bigint(20) NOT NULL,
@@ -952,7 +952,7 @@
 
   /** Theme Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."theme(
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."theme(
     theme_id bigint(20) NOT NULL,
     theme_app_id bigint(20) NOT NULL,
     theme_title varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -997,7 +997,7 @@
 
   /** User Type table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."user_type (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."user_type (
     user_type_id bigint(20) NOT NULL,
     user_type_app_id bigint(20) NOT NULL,
     user_type_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,

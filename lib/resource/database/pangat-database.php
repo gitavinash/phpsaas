@@ -8,7 +8,7 @@
 
   /** Booking Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."booking (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."booking (
     booking_id int(255) NOT NULL,
     booking_site_id bigint(20) NOT NULL,
     booking_user_id bigint(20) NOT NULL,
@@ -58,7 +58,7 @@
     
   /** Pangat Table */
 
-  mysqli_query($connection, "CREATE TABLE ".TABLE_PREFIX."pangat (
+  mysqli_query($connection, "CREATE TABLE IF NOT EXISTS ".TABLE_PREFIX."pangat (
     pangat_id bigint(20) NOT NULL,
     pangat_site_id bigint(20) NOT NULL,
     pangat_days varchar(10) NOT NULL,

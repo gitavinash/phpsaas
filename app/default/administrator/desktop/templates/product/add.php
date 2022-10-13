@@ -1,3 +1,23 @@
+<?php
+
+    $allProductList=mysqli_query($connection, "SELECT product_id, product_title, product_thumbnail, link_url FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=".SITE_ID);
+    $allProductOptionsDropDown = '';
+
+    if(mysqli_num_rows(($allProductList))!=0) {
+
+        while($productData = mysqli_fetch_assoc($allProductList)) {
+
+            extract($productData);
+            $allProductOptionsDropDown = $allProductOptionsDropDown. "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
+
+        }
+
+    } else {
+        $allProductOptionsDropDown="<option value='0'>No Product Found</option>";
+    }
+
+?>
+
 <h2>Add new <?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?></h2>
 
 <div class="form-box">
@@ -130,11 +150,14 @@
 
                 </div>
                 <div class="productAttributesDetails generalTab" style="display: none;">
-
-                    <div class="form-group">
-                        <label>Care & Tips</label>
-                        <textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow"
-                            placeholder="Care & tips..."></textarea>
+                    <div class="productDiv">
+                        <div class="form-group">
+                            <label>Select product varients</label>
+                            <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct"
+                                multiple="multiple">
+                                <?php echo $allProductOptionsDropDown ?>
+                            </select>
+                        </div>
                     </div>
 
                 </div>
