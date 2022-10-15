@@ -16,28 +16,33 @@
             </div>
             <div class="col-12 mt-0 mt-sm-3">
                 <div class="form row">
-                    <div class="mb-3 mb-sm-4 col-12 col-sm-6 p-0 m-0 pe-0 pe-sm-2">
-                        <input type="text" class="form-control form_control3" id="exampleFormControlInput1"
-                            placeholder="Your FirstName" />
-                    </div>
-                    <div class="mb-3 mb-sm-4 col-12 col-sm-6 p-0 ps-0 ps-sm-2">
-                        <input type="text" class="form-control form_control3" id="exampleFormControlInput1"
-                            placeholder="Your LastName" />
-                    </div>
-                    <div class="mb-3 mb-sm-4 col-12 col-sm-6 p-0 pe-0 pe-sm-2">
-                        <input type="Phone" class="form-control form_control3" id="exampleFormControlInput1"
-                            placeholder="Your Number" />
-                    </div>
-                    <div class="mb-3 mb-sm-4 col-12 col-sm-6 p-0 ps-0 ps-sm-2">
-                        <input type="email" class="form-control form_control3" id="exampleFormControlInput1"
-                            placeholder="Your Email" />
-                    </div>
-                    <div class="col-12 mb-3 mb-sm-4 p-0">
-                        <textarea class="form-control form_control3" id="exampleFormControlTextarea1" rows="6"
-                            placeholder="Your Message"></textarea>
-                    </div>
+                    <form method="post" action="">
+                        <div class="col-12 mb-3 mb-sm-4 p-0">
+                            <input type="text" class="form-control form_control3" id="exampleFormControlInput1"
+                                placeholder="Your First Name" name="name" />
+                        </div>
+                        <div class="col-12 mb-3 mb-sm-4 p-0">
+                            <input type="Phone" class="form-control form_control3" id="exampleFormControlInput1"
+                                placeholder="Your Number" name="mobile" required />
+                        </div>
+                        <div class="col-12 mb-3 mb-sm-4 p-0">
+                            <input type="email" class="form-control form_control3" id="exampleFormControlInput1"
+                                placeholder="Your Email" name="email" />
+                        </div>
+                        <div class="col-12 mb-3 mb-sm-4 p-0">
+                            <textarea class="form-control form_control3" id="exampleFormControlTextarea1" name="message"
+                                rows="6" placeholder="Your Message"></textarea>
+                        </div>
 
-                    <button type="submit" class="submit_btn_contact">Submit</button>
+                        <input type="hidden" name="type" value="enquiry">
+                        <input type="hidden" name="action" value="new">
+                        <input type="hidden" name="subject" value="Contact Us Form">
+                        <!-- <input type="hidden" name="sender" value="bW9oaXRhZ2dhcndhbDExMTk0QGdtYWlsLmNvbQ=="> -->
+                        <input type="hidden" name="sender" value="YXZpbmFzaHNoYXJtYTExNEBnbWFpbC5jb20=">
+                        <input type="hidden" name="redirect_url"
+                            value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
+                        <input type="submit" class="submit_btn_contact" value="Submit">
+                    </form>
                 </div>
             </div>
         </div>
