@@ -62,24 +62,27 @@
                 </p>
             </div>
             <div class="col-12 col-xl-8 m-auto form_a_bg mt-3 mt-md-5">
-                <form class="row p-3 p-md-5">
+                <form method="post" action="" class="row p-3 p-md-5">
                     <div class="col-12 col-md-6 mb-2 mb-md-3">
-                        <label for="name" class="form-label form_label3">Mobile</label>
-                        <input type="text" class="form-control form_control3" id="name"
+                        <label for="name" cl ass="form-label form_label3">Mobile</label>
+                        <input type="text" class="form-control form_control3" name="mobile" id="phone"
                             placeholder="Enter Your Number" />
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-3">
                         <label for="email" class="form-label form_label3">Email</label>
-                        <input type="email" class="form-control form_control3" id="email" placeholder="Enter Email" />
+                        <input type="email" class="form-control form_control3" name="email" id="email"
+                            placeholder="Enter Email" />
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-3">
                         <label for="tel" class="form-label form_label3">Your Name</label>
-                        <input type="tel" class="form-control form_control3" id="tel" placeholder="Enter Your Name" />
+                        <input type="tel" class="form-control form_control3" id="tel" name="name"
+                            placeholder="Enter Your Name" />
                     </div>
 
                     <div class="col-12 col-md-6 mb-2 mb-md-0 d-flex flex-column">
                         <label for="date" class="form-label form_label3">Your DOB</label>
-                        <input type="date" class="form-control form_control3" id="date" placeholder="Your State Name" />
+                        <input type="date" class="form-control form_control3" id="date" name="dateOfBirth"
+                            placeholder="Your State Name" />
                     </div>
 
                     <div class="col-12 col-md-12 mb-2 mb-md-3 d-flex flex-column">
@@ -89,7 +92,7 @@
 
                                 <div class="relative">
                                     <i class="fa-solid fa-caret-down select_arrow"></i>
-                                    <select class="select_form" id="gender">
+                                    <select class="select_form" name="hourOfBirth" id="gender">
                                         <option value="" disabled="" selected="">HH</option>
                                         <option value="00">00 (12 midnight)</option>
                                         <option value="01">01 (am)</option>
@@ -121,7 +124,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="relative">
                                     <i class="fa-solid fa-caret-down select_arrow"></i>
-                                    <select class="select_form" id="gender">
+                                    <select class="select_form" name="minuteOfBirth" id="gender">
                                         <option value="">MM</option>
                                         <option value="00">00</option>
                                         <option value="01">01</option>
@@ -190,7 +193,8 @@
                     </div>
                     <div class="col-12 col-md-12 mb-2 mb-md-3">
                         <label for="tel" class="form-label form_label3">Place Of Birth</label>
-                        <input type="tel" class="form-control form_control3" id="tel" placeholder="Place Of Birth" />
+                        <input type="tel" class="form-control form_control3" name="placeOfBirth" id="tel"
+                            placeholder="Place Of Birth" />
                     </div>
                     <!-- <div class="col-12 mb-3">
                 <div class="row align-items-center">
@@ -228,8 +232,14 @@
                 <label for="message" class="form-label">Reason For Appointment</label>
                 <textarea class="form-control form_control3" id="message" rows="8" placeholder="Message"></textarea>
               </div> -->
+                    <input type="hidden" name="type" value="enquiry">
+                    <input type="hidden" name="action" value="new">
+                    <input type="hidden" name="subject" value="Appointment Form">
+                    <input type="hidden" name="sender" value="bW9oaXRhZ2dhcndhbDExMTk0QGdtYWlsLmNvbQ==">
+                    <input type="hidden" name="redirect_url"
+                        value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                     <div class="col-12 mt-3">
-                        <button class="submit submit_btn">Make An Appointment</button>
+                        <input type="submit" value="Make An Appointment" class="submit submit_btn">
                     </div>
                 </form>
             </div>
