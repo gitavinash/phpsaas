@@ -66,7 +66,7 @@
                     <div class="col-12 col-md-6 mb-2 mb-md-3">
                         <label for="name" cl ass="form-label form_label3">Mobile</label>
                         <input type="text" class="form-control form_control3" name="mobile" id="phone"
-                            placeholder="Enter Your Number" />
+                            placeholder="Enter Your Number" required />
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-3">
                         <label for="email" class="form-label form_label3">Email</label>
