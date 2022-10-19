@@ -161,7 +161,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 <?php
                 }
 
-                if (SITE_ID != 22) { ?>
+                if (SITE_ID != 22 && SITE_ID != 35) { ?>
 
                 <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
                     <a href="coupon.php?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
