@@ -150,10 +150,11 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="testimonial.php?type=list&status=all"><i class="fas fa-list"></i> All post</a>
+                            <li><a href="testimonial.php?type=list&status=all"><i class="fas fa-list"></i> All
+                                    testimonial</a>
                             </li>
                             <li><a href="testimonial.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    post</a></li>
+                                    testimonial</a></li>
                         </ul>
                     </div>
                 </li>
