@@ -585,6 +585,7 @@ nav {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 300px !important;
 }
 .testi_img {
   width: 120px;
@@ -2883,4 +2884,8 @@ a.delet:hover span {
   .card img {
     width: 40%;
   }
+}
+
+.cont_testi_img img {
+  border-radius: 100% !important;
 }

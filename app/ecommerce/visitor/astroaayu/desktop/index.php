@@ -1,6 +1,6 @@
 <?php
 
-  require_once 'header.php';
+require_once 'header.php';
 
 ?>
 
@@ -477,44 +477,40 @@
             <div class="row testi_slider">
                 <div class="col-5 testi_container px-2 px-sm-5 pb-2 pb-sm-5 relative">
                     <div class="cont_testi_img">
-                        <img src="<?php echo USER_IMAGES ?>testi1.png" class="testi_img" />
+                        <img src="<?php echo USER_IMAGES ?>testimonial/lokesh-teacher.jpg" class="testi_img" />
                     </div>
                     <div class="test_content text-center">
-                        <p class="test_para">
-                            We have the World Famous Astrologers on the Best Astroaayu
-                            Website in India, practising both Indian Astroaayu and Western
-                            Astroaayu for Astro today.
+                        <p class="test_para">Staff r cooperative n consulting with aachary is very satisfying ,give some
+                            moral boost in life
                         </p>
-                        <p class="testi_name mt-2 mt-sm-3">David Parker</p>
-                        <p>Vastu</p>
+                        <p class="testi_name mt-2 mt-sm-3">Lokesh</p>
+                        <p>Teacher</p>
                     </div>
                 </div>
                 <div class="col-5 testi_container px-2 px-sm-5 pb-2 pb-sm-5">
                     <div class="cont_testi_img">
-                        <img src="<?php echo USER_IMAGES ?>testi2.png" class="testi_img" />
+                        <img src="<?php echo USER_IMAGES ?>testimonial/pritam-sugar-mill-factory-business-man.jpg"
+                            class="testi_img" />
                     </div>
                     <div class="test_content text-center">
-                        <p class="test_para">
-                            We have the World Famous Astrologers on the Best Astroaayu
-                            Website in India, practising both Indian Astroaayu and Western
-                            Astroaayu for Astro today.
+                        <p class="test_para">Excellent place for Astrology and remedies. Staff is very cooperative.
+                            Guruji advises are unique and full filling the 'Gaps' in life. Must be visited this place
+                            for peace of mind, provided you have faith in Astrology.
                         </p>
-                        <p class="testi_name mt-2 mt-sm-3">Divya</p>
-                        <p>Astro</p>
+                        <p class="testi_name mt-2 mt-sm-3">Pritam</p>
+                        <p>Business Man</p>
                     </div>
                 </div>
                 <div class="col-5 testi_container px-2 px-sm-5 pb-2 pb-sm-5">
                     <div class="cont_testi_img">
-                        <img src="<?php echo USER_IMAGES ?>testi2.png" class="testi_img" />
+                        <img src="<?php echo USER_IMAGES ?>testimonial/md-aasim-doctor-mbbs.jpg" class="testi_img" />
                     </div>
                     <div class="test_content text-center">
-                        <p class="test_para">
-                            We have the World Famous Astrologers on the Best Astroaayu
-                            Website in India, practising both Indian Astroaayu and Western
-                            Astroaayu for Astro today.
+                        <p class="test_para">It is always a pleasure to meet, and we trust him completely. We
+                            always get fabulous results from his remedies for all our life problems.
                         </p>
-                        <p class="testi_name mt-2 mt-sm-3">Divya</p>
-                        <p>Astro</p>
+                        <p class="testi_name mt-2 mt-sm-3">Md. Aasim</p>
+                        <p>Doctor, MBBS</p>
                     </div>
                 </div>
             </div>
