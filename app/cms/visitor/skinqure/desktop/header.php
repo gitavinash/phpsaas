@@ -373,6 +373,7 @@
                                     <ul class="text-start">
                                         <li><a href="/technology/">Technology</a></li>
                                         <li><a href="/media/">Media</a></li>
+                                        <li><a href="/why-us/">Why Us</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -382,6 +383,7 @@
                                     <ul class="text-start">
                                         <li><a href="/dr-jangid/">Dr. Jangid</a></li>
                                         <li><a href="/aestheticians/">Aestheticians</a></li>
+                                        <li><a href="/career/">Career</a></li>
                                     </ul>
                                 </div>
                             </li>
