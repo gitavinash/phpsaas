@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
 
@@ -62,17 +63,18 @@
             <div class="d-flex align-items-center">
                 <div class="nav_container nav_res">
                     <ul class="d-flex align-items-center relative">
-                        <li><a href="/" <?php echo ((ACTIVE_URL=='/') ? 'class="active_link"' : '') ?>>Home</a></li>
-                        <li><a href="/about/" <?php echo ((ACTIVE_URL=='/about/') ? 'class="active_link"' : '') ?>>About
+                        <li><a href="/" <?php echo ((ACTIVE_URL == '/') ? 'class="active_link"' : '') ?>>Home</a></li>
+                        <li><a href="/about/"
+                                <?php echo ((ACTIVE_URL == '/about/') ? 'class="active_link"' : '') ?>>About
                                 Us</a></li>
                         <li><a href="/numerology/"
-                                <?php echo ((ACTIVE_URL=='/numerology/') ? 'class="active_link"' : '') ?>>Numerology</a>
+                                <?php echo ((ACTIVE_URL == '/numerology/') ? 'class="active_link"' : '') ?>>Numerology</a>
                         </li>
                         <li><a href="/shop/"
-                                <?php echo ((ACTIVE_URL=='/shop/') ? 'class="active_link"' : '') ?>>Shop</a>
+                                <?php echo ((ACTIVE_URL == '/shop/') ? 'class="active_link"' : '') ?>>Shop</a>
                         </li>
                         <li><a href="/contact/"
-                                <?php echo ((ACTIVE_URL=='/contact/') ? 'class="active_link"' : '') ?>>Contact
+                                <?php echo ((ACTIVE_URL == '/contact/') ? 'class="active_link"' : '') ?>>Contact
                                 Us</a></li>
                         <li>
                             <a href="/appointment/" class="display_prop">Book An Appointment</a>
