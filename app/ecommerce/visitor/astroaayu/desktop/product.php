@@ -17,15 +17,16 @@
             </div>
             <div class="d-flex align-items-center mt-1">
                 <p class="title_semi">₹ <?php echo $inventory_price ?>
-                    <?php echo (($inventory_mrp!='') ? "<del>₹ {$inventory_mrp} </del>" : "" ) ?></p>
-                <?php 
-                    if($inventory_mrp!='') { ?>
+                    <?php echo (($inventory_mrp != '') ? "<del>₹ {$inventory_mrp} </del>" : "") ?></p>
+                <?php
+                if ($inventory_mrp != '') { ?>
                 <div class="off">
-                    <?php $discountPerstange = (1-$inventory_price/$inventory_mrp)*100; echo intval($discountPerstange) ?>%
+                    <?php $discountPerstange = (1 - $inventory_price / $inventory_mrp) * 100;
+                        echo intval($discountPerstange) ?>%
                     Off</div>
                 <?php
-                    }
-                    ?>
+                }
+                ?>
             </div>
             <hr>
             <p><?php echo $product_highlight ?></p>
@@ -33,10 +34,10 @@
             <div class="mt-3 add_container">
                 <div class="row">
                     <?php
-                    if($inventory_variation!='') {
-                        $varition = json_decode($inventory_variation, TRUE);
+                    if ($inventory_variation != '') {
+                        $varition = json_decode(base64_decode($inventory_variation), TRUE);
 
-                        for($i=0; $i<sizeof($varition); $i++) {
+                        for ($i = 0; $i < sizeof($varition); $i++) {
 
                             echo "<div class='col-md-4 col-6' >
                                 <div class='row'>
@@ -54,16 +55,14 @@
                                     </a>
                                 </div>
                         </div>";
-
                         }
-
                     }
                     ?>
                 </div>
             </div>
             <div class="mt-3 add_container">
                 <p style="display:none" id="productInfo"
-                    value="<?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>">
+                    value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
                 </p>
                 <button class="add_cart" id="addToCart">Buy Now <span class="material-symbols-sharp">
                         shopping_bag
@@ -89,62 +88,55 @@
         <div class="products_container2 mt-2 mt-md-4">
 
             <?php
-				
-				if($tagListData=mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
 
-					if(mysqli_num_rows($tagListData)!=0) {
-					
-						extract(mysqli_fetch_assoc($tagListData));
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 AND product_id!={$product_id} GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
-					
-					} else {
+            if ($tagListData = mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
 
-						$productRelated=explode(' ', $product_title);
-					
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 AND product_id!={$product_id}  GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
-					
-					}
-				
-				}
+                if (mysqli_num_rows($tagListData) != 0) {
 
-				if($relatedProductsData=mysqli_query($connection, $relatedProductQuery)) {
+                    extract(mysqli_fetch_assoc($tagListData));
+                    $relatedProductQuery = "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='" . SITE_ID . "' AND inventory_in_stock=1 AND product_id!={$product_id} GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+                } else {
 
-					if(mysqli_num_rows($relatedProductsData)!=0) {
-					
-						while($relatedProducts=mysqli_fetch_assoc($relatedProductsData)) {
-					
-							extract($relatedProducts);
+                    $productRelated = explode(' ', $product_title);
 
-                            
-							echo "
+                    $relatedProductQuery = "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='" . SITE_ID . "' AND inventory_in_stock=1 AND product_id!={$product_id}  GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+                }
+            }
+
+            if ($relatedProductsData = mysqli_query($connection, $relatedProductQuery)) {
+
+                if (mysqli_num_rows($relatedProductsData) != 0) {
+
+                    while ($relatedProducts = mysqli_fetch_assoc($relatedProductsData)) {
+
+                        extract($relatedProducts);
+
+
+                        echo "
                             <div class='product_box'>
                                 <div class='product_box_bg'>
                                     <img src='{$product_image}' />
         </div>
         <div class='product_contents text-center mt-3'>
             <h4 class='m-0'>{$product_title}</h4>
-            <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>".((1-$inventory_price/$inventory_mrp)*100)."% Off</div></p>
+            <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>" . ((1 - $inventory_price / $inventory_mrp) * 100) . "% Off</div></p>
         </div>
     </div>
     ";
+                    }
+                } else {
 
-    }
+                    echo "<h4 class='m-0'>No product found</h4>";
+                }
+            }
 
-    } else {
-
-        echo "<h4 class='m-0'>No product found</h4>";
-
-    }
-
-    }
-
-    ?>
+            ?>
 
         </div>
     </div>
 </main>
 <?php
 
-    require_once('footer.php');
+require_once('footer.php');
 
 ?>
