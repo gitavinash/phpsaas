@@ -120,7 +120,7 @@
         </div>
         <div class='product_contents text-center mt-3'>
             <h4 class='m-0'>{$product_title}</h4>
-            <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>" . ((1 - $inventory_price / $inventory_mrp) * 100) . "% Off</div></p>
+            <p>" . (($inventory_mrp == '') ? "₹ {$inventory_price}" : "<span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>" . ((1 - $inventory_price / $inventory_mrp) * 100) . "% Off</div>") . "</p>
         </div>
     </div></a>
     ";
