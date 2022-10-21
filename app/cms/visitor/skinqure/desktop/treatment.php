@@ -1,8 +1,8 @@
 <?php
 
-    $serviceSection = json_decode($service_section, true);
-    
-    require_once 'header.php';
+$serviceSection = json_decode(base64_decode($service_section), true);
+
+require_once 'header.php';
 
 ?>
 
@@ -77,13 +77,13 @@
 
 <?php
 
-    $backGroundColor = 'dark';
+$backGroundColor = 'dark';
 
-    for($i=0; $i<sizeof($serviceSection['treatment_option']); $i++) {
+for ($i = 0; $i < sizeof($serviceSection['treatment_option']); $i++) {
 
-        if($serviceSection['treatment_option'][$i]['image']!='' && $serviceSection['treatment_option'][$i]['header']!='') {
-    
-            if($backGroundColor == 'light') { ?>
+    if ($serviceSection['treatment_option'][$i]['image'] != '' && $serviceSection['treatment_option'][$i]['header'] != '') {
+
+        if ($backGroundColor == 'light') { ?>
 
 <section class="treatment" style="padding: 0px;">
     <div class="container-fluid">
@@ -135,10 +135,9 @@
 </section>
 
 <?php
-            
-            $backGroundColor = 'dark';
 
-            } else { ?>
+            $backGroundColor = 'dark';
+        } else { ?>
 
 
 <section class="treatment yellowbg" style="padding: 0px;">
@@ -192,20 +191,16 @@
 
 <?php
 
-$backGroundColor = 'light';
-
-            }
-
-
+            $backGroundColor = 'light';
         }
-
     }
+}
 
 ?>
 
 <?php
 
-    if(isset($serviceSection['before_after'])) { ?>
+if (isset($serviceSection['before_after'])) { ?>
 
 
 <section class="bluebg beforeAfterSection section_spacing_top sectionpadding">
@@ -294,13 +289,13 @@ $backGroundColor = 'light';
 </section>
 
 <?php
-    }
+}
 
 ?>
 
 <?php
 
-    if(isset($serviceSection['why_choose_us'])) { ?>
+if (isset($serviceSection['why_choose_us'])) { ?>
 
 
 <section class="section_spacing_top">
@@ -323,8 +318,8 @@ $backGroundColor = 'light';
                                 </h3>
                             </div>
                             <?php
-                            
-                                for($i=0; $i<sizeof($serviceSection['why_choose_us']['steps']); $i++) { ?>
+
+                                for ($i = 0; $i < sizeof($serviceSection['why_choose_us']['steps']); $i++) { ?>
 
                             <div class="d-flex w-100 align-items-center mb-5">
                                 <div class="icon me-2">
@@ -339,7 +334,7 @@ $backGroundColor = 'light';
                             <?php
                                 }
 
-                            ?>
+                                ?>
                         </div>
                     </div>
 
@@ -350,7 +345,7 @@ $backGroundColor = 'light';
 </section>
 
 <?php
-    }
+}
 
 ?>
 

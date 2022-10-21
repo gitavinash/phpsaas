@@ -1,8 +1,8 @@
 <?php
 
-    $serviceSection = json_decode($service_section, true);
+$serviceSection = json_decode(base64_decode($service_section), true);
 
-    require_once 'header.php';
+require_once 'header.php';
 
 
 ?>
@@ -57,7 +57,7 @@
 
 <?php
 
-    if(isset($serviceSection['treatment_steps'])) { ?>
+if (isset($serviceSection['treatment_steps'])) { ?>
 
 <section class="section_spacing_top section_spacing_bottom">
     <div class="container-fluid">
@@ -71,8 +71,8 @@
                         </div>
                     </div>
                     <?php
-                    
-                    for($i=0; $i<sizeof($serviceSection['treatment_steps']['steps']); $i++) { ?>
+
+                        for ($i = 0; $i < sizeof($serviceSection['treatment_steps']['steps']); $i++) { ?>
 
                     <div class="col-lg-4 col-md-4 mb-lg-0 mb-md-0 mb-4">
                         <div class="w-100 relative service_box">
@@ -92,9 +92,9 @@
                     </div>
 
                     <?php
-                    }
+                        }
 
-                    ?>
+                        ?>
                 </div>
             </div>
         </div>
@@ -102,14 +102,14 @@
 </section>
 
 <?php
-    }
+}
 
 ?>
 
 
 <?php
 
-    if(isset($serviceSection['why_choose_us'])) { ?>
+if (isset($serviceSection['why_choose_us'])) { ?>
 
 
 <section class="section_spacing_top">
@@ -132,8 +132,8 @@
                                 </h3>
                             </div>
                             <?php
-                            
-                                for($i=0; $i<sizeof($serviceSection['why_choose_us']['steps']); $i++) { ?>
+
+                                for ($i = 0; $i < sizeof($serviceSection['why_choose_us']['steps']); $i++) { ?>
 
                             <div class="d-flex w-100 align-items-center mb-5">
                                 <div class="icon me-2">
@@ -148,7 +148,7 @@
                             <?php
                                 }
 
-                            ?>
+                                ?>
                         </div>
                     </div>
 
@@ -159,13 +159,13 @@
 </section>
 
 <?php
-    }
+}
 
 ?>
 
 <?php
 
-    if(isset($serviceSection['before_after'])) { ?>
+if (isset($serviceSection['before_after'])) { ?>
 
 
 <section class="greenbg  section_spacing_top sectionpadding">
@@ -222,13 +222,13 @@
 </section>
 
 <?php
-    }
+}
 
 ?>
 
 <?php
 
-    if(isset($serviceSection['faq'])) { ?>
+if (isset($serviceSection['faq'])) { ?>
 
 
 <section class="sectionpadding">
@@ -245,11 +245,11 @@
                     <div class="accordion" id="faqAccordion">
 
                         <?php
-                    
-                    for($i=0; $i<sizeof($serviceSection['faq']); $i++) { 
-                        
-                        if($serviceSection['faq'][$i]['question']!='') {
-                            if($i===0) {?>
+
+                            for ($i = 0; $i < sizeof($serviceSection['faq']); $i++) {
+
+                                if ($serviceSection['faq'][$i]['question'] != '') {
+                                    if ($i === 0) { ?>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?php echo $i ?>">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -266,7 +266,7 @@
                             </div>
                         </div>
                         <?php
-                                } else { ?>
+                                    } else { ?>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?php echo $i ?>">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -283,12 +283,11 @@
                             </div>
                         </div>
                         <?php
+                                    }
                                 }
-                        }
-                        
-                        }
+                            }
 
-                        ?>
+                            ?>
 
                     </div>
                 </div>
@@ -299,12 +298,12 @@
 
 
 <?php
-    }
-    ?>
+}
+?>
 
 <?php
 
-    if(isset($serviceSection['watch_video'])) { ?>
+if (isset($serviceSection['watch_video'])) { ?>
 
 <section class="sectionpadding youtube_testimonial"
     style="background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(<?php echo $serviceSection['watch_video']['image'] ?>); background-size: cover; background-position: 100% 100%">
@@ -339,7 +338,7 @@
 </div>
 
 <?php
-    }
+}
 
 ?>
 
@@ -411,7 +410,7 @@
 
 <?php
 
-    if(isset($serviceSection['our_commitment'])) { ?>
+if (isset($serviceSection['our_commitment'])) { ?>
 
 <section class="section_spacing_top ">
     <div class="container-fluid">
@@ -442,7 +441,7 @@
     </div>
 </section>
 <?php
-    }
+}
 
 ?>
 
