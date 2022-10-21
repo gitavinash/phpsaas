@@ -1,6 +1,6 @@
 <?php require_once 'header.php' ?>
 <div class="common_banner">
-    <h1 class="banner_title"><?php echo $product_title ?></h1>
+    <h1 class="banner_title">Product</h1>
 </div>
 
 <main class="container-fluid">
