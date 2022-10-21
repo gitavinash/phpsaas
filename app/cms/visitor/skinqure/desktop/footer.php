@@ -75,9 +75,9 @@ $(".mediaGallery").rbox({
     ' type': 'image',
 });
 </script>
-< script>
-    // Swiper Configuration
-    var swiper = new Swiper(".swiper-container", {
+<script>
+// Swiper Configuration
+var swiper = new Swiper(".swiper-container", {
     slidesPerView: 3.5,
     spaceBetween: 30,
     centeredSlides: true,
@@ -85,132 +85,132 @@ $(".mediaGallery").rbox({
     grabCursor: true,
     loop: true,
     pagination: {
-    el: ".swiper-pagination",
-    clickable: true
+        el: ".swiper-pagination",
+        clickable: true
     },
     autoplay: {
-    delay: 4000,
-    disableOnInteraction: false
+        delay: 4000,
+        disableOnInteraction: false
     },
     navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev"
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
     },
     breakpoints: {
-    500: {
-    slidesPerView: 1
-    },
-    700: {
-    slidesPerView: 3.5
-    }
-    }
-    });
-    </script>
-    <script>
-    $('.counting').each(function() {
-        var $this = $(this),
-            countTo = $this.attr('data-count');
-
-        $({
-            countNum: $this.text()
-        }).animate({
-            countNum: countTo
-        }, {
-            duration: 3000,
-            easing: 'linear',
-            step: function() {
-                $this.text(Math.floor(this.countNum));
-            },
-            complete: function() {
-                $this.text(this.countNum);
-                //alert('finished');
-            }
-        });
-
-
-    });
-    </script>
-    <script>
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    </script>
-    <script>
-    document.onkeydown = function(e) {
-        if (e.ctrlKey &&
-            (e.keyCode === 67 ||
-                e.keyCode === 86 ||
-                e.keyCode === 85 ||
-                e.keyCode === 117)) {
-            return false;
-        } else {
-            return true;
+        500: {
+            slidesPerView: 1
+        },
+        700: {
+            slidesPerView: 3.5
         }
-    };
-    $(document).keypress("u", function(e) {
-        if (e.ctrlKey) {
-            return false;
-        } else {
-            return true;
+    }
+});
+</script>
+<script>
+$('.counting').each(function() {
+    var $this = $(this),
+        countTo = $this.attr('data-count');
+
+    $({
+        countNum: $this.text()
+    }).animate({
+        countNum: countTo
+    }, {
+        duration: 3000,
+        easing: 'linear',
+        step: function() {
+            $this.text(Math.floor(this.countNum));
+        },
+        complete: function() {
+            $this.text(this.countNum);
+            //alert('finished');
         }
     });
 
-    $('.beforeAfterSlider').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        fade: false,
-        adaptiveHeight: true,
+
+});
+</script>
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+<script>
+document.onkeydown = function(e) {
+    if (e.ctrlKey &&
+        (e.keyCode === 67 ||
+            e.keyCode === 86 ||
+            e.keyCode === 85 ||
+            e.keyCode === 117)) {
+        return false;
+    } else {
+        return true;
+    }
+};
+$(document).keypress("u", function(e) {
+    if (e.ctrlKey) {
+        return false;
+    } else {
+        return true;
+    }
+});
+
+$('.beforeAfterSlider').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: false,
+    adaptiveHeight: true,
+    infinite: false,
+    useTransform: true,
+    speed: 400,
+    cssEase: 'cubic-bezier(0.77, 0, 0.18, 1)',
+});
+
+$('.beforeAfterSliderNav')
+    .on('init', function(event, slick) {
+        $('.beforeAfterSliderNav .slick-slide.slick-current').addClass('is-active');
+    })
+    .slick({
+        slidesToShow: 7,
+        slidesToScroll: 7,
+        dots: false,
+        focusOnSelect: false,
         infinite: false,
-        useTransform: true,
-        speed: 400,
-        cssEase: 'cubic-bezier(0.77, 0, 0.18, 1)',
+        responsive: [{
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 5,
+                slidesToScroll: 5,
+            }
+        }, {
+            breakpoint: 640,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: 4,
+            }
+        }, {
+            breakpoint: 420,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+            }
+        }]
     });
 
-    $('.beforeAfterSliderNav')
-        .on('init', function(event, slick) {
-            $('.beforeAfterSliderNav .slick-slide.slick-current').addClass('is-active');
-        })
-        .slick({
-            slidesToShow: 7,
-            slidesToScroll: 7,
-            dots: false,
-            focusOnSelect: false,
-            infinite: false,
-            responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 5,
-                    slidesToScroll: 5,
-                }
-            }, {
-                breakpoint: 640,
-                settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 4,
-                }
-            }, {
-                breakpoint: 420,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                }
-            }]
-        });
-
-    $('.beforeAfterSlider').on('afterChange', function(event, slick, currentSlide) {
-        $('.beforeAfterSliderNav').slick('slickGoTo', currentSlide);
-        var currrentNavSlideElem = '.beforeAfterSliderNav .slick-slide[data-slick-index="' + currentSlide +
+$('.beforeAfterSlider').on('afterChange', function(event, slick, currentSlide) {
+    $('.beforeAfterSliderNav').slick('slickGoTo', currentSlide);
+    var currrentNavSlideElem = '.beforeAfterSliderNav .slick-slide[data-slick-index="' + currentSlide +
         '"]';
-        $('.beforeAfterSliderNav .slick-slide.is-active').removeClass('is-active');
-        $(currrentNavSlideElem).addClass('is-active');
-    });
+    $('.beforeAfterSliderNav .slick-slide.is-active').removeClass('is-active');
+    $(currrentNavSlideElem).addClass('is-active');
+});
 
-    $('.beforeAfterSliderNav').on('click', '.slick-slide', function(event) {
-        event.preventDefault();
-        var goToSingleSlide = $(this).data('slick-index');
+$('.beforeAfterSliderNav').on('click', '.slick-slide', function(event) {
+    event.preventDefault();
+    var goToSingleSlide = $(this).data('slick-index');
 
-        $('.beforeAfterSlider').slick('slickGoTo', goToSingleSlide);
-    });
-    </script>
-    </body>
+    $('.beforeAfterSlider').slick('slickGoTo', goToSingleSlide);
+});
+</script>
+</body>
 
-    </html>
+</html>
