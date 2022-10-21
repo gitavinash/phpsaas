@@ -113,6 +113,7 @@
 
 
                         echo "
+                        <a href='{$link_url}'>
                             <div class='product_box'>
                                 <div class='product_box_bg'>
                                     <img src='{$product_image}' />
@@ -121,7 +122,7 @@
             <h4 class='m-0'>{$product_title}</h4>
             <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>" . ((1 - $inventory_price / $inventory_mrp) * 100) . "% Off</div></p>
         </div>
-    </div>
+    </div></a>
     ";
                     }
                 } else {
