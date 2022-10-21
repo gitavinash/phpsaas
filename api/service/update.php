@@ -43,94 +43,93 @@ function update($connection, $data)
 
                     $updatedServiceSection = json_encode(array(
                         'treatment_steps' => array(
-                            'header' => mysqli_real_escape_string($connection, htmlspecialchars($treatment_header)),
-                            'description' => mysqli_real_escape_string($connection, htmlspecialchars($treatment_description)),
+                            'header' => $treatment_header,
+                            'description' => $treatment_description,
                             'steps' => array(
                                 array(
                                     'image' => (($treatmentImage_1 != '') ? $treatmentImage_1 : $serviceSection['treatment_steps']['steps'][0]['image']),
-                                    'header' => mysqli_real_escape_string($connection, htmlspecialchars($treatmentImageHeader_1)),
-                                    'description' => mysqli_real_escape_string($connection, htmlspecialchars($treatmentImageDescription_1))
+                                    'header' => $treatmentImageHeader_1,
+                                    'description' => $treatmentImageDescription_1
                                 ),
                                 array(
                                     'image' => (($treatmentImage_2 != '') ? $treatmentImage_2 : $serviceSection['treatment_steps']['steps'][1]['image']),
-                                    'header' => mysqli_real_escape_string($connection, htmlspecialchars($treatmentImageHeader_2)),
-                                    'description' => mysqli_real_escape_string($connection, htmlspecialchars($treatmentImageDescription_2))
+                                    'header' => $treatmentImageHeader_2,
+                                    'description' => $treatmentImageDescription_2
                                 ),
                                 array(
                                     'image' => (($treatmentImage_3 != '') ? $treatmentImage_3 : $serviceSection['treatment_steps']['steps'][2]['image']),
-                                    'header' => mysqli_real_escape_string($connection, htmlspecialchars($treatmentImageHeader_3)),
-                                    'description' => mysqli_real_escape_string($connection, htmlspecialchars($treatmentImageDescription_3))
+                                    'header' => $treatmentImageHeader_3,
+                                    'description' => $treatmentImageDescription_3
                                 )
                             )
                         ),
                         'why_choose_us' => array(
                             'image' => (($whyChooseUs != '') ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
-                            'header' => mysqli_real_escape_string($connection, htmlspecialchars($whyChooseTitle)),
-                            'description' => mysqli_real_escape_string($connection, htmlspecialchars($whyChooseDescription)),
+                            'header' => $whyChooseTitle,
+                            'description' => $whyChooseDescription,
                             'steps' => array(
                                 array(
                                     'icon' => (($stepIcon_1 != '') ? $stepIcon_1 : $serviceSection['why_choose_us']['steps'][0]['icon']),
-                                    'description' => mysqli_real_escape_string($connection, htmlspecialchars($stepHeader_1))
+                                    'description' => $stepHeader_1
                                 ),
                                 array(
                                     'icon' => (($stepIcon_2 != '') ? $stepIcon_2 : $serviceSection['why_choose_us']['steps'][1]['icon']),
-                                    'description' => mysqli_real_escape_string($connection, htmlspecialchars($stepHeader_2))
+                                    'description' => $stepHeader_2
                                 ),
                                 array(
                                     'icon' => (($stepIcon_3 != '') ? $stepIcon_3 : $serviceSection['why_choose_us']['steps'][2]['icon']),
-                                    'description' => mysqli_real_escape_string(
-                                        $connection,
-                                        htmlspecialchars($stepHeader_30)
-                                    ),
-                                )
-                            ),
+                                    'description' => $stepHeader_3
+                                ),
+                            )
                         ),
                         'before_after' => array(
-                            'header' => mysqli_real_escape_string($connection, htmlspecialchars($berforeAfterHeader)),
-                            'subHeader' => mysqli_real_escape_string($connection, htmlspecialchars($berforeAfterSubHeader)),
-                            'description' => mysqli_real_escape_string($connection, htmlspecialchars($berforeAfterDescription)),
-                            'videoLink' => mysqli_real_escape_string($connection, htmlspecialchars($berforeAfterVideLink)),
+                            'header' => $berforeAfterHeader,
+                            'subHeader' => $berforeAfterSubHeader,
+                            'description' => $berforeAfterDescription,
+                            'videoLink' => $berforeAfterVideLink,
                             'images' => array(
-                                'before' => mysqli_real_escape_string($connection, (($before != '') ? $before : $serviceSection['before_after']['images']['before'])),
-                                'after' => mysqli_real_escape_string($connection, (($after != '') ? $after : $serviceSection['before_after']['images']['after']))
+                                'before' => (($before != '') ? $before : $serviceSection['before_after']['images']['before']),
+                                'after' => (($after != '') ? $after : $serviceSection['before_after']['images']['after'])
                             )
                         ),
                         'watch_video' => array(
                             'image' => (($watchVideoImage != '') ? $watchVideoImage : $serviceSection['watch_video']['image']),
-                            'header' => mysqli_real_escape_string($connection, htmlspecialchars($watchVideoHeader)),
-                            'description' => mysqli_real_escape_string($connection, htmlspecialchars($watchVideoDescription)),
-                            'subDescription' => mysqli_real_escape_string($connection, htmlspecialchars($watchVideoSubDescription)),
-                            'videoLink' => mysqli_real_escape_string($connection, htmlspecialchars($watchVideoLink))
+                            'header' => $watchVideoHeader,
+                            'description' => $watchVideoDescription,
+                            'subDescription' => $watchVideoSubDescription,
+                            'videoLink' => $watchVideoLink
                         ),
                         'our_commitment' => array(
-                            'image' => mysqli_real_escape_string($connection, (($commitmentImage != '') ? $commitmentImage : $serviceSection['our_commitment']['image'])),
-                            'header' => mysqli_real_escape_string($connection, htmlspecialchars($commitmentHeader)),
-                            'subHeader' => mysqli_real_escape_string($connection, htmlspecialchars($commitmentSubHeader)),
-                            'descripton' => mysqli_real_escape_string($connection, htmlspecialchars($commitmentDescription))
+                            'image' => (($commitmentImage != '') ? $commitmentImage : $serviceSection['our_commitment']['image']),
+                            'header' => $commitmentHeader,
+                            'subHeader' => $commitmentSubHeader,
+                            'descripton' => $commitmentDescription
                         ),
                         'faq' => array(
                             0 => array(
-                                'question' => mysqli_real_escape_string($connection, htmlspecialchars($faqQuestion1)),
-                                'answer' => mysqli_real_escape_string($connection, htmlspecialchars($faqAnswer1))
+                                'question' => $faqQuestion1,
+                                'answer' => $faqAnswer1
                             ),
                             1 => array(
-                                'question' => mysqli_real_escape_string($connection, htmlspecialchars($faqQuestion2)),
-                                'answer' => mysqli_real_escape_string($connection, htmlspecialchars($faqAnswer2))
+                                'question' => $faqQuestion2,
+                                'answer' => $faqAnswer2
                             ),
                             2 => array(
-                                'question' => mysqli_real_escape_string($connection, htmlspecialchars($faqQuestion3)),
-                                'answer' => mysqli_real_escape_string($connection, htmlspecialchars($faqAnswer3))
+                                'question' => $faqQuestion3,
+                                'answer' => $faqAnswer3
                             ),
                             3 => array(
-                                'question' => mysqli_real_escape_string($connection, htmlspecialchars($faqQuestion4)),
-                                'answer' => mysqli_real_escape_string($connection, htmlspecialchars($faqAnswer4))
+                                'question' => $faqQuestion4,
+                                'answer' => $faqAnswer4
                             ),
                             4 => array(
-                                'question' => mysqli_real_escape_string($connection, htmlspecialchars($faqQuestion5)),
-                                'answer' => mysqli_real_escape_string($connection, htmlspecialchars($faqAnswer5))
+                                'question' => $faqQuestion5,
+                                'answer' => $faqAnswer5
                             )
                         )
-                    ), TRUE);
+                    ), true);
+
+                    $updatedServiceSection = base64_encode($updatedServiceSection);
 
                     if (isset($_FILES['gallery'])) {
 

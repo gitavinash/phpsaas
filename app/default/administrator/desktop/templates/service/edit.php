@@ -6,7 +6,7 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
     if (mysqli_num_rows($serviceDetails) != 0) {
         extract(mysqli_fetch_assoc($serviceDetails));
 
-        $serviceSection = json_decode($service_section);
+        $serviceSection = json_decode(base64_decode($service_section));
     } else { ?>
 <script type="text/javascript">
 alert('Invalid action found');
