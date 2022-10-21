@@ -61,17 +61,15 @@
                 </div>
             </div>
             <div class="mt-3 add_container">
-                <p class="title_semi">₹ <?php echo $inventory_price ?>
-                    <?php echo (($inventory_mrp != '') ? "<del>₹ {$inventory_mrp} </del>" : "") ?></p>
-                <?php
-                if ($inventory_mrp != '') { ?>
-                <div class="off">
-                    <?php $discountPerstange = (1 - $inventory_price / $inventory_mrp) * 100;
-                        echo intval($discountPerstange) ?>%
-                    Off</div>
-                <?php
-                }
-                ?>
+                <p style="display:none" id="productInfo"
+                    value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
+                </p>
+                <button class="add_cart" id="addToCart">Buy Now <span class="material-symbols-sharp">
+                        shopping_bag
+                    </span></button>
+                <!-- <div class="share_icon"><span class="material-symbols-sharp">
+                        outgoing_mail
+                    </span></div> -->
             </div>
             <hr>
         </div>
