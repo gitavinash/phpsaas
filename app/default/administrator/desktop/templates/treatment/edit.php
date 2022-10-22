@@ -8,7 +8,7 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
 
         $serviceSection = json_decode(base64_decode($service_section));
         if ($serviceSection == '') {
-            $serviceSection = json_decode(($service_section), TRUE);
+            $serviceSection = json_decode(($service_section));
         }
     } else { ?>
 <script type="text/javascript">
