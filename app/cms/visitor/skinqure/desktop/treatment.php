@@ -2,6 +2,10 @@
 
 $serviceSection = json_decode(base64_decode($service_section), true);
 
+if ($serviceSection == '') {
+    $serviceSection = json_decode($service_section, TRUE);
+}
+
 require_once 'header.php';
 
 ?>

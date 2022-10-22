@@ -2,6 +2,11 @@
 
 $serviceSection = json_decode(base64_decode($service_section), true);
 
+if ($serviceSection == '') {
+    $serviceSection = json_decode($service_section, TRUE);
+}
+
+
 require_once 'header.php';
 
 
@@ -54,6 +59,82 @@ require_once 'header.php';
         </div>
     </div>
 </section>
+
+
+<?php
+
+if (isset($serviceSection['faq'])) { ?>
+
+
+<section class="sectionpadding">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <div class="row">
+
+                    <div class="col-md-12 text-center">
+                        <div class="section_heading mb-md-4">
+                            <h3 class="text-center">Frequently Asked Questions ( FAQs )</h3>
+                        </div>
+                    </div>
+                    <div class="accordion" id="faqAccordion">
+
+                        <?php
+
+                            for ($i = 0; $i < sizeof($serviceSection['faq']); $i++) {
+
+                                if ($serviceSection['faq'][$i]['question'] != '') {
+                                    if ($i === 0) { ?>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading<?php echo $i ?>">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse<?php echo $i ?>" aria-expanded="true"
+                                    aria-controls="collapse<?php echo $i ?>">
+                                    <?php echo $serviceSection['faq'][$i]['question'] ?>
+                                </button>
+                            </h2>
+                            <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse show"
+                                aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <?php echo $serviceSection['faq'][$i]['answer'] ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                                    } else { ?>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading<?php echo $i ?>">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse<?php echo $i ?>" aria-expanded="false"
+                                    aria-controls="collapse<?php echo $i ?>">
+                                    <?php echo $serviceSection['faq'][$i]['question'] ?>
+                                </button>
+                            </h2>
+                            <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse"
+                                aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <?php echo $serviceSection['faq'][$i]['answer'] ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                                    }
+                                }
+                            }
+
+                            ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<?php
+}
+?>
 
 <?php
 
@@ -224,81 +305,6 @@ if (isset($serviceSection['before_after'])) { ?>
 <?php
 }
 
-?>
-
-<?php
-
-if (isset($serviceSection['faq'])) { ?>
-
-
-<section class="sectionpadding">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-10 text-center">
-                <div class="row">
-
-                    <div class="col-md-12 text-center">
-                        <div class="section_heading mb-md-4">
-                            <h3 class="text-center">Frequently Asked Questions ( FAQs )</h3>
-                        </div>
-                    </div>
-                    <div class="accordion" id="faqAccordion">
-
-                        <?php
-
-                            for ($i = 0; $i < sizeof($serviceSection['faq']); $i++) {
-
-                                if ($serviceSection['faq'][$i]['question'] != '') {
-                                    if ($i === 0) { ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?php echo $i ?>">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse<?php echo $i ?>" aria-expanded="true"
-                                    aria-controls="collapse<?php echo $i ?>">
-                                    <?php echo $serviceSection['faq'][$i]['question'] ?>
-                                </button>
-                            </h2>
-                            <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse show"
-                                aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    <?php echo $serviceSection['faq'][$i]['answer'] ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                                    } else { ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?php echo $i ?>">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse<?php echo $i ?>" aria-expanded="false"
-                                    aria-controls="collapse<?php echo $i ?>">
-                                    <?php echo $serviceSection['faq'][$i]['question'] ?>
-                                </button>
-                            </h2>
-                            <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse"
-                                aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    <?php echo $serviceSection['faq'][$i]['answer'] ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                                    }
-                                }
-                            }
-
-                            ?>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<?php
-}
 ?>
 
 <?php
