@@ -381,82 +381,34 @@ require_once 'header.php';
         </div>
         <div class="col-12 mt-3 mt-md-5">
             <div class="grid_grid_pro">
-                <a href='/category/yantra/'>
-                    <div class="product_box">
-                        <div class="product_box_bg">
-                            <img src="<?php echo USER_IMAGES ?>s1.png" />
-                        </div>
-                        <div class="product_contents text-center mt-3">
-                            <h4 class="m-0">Yantra</h4>
-                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                        <div class="ratings mt-1">
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp"> star </span>
-                        </div>
-                        <p><span class="color_red">Offers</span> Special Price</p> -->
-                        </div>
-                    </div>
-                </a>
-                <a href='/category/gem-stones/'>
-                    <div class="product_box">
-                        <div class="product_box_bg">
-                            <img src="<?php echo USER_IMAGES ?>s2.png" />
-                        </div>
-                        <div class="product_contents text-center mt-3">
-                            <h4 class="m-0">Gem Stones</h4>
-                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                        <div class="ratings mt-1">
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp"> star </span>
-                        </div>
-                        <p><span class="color_red">Offers</span> Special Price</p> -->
-                        </div>
-                    </div>
-                </a>
-                <a href='/category/hawan/'>
-                    <div class="product_box">
-                        <div class="product_box_bg">
-                            <img src="<?php echo USER_IMAGES ?>s3.png" />
-                        </div>
-                        <div class="product_contents text-center mt-3">
-                            <h4 class="m-0">Hawan</h4>
-                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                        <div class="ratings mt-1">
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp"> star </span>
-                        </div>
-                        <p><span class="color_red">Offers</span> Special Price</p> -->
-                        </div>
-                    </div>
-                </a>
-                <a href='/category/upay/'>
-                    <div class="product_box">
-                        <div class="product_box_bg">
-                            <img src="<?php echo USER_IMAGES ?>s4.png" />
-                        </div>
-                        <div class="product_contents text-center mt-3">
-                            <h4 class="m-0">Upay</h4>
-                            <!-- <p><span class="color_red me-1">$20</span><del>$60</del></p>
-                        <div class="ratings mt-1">
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp yellow"> star </span>
-                            <span class="material-symbols-sharp"> star </span>
-                        </div>
-                        <p><span class="color_red">Offers</span> Special Price</p> -->
-                        </div>
-                    </div>
-                </a>
+
+                <?php
+
+                if ($checkCategory = mysqli_query($connection, "SELECT category_image, category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_status=200 AND category_type='product' AND link_site_id=" . SITE_ID)) {
+
+                    if (mysqli_num_rows($checkCategory) == 0) {
+
+                        echo "No Category Found";
+                    }
+
+                    while ($categoryData = mysqli_fetch_assoc($checkCategory)) {
+
+                        extract($categoryData);
+
+                        echo "<a href='{$link_url}'>
+                                        <div class='product_box'>
+                                            <div class='product_box_bg'>
+                                                <img src='{$category_image}' />
+            </div>
+            <div class='product_contents text-center mt-3'>
+                <h4 class='m-0'>{$category_title}</h4>
+            </div>
+        </div>
+        </a>";
+                    }
+                }
+
+                ?>
 
             </div>
         </div>

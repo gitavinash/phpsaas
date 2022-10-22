@@ -18,20 +18,18 @@
                 </div>
                 <ul class="filter_box_ul">
                     <?php
-                    
-                        $categotyList = mysqli_query($connection, "SELECT category_title, link_url FROM isw_category INNER JOIN isw_link ON link_relation_id=category_id WHERE link_site_id=".SITE_ID." AND link_type='category' AND link_status=200");
 
-                        if(mysqli_num_rows($categotyList)!=0) {
+                    $categotyList = mysqli_query($connection, "SELECT category_title, link_url FROM isw_category INNER JOIN isw_link ON link_relation_id=category_id WHERE link_site_id=" . SITE_ID . " AND link_type='category' AND category_type='product' AND link_status=200");
 
-                            while($categoryData=mysqli_fetch_assoc($categotyList)) {
+                    if (mysqli_num_rows($categotyList) != 0) {
 
-                                extract($categoryData);
+                        while ($categoryData = mysqli_fetch_assoc($categotyList)) {
 
-                                echo "<li><a href='{$link_url}'>{$category_title}</a></li>";
+                            extract($categoryData);
 
-                            }
-
+                            echo "<li><a href='{$link_url}'>{$category_title}</a></li>";
                         }
+                    }
 
                     ?>
                 </ul>
@@ -82,34 +80,31 @@
                     <div class="products_container">
 
                         <?php
-                        
-                            $productList = mysqli_query($connection, "SELECT link_url, product_thumbnail, product_title, inventory_price, inventory_mrp FROM isw_product INNER JOIN isw_link ON link_relation_id=product_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_site_id=".SITE_ID." LIMIT 30");
 
-                            if(mysqli_num_rows($productList)!=0) {
+                        $productList = mysqli_query($connection, "SELECT link_url, product_thumbnail, product_title, inventory_price, inventory_mrp FROM isw_product INNER JOIN isw_link ON link_relation_id=product_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_site_id=" . SITE_ID . " LIMIT 30");
 
-                                while($productListData = mysqli_fetch_assoc($productList)) {
+                        if (mysqli_num_rows($productList) != 0) {
 
-                                    extract($productListData);
+                            while ($productListData = mysqli_fetch_assoc($productList)) {
 
-                                    echo "<a class='product_box' href='{$link_url}'>
+                                extract($productListData);
+
+                                echo "<a class='product_box' href='{$link_url}'>
                                     <div class='product_box_bg'>
                                         <img src='{$product_thumbnail}' />
                     </div>
                     <div class='product_contents text-center mt-3'>
                         <h4 class='m-0'>{$product_title}</h4>
-                        <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>".((1-$inventory_price/$inventory_mrp)*100)."% Off</div></p>
+                        <p><span class='color_red me-1'>₹{$inventory_price}</span><del>₹{$inventory_mrp}</del><br /><div class='off'>" . ((1 - $inventory_price / $inventory_mrp) * 100) . "% Off</div></p>
                     </div>
                     </a>";
+                            }
+                        } else {
 
-                    }
+                            echo "<h4 class='m-0'>No product found</h4>";
+                        }
 
-                    } else {
-
-                        echo "<h4 class='m-0'>No product found</h4>";
-
-                    }
-
-                    ?>
+                        ?>
 
                     </div>
                 </div>
