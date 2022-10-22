@@ -7,6 +7,10 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
         extract(mysqli_fetch_assoc($serviceDetails));
 
         $serviceSection = json_decode(base64_decode($service_section));
+
+        if ($serviceSection == '') {
+            $serviceSection = json_decode(($service_section), TRUE);
+        }
     } else { ?>
 <script type="text/javascript">
 alert('Invalid action found');
