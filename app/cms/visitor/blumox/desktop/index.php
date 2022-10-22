@@ -27,6 +27,8 @@
 </head>
 
 <body>
+    <img src="<?php echo str_replace(ROOT, '', SYSTEM_THEME) ?>assets/images/blumox-logo.png"
+        style="height: 100px; width: auto;" alt="">
     <img src="<?php echo str_replace(ROOT, '', SYSTEM_THEME) ?>assets/images/under-development.png" alt="">
     <h1>Under Development <span>Sorry for the dust! We know it’s taking a while but sit tight and we’ll be with you
             soon.</span></h1>
