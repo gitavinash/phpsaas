@@ -592,7 +592,7 @@ require_once 'header.php';
     <div class="margin_top common_padding">
         <div class="col-12 d-flex justify-content-center flex-column align-items-center">
             <p class="title_semi text_center">
-                <span class="title_semi_line2"></span> Frequently Asked
+                <span class="title_semi_line2"></span>Frequently Asked
                 Questions<span class="title_semi_line"></span>
             </p>
         </div>
@@ -608,15 +608,7 @@ require_once 'header.php';
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <p>
-                                We have the World Famous Astroaayu on the Best Astrology
-                                Website in India, practising both Indian Astrology and
-                                Western Astrology for astrology today.
-                            </p>
-                            <p class="mt-2">
-                                They will provide the best free horoscope astrology to you
-                                by analysing your birth chart and your astrology sign.
-                            </p>
+                            <p>₹ 3100 Per Kundali</p>
                         </div>
                     </div>
                 </div>
@@ -631,12 +623,14 @@ require_once 'header.php';
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <p>
-                                You can always fill up the enquiry form at any point of time in a day and our
-                                Astrologers will get in touch with you shortly.
+                                For an online Vastu consultation, you simply need to share your floor plan and Google
+                                location. A small video or some pictures of the property are an added advantage. Once we
+                                receive that, we can do a Vastu consultation online through video call (Zoom /
+                                Whatsapp) or email.
                             </p>
                             <p class="mt-2">
-                                They will provide the best free horoscope astrology to you
-                                by analysing your birth chart and your astrology sign.
+                                Rest information are already provided on website. <br />Any queries please call on
+                                mentioned numbers.
                             </p>
                         </div>
                     </div>
@@ -652,13 +646,9 @@ require_once 'header.php';
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <p>
-                                We have the World Famous Astroaayu on the Best Astrology
-                                Website in India, practising both Indian Astrology and
-                                Western Astrology for astrology today.
-                            </p>
-                            <p class="mt-2">
-                                They will provide the best free horoscope astrology to you
-                                by analysing your birth chart and your astrology sign.
+                                The Astroaayu predictions can help you to explore the best in life ahead and make your
+                                way to success in the professional, personal and financial aspects. Astroaayu can help
+                                you to find the best ways to get into the life you have always dreamt of.
                             </p>
                         </div>
                     </div>
@@ -674,13 +664,9 @@ require_once 'header.php';
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <p>
-                                We have the World Famous Astroaayu on the Best Astrology
-                                Website in India, practising both Indian Astrology and
-                                Western Astrology for astrology today.
-                            </p>
-                            <p class="mt-2">
-                                They will provide the best free horoscope astrology to you
-                                by analysing your birth chart and your astrology sign.
+                                Vastu holds an enormous importance in our culture. While we must check the basic Vastu
+                                compliance while buying a home/property, we must also understand without vastu human
+                                life part will always suffer .
                             </p>
                         </div>
                     </div>
