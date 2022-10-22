@@ -9,13 +9,29 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkservice = mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, service_section FROM " . TABLE_PREFIX . "service INNER JOIN " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
+            if ($checkservice = mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, service_section, service_status FROM " . TABLE_PREFIX . "service INNER JOIN " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
 
                 if (mysqli_num_rows($checkservice) != 0) {
 
+                    $sku = ((isset($sku)) ? $sku : '');
+                    $salePrice = ((isset($salePrice)) ? $salePrice : '');
+                    $mrp = ((isset($mrp)) ? $mrp : '');
+                    $taxStatus = ((isset($taxStatus)) ? $taxStatus : '');
+                    $taxRate = ((isset($taxRate)) ? $taxRate : '');
+                    $stock_warning = ((isset($stock_warning)) ? $stock_warning : '');
+                    $weight = ((isset($weight)) ? $weight : '');
+                    $height = ((isset($height)) ? $height : '');
+                    $width = ((isset($width)) ? $width : '');
+                    $lenght = ((isset($lenght)) ? $lenght : '');
+                    $highlight = ((isset($highlight)) ? $highlight : '');
+
                     extract(mysqli_fetch_assoc($checkservice));
 
-                    $serviceSection = json_decode($service_section, true);
+                    $serviceSection = json_decode(base64_decode($service_section), true);
+
+                    if ($serviceSection == '') {
+                        $serviceSection = json_decode($service_section, TRUE);
+                    }
 
                     require_once MODULES . 'imageUploader.php';
 
@@ -47,37 +63,37 @@ function update($connection, $data)
                             'description' => $treatment_description,
                             'steps' => array(
                                 array(
-                                    'image' => (($treatmentImage_1 != '') ? $treatmentImage_1 : $serviceSection['treatment_steps']['steps'][0]['image']),
+                                    'image' => ((isset($treatmentImage_1)) ? $treatmentImage_1 : $serviceSection['treatment_steps']['steps'][0]['image']),
                                     'header' => $treatmentImageHeader_1,
                                     'description' => $treatmentImageDescription_1
                                 ),
                                 array(
-                                    'image' => (($treatmentImage_2 != '') ? $treatmentImage_2 : $serviceSection['treatment_steps']['steps'][1]['image']),
+                                    'image' => ((isset($treatmentImage_2)) ? $treatmentImage_2 : $serviceSection['treatment_steps']['steps'][1]['image']),
                                     'header' => $treatmentImageHeader_2,
                                     'description' => $treatmentImageDescription_2
                                 ),
                                 array(
-                                    'image' => (($treatmentImage_3 != '') ? $treatmentImage_3 : $serviceSection['treatment_steps']['steps'][2]['image']),
+                                    'image' => ((isset($treatmentImage_3)) ? $treatmentImage_3 : $serviceSection['treatment_steps']['steps'][2]['image']),
                                     'header' => $treatmentImageHeader_3,
                                     'description' => $treatmentImageDescription_3
                                 )
                             )
                         ),
                         'why_choose_us' => array(
-                            'image' => (($whyChooseUs != '') ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
+                            'image' => ((isset($whyChooseUs)) ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
                             'header' => $whyChooseTitle,
                             'description' => $whyChooseDescription,
                             'steps' => array(
                                 array(
-                                    'icon' => (($stepIcon_1 != '') ? $stepIcon_1 : $serviceSection['why_choose_us']['steps'][0]['icon']),
+                                    'icon' => ((isset($stepIcon_1)) ? $stepIcon_1 : $serviceSection['why_choose_us']['steps'][0]['icon']),
                                     'description' => $stepHeader_1
                                 ),
                                 array(
-                                    'icon' => (($stepIcon_2 != '') ? $stepIcon_2 : $serviceSection['why_choose_us']['steps'][1]['icon']),
+                                    'icon' => ((isset($stepIcon_2)) ? $stepIcon_2 : $serviceSection['why_choose_us']['steps'][1]['icon']),
                                     'description' => $stepHeader_2
                                 ),
                                 array(
-                                    'icon' => (($stepIcon_3 != '') ? $stepIcon_3 : $serviceSection['why_choose_us']['steps'][2]['icon']),
+                                    'icon' => ((isset($stepIcon_3)) ? $stepIcon_3 : $serviceSection['why_choose_us']['steps'][2]['icon']),
                                     'description' => $stepHeader_3
                                 ),
                             )
@@ -88,19 +104,18 @@ function update($connection, $data)
                             'description' => $berforeAfterDescription,
                             'videoLink' => $berforeAfterVideLink,
                             'images' => array(
-                                'before' => (($before != '') ? $before : $serviceSection['before_after']['images']['before']),
-                                'after' => (($after != '') ? $after : $serviceSection['before_after']['images']['after'])
+                                'before' => ((isset($before)) ? $before : $serviceSection['before_after']['images']['before']),
+                                'after' => ((isset($after)) ? $after : $serviceSection['before_after']['images']['after'])
                             )
                         ),
                         'watch_video' => array(
-                            'image' => (($watchVideoImage != '') ? $watchVideoImage : $serviceSection['watch_video']['image']),
+                            'image' => ((isset($watchVideoImage)) ? $watchVideoImage : $serviceSection['watch_video']['image']),
                             'header' => $watchVideoHeader,
                             'description' => $watchVideoDescription,
-                            'subDescription' => $watchVideoSubDescription,
                             'videoLink' => $watchVideoLink
                         ),
                         'our_commitment' => array(
-                            'image' => (($commitmentImage != '') ? $commitmentImage : $serviceSection['our_commitment']['image']),
+                            'image' => ((isset($commitmentImage)) ? $commitmentImage : $serviceSection['our_commitment']['image']),
                             'header' => $commitmentHeader,
                             'subHeader' => $commitmentSubHeader,
                             'descripton' => $commitmentDescription
@@ -136,7 +151,7 @@ function update($connection, $data)
                         require_once MODULES . 'galleryUploader.php';
                     } else {
 
-                        $gallery = $oldGallery;
+                        $gallery = ((isset($oldGallery)) ? $oldGallery : '');
                     }
 
                     /** Category */
@@ -183,7 +198,7 @@ function update($connection, $data)
 
                         $addRedirect = TRUE;
 
-                        if ($postStatus == 0) {
+                        if ($serviceStatus == 0) {
 
                             $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
                         } else {

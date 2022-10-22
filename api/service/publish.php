@@ -6,6 +6,18 @@ function publish($connection, $data)
 
     if ($title != '') {
 
+        $sku = ((isset($sku)) ? $sku : '');
+        $salePrice = ((isset($salePrice)) ? $salePrice : '');
+        $mrp = ((isset($mrp)) ? $mrp : '');
+        $taxStatus = ((isset($taxStatus)) ? $taxStatus : '');
+        $taxRate = ((isset($taxRate)) ? $taxRate : '');
+        $stock_warning = ((isset($stock_warning)) ? $stock_warning : '');
+        $weight = ((isset($weight)) ? $weight : '');
+        $height = ((isset($height)) ? $height : '');
+        $width = ((isset($width)) ? $width : '');
+        $lenght = ((isset($lenght)) ? $lenght : '');
+        $highlight = ((isset($highlight)) ? $highlight : '');
+
         require_once MODULES . 'imageUploader.php';
 
         if (isset($image['featureImage'])) {
@@ -76,7 +88,6 @@ function publish($connection, $data)
                     'image' => $watchVideoImage,
                     'header' => $watchVideoHeader,
                     'description' => $watchVideoDescription,
-                    'subDescription' => $watchVideoSubDescription,
                     'videoLink' => $watchVideoLink
                 ),
                 'our_commitment' => array(
