@@ -230,7 +230,7 @@ if (isset($serviceSection['before_after'])) { ?>
                     <div class="col-md-6 col-12">
                         <div class="slider beforeAfterSlider">
                             <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_19.jpg" alt="">
+                                <img src="<?php echo USER_IMAGES ?>before_after.jpeg" alt="">
                             </div>
                             <div>
                                 <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_20.jpg" alt="">
