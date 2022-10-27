@@ -226,24 +226,39 @@ window.location.href = 'dashboard/service/?type=list&status=all';
                 </div>
                 <div class="row">
 
-                    <div class="col-6">
-                        <h4>Before Image</h4>
-                        <div class="form-group">
-                            <label>Before image</label>
-                            <input type="file" name="before" class="full-width"
-                                accept="image/x-png, image/gif, image/jpeg">
+                    <div class="productGallery generalTab">
+                        <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
                         </div>
-                    </div>
+                        <?php
 
-                    <div class="col-6">
-                        <h4>After Image</h4>
-                        <div class="form-group">
-                            <label>After image</label>
-                            <input type="file" name="after" class="full-width"
-                                accept="image/x-png, image/gif, image/jpeg">
-                        </div>
+                            if ($service_gallery != '') {
+
+                                $serviceGalleryList = json_decode($service_gallery, TRUE);
+
+                                $oldGalleryImages = array();
+
+                                for ($i = 0; $i < sizeof($serviceGalleryList); $i++) {
+
+                                    $oldGalleryImages[] = array(
+                                        'id' => $i + 1,
+                                        'name' => $serviceGalleryList[$i]['name'],
+                                        'src' => $serviceGalleryList[$i]['path'],
+                                        'type' => $serviceGalleryList[$i]['type'],
+                                    );
+                                }
+
+                                $oldGalleryImages = json_encode($oldGalleryImages, TRUE);
+                            } else {
+
+                                $oldGalleryImages = json_encode('', TRUE);
+                            }
+
+                            echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+
+                            ?>
+
                     </div>
-                </div>
             </section>
 
             <section style="margin-top:30px">

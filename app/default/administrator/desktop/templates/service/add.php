@@ -16,8 +16,8 @@
             </div>
 
             <?php
-			
-			if($site_id==31) { ?>
+
+            if ($site_id == 31) { ?>
             <div class="form-group">
                 <div class="form-group fullscreen-editor">
                     <textarea name="description" class="editor inside-shadow"></textarea>
@@ -178,23 +178,14 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-6">
-                        <h4>Before Image</h4>
-                        <div class="form-group">
-                            <label>Before image</label>
-                            <input type="file" name="before" class="full-width"
-                                accept="image/x-png, image/gif, image/jpeg">
+                    <div class="productGallery generalTab">
+
+                        <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
                         </div>
+
                     </div>
 
-                    <div class="col-6">
-                        <h4>After Image</h4>
-                        <div class="form-group">
-                            <label>After image</label>
-                            <input type="file" name="after" class="full-width"
-                                accept="image/x-png, image/gif, image/jpeg">
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -291,8 +282,8 @@
             </section>
 
             <?php
-			} else {
-				?>
+            } else {
+            ?>
             <div class="form-group fullscreen-editor">
                 <textarea name="description" class="editor inside-shadow"></textarea>
             </div>
@@ -367,9 +358,9 @@
                 </div>
             </section>
             <?php
-			}
+            }
 
-			?>
+            ?>
 
             <!-- SEO & social media marketing -->
 
@@ -468,18 +459,18 @@
             <h2>Categories</h2>
             <div class="action-box height-200 inside-shadow">
                 <?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$postType}' AND category_site_id='".SITE_ID."' AND link_status=200 ORDER BY category_title ASC")) {
-						while($category=mysqli_fetch_assoc($categoryList)) { ?>
+                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_description, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$postType}' AND category_site_id='" . SITE_ID . "' AND link_status=200 ORDER BY category_title ASC")) {
+                    while ($category = mysqli_fetch_assoc($categoryList)) { ?>
                 <div class="form-group">
                     <input type="radio" name="category"
-                        value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?>>
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
                     <?php echo ucwords($category['category_title']); ?>
                 </div>
                 <?php
-						}
-					}
-				?>
+                    }
+                }
+                ?>
             </div>
             <h2>Tags</h2>
             <div class="action-box inside-shadow">

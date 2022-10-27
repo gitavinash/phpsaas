@@ -9,7 +9,7 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkservice = mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, service_section FROM " . TABLE_PREFIX . "service INNER JOIN " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
+            if ($checkservice = mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, service_section, service_gallery FROM " . TABLE_PREFIX . "service INNER JOIN " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
 
                 if (mysqli_num_rows($checkservice) != 0) {
 
@@ -34,6 +34,40 @@ function update($connection, $data)
                         $facebookImage = (((isset($facebookImage)) ? $facebookImage : $oldFacebookImage));
                         $twitterImage = (((isset($twitterImage)) ? $twitterImage : $oldTwitterImage));
                     }
+
+                    if (isset($_FILES['gallery'])) {
+
+                        require_once MODULES . 'galleryUploader.php';
+
+                        if ($gallery != '') {
+
+                            $isGalleryUpdate = TRUE;
+                        }
+                    }
+
+                    $oldGallery = json_decode($service_gallery, TRUE);
+
+                    // Match old gallery db from from value
+                    $newProductGallery = array();
+
+                    if (isset($_POST['oldGallery'])) {
+
+                        for ($i = 0; $i < sizeof($_POST['oldGallery']); $i++) {
+
+                            $j = $_POST['oldGallery'][$i] - 1;
+
+                            $newProductGallery[] = $oldGallery[$j];
+                        }
+                    }
+
+                    /** Update old gallery */
+
+                    if (isset($isGalleryUpdate)) {
+
+                        $newProductGallery = array_merge($newProductGallery, $images);
+                    }
+
+                    $newProductGallery = json_encode($newProductGallery, TRUE);
 
                     $featurePost = ((isset($featurePost)) ? 1 : 0);
                     $in_stock = ((isset($in_stock)) ? 1 : 0);
@@ -155,10 +189,6 @@ function update($connection, $data)
                             'subHeader' => $berforeAfterSubHeader,
                             'description' => $berforeAfterDescription,
                             'videoLink' => $berforeAfterVideLink,
-                            'images' => array(
-                                'before' => (($before != '') ? $before : $serviceSection['before_after']['images']['before']),
-                                'after' => (($after != '') ? $after : $serviceSection['before_after']['images']['after'])
-                            )
                         ),
                         'why_choose_us' => array(
                             'image' => (($whyChooseUs != '') ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
@@ -244,7 +274,7 @@ function update($connection, $data)
                         }
                     }
 
-                    $updateservice = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$gallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='" . USER_ID . "', service_status=1, service_type='treatment', service_section='{$updatedServiceSection}' WHERE service_id='{$id}'");
+                    $updateservice = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$newProductGallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='" . USER_ID . "', service_status=1, service_type='treatment', service_section='{$updatedServiceSection}' WHERE service_id='{$id}'");
 
                     $updateInventtory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1 WHERE inventory_relation_id='{$id}'");
 

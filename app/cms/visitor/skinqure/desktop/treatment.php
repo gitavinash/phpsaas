@@ -206,7 +206,6 @@ for ($i = 0; $i < sizeof($serviceSection['treatment_option']); $i++) {
 
 if (isset($serviceSection['before_after'])) { ?>
 
-
 <section class="bluebg beforeAfterSection section_spacing_top sectionpadding">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -227,64 +226,44 @@ if (isset($serviceSection['before_after'])) { ?>
                             class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
                     </div>
 
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-8 col-12">
                         <div class="slider beforeAfterSlider">
-                            <div>
-                                <img src="<?php echo USER_IMAGES ?>before_after.jpeg" alt="">
-                            </div>
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_20.jpg" alt="">
-                            </div>
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_38.jpg" alt="">
-                            </div>
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_37.jpg" alt="">
-                            </div>
+
+                            <?php
+
+                                if ($service_gallery != '') {
+
+                                    $serviceGalleryList = json_decode($service_gallery, TRUE);
+
+                                    $oldGalleryImages = array();
+
+                                    for ($i = 0; $i < sizeof($serviceGalleryList); $i++) {
+
+                                        echo "<div><img src='{$serviceGalleryList[$i]['path']}'></div>";
+                                    }
+                                }
+
+                                ?>
+
                         </div>
                         <div class="slider beforeAfterSliderNav">
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_19.jpg" alt="">
-                            </div>
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662035921_20.jpg" alt="">
-                            </div>
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_38.jpg" alt="">
-                            </div>
-                            <div>
-                                <img src="https://skinqure.itssoftworld.com/upload/2022/09/1662734761_37.jpg" alt="">
-                            </div>
-                        </div>
-                    </div>
+                            <?php
 
-                    <!-- <div class="col-6 col-md-4">
-                        <div class="bimg">
-                            <a class="lightbox" href="#before">
-                                <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>"
-                                    class="w-100">
-                                <h4>Before</h4>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="bimg">
-                            <a class="lightbox" href="#after">
-                                <img src="<?php echo $serviceSection['before_after']['images']['after'] ?>"
-                                    class="w-100">
-                                <h4>After</h4>
-                            </a>
-                        </div>
-                    </div> -->
+                                if ($service_gallery != '') {
 
-                    <!-- <div class="lightbox-target" id="before">
-                        <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>" />
-                        <a class="lightbox-close" href="#"></a>
+                                    $serviceGalleryList = json_decode($service_gallery, TRUE);
+
+                                    $oldGalleryImages = array();
+
+                                    for ($i = 0; $i < sizeof($serviceGalleryList); $i++) {
+
+                                        echo "<div class='slick-navigation' ><img src='{$serviceGalleryList[$i]['path']}'></div>";
+                                    }
+                                }
+
+                                ?>
+                        </div>
                     </div>
-                    <div class="lightbox-target" id="after">
-                        <img src="<?php echo $serviceSection['before_after']['images']['after']  ?>" />
-                        <a class="lightbox-close" href="#"></a>
-                    </div> -->
 
                 </div>
             </div>

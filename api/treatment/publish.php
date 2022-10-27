@@ -19,7 +19,13 @@ function publish($connection, $data)
             $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
             $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
 
-            $gallery = '';
+            if (isset($_FILES['gallery'])) {
+
+                require_once MODULES . 'galleryUploader.php';
+            } else {
+
+                $gallery = '';
+            }
 
             $service_section = json_encode(array(
                 'feature_video' => array(

@@ -268,32 +268,45 @@ if (isset($serviceSection['before_after'])) { ?>
                         <a href="<?php echo $serviceSection['before_after']['videoLink'] ?>" target="_blank"
                             class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
                     </div>
-                    <div class="col-6 col-md-4">
-                        <div class="bimg">
-                            <a class="lightbox" href="#before">
-                                <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>"
-                                    class="w-100">
-                                <h4>Before</h4>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="bimg">
-                            <a class="lightbox" href="#after">
-                                <img src="<?php echo $serviceSection['before_after']['images']['after'] ?>"
-                                    class="w-100">
-                                <h4>After</h4>
-                            </a>
-                        </div>
-                    </div>
+                    <div class="col-md-8 col-12">
 
-                    <div class="lightbox-target" id="before">
-                        <img src="<?php echo $serviceSection['before_after']['images']['before'] ?>" />
-                        <a class="lightbox-close" href="#"></a>
-                    </div>
-                    <div class="lightbox-target" id="after">
-                        <img src="<?php echo $serviceSection['before_after']['images']['after']  ?>" />
-                        <a class="lightbox-close" href="#"></a>
+                        <div class="slider beforeAfterSlider">
+
+                            <?php
+
+                                if ($service_gallery != '') {
+
+                                    $serviceGalleryList = json_decode($service_gallery, TRUE);
+
+                                    $oldGalleryImages = array();
+
+                                    for ($i = 0; $i < sizeof($serviceGalleryList); $i++) {
+
+                                        echo "<div><img src='{$serviceGalleryList[$i]['path']}'></div>";
+                                    }
+                                }
+
+                                ?>
+
+                        </div>
+                        <div class="slider beforeAfterSliderNav">
+                            <?php
+
+                                if ($service_gallery != '') {
+
+                                    $serviceGalleryList = json_decode($service_gallery, TRUE);
+
+                                    $oldGalleryImages = array();
+
+                                    for ($i = 0; $i < sizeof($serviceGalleryList); $i++) {
+
+                                        echo "<div class='slick-navigation' ><img src='{$serviceGalleryList[$i]['path']}'></div>";
+                                    }
+                                }
+
+                                ?>
+                        </div>
+
                     </div>
 
                 </div>
