@@ -115,8 +115,8 @@ require_once 'header.php';
                 <div class="row">
                     <div class="col-md-12">
                         <div class="section_heading">
-                            <p class="text-start">How It Works</p>
-                            <h3 class="text-start">Meet our Dermatologists <strong>Experience SkinQure</strong></h3>
+                            <p class="text-start">Meet our Dermatologists</p>
+                            <h3 class="text-start"><strong>Experience SkinQure</strong></h3>
                         </div>
                     </div>
                 </div>
