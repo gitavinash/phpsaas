@@ -111,12 +111,12 @@ for ($i = 0; $i < sizeof($serviceSection['treatment_option']); $i++) {
                                 </strong><?php echo $serviceSection['treatment_option'][$i]['sitting'] ?>
                             </p>
                             <div class="row">
-                                <div class="col-12 col-md-6">
+                                <div class="col-6">
                                     <a href="<?php echo $serviceSection['treatment_option'][$i]['bookNow'] ?>"><img
                                             src="<?php echo USER_IMAGES ?>icon/book-now.png" class="treatment-btn"
                                             alt=""></a>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-6">
                                     <a href="<?php echo $serviceSection['treatment_option'][$i]['watchVideo'] ?>"><img
                                             src="<?php echo USER_IMAGES ?>icon/watch-video.png" class="treatment-btn"
                                             alt=""></a>
@@ -174,12 +174,12 @@ for ($i = 0; $i < sizeof($serviceSection['treatment_option']); $i++) {
                                 </strong><?php echo $serviceSection['treatment_option'][$i]['sitting'] ?>
                             </p>
                             <div class="row">
-                                <div class="col-12 col-md-6">
+                                <div class="col-6">
                                     <a href="<?php echo $serviceSection['treatment_option'][$i]['bookNow'] ?>"><img
                                             src="<?php echo USER_IMAGES ?>icon/book-now.png" class="treatment-btn"
                                             alt=""></a>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-6">
                                     <a href="<?php echo $serviceSection['treatment_option'][$i]['watchVideo'] ?>"><img
                                             src="<?php echo USER_IMAGES ?>icon/watch-video.png" class="treatment-btn"
                                             alt=""></a>
