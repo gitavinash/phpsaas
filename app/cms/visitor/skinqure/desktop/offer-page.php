@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php'
+require_once 'header.php'
 
 ?>
 
@@ -9,11 +9,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="row">
-                    <iframe width="100%" height="315"
-                        src="https://www.youtube.com/embed/<?php echo str_replace('https://www.youtube.com/watch?v=', '', $serviceSection['feature_video']['url']) ?>"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/<?php echo str_replace('https://www.youtube.com/watch?v=', '', $serviceSection['feature_video']['url']) ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -45,93 +41,91 @@
 
 <?php
 
-    $backGroundColor = 'dark';
+$backGroundColor = 'dark';
 
-    $offerList = mysqli_query($connection, "SELECT page_image, page_title, page_description FROM ".TABLE_PREFIX."page INNER JOIN ".TABLE_PREFIX."link on link_relation_id=page_id WHERE page_type='offer' AND link_status=200 AND page_status=1 AND link_type='page' AND link_site_id=".SITE_ID." LIMIT 0, 10");
+$offerList = mysqli_query($connection, "SELECT page_image, page_title, page_description FROM " . TABLE_PREFIX . "page INNER JOIN " . TABLE_PREFIX . "link on link_relation_id=page_id WHERE page_type='offer' AND link_status=200 AND page_status=1 AND link_type='page' AND link_site_id=" . SITE_ID . " LIMIT 0, 10");
 
-    if(mysqli_num_rows($offerList)!=0) {
+if (mysqli_num_rows($offerList) != 0) {
 
-        while($offerData = mysqli_fetch_assoc($offerList)) {
+    while ($offerData = mysqli_fetch_assoc($offerList)) {
 
-            extract($offerData);
+        extract($offerData);
 
-            if($backGroundColor==='light') { ?>
+        if ($backGroundColor === 'light') { ?>
 
 
-<section class="treatment" style="padding: 0px;">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 h-100 formfield relative">
-                            <div class="treatment-section-img">
-                                <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100 h100 cover">
+            <section class="treatment" style="padding: 0px;">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                                    <div class="w-100 h-100 formfield relative">
+                                        <div class="treatment-section-img">
+                                            <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100 h100 cover">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                                    <div class="w-100 formfield treatment-box">
+                                        <h4><?php echo $page_title ?></h4>
+                                        <p><?php echo $page_description ?></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 formfield treatment-box text-white">
-                            <h4><?php echo $page_title ?></h4>
-                            <p><?php echo $page_description ?></p>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+            </section>
 
-<?php
+        <?php
 
-                $backGroundColor='dark';
+            $backGroundColor = 'dark';
+        } else { ?>
 
-            } else { ?>
-
-<section class="treatment yellowbg" style="padding: 0px;">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 h-100 formfield relative">
-                            <div class="treatment-section-img">
-                                <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100 h100 cover">
+            <section class="treatment yellowbg" style="padding: 0px;">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                                    <div class="w-100 h-100 formfield relative">
+                                        <div class="treatment-section-img">
+                                            <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100 h100 cover">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                                    <div class="w-100 formfield treatment-box text-white">
+                                        <h4><?php echo $page_title ?></h4>
+                                        <p><?php echo $page_description ?></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 formfield treatment-box text-white">
-                            <h4><?php echo $page_title ?></h4>
-                            <p><?php echo $page_description ?></p>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-<?php
-$backGroundColor='light';
-}
-
-}
+            </section>
+    <?php
+            $backGroundColor = 'light';
+        }
+    }
 } else { ?>
-<section class="treatment yellowbg" style="padding: 0px;">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-12 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 formfield treatment-box text-white">
-                            <h4>No offer found</h4>
+    <section class="treatment yellowbg" style="padding: 0px;">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12 p-0 p-lg-0 p-md-0">
+                            <div class="w-100 formfield treatment-box text-white">
+                                <h4>No offer found</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 <?php
 }
 
@@ -157,32 +151,27 @@ $backGroundColor='light';
                                 <div class="row ">
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="First Name"
-                                                class="form-control">
+                                            <input type="text" name="" id="name" placeholder="First Name" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Last Name"
-                                                class="form-control">
+                                            <input type="text" name="" id="name" placeholder="Last Name" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Contact Number"
-                                                class="form-control">
+                                            <input type="text" name="" id="name" placeholder="Contact Number" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Email Address"
-                                                class="form-control">
+                                            <input type="text" name="" id="name" placeholder="Email Address" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-12 mb-4">
                                         <div class="w-100 form-group">
-                                            <textarea name="" id="" placeholder="Your Message"
-                                                class="form-control"></textarea>
+                                            <textarea name="" id="" placeholder="Your Message" class="form-control"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -204,6 +193,6 @@ $backGroundColor='light';
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
