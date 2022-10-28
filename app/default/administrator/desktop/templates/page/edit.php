@@ -3,18 +3,18 @@
 $id = base64_decode($id);
 
 if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "page, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='page' AND link_relation_id=page_id AND meta_relation_id=link_id AND page_id='{$id}' AND link_status!=301 AND link_type='page' LIMIT 1")) {
-	if (mysqli_num_rows($pageDetails) != 0) {
-		extract(mysqli_fetch_assoc($pageDetails));
+    if (mysqli_num_rows($pageDetails) != 0) {
+        extract(mysqli_fetch_assoc($pageDetails));
 
-		$page_section = json_decode(base64_decode($page_section));
-	} else {
-		exit(); ?>
+        $page_section = json_decode(base64_decode($page_section));
+    } else {
+        exit(); ?>
 <script type="text/javascript">
 alert('Invalid action found');
 window.location.href = 'dashboard/page/?type=list&status=all';
 </script>
 <?php
-	}
+    }
 }
 
 ?>
@@ -31,8 +31,8 @@ window.location.href = 'dashboard/page/?type=list&status=all';
             <div class="form-group">
                 <div class="url">
                     <?php
-					$url = explode('/', ltrim(rtrim($link_url, '/'), '/'));
-					?>
+                    $url = explode('/', ltrim(rtrim($link_url, '/'), '/'));
+                    ?>
                     <p><strong>Permalink</strong></p>
                     <p><span><?php echo SITE_DOMAIN ?>/</span></p>
                     <input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url">
@@ -41,7 +41,7 @@ window.location.href = 'dashboard/page/?type=list&status=all';
             </div>
             <?php
 
-			if (SITE_ID == 31 && $page_id == 50) { ?>
+            if (SITE_ID == 31 && $page_id == 50) { ?>
 
             <section style="margin-top:30px">
                 <h3>Technology Option 1</h3>
@@ -266,15 +266,30 @@ window.location.href = 'dashboard/page/?type=list&status=all';
             </section>
 
             <?php
-			} else { ?>
+            } else { ?>
             <div class="form-group fullscreen-editor">
                 <textarea name="description"
                     class="editor inside-shadow"><?php echo html_entity_decode($page_description); ?></textarea>
             </div>
             <?php
-			}
+            }
 
-			?>
+            if (SITE_ID == 31 && $page_id == 51) { ?>
+
+            <section style="margin-top:30px">
+                <h3>Feature Video</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Youtube video url</label>
+                    <input type="text" class="form-control inside-shadow" name="highlight"
+                        value="<?php echo $page_highlight ?>" placeholder="Feature Video">
+                </div>
+            </section>
+
+            <?php
+            }
+
+            ?>
             <section>
                 <h3>Advance Options for digital marketing</h3>
                 <ul class='tabs'>
