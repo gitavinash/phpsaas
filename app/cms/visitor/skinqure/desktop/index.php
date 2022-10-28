@@ -1,6 +1,6 @@
 <?php
 
-  require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <section>
@@ -22,12 +22,12 @@
                             <div class="carousel-item active">
                                 <img src="<?php echo USER_IMAGES ?>banner1.png" class="d-block w-100" alt="...">
                                 <div class="carousel-caption d-md-block">
-                                    <h3 class="animated slideInUp">Making What's <br />Good Even Batter With Our
+                                    <h3 class="animated slideInUp">Making What's <br />Good Even Better With Our
                                         Cosmetic
                                         Treatments!</h3>
                                     <p class="animated slideInUp">Advanced Cosmetic Treatments Are Available at Skinqure
                                         to Make You Gorgeous
-                                        and Gives You the Beausy Which you Deserve.</p>
+                                        and Gives You the Beauty Which you Deserve.</p>
                                     <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                     <div class="col-md-12">
                         <div class="section_heading">
                             <p class="text-start">How It Works</p>
-                            <h3 class="text-start">Meet our Dermatologists<strong>Exprience SkinQure</strong></h3>
+                            <h3 class="text-start">Meet our Dermatologists <strong>Experience SkinQure</strong></h3>
                         </div>
                     </div>
                 </div>
@@ -677,6 +677,6 @@
 
 <?php
 
-  require_once 'footer.php'
+require_once 'footer.php'
 
 ?>
