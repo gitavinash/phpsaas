@@ -15,7 +15,7 @@ function update($connection, $data)
 
                     extract(mysqli_fetch_assoc($checkservice));
 
-                    $serviceSection = json_decode($service_section, true);
+                    $serviceSection = json_decode(base64_decode($service_section), true);
 
                     require_once MODULES . 'imageUploader.php';
 

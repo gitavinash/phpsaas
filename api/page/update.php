@@ -11,11 +11,13 @@ function update($connection, $data)
 
     if ($title != '') {
 
-        if ($checkPage = mysqli_query($connection, "SELECT link_id FROM " . TABLE_PREFIX . "page INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND page_id='{$id}'")) {
+        if ($checkPage = mysqli_query($connection, "SELECT link_id, page_section FROM " . TABLE_PREFIX . "page INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND page_id='{$id}'")) {
 
             if (mysqli_num_rows($checkPage) != 0) {
 
                 extract(mysqli_fetch_assoc($checkPage));
+
+                $pageSection = json_decode(base64_decode($page_section), true);
 
                 require_once MODULES . 'imageUploader.php';
 
@@ -39,6 +41,86 @@ function update($connection, $data)
 
                 $url = '/' . strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
                 $linkID = $link_id;
+
+
+                $updatedPageSection = json_encode(array(
+                    'technology_option' => array(
+                        0 => array(
+                            'image' => (($technologyOptionFeatureImage_1 != '') ? $technologyOptionFeatureImage_1 : $pageSection['technology_option'][0]['image']),
+                            'header' => $technologyOptionHeader_1,
+                            'description' => $technologyOptionDescription_1,
+                        ),
+                        1 => array(
+                            'image' => (($technologyOptionFeatureImage_2 != '') ? $technologyOptionFeatureImage_2 : $pageSection['technology_option'][1]['image']),
+                            'header' => $technologyOptionHeader_2,
+                            'description' => $technologyOptionDescription_2,
+                        ),
+                        2 => array(
+                            'image' => (($technologyOptionFeatureImage_3 != '') ? $technologyOptionFeatureImage_3 : $pageSection['technology_option'][2]['image']),
+                            'header' => $technologyOptionHeader_3,
+                            'description' => $technologyOptionDescription_3,
+                        ),
+                        3 => array(
+                            'image' => (($technologyOptionFeatureImage_4 != '') ? $technologyOptionFeatureImage_4 : $pageSection['technology_option'][3]['image']),
+                            'header' => $technologyOptionHeader_4,
+                            'description' => $technologyOptionDescription_4,
+                        ),
+                        4 => array(
+                            'image' => (($technologyOptionFeatureImage_5 != '') ? $technologyOptionFeatureImage_5 : $pageSection['technology_option'][4]['image']),
+                            'header' => $technologyOptionHeader_5,
+                            'description' => $technologyOptionDescription_5,
+                        ),
+                        5 => array(
+                            'image' => (($technologyOptionFeatureImage_6 != '') ? $technologyOptionFeatureImage_6 : $pageSection['technology_option'][5]['image']),
+                            'header' => $technologyOptionHeader_6,
+                            'description' => $technologyOptionDescription_6,
+                        ),
+                        6 => array(
+                            'image' => (($technologyOptionFeatureImage_7 != '') ? $technologyOptionFeatureImage_7 : $pageSection['technology_option'][6]['image']),
+                            'header' => $technologyOptionHeader_7,
+                            'description' => $technologyOptionDescription_7,
+                        ),
+                        7 => array(
+                            'image' => (($technologyOptionFeatureImage_8 != '') ? $technologyOptionFeatureImage_8 : $pageSection['technology_option'][7]['image']),
+                            'header' => $technologyOptionHeader_8,
+                            'description' => $technologyOptionDescription_8,
+                        ),
+                        8 => array(
+                            'image' => (($technologyOptionFeatureImage_9 != '') ? $technologyOptionFeatureImage_9 : $pageSection['technology_option'][8]['image']),
+                            'header' => $technologyOptionHeader_9,
+                            'description' => $technologyOptionDescription_9,
+                        ),
+                        9 => array(
+                            'image' => (($technologyOptionFeatureImage_10 != '') ? $technologyOptionFeatureImage_10 : $pageSection['technology_option'][9]['image']),
+                            'header' => $technologyOptionHeader_10,
+                            'description' => $technologyOptionDescription_10,
+                        ),
+                    ),
+                    'faq' => array(
+                        0 => array(
+                            'question' => $faqQuestion1,
+                            'answer' => $faqAnswer1
+                        ),
+                        1 => array(
+                            'question' => $faqQuestion2,
+                            'answer' => $faqAnswer2
+                        ),
+                        2 => array(
+                            'question' => $faqQuestion3,
+                            'answer' => $faqAnswer3
+                        ),
+                        3 => array(
+                            'question' => $faqQuestion4,
+                            'answer' => $faqAnswer4
+                        ),
+                        4 => array(
+                            'question' => $faqQuestion5,
+                            'answer' => $faqAnswer5
+                        )
+                    )
+                ), true);
+
+                $updatedPageSection = base64_encode($updatedPageSection);
 
                 mysqli_query($connection, "START TRANSACTION");
 
@@ -78,7 +160,7 @@ function update($connection, $data)
 
                 /** Update page table */
 
-                $updatePage = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "page SET page_image='{$featureImage}', page_thumbnail='{$thumbnailImage}', page_title='{$title}', page_description='{$description}', page_highlight='{$highlight}', page_status='1' WHERE page_id='{$id}'");
+                $updatePage = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "page SET page_image='{$featureImage}', page_thumbnail='{$thumbnailImage}', page_title='{$title}', page_description='{$description}', page_highlight='{$highlight}', page_section='{$updatedPageSection}', page_status='1' WHERE page_id='{$id}'");
 
                 /** Update meta table */
 

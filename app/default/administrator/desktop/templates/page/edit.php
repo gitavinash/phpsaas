@@ -6,7 +6,7 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
     if (mysqli_num_rows($pageDetails) != 0) {
         extract(mysqli_fetch_assoc($pageDetails));
 
-        $page_section = json_decode(base64_decode($page_section));
+        $pageSection = json_decode(base64_decode($page_section));
     } else {
         exit(); ?>
 <script type="text/javascript">
@@ -39,51 +39,74 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                     <input type="hidden" name='oldURL' value='<?php echo $link_url ?>'>
                 </div>
             </div>
+
+            <div class="form-group fullscreen-editor">
+                <textarea name="description"
+                    class="editor inside-shadow"><?php echo html_entity_decode($page_description); ?></textarea>
+            </div>
             <?php
 
+
             if (SITE_ID == 31 && $page_id == 50) { ?>
+
+            <section style="margin-top:30px">
+                <h3>Feature Video</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Youtube video url</label>
+                    <input type="text" class="form-control inside-shadow" name="highlight"
+                        value="<?php echo $page_highlight ?>" placeholder="Feature Video">
+                </div>
+            </section>
+
+            <?php
+            }
+
+            if (SITE_ID == 31 && $page_id == 50) { ?>
+
 
             <section style="margin-top:30px">
                 <h3>Technology Option 1</h3>
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_1"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[0]->header) ?>"
+                        name="technologyOptionHeader_1" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_1"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_1"><?php echo stripslashes($pageSection->technology_option[0]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 1 Feature Image</h4>
+                    <h4>Technology Option 1 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_1" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_1" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
             </section>
-
             <section style="margin-top:30px">
                 <h3>Technology Option 2</h3>
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_2"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[1]->header) ?>"
+                        name="technologyOptionHeader_2" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_2"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_2"><?php echo stripslashes($pageSection->technology_option[1]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 2 Feature Image</h4>
+                    <h4>Technology Option 2 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_2" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_2" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -93,19 +116,21 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_3"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[2]->header) ?>"
+                        name="technologyOptionHeader_3" placeholder="Header">
                 </div>
+
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_3"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_3"><?php echo stripslashes($pageSection->technology_option[2]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 3 Feature Image</h4>
+                    <h4>Technology Option 3 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_3" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_3" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -115,19 +140,21 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_4"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[3]->header) ?>"
+                        name="technologyOptionHeader_4" placeholder="Header">
                 </div>
+
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_4"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_4"><?php echo stripslashes($pageSection->technology_option[3]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 4 Feature Image</h4>
+                    <h4>Technology Option 4 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_4" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_4" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -137,19 +164,20 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_5"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[4]->header) ?>"
+                        name="technologyOptionHeader_5" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_5"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_5"><?php echo stripslashes($pageSection->technology_option[4]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 5 Feature Image</h4>
+                    <h4>Technology Option 5 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_5" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_5" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -159,19 +187,21 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_6"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[5]->header) ?>"
+                        name="technologyOptionHeader_6" placeholder="Header">
                 </div>
+
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_6"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_6"><?php echo stripslashes($pageSection->technology_option[5]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 6 Feature Image</h4>
+                    <h4>Technology Option 6 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_6" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_6" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -181,19 +211,21 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_7"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[6]->header) ?>"
+                        name="technologyOptionHeader_7" placeholder="Header">
                 </div>
+
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_7"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_7"><?php echo stripslashes($pageSection->technology_option[6]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 7 Feature Image</h4>
+                    <h4>Technology Option 7 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_7" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_7" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -203,19 +235,20 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_8"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[7]->header) ?>"
+                        name="technologyOptionHeader_8" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_8"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_8"><?php echo stripslashes($pageSection->technology_option[7]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 8 Feature Image</h4>
+                    <h4>Technology Option 8 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_8" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_8" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -225,19 +258,20 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_9"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[8]->header) ?>"
+                        name="technologyOptionHeader_9" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_9"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_9"><?php echo stripslashes($pageSection->technology_option[8]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 9 Feature Image</h4>
+                    <h4>Technology Option 9 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_9" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_9" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
@@ -247,30 +281,25 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <hr>
                 <div class="form-group">
                     <label>Header</label>
-                    <input type="text" class="form-control inside-shadow" value="" name="technologyHeader_10"
-                        placeholder="Header">
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->technology_option[9]->header) ?>"
+                        name="technologyOptionHeader_10" placeholder="Header">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control inside-shadow" name="technologyDescription_10"
-                        placeholder="Description"></textarea>
+                    <textarea class="form-control inside-shadow"
+                        name="technologyOptionDescription_10"><?php echo stripslashes($pageSection->technology_option[9]->description) ?></textarea>
                 </div>
                 <div class="row">
-                    <h4>Treatment Option 10 Feature Image</h4>
+                    <h4>Technology Option 10 Feature Image</h4>
                     <div class="form-group">
-                        <label>Feature image</label>
-                        <input type="file" name="technologyFeatureImage_10" class="full-width"
+                        <label>Before image</label>
+                        <input type="file" name="technologyOptionFeatureImage_10" class="full-width"
                             accept="image/x-png, image/gif, image/jpeg">
                     </div>
                 </div>
             </section>
 
-            <?php
-            } else { ?>
-            <div class="form-group fullscreen-editor">
-                <textarea name="description"
-                    class="editor inside-shadow"><?php echo html_entity_decode($page_description); ?></textarea>
-            </div>
             <?php
             }
 
@@ -283,6 +312,70 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                     <label>Youtube video url</label>
                     <input type="text" class="form-control inside-shadow" name="highlight"
                         value="<?php echo $page_highlight ?>" placeholder="Feature Video">
+                </div>
+            </section>
+
+            <?php
+            }
+
+            if (SITE_ID == 31 && $page_id == 48) { ?>
+
+            <section style="margin-top:30px">
+                <h3>FAQ</h3>
+                <div class="form-group">
+                    <label>Question 1</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[0]->question) ?>" name="faqQuestion1"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer1" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[0]->answer) ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 2</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[1]->question) ?>" name="faqQuestion2"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer2" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[1]->answer) ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 3</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[2]->question) ?>" name="faqQuestion3"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer3" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[2]->answer) ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 4</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[3]->question) ?>" name="faqQuestion4"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer4" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[3]->answer) ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 5</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[4]->question) ?>" name="faqQuestion5"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer5" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[4]->answer) ?></textarea>
                 </div>
             </section>
 
@@ -377,7 +470,7 @@ window.location.href = 'dashboard/page/?type=list&status=all';
         <div class="right-box">
             <div class="action-box inside-shadow">
                 <input type="button" id="updatePost" class="btn btn-green btn-block"
-                    value=" <?php echo (($page_status == 1) ? 'Update ' : 'Publish '); ?>post">
+                    value=" <?php echo (($page_status == 1) ? 'Update ' : 'Publish '); ?>page">
                 <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
                 <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                 <input type="hidden" name="action" value="update">
@@ -385,7 +478,7 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                 <input type="hidden" name="id" value="<?php echo $id ?>">
                 <input type="hidden" name="postType" value="<?php echo $page_type ?>">
                 <a href='<?php echo SITE_URL . $link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
-                    post</a>
+                    page</a>
             </div>
             <h2>Feature Image</h2>
             <div class="form-group featureImageUploadBox upload-btn"
