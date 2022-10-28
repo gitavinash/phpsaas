@@ -58,6 +58,9 @@ function update($connection, $data)
                     $currentStock = ((isset($currentStock)) ? $currentStock : 0);
 
                     $updatedServiceSection = json_encode(array(
+                        'quote' => array(
+                            'quote' => $quote
+                        ),
                         'treatment_steps' => array(
                             'header' => $treatment_header,
                             'description' => $treatment_description,

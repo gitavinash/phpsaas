@@ -32,6 +32,7 @@ require_once 'header.php';
     </div>
 </section>
 
+
 <section class="section_spacing_top ">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -39,21 +40,27 @@ require_once 'header.php';
                 <div class="row">
                     <div class="col-md-12">
                         <div class="w-100 h100">
-                            <div class="section_heading">
-                                <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
-                            </div>
 
-                            <div class="description abt_p">
-                                <?php echo $service_description ?>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="quote-box">
+                                            <p><?php echo $serviceSection['quote']['quote'] ?></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="section_heading">
+                                            <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
+                                        </div>
+                                        <div class="description abt_p">
+                                            <?php echo $service_description ?>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
                     </div>
-                    <!-- <div class="col-md-6">
-                        <div class="w-100 h100">
-                            <img src="<?php echo USER_IMAGES ?>doctor-1.jpg" alt="" class="img-fluid w-100 h100 cover">
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>

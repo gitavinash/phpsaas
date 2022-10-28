@@ -24,6 +24,15 @@
                 </div>
             </div>
 
+            <section style="margin-top:30px">
+                <h3>Quote</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Quote message</label>
+                    <textarea name="quote" class="form-control inside-shadow" placeholder="Quote message"></textarea>
+                </div>
+            </section>
+
             <section style="margin-top: 30px">
                 <div class="form-group">
                     <h3>Treatment Option</h3>

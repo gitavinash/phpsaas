@@ -41,6 +41,9 @@ function publish($connection, $data)
 
 
             $service_section = json_encode(array(
+                'quote' => array(
+                    'quote' => $quote
+                ),
                 'treatment_steps' => array(
                     'header' => $treatment_header,
                     'description' => $treatment_description,
