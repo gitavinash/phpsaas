@@ -94,7 +94,7 @@ require_once 'header.php';
                     </div>
                     <div class="col-md-4">
                         <div class="bespoke_package bespoke_package3">
-                            <h5 class="title text-start">Our Sgnature<br />Hydrafacial treatment</h5>
+                            <h5 class="title text-start">Our Signature<br />Hydrafacial treatment</h5>
                             <a href="#" class="text-start float-start link">Know More</a>
                         </div>
                     </div>
