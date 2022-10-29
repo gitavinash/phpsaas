@@ -28,11 +28,9 @@
             <div class="f-box l-w4 l-m-w2">
                 <h3>About Oxteal</h3>
                 <ul class="footer-list">
-                    <li><a href="">About Us</a></li>
-                    <li><a href="">Contact Us</a></li>
+                    <li><a href="/about-us/">About Us</a></li>
+                    <li><a href="/contact-us/">Contact Us</a></li>
                     <li><a href="">Blog</a></li>
-                    <li><a href="">Career</a></li>
-                    <li><a href="">Our Technology</a></li>
                     <li><a href="/terms-of-service/">Terms of Service</a></li>
                     <li><a href="/privacy-policy/">Privacy policy</a></li>
                     <li><a href="/refund-policy/">Return policy</a></li>
