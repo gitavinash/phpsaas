@@ -34,7 +34,8 @@
                     </div>
                     <div class="right-box fr">
                         <ul class="list-menu">
-                            <li><a href="/login/"><i class="fi-rr-user"></i> Login / Signup</a></li>
+                            <li><a href="https://dashboard.oxteal.com/"><i class="fi-rr-user"></i> Login / Signup</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -64,7 +65,7 @@
                 <div class="menu fr">
                     <ul class="list-menu">
                         <li><a href="/support/"><i class="fi-rr-interrogation"></i></a></li>
-                        <li><a href="/login/"><i class="fi-rr-user"></i></a></li>
+                        <li><a href="https://dashboard.oxteal.com/"><i class="fi-rr-user"></i></a></li>
                         <li><a href="/checkout/"><i class="fi-rr-shopping-cart"></i></a></li>
                         <li><a href="#" id="openNav"><i class="fi-rr-menu-burger"></i></a></li>
                     </ul>
