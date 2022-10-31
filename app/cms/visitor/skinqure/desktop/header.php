@@ -374,7 +374,7 @@
                                         <li><a href="/technology/">Technology</a></li>
                                         <li><a href="/media/">Media</a></li>
                                         <li><a href="/why-us/">Why Us</a></li>
-                                        <li><a href="/gallery/">Gallery</a></li>
+                                        <li><a href="/skinqure-gallery/">Gallery</a></li>
                                     </ul>
                                 </div>
                             </li>

@@ -50,7 +50,10 @@
     </div>
 </div>
 
-<script src="<?php echo JS_LIBRARY ?>jquery.min.js" type="text/javascript"></script>
+
+<!-- sections end -->
+<?php include_once NOTIFICATION . 'index.php' ?>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js'></script>

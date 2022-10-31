@@ -5,8 +5,7 @@
         <div class="left-box">
             <div class="form-group">
                 <label>Slider Title</label>
-                <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title"
-                    autofocus required>
+                <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title" autofocus required>
             </div>
 
             <div class="form-group fullscreen-editor">
@@ -30,7 +29,7 @@
             </div>
             <div class="img-preview featureImagePreviewBox action-box" style="display: none;">
                 <img src="#" id="featureImagePath" alt="">
-                <p id="changeImage" class="btn btn-red btn-sm">Remove image</p>
+                <p id="featureChangeImage" class="btn btn-red btn-sm">Remove feature image</p>
             </div>
         </div>
     </form>
