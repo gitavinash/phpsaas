@@ -263,265 +263,90 @@ require_once 'header.php';
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service1.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/acne.png" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Laser Hair Reduction</h2>
+                                    <h2>Acne</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/treatment-dermatology/acne-treatments/">Make An Appointment</a>
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service2.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/chemical-peels.png"
+                                    alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Acne Scars</h2>
+                                    <h2>Chemical Peels</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/face-cosmetics/chemical-peels-organic-peels/">Make An
+                                        Appointment</a>
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service3.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/hair-loss.png" alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Tattoo Removal</h2>
+                                    <h2>Hair Loss</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/default-treatment/meso-treatment-for-hair-loss/">Make An
+                                        Appointment</a>
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service4.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/hair-transplant.png"
+                                    alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Carbon Laser Toning</h2>
+                                    <h2>Hair Transplant</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/default-treatment/hair-transplant/">Make An Appointment</a>
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/laser-tattoo-removal.png"
+                                    alt="Image Slider">
                                 <div class="data-box">
-                                    <h2>Chemical Peels / Organic Peels</h2>
+                                    <h2>Laser Tattoo Removal</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/body-cosmetics/laser-tattoo-removal/">Make An Appointment</a>
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Open Pore Treatments</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Under Eye Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Lip Enhancement</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Double Chin Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Filler Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>HIFU Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Laser Resurfacing</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Fillers Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Facelift</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Birth Mark Removal</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Acne Treatments</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Acne Scar Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Melasma Pigmentation Treatment</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Allergy Treatments</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/mole-removal.png" alt="Image Slider">
                                 <div class="data-box">
                                     <h2>Mole Removal</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/treatment-dermatology/mole-removal/">Make An Appointment</a>
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
-                                <div class="data-box">
-                                    <h2>Cyst Removal</h2>
-                                </div>
-                                <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card-image">
-                                <img src="<?php echo USER_IMAGES ?>service5.jpg" alt="Image Slider">
+                                <img src="<?php echo USER_IMAGES ?>homepage-slider/nail-surgery.png" alt="Image Slider">
                                 <div class="data-box">
                                     <h2>Nail Surgery</h2>
                                 </div>
                                 <div class="data-box1">
                                     <h3>You Really Decide To<br> Improve Yourself</h3>
-                                    <a href="">Make An Appointment</a>
+                                    <a href="/treatment/treatment-dermatology/nail-surgery/">Make An Appointment</a>
                                 </div>
                             </div>
                         </div>

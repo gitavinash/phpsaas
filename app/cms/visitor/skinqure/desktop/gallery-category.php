@@ -42,7 +42,9 @@ require_once 'header.php'
 
                     <div class="col-12 col-md-4">
                         <a href="<?php echo $link_url ?>">
-                            <img src="<?php echo $gallery_image ?>" alt="<?php echo $gallery_title ?>" />
+                            <div class='galleryBox'>
+                                <img src="<?php echo $gallery_image ?>" alt="<?php echo $gallery_title ?>" />
+                            </div>
                         </a>
                     </div>
 
