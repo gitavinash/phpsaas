@@ -32,7 +32,7 @@ require_once 'header.php'
 
                     <?php
 
-                    if ($imageGallery = mysqli_query($connection, "SELECT gallery_title, gallery_image, link_url FROM " . TABLE_PREFIX . "gallery INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = gallery_id WHERE link_type='gallery' AND link_status=200 AND link_site_id=" . SITE_ID)) {
+                    if ($imageGallery = mysqli_query($connection, "SELECT gallery_title, gallery_image, link_url FROM " . TABLE_PREFIX . "gallery INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = gallery_id WHERE link_type='gallery' AND link_status=200 AND gallery_category_id='{$category_id}' AND link_site_id=" . SITE_ID)) {
 
                         if (mysqli_num_rows($imageGallery) != 0) {
 
