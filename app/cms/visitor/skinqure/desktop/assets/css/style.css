@@ -422,7 +422,14 @@ button.accordion-button {
 .galleryBox {
 	float: left;
 	width: 100%;
+	margin: 20px 0px;
 }
+
+.galleryBox img {
+	float: left;
+	width: 100%;
+}
+
 
 .mediaGallery {
 	float: left;
