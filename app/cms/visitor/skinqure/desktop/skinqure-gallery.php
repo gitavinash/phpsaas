@@ -44,6 +44,7 @@ require_once 'header.php'
                         <a href="<?php echo $link_url ?>">
                             <div class='galleryBox'>
                                 <img src="<?php echo $category_image ?>" alt="<?php echo $category_title ?>" />
+                                <h2 class='gallerTitle'><?php echo $category_title ?></h2>
                             </div>
                         </a>
                     </div>
@@ -59,7 +60,7 @@ require_once 'header.php'
         </div>
     </div>
 </section>
-<section>
+<!-- <section>
     <div class="container-fluid">
         <div class="row justify-content-center section_spacing_top section_spacing_bottom">
             <div class="col-lg-10">
@@ -83,7 +84,7 @@ require_once 'header.php'
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <?php
 

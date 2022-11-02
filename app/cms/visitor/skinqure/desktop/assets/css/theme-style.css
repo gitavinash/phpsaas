@@ -2235,3 +2235,12 @@ i.fa.fa-quote-left {
     padding: 0px 10px;
     color: #999;
 }
+
+h2.gallerTitle {
+    color: #333;
+    padding: 10px 0px;
+    float: left;
+    width: 100%;
+    text-align: center;
+    line-height: 40px;
+}
