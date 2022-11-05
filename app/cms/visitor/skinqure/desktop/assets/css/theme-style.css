@@ -2244,3 +2244,8 @@ h2.gallerTitle {
     text-align: center;
     line-height: 40px;
 }
+
+.accordion-body ul {
+    list-style: inherit !important;
+    padding-left: 20px;
+}
