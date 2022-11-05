@@ -27,10 +27,10 @@ function update($connection, $data)
 
                     extract(mysqli_fetch_assoc($checkservice));
 
-                    $serviceSection = json_decode(base64_decode($service_section), true);
+                    $serviceSection = json_decode(base64_decode(str_replace('\r\n', '<br />', $service_section)), true);
 
                     if ($serviceSection == '') {
-                        $serviceSection = json_decode($service_section, TRUE);
+                        $serviceSection = json_decode(str_replace('\r\n', '<br />', $service_section), TRUE);
                     }
 
                     require_once MODULES . 'imageUploader.php';
@@ -147,7 +147,7 @@ function update($connection, $data)
                         )
                     ), true);
 
-                    $updatedServiceSection = base64_encode($updatedServiceSection);
+                    $updatedServiceSection = base64_encode(str_replace('\r\n', '<br />', $updatedServiceSection));
 
                     if (isset($_FILES['gallery'])) {
 

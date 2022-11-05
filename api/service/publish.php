@@ -130,7 +130,7 @@ function publish($connection, $data)
                 )
             ), true);
 
-            $service_section = base64_encode($service_section);
+            $service_section = base64_encode(str_replace('\r\n', '<br />', $service_section));
 
             if (isset($_FILES['gallery'])) {
 

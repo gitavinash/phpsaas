@@ -103,7 +103,7 @@ if (isset($serviceSection['faq'])) { ?>
                             <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse show"
                                 aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    <?php echo $serviceSection['faq'][$i]['answer'] ?>
+                                    <?php echo str_replace('\r\n', '<br />', $serviceSection['faq'][$i]['answer']) ?>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +120,7 @@ if (isset($serviceSection['faq'])) { ?>
                             <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse"
                                 aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    <?php echo $serviceSection['faq'][$i]['answer'] ?>
+                                    <?php echo str_replace('\r\n', '<br />', $serviceSection['faq'][$i]['answer']) ?>
                                 </div>
                             </div>
                         </div>
