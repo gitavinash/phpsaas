@@ -1130,7 +1130,7 @@ ul.menu-creator li:last-child {
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 5px;
 }
 
 /* Track */
@@ -1141,7 +1141,7 @@ ul.menu-creator li:last-child {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #3386ff;
+  background: #f1f1f1;
 }
 
 /* Handle on hover */
