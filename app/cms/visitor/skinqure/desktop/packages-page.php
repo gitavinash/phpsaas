@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php'
+require_once 'header.php'
 
 ?>
 
@@ -43,32 +43,22 @@
     </div>
 </section>
 
-<section class="treatment yellowbg" style="padding: 0px;">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 formfield treatment-box text-white">
-                            <h4></h4>
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 h-100 formfield relative">
-                            <div class="treatment-section-img">
-                                <img src="<?php echo $serviceSection['treatment_option'][$i]['image'] ?>" alt=""
-                                    class="img-fluid w-100 h100 cover">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<section class="treatment" style="padding: 0px;">
+<?php
+
+$packageList = mysqli_query($connection, "SELECT post_image, post_title, post_description FROM " . TABLE_PREFIX . "post WHERE post_type='package' AND post_site_id=" . SITE_ID);
+
+$backGroundColor = 'dark';
+
+if (mysqli_num_rows($packageList) != 0) {
+
+    while ($packageData = mysqli_fetch_assoc($packageList)) {
+
+        extract($packageData);
+
+        if ($backGroundColor == 'light') { ?>
+
+<section class="technology" style="padding: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
@@ -76,15 +66,14 @@
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
                             <div class="treatment-section-img">
-                                <img src="<?php echo $serviceSection['treatment_option'][$i]['image'] ?>" alt=""
-                                    class="img-fluid w-100 h100 cover">
+                                <img src="<?php echo $post_image ?>" alt="" class="img-fluid w-100 h100 cover">
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 formfield treatment-box text-white">
-                            <h4></h4>
-                            <p></p>
+                            <h4><?php echo $post_title ?></h4>
+                            <p><?php echo $post_description ?></p>
                         </div>
                     </div>
                 </div>
@@ -93,73 +82,48 @@
     </div>
 </section>
 
-<section class="">
+<?php
+
+            $backGroundColor = 'dark';
+        } else { ?>
+
+
+<section class="technology yellowbg" style="padding: 0px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
-                            <img src="<?php echo USER_IMAGES ?>08.jpg" alt="" class="img-fluid w-100 h100 cover">
+                            <div class="treatment-section-img">
+                                <img src="<?php echo $post_image ?>" alt="" class="img-fluid w-100 h100 cover">
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 bg-primary formfield text-white form-box ">
-                            <h4>Reveal The NU in You:</h4>
-                            <p class="mb-md-4">Book your appointment today with our expert dermatologist for a perfect
-                                diagnosis & medical advice at SkinQure Clinic. Consultation is available both online and
-                                offline.</p>
-                            <form action="" class="w-100">
-                                <div class="row ">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="First Name"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Last Name"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Contact Number"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Email Address"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 mb-4">
-                                        <div class="w-100 form-group">
-                                            <textarea name="" id="" placeholder="Your Message"
-                                                class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="w-100 d-flex justify-content-center">
-                                            <input type="submit" value="Book Consultation" class="btn text-white">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="w-100 formfield treatment-box text-white">
+                            <h4><?php echo $post_title ?></h4>
+                            <p><?php echo $post_description ?></p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<?php
+
+            $backGroundColor = 'light';
+        }
+    }
+}
+
+?>
 
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
