@@ -6,7 +6,7 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
     if (mysqli_num_rows($pageDetails) != 0) {
         extract(mysqli_fetch_assoc($pageDetails));
 
-        $pageSection = json_decode(base64_decode($page_section));
+        $pageSection = ((isset($page_section)) ? json_decode(base64_decode($page_section)) : '');
     } else {
         exit(); ?>
 <script type="text/javascript">

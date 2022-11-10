@@ -18,7 +18,7 @@ switch ($link_status) {
 
                 extract(mysqli_fetch_assoc($pageData));
 
-                $pageSection = json_decode(base64_decode($page_section), true);
+                $pageSection = ((isset($page_section)) ? json_decode(base64_decode($page_section), true) : '');
 
                 if (file_exists(ROUTER . $link_status . '.php')) {
 
