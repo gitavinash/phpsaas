@@ -404,6 +404,79 @@ window.location.href = 'dashboard/page/?type=list&status=all';
             <?php
             }
 
+            if (SITE_ID == 31 && $page_id == 46) { ?>
+
+
+            <section style="margin-top: 30px">
+                <h3>Why Choose Us</h3>
+                <hr>
+                <div class="form-group">
+                    <label>Feature image</label>
+                    <input type="file" name="whyChooseUs" class="full-width"
+                        accept="image/x-png, image/gif, image/jpeg">
+                </div>
+                <div class="form-group">
+                    <label>Header</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->why_choose_us->header) ?>" name="whyChooseTitle"
+                        placeholder="Header">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->why_choose_us->description) ?>"
+                        name="whyChooseDescription" placeholder="Description">
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <h4>Step 1</h4>
+                        <div class="form-group">
+                            <label>Step 1 icon</label>
+                            <input type="file" name="stepIcon_1" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Step 1 Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo stripslashes($pageSection->why_choose_us->steps[0]->description) ?>"
+                                name="stepHeader_1" placeholder="Step 1 Description">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h4>Step 2</h4>
+                        <div class="form-group">
+                            <label>Step 2 icon</label>
+                            <input type="file" name="stepIcon_2" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Step 2 Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo stripslashes($pageSection->why_choose_us->steps[1]->description) ?>"
+                                name="stepHeader_2" placeholder="Step 2 Description">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h4>Step 3</h4>
+                        <div class="form-group">
+                            <label>Step 3 icon</label>
+                            <input type="file" name="stepIcon_3" class="full-width"
+                                accept="image/x-png, image/gif, image/jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label>Step 3 Description</label>
+                            <input type="text" class="form-control inside-shadow"
+                                value="<?php echo stripslashes($pageSection->why_choose_us->steps[2]->description) ?>"
+                                name="stepHeader_3" placeholder="Step 3 Description">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <?php
+            }
+
             ?>
             <section>
                 <h3>Advance Options for digital marketing</h3>

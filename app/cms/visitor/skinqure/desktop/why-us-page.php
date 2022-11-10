@@ -1,6 +1,6 @@
 <?php
 
-  require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <section>
@@ -19,69 +19,47 @@
         </div>
     </div>
 </section>
+<?php
 
-<section class="section_spacing_top section_spacing_bottom">
+if (isset($pageSection['why_choose_us'])) { ?>
+
+
+<section class="section_spacing_top">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
                         <div class="w-100 second_img service_first relative">
-                            <img src="<?php echo USER_IMAGES ?>img-04.jpg" alt="" class="img-fluid ">
-                            <div class="top_img">
-                                <img src="<?php echo USER_IMAGES ?>ser-5.jpg" alt="" class="img-fluid w-100">
-                            </div>
+                            <img src="<?php echo $pageSection['why_choose_us']['image'] ?>" alt="" class="img-fluid ">
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
                         <div class="w-100 secondaboutpage ">
                             <div class="section_heading">
-                                <p class="text-start">Extraordinary Services</p>
-                                <h3 class="text-start mb-md-5">Why You Should Choose Cura?</h3>
+                                <p class="text-start"><?php echo $pageSection['why_choose_us']['header'] ?></p>
+                                <h3 class="text-start mb-md-5">
+                                    <?php echo $pageSection['why_choose_us']['description'] ?>
+                                </h3>
                             </div>
+                            <?php
+
+                                for ($i = 0; $i < sizeof($pageSection['why_choose_us']['steps']); $i++) { ?>
+
                             <div class="d-flex w-100 align-items-center mb-5">
                                 <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>calendar.png" alt="" class="img-fluid">
-                                </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        10 Years of Experience
-                                    </h5>
-                                    <p class="m-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 align-items-center mb-5">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>consultation.png" alt="" class="img-fluid">
-                                </div>
-                                <div class="text text-start">
-                                    <h5>
-                                        Free Consultation
-                                    </h5>
-                                    <p class="m-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 align-items-center mb-4">
-                                <div class="icon me-2">
-                                    <img src="<?php echo USER_IMAGES ?>customer-satisfaction.png" alt=""
+                                    <img src="<?php echo $pageSection['why_choose_us']['steps'][$i]['icon'] ?>" alt=""
                                         class="img-fluid">
                                 </div>
                                 <div class="text text-start">
-                                    <h5>
-                                        100% Guaranteed
-                                    </h5>
-                                    <p class="m-0 text-start">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus,
-                                        ullamcorper.
-                                    </p>
+                                    <h5><?php echo $pageSection['why_choose_us']['steps'][$i]['description'] ?></h5>
                                 </div>
                             </div>
+
+                            <?php
+                                }
+
+                                ?>
                         </div>
                     </div>
 
@@ -90,8 +68,10 @@
         </div>
     </div>
 </section>
-<?php
 
-  require_once 'footer.php';
+<?php
+}
+
+require_once 'footer.php';
 
 ?>

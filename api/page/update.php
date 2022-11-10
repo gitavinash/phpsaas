@@ -126,7 +126,26 @@ function update($connection, $data)
                             'question' => ((isset($faqQuestion7)) ? $faqQuestion7 : ''),
                             'answer' => ((isset($faqAnswer7)) ? $faqAnswer7 : '')
                         )
-                    )
+                    ),
+                    'why_choose_us' => array(
+                        'image' => ((isset($whyChooseUs)) ? $whyChooseUs : $pageSection['why_choose_us']['image']),
+                        'header' => ((isset($whyChooseTitle)) ? $whyChooseTitle : $whyChooseTitle),
+                        'description' => ((isset($whyChooseDescription)) ? $whyChooseDescription : ''),
+                        'steps' => array(
+                            array(
+                                'icon' => ((isset($stepIcon_1)) ? $stepIcon_1 : $pageSection['why_choose_us']['steps'][0]['icon']),
+                                'description' => ((isset($stepHeader_1)) ? $stepHeader_1 : '')
+                            ),
+                            array(
+                                'icon' => ((isset($stepIcon_2)) ? $stepIcon_2 : $pageSection['why_choose_us']['steps'][1]['icon']),
+                                'description' => ((isset($stepHeader_2)) ? $stepHeader_2 : '')
+                            ),
+                            array(
+                                'icon' => ((isset($stepIcon_3)) ? $stepIcon_3 : $pageSection['why_choose_us']['steps'][2]['icon']),
+                                'description' => ((isset($stepHeader_3)) ? $stepHeader_3 : '')
+                            ),
+                        )
+                    ),
                 ), true);
 
                 $updatedPageSection = base64_encode($updatedPageSection);
