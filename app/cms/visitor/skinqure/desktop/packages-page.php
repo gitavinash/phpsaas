@@ -94,16 +94,16 @@ if (mysqli_num_rows($packageList) != 0) {
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
+                        <div class="w-100 formfield treatment-box text-white">
+                            <h4><?php echo $post_title ?></h4>
+                            <p><?php echo $post_description ?></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 h-100 formfield relative">
                             <div class="treatment-section-img">
                                 <img src="<?php echo $post_image ?>" alt="" class="img-fluid w-100 h100 cover">
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 formfield treatment-box text-white">
-                            <h4><?php echo $post_title ?></h4>
-                            <p><?php echo $post_description ?></p>
                         </div>
                     </div>
                 </div>
