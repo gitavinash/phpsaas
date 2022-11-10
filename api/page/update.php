@@ -184,7 +184,7 @@ function update($connection, $data)
                     $redirect = '/dashboard/' . $postType . '/?type=edit&editor=true&id=' . base64_encode($id);
                 } else {
 
-                    echo $addRedirect . ' && ' . $updateLink . ' && ' . $updatePage . ' && ' . $updateMeta . ' && ' . $tagData;
+                    echo $addRedirect . ' && ' . $updateLink . ' && ' . $updatePage . ' && ' . $updateMeta;
 
                     $msg = "Somthing is wrong while updating {$postType}";
                     mysqli_query($connection, 'ROLLBACK');
