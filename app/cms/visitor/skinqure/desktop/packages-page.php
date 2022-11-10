@@ -4,16 +4,21 @@ require_once 'header.php'
 
 ?>
 
-<section class="section_spacing_top ">
+<section>
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="row">
-                    <iframe width="100%" height="315"
-                        src="https://www.youtube.com/embed/<?php echo str_replace('https://www.youtube.com/watch?v=', '', $serviceSection['feature_video']['url']) ?>"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+            <div class="col-md-12 text-center p-0">
+                <div class="inner_page_banner"
+                    style="background-image: url(<?php echo $page_image ?>); background-size: cover; background-position: 100% 100%">
+                    <div class="inner_content">
+                        <p>
+                            <?php echo ucwords($page_title) ?></p>
+                        <div class="text-start"><a href="/">Home</a> <span><i
+                                    class="fa fa-chevron-right"></i></span><span>Service</span>
+                            <span><i
+                                    class="fa fa-chevron-right"></i></span><span><?php echo ucwords($page_title) ?></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
