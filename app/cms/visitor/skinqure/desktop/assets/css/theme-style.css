@@ -2249,3 +2249,17 @@ h2.gallerTitle {
     list-style: inherit !important;
     padding-left: 20px;
 }
+
+.career-box {
+    border-left: 5px solid #E8B05D;
+    padding: 20px 10px;
+    box-sizing: content-box;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom: 1px solid #E8B05D;
+}
+
+.career-box:hover {
+    background: #E8B05D;
+    color: #fff;
+}

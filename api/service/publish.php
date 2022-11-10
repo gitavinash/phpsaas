@@ -39,7 +39,6 @@ function publish($connection, $data)
                 $gallery = '';
             }
 
-
             $service_section = json_encode(array(
                 'quote' => array(
                     'quote' => $quote
