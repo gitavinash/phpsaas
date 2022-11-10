@@ -41,81 +41,90 @@ function update($connection, $data)
 
                 $url = '/' . strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
                 $linkID = $link_id;
+                $highlight = (isset($highlight) ? $highlight : '');
 
 
                 $updatedPageSection = json_encode(array(
                     'technology_option' => array(
                         0 => array(
-                            'image' => (($technologyOptionFeatureImage_1 != '') ? $technologyOptionFeatureImage_1 : $pageSection['technology_option'][0]['image']),
-                            'header' => $technologyOptionHeader_1,
-                            'description' => $technologyOptionDescription_1,
+                            'image' => ((isset($technologyOptionFeatureImage_1) ? $technologyOptionFeatureImage_1 : $pageSection['technology_option'][0]['image'])),
+                            'header' => ((isset($technologyOptionHeader_1)) ? $technologyOptionHeader_1 : ''),
+                            'description' => ((isset($technologyOptionDescription_1)) ? $technologyOptionDescription_1 : ''),
                         ),
                         1 => array(
-                            'image' => (($technologyOptionFeatureImage_2 != '') ? $technologyOptionFeatureImage_2 : $pageSection['technology_option'][1]['image']),
-                            'header' => $technologyOptionHeader_2,
-                            'description' => $technologyOptionDescription_2,
+                            'image' => ((isset($technologyOptionFeatureImage_2) ? $technologyOptionFeatureImage_2 : $pageSection['technology_option'][1]['image'])),
+                            'header' => ((isset($technologyOptionHeader_2)) ? $technologyOptionHeader_2 : ''),
+                            'description' => ((isset($technologyOptionDescription_2)) ? $technologyOptionDescription_2 : ''),
                         ),
                         2 => array(
-                            'image' => (($technologyOptionFeatureImage_3 != '') ? $technologyOptionFeatureImage_3 : $pageSection['technology_option'][2]['image']),
-                            'header' => $technologyOptionHeader_3,
-                            'description' => $technologyOptionDescription_3,
+                            'image' => ((isset($technologyOptionFeatureImage_3) ? $technologyOptionFeatureImage_3 : $pageSection['technology_option'][2]['image'])),
+                            'header' => ((isset($technologyOptionHeader_3)) ? $technologyOptionHeader_3 : ''),
+                            'description' => ((isset($technologyOptionDescription_3)) ? $technologyOptionDescription_3 : ''),
                         ),
                         3 => array(
-                            'image' => (($technologyOptionFeatureImage_4 != '') ? $technologyOptionFeatureImage_4 : $pageSection['technology_option'][3]['image']),
-                            'header' => $technologyOptionHeader_4,
-                            'description' => $technologyOptionDescription_4,
+                            'image' => ((isset($technologyOptionFeatureImage_4) ? $technologyOptionFeatureImage_4 : $pageSection['technology_option'][3]['image'])),
+                            'header' => ((isset($technologyOptionHeader_4)) ? $technologyOptionHeader_4 : ''),
+                            'description' => ((isset($technologyOptionDescription_4)) ? $technologyOptionDescription_4 : ''),
                         ),
                         4 => array(
-                            'image' => (($technologyOptionFeatureImage_5 != '') ? $technologyOptionFeatureImage_5 : $pageSection['technology_option'][4]['image']),
-                            'header' => $technologyOptionHeader_5,
-                            'description' => $technologyOptionDescription_5,
+                            'image' => ((isset($technologyOptionFeatureImage_5) ? $technologyOptionFeatureImage_5 : $pageSection['technology_option'][4]['image'])),
+                            'header' => ((isset($technologyOptionHeader_5)) ? $technologyOptionHeader_5 : ''),
+                            'description' => ((isset($technologyOptionDescription_5)) ? $technologyOptionDescription_5 : ''),
                         ),
                         5 => array(
-                            'image' => (($technologyOptionFeatureImage_6 != '') ? $technologyOptionFeatureImage_6 : $pageSection['technology_option'][5]['image']),
-                            'header' => $technologyOptionHeader_6,
-                            'description' => $technologyOptionDescription_6,
+                            'image' => ((isset($technologyOptionFeatureImage_6) ? $technologyOptionFeatureImage_6 : $pageSection['technology_option'][5]['image'])),
+                            'header' => ((isset($technologyOptionHeader_6)) ? $technologyOptionHeader_6 : ''),
+                            'description' => ((isset($technologyOptionDescription_6)) ? $technologyOptionDescription_6 : ''),
                         ),
                         6 => array(
-                            'image' => (($technologyOptionFeatureImage_7 != '') ? $technologyOptionFeatureImage_7 : $pageSection['technology_option'][6]['image']),
-                            'header' => $technologyOptionHeader_7,
-                            'description' => $technologyOptionDescription_7,
+                            'image' => ((isset($technologyOptionFeatureImage_7) ? $technologyOptionFeatureImage_7 : $pageSection['technology_option'][6]['image'])),
+                            'header' => ((isset($technologyOptionHeader_7)) ? $technologyOptionHeader_7 : ''),
+                            'description' => ((isset($technologyOptionDescription_7)) ? $technologyOptionDescription_7 : ''),
                         ),
                         7 => array(
-                            'image' => (($technologyOptionFeatureImage_8 != '') ? $technologyOptionFeatureImage_8 : $pageSection['technology_option'][7]['image']),
-                            'header' => $technologyOptionHeader_8,
-                            'description' => $technologyOptionDescription_8,
+                            'image' => ((isset($technologyOptionFeatureImage_8) ? $technologyOptionFeatureImage_8 : $pageSection['technology_option'][7]['image'])),
+                            'header' => ((isset($technologyOptionHeader_8)) ? $technologyOptionHeader_8 : ''),
+                            'description' => ((isset($technologyOptionDescription_8)) ? $technologyOptionDescription_8 : ''),
                         ),
                         8 => array(
-                            'image' => (($technologyOptionFeatureImage_9 != '') ? $technologyOptionFeatureImage_9 : $pageSection['technology_option'][8]['image']),
-                            'header' => $technologyOptionHeader_9,
-                            'description' => $technologyOptionDescription_9,
+                            'image' => ((isset($technologyOptionFeatureImage_9) ? $technologyOptionFeatureImage_9 : $pageSection['technology_option'][8]['image'])),
+                            'header' => ((isset($technologyOptionHeader_9)) ? $technologyOptionHeader_9 : ''),
+                            'description' => ((isset($technologyOptionDescription_9)) ? $technologyOptionDescription_9 : ''),
                         ),
                         9 => array(
-                            'image' => (($technologyOptionFeatureImage_10 != '') ? $technologyOptionFeatureImage_10 : $pageSection['technology_option'][9]['image']),
-                            'header' => $technologyOptionHeader_10,
-                            'description' => $technologyOptionDescription_10,
+                            'image' => ((isset($technologyOptionFeatureImage_10) ? $technologyOptionFeatureImage_10 : $pageSection['technology_option'][9]['image'])),
+                            'header' => ((isset($technologyOptionHeader_10)) ? $technologyOptionHeader_10 : ''),
+                            'description' => ((isset($technologyOptionDescription_10)) ? $technologyOptionDescription_10 : ''),
                         ),
                     ),
                     'faq' => array(
                         0 => array(
-                            'question' => $faqQuestion1,
-                            'answer' => $faqAnswer1
+                            'question' => ((isset($faqQuestion1)) ? $faqQuestion1 : ''),
+                            'answer' => ((isset($faqAnswer1)) ? $faqAnswer1 : '')
                         ),
                         1 => array(
-                            'question' => $faqQuestion2,
-                            'answer' => $faqAnswer2
+                            'question' => ((isset($faqQuestion2)) ? $faqQuestion2 : ''),
+                            'answer' => ((isset($faqAnswer2)) ? $faqAnswer2 : '')
                         ),
                         2 => array(
-                            'question' => $faqQuestion3,
-                            'answer' => $faqAnswer3
+                            'question' => ((isset($faqQuestion3)) ? $faqQuestion3 : ''),
+                            'answer' => ((isset($faqAnswer3)) ? $faqAnswer3 : '')
                         ),
                         3 => array(
-                            'question' => $faqQuestion4,
-                            'answer' => $faqAnswer4
+                            'question' => ((isset($faqQuestion4)) ? $faqQuestion4 : ''),
+                            'answer' => ((isset($faqAnswer4)) ? $faqAnswer4 : '')
                         ),
                         4 => array(
-                            'question' => $faqQuestion5,
-                            'answer' => $faqAnswer5
+                            'question' => ((isset($faqQuestion5)) ? $faqQuestion5 : ''),
+                            'answer' => ((isset($faqAnswer5)) ? $faqAnswer5 : '')
+                        ),
+                        5 => array(
+                            'question' => ((isset($faqQuestion6)) ? $faqQuestion6 : ''),
+                            'answer' => ((isset($faqAnswer6)) ? $faqAnswer6 : '')
+                        ),
+                        6 => array(
+                            'question' => ((isset($faqQuestion7)) ? $faqQuestion7 : ''),
+                            'answer' => ((isset($faqAnswer7)) ? $faqAnswer7 : '')
                         )
                     )
                 ), true);

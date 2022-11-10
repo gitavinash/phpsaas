@@ -377,6 +377,28 @@ window.location.href = 'dashboard/page/?type=list&status=all';
                     <textarea name="faqAnswer5" class="form-control inside-shadow"
                         placeholder="Answer"><?php echo stripslashes($pageSection->faq[4]->answer) ?></textarea>
                 </div>
+                <div class="form-group">
+                    <label>Question 6</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[5]->question) ?>" name="faqQuestion6"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer6" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[5]->answer) ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Question 7</label>
+                    <input type="text" class="form-control inside-shadow"
+                        value="<?php echo stripslashes($pageSection->faq[6]->question) ?>" name="faqQuestion7"
+                        placeholder="Question">
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="faqAnswer7" class="form-control inside-shadow"
+                        placeholder="Answer"><?php echo stripslashes($pageSection->faq[6]->answer) ?></textarea>
+                </div>
             </section>
 
             <?php
