@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php'
+require_once 'header.php'
 
 ?>
 <section>
@@ -24,30 +24,37 @@
 <section>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12 col-md-4">
-                <div class="galleryBox">
-                    <a href="" class="mediaGallery"
-                        data-rbox-image="https://www.skinqure.in/wp-content/uploads/2019/11/skin-5.jpg"
-                        data-rbox-caption="Captions support <strong>HTML</strong>" data-rbox-series="gallery">
-                        <img src="https://www.skinqure.in/wp-content/uploads/2019/11/skin-5.jpg" alt="Example Image" />
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="galleryBox">
-                    <a href="" class="mediaGallery"
-                        data-rbox-image="https://www.skinqure.in/wp-content/uploads/2019/11/skin-4.jpg"
-                        data-rbox-caption="Captions support <strong>HTML</strong>" data-rbox-series="gallery">
-                        <img src="https://www.skinqure.in/wp-content/uploads/2019/11/skin-4.jpg" alt="Example Image" />
-                    </a>
-                </div>
-            </div>
+
+            <?php
+
+            if ($artciles = mysqli_query($connection, "SELECT page_title, page_section FROM " . TABLE_PREFIX . "page WHERE page_type='article' AND page_site_id=" . SITE_ID)) {
+
+                if (mysqli_num_rows($artciles) != 0) {
+
+                    while ($artcilesData = mysqli_fetch_assoc($artciles)) {
+
+                        extract($artcilesData);
+
+                        echo "<div class='col-12 col-md-4'>
+                        <div class='galleryBox'>
+                            <a href='{$page_section}'>
+                                <img src='{$page_image}' alt='Example Image' />
+                            </a>
+                        </div>
+                    </div>";
+                    }
+                }
+            }
+
+
+            ?>
+
         </div>
     </div>
 </section>
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
