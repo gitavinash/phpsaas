@@ -386,6 +386,28 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     </div>
                 </li>
 
+                <li <?php echo (($postType == 'articles') ? 'class="active"' : '') ?>>
+                    <a href="articles.php?type=list&status=all"><i class="fas fa-rss"></i> Media Articles</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="articles.php?type=list&status=all"><i class="fas fa-list"></i> All Articles</a>
+                            </li>
+                            <li><a href="articles.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New
+                                    articles</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="articles.php?type=list&status=all"><i class="fas fa-list"></i> All Articles</a>
+                            </li>
+                            <li><a href="articles.php?type=add&editor=true"><i class="fas fa-plus"></i> Add New
+                                    articles</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <?php
                     }
 
