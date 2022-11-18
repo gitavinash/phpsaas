@@ -1,69 +1,60 @@
 <?php
 
-	/* Set up default system application */
+/* Set up default system application */
 
-	function domain($connection, $data) {
+function domain($connection, $data)
+{
 
-        extract($data);
+    extract($data);
 
-		$expireDate=date('Y-m-d', strtotime('+1 years'));
-        $theme=((isset($theme)) ? $theme : 1 );
-        $checkUser=mysqli_query($connection, "SELECT user_id, site_id FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."site ON site_owner_id=user_id WHERE user_username='{$username}'");
-    
-        if(mysqli_num_rows($checkUser)!=0) {
+    $expireDate = date('Y-m-d', strtotime('+1 years'));
+    $theme = ((isset($theme)) ? $theme : 1);
+    $checkUser = mysqli_query($connection, "SELECT user_id, site_id FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site ON site_owner_id=user_id WHERE user_username='{$username}'");
 
-            extract(mysqli_fetch_assoc($checkUser));
+    if (mysqli_num_rows($checkUser) != 0) {
 
-            $checkDomain=mysqli_query($connection, "SELECT site_domain FROM ".TABLE_PREFIX."site WHERE site_domain='{$domain}'");
+        extract(mysqli_fetch_assoc($checkUser));
 
-            if(mysqli_num_rows($checkDomain)==0) {
+        $checkDomain = mysqli_query($connection, "SELECT site_domain FROM " . TABLE_PREFIX . "site WHERE site_domain='{$domain}'");
 
-                mysqli_query($connection, "START TRANSACTION");
+        if (mysqli_num_rows($checkDomain) == 0) {
 
-                $updateSite=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_domain='{$domain}', site_app_id='{$app}', site_theme_id=1, site_status=1, site_expire_date='{$expireDate}' WHERE site_id='{$site_id}'");
+            mysqli_query($connection, "START TRANSACTION");
 
-                $updateSiteSetting=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_setting SET site_custom_domain=1 WHERE site_setting_site_id='{$site_id}'");
+            $updateSite = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site SET site_domain='{$domain}', site_app_id='{$app}', site_theme_id=1, site_status=1 WHERE site_id='{$site_id}'");
 
-                if($updateSite && $updateSiteSetting) {
+            $updateSiteSetting = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_setting SET site_custom_domain=1 WHERE site_setting_site_id='{$site_id}'");
 
-                    $status='success';
-                    $msg='Website setup is successfully completed';
-                    $url='/login/';
+            if ($updateSite && $updateSiteSetting) {
 
-                    mysqli_query($connection, "COMMIT");
+                $status = 'success';
+                $msg = 'Website setup is successfully completed';
+                $url = '/login/';
 
-                } else {
-
-                    echo $updateSite.' && '.$updateSiteSetting.' && '.$updateSiteApp;
-                    exit();
-
-                    $status='error';
-                    $msg='System is unable to complete the task';
-
-                    mysqli_query($connection, "ROLLBACK");
-
-                }
-
+                mysqli_query($connection, "COMMIT");
             } else {
 
-                $status='error';
-                $msg='This Domain is already in used';
+                $status = 'error';
+                $msg = 'System is unable to complete the task';
 
+                mysqli_query($connection, "ROLLBACK");
             }
-
         } else {
 
-            $msg='error';
-            $status='Invalid setup id found';
-
+            $status = 'error';
+            $msg = 'This Domain is already in used';
         }
+    } else {
 
-        $result=array(
-            'status' => ((isset($status)) ? $status : 'error' ),
-            'msg' => ((isset($msg)) ? $msg : 'Something is wrong while setup your website' ),
-            'url' => ((isset($url)) ? $url : '#' )
-        );
-
-        echo json_encode($result, TRUE);
-
+        $msg = 'error';
+        $status = 'Invalid setup id found';
     }
+
+    $result = array(
+        'status' => ((isset($status)) ? $status : 'error'),
+        'msg' => ((isset($msg)) ? $msg : 'Something is wrong while setup your website'),
+        'url' => ((isset($url)) ? $url : '#')
+    );
+
+    echo json_encode($result, TRUE);
+}
