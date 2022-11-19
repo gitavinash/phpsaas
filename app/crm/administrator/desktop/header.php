@@ -86,13 +86,13 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                     <div class="side-menu">
                         <ul>
                             <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
-                            <li><a href="lead/"><i class="fas fa-bullhorn"></i> Add new lead</a>
+                            <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
-                            <li><a href="lead/"><i class="fas fa-bullhorn"></i> Add new lead</a>
+                            <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
                         </ul>
                     </div>
                 </li>
