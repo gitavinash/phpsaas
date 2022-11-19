@@ -64,7 +64,8 @@
                                                     Pigmentation Treatments</a>
                                             </li>
                                             <li>
-                                                <a href="">Facial Pigmentation</a>
+                                                <a href="/treatment/treatment-dermatology/facial-pigmentation/">Facial
+                                                    Pigmentation</a>
                                             </li>
                                         </ul>
                                         <h4 class="title">Hair Treatments</h4>
@@ -85,7 +86,8 @@
                                                 <a href="">Mesotherapy</a>
                                             </li>
                                             <li>
-                                                <a href="">Stem-Cell therapy</a>
+                                                <a href="/treatment/treatment-dermatology/stem-cell-therapy/">Stem-Cell
+                                                    therapy</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -147,7 +149,8 @@
                                                     Lightening Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="">Freckles / Blemmishes Treatment</a>
+                                                <a href="/treatment/face-cosmetics/freckles-blemmishes-treatment/">Freckles
+                                                    / Blemmishes Treatment</a>
                                             </li>
                                             <li>
                                                 <a href="/treatment/face-cosmetics/skin-glow-treatment/">Skin
@@ -157,10 +160,12 @@
                                                 <a href="/treatment/face-cosmetics/medi-facials/">Medifacials</a>
                                             </li>
                                             <li>
-                                                <a href="">Hydrafacial Md Elite</a>
+                                                <a href="/treatment/face-cosmetics/hydrafacial-md-elite/">Hydrafacial
+                                                    Md Elite</a>
                                             </li>
                                             <li>
-                                                <a href="">Carbon Laser Facial</a>
+                                                <a href="/treatment/face-cosmetics/carbon-laser-toning/">Carbon
+                                                    Laser Facial</a>
                                             </li>
                                             <li>
                                                 <a href="/treatment/face-cosmetics/lip-enhancement/">Lip
@@ -188,19 +193,24 @@
                                                     Facelift</a>
                                             </li>
                                             <li>
-                                                <a href="">Thread Lift</a>
+                                                <a href="/treatment/face-cosmetics/thread-lift-treatment/">Thread
+                                                    Lift</a>
                                             </li>
                                             <li>
-                                                <a href="">RF Treatments</a>
+                                                <a href="/treatment/face-cosmetics/rf-treatment/">RF
+                                                    Treatments</a>
                                             </li>
                                             <li>
-                                                <a href="">MNRF Treatment</a>
+                                                <a href="/treatment/face-cosmetics/mnrf-treatment/">MNRF
+                                                    Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="">HIFU Treatment</a>
+                                                <a href="/treatment/face-cosmetics/hifu-treatment/">HIFU
+                                                    Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="">Laser resurfacing </a>
+                                                <a href="/treatment/face-cosmetics/laser-resurfacing/">Laser
+                                                    resurfacing </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -220,35 +230,43 @@
                                                     Lightening Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="">Intimate Part Lightening Treatment</a>
+                                                <a href="/treatment/body-cosmetics/intimate-part-lightening/">Intimate
+                                                    Part Lightening Treatment</a>
                                             </li>
                                             <li>
                                                 <a href="/treatment/body-cosmetics/de-tan-treatment/">De-Taning
                                                     Treatment</a>
                                             </li>
                                             <li>
-                                                <a href="">Neck Pigmentation</a>
+                                                <a href="/treatment/body-cosmetics/neck-pigmentation/">Neck
+                                                    Pigmentation</a>
                                             </li>
                                         </ul>
                                         <h4 class="title">Laser Treatments</h4>
                                         <ul>
                                             <li>
-                                                <a href="">Laser Hair Reduction</a>
+                                                <a href="/treatment/body-cosmetics/laser-hair-reduction/">Laser
+                                                    Hair Reduction</a>
                                             </li>
                                             <li>
-                                                <a href="">Laser Tattoo Removal</a>
+                                                <a href="/treatment/body-cosmetics/laser-tattoo-removal/">Laser
+                                                    Tattoo Removal</a>
                                             </li>
                                             <li>
-                                                <a href="">Laser For Pigmentation</a>
+                                                <a href="/treatment/face-cosmetics/laser-for-pigmentation/">Laser
+                                                    For Pigmentation</a>
                                             </li>
                                             <li>
-                                                <a href="">Laser For Acne Scars</a>
+                                                <a href="/treatment/face-cosmetics/laser-for-acne-scars/">Laser
+                                                    For Acne Scars</a>
                                             </li>
                                             <li>
-                                                <a href="">Laser For Chickenpox Scars</a>
+                                                <a href="/treatment/face-cosmetics/laser-for-chicken-pox-scar/">Laser
+                                                    For Chickenpox Scars</a>
                                             </li>
                                             <li>
-                                                <a href="">Laser For Birth Marks </a>
+                                                <a href="/treatment/body-cosmetics/laser-for-birth-marks/">Laser
+                                                    For Birth Marks</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -291,10 +309,12 @@
                                                     Pores</a>
                                             </li>
                                             <li>
-                                                <a href="">Undereye Pigmentation</a>
+                                                <a href="/service/facial-cosmetic-treatment/under-eye/">Undereye
+                                                    Pigmentation</a>
                                             </li>
                                             <li>
-                                                <a href="">Lip Pigmentation</a>
+                                                <a href="/service/facial-cosmetic-treatment/lip-lightening/">Lip
+                                                    Pigmentation</a>
                                             </li>
                                             <li>
                                                 <a
@@ -302,19 +322,22 @@
                                                     Peels</a>
                                             </li>
                                             <li>
-                                                <a href="">Dull Face / Photopigmentation</a>
+                                                <a
+                                                    href="/service/facial-cosmetic-treatment/dull-face-photo-pigmentation/">Dull
+                                                    Face / Photopigmentation</a>
                                             </li>
                                             <li>
-                                                <a href="">Facial Tanning</a>
+                                                <a href="/service/facial-cosmetic-treatment/facial-tanning/">Facial
+                                                    Tanning</a>
                                             </li>
                                             <li>
-                                                <a href="">Xanthelesma</a>
+                                                <a href="/service/facial-cosmetic-treatment/xanthelsma/">Xanthelesma</a>
                                             </li>
                                             <li>
-                                                <a href="">Milia</a>
+                                                <a href="/service/facial-cosmetic-treatment/milia/">Milia</a>
                                             </li>
                                             <li>
-                                                <a href="">Aging Face</a>
+                                                <a href="/service/facial-cosmetic-treatment/aging-face/">Aging Face</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -326,17 +349,20 @@
                                                     Marks</a>
                                             </li>
                                             <li>
-                                                <a href="">Underarm Pigmentation</a>
+                                                <a href="/service/body-cosmetic-treatment/underarm-pigmentation/">Underarm
+                                                    Pigmentation</a>
                                             </li>
                                             <li>
                                                 <a
                                                     href="/service/body-cosmetic-treatment/cellulite-treatment/">Cellulite</a>
                                             </li>
                                             <li>
-                                                <a href="">Hesitational Marks</a>
+                                                <a href="/service/body-cosmetic-treatment/hesitational-marks/">Hesitational
+                                                    Marks</a>
                                             </li>
                                             <li>
-                                                <a href="">Body Tanning</a>
+                                                <a href="/service/body-cosmetic-treatment/body-tanning/">Body
+                                                    Tanning</a>
                                             </li>
                                             <li>
                                                 <a href="/service/body-cosmetic-treatment/birth-mark/">Birth
@@ -348,19 +374,23 @@
                                         <h4 class="title">Hair loss</h4>
                                         <ul>
                                             <li>
-                                                <a href="">Male Patterend Baldness</a>
+                                                <a href="/service/body-cosmetic-treatment/male-patterned-baldness/">Male
+                                                    Patterend Baldness</a>
                                             </li>
                                             <li>
-                                                <a href="">Female Hairloss</a>
+                                                <a href="/service/body-cosmetic-treatment/female-hair-loss/">Female
+                                                    Hairloss</a>
                                             </li>
                                             <li>
-                                                <a href="">Alopecia Areata</a>
+                                                <a href="/service/body-cosmetic-treatment/alopecia-areata/">Alopecia
+                                                    Areata</a>
                                             </li>
                                             <li>
-                                                <a href="">Scarring Alopecia / LPP</a>
+                                                <a href="/service/body-cosmetic-treatment/scarring-alopecia-lpp/">Scarring
+                                                    Alopecia / LPP</a>
                                             </li>
                                             <li>
-                                                <a href="">Dandruff</a>
+                                                <a href="/service/body-cosmetic-treatment/dandruff/">Dandruff</a>
                                             </li>
                                         </ul>
                                     </div>
