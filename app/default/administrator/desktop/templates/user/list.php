@@ -34,7 +34,7 @@
                     extract($data) ?>
         <tr>
             <td>
-                <p><a href="#"><?php echo $user_username; ?></a>
+                <p><a href=""><?php echo $user_username; ?></a>
                 </p>
                 <!-- <p><a
                         href="user.php?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><?php echo $user_username; ?></a>
