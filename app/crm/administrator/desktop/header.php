@@ -55,15 +55,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="index.php"><i
                             class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <?php
-
-                if (SITE_ID == 36) { ?>
-
-                <li <?php echo ((ADMIN_BASE_URL == '/lead/') ? 'class="active"' : '') ?>><a href="lead/"><i
-                            class="fas fa-bullhorn"></i> Add new lead</a>
-                    <?php
-                }
-                    ?>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/order/') ? 'class="active"' : '') ?>>
                     <a href="order.php?type=list&status=all"><i class="fas fa-funnel-dollar"></i> Manage order</a>
@@ -90,6 +81,25 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/lead/') ? 'class="active"' : '') ?>>
+                    <a href="lead.php?type=list&status=all"><i class="fas fa-bullhorn"></i> Manage Leads</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
+                            <li><a href="lead/"><i class="fas fa-bullhorn"></i> Add new lead</a>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
+                            <li><a href="lead/"><i class="fas fa-bullhorn"></i> Add new lead</a>
+                        </ul>
+                    </div>
+                </li>
+                <?php
+
+                if (SITE_ID == 17) { ?>
+
                 <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
                     <a href="subscription.php?type=list&status=all"><i class="fas fa-crown"></i> Manage
                         Subscription</a>
@@ -118,6 +128,11 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
+
+                <?php
+                }
+
+                ?>
                 <li <?php echo ((ADMIN_BASE_URL == '/customer/') ? 'class="active"' : '') ?>>
                     <a href="customer.php?type=list&status=all"><i class="fas fa-users"></i> Manage Customer</a>
                     <div class="side-menu">
@@ -132,6 +147,23 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="customer.php?type=list&status=all"><i class="fas fa-list"></i> All customer</a>
                             </li>
                             <!-- <li><a href="customer.php?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
+                    <a href="user.php?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="user.php?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user.php?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="user.php?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user.php?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
                         </ul>
                     </div>
                 </li>
