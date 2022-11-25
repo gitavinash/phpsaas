@@ -27,7 +27,7 @@ require_once 'header.php'
             <div class="col-lg-10">
                 <div class="row">
                     <div class="section_heading">
-                        <h3 class="text-start mb-md-4">Patient Results</h3>
+                        <h3 class="text-start mb-md-4">Patient Gallery</h3>
                     </div>
 
                     <?php

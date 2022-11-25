@@ -430,6 +430,9 @@ button.accordion-button {
 	width: 100%;
 }
 
+.galleryBoxBtn {
+	float: left;
+}
 
 .mediaGallery {
 	float: left;

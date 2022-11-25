@@ -40,6 +40,7 @@ require_once 'header.php'
                             <a href='{$page_section}'>
                                 <img src='{$page_image}' alt='Example Image' />
                             </a>
+                            <a href='{$page_section}' target='_blank' class='galleryBoxBtn btn btn_quote'>Read Article</a>
                         </div>
                     </div>";
                     }
