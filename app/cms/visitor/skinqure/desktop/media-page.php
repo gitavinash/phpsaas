@@ -7,7 +7,7 @@ require_once 'header.php'
     <div class="container-fluid section_spacing_top section_spacing_bottom">
         <div class="row justify-content-center">
             <div class="col-md-12 text-center p-0">
-                <div class="inner_page_banner about_banner_bg">
+                <div class="inner_page_banner">
                     <div class="inner_content">
                         <p><?php echo ucwords($page_title) ?></p>
                         <div class="text-start"><a href="/">Home</a> <span><i
