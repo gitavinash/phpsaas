@@ -462,6 +462,7 @@ button.accordion-button {
     align-items: center;
     justify-content: center;
     height: 400px;
+	overflow: hidden;
 }
 
 .beforeAfterSlider img {
