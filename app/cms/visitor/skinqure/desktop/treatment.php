@@ -38,15 +38,16 @@ require_once 'header.php';
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="quote-box">
-                                            <p><?php echo $serviceSection['quote']['quote'] ?></p>
+                                            <p><?php echo stripslashes($serviceSection['quote']['quote']); ?></p>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="section_heading">
-                                            <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
+                                            <h3 class="text-start mb-md-4">
+                                                <?php echo stripslashes(ucwords($service_title)) ?></h3>
                                         </div>
                                         <div class="description abt_p">
-                                            <?php echo $service_description ?>
+                                            <?php echo stripslashes($service_description) ?>
                                         </div>
                                     </div>
                                 </div>
@@ -96,19 +97,22 @@ for ($i = 0; $i < sizeof($serviceSection['treatment_option']); $i++) {
                 <div class="row">
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 formfield treatment-box text-white">
-                            <h4><?php echo $serviceSection['treatment_option'][$i]['header'] ?></h4>
+                            <h4><?php echo stripslashes($serviceSection['treatment_option'][$i]['header']) ?></h4>
                             <p><img src="<?php echo USER_IMAGES ?>icon/forward.png"
                                     class="treatment-icon"><strong>Indications
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['indications'] ?></p>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['indications']) ?>
+                            </p>
                             <p><img src="<?php echo USER_IMAGES ?>icon/process.png"
                                     class="treatment-icon"><strong>Process
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['process'] ?></p>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['process']) ?>
+                            </p>
                             <p><img src="<?php echo USER_IMAGES ?>icon/clock.png"
                                     class="treatment-icon"><strong>Duration
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['duration'] ?></p>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['duration']) ?>
+                            </p>
                             <p><img src="<?php echo USER_IMAGES ?>icon/calender.png" class="treatment-icon"><strong>No.
                                     of sittings
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['sitting'] ?>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['sitting']) ?>
                             </p>
                             <div class="row">
                                 <div class="col-6">
@@ -159,19 +163,22 @@ for ($i = 0; $i < sizeof($serviceSection['treatment_option']); $i++) {
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
                         <div class="w-100 formfield treatment-box text-white">
-                            <h4><?php echo $serviceSection['treatment_option'][$i]['header'] ?></h4>
+                            <h4><?php echo stripslashes($serviceSection['treatment_option'][$i]['header']) ?></h4>
                             <p><img src="<?php echo USER_IMAGES ?>icon/forward.png"
                                     class="treatment-icon"><strong>Indications
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['indications'] ?></p>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['indications']) ?>
+                            </p>
                             <p><img src="<?php echo USER_IMAGES ?>icon/process.png"
                                     class="treatment-icon"><strong>Process
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['process'] ?></p>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['process']) ?>
+                            </p>
                             <p><img src="<?php echo USER_IMAGES ?>icon/clock.png"
                                     class="treatment-icon"><strong>Duration
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['duration'] ?></p>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['duration']) ?>
+                            </p>
                             <p><img src="<?php echo USER_IMAGES ?>icon/calender.png" class="treatment-icon"><strong>No.
                                     of sittings
-                                </strong><?php echo $serviceSection['treatment_option'][$i]['sitting'] ?>
+                                </strong><?php echo stripslashes($serviceSection['treatment_option'][$i]['sitting']) ?>
                             </p>
                             <div class="row">
                                 <div class="col-6">
@@ -214,13 +221,15 @@ if (isset($serviceSection['before_after'])) { ?>
 
                     <div class="col-md-4 position-relative">
                         <div class="section_heading">
-                            <h3 class="text-start"><?php echo $serviceSection['before_after']['header'] ?></h3>
-                            <h3 class="text-start"><?php echo $serviceSection['before_after']['subHeader'] ?></h3>
+                            <h3 class="text-start"><?php echo stripslashes($serviceSection['before_after']['header']) ?>
+                            </h3>
+                            <h3 class="text-start">
+                                <?php echo stripslashes($serviceSection['before_after']['subHeader']) ?></h3>
                         </div>
 
                         <p class="separate_quote">
                             <img src="<?php echo USER_IMAGES ?>left-quote.png">
-                            <?php echo $serviceSection['before_after']['description'] ?>
+                            <?php echo stripslashes($serviceSection['before_after']['description']) ?>
                         </p>
                         <a href="<?php echo $serviceSection['before_after']['videoLink'] ?>" target="_blank"
                             class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
@@ -295,9 +304,10 @@ if (isset($serviceSection['why_choose_us'])) { ?>
                     <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
                         <div class="w-100 secondaboutpage ">
                             <div class="section_heading">
-                                <p class="text-start"><?php echo $serviceSection['why_choose_us']['header'] ?></p>
+                                <p class="text-start">
+                                    <?php echo stripslashes($serviceSection['why_choose_us']['header']) ?></p>
                                 <h3 class="text-start mb-md-5">
-                                    <?php echo $serviceSection['why_choose_us']['description'] ?>
+                                    <?php echo stripslashes($serviceSection['why_choose_us']['description']) ?>
                                 </h3>
                             </div>
                             <?php
@@ -306,11 +316,12 @@ if (isset($serviceSection['why_choose_us'])) { ?>
 
                             <div class="d-flex w-100 align-items-center mb-5">
                                 <div class="icon me-2">
-                                    <img src="<?php echo $serviceSection['why_choose_us']['steps'][$i]['icon'] ?>"
+                                    <img src="<?php echo stripslashes($serviceSection['why_choose_us']['steps'][$i]['icon']) ?>"
                                         alt="" class="img-fluid">
                                 </div>
                                 <div class="text text-start">
-                                    <h5><?php echo $serviceSection['why_choose_us']['steps'][$i]['description'] ?></h5>
+                                    <h5><?php echo stripslashes($serviceSection['why_choose_us']['steps'][$i]['description']) ?>
+                                    </h5>
                                 </div>
                             </div>
 

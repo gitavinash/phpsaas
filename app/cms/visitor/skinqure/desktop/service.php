@@ -45,15 +45,17 @@ require_once 'header.php';
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="quote-box">
-                                            <p><?php echo $serviceSection['quote']['quote'] ?></p>
+                                            <p><?php echo stripslashes($serviceSection['quote']['quote']) ?>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="section_heading">
-                                            <h3 class="text-start mb-md-4"><?php echo ucwords($service_title) ?></h3>
+                                            <h3 class="text-start mb-md-4">
+                                                <?php echo ucwords(stripslashes($service_title)) ?></h3>
                                         </div>
                                         <div class="description abt_p">
-                                            <?php echo $service_description ?>
+                                            <?php echo stripslashes($service_description) ?>
                                         </div>
                                     </div>
                                 </div>
@@ -97,13 +99,13 @@ if (isset($serviceSection['faq'])) { ?>
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse<?php echo $i ?>" aria-expanded="true"
                                     aria-controls="collapse<?php echo $i ?>">
-                                    <?php echo $serviceSection['faq'][$i]['question'] ?>
+                                    <?php echo stripslashes($serviceSection['faq'][$i]['question']) ?>
                                 </button>
                             </h2>
                             <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse show"
                                 aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    <?php echo str_replace('\r\n', '<br />', $serviceSection['faq'][$i]['answer']) ?>
+                                    <?php echo stripslashes(str_replace('\r\n', '<br />', $serviceSection['faq'][$i]['answer'])) ?>
                                 </div>
                             </div>
                         </div>
@@ -114,13 +116,13 @@ if (isset($serviceSection['faq'])) { ?>
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse<?php echo $i ?>" aria-expanded="false"
                                     aria-controls="collapse<?php echo $i ?>">
-                                    <?php echo $serviceSection['faq'][$i]['question'] ?>
+                                    <?php echo stripslashes($serviceSection['faq'][$i]['question']) ?>
                                 </button>
                             </h2>
                             <div id="collapse<?php echo $i ?>" class="accordion-collapse collapse"
                                 aria-labelledby="heading<?php echo $i ?>" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    <?php echo str_replace('\r\n', '<br />', $serviceSection['faq'][$i]['answer']) ?>
+                                    <?php echo stripslashes(str_replace('\r\n', '<br />', $serviceSection['faq'][$i]['answer'])) ?>
                                 </div>
                             </div>
                         </div>
@@ -154,8 +156,10 @@ if (isset($serviceSection['treatment_steps'])) { ?>
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <div class="section_heading mb-md-4">
-                            <p class="text-center"><?php echo $serviceSection['treatment_steps']['header'] ?></p>
-                            <h3 class="text-center"><?php echo $serviceSection['treatment_steps']['description'] ?></h3>
+                            <p class="text-center">
+                                <?php echo stripslashes($serviceSection['treatment_steps']['header']) ?></p>
+                            <h3 class="text-center">
+                                <?php echo stripslashes($serviceSection['treatment_steps']['description']) ?></h3>
                         </div>
                     </div>
                     <?php
@@ -169,11 +173,12 @@ if (isset($serviceSection['treatment_steps'])) { ?>
                                     class="img-fluid w-100">
                             </figure>
                             <div class="service-title">
-                                <h3><?php echo $serviceSection['treatment_steps']['steps'][$i]['header'] ?></h3>
+                                <h3><?php echo stripslashes($serviceSection['treatment_steps']['steps'][$i]['header']) ?>
+                                </h3>
                             </div>
                             <div class="written_text p-3">
                                 <p class="m-0">
-                                    <?php echo $serviceSection['treatment_steps']['steps'][$i]['description'] ?>
+                                    <?php echo stripslashes($serviceSection['treatment_steps']['steps'][$i]['description']) ?>
                                 </p>
                             </div>
                         </div>
@@ -214,9 +219,10 @@ if (isset($serviceSection['why_choose_us'])) { ?>
                     <div class="col-lg-6 col-md-6 p-lg-0 p-md-0">
                         <div class="w-100 secondaboutpage ">
                             <div class="section_heading">
-                                <p class="text-start"><?php echo $serviceSection['why_choose_us']['header'] ?></p>
+                                <p class="text-start">
+                                    <?php echo stripslashes($serviceSection['why_choose_us']['header']) ?></p>
                                 <h3 class="text-start mb-md-5">
-                                    <?php echo $serviceSection['why_choose_us']['description'] ?>
+                                    <?php echo stripslashes($serviceSection['why_choose_us']['description']) ?>
                                 </h3>
                             </div>
                             <?php
@@ -229,7 +235,8 @@ if (isset($serviceSection['why_choose_us'])) { ?>
                                         alt="" class="img-fluid">
                                 </div>
                                 <div class="text text-start">
-                                    <h5><?php echo $serviceSection['why_choose_us']['steps'][$i]['description'] ?></h5>
+                                    <h5><?php echo stripslashes($serviceSection['why_choose_us']['steps'][$i]['description']) ?>
+                                    </h5>
                                 </div>
                             </div>
 
@@ -264,13 +271,15 @@ if (isset($serviceSection['before_after'])) { ?>
 
                     <div class="col-md-4 position-relative">
                         <div class="section_heading">
-                            <h3 class="text-start"><?php echo $serviceSection['before_after']['header'] ?></h3>
-                            <h3 class="text-start"><?php echo $serviceSection['before_after']['subHeader'] ?></h3>
+                            <h3 class="text-start"><?php echo stripslashes($serviceSection['before_after']['header']) ?>
+                            </h3>
+                            <h3 class="text-start">
+                                <?php echo stripslashes($serviceSection['before_after']['subHeader']) ?></h3>
                         </div>
 
                         <p class="separate_quote">
                             <img src="<?php echo USER_IMAGES ?>left-quote.png">
-                            <?php echo $serviceSection['before_after']['description'] ?>
+                            <?php echo stripslashes($serviceSection['before_after']['description']) ?>
                         </p>
                         <a href="<?php echo $serviceSection['before_after']['videoLink'] ?>" target="_blank"
                             class="btn btn_quote"><i class="fa fa-play-circle"></i> Watch Full Video</a>
@@ -340,7 +349,7 @@ if (isset($serviceSection['watch_video'])) { ?>
                     <div class="section_heading">
                         <p class="text-center text-white"><?php echo $serviceSection['watch_video']['header'] ?></p>
                         <h3 class="text-center mb-md-4 text-white">
-                            <?php echo $serviceSection['watch_video']['description'] ?></h3>
+                            <?php echo stripslashes($serviceSection['watch_video']['description']) ?></h3>
                     </div>
                     <a class="btn youtube youtubbtn" target="_blank"
                         data-youtube="<?php echo $serviceSection['watch_video']['videoLink'] ?>"
