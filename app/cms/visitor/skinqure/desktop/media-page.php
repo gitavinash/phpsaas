@@ -27,7 +27,7 @@ require_once 'header.php'
 
             <?php
 
-            if ($artciles = mysqli_query($connection, "SELECT page_title, page_image, page_section FROM " . TABLE_PREFIX . "page WHERE page_type='article' AND page_site_id=" . SITE_ID)) {
+            if ($artciles = mysqli_query($connection, "SELECT page_title, page_image, page_section FROM " . TABLE_PREFIX . "page INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = page_id WHERE link_site_id =" . SITE_ID . " AND link_type='page' AND page_type='article' AND page_site_id=" . SITE_ID . " ORDER BY link_modified DESC")) {
 
                 if (mysqli_num_rows($artciles) != 0) {
 
