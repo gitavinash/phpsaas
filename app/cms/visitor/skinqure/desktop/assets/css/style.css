@@ -451,6 +451,10 @@ button.accordion-button {
 	margin: 0 27px !important;
 }
 
+.slick-slide img {
+	width: 100% !important;
+}
+
 /* the parent */
 .slick-list {
 	margin: 15px -35px 0px -35px !important;
