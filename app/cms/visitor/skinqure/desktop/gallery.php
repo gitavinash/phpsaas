@@ -45,7 +45,6 @@ require_once 'header.php'
                                 data-rbox-caption='{$name}' data-rbox-series='gallery'>
                                 <img src='{$path}'
                                     alt='{$name}' />
-                                <h2 class='gallerTitle' >{$name}</h2>
                             </a>
                         </div>
                     </div>";
