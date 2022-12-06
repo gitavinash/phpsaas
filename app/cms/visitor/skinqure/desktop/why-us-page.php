@@ -8,7 +8,7 @@ require_once 'header.php';
         <div class="row justify-content-center">
             <div class="col-md-12 text-center p-0">
                 <div class="inner_page_banner"
-                    style="background-image: url(<?php echo $service_image ?>); background-size: cover; background-position: 100% 100%">
+                    style="background-image: url(<?php echo $page_image ?>); background-size: cover; background-position: 100% 100%">
                     <div class="inner_content">
                         <p><?php echo ucwords($page_title) ?></p>
                         <div class="text-start"><a href="/">Home</a> <span><i
