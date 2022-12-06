@@ -9,7 +9,7 @@
     <meta name="" content="">
     <meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
     <title>
-        <?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'}.' | '.SITE_NAME ) : SITE_DESC.' | '.SITE_NAME ) ?>
+        <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME) ?>
     </title>
 
     <!-- css -->
@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>zoom-gallery/zoom.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script type='text/javascript' async=''
+        src='https://marketing.contlo.com/js/contlo_messaging_v3.js?v=3&shop_id=0ae781f421ea9e9f9a0c48de4572354e'>
+    </script>
 
     <?php require_once DEFAULT_META; ?>
 
@@ -65,14 +69,14 @@
     </script>
 
     <?php
-    
-        if(BASE_URL=='/thank-you/') {
 
-            if(isset($id)) {
+    if (BASE_URL == '/thank-you/') {
 
-                if($id!='') {
+        if (isset($id)) {
 
-                    ?>
+            if ($id != '') {
+
+    ?>
 
     <script>
     gtag('event', 'conversion', {
@@ -84,11 +88,9 @@
     </script>
     <?php
 
-                }
-                
             }
-
         }
+    }
 
     ?>
 
@@ -134,7 +136,7 @@
                         <div class="search-box">
                             <form action="/search/" class="form-inline">
                                 <input class="form-control" name="q" type="search"
-                                    value="<?php echo ((isset($_GET['q'])) ? $_GET['q'] : '' ); ?>"
+                                    value="<?php echo ((isset($_GET['q'])) ? $_GET['q'] : ''); ?>"
                                     placeholder="Search for gifts, flowers...">
                             </form>
                         </div>
@@ -154,14 +156,13 @@
                                                 class="crt-crcl">
 
                                                 <?php
-											
-											if($cartNumber=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1 AND cart_site_id=".SITE_ID)) {
 
-												echo mysqli_num_rows($cartNumber);
+                                                if ($cartNumber = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON cart_relation_id=product_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=0 AND product_status=1 AND cart_site_id=" . SITE_ID)) {
 
-											}
+                                                    echo mysqli_num_rows($cartNumber);
+                                                }
 
-										?>
+                                                ?>
 
                                             </span><span class="span-item">Cart</span></li>
                                         <!-- user acount -->
@@ -225,14 +226,13 @@
                                             src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">
 
                                         <?php
-											
-											if($cartNumber=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=0 AND product_status=1")) {
 
-												echo mysqli_num_rows($cartNumber);
+                                        if ($cartNumber = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON cart_relation_id=product_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=0 AND product_status=1")) {
 
-											}
+                                            echo mysqli_num_rows($cartNumber);
+                                        }
 
-										?>
+                                        ?>
 
                                     </span>
                                 </div>

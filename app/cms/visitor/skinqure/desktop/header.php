@@ -14,10 +14,6 @@
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
 
-    <script type='text/javascript' async=''
-        src='https://marketing.contlo.com/js/contlo_messaging_v3.js?v=3&shop_id=0ae781f421ea9e9f9a0c48de4572354e'>
-    </script>
-
     <?php require_once DEFAULT_META; ?>
 
 </head>
