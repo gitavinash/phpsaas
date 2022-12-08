@@ -451,10 +451,6 @@ button.accordion-button {
 	margin: 0 27px !important;
 }
 
-.slick-slide img {
-	width: 100% !important;
-}
-
 /* the parent */
 .slick-list {
 	margin: 15px -35px 0px -35px !important;
@@ -468,12 +464,17 @@ button.accordion-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 400px;
+    /* height: 400px; */
 	overflow: hidden;
 }
 
+.slick-arrow {
+	display: none !important;
+}
+
 .beforeAfterSlider img {
-	height: 400px;
+	/* height: 400px; */
+	width: 100% !important;
 }
 
 .beforeAfterSliderNav {
