@@ -413,7 +413,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 
                     ?>
 
-                <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
+                <!-- <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
                     <a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
                     <div class="side-menu">
                         <ul>
@@ -427,7 +427,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="import.php?type=page"><i class="fas fa-file"></i> Page</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
                 <?php
                 }
@@ -463,6 +463,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                             <li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a href="setting.php?type=redirection&status=all"><i
+                                        class="fas fa-external-link-alt"></i> URL redirection</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -472,6 +474,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                             <li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a href="setting.php?type=redirection&status=all"><i
+                                        class="fas fa-external-link-alt"></i> URL redirection</a></li>
                         </ul>
                     </div>
                 </li>
