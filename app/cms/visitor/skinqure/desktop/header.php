@@ -423,7 +423,7 @@
                                 <div class="sub-menu single-column-menu">
                                     <ul class="text-start">
                                         <li><a href="/packages/">Packages</a></li>
-                                        <li><a href="/wow-inclusive/">WOW inclusive</a></li>
+                                        <!-- <li><a href="/wow-inclusive/">WOW inclusive</a></li> -->
                                         <li><a href="/latest-offers/">Latest Offers</a></li>
                                         <!-- <li><a href="/bridal-packages/">Bridal Packages</a></li> -->
                                     </ul>

@@ -25,15 +25,25 @@
 
                         <ul>
                             <li><a href="/dr-jangid/">Dr. Jangid</a></li>
-                            <li><a href="/our-dermatologists/">Our Dermatologists</a></li>
+                            <!-- <li><a href="/our-dermatologists/">Our Dermatologists</a></li> -->
                             <li><a href="/aestheticians/">Aestheticians</a></li>
-                            <li><a href="/managers/">Managers</a></li>
+                            <!-- <li><a href="/managers/">Managers</a></li> -->
                         </ul>
                     </div>
                     <div class="col-md-3">
                         <h3 class="footer_heading">Services</h3>
                         <ul>
                             <li><a href="/service/default/laser-hair-reduction/">Laser Hair reduction</a></li>
+                            <li><a href="/treatment/face-cosmetics/hydrafacial-md-elite/">Hydrafacial
+                                    MD Elite</a></li>
+                            <li><a href="/treatment/face-cosmetics/skin-glow-treatment/">Skin
+                                    Glow Treatment</a></li>
+                            <li><a href="/treatment/face-cosmetics/chemical-peels-organic-peels/">Chemical
+                                    Peels / Organic Peels</a></li>
+                            <li><a href="/treatment/treatment-dermatology/nail-surgery/">Nail
+                                    Surgery</a></li>
+                            <li><a href="/treatment/treatment-dermatology/mole-removal/">Mole
+                                    Removal</a></li>
                         </ul>
                     </div>
                 </div>

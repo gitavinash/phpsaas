@@ -6,13 +6,38 @@ $startFrom = (isset($product) ? $product : 0);
 $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$productStatus}'");
 
 ?>
-<h2>Add new redirects</h2>
-<div class="options-bar">
-    <div class="left-box">
-        <form id="redirectionForm">
-            <input type="text" name="fromURL" class="form-control inside-shadow">
-        </form>
-    </div>
+<h2>Add new url redirection</h2>
+
+<div class="form-box">
+
+    <form method="POST" id="redirectionForm">
+        <div class="form-group">
+            <label>From</label>
+            <input type="text" name="fromURL" class="form-control inside-shadow" required>
+        </div>
+        <div class="form-group">
+            <label>To</label>
+            <input type="text" name="toURL" class="form-control inside-shadow" required>
+        </div>
+        <div class="form-group">
+            <label>HTTP Status ( Learn more about redirect status : <a
+                    href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections" target="_blank">Click
+                    here</a>
+                )</label>
+            <select name="httpCode" class="form-control inside-shadow">
+                <option value="301">300 ( Multiple Choice ) </option>
+                <option value="301" selected>301 ( Moved Permanently ) </option>
+                <option value="301">302 ( Found ) </option>
+                <option value="301">303 ( See Other ) </option>
+                <option value="301">304 ( Not Modified ) </option>
+                <option value="301">307 ( Temporary Redirect ) </option>
+                <option value="302">308 ( Permanent Redirect ) </option>
+            </select>
+        </div>
+        <input type="hidden" name="postType" id="type" value="redirection">
+        <input type="hidden" name="action" value="publish">
+        <input type="submit" class="btn btn-green" value="Add Redirection">
+    </form>
 </div>
 
 <h2>All redirects</h2>
@@ -21,13 +46,14 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
         <form method="GET">
             <input type="hidden" name="type" value="<?php echo $_GET['type']; ?>">
             <select class="form-control" name="status" id="changeStatus">
-                <option value="all" <?php echo (($_GET['status'] == 'all') ? 'selected' : '') ?>>All products</option>
-                <option value="301" <?php echo (($_GET['status'] == '301') ? 'selected' : '') ?>>301 Moved Permanently
-                </option>
-                <option value="302" <?php echo (($_GET['status'] == '302') ? 'selected' : '') ?>>302 Moved Temporarily
-                </option>
-                <option value="307" <?php echo (($_GET['status'] == '302') ? 'selected' : '') ?>>307 Moved Temporarily
-                </option>
+                <option value="#">Select HTTP Status</option>
+                <option value="301">300 ( Multiple Choice ) </option>
+                <option value="301">301 ( Moved Permanently ) </option>
+                <option value="301">302 ( Found ) </option>
+                <option value="301">303 ( See Other ) </option>
+                <option value="301">304 ( Not Modified ) </option>
+                <option value="301">307 ( Temporary Redirect ) </option>
+                <option value="302">308 ( Permanent Redirect ) </option>
             </select>
             <input type="submit" class="btn" value="Filter">
         </form>
@@ -40,35 +66,30 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
     <thead>
         <tr>
             <!-- <th style="width: 50px"></th> -->
-            <th>Title</th>
-            <th style="width: 150px">Category</th>
-            <th style="width: 150px">Author</th>
-            <th style="width: 100px">Date</th>
+            <th style="width: 400px;">From</th>
+            <th style="width: 400px;">To</th>
+            <th>HTTP Status</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT product_id, product_title, category_title, link_url, link_status, link_creation, profile_display_name FROM " . TABLE_PREFIX . "product, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category WHERE product_owner_id='" . USER_ID . "' AND link_type='product' AND link_relation_id=product_id AND link_site_id='" . SITE_ID . "' AND category_id=product_category AND link_status!=301 $productStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+        if ($dataList = mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."redirection WHERE redirection_site_id=".SITE_ID)) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
         <tr>
+            <td><?php echo $redirection_from ?></td>
+            <td><?php echo $redirection_to ?></td>
+            <td><?php echo $redirection_http_status ?></td>
             <td>
-                <p><a
-                        href="product.php?type=edit&editor=true&id=<?php echo $product_id; ?>"><?php echo $product_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
-                </p>
-                <div class="hover">
-                    <a href="product.php?type=edit&editor=true&id=<?php echo $product_id; ?>"><i
-                            class="fas fa-pencil-alt"></i> Edit</a>
-                    <a href="product.php?type=product&id=<?php echo $product_id; ?>"><i class="fas fa-trash"></i>
-                        Delete</a>
-                    <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
-                </div>
+                <a href="<?php echo $redirection_from ?>" class="btn btn-sm btn-blue" target="_blank"><i
+                        class="fas fa-eye"></i>
+                    View</a>
+                <a href="#" class="btn btn-sm btn-blue"><i class="fas fa-trash"></i>
+                    Delete</a>
             </td>
-            <td><?php echo $category_title; ?></td>
-            <td><?php echo $profile_display_name; ?></td>
-            <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
         </tr>
         <?php
                 }

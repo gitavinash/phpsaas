@@ -375,7 +375,7 @@ require_once 'header.php';
                 <div class="row">
                     <div class="col-md-6">
                         <div class="section_heading">
-                            <p class="text-start">Testimonials</p>
+                            <p class="text-start">Testimonial</p>
 
                         </div>
                         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
