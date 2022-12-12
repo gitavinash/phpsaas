@@ -456,36 +456,46 @@ require_once 'header.php';
                                 <div class="row ">
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="First Name"
+                                            <input type="text" name="first_name" id="name" placeholder="First Name"
                                                 class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Last Name"
+                                            <input type="text" name="last_name" id="name" placeholder="Last Name"
                                                 class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Contact Number"
+                                            <input type="text" name="mobile" id="name" placeholder="Contact Number"
                                                 class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="w-100 form-group">
-                                            <input type="text" name="" id="name" placeholder="Email Address"
+                                            <input type="text" name="email" id="name" placeholder="Email Address"
                                                 class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-12 mb-4">
                                         <div class="w-100 form-group">
-                                            <textarea name="" id="" placeholder="Your Message"
+                                            <textarea name="message" id="" placeholder="Your Message"
                                                 class="form-control"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="w-100 d-flex justify-content-center">
+                                            <input type="hidden" name="type" value="enquiry">
+                                            <input type="hidden" name="action" value="new">
+                                            <input type="hidden" name="subject"
+                                                value="Reveal The NU in You: Enquiry Form">
+                                            <input type="hidden" name="sender"
+                                                value="<?php echo base64_encode("skinqure.saket@gmail.com") ?>">
+                                            <input type="hidden" name="cc"
+                                                value="<?php echo base64_encode("kushagra.catalyst@gmail.com,info@skinqure.in,care@skinqure.in") ?>">
+                                            <input type="hidden" name="redirect_url"
+                                                value="/thank-you/?msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                                             <input type="submit" value="Book Consultation" class="btn text-white">
                                         </div>
                                     </div>

@@ -15,21 +15,25 @@
 
         unset($_REQUEST['name']);
 
-    }
+    } else {
 
-    if(isset($first_name)) {
+        if(isset($first_name)) {
 
-        // Remove first name varible from array
+            // Remove first name varible from array
 
-        unset($_REQUEST['first_name']);
+            unset($_REQUEST['first_name']);
 
-    }
+        }
 
-    if(isset($last_name)) {
+        if(isset($last_name)) {
 
-        // Remove last name varible from array
+            // Remove last name varible from array
 
-        unset($_REQUEST['last_name']);
+            unset($_REQUEST['last_name']);
+
+        }
+
+        $name = $first_name.' '.$last_name;
 
     }
 
@@ -107,6 +111,30 @@
 
         echo $msg='Sender email is not found';
         exit();
+
+    }
+
+    if(isset($cc)) {
+
+        // Remove enquiry campaign varible from array
+
+        unset($_REQUEST['cc']);
+        
+        // Admin email id or where email will be send
+    
+        $ccAddress = base64_decode($cc);        
+
+    }
+
+    if(isset($bcc)) {
+        
+        // Remove enquiry campaign varible from array
+
+        unset($_REQUEST['bcc']);
+        
+        // Admin email id or where email will be send
+    
+        $bccAddress = base64_decode($bcc);        
 
     }
     

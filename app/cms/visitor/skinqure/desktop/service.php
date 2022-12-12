@@ -429,6 +429,16 @@ if (isset($serviceSection['watch_video'])) { ?>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="w-100 d-flex justify-content-center">
+                                            <input type="hidden" name="type" value="enquiry">
+                                            <input type="hidden" name="action" value="new">
+                                            <input type="hidden" name="subject"
+                                                value="Reveal The NU in You: Enquiry Form">
+                                            <input type="hidden" name="sender"
+                                                value="<?php echo base64_encode("skinqure.saket@gmail.com") ?>">
+                                            <input type="hidden" name="cc"
+                                                value="<?php echo base64_encode("kushagra.catalyst@gmail.com,info@skinqure.in,care@skinqure.in") ?>">
+                                            <input type="hidden" name="redirect_url"
+                                                value="/thank-you/?msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                                             <input type="submit" value="Book Consultation" class="btn text-white">
                                         </div>
                                     </div>

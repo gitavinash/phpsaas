@@ -33,6 +33,19 @@
 			$mail->AddReplyTo(REPLY_EMAIL);
 
 			$mail->AddAddress($toAddress);
+
+			if(isset($ccAddress)) {
+
+				$mail->AddCC($ccAddress);
+
+			}
+
+			if(isset($bccAddress)) {
+
+				$mail->AddBCC($bccAddress);
+
+			}
+
 			$mail->Subject = $subject;
 			$mail->Body = $email_body;
 			
