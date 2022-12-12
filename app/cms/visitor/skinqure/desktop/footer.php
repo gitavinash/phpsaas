@@ -8,6 +8,20 @@
                         <p>J-215, Saket, New Delhi-17</p>
                         <p>Phone: +91 92665 55500</p>
                         <p>Email: info@skinqure.in</p>
+                        <ul class="social-media-icon">
+                            <li><a href="https://www.facebook.com/skinqureindia/" target="_blank"><i
+                                        class="fa fa-facebook-square" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.instagram.com/skinqure/" target="_blank"><i class="fa fa-instagram"
+                                        aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.youtube.com/c/SkinQure" target="_blank"><i
+                                        class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+                            <li><a href="https://twitter.com/skinqureclinics" target="_blank"><i
+                                        class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.linkedin.com/company/skinqure/" target="_blank"><i
+                                        class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.google.com/maps?q=J-215,+Saket+,+New+Delhi-17" target="_blank"><i
+                                        class="fa fa-map" aria-hidden="true"></i></a></li>
+                        </ul>
                     </div>
                     <div class="col-md-3">
                         <h3 class="footer_heading">Quick Links</h3>

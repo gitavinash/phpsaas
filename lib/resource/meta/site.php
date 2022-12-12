@@ -2,7 +2,7 @@
 <!-- Site Default Configuration -->
 <link rel="icon" href="<?php echo SITE_ICON ?>">
 <title>
-    <?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_NAME.' '.SITE_DESC ) ?>
+    <?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>
 </title>
 <!-- Canonical URL -->
 <link rel="canonical" href="<?php echo $canonicalURL; ?>" />

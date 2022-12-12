@@ -70,7 +70,10 @@
 </head>
 
 <body>
-
+    <a href="tel:+91-9266555500" class="sticky sticky-phone" target="_blank"><i class="fa fa-phone"
+            aria-hidden="true"></i></a>
+    <a href="https://wa.me/919266555500?text=Hello%20SkinQure%21%21%20I%20would%20like%20to%20book%20an%20appointment%20with%20dermatologist."
+        class="sticky sticky-whatsapp" target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
     <!-- header start -->
     <header class="header">
         <div class="container-fluid common_padding">
