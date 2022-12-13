@@ -100,7 +100,7 @@
                             <div class="form-group">
                                 <input type="submit" class="btn btncontact" value="Submit Now and Get Consultation"
                                     name="">
-                                <p style="margin-top: 10px"><strong>Note :</strong> Consultation fees is ₹ 900/-</p>
+                                <p style="margin-top: 10px"><strong>Note :</strong> Consultation fees is ₹ 1,200/-</p>
                             </div>
                         </form>
                     </div>
