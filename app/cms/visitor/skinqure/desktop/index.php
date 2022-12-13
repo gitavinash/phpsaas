@@ -28,7 +28,8 @@ require_once 'header.php';
                                     <p class="animated slideInUp">Advanced Cosmetic Treatments Are Available at Skinqure
                                         to Make You Gorgeous
                                         and Gives You the Beauty Which you Deserve.</p>
-                                    <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
+                                    <a href="/treatment/face-cosmetics/chemical-peels-organic-peels/"
+                                        class="btn carouselbtn animated slideInUp">Learn More</a>
                                 </div>
                             </div>
                             <div class="carousel-item">
@@ -40,7 +41,8 @@ require_once 'header.php';
                                     <p class="animated slideInUp">Get Your Hair Transplant Done at SkinQure and Boost
                                         Your
                                         Confidence</p>
-                                    <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
+                                    <a href="/hair-transplant/" class="btn carouselbtn animated slideInUp">Learn
+                                        More</a>
                                 </div>
                             </div>
                             <div class="carousel-item">
@@ -51,7 +53,8 @@ require_once 'header.php';
                                     <p class="animated slideInUp">Goodbye to All the Unwanted Hairs With SkinQure. We
                                         Will Ensure You Have a
                                         Pain Free Experience</p>
-                                    <a href="" class="btn carouselbtn animated slideInUp">Learn More</a>
+                                    <a href="/treatment/body-cosmetics/laser-hair-reduction/"
+                                        class="btn carouselbtn animated slideInUp">Learn More</a>
                                 </div>
                             </div>
                         </div>
@@ -186,7 +189,7 @@ require_once 'header.php';
                         <div class="row mt-md-5">
                             <div class="col-12">
                                 <p class="ready_to_start textcolor text-start">Ready to book an appointment? <span><a
-                                            href="">Click here</a></span></p>
+                                            href="/contact-us/">Click here</a></span></p>
                             </div>
                         </div>
                     </div>

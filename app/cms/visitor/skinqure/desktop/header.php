@@ -488,7 +488,7 @@
                 </div>
                 <!-- menu end here -->
                 <div class="header-item item-right">
-                    <a href="" class="btn book_appoint">Book An Appointment</a>
+                    <a href="/contact-us/" class="btn book_appoint">Book An Appointment</a>
                     <!-- mobile menu trigger -->
                     <div class="mobile-menu-trigger">
                         <span></span>
