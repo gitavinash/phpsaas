@@ -77,8 +77,8 @@
     <!-- header start -->
     <header class="header">
         <div class="container-fluid common_padding">
-            <div class="row v-center justify-content-center">
-                <div class="header-item item-left">
+            <div class="row v-center mobile-menu justify-content-center">
+                <div class="header-item header-item-mobile item-left">
                     <div class="logo">
                         <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" class="logo_img"></a>
                     </div>
@@ -487,7 +487,7 @@
                     </nav>
                 </div>
                 <!-- menu end here -->
-                <div class="header-item item-right">
+                <div class="header-item item-right burger-menu">
                     <a href="/contact-us/" class="btn book_appoint">Book An Appointment</a>
                     <!-- mobile menu trigger -->
                     <div class="mobile-menu-trigger">
