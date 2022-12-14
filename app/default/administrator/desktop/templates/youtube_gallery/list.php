@@ -6,7 +6,7 @@
 	$postStatus=(($postStatus=='all') ? '' : "AND post_status='{$postStatus}'" );
 	
 ?>
-<h2>All <?php echo ucwords($postType.'s') ?></h2>
+<h2>All Galleries</h2>
 <div class="options-bar">
     <div class="left-box">
         <form method="GET">
