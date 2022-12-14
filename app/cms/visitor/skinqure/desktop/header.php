@@ -459,6 +459,7 @@
                                         <li><a href="/media/">Media</a></li>
                                         <li><a href="/why-us/">Why Us</a></li>
                                         <li><a href="/skinqure-gallery/">Gallery</a></li>
+                                        <li><a href="/video-gallery/">Video Gallery</a></li>
                                     </ul>
                                 </div>
                             </li>

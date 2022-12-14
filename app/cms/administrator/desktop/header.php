@@ -62,11 +62,9 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="gallery.php?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
                             </li>
-                            <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
-                                    image gallery</a></li>
-                            <li><a href="gallery.php?type=add&editor=true&galleryType=youtube"><i
-                                        class="fas fa-plus"></i>Add
-                                    YouTube gallery</a></li>
+                            <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    gallery</a>
+                            </li>
                             <li><a href="gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
@@ -75,10 +73,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="gallery.php?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
                             </li>
                             <li><a href="gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
-                                    image gallery</a></li>
-                            <li><a href="gallery.php?type=add&editor=true&galleryType=youtube"><i
-                                        class="fas fa-plus"></i>Add
-                                    YouTube gallery</a></li>
+                                    new gallery</a></li>
                             <li><a href="gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
@@ -282,6 +277,31 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 
                     if (SITE_ID == 31) { ?>
 
+                <li <?php echo (($postType == 'youtube_gallery') ? 'class="active"' : '') ?>>
+                    <a href="youtube_gallery.php?type=list&status=all"><i class="fab fa-youtube"></i> Youtube
+                        Gallery</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="youtube_gallery.php?type=list&status=all"><i class="fas fa-list"></i> All
+                                    galleries</a>
+                            </li>
+                            <li><a href="youtube_gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
+                                    image gallery</a></li>
+                            <li><a href="gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="youtube_gallery.php?type=list&status=all"><i class="fas fa-list"></i> All
+                                    galleries</a>
+                            </li>
+                            <li><a href="youtube_gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
+                                    new gallery</a></li>
+                            <li><a href="youtube_gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
                 <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
                     <a href="treatment.php?type=list&status=all"><i class="fas fa-medkit"></i> Treatment</a>

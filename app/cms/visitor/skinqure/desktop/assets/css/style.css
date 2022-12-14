@@ -200,6 +200,9 @@ a {
 
 /*responsive*/
 @media (max-width: 400px) {
+  .youtube-gallery iframe {
+    width: 100% !important;
+  }
   .mobile-menu {
     justify-content: left !important;
   }

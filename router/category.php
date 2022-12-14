@@ -58,7 +58,7 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				require_once $category_path;
 			} else {
 
-				$category_path = USER_PATH . $category_type . '-category.php';
+				$category_path = USER_PATH . str_replace('_', '-', str_replace(' ', '-', $category_type)) . '-category.php';
 
 				if (file_exists($category_path)) {
 

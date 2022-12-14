@@ -39,9 +39,21 @@
 
                                 } else {
 
-                                    /** Display content in default template */
+                                    $postTypeTemplate = USER_PATH.strtolower(str_replace('_', '-', str_replace(' ', '-', $post_type))).'-post.php';
 
-                                    require_once USER_PATH.'post.php';
+                                    if(file_exists(($postTypeTemplate))) {
+
+                                    /** Opening category post type */
+
+                                    require_once $postTypeTemplate;
+
+                                    } else {
+
+                                        /** Display content in default template */
+
+                                        require_once USER_PATH.'post.php';
+                                        
+                                    }
 
                                 }
 
