@@ -87,7 +87,8 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
                 <a href="<?php echo $redirection_from ?>" class="btn btn-sm btn-blue" target="_blank"><i
                         class="fas fa-eye"></i>
                     View</a>
-                <a href="#" class="btn btn-sm btn-blue"><i class="fas fa-trash"></i>
+                <a href="#" id="<?php echo base64_encode($redirection_id) ?>_redirection"
+                    class="deleteBtn btn btn-sm btn-blue"><i class="fas fa-trash"></i>
                     Delete</a>
             </td>
         </tr>
