@@ -287,7 +287,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="youtube_gallery.php?type=add&editor=true"><i class="fas fa-plus"></i>Add
                                     image gallery</a></li>
-                            <li><a href="gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="youtube_gallery.php?type=category"><i class="fas fa-tags"></i>Categories</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
