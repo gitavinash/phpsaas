@@ -125,19 +125,20 @@
                                         <h4 class="title">Hair Treatments</h4>
                                         <ul>
                                             <li>
-                                                <a href="">PRP Therapy</a>
+                                                <a href="https://landing.skinqure.in/hair-transplant/">PRP Therapy</a>
                                             </li>
                                             <li>
-                                                <a href="">GFC</a>
+                                                <a href="https://landing.skinqure.in/hair-transplant/">GFC</a>
                                             </li>
                                             <li>
-                                                <a href="">LLLT</a>
+                                                <a href="https://landing.skinqure.in/hair-transplant/">LLLT</a>
                                             </li>
                                             <li>
-                                                <a href="">Hair Transplant</a>
+                                                <a href="https://landing.skinqure.in/hair-transplant/">Hair
+                                                    Transplant</a>
                                             </li>
                                             <li>
-                                                <a href="">Mesotherapy</a>
+                                                <a href="https://landing.skinqure.in/hair-transplant/">Mesotherapy</a>
                                             </li>
                                             <li>
                                                 <a href="/treatment/treatment-dermatology/stem-cell-therapy/">Stem-Cell

@@ -26,6 +26,8 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 
 			$category_path = USER_PATH . str_replace('/category/', '', rtrim($categoryLink, '/')) . '-category.php';
 
+			$category_type = (($category_type=='youtube_gallery') ? 'post' : $category_type);
+
 			// Count total result for pagination
 
 			if ($totalCategoryPost = mysqli_query($connection, "SELECT count(link_id) as total_result FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "{$category_type} ON link_relation_id={$category_type}_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY link_published DESC")) {

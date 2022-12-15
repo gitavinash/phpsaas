@@ -41,7 +41,8 @@ require_once 'header.php';
                                     <p class="animated slideInUp">Get Your Hair Transplant Done at SkinQure and Boost
                                         Your
                                         Confidence</p>
-                                    <a href="/hair-transplant/" class="btn carouselbtn animated slideInUp">Learn
+                                    <a href="https://landing.skinqure.in/hair-transplant/"
+                                        class="btn carouselbtn animated slideInUp">Learn
                                         More</a>
                                 </div>
                             </div>

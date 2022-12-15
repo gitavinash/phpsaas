@@ -30,6 +30,7 @@
                             <li><a href="/">Home</a></li>
                             <li><a href="/about-us/">About Us</a></li>
                             <li><a href="/why-us/">Why Us</a></li>
+                            <li><a href="/skinqure-gallery/">Results</a></li>
                             <li><a href="https://blog.skinqure.in/">Blogs</a></li>
                             <li><a href="/contact-us/">Contact Us</a></li>
                         </ul>

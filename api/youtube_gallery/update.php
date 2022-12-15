@@ -64,7 +64,7 @@
                 
                                     /** Add new active url of the post */
                 
-                                    $updateLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, '{$postType}', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), '{$featurePost}')");
+                                    $updateLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, 'post', '".USER_ID."', '".SITE_ID."', NOW(), NOW(), '{$featurePost}')");
                                     $linkID=mysqli_insert_id($connection);
                 
                                 } else {
@@ -83,11 +83,11 @@
                 
                             if($postStatus==0) {
                 
-                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
+                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='post' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
                 
                             } else {
                 
-                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
+                                $updateLink=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."link SET link_status=200, link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='post' AND link_url='{$oldURL}' AND link_site_id='".SITE_ID."'");
                 
                             }
                 
@@ -103,7 +103,7 @@
                 
                         /** Manage Tags  */
                 
-                        $deleteTags=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$id}' AND tag_site_id=".SITE_ID." AND tag_type='{$postType}'");
+                        $deleteTags=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$id}' AND tag_site_id=".SITE_ID." AND tag_type='post'");
                         $tags=explode(',', $tags);
                 
                         /* Insert tags into tag table */
@@ -113,7 +113,7 @@
                             if($tags!='') {
                                 
                                 $tagName=strtolower($tags[$i]);
-                                $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagName}', '{$id}', '".USER_ID."', '".SITE_ID."', '{$postType}')");
+                                $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagName}', '{$id}', '".USER_ID."', '".SITE_ID."', 'post')");
                 
                             } else {
                             

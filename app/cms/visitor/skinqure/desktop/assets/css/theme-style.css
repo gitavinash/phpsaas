@@ -1643,6 +1643,12 @@ img.treatment-btn {
     background-size: cover;
   }
 
+  ul.about-us-social-media-icon {
+    list-style: none;
+    display: inline-block;
+    padding: 20px 15%;
+  }
+
   .quote-box p {
     font-size: 16px;
     line-height: 28px;
@@ -2043,6 +2049,11 @@ img.treatment-btn {
   }
 }
 @media screen and (max-width: 480px) {
+  ul.about-us-social-media-icon {
+    list-style: none;
+    display: inline-block;
+    padding: 20px 15%;
+  }
   .treatment {
     padding: 40px 0px;
   }
@@ -2054,6 +2065,11 @@ img.treatment-btn {
   }
 }
 @media screen and (max-width: 400px) {
+  ul.about-us-social-media-icon {
+    list-style: none;
+    display: inline-block;
+    padding: 20px 15%;
+  }
   .treatment {
     padding: 30px 0px;
   }
@@ -2128,6 +2144,27 @@ h2.gallerTitle {
   color: #fff;
 }
 
+ul.about-us-social-media-icon {
+  list-style: none;
+  display: inline-block;
+  padding: 20px 25%;
+}
+
+ul.about-us-social-media-icon li {
+  float: left;
+  list-style: none;
+  margin-right: 10px;
+  font-size: 32px;
+}
+
+ul.about-us-social-media-icon li a {
+  color: #e7b05d;
+}
+
+ul.about-us-social-media-icon li a:hover {
+  color: inherit;
+}
+
 ul.social-media-icon {
   float: left;
   list-style: none;
@@ -2163,4 +2200,16 @@ a.sticky {
 
 .sticky-whatsapp {
   top: 40%;
+}
+
+.golden-btn {
+  padding: 10px 50px;
+  background: #e69472 !important;
+  font-size: 18px;
+}
+
+.green-btn {
+  padding: 10px 50px;
+  background: #c9dcd2 !important;
+  font-size: 18px;
 }

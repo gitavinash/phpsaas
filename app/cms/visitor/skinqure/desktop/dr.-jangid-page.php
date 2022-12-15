@@ -36,6 +36,22 @@ require_once 'header.php'
                         <div class="w-100">
                             <img src="<?php echo $page_image ?>" alt="" class="img-fluid w-100">
                         </div>
+
+                        <ul class="about-us-social-media-icon">
+                            <li><a href="https://www.facebook.com/drjangid/" target="_blank"><i
+                                        class="fa fa-facebook-square" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.instagram.com/doc.jangid/" target="_blank"><i
+                                        class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.youtube.com/@skinqure/" target="_blank"><i
+                                        class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+                            <li><a href="https://twitter.com/drjangid/" target="_blank"><i class="fa fa-twitter-square"
+                                        aria-hidden="true"></i></a></li>
+                            <li><a href="https://linkedin.com/in/dr-jangid-dermatologist-39835269/" target="_blank"><i
+                                        class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+                        </ul>
+
+                        <a href="/media/" class="btn green-btn animated slideInUp">Featured Articles</a>
+
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="w-100 p-lg-4 p-md-4 mt-lg-3">
@@ -80,7 +96,6 @@ require_once 'header.php'
 
 
                             ?>
-
 
                         </div>
                     </div>
