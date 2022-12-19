@@ -36,7 +36,7 @@ body {
   background-color: #c9ddd2;
 }
 .bluebg {
-  background-color: #0d415f;
+  background-color: #cfe0e0;
 }
 .bluebg a,
 p,
@@ -66,7 +66,7 @@ h6 {
   color: #222327 !important;
 }
 .yellowbg {
-  background-color: #e8b05d;
+  background-color: #e0c099;
 }
 .sectionpadding {
   padding: 100px 0px;
@@ -657,6 +657,9 @@ input[type="range"]::-moz-range-track {
   width: fit-content;
   margin-top: 3rem;
 }
+a.btn_quote {
+  color: #fff;
+}
 .btn_quote:hover {
   color: #fff;
 }
@@ -1018,7 +1021,7 @@ input[type="range"]::-moz-range-track {
 /*------------------------Contact Page Styling-----------------------------*/
 /*------------------------Footer Styling---------------------*/
 footer {
-  background-color: #e8b05d;
+  background-color: #e0c099;
   padding: 5rem 0rem;
 }
 .footer_logo {
@@ -1050,7 +1053,7 @@ footer ul li a {
   text-decoration: none;
 }
 .copyright {
-  background-color: #e8b05d;
+  background-color: #e0c099;
 }
 .copyright p {
   color: #fff;
@@ -1397,7 +1400,7 @@ section.section_spacing_top.bg-green-trans {
 .quote-box {
   background: url("../images/icon/quote.png") center center no-repeat;
   height: 150px;
-  padding: 40px 50px;
+  padding: 40px 15%;
   color: #333 !important;
 }
 
@@ -1437,8 +1440,8 @@ img.treatment-btn {
   width: 400px;
   margin: 10% 19%;
   box-sizing: content-box;
-  background: #0d415f;
-  padding: 15px 15px 4px 4px;
+  /* background: #0d415f;
+  padding: 15px 15px 4px 4px; */
   border-radius: 10px;
 }
 
@@ -1459,7 +1462,7 @@ img.treatment-btn {
 .form-box {
   height: 100%;
   padding: 4rem 9rem 4rem 4rem;
-  background-color: #e8b05d !important;
+  background-color: #ebcaba !important;
 }
 
 .form-box-non-bg {
@@ -1662,8 +1665,8 @@ img.treatment-btn {
     width: 80%;
     margin: 10% 10%;
     box-sizing: content-box;
-    background: #0d415f;
-    padding: 15px 15px 4px 4px;
+    /* background: #0d415f;
+    padding: 15px 15px 4px 4px; */
     border-radius: 10px;
   }
 

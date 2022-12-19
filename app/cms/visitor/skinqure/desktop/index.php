@@ -272,7 +272,7 @@ require_once 'header.php';
                                     <h2>Acne</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>You can have the flawless glowing skin that you always wanted.</h3>
                                     <a href="/treatment/treatment-dermatology/acne-treatments/">Make An Appointment</a>
                                 </div>
                             </div>
@@ -285,7 +285,7 @@ require_once 'header.php';
                                     <h2>Chemical Peels</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>Make your uneven skin filtered with glow.</h3>
                                     <a href="/treatment/face-cosmetics/chemical-peels-organic-peels/">Make An
                                         Appointment</a>
                                 </div>
@@ -298,7 +298,7 @@ require_once 'header.php';
                                     <h2>Hair Loss</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>You can get rid of the hair loss problem that has been pestering you.</h3>
                                     <a href="/treatment/default-treatment/meso-treatment-for-hair-loss/">Make An
                                         Appointment</a>
                                 </div>
@@ -312,7 +312,7 @@ require_once 'header.php';
                                     <h2>Hair Transplant</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>You can get your hair transplant done to achieve your desired results.</h3>
                                     <a href="/treatment/default-treatment/hair-transplant/">Make An Appointment</a>
                                 </div>
                             </div>
@@ -325,7 +325,7 @@ require_once 'header.php';
                                     <h2>Laser Tattoo Removal</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>Pencils have erasers and we have laser tattoo removal.</h3>
                                     <a href="/treatment/body-cosmetics/laser-tattoo-removal/">Make An Appointment</a>
                                 </div>
                             </div>
@@ -337,7 +337,7 @@ require_once 'header.php';
                                     <h2>Mole Removal</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>You want your mole removed, consider it done.</h3>
                                     <a href="/treatment/treatment-dermatology/mole-removal/">Make An Appointment</a>
                                 </div>
                             </div>
@@ -349,7 +349,7 @@ require_once 'header.php';
                                     <h2>Nail Surgery</h2>
                                 </div>
                                 <div class="data-box1">
-                                    <h3>You Really Decide To<br> Improve Yourself</h3>
+                                    <h3>Get ready to flaunt your nails with surgery done right.</h3>
                                     <a href="/treatment/treatment-dermatology/nail-surgery/">Make An Appointment</a>
                                 </div>
                             </div>
@@ -439,7 +439,6 @@ require_once 'header.php';
 
 </section>
 
-
 <section class="">
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -451,7 +450,7 @@ require_once 'header.php';
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 p-0 p-lg-0 p-md-0">
-                        <div class="w-100 bg-primary formfield text-white form-box ">
+                        <div class="w-100 reveal-form bg-primary formfield text-white form-box ">
                             <h4>Reveal The NU in You:</h4>
                             <p class="mb-md-4">Book your appointment today with our expert dermatologist for a perfect
                                 diagnosis & medical advice at SkinQure Clinic. Consultation is available both online and

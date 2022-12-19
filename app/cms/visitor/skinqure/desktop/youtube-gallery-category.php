@@ -44,7 +44,7 @@ require_once 'header.php'
                         <a href="<?php echo $link_url ?>">
                             <div class='galleryBox'>
                                 <img src="<?php echo $post_image ?>" alt="<?php echo $post_title ?>" />
-                                <!-- <h2 class='gallerTitle'><?php echo $category_title ?></h2> -->
+                                <h2 class='gallerTitle'><?php echo $post_title ?></h2>
                             </div>
                         </a>
                     </div>

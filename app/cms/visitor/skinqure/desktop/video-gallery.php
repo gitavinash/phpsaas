@@ -26,9 +26,6 @@ require_once 'header.php'
         <div class="row justify-content-center section_spacing_top section_spacing_bottom">
             <div class="col-lg-10">
                 <div class="row">
-                    <div class="section_heading">
-                        <h3 class="text-start mb-md-4">Patient Results</h3>
-                    </div>
 
                     <?php
 
