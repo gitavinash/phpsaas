@@ -20,7 +20,7 @@
 
 		if(DEVELOPMENT_MODE==false) {
 		
-			echo USER_PATH. '<h1>'.SITE_VERSION.' theme not found</h1>';
+			echo '<h1>'.SITE_VERSION.' theme not found</h1>';
 		
 		} else {
 
