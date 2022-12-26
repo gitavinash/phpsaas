@@ -1,4 +1,11 @@
 <?php
 
-    header("Location: /login/", TRUE, 301);
-    exit();
+require_once 'header.php';
+
+?>
+
+<?php
+
+require_once 'footer.php'
+
+?>
