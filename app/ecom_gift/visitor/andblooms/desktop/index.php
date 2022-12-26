@@ -95,7 +95,7 @@
                     </a>
                     <span class="cart-bodr-h2"></span>
                     <div class="view-box">
-                        <a href="/tag/love/" class="btn-vw">View All</a>
+                        <a href="/shop/" class="btn-vw">View All</a>
                     </div>
                 </div>
             </div>
