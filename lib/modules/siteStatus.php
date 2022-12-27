@@ -2,9 +2,6 @@
 
 	/** Including database connection file */
 
-	phpinfo();
-	exit();
-
 	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/connection.php';
 	// require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/mongoDbConnection.php';
 
