@@ -14,6 +14,7 @@
 		define('DB_USER', 'root');		// database username ex :- root
 		define('DB_PASS', '');		// datapase user password :- 12345
 		define('DB_NAME', 'isw');		// database name ex :- cms_db
+		define('MONGO_DB_CONNECTION_URL', 'mongodb://localhost:27017/');		// MongoDB Connection URL
 
 	} else {
 
@@ -21,6 +22,7 @@
 		define('DB_USER', 'root');		// database username ex :- root
 		define('DB_PASS', 'A=2ADu5P7WqCPm!Unc6*a?N^8Ka2?Htp');		// datapase user password :- 12345
 		define('DB_NAME', 'isw_saas');		// database name ex :- cms_db
+		define('MONGO_DB_CONNECTION_URL', 'mongodb+srv://iswone:!KL0KdVY65K8@cluster0.vldbb2n.mongodb.net/test');		// MongoDB Connection URL
 
 	}
 

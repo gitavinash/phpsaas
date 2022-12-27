@@ -3,6 +3,7 @@
 	/** Including database connection file */
 
 	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/connection.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/mongoDbConnection.php';
 
 	/** This script run only when Request method is not POST */
 
