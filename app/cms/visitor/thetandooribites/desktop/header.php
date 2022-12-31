@@ -65,10 +65,14 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="/" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="/about-us/" class="nav-link">About Us</a></li>
-                    <li class="nav-item"><a href="/menu/" class="nav-link">Our Menu</a></li>
-                    <li class="nav-item"><a href="/contact-us/" class="nav-link">Contact Us</a></li>
+                    <li class="nav-item <?php echo ((ACTIVE_URL=='/') ? 'active' : '') ?>"><a href="/"
+                            class="nav-link">Home</a></li>
+                    <li class="nav-item <?php echo ((ACTIVE_URL=='/about-us/') ? 'active' : '') ?>"><a href="/about-us/"
+                            class="nav-link">About Us</a></li>
+                    <li class="nav-item <?php echo ((ACTIVE_URL=='/menu/') ? 'active' : '') ?>"><a href="/menu/"
+                            class="nav-link">Our Menu</a></li>
+                    <li class="nav-item <?php echo ((ACTIVE_URL=='/contact-us/') ? 'active' : '') ?>"><a
+                            href="/contact-us/" class="nav-link">Contact Us</a></li>
                     <li class="nav-item cta"><a href="#" class="nav-link">Order Now</a></li>
                 </ul>
             </div>
