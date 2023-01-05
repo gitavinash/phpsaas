@@ -134,7 +134,15 @@
 														<div class='col-md-9 col-xs-12'><strong>{$productNameList[$i]}</strong><br />Qty: {$productQtyList[$i]}</div>
 													</div>";
 
+                                                    $products[]=array(
+                                                        'title' => $productNameList[$i],
+                                                        'feature_image' => $productImageList[$i],
+                                                        'qty' => $productQtyList[$i],
+                                                    );
+
 												}
+
+                                                $productList = $products;
 
 												?>
 
@@ -142,6 +150,15 @@
                     </div>
 
                     <?php
+
+                                    // Send event to third party services
+
+                                    if(defined('ENABLE_CONTLO')) {
+
+                                        require_once CONTLO.'cart-summary.php';
+                
+                                    }
+
                                     } else {
 
                                         echo '<h3 class="heading-2">Somthing is wrong</h3>';

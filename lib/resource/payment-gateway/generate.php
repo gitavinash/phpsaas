@@ -55,6 +55,14 @@
 
                 if(file_exists($pgFile)) {
 
+                    // Send event to third party services
+
+                    if(defined('ENABLE_CONTLO')) {
+
+                        require_once CONTLO.'payment.php';
+
+                    }
+
                     require_once $pgFile;
 
                 } else {

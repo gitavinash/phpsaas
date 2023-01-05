@@ -20,6 +20,12 @@
 
                     $status=200;
                     $msg=ucfirst($itemType).' add to card is successful';
+
+                   if(defined('ENABLE_CONTLO')) {
+
+                        require_once CONTLO.'add-to-cart.php';
+
+                   }
         
                 } else {
         

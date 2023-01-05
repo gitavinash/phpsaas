@@ -415,6 +415,8 @@
                                     <label>Select occasion</label>
                                     <select class="form-control notes" name="occasion" id="occasion">
                                         <option value="">Select occasion</option>
+                                        <option value="Anniversary">Anniversary</option>
+                                        <option value="Birthday">Birthday</option>
                                         <option value="Congratulation">Congratulation</option>
                                         <option value="Get Well Soon">Get Well Soon</option>
                                         <option value="I am Sorry">I am Sorry</option>

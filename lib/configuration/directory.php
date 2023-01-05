@@ -9,6 +9,9 @@
 	define('RESOURCE', ROOT.'/lib/resource/');
 	define('PAYMENT_GATEWAY', RESOURCE.'payment-gateway/');
 	define('NOTIFICATION', RESOURCE.'notification/');
+
+	define('CONTLO', RESOURCE.'contlo/');
+	define('CONTLO_API_URL', 'https://api.contlo.com/v1/track');
 	
 	/** Meta and Structure Data Resource */
 	
