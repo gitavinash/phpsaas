@@ -69,6 +69,9 @@
 </footer>
 <!-- Optional JavaScript; choose one of the two! -->
 
+<!-- sections end -->
+<?php include_once NOTIFICATION . 'index.php' ?>
+
 <!-- Option 1: Bootstrap Bundle with Popper -->
 
 <script src="<?php echo USER_JS ?>app.js"></script>
