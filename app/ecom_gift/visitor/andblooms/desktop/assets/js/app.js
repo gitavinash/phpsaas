@@ -69,6 +69,7 @@ $(document).ready(function() {
 
                 //   window.location.href='/checkout/';
                 alert('Product added to cart successfully');
+                $('#addToCart').html('Added to cart');
 
               } else {
                   console.log(data.msg);
