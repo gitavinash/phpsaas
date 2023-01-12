@@ -338,8 +338,8 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <li class="nav-item " style="border-bottom: 3px solid #d4946d;">
-                                        <a class="nav-link" style="color: #d4946d" href="/tag/valentine/"><b>Valentine's
+                                    <li class="nav-item " style="background: #F19EB5; height: 50px">
+                                        <a class="nav-link" style="color: #fff" href="/tag/valentine/"><b>Valentine's
                                                 Day</b></a>
                                     </li>
                                     <li class="nav-item ">

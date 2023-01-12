@@ -67,7 +67,8 @@ $(document).ready(function() {
                   $('#selectedQty').text('');
                   $('#selectedQty').append(data.productQty);
 
-                  window.location.href='/checkout/';
+                //   window.location.href='/checkout/';
+                alert('Product added to cart successfully');
 
               } else {
                   console.log(data.msg);
