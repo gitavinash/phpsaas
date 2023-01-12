@@ -1,6 +1,6 @@
 <?php
 
-    include_once 'header.php';
+include_once 'header.php';
 
 ?>
 <main class="l-w1">
@@ -46,19 +46,19 @@
                         <h3 class="l-w1 center">Economy<span class="l-w1 center">Best for personal and static
                                 websites</span></h3>
                         <p class="l-w1 center">Starting at <span class="l-w1 center"><sup>₹</sup>
-                                <strong>499</strong>/mo*</span></p>
+                                <strong>299</strong>/mo*</span></p>
                         <div class="buy-now l-w1">
                             <a href="#" class="buy-now-btn l-w1 center" id="">Buy Now</a>
                         </div>
                         <ul class="list-item l-w1 center">
                             <li><strong>1</strong> Website</li>
-                            <li><strong>5 GB</strong> SSD Storage</li>
-                            <li><strong>10k</strong> Monthly visitors<sup>1</sup></li>
-                            <li><strong>50 GB</strong> Bandwidth</li>
+                            <li><strong>1 GB</strong> SSD Storage</li>
+                            <li><strong>1k</strong> Monthly visitors<sup>1</sup></li>
+                            <li><strong>10 GB</strong> Bandwidth</li>
                             <li><strong>1</strong> Database</li>
-                            <li><strong>5</strong> Email</li>
+                            <li><strong>1</strong> Email</li>
                             <li><strong>Free</strong> SSL</li>
-                            <li>Free <strong>.in</strong> Domain<sup>2</sup></li>
+                            <li><i class="fi-rr-cross"></i></li>
                             <li><strong>Free</strong> Control Panel<sup>4</sup></li>
                             <li>Server location in <strong>India</strong></li>
                         </ul>
@@ -72,22 +72,22 @@
                         <p>Recommended</p>
                     </div>
                     <div class="plans l-w1">
-                        <h3 class="l-w1 center">Deluxe<span class="l-w1 center">Best for blog and wordpress
-                                websites</span></h3>
+                        <h3 class="l-w1 center">Deluxe<span class="l-w1 center">Best for small business website</span>
+                        </h3>
                         <p class="l-w1 center">Starting at <span class="l-w1 center"><sup>₹</sup>
                                 <strong>749</strong>/mo*</span></p>
                         <div class="buy-now l-w1">
                             <a href="#" class="buy-now-btn l-w1 center" id="">Buy Now</a>
                         </div>
                         <ul class="list-item l-w1 center">
-                            <li><strong>5</strong> Website</li>
-                            <li><strong>10 GB</strong> SSD Storage</li>
-                            <li><strong>50k</strong> Monthly visitors<sup>1</sup></li>
-                            <li><strong>100 GB</strong> Bandwidth</li>
+                            <li><strong>5</strong> Websites</li>
+                            <li><strong>5 GB</strong> SSD Storage</li>
+                            <li><strong>10k</strong> Monthly visitors<sup>1</sup></li>
+                            <li><strong>50 GB</strong> Bandwidth</li>
                             <li><strong>10</strong> Database</li>
                             <li><strong>5</strong> Email</li>
                             <li><strong>Free</strong> SSL</li>
-                            <li>Free <strong>.com</strong> Domain<sup>2</sup></li>
+                            <li><i class="fi-rr-cross"></i></li>
                             <li><strong>Free</strong> Control Panel<sup>4</sup></li>
                             <li>Server location in <strong>India</strong></li>
                         </ul>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="right-box">
                     <div class="plans l-w1 btrr bln">
-                        <h3 class="l-w1 center">Ultimate<span class="l-w1 center">Best for API and high traffic
+                        <h3 class="l-w1 center">Ultimate<span class="l-w1 center">Best for high traffic
                                 websites</span></h3>
                         <p class="l-w1 center">Starting at <span class="l-w1 center"><sup>₹</sup>
                                 <strong>999</strong>/mo*</span></p>
@@ -106,10 +106,10 @@
                             <a href="#" class="buy-now-btn l-w1 center" id="">Buy Now</a>
                         </div>
                         <ul class="list-item l-w1 center">
-                            <li><strong>10</strong> Website</li>
-                            <li><strong>25 GB</strong> SSD Storage</li>
-                            <li><strong>100k</strong> Monthly visitors<sup>1</sup></li>
-                            <li><strong>250 GB</strong> Bandwidth</li>
+                            <li><strong>10</strong> Websites</li>
+                            <li><strong>10 GB</strong> SSD Storage</li>
+                            <li><strong>50k</strong> Monthly visitors<sup>1</sup></li>
+                            <li><strong>100 GB</strong> Bandwidth</li>
                             <li><strong>20</strong> Database</li>
                             <li><strong>20</strong> Email</li>
                             <li><strong>Free</strong> SSL</li>
@@ -170,7 +170,7 @@
                         <div class="offer l-w1 center">
                             <a href="">
                                 <p><i class="fi-rr-database mob-show"></i><strong>Web Hosting</strong><span><strong>₹
-                                            499/</strong>mo*</span></p>
+                                            299/</strong>mo*</span></p>
                             </a>
                         </div>
                     </div>
@@ -196,9 +196,9 @@
                 <div class="l-w1">
                     <div class="main-offer">
                         <a href="">
-                            <p><i class="fi-rr-database"></i> <strong>Web Hosting</strong></p>
+                            <p><i class="fi-rr-database"></i> <strong>Reseller Hosting</strong></p>
                             <p class="l-w1 center">Starting at <span class="l-w1 center"><sup>₹</sup>
-                                    <strong>499</strong>/mo*</span></p>
+                                    <strong>999</strong>/mo*</span></p>
                         </a>
                     </div>
                 </div>
@@ -218,6 +218,6 @@
 </main>
 <?php
 
-    include_once 'footer.php';
+include_once 'footer.php';
 
 ?>

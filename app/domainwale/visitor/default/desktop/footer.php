@@ -8,7 +8,8 @@
         <div class="container">
             <div class="l-w4 l-m-w2">
                 <div class="logo">
-                    <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> logo"></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>oxteal-logo-light.png"
+                            alt="<?php echo SITE_NAME ?> logo"></a>
                 </div>
                 <p><i class="fi-rr-marker"></i> <strong>Oxteal</strong><br />A2/5A, WHS Block 2,<br />Kirti Nagar, New
                     Delhi</p>
@@ -30,6 +31,7 @@
                 <ul class="footer-list">
                     <li><a href="/about-us/">About Us</a></li>
                     <li><a href="/contact-us/">Contact Us</a></li>
+                    <li><a href="/careers/">Careers</a></li>
                     <li><a href="">Blog</a></li>
                     <li><a href="/terms-of-service/">Terms of Service</a></li>
                     <li><a href="/privacy-policy/">Privacy policy</a></li>
@@ -37,23 +39,27 @@
                 </ul>
             </div>
             <div class="f-box l-w4 l-m-w2">
-                <h3>Domain</h3>
+                <h3>Hosting</h3>
                 <ul class="footer-list">
-                    <li><a href="">Buy Domain</a></li>
-                    <li><a href="">Domain Transafer</a></li>
-                    <li><a href="">Domain Name Search</a></li>
-                    <li><a href="">Bulk Domain Search</a></li>
-                    <li><a href="">WHOIS</a></li>
-                    <li><a href="">Domain Price List</a></li>
+                    <li><a href="/linux-web-hosting/">Web Hosting</a></li>
+                    <li><a href="/cloud-hosting/">Cloud Hosting</a></li>
+                    <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>
+                    <li><a href="/managed-web-hosting/">Managed WordPress Hosting</a></li>
+                    <li><a href="/reseller-hosting/">Reseller Hosting</a></li>
+                    <li><a href="/ecommerce-hosting/">Ecommerce Hosting</a></li>
+                    <li><a href="/cms-hosting/">CMS Hosting</a></li>
                 </ul>
             </div>
             <div class="f-box l-w4 l-m-w2">
-                <h3>Hosting</h3>
+                <h3>Solutions</h3>
                 <ul class="footer-list">
-                    <li><a href="">Linux Web Hosting</a></li>
-                    <li><a href="">VPS Hosting</a></li>
-                    <li><a href="">Website Migration</a></li>
-                    <li><a href="">Website AMC</a></li>
+                    <li><a href="/domain-name-registration/">Domain Registration</a></li>
+                    <li><a href="/domain-whois-lookup/">Domain Whois Lookup</a></li>
+                    <li><a href="/website-migration/">Website Migration</a></li>
+                    <li><a href="/website-amc/">Website AMC</a></li>
+                    <li><a href="/website-development/">Website Development</a></li>
+                    <li><a href="/website-development/">Online Store</a></li>
+                    <li><a href="/digital-marketing/">Digital Marketing</a></li>
                 </ul>
             </div>
         </div>

@@ -66,15 +66,16 @@
             </div>
             <div class="container">
                 <div class="logo l-w3 fl">
-                    <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> logo"></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>oxteal-logo-dark.png"
+                            alt="<?php echo SITE_NAME ?> logo"></a>
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">
                         <li><a href="/domain-name-registration/">Domain</a></li>
-                        <li><a href="/hosting/">Hosting</a></li>
+                        <li><a href="/linux-web-hosting/">Hosting</a></li>
                         <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>
                         <li><a href="/vps-hosting/">VPS Hosting</a></li>
-                        <li><a href="/amc/">AMC</a></li>
+                        <li><a href="/website-amc/">AMC</a></li>
                         <li><a href="/blog/"><i class="fas fa-blog"></i> Blog</a></li>
                         <li><a href="/checkout/">Cart <i class="fi-rr-shopping-cart"></i></a></li>
                     </ul>
