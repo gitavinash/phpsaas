@@ -1236,11 +1236,18 @@ a.card-link:hover .img-acc img {
 }
 
 .img-cd {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+}
+/* 
+.img-cd {
   width: 220px;
   height: 220px;
   overflow: hidden;
   position: relative;
-}
+} */
 
 .quantity,
 .rate,
@@ -4378,4 +4385,16 @@ form.franchise textarea {
   .out-of-stock img {
     width: 140px;
   }
+}
+
+.featured-banner {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.featured-banner img {
+  float: left;
+  width: 100%;
 }

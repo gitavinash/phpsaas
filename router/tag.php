@@ -72,15 +72,16 @@ if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag
     /** Include dedicated tag theme template */
 
     $tagTypeTheme = USER_PATH . "{$tag_type}-tag.php";
-    $tagNameTheme = USER_PATH . "{$tag_type}-tag.php";
+    $tagNameTheme = USER_PATH . str_replace(' ', '_', $searchTag) . "-tag.php";
 
     /** Include Tag view template */
 
-    if (file_exists($tagTypeTheme)) {
+    if (file_exists($tagNameTheme)) {
+
+        require_once $tagNameTheme;
+    } else if (file_exists(($tagTypeTheme))) {
 
         require_once $tagTypeTheme;
-    } else if (file_exists(($tagNameTheme))) {
-        require_once $tagNameTheme;
     } else {
 
         require_once USER_PATH . 'tag.php';
