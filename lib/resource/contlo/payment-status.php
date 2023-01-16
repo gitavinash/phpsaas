@@ -2,7 +2,7 @@
 
 
 $data = array(
-    'event' => 'cart_summary',
+    'event' => 'andblooms_payment_status',
     'email' => $profile_email,
     'phone_number' => $profile_mobile,
     'properties' => array(

@@ -31,7 +31,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
         <div class="left-side">
             <ul>
                 <li>
-                    <div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+                    <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
         </div>
@@ -44,8 +44,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                                 alt=""></div>
                     </a>
                     <ul>
-                        <li><a href="setting.php?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-                        <li><a href="setting.php?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+                        <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
+                        <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                         <li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
                     </ul>
                 </li>
@@ -56,62 +56,62 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="index.php"><i
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
                             class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li <?php echo ((ADMIN_BASE_URL == '/product/') ? 'class="active"' : '') ?>>
-                    <a href="product.php?type=list&status=all"><i class="fas fa-box-open"></i> Product</a>
+                    <a href="product/?type=list&status=all"><i class="fas fa-box-open"></i> Product</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a>
+                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All product</a>
                             </li>
-                            <li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                            <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     product</a></li>
-                            <li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="product/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="product.php?type=list&status=all"><i class="fas fa-list"></i> All product</a>
+                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All product</a>
                             </li>
-                            <li><a href="product.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                            <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     product</a></li>
-                            <li><a href="product.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="product/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/page/') ? 'class="active"' : '') ?>>
-                    <a href="page.php?type=list&status=all"><i class="fas fa-file"></i> Page</a>
+                    <a href="page/?type=list&status=all"><i class="fas fa-file"></i> Page</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
-                            <li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
+                            <li><a href="page/?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
+                            <li><a href="page/?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="page.php?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
-                            <li><a href="page.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
+                            <li><a href="page/?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
+                            <li><a href="page/?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
                         </ul>
                     </div>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
-                    <a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
+                    <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="media.php?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
-                            <li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
-                            <li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-                            <li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-                            <li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+                            <li><a href="media/?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
+                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
+                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
+                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="media.php?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
-                            <li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
-                            <li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-                            <li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-                            <li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+                            <li><a href="media/?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
+                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
+                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
+                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
                         </ul>
                     </div>
                 </li>
@@ -121,40 +121,40 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 
 
                 <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
-                    <a href="post.php?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
+                    <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="post.php?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post.php?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>
 
 
                 <li <?php echo (($postType == 'testimonial') ? 'class="active"' : '') ?>>
-                    <a href="testimonial.php?type=list&status=all"><i class="fas fa-comment"></i> Testimonial</a>
+                    <a href="testimonial/?type=list&status=all"><i class="fas fa-comment"></i> Testimonial</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="testimonial.php?type=list&status=all"><i class="fas fa-list"></i> All
+                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
                                     testimonial</a></li>
-                            <li><a href="testimonial.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     testimonial</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="testimonial.php?type=list&status=all"><i class="fas fa-list"></i> All
+                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
                                     testimonial</a>
                             </li>
-                            <li><a href="testimonial.php?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     testimonial</a></li>
                         </ul>
                     </div>
@@ -166,19 +166,19 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 if (SITE_ID != 22 && SITE_ID != 35) { ?>
 
                 <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
-                    <a href="coupon.php?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
+                    <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
+                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
                             </li>
-                            <li><a href="coupon.php?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+                            <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="coupon.php?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
+                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
                             </li>
-                            <li><a href="coupon.php?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+                            <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
                         </ul>
                     </div>
                 </li>
@@ -188,74 +188,74 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 
                 ?>
                 <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
-                    <a href="import.php?type=product"><i class="fas fa-upload"></i> Import</a>
+                    <a href="import/?type=product"><i class="fas fa-upload"></i> Import</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="import.php?type=product"><i class="fas fa-cubes"></i> Products</a></li>
+                            <li><a href="import/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="import.php?type=product"><i class="fas fa-cubes"></i> Products</a></li>
+                            <li><a href="import/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
                         </ul>
                     </div>
                 </li>
                 <!-- <li <?php echo ((ADMIN_BASE_URL == '/export/') ? 'class="active"' : '') ?> >
-						<a href="export.php?type=product"><i class="fas fa-download"></i> Export</a>
+						<a href="export/?type=product"><i class="fas fa-download"></i> Export</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="export.php?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-								<li><a href="export.php?type=users"><i class="fas fa-users"></i> Users</a></li>
-								<li><a href="export.php?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
+								<li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
+								<li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
+								<li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="export.php?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-								<li><a href="export.php?type=users"><i class="fas fa-users"></i> Users</a></li>
-								<li><a href="export.php?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
+								<li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
+								<li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
+								<li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
 							</ul>
 						</div>
 					</li> -->
                 <!-- <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?> >
-						<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Import</a>
+						<a href="setting/?type=configuration"><i class="fas fa-cog"></i> Import</a>
 						<div class="side-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
 							</ul>
 						</div>
 						<div class="bottom-menu">
 							<ul>
-								<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+								<li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
 							</ul>
 						</div>
 					</li> -->
                 <li <?php echo ((ADMIN_BASE_URL == '/setting/') ? 'class="active"' : '') ?>>
-                    <a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-                            <li><a href="setting.php?type=sliders"><i class="fas fa-images"></i>
+                            <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+                            <li><a href="setting/?type=sliders"><i class="fas fa-images"></i>
                                     Sliders</a></li>
-                            <li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change password</a></li>
-                            <li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-                            <li><a href="setting.php?type=redirection&status=all"><i
-                                        class="fas fa-external-link-alt"></i> URL redirection</a></li>
+                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i>
+                                    URL redirection</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-                            <li><a href="setting.php?type=sliders"><i class="fas fa-images"></i>
+                            <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+                            <li><a href="setting/?type=sliders"><i class="fas fa-images"></i>
                                     Sliders</a></li>
-                            <li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
-                            <li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-                            <li><a href="setting.php?type=redirection&status=all"><i
-                                        class="fas fa-external-link-alt"></i> URL redirection</a></li>
+                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i>
+                                    URL redirection</a></li>
                         </ul>
                     </div>
                 </li>
