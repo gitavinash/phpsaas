@@ -14,7 +14,7 @@ if (is_numeric($currentPage)) {
 	$categoryURL = $url;
 }
 
-if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category_title, category_image, category_description, category_type, link_id, link_url as categoryLink, link_status, link_type, link_relation_id, link_site_id, link_published, link_modified, meta_title, meta_description, meta_keyword, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id=category_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id WHERE link_url='{$categoryURL}' AND link_type='category' AND link_status=200 AND link_site_id=" . SITE_ID . " AND meta_type='category' LIMIT 0, 1")) {
+if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category_title, category_image, category_description, category_type, link_id, link_url as categoryLink, link_status, link_type, link_relation_id, link_site_id, link_published, link_modified, meta_title, meta_description, meta_keyword, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id=category_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id WHERE link_url='{$categoryURL}' AND link_type='category' AND link_status=200 AND link_site_id=" . SITE_ID . " AND meta_type='category' ORDER BY link_is_featured, link_modified DESC LIMIT 0, 1")) {
 
 	if (mysqli_num_rows($checkUrl) != 0) {
 
