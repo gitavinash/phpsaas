@@ -7,7 +7,7 @@
                     <p>Steps we are taking to keep you safe</p>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 testimonial-slider-box">
 
                 <!-- Testimonial slider -->
                 <h2 class="testimonial-slider-title">Testimonials</h2>

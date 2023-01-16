@@ -1531,10 +1531,17 @@ span.payout img {
 
 .bg-covid {
   float: left;
-  background-image: url(/app/ecom_gift/visitor/andblooms/desktop/assets/images/fasafety-footer.png);
-  background-size: cover;
+  background: #d4946d;
+  /* background-image: url(/app/ecom_gift/visitor/andblooms/desktop/assets/images/fasafety-footer.png); */
+  /* background-size: cover; */
   width: 100%;
   padding-bottom: 40px;
+}
+
+.testimonial-slider-box {
+  background: #ca7f52;
+  border-radius: 8px;
+  padding: 25px 20px;
 }
 
 .safety-head {
