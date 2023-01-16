@@ -1,8 +1,13 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Poppins, sans-serif;
+  font-family: "Jost", sans-serif;
   color: #3a3a3a;
+  background: #f2f2f2;
+}
+
+header {
+  background: #fff;
 }
 
 h1,
@@ -57,16 +62,17 @@ a:hover {
 .product-slider {
   float: left;
   width: 100%;
-  overflow: hidden;
   height: 400px;
+  overflow: hidden;
 }
 
 .product-slide {
   float: left;
+  border-radius: 8px;
   background: #fff;
+  height: 348px;
   box-sizing: border-box;
   margin: 0 10px;
-  height: 350px;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
     0 0 40px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
@@ -120,7 +126,7 @@ a:hover {
 }
 
 .header-top p span {
-  font-family: Arial;
+  font-family: "Lato", sans-serif;
 }
 
 .header-box {
@@ -129,7 +135,9 @@ a:hover {
   border-bottom: 1px solid #dcdcdc;
   border-top: 1px solid #dcdcdc;
   box-shadow: 0 4px 5px #0808081a;
+  background: #fff;
   z-index: 999;
+  height: 55px;
 }
 
 .header-top p .material-icons {
@@ -226,7 +234,7 @@ button:focus {
   background-position-x: 3px;
   box-sizing: border-box;
   height: 47px !important;
-  font-family: Poppins, sans-serif;
+  font-family: "Jost", sans-serif;
 }
 
 .city-popup {
@@ -263,7 +271,7 @@ button:focus {
   height: 30px;
   font-size: 18px;
   display: inline-block;
-  font-family: Lato;
+  font-family: "Lato", sans-serif;
   font-weight: 100;
   border: none;
   outline: 0;
@@ -831,7 +839,7 @@ img.mega-img {
 .card-cont h5 {
   margin-bottom: 11px;
   color: #6b6a6a;
-  font-family: Raleway, sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 700;
 }
 
@@ -843,7 +851,7 @@ img.mega-img {
 
 .wed-planer h2 {
   color: #ee4036;
-  font-family: Raleway, sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 25px;
   margin-bottom: 15px;
   font-weight: 700;
@@ -1141,7 +1149,7 @@ section.section-call {
   margin-bottom: 0;
   font-size: 30px;
   font-weight: 600;
-  background: #fff;
+  background: #f2f2f2;
   display: inline-block;
   padding: 0 10px;
 }
@@ -1228,11 +1236,20 @@ a.card-link:hover .img-acc img {
   width: 100%;
   float: left;
   margin-bottom: 40px;
+  background: #fff;
+  border-radius: 8px;
+  transition: box-shadow 0.3s;
+}
+
+.event-card:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
 }
 
 .img-cd img {
   text-align: center;
   width: 100%;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .img-cd {
@@ -1339,7 +1356,7 @@ h2.h2-socl {
 }
 
 .feature-tag h4 {
-  font-family: Poppins, sans-serif;
+  font-family: "Jost", sans-serif;
   font-size: 18px;
   text-align: center;
 }
@@ -1776,7 +1793,7 @@ span.payout img {
   width: 100%;
   font-size: 12px;
   margin-bottom: 5px;
-  font-family: Poppins, sans-serif;
+  font-family: "Jost", sans-serif;
 }
 
 .catag-lbel span {
@@ -2015,7 +2032,7 @@ a.out-of-stock:hover {
   width: 100%;
   border-top: 1px solid #ccc;
   padding-top: 20px;
-  font-family: Poppins, sans-serif !important;
+  font-family: "Lato", sans-serif;
 }
 
 .similar-product h1 {
@@ -3788,7 +3805,7 @@ footer {
     z-index: 9999;
     width: 100%;
     float: left;
-    background: #fff;
+    background: #ffffff;
   }
   .header-box {
     border-top: none;
@@ -4021,8 +4038,8 @@ footer {
     width: 98%;
   }
   .img-cd {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: auto;
   }
   .fot-box ul li:before {
     display: none;
@@ -4397,4 +4414,21 @@ form.franchise textarea {
 .featured-banner img {
   float: left;
   width: 100%;
+}
+
+.landing-page-heading {
+  float: left;
+  width: 100%;
+  padding: 50px 0px;
+  text-align: center;
+}
+
+.landing-page-heading h2 {
+  line-height: 48px;
+}
+
+.landing-page-heading p {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 28px;
 }

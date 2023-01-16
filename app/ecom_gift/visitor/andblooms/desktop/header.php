@@ -16,8 +16,10 @@
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;400;600&family=Lato&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>zoom-gallery/zoom.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -237,33 +239,6 @@
                                     </span>
                                 </div>
 
-                                <!-- more dots menu mobile -->
-                                <!-- <button class="navbar-toggler more-dots" type="button" data-toggle="collapse" data-target="#navbarMore" aria-controls="navbarMore" aria-expanded="false" aria-label="Toggle navigation">
-										<img src="<?php echo USER_IMAGES ?>more.svg">		
-									</button>
-									<div class="collapse navbar-collapse" id="navbarMore">
-										<ul class="navbar-nav mob-more">
-											<li class="nav-item">
-											    <a class="dropdown-item" href="#">Login</a>
-											</li>
-											<li class="nav-item">
-											    <a class="dropdown-item" href="#">Register</a>
-											</li>
-											<li class="nav-item">
-										        <a class="dropdown-item" href="#">Track Order</a>
-										    </li>
-											<li class="nav-item">
-										        <a class="dropdown-item" href="#">Same Day</a>
-										    </li>
-											<li class="nav-item">
-										        <a class="dropdown-item" href="#">Midnight</a>
-										    </li>
-											<li class="nav-item">
-										        <a class="dropdown-item" href="#">Contact Us</a>
-										    </li>
-										</ul>
-									</div> -->
-                                <!-- more dots menu mobile end-->
                             </div>
                             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                                 <ul class="navbar-nav menu-ul">
@@ -338,7 +313,7 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <li class="nav-item " style="background: #F19EB5; height: 50px">
+                                    <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/valentine/"><b>Valentine's
                                                 Day</b></a>
                                     </li>

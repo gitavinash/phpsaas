@@ -12,12 +12,23 @@ if (is_array($tagPost)) {
 <!-- section global platform start -->
 <section class="featured-banner">
     <img src="<?php echo USER_IMAGES ?>valentine-day-banner.jpg" alt="">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="landing-page-heading">
+                    <h2>
+                        Valentine's Day Special
+                    </h2>
+                    <p>Special gift for your partner</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- section global platform end -->
 
 <!-- section global platform start -->
-<section class="banner-section baner-bg">
-    <div class="overlay-bner"></div>
+<section class="banner-section">
     <div class="container">
         <div class="row ">
 
@@ -31,15 +42,6 @@ if (is_array($tagPost)) {
                 $resultTags = implode(' OR link_relation_id=', $tagId);
 
                 ?>
-
-        </div>
-    </div>
-    </div>
-</section>
-
-<section class="section-content">
-    <div class="container">
-        <div class="row">
 
             <?php
 

@@ -120,6 +120,13 @@
                     </div>
                 </div>
             </div>
+            <div class="row center">
+                <div class="col-md-12 col-12">
+                    <div class="footer-btm">
+                        <p>© 2020-<?php echo date('Y') ?> <?php echo SITE_NAME; ?>. All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="section-footer">
@@ -127,7 +134,8 @@
             <div class="row">
                 <div class="col-md-12 col-12">
                     <div class="footer-btm">
-                        <p>© 2020 <?php echo SITE_NAME; ?>. All Rights Reserved</p>
+                        <p>Design &amp; Developed by <a href="https://itssoftworld.com"
+                                title="Ecommerce development in delhi">ITS Soft World</a></p>
                     </div>
                 </div>
             </div>
@@ -135,13 +143,13 @@
     </div>
     <div class="whatsapp">
         <a
-            href="https://wa.me/919910744119?text=<?php echo ((isset($link_type)) ? (($link_type=='product') ? urlencode('i want to know about '.$product_title.' '.SITE_URL.ACTIVE_URL) : 'Hello' ) : 'Hello' ) ?>"><img
+            href="https://wa.me/919910744119?text=<?php echo ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello') ?>"><img
                 src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
     </div>
 </footer>
 
 <!-- sections end -->
-<?php include_once NOTIFICATION.'index.php' ?>
+<?php include_once NOTIFICATION . 'index.php' ?>
 
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
@@ -224,7 +232,7 @@ $(document).ready(function() {
 
     <?php
 
-				if(SITE_VERSION=='desktop') { ?>
+        if (SITE_VERSION == 'desktop') { ?>
 
     $('.product-main-slider-nav').slick({
         slidesToShow: 5,
@@ -236,7 +244,7 @@ $(document).ready(function() {
     });
 
     <?php
-				} else { ?>
+        } else { ?>
 
     $('.product-main-slider-nav').slick({
         slidesToShow: 3,
@@ -248,9 +256,9 @@ $(document).ready(function() {
     });
 
     <?php
-				}
+        }
 
-				?>
+        ?>
 
 });
 </script>
@@ -284,8 +292,8 @@ $("#close").click(function() {
 </script>
 
 <?php
-		
-		if(SITE_VERSION=='desktop') { ?>
+
+if (SITE_VERSION == 'desktop') { ?>
 
 <script>
 // Height of product details dev
@@ -328,9 +336,9 @@ $(function() {
 </script>
 
 <?php
-		}
+}
 
-		?>
+?>
 
 </body>
 
