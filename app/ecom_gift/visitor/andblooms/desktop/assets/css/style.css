@@ -3755,10 +3755,10 @@ footer {
 
 @media only screen and (min-width: 320px) and (max-width: 768px) {
   .product-slider {
-    height: auto !important;
+    height: 300px;
   }
   .product-slide {
-    height: auto !important;
+    height: 258px;
   }
   .product-main-slider {
     height: 300px;
@@ -3818,6 +3818,7 @@ footer {
     border-top: none;
     box-shadow: none;
     z-index: 999;
+    background: #fff;
   }
   .header-top {
     display: none;
@@ -3943,6 +3944,7 @@ footer {
   }
   a.cont-menu {
     margin-top: 10px;
+    margin-bottom: 20px;
   }
   .social {
     display: none;
@@ -4213,6 +4215,11 @@ footer {
   .pay-form .col-md-12 {
     padding: 0;
   }
+  .testimonial-slider-box {
+    margin: 0px 0% 20px 4%;
+    float: left;
+    width: 92%;
+  }
 }
 
 .deliveryDateBox {
@@ -4438,4 +4445,8 @@ form.franchise textarea {
   font-size: 18px;
   font-weight: 300;
   line-height: 28px;
+}
+
+.mobile-bg {
+  background: #fff;
 }

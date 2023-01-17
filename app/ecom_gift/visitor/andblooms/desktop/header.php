@@ -209,7 +209,7 @@
         <div class="header-box">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 mobile-bg">
                         <nav class="navbar navbar-expand-lg menu-top fixed">
                             <a href="" class="dn-l"><img src="<?php echo USER_IMAGES ?>logo1.png" class="logo-mb"></a>
                             <button class="navbar-toggler bar-mnu" type="button" data-toggle="collapse"
