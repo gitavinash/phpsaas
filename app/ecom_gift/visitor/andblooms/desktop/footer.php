@@ -191,10 +191,11 @@ $(document).ready(function() {
     $('.product-slider').slick({
         slidesToShow: 4,
         slidesToScroll: 1,
-        autoplay: false,
+        autoplay: true,
         autoplaySpeed: 2000,
         dots: false,
         arrows: false,
+        adaptiveHeight: true,
         responsive: [{
                 breakpoint: 1024,
                 settings: {
