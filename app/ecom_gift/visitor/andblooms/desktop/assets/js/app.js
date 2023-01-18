@@ -491,4 +491,17 @@ $(document).ready(function() {
 
     // $('.picZoomer').picZoomer();
 
+    $('.sorting').on('change', function(){
+        var sorting = $(this).find(":selected").val();
+        var url = window.location.href.split("?")[0];
+        if (window.location.href.indexOf("?") > 0) {
+            window.location = url + "?sort=" + sorting;
+            // console.log(url + "?sort=" + sorting);
+        } else {
+            window.location = url + "?sort=" + sorting;
+            // console.log(url + "?sort=" + sorting);
+        }
+        return false;
+    });
+
 });

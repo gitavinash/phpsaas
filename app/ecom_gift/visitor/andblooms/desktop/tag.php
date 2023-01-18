@@ -42,7 +42,7 @@ if (is_array($tagPost)) {
 <section class="section-content">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8 col-12">
                 <div class="brdcrum">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -52,6 +52,20 @@ if (is_array($tagPost)) {
                             </li>
                         </ol>
                     </nav>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="float-right">
+                    <select name="sort" class="form-select sorting">
+                        <option value="#">Sort by</option>
+                        <option value="latest" <?php echo ((@$_GET['sort'] == 'latest') ? 'selected' : '') ?>>Latest
+                        </option>
+                        <option value="price_low" <?php echo ((@$_GET['sort'] == 'price_low') ? 'selected' : '') ?>>
+                            Price
+                            low to high</option>
+                        <option value="price_high" <?php echo ((@$_GET['sort'] == 'price_high') ? 'selected' : '') ?>>
+                            Price high to low</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -93,16 +107,15 @@ if (is_array($tagPost)) {
                 <div class="pagination">
                     <?php
 
+                        $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
+
                         if (PAGE_NO != 0) {
-                            echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "'>Previous page</a>";
+                            echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
                         }
 
                         if ((PAGE_NO + 1) != TOTAL_PAGE) {
-                            echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "'>Next page " . TOTAL_PAGE . " - " . NEXT_PAGE . " &raquo;</a>";
+                            echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$sort}'>Next page " . TOTAL_PAGE . " - " . NEXT_PAGE . " &raquo;</a>";
                         }
-
-                        echo 'Pagination = ' . PAGE_NO . ' = ' . TOTAL_PAGE . ' | ' . NEXT_PAGE . ' = ' . TOTAL_PAGE;
-
 
                         ?>
                 </div>
