@@ -1,25 +1,22 @@
 <?php
 
-	if($checkProductMeta=mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".SITE_ID)) {
+if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM " . TABLE_PREFIX . "product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=" . SITE_ID)) {
 
-		if(mysqli_num_rows($checkProductMeta)!=0) {
+    if (mysqli_num_rows($checkProductMeta) != 0) {
 
-			$productMeta=array();
+        $productMeta = array();
 
-			while($checkProductMetaData=mysqli_fetch_assoc($checkProductMeta)) {
+        while ($checkProductMetaData = mysqli_fetch_assoc($checkProductMeta)) {
 
 
-				// Create dynamic variable in the name of product_meta_key value
+            // Create dynamic variable in the name of product_meta_key value
 
-				${$checkProductMetaData['product_meta_key']}=$checkProductMetaData['product_meta_value'];
+            ${$checkProductMetaData['product_meta_key']} = $checkProductMetaData['product_meta_value'];
+        }
+    }
+}
 
-			}
-
-		}
-
-	}
-
-    include_once 'header.php';
+include_once 'header.php';
 
 ?>
 
@@ -43,34 +40,30 @@
                 <!-- Product gallery -->
 
                 <div class="picZoomer">
-                    <img src="<?php echo $product_image ?>" alt="">
+                    <img src="<?php echo $product_image ?>" class="touchedPic" alt="">
                 </div>
                 <?php
-                
-                    if($product_gallery!='') {
 
-                        $galleryImages=json_decode($product_gallery, TRUE);
+                if ($product_gallery != '') {
 
-                        if($galleryImages!='') {
+                    $galleryImages = json_decode($product_gallery, TRUE);
 
-                            echo "<ul class='piclist' ><li><img src='{$product_image}' /></li>";
+                    if ($galleryImages != '') {
 
-							for($i=0; $i<sizeof($galleryImages); $i++) {
+                        echo "<ul class='piclist' ><li><img src='{$product_image}' /></li>";
 
-								extract($galleryImages[$i]);
-								echo "<li><img src='{$path}' /></li>";
+                        for ($i = 0; $i < sizeof($galleryImages); $i++) {
 
-						    }
+                            extract($galleryImages[$i]);
+                            echo "<li><img src='{$path}' /></li>";
+                        }
 
-                            echo '</ul>';
+                        echo '</ul>';
+                    } else {
 
-						} else {
-
-							echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
-
-						}
-
+                        echo "<div class='slide'><div class='img'><img src='{$product_image}' alt='{$product_title}' /></div></div>";
                     }
+                }
 
                 ?>
 
@@ -80,25 +73,24 @@
                 <div class="prod-detail" id="productDetails">
                     <h2><?php echo $product_title ?></h2>
                     <?php
-					
-						echo (($inventory_in_stock==0) ? "<h5 class='outStock'>Out of Stock</h5>" : "<h5 class='stock'>In Stock</h5>" );
 
-					?>
+                    echo (($inventory_in_stock == 0) ? "<h5 class='outStock'>Out of Stock</h5>" : "<h5 class='stock'>In Stock</h5>");
+
+                    ?>
                     <p class="catag-lbel">Product Contains </p>
                     <p class="catg-info"><?php echo $product_highlight ?></p>
                     <div class="price-tg">
 
                         <p style="display:none" id="productInfo"
-                            value="<?php echo $product_id.'_'.(($inventory_price==0) ? $inventory_mrp : $inventory_price ).'_1' ?>">
+                            value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
                         </p>
 
                         <?php
-						
-							if($inventory_price==0) {
 
-								echo "<h2 class='ofer-price'><img src='".USER_IMAGES."rupees.svg'> <span>{$inventory_mrp}</span></h2>";
+                        if ($inventory_price == 0) {
 
-							} else { ?>
+                            echo "<h2 class='ofer-price'><img src='" . USER_IMAGES . "rupees.svg'> <span>{$inventory_mrp}</span></h2>";
+                        } else { ?>
 
                         <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
                             <span><?php echo $inventory_price ?></span>
@@ -107,24 +99,22 @@
 
                         <?php
 
-								if($inventory_mrp!='') {
+                            if ($inventory_mrp != '') {
 
-									if($inventory_mrp!=$inventory_price) {
+                                if ($inventory_mrp != $inventory_price) {
 
-										$discountPersantage=round((1 - $inventory_price / $inventory_mrp) * 100, 0);
+                                    $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
 
-										echo "<h3 class='remain-days'>({$discountPersantage}% OFF)</h3>";
+                                    echo "<h3 class='remain-days'>({$discountPersantage}% OFF)</h3>";
+                                }
+                            }
 
-									}
-
-								}
-
-								?>
+                            ?>
 
                         <?php
-							}
+                        }
 
-						?>
+                        ?>
 
                     </div>
                     <!-- <div class="quantaty">
@@ -139,20 +129,20 @@
 					</div> -->
                     <div class="cart-box">
                         <input type="hidden" id="qty"
-                            value="<?php echo $product_id.'_1_'.(($inventory_price!=0) ? $inventory_price : $inventory_mrp) ?>">
+                            value="<?php echo $product_id . '_1_' . (($inventory_price != 0) ? $inventory_price : $inventory_mrp) ?>">
                         <!-- <span><img src="<?php echo USER_IMAGES ?>van.svg">Earliest delivery date: <?php echo date('d M Y', strtotime('+1 days')) ?></span> -->
                         <span><img src="<?php echo USER_IMAGES ?>van.svg">Same day delivery</span>
 
                         <?php
-					
-							echo (($inventory_in_stock==0) ? "<a class='out-of-stock'>Out of stock</a>" : "<a href='#' id='addToCart' class='cart-ad-btn'>Buy Now</a>" );
 
-						?>
+                        echo (($inventory_in_stock == 0) ? "<a class='out-of-stock'>Out of stock</a>" : "<a href='#' id='addToCart' class='cart-ad-btn'>Buy Now</a>");
+
+                        ?>
 
                         <p style="margin-top:5px">
                             <span>Availability in
                                 <strong
-                                    style="color: #2F9100"><?php echo ((isset($availability_cities)) ? $availability_cities : 'Delhi' ) ?></strong>
+                                    style="color: #2F9100"><?php echo ((isset($availability_cities)) ? $availability_cities : 'Delhi') ?></strong>
                                 only</span>
 
                         </p>
@@ -167,16 +157,15 @@
                         <h2>Care & Tips</h2>
                         <div class="care_n_tips">
                             <?php
-							
-							if(isset($care_n_tips)) {
 
-                                if($care_n_tips!='') {
+                            if (isset($care_n_tips)) {
 
-								    echo '<ul><li>'.str_replace('<br />', '</li><li>', $care_n_tips).'</li></ul>';
+                                if ($care_n_tips != '') {
 
-                                } else{
+                                    echo '<ul><li>' . str_replace('<br />', '</li><li>', $care_n_tips) . '</li></ul>';
+                                } else {
 
-                                     ?>
+                            ?>
 
                             <ul>
                                 <li>Start by removing the bouquet wrapper.</li>
@@ -192,8 +181,7 @@
                             <?php
 
                                 }
-
-							} else { ?>
+                            } else { ?>
 
                             <ul>
                                 <li>Start by removing the bouquet wrapper.</li>
@@ -207,23 +195,22 @@
                             </ul>
 
                             <?php
-							}
+                            }
 
-							?>
+                            ?>
                         </div>
                         <h2>Delivery Information</h2>
                         <div class="care_n_tips">
                             <?php
-							
-							if(isset($delivery_information)) {
 
-                                if($delivery_information!='') {
+                            if (isset($delivery_information)) {
 
-								    echo '<ul><li>'.str_replace('<br />', '</li><li>', $delivery_information).'</li></ul>';
+                                if ($delivery_information != '') {
 
-                                }  else {
+                                    echo '<ul><li>' . str_replace('<br />', '</li><li>', $delivery_information) . '</li></ul>';
+                                } else {
 
-                                     ?>
+                            ?>
 
                             <ul>
                                 <li>The image displayed is indicative. Actual product may vary in design & shape
@@ -240,8 +227,7 @@
                             <?php
 
                                 }
-
-							} else { ?>
+                            } else { ?>
 
                             <ul>
                                 <li>The image displayed is indicative. Actual product may vary in design & shape
@@ -256,12 +242,12 @@
                             </ul>
 
                             <?php
-							}
+                            }
 
-							?>
+                            ?>
                         </div>
                         <!-- SKU  -->
-                        <?php echo (($inventory_sku!='') ? "<div class='sku'><h4>SKU:</h4><h3>{$inventory_sku}</h3></div>" : "") ?>
+                        <?php echo (($inventory_sku != '') ? "<div class='sku'><h4>SKU:</h4><h3>{$inventory_sku}</h3></div>" : "") ?>
                         <!-- <h2>Reviews for Enticing Red Roses</h2>
 						<div class="recomnd">
 							<p class="star-rate"><img src="<?php echo USER_IMAGES ?>stars.svg"> 4.6 out of 5</p>
@@ -289,33 +275,30 @@
 
 
                     <?php
-				
-				if($tagListData=mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
 
-					if(mysqli_num_rows($tagListData)!=0) {
-					
-						extract(mysqli_fetch_assoc($tagListData));
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
-					
-					} else {
+                    if ($tagListData = mysqli_query($connection, "SELECT tag_title as relatedTags FROM isw_tag WHERE tag_relation_id='{$product_id}' LIMIT 0, 1")) {
 
-						$productRelated=explode(' ', $product_title);
-					
-						$relatedProductQuery= "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='".SITE_ID."' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
-					
-					}
-				
-				}
+                        if (mysqli_num_rows($tagListData) != 0) {
 
-				if($relatedProductsData=mysqli_query($connection, $relatedProductQuery)) {
+                            extract(mysqli_fetch_assoc($tagListData));
+                            $relatedProductQuery = "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$relatedTags}%' AND link_status=200 AND link_type='product' AND link_site_id='" . SITE_ID . "' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+                        } else {
 
-					if(mysqli_num_rows($relatedProductsData)!=0) {
-					
-						while($relatedProducts=mysqli_fetch_assoc($relatedProductsData)) {
-					
-							extract($relatedProducts);
+                            $productRelated = explode(' ', $product_title);
 
-							echo "
+                            $relatedProductQuery = "SELECT link_url, product_title, product_image, inventory_currency, inventory_price, inventory_mrp FROM isw_tag INNER JOIN isw_link ON link_relation_id=tag_relation_id INNER JOIN isw_product ON product_id=link_relation_id INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE tag_title LIKE '%{$productRelated[0]}%' AND link_status=200 AND link_type='product' AND link_site_id='" . SITE_ID . "' AND inventory_in_stock=1 GROUP BY tag_relation_id ORDER BY RAND() LIMIT 0, 10";
+                        }
+                    }
+
+                    if ($relatedProductsData = mysqli_query($connection, $relatedProductQuery)) {
+
+                        if (mysqli_num_rows($relatedProductsData) != 0) {
+
+                            while ($relatedProducts = mysqli_fetch_assoc($relatedProductsData)) {
+
+                                extract($relatedProducts);
+
+                                echo "
 							<div class='product-slide'>
 								<a href='{$link_url}'>
 									<div class='col-card-3'>
@@ -330,14 +313,11 @@
 								</a>
 							</div>
 						";
+                            }
+                        }
+                    }
 
-						}
-
-					}
-
-				}
-
-				?>
+                    ?>
 
                 </div>
             </div>
@@ -466,6 +446,6 @@
 
 <?php
 
-    include_once 'footer.php';
+include_once 'footer.php';
 
 ?>

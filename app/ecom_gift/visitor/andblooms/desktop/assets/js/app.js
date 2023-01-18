@@ -482,9 +482,14 @@ $(document).ready(function() {
 
     }
 
-    $('.piclist li').on('click touchstart', function(event) {
+    $('.piclist li').on('click', function(event) {
         var $pic = $(this).find('img');
         $('.picZoomer-pic').attr('src', $pic.attr('src'));
+    });
+
+    $('.piclist li').on('touchstart', function(event) {
+        var $pic = $(this).find('img');
+        $('.touchedPic').attr('src', $pic.attr('src'));
     });
 
     // // Product Zoom
