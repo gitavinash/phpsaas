@@ -32,24 +32,24 @@
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-        <tr>
-            <td>
-                <p><?php echo $user_username; ?></p>
-                <!-- <p><a
-                        href="user.php?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><?php echo $user_username; ?></a>
+                    <tr>
+                        <td>
+                            <p><?php echo $user_username; ?></p>
+                            <!-- <p><a
+                        href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><?php echo $user_username; ?></a>
                 </p> -->
-                <!-- <div class="hover">
-                    <a href="user.php?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><i
+                            <!-- <div class="hover">
+                    <a href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><i
                             class="fas fa-pencil-alt"></i> Edit</a>
                     <a href="#" id="<?php echo base64_encode($user_id) ?>_post" class="deleteBtn"><i
                             class="fas fa-trash"></i> Delete</a>
                 </div> -->
-            </td>
-            <td><?php echo $profile_display_name; ?></td>
-            <td><?php echo $user_email; ?></td>
-            <td><?php echo $site_access_type; ?></td>
-            <td></td>
-        </tr>
+                        </td>
+                        <td><?php echo $profile_display_name; ?></td>
+                        <td><?php echo $user_email; ?></td>
+                        <td><?php echo $site_access_type; ?></td>
+                        <td></td>
+                    </tr>
         <?php
                 }
             }

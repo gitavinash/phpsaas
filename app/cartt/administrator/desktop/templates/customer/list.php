@@ -56,7 +56,7 @@
                     href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_mobile ?></a>
             </td>
             <td>
-                <a href="customer.php?type=profile&id=<?php echo base64_encode($profile_user_id); ?>"
+                <a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id); ?>"
                     class="btn btn-sm btn-blue"><i class="fas fa-eye"></i> View</a>
             </td>
         </tr>

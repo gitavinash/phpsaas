@@ -173,11 +173,23 @@ include_once 'header.php';
                             </div>
                         </div>
                     </div>
+                    <strong>Have a Coupon Code?</strong>
+                    <div class="row">
+                        <form class="form-row">
+                            <div class="form-group col-12 cod-ap">
+                                <input type="text" class="form-control couponCode" id="couponCode2"
+                                    placeholder="Discount Code">
+                            </div>
+                            <div class="form-group col-md-4 ap-btn">
+                                <button type="submit" class="btn btn-success checkCoupon btn">Apply</button>
+                            </div>
+                            <span class="couponMsg"></span>
+                        </form>
+                    </div>
                     <h4>Grand Total</h4>
                     <h5 style="margin-bottom: 10px"><img
                             src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $cart_price + $order_delivery_charges ?>
                     </h5>
-                    <!-- <p>Have a Coupon Code? You can apply the discount coupon in the Checkout Process</p> -->
                     <form>
                         <input type="hidden" name="order" value="<?php echo $id ?>">
                         <input type="hidden" name="paymentMode" value="online">

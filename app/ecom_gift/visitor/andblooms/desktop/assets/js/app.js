@@ -509,4 +509,15 @@ $(document).ready(function() {
         return false;
     });
 
+    $('.checkCoupon').hide();
+
+    $('#couponCode2').on('input', function(){
+        code = $(this).val();
+        if(code.length!=0) {
+            $('.checkCoupon').show();
+        } else {
+            $('.checkCoupon').hide();
+        }
+    });
+
 });

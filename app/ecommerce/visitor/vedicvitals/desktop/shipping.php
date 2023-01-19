@@ -1,319 +1,324 @@
 <?php
 
-	if(isset($id)) {
+if (isset($id)) {
 
-		$id=base64_decode($id);
+	$id = base64_decode($id);
 
-		if($checkOrder=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."user ON order_user_id=user_id INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id INNER JOIN ".TABLE_PREFIX."address ON order_address_id=address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id WHERE order_id='{$id}' AND order_cart_session_id='".SESSION_ID."' AND order_status=0")) {
+	if ($checkOrder = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "user ON order_user_id=user_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "address ON order_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON city_id=address_city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE order_id='{$id}' AND order_cart_session_id='" . SESSION_ID . "' AND order_status=0")) {
 
-			if(mysqli_num_rows($checkOrder)!=0) {
+		if (mysqli_num_rows($checkOrder) != 0) {
 
-				extract(mysqli_fetch_assoc($checkOrder)); ?>
+			extract(mysqli_fetch_assoc($checkOrder)); ?>
 
-				<?php
+<?php
 
-				$totalPrice=0;
+			$totalPrice = 0;
 
-				?>
-				<!DOCTYPE html>
-				<html>
-				<head>
-					<meta charset="utf-8">
-					<link rel="shortcut icon" href=" ">
-					<title>Checkout </title>
-					<meta name="" content="">
-					<meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
-					<!-- css -->
-					<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap" rel="stylesheet">
-					<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
-					<link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
-					<link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
+			?>
+<!DOCTYPE html>
+<html>
 
-				</head>
-				<body>
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href=" ">
+    <title>Checkout </title>
+    <meta name="" content="">
+    <meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
+    <!-- css -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
 
-					<!-- section global platform start -->
-					<!-- <section class="banner-section pro-galery"> -->
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col-md-7">
-									<div class="main-right dn-l">
+</head>
 
-										<div class="check-head mob-check">
-											<div class="logo">
-												<a href="/" ><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
-											</div>
-										</div>
+<body>
 
-										<?php
+    <!-- section global platform start -->
+    <!-- <section class="banner-section pro-galery"> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="main-right dn-l">
 
-											if($checkCart=mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_price, product_title, product_image FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON product_id=cart_relation_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2 AND product_status=1 AND cart_site_id=".SITE_ID)) {
+                    <div class="check-head mob-check">
+                        <div class="logo">
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
+                        </div>
+                    </div>
 
-												if(mysqli_num_rows($checkCart)!=0) {
+                    <?php
 
-													while($cartData=mysqli_fetch_assoc($checkCart)) {
+								if ($checkCart = mysqli_query($connection, "SELECT cart_relation_type, cart_qty, cart_currency, cart_price, product_title, product_image FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON product_id=cart_relation_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=2 AND product_status=1 AND cart_site_id=" . SITE_ID)) {
 
-														extract($cartData);
-														
-														$totalPrice=$totalPrice+$cart_price;
+									if (mysqli_num_rows($checkCart) != 0) {
 
-														?>
+										while ($cartData = mysqli_fetch_assoc($checkCart)) {
 
-															<div class="prodcut-list-cart">
-																<img src="<?php echo $product_image ?>">
-																<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
-																<div class="price-new">
-																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
-																</div>
-															</div>
+											extract($cartData);
+
+											$totalPrice = $totalPrice + $cart_price;
+
+								?>
+
+                    <div class="prodcut-list-cart">
+                        <img src="<?php echo $product_image ?>">
+                        <h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
+                        <div class="price-new">
+                            <span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
+                        </div>
+                    </div>
 
 
-														<?php
+                    <?php
 
-													}
+										}
+									}
+								}
 
-												}
+								?>
 
-											}
+                    <div class="copn-div">
+                        <form class="form-row">
+                            <div class="form-group col-md-8 cod-ap">
+                                <input type="text" class="form-control couponCode" id="couponCode2"
+                                    placeholder="Discount Code">
+                            </div>
+                            <div class="form-group col-md-4 ap-btn">
+                                <button type="submit" class="checkCoupon btn">Apply</button>
+                            </div>
+                            <span class="couponMsg"></span>
+                        </form>
+                    </div>
 
-										?>
+                    <div class="sub-totl">
+                        <div class="sub1">
+                            <span class="spn-lft">Subtotal</span>
+                            <span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong
+                                    id="subTotal"><?php echo number_format($totalPrice, 2) ?></strong></span>
+                        </div>
+                        <div class="sub1">
+                            <span class="spn-lft">Shipping</span>
+                            <span class="spn-rgt ship-rt shippingCharge">Calculated at next step</span>
+                        </div>
+                    </div>
 
-										<div class="copn-div">
-											<form class="form-row">
-												<div class="form-group col-md-8 cod-ap">
-													<input type="text" class="form-control couponCode" id="couponCode2" placeholder="Discount Code">
-												</div>
-												<div class="form-group col-md-4 ap-btn">
-													<button type="submit" class="checkCoupon btn">Apply</button>
-												</div>
-												<span class="couponMsg" ></span>
-											</form>
-										</div>
+                    <div class="sub-tot2">
+                        <div class="sub1">
+                            <span class="spn-lft-1 totl">Total<br>
+                                <span class="ship-ad">Including GST</span></span>
+                            <span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong
+                                    id="finalPrice2"><?php echo number_format($totalPrice, 2) ?></strong></span>
+                        </div>
+                    </div>
 
-										<div class="sub-totl">
-											<div class="sub1">
-												<span class="spn-lft">Subtotal</span>
-												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="subTotal" ><?php echo number_format($totalPrice, 2) ?></strong></span>
-											</div>
-											<div class="sub1">
-												<span class="spn-lft">Shipping</span>
-												<span class="spn-rgt ship-rt shippingCharge" >Calculated at next step</span>
-											</div>
-										</div>
+                </div>
 
-										<div class="sub-tot2">
-											<div class="sub1">
-												<span class="spn-lft-1 totl">Total<br>
-													<span class="ship-ad">Including GST</span></span>
-												<span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice2" ><?php echo number_format($totalPrice, 2) ?></strong></span>
-											</div>
-										</div>
-
-									</div>
-
-									<div class="main-left">
-										<div class="check-head dn-s">
-											<div class="logo">
-												<a href="/" ><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
-											</div>
-										</div>
-										<div class="brdcrum check-bread dn-s">
-											<nav aria-label="breadcrumb">
-											<ol class="breadcrumb">
-												<!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <div class="main-left">
+                    <div class="check-head dn-s">
+                        <div class="logo">
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="logo-mb"></a>
+                        </div>
+                    </div>
+                    <div class="brdcrum check-bread dn-s">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
 												<li class="breadcrumb-item"><a href="#">Product</a></li>
 												<li class="breadcrumb-item active" aria-current="page">product name</li> -->
-											</ol>
-											</nav>
-										</div>
+                            </ol>
+                        </nav>
+                    </div>
 
-										<!-- Payment Gateway or Shipping Confirmation -->
+                    <!-- Payment Gateway or Shipping Confirmation -->
 
-										<form class="shipping-box" >
+                    <form class="shipping-box">
 
-											<div class="form-row">
-												<div class="form-group col-md-12">
-												<label class="labl-head">Contact information</label>
-												</div>
-												<table class="table ship-table">
-												
-												<tbody>
-													<tr>
-														<th scope="row" style="width: 80px" >Name</th>
-														<td id='shippingName' ><?php echo $profile_display_name ?></td>
-													</tr>
-													<tr>
-														<th scope="row">Email</th>
-														<td id='shippingName' ><?php echo $profile_email ?></td>
-													</tr>
-													<tr>
-														<th scope="row">Mobile</th>
-														<td id='shippingName' ><?php echo $address_mobile ?></td>
-													</tr>
-													<tr>
-														<th scope="row">Ship to</th>
-														<td id='shippingAddress' ><?php echo $address_house_no.', '.$address_landmark.', '.$address_area.', '.$city_name.', '.$state_name.' - '.$address_pin_code; ?></td>
-													</tr>
-												</tbody>
-												</table>
-											</div>
-											
-											<div class="form-row">
-												<div class="form-group col-md-12">
-													<label class="labl-head">Shipping Method</label>
-												</div>
-												<table class="table ship-table ship-mth">
-												
-												<tbody>
-													<tr>
-													<td>
-														<input class="form-check-input" id="online" type="radio" name="paymentMode" value="online" checked >
-													</td>
-													<th scope="row">Prepaid Shipping</th>
-													<td><span>Free</span></td>
-													</tr>
-													<tr>
-													<td>
-														<input class="form-check-input" id="cod" type="radio" name="paymentMode" value="cash" >
-													</td>
-													<th scope="row">COD ( Cash handling Charges )</th>
-													<td><span><i class="fas fa-rupee-sign"></i> 50/-</span></td>
-													</tr>
-												</tbody>
-												</table>
-											</div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label class="labl-head">Contact information</label>
+                            </div>
+                            <table class="table ship-table">
 
-											<div class="form-row actn-box">
-												<div class="form-group col-md-6">
-													<!-- <a href='#' id='backToCheckout' class="retn"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Information</a> -->
-												</div>
-												<div class="form-group col-md-6">
-													<input type="hidden" name="order" value="<?php echo $id ?>" >
-													<a href='#' id="continueToPayment" class="btn shi-btn">Continue Payment</a>
-												</div>
-											</div>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" style="width: 80px">Name</th>
+                                        <td id='shippingName'><?php echo $profile_display_name ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Email</th>
+                                        <td id='shippingName'><?php echo $profile_email ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Mobile</th>
+                                        <td id='shippingName'><?php echo $address_mobile ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Ship to</th>
+                                        <td id='shippingAddress'>
+                                            <?php echo $address_house_no . ', ' . $address_landmark . ', ' . $address_area . ', ' . $city_name . ', ' . $state_name . ' - ' . $address_pin_code; ?>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-										</form>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label class="labl-head">Shipping Method</label>
+                            </div>
+                            <table class="table ship-table ship-mth">
 
-										<!-- footer-link -->
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" id="online" type="radio" name="paymentMode"
+                                                value="online" checked>
+                                        </td>
+                                        <th scope="row">Prepaid Shipping</th>
+                                        <td><span>Free</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" id="cod" type="radio" name="paymentMode"
+                                                value="cash">
+                                        </td>
+                                        <th scope="row">COD ( Cash handling Charges )</th>
+                                        <td><span><i class="fas fa-rupee-sign"></i> 50/-</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-										<div class="check-footer">
-											<ul>
-												<li><a href="/return-policy/">Return policy</a></li>
-												<li><a href="/disclaimer/">Disclaimer</a></li>
-												<li><a href="/privacy-policy/">Privacy policy</a></li>
-												<li><a href="/terms-of-use/">Terms of use</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-5 bg-gry dn-s">
-									<div class="main-right">
+                        <div class="form-row actn-box">
+                            <div class="form-group col-md-6">
+                                <!-- <a href='#' id='backToCheckout' class="retn"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Information</a> -->
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="hidden" name="order" value="<?php echo $id ?>">
+                                <a href='#' id="continueToPayment" class="btn shi-btn">Continue Payment</a>
+                            </div>
+                        </div>
 
-										<?php
+                    </form>
 
-											// if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2")) {
-											if($checkCart=mysqli_query($connection, "SELECT product_title, product_thumbnail, product_image, cart_qty, cart_price FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2")) {
+                    <!-- footer-link -->
 
-												if(mysqli_num_rows($checkCart)!=0) {
+                    <div class="check-footer">
+                        <ul>
+                            <li><a href="/return-policy/">Return policy</a></li>
+                            <li><a href="/disclaimer/">Disclaimer</a></li>
+                            <li><a href="/privacy-policy/">Privacy policy</a></li>
+                            <li><a href="/terms-of-use/">Terms of use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 bg-gry dn-s">
+                <div class="main-right">
 
-													$totalPrice=0;
+                    <?php
 
-													while($cartData=mysqli_fetch_assoc($checkCart)) {
+								// if($checkCart=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."cart INNER JOIN ".TABLE_PREFIX."product ON cart_relation_id=product_id WHERE cart_session_id='".SESSION_ID."' AND cart_status=2")) {
+								if ($checkCart = mysqli_query($connection, "SELECT product_title, product_thumbnail, product_image, cart_qty, cart_price FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON cart_relation_id=product_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=2")) {
 
-														extract($cartData);
+									if (mysqli_num_rows($checkCart) != 0) {
 
-														$totalPrice=$totalPrice+$cart_price;
+										$totalPrice = 0;
 
-														?>
+										while ($cartData = mysqli_fetch_assoc($checkCart)) {
 
-															<div class="prodcut-list-cart">
-																<img src="<?php echo $product_image ?>">
-																<h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
-																<div class="price-new">
-																	<span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
-																</div>
-															</div>
+											extract($cartData);
+
+											$totalPrice = $totalPrice + $cart_price;
+
+								?>
+
+                    <div class="prodcut-list-cart">
+                        <img src="<?php echo $product_image ?>">
+                        <h3><?php echo $product_title; ?> – Pack of <?php echo $cart_qty ?></h3>
+                        <div class="price-new">
+                            <span><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo $cart_price ?></span>
+                        </div>
+                    </div>
 
 
-														<?php
+                    <?php
 
-													}
+										}
+									} else {
 
-												} else {
+										echo "Empty Cart";
+									}
+								}
 
-													echo "Empty Cart";
+								?>
 
-												}
+                    <div class="copn-div">
+                        <form class="form-row">
+                            <div class="form-group col-md-8 cod-ap">
+                                <input type="text" class="form-control couponCode" id="couponCode1"
+                                    placeholder="Discount Code">
+                            </div>
+                            <div class="form-group col-md-4 ap-btn">
+                                <button type="submit" class="checkCoupon btn">Apply</button>
+                            </div>
+                            <span class="couponMsg"></span>
+                        </form>
+                    </div>
 
-											}
+                    <div class="sub-totl">
+                        <div class="sub1">
+                            <span class="spn-lft">Subtotal</span>
+                            <span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i>
+                                <?php echo number_format($totalPrice, 2) ?></span>
+                            <span id='cartPrice' style='display:none'><?php echo number_format($totalPrice, 2) ?></span>
+                        </div>
+                        <div class="sub1">
+                            <span class="spn-lft">Shipping</span>
+                            <span class="spn-rgt ship-rt shippingCharge">Calculated at next step</span>
+                        </div>
+                    </div>
 
-										?>
+                    <div class="sub-tot2">
+                        <div class="sub1">
+                            <span class="spn-lft-1 totl">Total<br>
+                                <span class="ship-ad">Including GST</span></span>
+                            <span class="spn-rgt-1 man-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong
+                                    id="finalPrice"><?php echo number_format($totalPrice, 2) ?></strong></span>
+                        </div>
+                    </div>
 
-										<div class="copn-div">
-											<form class="form-row">
-												<div class="form-group col-md-8 cod-ap">
-													<input type="text" class="form-control couponCode" id="couponCode1" placeholder="Discount Code">
-												</div>
-												<div class="form-group col-md-4 ap-btn">
-													<button type="submit" class="checkCoupon btn">Apply</button>
-												</div>
-												<span class="couponMsg" ></span>
-											</form>
-										</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- </section> -->
+    <!-- section global platform end -->
 
-										<div class="sub-totl">
-											<div class="sub1">
-												<span class="spn-lft">Subtotal</span>
-												<span class="spn-rgt rt-t"><i class="fas fa-rupee-sign" aria-hidden="true"></i> <?php echo number_format($totalPrice, 2) ?></span>
-												<span id='cartPrice' style='display:none' ><?php echo number_format($totalPrice, 2) ?></span>
-											</div>
-											<div class="sub1">
-												<span class="spn-lft">Shipping</span>
-												<span class="spn-rgt ship-rt shippingCharge" >Calculated at next step</span>
-											</div>
-										</div>
+    <!-- script start -->
+    <?php require_once NOTIFICATION . 'index.php' ?>
 
-										<div class="sub-tot2">
-											<div class="sub1">
-												<span class="spn-lft-1 totl">Total<br>
-												<span class="ship-ad">Including GST</span></span>
-												<span class="spn-rgt-1 man-t" ><i class="fas fa-rupee-sign" aria-hidden="true"></i> <strong id="finalPrice" ><?php echo number_format($totalPrice, 2) ?></strong></span>
-											</div>
-										</div>
+    <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
+    <!-- script end -->
 
-									</div>
-								</div>
-							</div>
-						</div> 
-					<!-- </section> -->
-					<!-- section global platform end -->
 
-					<!-- script start -->
-					<?php require_once NOTIFICATION.'index.php' ?>
-	
-					<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" ></script>
-					<script type="text/javascript" src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
-					<!-- script end -->
 
-					
+</body>
 
-				</body>
-				</html>
+</html>
 
-				<?php
-			} else {
+<?php
+		} else {
 
-				require_once 'continue-shopping.php';
-
-			}
-
+			require_once 'continue-shopping.php';
 		}
-
-	} else {
-
-		require_once 'continue-shopping.php';
-
 	}
+} else {
+
+	require_once 'continue-shopping.php';
+}
 
 ?>

@@ -1,18 +1,19 @@
 <?php
-	
-	$coupon_id=base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
-    
-	if($couponDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."coupon WHERE coupon_id='{$coupon_id}' AND coupon_site_id=".APP_SITE_ID)) {
-		if(mysqli_num_rows($couponDetails)!=0) {
-			extract(mysqli_fetch_assoc($couponDetails));
-		} else { exit(); ?>
+
+$coupon_id = base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
+
+if ($couponDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "coupon WHERE coupon_id='{$coupon_id}' AND coupon_site_id=" . APP_SITE_ID)) {
+    if (mysqli_num_rows($couponDetails) != 0) {
+        extract(mysqli_fetch_assoc($couponDetails));
+    } else {
+        exit(); ?>
 <script type="text/javascript">
 alert('Invalid action found');
 window.location.href = 'dashboard/coupon/?type=list&status=all';
 </script>
 <?php
-		}
-	}
+    }
+}
 
 ?>
 
@@ -47,66 +48,76 @@ window.location.href = 'dashboard/coupon/?type=list&status=all';
                     <label>Payment mode</label>
                     <select class="form-control inside-shadow" name="paymentMode" id="paymentMode" required>
                         <option value="#">Payment mode</option>
-                        <option value="all" <?php echo (($coupon_payment_mode=='all') ? 'selected' : '') ?>>All</option>
-                        <option value="cash" <?php echo (($coupon_payment_mode=='cash') ? 'selected' : '') ?>>Cash
+                        <option value="all" <?php echo (($coupon_payment_mode == 'all') ? 'selected' : '') ?>>All
                         </option>
-                        <option value="online" <?php echo (($coupon_payment_mode=='online') ? 'selected' : '') ?>>Online
+                        <option value="cash" <?php echo (($coupon_payment_mode == 'cash') ? 'selected' : '') ?>>Cash
                         </option>
-                    </select>
-                </div>
-            </div>
-            <div class="box-2">
-                <div class="form-group">
-                    <label>Discount</label>
-                    <input type="number" id="discount" class="form-control inside-shadow"
-                        value="<?php echo $coupon_discount ?>" name="discount" placeholder="Discount" required>
-                </div>
-            </div>
-            <div class="box-2">
-                <div class="form-group">
-                    <label>Discount type</label>
-                    <select class="form-control inside-shadow" name="discountType" id="discountType" required>
-                        <option value="#" <?php echo (($coupon_discount_type=='#') ? 'selected' : '') ?>>Dicount type
-                        </option>
-                        <option value="%" <?php echo (($coupon_discount_type=='%') ? 'selected' : '') ?>>Percentage (%)
-                        </option>
-                        <option value="₹" <?php echo (($coupon_discount_type=='₹') ? 'selected' : '') ?>>INR (₹)
-                        </option>
-                        <option value="$" <?php echo (($coupon_discount_type=='$') ? 'selected' : '') ?>>USD ($)
+                        <option value="online" <?php echo (($coupon_payment_mode == 'online') ? 'selected' : '') ?>>
+                            Online
                         </option>
                     </select>
                 </div>
             </div>
-            <div class="box-2">
-                <div class="form-group">
-                    <label>Minimum cart amount</label>
-                    <input type="number" id="minCartAmount" value="<?php echo $coupon_min_value ?>"
-                        class="form-control inside-shadow" name="minCartAmount" placeholder="Minimum cart amount">
+            <section>
+                <div class="box-2">
+                    <div class="form-group">
+                        <label>Discount</label>
+                        <input type="number" id="discount" class="form-control inside-shadow"
+                            value="<?php echo $coupon_discount ?>" name="discount" placeholder="Discount" required>
+                    </div>
                 </div>
-            </div>
-            <div class="box-2">
-                <div class="form-group">
-                    <label>Maximum discount amount</label>
-                    <input type="number" id="maxDiscount" class="form-control inside-shadow"
-                        value="<?php echo $coupon_max_discount ?>" name="maxDiscount"
-                        placeholder="( Ignore for same as the discount amount )">
+                <div class="box-2">
+                    <div class="form-group">
+                        <label>Discount type</label>
+                        <select class="form-control inside-shadow" name="discountType" id="discountType" required>
+                            <option value="#" <?php echo (($coupon_discount_type == '#') ? 'selected' : '') ?>>Dicount
+                                type
+                            </option>
+                            <option value="%" <?php echo (($coupon_discount_type == '%') ? 'selected' : '') ?>>
+                                Percentage (%)
+                            </option>
+                            <option value="₹" <?php echo (($coupon_discount_type == '₹') ? 'selected' : '') ?>>INR (₹)
+                            </option>
+                            <option value="$" <?php echo (($coupon_discount_type == '$') ? 'selected' : '') ?>>USD ($)
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="box-2">
-                <div class="form-group">
-                    <label>Limit</label>
-                    <input type="number" id="limit" class="form-control inside-shadow"
-                        value="<?php echo $coupon_limit ?>" name="limit" placeholder="0 for unlimited use">
+            </section>
+            <section>
+                <div class="box-2">
+                    <div class="form-group">
+                        <label>Minimum cart amount</label>
+                        <input type="number" id="minCartAmount" value="<?php echo $coupon_min_value ?>"
+                            class="form-control inside-shadow" name="minCartAmount" placeholder="Minimum cart amount">
+                    </div>
                 </div>
-            </div>
-            <div class="box-2">
-                <div class="form-group">
-                    <label>Expiry date*</label>
-                    <input type="text" class="datepicker form-control inside-shadow"
-                        value="<?php echo date('d/m/Y', strtotime($coupon_expire)) ?>" name="expiryDate"
-                        placeholder="Ignore for lifetime">
+                <div class="box-2">
+                    <div class="form-group">
+                        <label>Maximum discount amount</label>
+                        <input type="number" id="maxDiscount" class="form-control inside-shadow"
+                            value="<?php echo $coupon_max_discount ?>" name="maxDiscount"
+                            placeholder="( Ignore for same as the discount amount )">
+                    </div>
                 </div>
-            </div>
+            </section>
+            <section>
+                <div class="box-2">
+                    <div class="form-group">
+                        <label>Limit</label>
+                        <input type="number" id="limit" class="form-control inside-shadow"
+                            value="<?php echo $coupon_limit ?>" name="limit" placeholder="0 for unlimited use">
+                    </div>
+                </div>
+                <div class="box-2">
+                    <div class="form-group">
+                        <label>Expiry date*</label>
+                        <input type="text" class="datepicker form-control inside-shadow"
+                            value="<?php echo date('d/m/Y', strtotime($coupon_expire)) ?>" name="expiryDate"
+                            placeholder="Ignore for lifetime">
+                    </div>
+                </div>
+            </section>
         </div>
         <div class="right-box">
             <div class="action-box inside-shadow">

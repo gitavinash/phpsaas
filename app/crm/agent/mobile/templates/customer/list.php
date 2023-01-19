@@ -1,7 +1,7 @@
 <?php
 
-	$orderStatus=mysqli_real_escape_string($connection, $_GET['status']);
-	$orderStatus=(($orderStatus=='all') ? '' : "AND order_status='{$orderStatus}'" );
+$orderStatus = mysqli_real_escape_string($connection, $_GET['status']);
+$orderStatus = (($orderStatus == 'all') ? '' : "AND order_status='{$orderStatus}'");
 
 ?>
 <h2>All Customers</h2>
@@ -10,13 +10,13 @@
         <form method="GET">
             <input type="hidden" name="type" value="<?php echo $_GET['type']; ?>">
             <select class="form-control" name="status" id="changeStatus">
-                <option value="all" <?php echo (($_GET['status']=='all') ? 'selected' : '' ) ?>>All
+                <option value="all" <?php echo (($_GET['status'] == 'all') ? 'selected' : '') ?>>All
                     <?php echo $postType ?></option>
-                <option value="0" <?php echo (($_GET['status']=='0') ? 'selected' : '' ) ?>>Pending
+                <option value="0" <?php echo (($_GET['status'] == '0') ? 'selected' : '') ?>>Pending
                     <?php echo $postType ?></option>
-                <option value="1" <?php echo (($_GET['status']=='1') ? 'selected' : '' ) ?>>Confirm
+                <option value="1" <?php echo (($_GET['status'] == '1') ? 'selected' : '') ?>>Confirm
                     <?php echo $postType ?></option>
-                <option value="2" <?php echo (($_GET['status']=='2') ? 'selected' : '' ) ?>>Cancel
+                <option value="2" <?php echo (($_GET['status'] == '2') ? 'selected' : '') ?>>Cancel
                     <?php echo $postType ?></option>
             </select>
             <input type="submit" class="btn" value="Filter">
@@ -39,33 +39,30 @@
     <tbody>
         <?php
 
-			if($dataList=mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM ".TABLE_PREFIX."order INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=order_user_id WHERE order_site_id=".APP_SITE_ID." {$orderStatus} GROUP BY order_user_id ORDER BY order_id DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_id, order_product_qty, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, order_generate, order_status FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=order_user_id WHERE order_site_id=" . APP_SITE_ID . " {$orderStatus} GROUP BY order_user_id ORDER BY order_id DESC")) {
 
-					if(mysqli_num_rows($dataList)!=0) {
-                        $i=1;
-						while($data=mysqli_fetch_assoc($dataList)) {
-                            extract($data);
-                            ?>
-        <tr>
-            <td><?php echo $i ?></td>
-            <td><?php echo 'OD'.$order_id ?></td>
-            <td><a
-                    href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_display_name ?></a>
-            </td>
-            <td><a
-                    href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_mobile ?></a>
-            </td>
-            <td>
-                <a href="customer.php?type=profile&id=<?php echo base64_encode($profile_user_id); ?>"
-                    class="btn btn-sm btn-blue"><i class="fas fa-eye"></i> View</a>
-            </td>
-        </tr>
+            if (mysqli_num_rows($dataList) != 0) {
+                $i = 1;
+                while ($data = mysqli_fetch_assoc($dataList)) {
+                    extract($data);
+        ?>
+                    <tr>
+                        <td><?php echo $i ?></td>
+                        <td><?php echo 'OD' . $order_id ?></td>
+                        <td><a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_display_name ?></a>
+                        </td>
+                        <td><a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id) ?>"><?php echo $profile_mobile ?></a>
+                        </td>
+                        <td>
+                            <a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id); ?>" class="btn btn-sm btn-blue"><i class="fas fa-eye"></i> View</a>
+                        </td>
+                    </tr>
         <?php
-						$i++;
-						}
-					}
-			}
-			
-		?>
+                    $i++;
+                }
+            }
+        }
+
+        ?>
     </tbody>
 </table>
