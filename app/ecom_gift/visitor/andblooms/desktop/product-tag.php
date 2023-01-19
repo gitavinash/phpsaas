@@ -71,7 +71,23 @@ include_once 'header.php';
 
             <?php
 
-            if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 AND (link_relation_id={$resultTags}) AND link_site_id=" . SITE_ID . " AND inventory_type='product' ORDER BY link_is_featured, link_published DESC LIMIT 0, 100")) {
+            $sortBy = 'link_is_featured, link_published DESC';
+
+            if (isset($_GET['sort'])) {
+
+                switch ($_GET['sort']) {
+
+                    case 'price_low':
+                        $sortBy = 'inventory_price ASC';
+                        break;
+
+                    case 'price_high':
+                        $sortBy = 'inventory_price DESC';
+                        break;
+                }
+            }
+
+            if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 AND (link_relation_id={$resultTags}) AND link_site_id=" . SITE_ID . " AND inventory_type='product' ORDER BY {$sortBy} LIMIT 0, 100")) {
 
                 if (mysqli_num_rows($tagResults) != 0) {
 
