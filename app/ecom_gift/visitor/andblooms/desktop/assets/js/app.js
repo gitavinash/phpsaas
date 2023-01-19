@@ -520,4 +520,79 @@ $(document).ready(function() {
         }
     });
 
+
+    /** Check Coupon */
+
+    $('.checkCoupon').click(function(e) {
+        e.preventDefault();
+ 
+        var couponCode1 = $('#couponCode1').val();
+        var couponCode2 = $('#couponCode2').val();
+
+        var paymentMode = $('input[name="paymentMode"]:checked').val();
+        var cartPrice = $('#cartPrice').text();
+        
+        var couponCode='';
+
+        if(couponCode1!='') {
+            couponCode=couponCode1;
+        }
+
+        if(couponCode2!='') {
+            couponCode=couponCode2;
+        }
+
+        if(couponCode!='') {
+
+            $('.checkCoupon').hide();
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'coupon' : couponCode,
+                    'paymentMode' : paymentMode,
+                    'cartPrice' : cartPrice,
+                    'type' : 'coupon',
+                    'action' : 'validate'
+                },
+                success: function(data) {
+
+                    console.log(data);
+                    
+                    if(data.status==200) {
+
+                        $('.couponMsg').css('color', '#28a745');
+                        $('.couponMsg').html(data.msg);
+
+                        var totalValue=$('#finalPrice2').text();
+
+                        totalValue=totalValue-data.discount;
+                        totalValue=totalValue.toFixed(2);
+
+                        $('#finalPrice').text(totalValue);
+                        $('#finalPrice2').text(totalValue);
+
+                    } else {
+                        $('.couponMsg').css('color', '#ff0000');
+                        $('.couponMsg').html(data.msg);
+                    }
+                    
+                    $('.checkCoupon').show();
+    
+                },
+                error: function(data) {
+                    console.log(data);
+                    $('#checkCoupon').show();
+                }
+            });
+
+        } else {
+            
+            popUpMessage('center', 'Please enter coupon code', 'warning');
+
+        }
+        
+    })
+
 });
