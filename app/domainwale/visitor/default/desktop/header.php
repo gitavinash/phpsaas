@@ -85,7 +85,8 @@
         <section class="mobile">
             <div class="container">
                 <div class="logo l-w3 fl">
-                    <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo"></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>oxteal-logo-dark.png"
+                            alt="<?php echo SITE_NAME ?> Logo"></a>
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">
@@ -102,24 +103,20 @@
                     <a href="#" class="closebtn" id="closeNav"><i class="fi-rr-cross-small"></i></a>
                     <div class="menu fl">
                         <ul class="list-menu">
-                            <li><a href="/domain/"><i class="fi-rr-globe"></i>Domain <i
+                            <li><a href="/domain-name-registration/"><i class="fi-rr-globe"></i>Domain Registration<i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/hosting/"><i class="fi-rr-network-cloud"></i> Hosting <i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/vps-hosting/"><i class="fi-rr-database"></i> VPS Hosting <i
+                            <li><a href="/linux-web-hosting/"><i class="fi-rr-network-cloud"></i> Hosting <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/wordpress-hosting/"><i class="fi-rr-database"></i> WordPress Hosting <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/ssl-certificate/"><i class="fi-rr-shield-check"></i> SSL certificate<i
+                            <li><a href="/whois-lookup/"><i class="fi-rr-world"></i> WHOIS <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/whois/"><i class="fi-rr-world"></i> WHOIS <i
+                            <li><a href="/website-development/"><i class="fi-rr-browser"></i> Website <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/website-design/"><i class="fi-rr-browser"></i> Website <i
+                            <li><a href="/website-amc/"><i class="fi-rr-pulse"></i> AMC <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/amc/"><i class="fi-rr-pulse"></i> AMC <i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/blog/"><i class="fi-rr-book-alt"></i> Blog <i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li>
+                            <!-- <li><a href="https://blog.oxteal.com/"><i class="fi-rr-book-alt"></i> Blog <i
+                                        class="fi-rr-arrow-small-right fr"></i></a></li> -->
                         </ul>
                     </div>
                 </div>

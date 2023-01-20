@@ -58,7 +58,7 @@
                     <li><a href="/website-migration/">Website Migration</a></li>
                     <li><a href="/website-amc/">Website AMC</a></li>
                     <li><a href="/website-development/">Website Development</a></li>
-                    <li><a href="/website-development/">Online Store</a></li>
+                    <li><a href="/ecommerce-website-development/">Online Store</a></li>
                     <li><a href="/digital-marketing/">Digital Marketing</a></li>
                 </ul>
             </div>

@@ -528,7 +528,7 @@ footer {
   width: 100%;
   font-size: 24px;
   font-family: Lato, sans-serif;
-  padding: 20px 0px;
+  padding: 21px 0px;
   box-sizing: border-box;
 }
 
@@ -725,18 +725,18 @@ ul.footer-list li a {
 /* Domain search page styling */
 
 .domain-search-box {
-  background: #fff;
-  padding: 50px 0px 0px 0;
+  background: #2f4f4f;
+  padding: 125px 0px 125px 0px;
   box-sizing: border-box;
 }
 
 .domain-search-box h1 {
   float: left;
   width: 100%;
-  color: #009b72;
+  color: #f2f2f2;
   font-size: 32px;
-  padding: 10px 0px;
-  font-weight: 500;
+  padding: 25px 0px;
+  font-weight: 600;
   padding-top: 50px;
 }
 
@@ -747,6 +747,16 @@ ul.footer-list li a {
 
 .show-domain-result {
   background: #fff;
+}
+
+.show-domain-result h1 {
+  float: left;
+  width: 100%;
+  color: #009b72;
+  font-size: 32px;
+  padding: 10px 0px;
+  font-weight: 500;
+  padding-top: 50px;
 }
 
 .result-loader {
@@ -1069,8 +1079,8 @@ button:disabled {
   /* Domain search page styling */
 
   .domain-search-box {
-    background: #fff;
-    padding: 20px 0px 0px 0px;
+    background: #2f4f4f;
+    padding: 125px 0px 125px 0px;
     box-sizing: border-box;
     font-family: "Lato", sans-serif;
   }
