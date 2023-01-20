@@ -233,23 +233,14 @@ $(document).ready(function() {
       e.preventDefault();
       $('#continueToPayment').hide();
 
-      var couponCode1 = $('#couponCode1').val();
-      var couponCode2 = $('#couponCode2').val();
-
-      var couponCode;
-
-      if(couponCode1!='') {
-          couponCode=couponCode1;
-      }
-
-      if(couponCode2!='') {
-          couponCode=couponCode2;
-      }
+      var couponCode= $('#couponCode').val();
 
       var formData = $('.shipping-box').serializeArray();
       formData.push({name:'coupon', value: couponCode});
       formData.push({name:'type', value:'order'});
       formData.push({name:'action', value:'generate'});
+      formData.push({name:'order', value: $('#orderId').val()});
+      formData.push({name:'paymentMode', value: 'online'});
 
       $.ajax({
           type: 'POST',
@@ -511,7 +502,7 @@ $(document).ready(function() {
 
     $('.checkCoupon').hide();
 
-    $('#couponCode2').on('input', function(){
+    $('#couponCode').on('input', function(){
         code = $(this).val();
         if(code.length!=0) {
             $('.checkCoupon').show();
@@ -526,21 +517,10 @@ $(document).ready(function() {
     $('.checkCoupon').click(function(e) {
         e.preventDefault();
  
-        var couponCode1 = $('#couponCode1').val();
-        var couponCode2 = $('#couponCode2').val();
+        var couponCode = $('#couponCode').val();
 
-        var paymentMode = $('input[name="paymentMode"]:checked').val();
+        var paymentMode = 'online';
         var cartPrice = $('#cartPrice').text();
-        
-        var couponCode='';
-
-        if(couponCode1!='') {
-            couponCode=couponCode1;
-        }
-
-        if(couponCode2!='') {
-            couponCode=couponCode2;
-        }
 
         if(couponCode!='') {
 
@@ -565,13 +545,12 @@ $(document).ready(function() {
                         $('.couponMsg').css('color', '#28a745');
                         $('.couponMsg').html(data.msg);
 
-                        var totalValue=$('#finalPrice2').text();
+                        var totalValue=$('#finalPrice').text();
 
                         totalValue=totalValue-data.discount;
                         totalValue=totalValue.toFixed(2);
 
                         $('#finalPrice').text(totalValue);
-                        $('#finalPrice2').text(totalValue);
 
                     } else {
                         $('.couponMsg').css('color', '#ff0000');
@@ -582,7 +561,6 @@ $(document).ready(function() {
     
                 },
                 error: function(data) {
-                    console.log(data);
                     $('#checkCoupon').show();
                 }
             });

@@ -36,25 +36,21 @@ if (isset($coupon)) {
                         }
 
                         // Check minimum cart value
+                        if ($paymentMode) {
 
-                        if (isset($paymentMode)) {
+                            if ($coupon_min_value != 0) {
 
-                            if ($paymentMode) {
-
-                                if ($coupon_min_value != 0) {
-
-                                    if ($coupon_min_value < $cartPrice) {
-
-                                        $minCartValid = TRUE;
-                                    } else {
-
-                                        $minCartValid = FALSE;
-                                        $msg = "The purchase amount should be {$coupon_min_value} or more";
-                                    }
-                                } else {
+                                if ($coupon_min_value < $cartPrice) {
 
                                     $minCartValid = TRUE;
+                                } else {
+
+                                    $minCartValid = FALSE;
+                                    $msg = "The purchase amount should be {$coupon_min_value} or more";
                                 }
+                            } else {
+
+                                $minCartValid = TRUE;
                             }
                         }
 

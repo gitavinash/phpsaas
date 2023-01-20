@@ -165,7 +165,9 @@ include_once 'header.php';
                     <div>
                         <div class="row">
                             <div class="col-8">Subtotal</div>
-                            <div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $cart_price ?></div>
+                            <div class="col-4"><i class="fas fa-rupee-sign"></i>
+                                <span id="cartPrice"> <?php echo $cart_price ?></span>
+                            </div>
                         </div>
                         <div class="row" style="margin-bottom: 10px">
                             <div class="col-8">Delivery charges</div>
@@ -177,7 +179,7 @@ include_once 'header.php';
                     <div class="row">
                         <form class="form-row">
                             <div class="form-group col-12 cod-ap">
-                                <input type="text" class="form-control couponCode" id="couponCode2"
+                                <input type="text" class="form-control couponCode" id="couponCode"
                                     placeholder="Discount Code">
                             </div>
                             <div class="form-group col-md-4 ap-btn">
@@ -187,11 +189,11 @@ include_once 'header.php';
                         </form>
                     </div>
                     <h4>Grand Total</h4>
-                    <h5 style="margin-bottom: 10px"><img
-                            src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $cart_price + $order_delivery_charges ?>
+                    <h5 style="margin-bottom: 10px"><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg">
+                        <span id="finalPrice"><?php echo $cart_price + $order_delivery_charges ?></span>
                     </h5>
                     <form>
-                        <input type="hidden" name="order" value="<?php echo $id ?>">
+                        <input type="hidden" name="order" id="orderId" value=" <?php echo $id ?>">
                         <input type="hidden" name="paymentMode" value="online">
                         <a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Proceed to payment</a>
                     </form>
