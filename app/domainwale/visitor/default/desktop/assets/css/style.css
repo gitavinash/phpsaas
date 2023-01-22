@@ -119,6 +119,22 @@ sup {
   background: #009b72 !important;
 }
 
+.bg-blueies {
+  background: #008081 !important;
+}
+
+.bg-grey {
+  background: #333 !important;
+  color: #fff;
+}
+
+.slider-btn {
+  float: left;
+  padding: 15px 25px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
 header {
   background: #fff;
   -webkit-box-shadow: 0 0 20px rgb(89 102 122 / 10%);
@@ -725,9 +741,18 @@ ul.footer-list li a {
 /* Domain search page styling */
 
 .domain-search-box {
-  background: #2f4f4f;
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/domain-name-registration-background.jpg")
+    center center no-repeat;
   padding: 125px 0px 125px 0px;
   box-sizing: border-box;
+}
+.domain-search-box input.domain-search-btn {
+  background: #333;
+  border-color: #333;
+}
+
+.domain-search-box img {
+  width: 200px;
 }
 
 .domain-search-box h1 {
@@ -735,14 +760,29 @@ ul.footer-list li a {
   width: 100%;
   color: #f2f2f2;
   font-size: 32px;
-  padding: 25px 0px;
+  padding: 0px 0px 25px 0px;
   font-weight: 600;
-  padding-top: 50px;
+}
+
+.domain-search-box h1 span {
+  float: left;
+  width: 100%;
+  font-size: 22px;
+  font-weight: 200;
+  line-height: 40px;
 }
 
 .domain-search-box form {
-  padding: 0px 168px;
+  padding: 0px;
   box-sizing: border-box;
+}
+
+.domain-search-box p {
+  float: left;
+  padding: 10px 0px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 300;
 }
 
 .show-domain-result {
@@ -848,6 +888,75 @@ button:disabled {
 
 .domain-result-box:last-child {
   border-bottom: none;
+}
+
+/* Web Hosting page styling */
+
+.shared-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/web-hosting-background.jpg")
+    center center no-repeat;
+  padding: 125px 0px 125px 0px;
+  box-sizing: border-box;
+}
+
+.shared-hosting h1 {
+  float: left;
+  width: 100%;
+  color: #f2f2f2;
+  font-size: 32px;
+  padding: 0px 0px 25px 0px;
+  font-weight: 600;
+}
+
+.shared-hosting h1 span {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 200;
+  line-height: 40px;
+}
+
+.shared-hosting h2 {
+  float: left;
+  width: 100%;
+  color: #f2f2f2;
+  font-size: 14px;
+  padding: 25px 0 25px 0;
+  font-weight: 200;
+}
+
+.shared-hosting h2 strong {
+  float: left;
+  width: 100%;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 60px;
+}
+
+.shared-hosting h2 strong span {
+  font-size: 16px;
+  font-weight: 200;
+  line-height: 40px;
+}
+
+.shared-hosting p {
+  float: left;
+  width: 100%;
+  color: #fff;
+  font-weight: 300;
+  line-height: 28px;
+}
+
+.shared-hosting p strong {
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.info-section {
+  float: left;
+  width: 100%;
+  min-height: 400px;
 }
 
 /* CSS code for mobile devices */
@@ -1035,6 +1144,15 @@ button:disabled {
     padding: 0;
   }
 
+  .main-offer {
+    text-align: center;
+    float: left;
+    width: 100%;
+    border: 1px solid #d8d8d8 !important;
+    margin-bottom: 10px;
+    border-left: 0px !important;
+  }
+
   .offer {
     margin-bottom: 10px;
     border: 1px solid #d8d8d8 !important;
@@ -1079,17 +1197,27 @@ button:disabled {
   /* Domain search page styling */
 
   .domain-search-box {
-    background: #2f4f4f;
-    padding: 125px 0px 125px 0px;
+    padding: 50px 0px 50px 0px;
     box-sizing: border-box;
     font-family: "Lato", sans-serif;
   }
 
+  .domain-search-box p {
+    padding-left: 10px;
+  }
+
   .domain-search-box h1 {
-    color: #009b72;
+    color: #fff;
     font-size: 32px;
-    padding: 20px 0 0px 0px;
+    padding: 0px 0 20px 10px;
     font-weight: 500;
+  }
+
+  .domain-search-box h1 span {
+    float: left;
+    width: 100%;
+    text-align: left;
+    line-height: 40px;
   }
 
   .domain-search-box form {
@@ -1149,5 +1277,15 @@ button:disabled {
     font-size: 18px;
     line-height: 56px;
     padding: 0px;
+  }
+
+  .info-section {
+    float: left;
+    width: 100%;
+    min-height: 300px;
+  }
+
+  .shared-hosting {
+    padding: 50px 0px;
   }
 }

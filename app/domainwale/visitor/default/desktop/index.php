@@ -192,7 +192,7 @@ include_once 'header.php';
                     </div>
                 </div>
             </div>
-            <div class="l-w3 mob-hide">
+            <div class="l-w3">
                 <div class="l-w1">
                     <div class="main-offer">
                         <a href="">
