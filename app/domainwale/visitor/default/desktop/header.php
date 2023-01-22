@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="container">
-                <div class="logo l-w3 fl">
+                <div class="logo fl">
                     <a href="/"><img src="<?php echo USER_IMAGES ?>oxteal-logo-dark.png"
                             alt="<?php echo SITE_NAME ?> logo"></a>
                 </div>
@@ -74,7 +74,7 @@
                         <li><a href="/domain-name-registration/">Domain</a></li>
                         <li><a href="/linux-web-hosting/">Hosting</a></li>
                         <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>
-                        <li><a href="/vps-hosting/">VPS Hosting</a></li>
+                        <li><a href="/reseller-hosting/">Reseller Hosting</a></li>
                         <li><a href="/website-amc/">AMC</a></li>
                         <li><a href="/blog/"><i class="fas fa-blog"></i> Blog</a></li>
                         <li><a href="/checkout/">Cart <i class="fi-rr-shopping-cart"></i></a></li>

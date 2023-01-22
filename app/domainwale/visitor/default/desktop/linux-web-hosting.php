@@ -5,7 +5,7 @@ require_once 'header.php';
 ?>
 
 <section class="info-section bg-blueies">
-    <div class="shared-hosting l-w1 ">
+    <div class="shared-hosting hosting l-w1 ">
         <div class="container">
             <div class="l-w7 l-m-w1">
                 <p>Web Hosting</p>

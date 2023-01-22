@@ -25,6 +25,14 @@ sup {
   margin: 0 auto;
 }
 
+a {
+  cursor: pointer !important;
+}
+
+input[type="submit"] {
+  cursor: pointer !important;
+}
+
 .mob-show {
   display: none;
 }
@@ -180,6 +188,10 @@ ul.list-menu li i {
   float: left;
 }
 
+.logo {
+  float: left;
+}
+
 .logo img {
   float: left;
   width: auto;
@@ -212,7 +224,7 @@ main {
 }
 
 .homepage {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/oxteal-homepage-ackground.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/homepage-banner.jpg")
     center center no-repeat;
   background-size: cover;
   height: 450px;
@@ -741,7 +753,7 @@ ul.footer-list li a {
 /* Domain search page styling */
 
 .domain-search-box {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/domain-name-registration-background.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/domain-registration.jpg")
     center center no-repeat;
   padding: 125px 0px 125px 0px;
   box-sizing: border-box;
@@ -893,13 +905,56 @@ button:disabled {
 /* Web Hosting page styling */
 
 .shared-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/web-hosting-background.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/shared-web-hosting.jpg")
     center center no-repeat;
+}
+
+.cloud-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/cloud-hosting.jpg")
+    center center no-repeat;
+}
+
+.wordpress-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/wordPress-hosting.jpg")
+    center center no-repeat;
+}
+
+.managed-wordpress-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/managed-wordPress-hosting.jpg")
+    center center no-repeat;
+}
+
+.managed-web-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/managed-hosting.jpg")
+    center center no-repeat;
+}
+
+.reseller-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/reseller-hosting.jpg")
+    center center no-repeat;
+}
+
+.ecommerce-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/ecommerce-hosting.jpg")
+    center center no-repeat;
+}
+
+.cms-hosting {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/cms-hosting.jpg")
+    center center no-repeat;
+}
+
+.website-amc {
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/website-amc.jpg")
+    center center no-repeat;
+}
+
+.hosting {
   padding: 125px 0px 125px 0px;
   box-sizing: border-box;
 }
 
-.shared-hosting h1 {
+.hosting h1 {
   float: left;
   width: 100%;
   color: #f2f2f2;
@@ -908,7 +963,7 @@ button:disabled {
   font-weight: 600;
 }
 
-.shared-hosting h1 span {
+.hosting h1 span {
   float: left;
   width: 100%;
   text-align: center;
@@ -917,7 +972,7 @@ button:disabled {
   line-height: 40px;
 }
 
-.shared-hosting h2 {
+.hosting h2 {
   float: left;
   width: 100%;
   color: #f2f2f2;
@@ -926,7 +981,7 @@ button:disabled {
   font-weight: 200;
 }
 
-.shared-hosting h2 strong {
+.hosting h2 strong {
   float: left;
   width: 100%;
   font-size: 48px;
@@ -934,13 +989,13 @@ button:disabled {
   line-height: 60px;
 }
 
-.shared-hosting h2 strong span {
+.hosting h2 strong span {
   font-size: 16px;
   font-weight: 200;
   line-height: 40px;
 }
 
-.shared-hosting p {
+.hosting p {
   float: left;
   width: 100%;
   color: #fff;
@@ -948,7 +1003,7 @@ button:disabled {
   line-height: 28px;
 }
 
-.shared-hosting p strong {
+.hosting p strong {
   font-weight: 400;
   letter-spacing: 0.5px;
 }
