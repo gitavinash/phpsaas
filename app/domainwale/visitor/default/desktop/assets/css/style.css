@@ -607,9 +607,13 @@ footer {
   color: #000;
 }
 
+.main-offer p span {
+  color: #009b72;
+}
+
 .main-offer p span strong {
   font-size: 32px;
-  color: #000;
+  color: #009b72;
 }
 
 .main-offer i {
@@ -621,6 +625,7 @@ footer {
 
 .main-offer sup {
   font-size: 18px;
+  color: #009b72;
 }
 
 .service-box .main-offer:hover {
