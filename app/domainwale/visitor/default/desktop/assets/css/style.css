@@ -224,7 +224,7 @@ main {
 }
 
 .homepage {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/homepage-banner.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/homepage-banner.png")
     center center no-repeat;
   background-size: cover;
   height: 450px;
@@ -753,7 +753,7 @@ ul.footer-list li a {
 /* Domain search page styling */
 
 .domain-search-box {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/domain-registration.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/domain-registration.png")
     center center no-repeat;
   padding: 125px 0px 125px 0px;
   box-sizing: border-box;
@@ -905,47 +905,47 @@ button:disabled {
 /* Web Hosting page styling */
 
 .shared-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/shared-web-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/shared-web-hosting.png")
     center center no-repeat;
 }
 
 .cloud-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/cloud-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/cloud-hosting.png")
     center center no-repeat;
 }
 
 .wordpress-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/wordPress-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/wordPress-hosting.png")
     center center no-repeat;
 }
 
 .managed-wordpress-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/managed-wordPress-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/managed-wordPress-hosting.png")
     center center no-repeat;
 }
 
 .managed-web-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/managed-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/managed-hosting.png")
     center center no-repeat;
 }
 
 .reseller-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/reseller-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/reseller-hosting.png")
     center center no-repeat;
 }
 
 .ecommerce-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/ecommerce-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/ecommerce-hosting.png")
     center center no-repeat;
 }
 
 .cms-hosting {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/cms-hosting.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/cms-hosting.png")
     center center no-repeat;
 }
 
 .website-amc {
-  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/website-amc.jpg")
+  background: url("/app/domainwale/visitor/default/desktop/assets/images/banner/website-amc.png")
     center center no-repeat;
 }
 
