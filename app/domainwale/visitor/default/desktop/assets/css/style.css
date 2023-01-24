@@ -3,7 +3,7 @@ body {
   width: 100%;
   padding: 0;
   margin: 0 auto;
-  background: #f8f8f8;
+  background: #f2f2f2;
   font-family: "Lato", sans-serif;
 }
 
@@ -133,7 +133,7 @@ input[type="submit"] {
 
 .bg-grey {
   background: #333 !important;
-  color: #fff;
+  color: #f2f2f2;
 }
 
 .slider-btn {
@@ -143,15 +143,25 @@ input[type="submit"] {
   border-radius: 8px;
 }
 
+.btn {
+  float: left;
+  padding: 15px 25px;
+  font-size: 16px;
+}
+
+.desktop-right {
+  float: right !important;
+}
+
 header {
-  background: #fff;
+  background: #ffffff;
   -webkit-box-shadow: 0 0 20px rgb(89 102 122 / 10%);
   box-shadow: 0 0 20px rgb(89 102 122 / 10%);
   z-index: 9999;
 }
 
 .notification-bar {
-  color: #fff;
+  color: #f2f2f2;
   background: #009b72;
   font-weight: 300;
   letter-spacing: 1px;
@@ -228,7 +238,7 @@ main {
     center center no-repeat;
   background-size: cover;
   height: 450px;
-  color: #fff;
+  color: #f2f2f2;
 }
 
 .homepage h1 {
@@ -247,7 +257,7 @@ main {
   padding: 0;
   margin: 0 auto;
   font-weight: 700;
-  color: #fff;
+  color: #f2f2f2;
   margin-top: -10px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -292,7 +302,7 @@ input.domain-search-btn {
   background: #009b72;
   border-color: #009b72;
   border: none;
-  color: #fff;
+  color: #f2f2f2;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   margin-left: -1px;
@@ -328,22 +338,23 @@ input.domain-search-btn {
   font-weight: 700;
   color: #000;
   letter-spacing: -2px;
-  text-shadow: 1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff,
-    1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+  text-shadow: 1px 0 0 #f2f2f2, -1px 0 0 #f2f2f2, 0 1px 0 #f2f2f2,
+    0 -1px 0 #f2f2f2, 1px 1px #f2f2f2, -1px -1px 0 #f2f2f2, 1px -1px 0 #f2f2f2,
+    -1px 1px 0 #f2f2f2;
 }
 
 .domain-price p span {
   float: left;
   width: 100%;
   font-size: 18px;
-  color: #fff;
+  color: #f2f2f2;
   font-weight: 500;
   letter-spacing: 1px;
   text-shadow: none;
 }
 
 .hosting-plan {
-  background: #fff;
+  background: #f2f2f2;
   padding: 20px 0px;
 }
 
@@ -390,7 +401,7 @@ input.domain-search-btn {
 
 .hosting-package .featured {
   background: #009b72;
-  color: #fff;
+  color: #f2f2f2;
   height: 50px;
 }
 
@@ -460,7 +471,7 @@ input.domain-search-btn {
   background: #009b72;
   box-sizing: border-box;
   border-radius: 4px;
-  color: #fff;
+  color: #f2f2f2;
   font-size: 16px;
   -webkit-appearance: none;
 }
@@ -506,7 +517,7 @@ footer {
 }
 
 .service {
-  background: #fff;
+  background: #f2f2f2;
 }
 
 .service-box {
@@ -525,7 +536,7 @@ footer {
 
 .service-box .domain-price p {
   font-size: 38px;
-  color: #fff;
+  color: #f2f2f2;
   text-shadow: 1px 0 0 #333, -1px 0 0 #333, 0 1px 0 #333, 0 -1px 0 #333,
     1px 1px #333, -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333;
 }
@@ -633,7 +644,7 @@ footer {
 }
 
 .product-info {
-  background: #fff;
+  background: #f2f2f2;
 }
 
 .product-info-image {
@@ -645,7 +656,7 @@ footer {
 .support {
   background: #009b72;
   padding: 30px 0px;
-  color: #fff;
+  color: #f2f2f2;
 }
 
 .support p {
@@ -742,7 +753,7 @@ ul.footer-list li a {
 
 .not-found {
   padding: 50px 0px;
-  background: #fff;
+  background: #f2f2f2;
   box-sizing: border-box;
 }
 
@@ -797,13 +808,13 @@ ul.footer-list li a {
 .domain-search-box p {
   float: left;
   padding: 10px 0px;
-  color: #fff;
+  color: #f2f2f2;
   font-size: 14px;
   font-weight: 300;
 }
 
 .show-domain-result {
-  background: #fff;
+  background: #f2f2f2;
 }
 
 .show-domain-result h1 {
@@ -817,7 +828,7 @@ ul.footer-list li a {
 }
 
 .result-loader {
-  background: #fff;
+  background: #f2f2f2;
   display: none;
 }
 
@@ -884,7 +895,7 @@ button.add-to-cart {
   border: 1px solid #009b72;
   border-radius: 4px;
   padding: 5px 48px;
-  color: #fff;
+  color: #f2f2f2;
   font-size: 14px;
   line-height: 32px;
   cursor: pointer;
@@ -1003,7 +1014,7 @@ button:disabled {
 .hosting p {
   float: left;
   width: 100%;
-  color: #fff;
+  color: #f2f2f2;
   font-weight: 300;
   line-height: 28px;
 }
@@ -1013,10 +1024,36 @@ button:disabled {
   letter-spacing: 0.5px;
 }
 
+.section {
+  float: left;
+  width: 100%;
+}
+
 .info-section {
   float: left;
   width: 100%;
   min-height: 400px;
+}
+
+.description {
+  float: left;
+  width: 100%;
+}
+
+.description img {
+  float: left;
+  width: 100%;
+}
+
+.description .content {
+  float: left;
+  width: 100%;
+  min-height: 400px;
+  padding: 5% 10%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
 /* CSS code for mobile devices */
@@ -1091,7 +1128,7 @@ button:disabled {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #fff;
+    background-color: #ffffff;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 40px;
@@ -1267,7 +1304,7 @@ button:disabled {
   }
 
   .domain-search-box h1 {
-    color: #fff;
+    color: #f2f2f2;
     font-size: 32px;
     padding: 0px 0 20px 10px;
     font-weight: 500;

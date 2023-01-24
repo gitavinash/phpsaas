@@ -34,10 +34,53 @@ require_once 'header.php';
     </div>
 </section>
 
-<section class="info-section">
-    <div class="container">
-        <div class="l-w1">
+<section class="section">
+    <div class="description">
+        <div class="l-w2 l-m-w1">
+            <img src="<?php echo USER_IMAGES ?>domain_registration_1.jpg" alt="">
+        </div>
+        <div class="l-w2 l-m-w1">
+            <div class="content">
+                <div class="box">
+                    <h2></h2>
+                    <p></p>
+                    <a href="" class="btn bg-grey"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
+<section class="section">
+    <div class="description bg-green">
+        <div class="l-w2 l-m-w1 desktop-right">
+            <img src="<?php echo USER_IMAGES ?>domain_registration_1.jpg" alt="">
+        </div>
+        <div class="l-w2 l-m-w1">
+            <div class="content">
+                <div class="box">
+                    <h2></h2>
+                    <p></p>
+                    <a href="" class="btn bg-grey"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="description">
+        <div class="l-w2 l-m-w1">
+            <img src="<?php echo USER_IMAGES ?>domain_registration_1.jpg" alt="">
+        </div>
+        <div class="l-w2 l-m-w1">
+            <div class="content">
+                <div class="box">
+                    <h2></h2>
+                    <p></p>
+                    <a href="" class="btn bg-grey"></a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
