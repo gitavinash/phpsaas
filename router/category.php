@@ -52,6 +52,10 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 					case 'price_high':
 						$sortBy = 'inventory_price DESC';
 						break;
+
+					default:
+						$sortBy = 'link_published DESC';
+						break;
 				}
 			}
 

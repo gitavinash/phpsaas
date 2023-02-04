@@ -86,6 +86,10 @@ if (is_array($tagPost)) {
                         case 'price_high':
                             $sortBy = 'inventory_price DESC';
                             break;
+
+                        default:
+                            $sortBy = 'link_published DESC';
+                            break;
                     }
                 }
 

@@ -84,6 +84,10 @@ include_once 'header.php';
                     case 'price_high':
                         $sortBy = 'inventory_price DESC';
                         break;
+
+                    default:
+                        $sortBy = 'link_published DESC';
+                        break;
                 }
             }
 
