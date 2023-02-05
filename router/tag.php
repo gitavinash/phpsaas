@@ -21,7 +21,7 @@ if (is_numeric($currentPage)) {
 
 $searchTag = mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
 
-if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM " . TABLE_PREFIX . "tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " ORDER BY tag_time DESC " . PAGINATION)) {
+if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM " . TABLE_PREFIX . "tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " ORDER BY tag_relation_id DESC " . PAGINATION)) {
 
     if (mysqli_num_rows($tagList) != 0) {
 
@@ -34,7 +34,7 @@ if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag
 
         // Count total result for pagination
 
-        if ($totalCategoryPost = mysqli_query($connection, "SELECT count(tag_id) as total_result FROM " . TABLE_PREFIX . "tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " ORDER BY tag_time DESC")) {
+        if ($totalCategoryPost = mysqli_query($connection, "SELECT count(tag_id) as total_result FROM " . TABLE_PREFIX . "tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " ORDER BY tag_relation_id DESC")) {
 
             if (mysqli_num_rows($totalCategoryPost) != 0) {
 

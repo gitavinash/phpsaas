@@ -26,7 +26,7 @@ include_once 'header.php';
                 $tagId[] = $tagPost[$i]['tag_relation_id'];
             }
 
-            $resultTags = implode(' OR link_relation_id=', $tagId);
+            $resultTags = implode(', ', $tagId);
 
             ?>
 
@@ -71,7 +71,7 @@ include_once 'header.php';
 
             <?php
 
-            $sortBy = 'link_is_featured, link_published DESC';
+            $sortBy = 'link_id DESC';
 
             if (isset($_GET['sort'])) {
 
@@ -86,12 +86,12 @@ include_once 'header.php';
                         break;
 
                     default:
-                        $sortBy = 'link_published DESC';
+                        $sortBy = 'link_id DESC';
                         break;
                 }
             }
 
-            if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 AND (link_relation_id={$resultTags}) AND link_site_id=" . SITE_ID . " AND inventory_type='product' ORDER BY {$sortBy} LIMIT 0, 100")) {
+            if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 AND link_relation_id IN ({$resultTags}) AND link_site_id=" . SITE_ID . " AND inventory_type='product' ORDER BY {$sortBy} LIMIT 0, 100")) {
 
                 if (mysqli_num_rows($tagResults) != 0) {
 
