@@ -95,7 +95,13 @@ include_once 'header.php';
                         <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
                             <span><?php echo $inventory_price ?></span>
                         </h2>
-                        <h2 class="with-ofer-price"><span><?php echo $inventory_mrp ?></span></h2>
+                        <?php
+
+                            if ($inventory_price != $inventory_mrp) {
+                                echo "<h2 class='with-ofer-price'><span><?php echo $inventory_mrp ?></span></h2>";
+                        }
+
+                        ?>
 
                         <?php
 
