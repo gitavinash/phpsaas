@@ -86,14 +86,14 @@ if ($categoryID != '') {
 
                         if (file_put_contents($uploadFileLocation, file_get_contents($productGallery[$i]))) {
 
-                            $productGalleryImages[] = array(
-                                'name' => $imageName,
-                                'path' => $imageURL,
-                                'type' => $imgType,
-                            );
-
                             if ($i == 0) {
                                 $productFeatureImage = $imageURL;
+                            } else {
+                                $productGalleryImages[] = array(
+                                    'name' => $imageName,
+                                    'path' => $imageURL,
+                                    'type' => $imgType,
+                                );
                             }
                         }
                     }
