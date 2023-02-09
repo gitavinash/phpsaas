@@ -399,7 +399,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                 <div class="form-group">
                     <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
                         <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
-                    <?php echo ucwords($brand['category_title'] . ' -> ' . $product_brand_id); ?>
+                    <?php echo ucwords($brand['category_title']); ?>
                 </div>
                 <?php
                         }
