@@ -252,8 +252,8 @@
                             </button>
                             <div class="mob-menu dn-l">
                                 <div class="cart-mob">
-                                    <a href="" class="mob-bag sr-mob" id="searchBtn"><img
-                                            src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span>
+                                    <!-- <a href="" class="mob-bag sr-mob" id="searchBtn"><img
+                                            src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span> -->
                                     <a href="/checkout/" class="mob-bag"><img
                                             src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">
 
