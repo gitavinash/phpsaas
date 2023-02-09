@@ -385,12 +385,37 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                         <?php echo (($link_is_featured == '1') ? 'checked' : '') ?>> Mark as feature
                 </div>
             </div>
+            <?php
+
+            if (SITE_ID == 32) { ?>
+
+            <h2>Brand</h2>
+            <div class="action-box height-200 inside-shadow">
+
+                <?php
+
+                    if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
+                        while ($brand = mysqli_fetch_assoc($brandList)) { ?>
+                <div class="form-group">
+                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
+                        <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
+                    <?php echo ucwords($brand['category_title'] . ' -> ' . $product_brand_id); ?>
+                </div>
+                <?php
+                        }
+                    }
+                    ?>
+            </div>
+            <?php
+            }
+
+            ?>
             <h2>Categories</h2>
             <div class="action-box height-200 inside-shadow">
 
                 <?php
 
-                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
+                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND link_status=200 ORDER BY category_title ASC")) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
                 <div class="form-group">
                     <input type="radio" name="category"

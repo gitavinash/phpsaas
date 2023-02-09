@@ -1,20 +1,18 @@
 <?php
 
-    $allProductList=mysqli_query($connection, "SELECT product_id, product_title, product_thumbnail, link_url FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=".SITE_ID);
-    $allProductOptionsDropDown = '';
+$allProductList = mysqli_query($connection, "SELECT product_id, product_title, product_thumbnail, link_url FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=" . SITE_ID);
+$allProductOptionsDropDown = '';
 
-    if(mysqli_num_rows(($allProductList))!=0) {
+if (mysqli_num_rows(($allProductList)) != 0) {
 
-        while($productData = mysqli_fetch_assoc($allProductList)) {
+    while ($productData = mysqli_fetch_assoc($allProductList)) {
 
-            extract($productData);
-            $allProductOptionsDropDown = $allProductOptionsDropDown. "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
-
-        }
-
-    } else {
-        $allProductOptionsDropDown="<option value='0'>No Product Found</option>";
+        extract($productData);
+        $allProductOptionsDropDown = $allProductOptionsDropDown . "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
     }
+} else {
+    $allProductOptionsDropDown = "<option value='0'>No Product Found</option>";
+}
 
 ?>
 
@@ -272,21 +270,43 @@
                     <input type="checkbox" value="1" name='featurePost'> Mark as feature
                 </div>
             </div>
+            <?php
+
+            if (SITE_ID == 32) { ?>
+            <h2>Brand</h2>
+            <div class="action-box height-200 inside-shadow">
+                <?php
+                    if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
+                        while ($brand = mysqli_fetch_assoc($brandList)) { ?>
+                <div class="form-group">
+                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
+                        <?php echo (($brand['category_id'] == 1) ? 'checked' : '') ?>>
+                    <?php echo ucwords($brand['category_title']); ?>
+                </div>
+                <?php
+                        }
+                    }
+                    ?>
+            </div>
+            <?php
+            }
+
+            ?>
             <h2>Categories</h2>
             <div class="action-box height-200 inside-shadow">
                 <?php
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
-						while($category=mysqli_fetch_assoc($categoryList)) { ?>
+                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND  link_status=200 ORDER BY category_title ASC")) {
+                    while ($category = mysqli_fetch_assoc($categoryList)) { ?>
                 <div class="form-group">
                     <input type="radio" name="category"
-                        value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id']==1) ? 'checked' : '' ) ?>>
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
                     <?php echo ucwords($category['category_title']); ?>
                 </div>
                 <?php
-						}
-					}
-				?>
+                    }
+                }
+                ?>
             </div>
             <h2>Tags</h2>
             <div class="action-box inside-shadow">
