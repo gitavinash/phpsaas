@@ -98,14 +98,14 @@ include_once 'header.php';
                         <?php
 
                             if ($inventory_price != $inventory_mrp) {
-                                echo "<h2 class='with-ofer-price'><span><?php echo $inventory_mrp ?></span></h2>";
-                        }
+                                echo "<h2 class='with-ofer-price'><span>" . $inventory_mrp . "</span></h2>";
+                            }
 
-                        ?>
+                            ?>
 
                         <?php
 
-                            if ($inventory_mrp != '') {
+                            if ($inventory_mrp != 0) {
 
                                 if ($inventory_mrp != $inventory_price) {
 
