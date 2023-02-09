@@ -96,18 +96,11 @@ include_once 'header.php';
                             <span><?php echo $inventory_price ?></span>
                         </h2>
                         <?php
-
-                            if ($inventory_price != $inventory_mrp) {
-                                echo "<h2 class='with-ofer-price'><span>" . $inventory_mrp . "</span></h2>";
-                            }
-
-                            ?>
-
-                        <?php
-
                             if ($inventory_mrp != 0) {
 
                                 if ($inventory_mrp != $inventory_price) {
+
+                                    echo "<h2 class='with-ofer-price'><span>" . $inventory_mrp . "</span></h2>";
 
                                     $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
 
