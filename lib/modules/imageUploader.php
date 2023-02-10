@@ -80,9 +80,11 @@ if (isset($_FILES)) {
 								/** Creating image thumbnail */
 
 								$imageSize = imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
-								imagealphablending($imageSize, false);
 								imagesavealpha($imageSize, true);
-								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
+								// imagealphablending($imageSize, false);
+								// imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
+								$newCreatedImageColor = imagecolorallocatealpha($imageSize, 0, 0, 0, 127);
+								imagefill($imageSize, 0, 0, $newCreatedImageColor);
 								imagepng($imageSize, $thumbnailUploadFile, 9);
 								break;
 
