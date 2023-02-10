@@ -221,6 +221,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
+                            <li><a href="setting/?type=sliders"><i class="fas fa-images"></i>
+                                    Sliders</a></li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change password</a></li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <!-- <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
@@ -231,6 +233,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
+                            <li><a href="setting/?type=sliders"><i class="fas fa-images"></i>
+                                    Sliders</a></li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <!-- <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
