@@ -138,6 +138,8 @@ if (isset($_FILES)) {
 
 							echo 'Unable to move file';
 						}
+
+						exit();
 					}
 				} else {
 
