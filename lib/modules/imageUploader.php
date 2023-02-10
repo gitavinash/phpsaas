@@ -76,7 +76,6 @@ if (isset($_FILES)) {
 								/** Compressing PNG Image and save it */
 
 								$compressImage = imagecreatefrompng($imageValue['tmp_name']);
-								imagepng($compressImage, $uploadFile, 9);
 
 								/** Creating image thumbnail */
 
