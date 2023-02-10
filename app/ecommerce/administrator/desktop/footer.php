@@ -20,7 +20,7 @@
 
 			<?php
 
-			if(isset($_GET['editor'])) { ?>
+			if (isset($_GET['editor'])) { ?>
 			<script type='text/javascript'>
 $(window).bind('beforeunload', function() {
     return "Leaving this page will reset the wizard";
@@ -28,10 +28,19 @@ $(window).bind('beforeunload', function() {
 			</script>
 			<?php
 			}
-		
-			if(isset($_GET['type'])) {
 
-				if($_GET['type']=='list' ||  $_GET['type']=='category') { ?>
+			if (isset($_GET['responseMsg'])) { ?>
+
+			<script type='text/javascript'>
+alert("<?php echo $_GET['responseMsg'] ?>");
+			</script>
+
+			<?php
+			}
+
+			if (isset($_GET['type'])) {
+
+				if ($_GET['type'] == 'list' ||  $_GET['type'] == 'category') { ?>
 
 			<script>
 $(document).ready(function() {
@@ -48,13 +57,13 @@ $(document).ready(function() {
 })
 			</script>
 			<?php
-				}?>
+				} ?>
 
 			<?php
 
 			}
 
-		?>
+			?>
 
 			</body>
 

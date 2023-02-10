@@ -17,6 +17,13 @@ body {
   color: #3333335e;
 }
 
+a {
+  text-decoration: none;
+}
+
+.text-btn {
+  padding: 0px 10px;
+}
 input:read-only {
   background-color: #d8d8d8;
   cursor: default;

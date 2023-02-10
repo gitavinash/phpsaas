@@ -117,29 +117,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
-                <?php
-
-                if (SITE_ID == 35) { ?>
-
-
-                <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
-                    <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
-
 
                 <li <?php echo (($postType == 'testimonial') ? 'class="active"' : '') ?>>
                     <a href="testimonial/?type=list&status=all"><i class="fas fa-comment"></i> Testimonial</a>
@@ -163,9 +140,32 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 </li>
 
                 <?php
+
+                if (SITE_ID == 35) { ?>
+
+
+                <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
+                    <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <?php
                 }
 
-                if (SITE_ID != 22 && SITE_ID != 35) { ?>
+                if (SITE_ID != 22 && SITE_ID != 35 && SITE_ID != 32) { ?>
 
                 <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
                     <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>

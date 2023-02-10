@@ -44,7 +44,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
                     extract($data) ?>
                     <tr style="height: 60px">
                         <td>
-                            <p><a href="offer/?type=edit&editor=true&page=<?php echo base64_encode($page_id); ?>"><?php echo $page_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                            <p><a href="offer/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><?php echo $page_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
                             </p>
                             <div class="hover">
                                 <a href="offer/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>

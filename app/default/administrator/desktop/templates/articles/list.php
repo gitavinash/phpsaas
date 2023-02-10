@@ -42,19 +42,22 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-                    <tr style="height: 60px">
-                        <td>
-                            <p><a href="articles/?type=edit&editor=true&page=<?php echo base64_encode($page_id); ?>"><?php echo $page_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
-                            </p>
-                            <div class="hover">
-                                <a href="articles/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                <a href="#" id="<?php echo base64_encode($page_id) ?>_page" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
-                                <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
-                            </div>
-                        </td>
-                        <td><?php echo $profile_display_name; ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
-                    </tr>
+        <tr style="height: 60px">
+            <td>
+                <p><a
+                        href="articles/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><?php echo $page_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                </p>
+                <div class="hover">
+                    <a href="articles/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><i
+                            class="fas fa-pencil-alt"></i> Edit</a>
+                    <a href="#" id="<?php echo base64_encode($page_id) ?>_page" class="deleteBtn"><i
+                            class="fas fa-trash"></i> Delete</a>
+                    <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
+                </div>
+            </td>
+            <td><?php echo $profile_display_name; ?></td>
+            <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
+        </tr>
         <?php
                 }
             }

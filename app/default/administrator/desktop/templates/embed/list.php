@@ -48,7 +48,7 @@ $postType = (($listType == 'all') ? '' : "AND video_type='{$listType}'");
 					extract($data) ?>
 					<tr>
 						<td>
-							<p><a href="embed/?type=edit&editor=true&page=<?php echo base64_encode($video_id); ?>"><?php echo $video_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a></p>
+							<p><a href="embed/?type=edit&editor=true&id=<?php echo base64_encode($video_id); ?>"><?php echo $video_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a></p>
 							<div class="hover">
 								<a href="embed/?type=edit&editor=true&id=<?php echo base64_encode($video_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
 								<a href="#" id="<?php echo base64_encode($video_id) ?>_video" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
