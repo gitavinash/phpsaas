@@ -2,7 +2,6 @@
 
 function slider($connection, $data)
 {
-    print_r($data);
     extract($data);
     require_once LOGIN_CHECK;
 
