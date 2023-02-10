@@ -71,33 +71,35 @@ if (isset($_FILES)) {
 
 						switch ($filetype) {
 
-								// case PNG_IMAGE :
+							case PNG_IMAGE:
 
-								// 	/** Compressing PNG Image and save it */
+								/** Compressing PNG Image and save it */
 
-								// 	$compressImage=@imagecreatefrompng($imageValue['tmp_name']);
-								// 	imagepng($compressImage, $uploadFile, 9);
+								$compressImage = @imagecreatefrompng($imageValue['tmp_name']);
+								imagepng($compressImage, $uploadFile, 9);
 
-								// 	/** Creating image thumbnail */
+								/** Creating image thumbnail */
 
-								// 	$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
-								// 	imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
-								// 	imagepng($imageSize, $thumbnailUploadFile, 9);
-								// 	break;
+								$imageSize = imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
+								imagealphablending($imageSize, false);
+								imagesavealpha($imageSize, true);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
+								imagepng($imageSize, $thumbnailUploadFile, 9);
+								break;
 
-								// case GIF_IMAGE :
+							case GIF_IMAGE:
 
-								// 	/** Compressing GIF/Animation Image and save it */
+								/** Compressing GIF/Animation Image and save it */
 
-								// 	$compressImage=imagecreatefromgif($imageValue['tmp_name']);
-								// 	imagegif($compressImage, $uploadFile, IMAGE_COMPRESSION_QUALITY);
+								$compressImage = imagecreatefromgif($imageValue['tmp_name']);
+								imagegif($compressImage, $uploadFile, IMAGE_COMPRESSION_QUALITY);
 
-								// 	/** Creating image thumbnail */
+								/** Creating image thumbnail */
 
-								// 	$imageSize=imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
-								// 	imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
-								// 	imagegif($imageSize, $thumbnailUploadFile, 100);
-								// 	break;
+								$imageSize = imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
+								imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
+								imagegif($imageSize, $thumbnailUploadFile, 100);
+								break;
 
 							default:
 
