@@ -25,12 +25,13 @@
             <div class="row vertical-padding my-5">
                 <div class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center">
                     <div>
-                        <a href="https://api.whatsapp.com/send?phone=919560030646&text=Hi.">
+                        <a href="https://api.whatsapp.com/send?phone=919560030646&text=Hi." target="_blank">
                             <img src="<?php echo USER_IMAGES ?>3.png" alt="" />
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                                 <span class="font-size-40">WhatsApp</span>
                             </h4>
-                            <h4 class="text-white text-center">+91-9560030646</h4>
+                            <h4 class="text-white text-center"><a href="tel:+91-9560030646"
+                                    target="_blank"></a>+91-9560030646</h4>
                         </a>
                     </div>
                 </div>
@@ -41,7 +42,8 @@
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                                 <span class="font-size-40">Call Us</span>
                             </h4>
-                            <h4 class="text-white text-center">+91-9560030646</h4>
+                            <h4 class="text-white text-center"><a href="tel:+91-9560030646"
+                                    target="_blank"></a>+91-9560030646</h4>
                         </a>
                     </div>
                 </div>

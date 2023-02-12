@@ -21,70 +21,84 @@
                     <div class="row justify-content-center">
                         <div
                             class="col-12 col-sm-12 col-md-12 col-xl-4 col-xxl-2 order-2 order-xxl-1 mt-2 mt-xxl-0 d-none d-lg-block flex_div">
+                            <?php
+
+                            if ($product_gallery != '') {
+
+                                $galleryImages = json_decode($product_gallery, TRUE);
+
+                                if ($galleryImages != '') { ?>
                             <div class="sm-image-group mt-4 mt-xl-0">
-                                <img src="./assest/img/grou1.png" class="img-fluid" alt="" />
+                                <img src="<?php echo $product_image ?>" class="img-fluid"
+                                    alt="<?php echo $product_title ?>" />
                             </div>
+                            <?php
+
+                                    for ($i = 0; $i < sizeof($galleryImages); $i++) {
+
+                                        extract($galleryImages[$i]); ?>
                             <div class="sm-image-group mt-4">
-                                <img src="./assest/img/grou2.png" class="img-fluid" alt="" />
+                                <img src="<?php echo $path ?>" class="img-fluid" alt="<?php echo $name ?>" />
                             </div>
-                            <div class="sm-image-group mt-4">
-                                <img src="./assest/img/grou3.png" class="img-fluid" alt="" />
-                            </div>
-                            <div class="sm-image-group mt-4">
-                                <img src="./assest/img/grou4.png" class="img-fluid" alt="" />
-                            </div>
+                            <?php
+                                    }
+
+                                    echo '</ul>';
+                                }
+                            }
+
+                            ?>
                         </div>
 
                         <!-- mobile slider -->
                         <div
                             class="col-12 col-sm-12 col-md-12 col-xl-4 col-xxl-2 order-2 order-xxl-1 mt-2 mt-xxl-0 flex_div d-block d-xl-none">
-                            <div class="slider">
-                                <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
-                                </div>
+                            <div class="slider"><?php
 
-                                <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
-                                </div>
+                                                if ($product_gallery != '') {
 
-                                <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
-                                </div>
+                                                    $galleryImages = json_decode($product_gallery, TRUE);
 
+                                                    if ($galleryImages != '') {
+
+                                                ?>
                                 <div class="sm-image-group mt-4 mt-xl-0 mx-3">
-                                    <img src="./assest/img/grou1.png" class="img-fluid d-block m-auto" alt="" />
+                                    <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
+                                        alt="<?php echo $name ?>" />
                                 </div>
+                                <?php
+
+                                                        for ($i = 0; $i < sizeof($galleryImages); $i++) {
+
+                                                            extract($galleryImages[$i]); ?>
+                                <div class="sm-image-group mt-4 mt-xl-0 mx-3">
+                                    <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
+                                        alt="<?php echo $name ?>" />
+                                </div>
+                                <?php
+                                                        }
+
+                                                        echo '</ul>';
+                                                    }
+                                                }
+
+                                ?>
+
                             </div>
                         </div>
 
                         <!-- mobile slider -->
                         <div class="col-12 col-sm-12 col-md-12 col-xl-7 col-xxl-9 order-1 order-xxl-2">
                             <div class="product_image">
-                                <img src="./assest/img/oriduct.png" class="img-fluid" alt="" />
+                                <img src="<?php echo $product_image ?>" class="img-fluid"
+                                    alt="<?php echo $product_title ?>" />
                             </div>
-                            <!-- <div class="d-flex align-items-center justify-content-center mt-4 qustion">
-                <img src="./assest/img/queston.png" alt="" />
-                <p class="mb-0 ms-3">
-                  <span id="test">Have Questions?</span> Ask An Expert
-                </p>
-              </div> -->
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-xl-5 col-xxl-6 mt-4 mt-xl-0">
                 <h1>Dinterdum pretium condimento</h1>
-
-                <!-- <div class="d-flex align-items-center py-3">
-            <div>
-              <img src='assest/img/str1.png' alt="">
-              <img src='assest/img/str1.png' alt="">
-              <img src='assest/img/str1.png' alt="">
-              <img src='assest/img/str1.png' alt="">
-              <img src='assest/img/Star 5.png' alt="">
-            </div>
-            <p class="mb-0 ms-5 mt-2">16 reviews</p>
-          </div> -->
 
                 <div class="product_details">
                     <div>
@@ -97,96 +111,12 @@
                         <p>Availability: In stock</p>
                     </div>
                 </div>
-
-                <!-- <div class="mt-4 product_details time_section ">
-            <div class="col-12 ">
-              <div class="row gx-0 align-items-center">
-                <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-5">
-                  <p>Limited-Time Offers, End in:</p>
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-7 mt-3 mt-xl-0">
-                  <div class="col-12">
-                    <div class="row gx-1">
-                      <div class="col-12 col-sm-12 col-md-3">
-                        <div class="time_div">
-                          <p>00D</p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-3 mt-2 mt-md-0">
-                        <div class="time_div">
-                          <p>00D</p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-3 mt-2 mt-md-0">
-                        <div class="time_div">
-                          <p>00D</p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-3 mt-2 mt-md-0">
-                        <div class="time_div">
-                          <p>00D</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div> -->
-
                 <div class="price_div py-3 mt-4 prive_top_bodder">
                     <div class="d-flex align-items-center">
                         <h4>₹202.00</h4>
                         <p class="ms-5 line">₹210.00</p>
                     </div>
                 </div>
-                <!-- 
-          <div class="col-12 mt-4 filter">
-            <div class="row">
-              <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6">
-                <div class="row">
-                  <div class="col-12 mb-3">
-                    <h5>Power Output</h5>
-                  </div>
-                  <div class="col-4 col-sm-4 col-md-4">
-                    <div class="filter-div">
-                      <p>150 w</p>
-                    </div>
-                  </div>
-                  <div class="col-4 col-sm-4 col-md-4">
-                    <div class="filter-div">
-                      <p>200w</p>
-                    </div>
-                  </div>
-                  <div class="col-4 col-sm-4 col-md-4">
-                    <div class="filter-div">
-                      <p>300w</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="col-12 col-sm-12 col-md-1"></div>
-              <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-5 mt-3 mt-xxl-0">
-                <div class="row">
-                  <div class="col-12 mb-3">
-                    <h5>Color</h5>
-                  </div>
-                  <div class="col-4 col-sm-4 col-md-4">
-                    <div class="colr_div dark_cl colr_div_activ"></div>
-                  </div>
-                  <div class="col-4 col-sm-4 col-md-4">
-                    <div class="colr_div gray_cl "></div>
-                  </div>
-                  <div class="col-4 col-sm-4 col-md-4">
-                    <div class="colr_div skin_cl   "></div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div> -->
 
                 <div class="mt-4 prive_top_bodder py-5 filter fire">
                     <div class="col-12">
@@ -201,7 +131,7 @@
                             <div
                                 class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6 d-flex align-content-center mt-4 mt-xxl-0">
                                 <div class="d-flex align-items-center">
-                                    <img src="./assest/img/fire.png" alt="" />
+                                    <img src="<?php echo USER_IMAGES ?>fire.png" alt="" />
                                     <p class="mb-0 ms-2">8 sold in last 18 hours</p>
                                 </div>
                             </div>
@@ -212,7 +142,7 @@
                 <div class="d-flex align-items-center cart_div">
                     <button class="add_to_cart">ADD TO CART</button>
                     <div class="like ms-3">
-                        <img src="./assest/img/heart.png" alt="" />
+                        <img src="<?php echo USER_IMAGES ?>heart.png" alt="" />
                     </div>
                 </div>
             </div>

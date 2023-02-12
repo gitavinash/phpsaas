@@ -17,7 +17,7 @@
 <main>
     <section class="vertical-padding sidepadding">
         <h3 class="font-size-57 text-white fontibm">
-            <span class="goldan-clr"> Product </span> Categoreis
+            <span class="goldan-clr"> Product </span> Categories
         </h3>
 
         <div class="contianer-fluid">
@@ -73,22 +73,18 @@
         <div class="container-fluid">
             <div class="row py-3 d-flex align-items-center">
                 <div class="row vertical-padding my-5">
-                    <div
-                        class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center">
+                    <div class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center">
                         <div>
-                            <img src="<?php echo USER_IMAGES ?>d1 (3).png" alt="" style="padding: 8px 0px"
-                                class=" img-fluid" />
+                            <img src="<?php echo USER_IMAGES ?>d1 (3).png" alt="" style="padding: 8px 0px" class=" img-fluid" />
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                                 <span class="font-size-40">Free Shipping</span>
                             </h4>
                             <h4 class="text-white text-center">Order Over ₹ 1,000.00</h4>
                         </div>
                     </div>
-                    <div
-                        class="col-12 col-sm-12 col-lg-4 col-md-4 side-boder d-flex justify-content-center text-center">
+                    <div class="col-12 col-sm-12 col-lg-4 col-md-4 side-boder d-flex justify-content-center text-center">
                         <div>
-                            <img src="<?php echo USER_IMAGES ?>d1 (2).png" alt="" style="padding: 13px 0px"
-                                class="img-fluid" />
+                            <img src="<?php echo USER_IMAGES ?>d1 (2).png" alt="" style="padding: 13px 0px" class="img-fluid" />
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                                 <span class="font-size-40">Quick Payment</span>
                             </h4>
@@ -96,8 +92,7 @@
                         </div>
                     </div>
 
-                    <div
-                        class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center">
+                    <div class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center">
                         <div>
                             <img src="<?php echo USER_IMAGES ?>d1 (1).png" alt="" class="img-fluid" />
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">

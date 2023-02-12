@@ -1856,3 +1856,9 @@ ul.tabs li.active {
 .select2-selection__choice__remove {
   background: none !important;
 }
+
+.menu-box {
+  float: left;
+  width: 750px;
+  padding: 0px 20px;
+}

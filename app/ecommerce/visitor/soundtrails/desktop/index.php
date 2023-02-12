@@ -6,57 +6,49 @@
     <div class="row">
         <div class="multiple-items  home-slider">
 
+            <?php
+
+            if ($sliderList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slide_site_id=" . APP_SITE_ID)) {
+
+                if (mysqli_num_rows($sliderList) != 0) {
+
+                    while ($sliderData = mysqli_fetch_assoc($sliderList)) {
+                        extract($sliderData); ?>
             <div class="col-12 ">
                 <div class="row sidepadding hero align-items-center">
                     <div class="col-12 col-lg-6">
                         <h3 class="text-white fontibm">
-                            How Sound <br />
-                            Should <span style="color: #da9c65">Sound</span>
+                            <?php echo $slide_title ?>
                         </h3>
                         <p class="text-white my-3 fontibm">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid
-                            officia impedit maiores totam soluta, magnam officiis amet
-                            consequuntur eius, distinctio incidunt sapiente cum vero sint
-                            necessitatibus assumenda quasi dicta fugit!
+                            <?php echo $slide_description ?>
                         </p>
-                        <button class="btn1 my-3">Buy Now</button>
+                        <a href="<?php echo $slide_link ?>" class="btn1 my-3">Buy Now</a>
                     </div>
 
                     <div class="col-12 col-lg-6">
-                        <img src="<?php echo USER_IMAGES ?>p1.png" alt="" class="img-fluid" />
+                        <img src="<?php echo $slide_image ?>" alt="<?php echo $slide_title ?>" class="img-fluid" />
                     </div>
                 </div>
             </div>
-            <div class="col-12 ">
-                <div class="row sidepadding hero align-items-center">
-                    <div class="col-12 col-lg-6">
-                        <h3 class="text-white fontibm">
-                            How Sound <br />
-                            Should <span style="color: #da9c65">Sound</span>
-                        </h3>
-                        <p class="text-white my-3 fontibm">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid
-                            officia impedit maiores totam soluta, magnam officiis amet
-                            consequuntur eius, distinctio incidunt sapiente cum vero sint
-                            necessitatibus assumenda quasi dicta fugit!
-                        </p>
-                        <button class="btn1 my-3">Buy Now</button>
-                    </div>
 
-                    <div class="col-12 col-lg-6">
-                        <img src="<?php echo USER_IMAGES ?>p1.png" alt="" class="img-fluid" />
-                    </div>
-                </div>
-            </div>
+            <?php
+                    }
+                } else {
+
+                    echo "No slider found";
+                    exit();
+                }
+            } else {
+                echo mysqli_error($connection);
+                exit();
+            }
+
+            ?>
 
         </div>
 
     </div>
-
-
-
-
-
 
 </div>
 

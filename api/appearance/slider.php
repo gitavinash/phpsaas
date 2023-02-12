@@ -16,9 +16,9 @@ function slider($connection, $data)
 
     if (isset($sliderId)) {
 
-        $query = "UPDATE " . TABLE_PREFIX . "slide SET slide_image='{$featureImage}', slide_title='{$title}', slide_description = '{$description}' WHERE slide_id={$sliderId} AND slide_site_id=" . APP_SITE_ID;
+        $query = "UPDATE " . TABLE_PREFIX . "slide SET slide_image='{$featureImage}', slide_title='{$title}', slide_description = '{$description}', slide_link='{$link}' WHERE slide_id={$sliderId} AND slide_site_id=" . APP_SITE_ID;
     } else {
-        $query = "INSERT INTO " . TABLE_PREFIX . "slide(slide_site_id, slide_image, slide_title, slide_description, slide_status) VALUES(" . APP_SITE_ID . ", '{$featureImage}', '{$title}', '{$description}', 1)";
+        $query = "INSERT INTO " . TABLE_PREFIX . "slide(slide_site_id, slide_image, slide_title, slide_description, slide_link, slide_status) VALUES(" . APP_SITE_ID . ", '{$featureImage}', '{$title}', '{$description}', '{$link}', 1)";
     }
 
     if (mysqli_query($connection, $query)) {
@@ -33,6 +33,6 @@ function slider($connection, $data)
         $queryString = "&status=error&responseMsg=" . urlencode(mysqli_error($connection));
     }
 
-    header("Location: /dashboard/setting/?type=sliders" . $queryString);
+    header("Location: /dashboard/appearance/?type=sliders" . $queryString);
     exit();
 }
