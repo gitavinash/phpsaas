@@ -14,30 +14,26 @@
 
                     while ($sliderData = mysqli_fetch_assoc($sliderList)) {
                         extract($sliderData); ?>
-            <div class="col-12 ">
-                <div class="row sidepadding hero align-items-center">
-                    <div class="col-12 col-lg-6">
-                        <h3 class="text-white fontibm">
-                            <?php echo $slide_title ?>
-                        </h3>
-                        <p class="text-white my-3 fontibm">
-                            <?php echo $slide_description ?>
-                        </p>
-                        <a href="<?php echo $slide_link ?>" class="btn1 my-3">Buy Now</a>
-                    </div>
+                        <div class="col-12 ">
+                            <div class="row sidepadding hero align-items-center">
+                                <div class="col-12 col-lg-6">
+                                    <h3 class="text-white fontibm">
+                                        <?php echo $slide_title ?>
+                                    </h3>
+                                    <p class="text-white my-3 fontibm">
+                                        <?php echo $slide_description ?>
+                                    </p>
+                                    <a href="<?php echo $slide_link ?>" class="btn1 my-3">Buy Now</a>
+                                </div>
 
-                    <div class="col-12 col-lg-6">
-                        <img src="<?php echo $slide_image ?>" alt="<?php echo $slide_title ?>" class="img-fluid" />
-                    </div>
-                </div>
-            </div>
+                                <div class="col-12 col-lg-6">
+                                    <img src="<?php echo $slide_image ?>" alt="<?php echo $slide_title ?>" class="img-fluid" />
+                                </div>
+                            </div>
+                        </div>
 
             <?php
                     }
-                } else {
-
-                    echo "No slider found";
-                    exit();
                 }
             } else {
                 echo mysqli_error($connection);
@@ -106,46 +102,34 @@
                                 </div>
                             </div> -->
 
-                        <ul class="nav nav-pills d-flex justify-content-center d-none d-md-flex " id="pills-tab"
-                            role="tablist">
+                        <ul class="nav nav-pills d-flex justify-content-center d-none d-md-flex " id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="product-data" data-bs-toggle="pill"
-                                    data-bs-target="#product" type="button" role="tab" aria-controls="pills-home"
-                                    aria-selected="true">All product</button>
+                                <button class="nav-link active" id="product-data" data-bs-toggle="pill" data-bs-target="#product" type="button" role="tab" aria-controls="pills-home" aria-selected="true">All product</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="Home-theater" data-bs-toggle="pill"
-                                    data-bs-target="#Hometheater" type="button" role="tab" aria-controls="pills-profile"
-                                    aria-selected="false">Home theater</button>
+                                <button class="nav-link" id="Home-theater" data-bs-toggle="pill" data-bs-target="#Hometheater" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Home theater</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="Speaker-data" data-bs-toggle="pill"
-                                    data-bs-target="#Speaker" type="button" role="tab" aria-controls="pills-contact"
-                                    aria-selected="false">Speaker</button>
+                                <button class="nav-link" id="Speaker-data" data-bs-toggle="pill" data-bs-target="#Speaker" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Speaker</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="sound-system" data-bs-toggle="pill" data-bs-target="#sound"
-                                    type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Sound
+                                <button class="nav-link" id="sound-system" data-bs-toggle="pill" data-bs-target="#sound" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Sound
                                     bar</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="Home-cinema" data-bs-toggle="pill"
-                                    data-bs-target="#Homecinema" type="button" role="tab" aria-controls="pills-contact"
-                                    aria-selected="false">Home cinema</button>
+                                <button class="nav-link" id="Home-cinema" data-bs-toggle="pill" data-bs-target="#Homecinema" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Home cinema</button>
                             </li>
                         </ul>
 
                         <div class="tab-content" id="myTabContent">
 
-                            <div class="tab-pane fade show active" id="product" role="tabpanel"
-                                aria-labelledby="product-data">
+                            <div class="tab-pane fade show active" id="product" role="tabpanel" aria-labelledby="product-data">
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt=""
-                                                class="img-fluid mx-auto d-block " />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt="" class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -166,8 +150,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -188,8 +171,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -210,8 +192,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -238,8 +219,7 @@
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt=""
-                                                class="img-fluid mx-auto d-block " />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt="" class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -260,8 +240,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 33.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 33.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -282,8 +261,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 23.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 23.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -304,8 +282,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -333,8 +310,7 @@
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt=""
-                                                class="img-fluid mx-auto d-block " />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt="" class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -355,8 +331,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -377,8 +352,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -399,8 +373,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -427,8 +400,7 @@
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt=""
-                                                class="img-fluid mx-auto d-block " />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 26.png" alt="" class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -449,8 +421,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 27.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -471,8 +442,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 29.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -493,8 +463,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 30.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -521,8 +490,7 @@
                                 <div class="">
                                     <div class="row products my-5 p-0 mx-0">
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt=""
-                                                class="img-fluid mx-auto d-block " />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 31.png" alt="" class="img-fluid mx-auto d-block " />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -543,8 +511,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 33.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 33.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -565,8 +532,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 23.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 23.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -587,8 +553,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt=""
-                                                class="img-fluid  mx-auto d-block" />
+                                            <img src="<?php echo USER_IMAGES ?>product/image 24.png" alt="" class="img-fluid  mx-auto d-block" />
                                             <div class="product-details">
                                                 <p class="text-white font-size-20 font-family-sans text-center">
                                                     Blaupunkt Germany's SBW200
@@ -958,8 +923,7 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
-                                    class="img-fluid d-block m-auto">
+                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
@@ -976,8 +940,7 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
-                                    class="img-fluid d-block m-auto">
+                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
@@ -993,8 +956,7 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
-                                    class="img-fluid d-block m-auto">
+                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
@@ -1010,8 +972,7 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
-                                    class="img-fluid d-block m-auto">
+                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
@@ -1027,8 +988,7 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
-                                    class="img-fluid d-block m-auto">
+                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
