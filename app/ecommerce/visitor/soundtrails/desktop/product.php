@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row product_banner_section sidepadding hero align-items-center py-5">
         <div class="col-12 text-center my-5">
-            <h5>HOME / <span>PRODUCT</span></h5>
+            <h5>Home / <a href="/shop/">Products</a> / <span><?php echo $product_title ?></span></h5>
         </div>
     </div>
 </div>
@@ -98,23 +98,28 @@
                 </div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-xl-5 col-xxl-6 mt-4 mt-xl-0">
-                <h1>Dinterdum pretium condimento</h1>
+                <h1><?php echo $product_title ?></h1>
 
                 <div class="product_details">
                     <div>
-                        <p>Brand: Tomorrow</p>
+                        <p>Brand: <a href="<?php echo $brandURL ?>"><?php echo $brandName ?></a></p>
                     </div>
                     <div>
-                        <p>Product Code: W0690036</p>
+                        <p>Product Code: <?php echo $inventory_sku ?></p>
                     </div>
                     <div>
-                        <p>Availability: In stock</p>
+                        <p>Availability: <?php echo (($inventory_in_stock == 1) ? 'In stock' : 'Out off stock') ?></p>
                     </div>
                 </div>
                 <div class="price_div py-3 mt-4 prive_top_bodder">
                     <div class="d-flex align-items-center">
-                        <h4>₹202.00</h4>
-                        <p class="ms-5 line">₹210.00</p>
+                        <h4>₹
+                            <?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $inventory_price); ?>/-
+                        </h4>
+                        <p class="ms-5 line">
+                            ₹
+                            <?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $inventory_mrp); ?>/-
+                        </p>
                     </div>
                 </div>
 
@@ -124,17 +129,17 @@
                             <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6">
                                 <h5>QUANTITY</h5>
                                 <div class="quntity-div mt-3">
-                                    <input type="number" />
+                                    <input type="number" placeholder="1" value="1" />
                                     <div class="controlles"></div>
                                 </div>
                             </div>
-                            <div
+                            <!-- <div
                                 class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6 d-flex align-content-center mt-4 mt-xxl-0">
                                 <div class="d-flex align-items-center">
                                     <img src="<?php echo USER_IMAGES ?>fire.png" alt="" />
                                     <p class="mb-0 ms-2">8 sold in last 18 hours</p>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

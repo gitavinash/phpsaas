@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row product_banner_section sidepadding hero align-items-center py-5">
         <div class="col-12 text-center my-5">
-            <h5>HOME / <span>ABOUT</span></h5>
+            <h5>Home / <span><?php echo $page_title ?></span></h5>
         </div>
     </div>
 </div>

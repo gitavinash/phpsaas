@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row product_banner_section sidepadding hero align-items-center py-5">
         <div class="col-12 text-center my-5">
-            <h5>HOME / <span>CONTACT</span></h5>
+            <h5>Home / <span>Contact Us</span></h5>
         </div>
     </div>
 </div>
@@ -48,7 +48,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center">
+                <div
+                    class="col-12 col-lg-4 col-md-4 col-sm-12 side-boder d-flex justify-content-center text-center border-none">
                     <div>
                         <a href="mailto:support@soundtrails.in">
                             <img src="<?php echo USER_IMAGES ?>2.png" alt="" style="padding: 9px 0px" />

@@ -106,7 +106,7 @@ if ($categoryID != '') {
 
                             mysqli_query($connection, "START TRANSACTION");
 
-                            $url = '/product/' . strtolower($categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $productName)) . '/';
+                            $url = '/product' . strtolower($categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $productName)) . '/';
 
                             if ($checkURL = mysqli_query($connection, "SELECT link_url FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_site_id='" . SITE_ID . "'")) {
 
