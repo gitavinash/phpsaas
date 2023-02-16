@@ -11,15 +11,16 @@
     <title>
         <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME) ?>
     </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- css -->
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Righteous&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Righteous&display=swap"
         rel="stylesheet">
 
 </head>
@@ -27,9 +28,9 @@
 <body>
 
     <!-- header start -->
-    <header class="side-default-padding">
-        <div class="logo">
+    <header>
+        <!-- <div class="logo">
             <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
-        </div>
+        </div> -->
     </header>
     <!-- header end -->
