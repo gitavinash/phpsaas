@@ -25,7 +25,6 @@ a:hover {
 header {
   float: left;
   width: 100%;
-  padding: 20px 10%;
   box-sizing: border-box;
 }
 
@@ -97,7 +96,7 @@ section {
 
 img.welcomeLogo {
   height: 70px;
-  margin-top: -15px;
+  margin-top: -6px;
 }
 
 .welcomeNote p {
@@ -153,12 +152,16 @@ a.getInTouchBtn:hover {
   }
 
   .welcomeNote {
-    padding: 50px 5% 50px 5%;
+    padding: 100px 5% 50px 5%;
   }
 
   .welcomeNote h1 {
     font-size: 2em;
     line-height: 80px;
+  }
+
+  img.welcomeLogo {
+    margin-top: 0px;
   }
 
   .welcomeNote p {
@@ -172,18 +175,5 @@ a.getInTouchBtn:hover {
 
   .welcomeNote p strong {
     font-size: 24px;
-  }
-
-  a.getInTouchBtn {
-    border-bottom: 2px solid #3ab4f1;
-    padding: 5px 10px 5px 10px;
-  }
-
-  a.getInTouchBtn:hover {
-    background-color: #3ab4f1;
-    color: #fff;
-    -webkit-transition: background-color 1000ms linear;
-    -ms-transition: background-color 1000ms linear;
-    transition: background-color 1000ms linear;
   }
 }
