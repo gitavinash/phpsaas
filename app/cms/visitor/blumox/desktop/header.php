@@ -62,11 +62,33 @@
 
     <!-- header start -->
     <header>
-        <!-- <div class="menu">
+        <div class="menu">
             <span></span>
-        </div> -->
-        <!-- <div class="menuBox">
-
-        </div> -->
+        </div>
+        <div class="menuBox">
+            <section>
+                <div class="menuList">
+                    <ul>
+                        <li><a href="/about-us/">About</a></li>
+                        <li><a href="/our-work/">Work</a></li>
+                        <li><a href="/products/">Products</a></li>
+                        <li><a href="/services/">Services</a></li>
+                        <li><a href="/contact-us/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="legalLinks">
+                    <ul>
+                        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+                        <li><a href="/refund-policy/">Refund Policy</a></li>
+                        <li><a href="/terms-and-conditions/">Terms and Conditions</a></li>
+                        <li><a href="/sitemap/">Sitemap</a></li>
+                        <li>&copy; 2022 - <?php echo date('Y'); ?> Blumox Technologies pvt. ltd.</li>
+                    </ul>
+                </div>
+            </section>
+            <div class="menu closeMenu">
+                <span></span>
+            </div>
+        </div>
     </header>
     <!-- header end -->

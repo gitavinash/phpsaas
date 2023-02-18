@@ -1,8 +1,10 @@
-$('.card-ban').slick({
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    dots: false,
-    arrows: false,
+$(document).ready(function () {
+  $(".menu").click(function () {
+    $(".menuBox").height("100%");
+    $(".closeMenu").show();
+  });
+  $(".closeMenu").click(function () {
+    $(".menuBox").height("0%");
+    $(".closeMenu").hide();
+  });
 });

@@ -120,15 +120,147 @@ section {
   box-shadow: 0 0 50px #ccc;
 }
 
+.closeMenu {
+  display: none;
+}
+
+.closeMenu span::after {
+  content: "x" !important;
+  font-size: 42px;
+  line-height: 65px;
+  font-weight: 400;
+}
+
+.closeMenu span:hover {
+  box-shadow: 0 0 50px #ccc;
+}
+
+@-webkit-keyframes expand {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+
+@-webkit-keyframes compress {
+  0% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
+}
+
 .menuBox {
   position: fixed;
+  left: 0;
   float: left;
   overflow: hidden;
   width: 100%;
-  height: 100%;
-  background: red;
+  height: 0%;
+  background: #f2f2f2;
   z-index: 2;
-  transition: 0.5s;
+  transition: all 1s ease;
+}
+
+.menuBox section {
+  max-width: 1366px;
+  margin: 0 auto !important;
+  float: none !important;
+  padding: 0px !important;
+}
+
+.menuBox .menuList {
+  float: left;
+  width: 100%;
+  padding: 10% 0%;
+}
+
+.menuBox .menuList li {
+  list-style: none;
+  float: left;
+  width: 50%;
+  box-sizing: border-box;
+  padding-left: 0%;
+  padding-bottom: 5%;
+  font-size: 4em;
+  font-weight: 700;
+}
+
+.menuBox .menuList li:nth-child(even) {
+  padding-left: 0%;
+}
+
+.menuBox a:hover {
+  color: #3ab4f1;
+  transition: 0.3s;
+}
+
+.menuBox .legalLinks {
+  float: left;
+  width: 70%;
+  box-sizing: border-box;
+  padding: 5% 0%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.menuBox .legalLinks li {
+  list-style: none;
+  float: left;
+  font-size: 1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 32px;
+}
+
+.menuBox .legalLinks li:last-child {
+  width: 100%;
+}
+
+.menuBox .legalLinks li::after {
+  content: "/";
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #939393;
+}
+
+.menuBox .legalLinks li::after {
+  content: "/";
+  padding-left: 20px;
+  color: #939393;
+}
+
+.menuBox .legalLinks li:last-child::after {
+  content: none;
+}
+
+.menuBox .legalLinks li:nth-last-child(2)::after {
+  content: none;
+}
+
+.menuBox .socialLinks {
+  float: left;
+  width: 30%;
+  box-sizing: border-box;
+  padding: 5% 0%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.menuBox .socialLinks li {
+  list-style: none;
+  float: left;
+  font-size: 1em;
+  font-weight: 700;
+  padding-right: 2%;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .welcomeNote {
@@ -307,6 +439,43 @@ a.getInTouchBtn:hover {
     width: 50px;
     line-height: 50px;
     font-size: 14px;
+  }
+
+  .closeMenu span::after {
+    font-size: 32px;
+    line-height: 46px;
+  }
+
+  .menuBox .menuList {
+    float: left;
+    width: 100%;
+    padding: 20% 0% 5% 0%;
+  }
+
+  .menuBox .menuList li {
+    width: 100%;
+    font-size: 2em;
+  }
+
+  .menuBox .legalLinks {
+    width: 100%;
+    padding: 5% 0%;
+  }
+
+  .menuBox .legalLinks li {
+    list-style: none;
+    float: left;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 28px;
+  }
+
+  .menuBox .legalLinks li::after {
+    content: "/";
+    padding-left: 10px;
+    color: #939393;
   }
 
   .welcomeNote {
