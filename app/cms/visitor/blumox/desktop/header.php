@@ -62,8 +62,11 @@
 
     <!-- header start -->
     <header>
-        <!-- <div class="logo">
-            <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
-        </div> -->
+        <div class="menu">
+            <span></span>
+        </div>
+        <div class="menuBox">
+
+        </div>
     </header>
     <!-- header end -->

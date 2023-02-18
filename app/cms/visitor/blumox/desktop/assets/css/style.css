@@ -79,6 +79,48 @@ section {
   padding: 10px 0px;
 }
 
+.menu {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-height: 100px;
+  z-index: 1;
+}
+
+.menu span {
+  transition: box-shadow 0.3s;
+  float: right;
+  height: 70px;
+  width: 70px;
+  border-radius: 100%;
+  background-color: #fff;
+  line-height: 70px;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menu span::after {
+  content: "menu";
+}
+
+.menu span:hover {
+  box-shadow: 0 0 50px #ccc;
+}
+
+.menuBox {
+  position: fixed;
+  float: left;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: red;
+  z-index: 2;
+  transition: 0.5s;
+}
+
 .welcomeNote {
   float: left;
   width: 100%;
@@ -131,6 +173,99 @@ a.getInTouchBtn:hover {
   transition: background-color 1000ms linear;
 }
 
+.testimonialBox {
+  float: left;
+  width: 100%;
+  margin: 50px 0px 100px 0px;
+}
+
+.testimonialBox:last-child {
+  margin-bottom: 0px;
+}
+
+.testimonialBox .image {
+  float: left;
+  width: 70%;
+  height: 600px;
+  transition: transform 0.5s ease;
+}
+
+.testimonialBox .leftImageBox {
+  margin-left: 30% !important;
+}
+
+.testimonialBox .image img {
+  float: left;
+  width: 100%;
+  max-height: 600px;
+}
+
+.testimonialBox .text {
+  float: left;
+  width: 50%;
+  height: 400px;
+  margin-left: -20%;
+  background: #333;
+  padding: 100px 75px;
+  margin-top: 100px;
+  text-align: center;
+  transition: transform 0.5s ease;
+}
+
+.testimonialBox .leftBox {
+  width: 50% !important;
+  margin-left: -100% !important;
+}
+
+.testimonialBox .text h2 {
+  color: #fff;
+  font-size: 2.5em;
+  line-height: 70px;
+  letter-spacing: 5px;
+}
+
+.testimonialBox .text p {
+  font-size: 1.5em;
+  line-height: 48px;
+  color: #fff;
+}
+
+.testimonialBox:hover .image {
+  transform: scale(0.95);
+}
+
+.testimonialBox:hover .text {
+  transform: scale(1.05);
+}
+
+.linkBox {
+  float: left;
+  width: 100%;
+  padding: 75px 15% 75px 15%;
+}
+
+.linkBox p {
+  text-align: center;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.linkBox p strong {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+/* footer {
+  background: url("../images/logo.png") bottom center no-repeat;
+  width: 100%;
+  min-height: 300px;
+  float: left;
+  filter: grayscale();
+} */
+
 @media only screen and (max-width: 600px) {
   .heart {
     height: 20px;
@@ -149,6 +284,19 @@ a.getInTouchBtn:hover {
 
   .heart:after {
     left: 9px;
+  }
+
+  .menu {
+    top: 10px;
+    right: 10px;
+    max-height: 100px;
+  }
+
+  .menu span {
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    font-size: 14px;
   }
 
   .welcomeNote {
@@ -175,5 +323,50 @@ a.getInTouchBtn:hover {
 
   .welcomeNote p strong {
     font-size: 24px;
+  }
+
+  .testimonialBox {
+    margin: 0px;
+    margin-bottom: 100px;
+  }
+
+  .testimonialBox .image {
+    float: left;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .testimonialBox .leftImageBox {
+    margin: 0px !important;
+  }
+
+  .testimonialBox .text {
+    float: left;
+    width: 100%;
+    margin: 0px;
+    margin-top: -10%;
+    padding: 20% 5% 10% 5%;
+    height: auto;
+  }
+  .testimonialBox .leftBox {
+    margin: 0px !important;
+    width: 100% !important;
+    margin-top: -10% !important;
+  }
+
+  .testimonialBox .text h2 {
+    font-size: 24px;
+    line-height: 50px;
+    text-align: left;
+  }
+
+  .testimonialBox .text p {
+    font-size: 16px;
+    line-height: 32px;
+    text-align: left;
   }
 }
