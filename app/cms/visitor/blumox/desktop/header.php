@@ -62,11 +62,11 @@
 
     <!-- header start -->
     <header>
-        <div class="menu">
+        <!-- <div class="menu">
             <span></span>
-        </div>
-        <div class="menuBox">
+        </div> -->
+        <!-- <div class="menuBox">
 
-        </div>
+        </div> -->
     </header>
     <!-- header end -->
