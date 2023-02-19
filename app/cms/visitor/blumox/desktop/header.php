@@ -5,7 +5,6 @@
     <base href="<?php echo SITE_URL ?>">
     <meta charset="utf-8">
     <link rel="shortcut icon" href=" ">
-    <meta name="" content="">
     <meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
 
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon/apple-touch-icon.png">
