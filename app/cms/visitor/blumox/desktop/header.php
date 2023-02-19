@@ -26,34 +26,32 @@
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Righteous&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Righteous&display=swap" rel="stylesheet">
 
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "fvi9wdlvm3");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "fvi9wdlvm3");
     </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZBK4Z8XT71"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'G-ZBK4Z8XT71');
+        gtag('config', 'G-ZBK4Z8XT71');
     </script>
 
 </head>
@@ -62,6 +60,11 @@
 
     <!-- header start -->
     <header>
+        <?php
+        if (ACTIVE_URL != '/') {
+            echo "<div class='logo' ><a href='/'><img src='" . USER_IMAGES . "logo.png' alt='" . SITE_NAME . "' ></a></div>";
+        }
+        ?>
         <div class="menu">
             <span></span>
         </div>
@@ -81,8 +84,8 @@
                         <li><a href="/privacy-policy/">Privacy Policy</a></li>
                         <li><a href="/refund-policy/">Refund Policy</a></li>
                         <li><a href="/terms-and-conditions/">Terms and Conditions</a></li>
-                        <li><a href="/sitemap/">Sitemap</a></li>
-                        <li>&copy; 2022 - <?php echo date('Y'); ?> Blumox Technologies pvt. ltd.</li>
+                        <li><a href="/sitemap/" target="_blank">Sitemap</a></li>
+                        <li>&copy; 2022 - <?php echo date('Y'); ?> Blumox | a Unit of ITS Soft World</li>
                     </ul>
                 </div>
             </section>

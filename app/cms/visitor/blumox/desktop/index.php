@@ -6,17 +6,16 @@ require_once 'header.php';
 
 <section>
     <div class="welcomeNote">
-        <h1>Hello, we’re <img src="<?php echo USER_IMAGES ?>logo.png" class="welcomeLogo"
-                alt="<?php echo SITE_NAME ?>" />
+        <h1>Hello, we’re <img src="<?php echo USER_IMAGES ?>logo.png" class="welcomeLogo" alt="<?php echo SITE_NAME ?>" />
         </h1>
         <p><strong>We <span class="heart"></span> developing websites, mobile apps and applications for small, medium
                 and large
                 enterprises.</strong></p>
-        <p>Keen to know more? <a href="mailto:avinash@isw.one" class="getInTouchBtn">Get in Touch</a></p>
+        <p>Keen to know more? <a href="/contact-us/" class="getInTouchBtn">Get in Touch</a></p>
     </div>
 </section>
 <section>
-    <div class="testimonialBox">
+    <div class="projectBox">
         <a href="https://laskinnovita.com/download-app.php" target="_blank">
             <div class="image">
                 <img src="<?php echo USER_IMAGES ?>la-skinnovita-testimonial.jpg" alt="">
@@ -27,7 +26,7 @@ require_once 'header.php';
             </div>
         </a>
     </div>
-    <div class="testimonialBox">
+    <div class="projectBox">
         <a href="https://punjabkesari.com" target="_blank">
             <div class="image leftImageBox">
                 <img src="<?php echo USER_IMAGES ?>punjab-kesari-testimonial.jpg" alt="">
@@ -38,7 +37,7 @@ require_once 'header.php';
             </div>
         </a>
     </div>
-    <div class="testimonialBox">
+    <div class="projectBox">
         <a href="https://andblooms.com" target="_blank">
             <div class="image">
                 <img src="<?php echo USER_IMAGES ?>and-blooms-testimonial.jpg" alt="">
@@ -51,11 +50,12 @@ require_once 'header.php';
     </div>
 </section>
 
-<!-- <section>
+<section>
     <div class="linkBox">
         <p>See our <a href="/portfolio/" class="getInTouchBtn">more work</a></p>
     </div>
-</section> -->
+</section>
+
 <?php
 
 require_once 'footer.php';

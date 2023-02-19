@@ -8,12 +8,11 @@ body {
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
-a:hover {
-  color: inherit;
-  text-decoration: none;
+.leftText {
+  text-align: left !important;
 }
 
 .blumox {
@@ -36,6 +35,10 @@ header {
 
 .abBgColor {
   background: #d4946d !important;
+}
+
+.oxtealBgColor {
+  background: #009b72 !important;
 }
 
 section {
@@ -81,12 +84,12 @@ section {
 
 .logo {
   float: left;
+  padding: 20px 0px;
 }
 
 .logo img {
   float: left;
-  height: 100px;
-  padding: 10px 0px;
+  height: 70px;
 }
 
 .menu {
@@ -314,68 +317,64 @@ a.getInTouchBtn:hover {
   transition: background-color 1000ms linear;
 }
 
-.testimonialBox {
+.projectBox {
   float: left;
   width: 100%;
   margin: 50px 0px 100px 0px;
 }
 
-.testimonialBox:last-child {
-  margin-bottom: 0px;
-}
-
-.testimonialBox .image {
+.projectBox .image {
   float: left;
   width: 70%;
   height: 600px;
   transition: transform 0.5s ease;
 }
 
-.testimonialBox .leftImageBox {
+.projectBox .leftImageBox {
   margin-left: 25% !important;
 }
 
-.testimonialBox .image img {
+.projectBox .image img {
   float: left;
   width: auto;
   height: 600px;
 }
 
-.testimonialBox .text {
+.projectBox .text {
   float: left;
   width: 50%;
-  height: 400px;
+  min-height: 350px;
   margin-left: -20%;
   background: #333;
-  padding: 100px 75px;
+  padding: 50px 75px;
   margin-top: 100px;
   text-align: center;
   transition: transform 0.5s ease;
 }
 
-.testimonialBox .leftBox {
+.projectBox .leftBox {
   width: 50% !important;
   margin-left: -95% !important;
 }
 
-.testimonialBox .text h2 {
+.projectBox .text h2 {
   color: #fff;
   font-size: 2.5em;
   line-height: 70px;
   letter-spacing: 5px;
 }
 
-.testimonialBox .text p {
+.projectBox .text p {
   font-size: 1.5em;
   line-height: 48px;
   color: #fff;
 }
 
-.testimonialBox:hover .image {
+.projectBox:hover .image {
   transform: scale(0.95);
 }
 
-.testimonialBox:hover .text {
+.projectBox:hover .text {
   transform: scale(1.05);
 }
 
@@ -399,13 +398,100 @@ a.getInTouchBtn:hover {
   font-weight: 700;
 }
 
-/* footer {
-  background: url("../images/logo.png") bottom center no-repeat;
+.testimonialBox {
+  left: 0;
   width: 100%;
-  min-height: 300px;
+  min-height: 400px;
+  background: #3ab4f1;
+  padding: 5% !important;
+}
+
+.testimonialBox h2 {
+  text-align: center;
+  font-size: 4em;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.testimonials {
+  padding: 5% 10%;
+  text-align: center;
+  color: #fff;
+}
+
+.testimonials h3 {
+  line-height: 54px;
+}
+
+.testimonials p {
+  font-size: 1.5em;
+  line-height: 32px;
+  margin-top: 50px;
+}
+
+.introBox {
   float: left;
-  filter: grayscale();
-} */
+  width: 100%;
+  padding: 100px 15% 50px 15%;
+  text-align: center;
+}
+
+.introBox h1 {
+  font-weight: 700;
+  padding: 50px 0px;
+  font-size: 5em;
+}
+
+.introBox p {
+  font-weight: 400;
+  padding: 0px 0px;
+  font-size: 1.5em;
+  text-align: center;
+  color: #333;
+  line-height: 55px;
+}
+
+.contactBox p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  line-height: 24px;
+}
+
+.contactBox p a {
+  text-decoration: none;
+}
+
+.contactBox p a:hover {
+  color: #3ab4f1;
+  text-decoration: none;
+  -webkit-transition: color 500ms linear;
+  -ms-transition: color 500ms linear;
+  transition: color 500ms linear;
+}
+
+.contactBox p span {
+  font-size: 16px;
+}
+
+.policyTextBox p {
+  font-size: 18px;
+  text-align: justify;
+  line-height: 38px;
+}
+
+.policyTextBox p strong {
+  font-size: 24px;
+  line-height: 42px;
+}
+
+footer {
+  /* background: url("../images/logo.png") bottom center no-repeat; */
+  width: 100%;
+  float: left;
+  /* filter: grayscale(); */
+}
 
 @media only screen and (max-width: 800px) {
   .heart {
@@ -503,12 +589,12 @@ a.getInTouchBtn:hover {
     font-size: 24px;
   }
 
-  .testimonialBox {
+  .projectBox {
     margin: 0px;
     margin-bottom: 100px;
   }
 
-  .testimonialBox .image {
+  .projectBox .image {
     float: left;
     width: 100%;
     height: auto;
@@ -518,16 +604,16 @@ a.getInTouchBtn:hover {
     position: relative;
   }
 
-  .testimonialBox .image img {
+  .projectBox .image img {
     width: 100% !important;
     height: auto !important;
   }
 
-  .testimonialBox .leftImageBox {
+  .projectBox .leftImageBox {
     margin: 0px !important;
   }
 
-  .testimonialBox .text {
+  .projectBox .text {
     float: left;
     width: 100%;
     margin: 0px;
@@ -535,19 +621,19 @@ a.getInTouchBtn:hover {
     padding: 20% 5% 10% 5%;
     height: auto;
   }
-  .testimonialBox .leftBox {
+  .projectBox .leftBox {
     margin: 0px !important;
     width: 100% !important;
     margin-top: -10% !important;
   }
 
-  .testimonialBox .text h2 {
+  .projectBox .text h2 {
     font-size: 24px;
     line-height: 50px;
     text-align: left;
   }
 
-  .testimonialBox .text p {
+  .projectBox .text p {
     font-size: 16px;
     line-height: 32px;
     text-align: left;

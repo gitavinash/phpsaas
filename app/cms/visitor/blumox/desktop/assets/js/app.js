@@ -7,4 +7,10 @@ $(document).ready(function () {
     $(".menuBox").height("0%");
     $(".closeMenu").hide();
   });
+  $(".testimonials").slick({
+    dots: false,
+    autoplay: true,
+    arrows: false,
+    infinite: true,
+  });
 });
