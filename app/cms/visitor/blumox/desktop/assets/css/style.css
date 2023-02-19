@@ -475,6 +475,12 @@ a.getInTouchBtn:hover {
   font-size: 16px;
 }
 
+.policyTextBox {
+  font-size: 18px;
+  text-align: justify;
+  line-height: 38px;
+}
+
 .policyTextBox p {
   font-size: 18px;
   text-align: justify;
@@ -482,6 +488,11 @@ a.getInTouchBtn:hover {
 }
 
 .policyTextBox p strong {
+  font-size: 24px;
+  line-height: 42px;
+}
+
+.policyTextBox b {
   font-size: 24px;
   line-height: 42px;
 }

@@ -8,7 +8,7 @@ require_once 'header.php';
     <div class="introBox">
         <h1><?php echo $page_title ?></h1>
         <div class="policyTextBox">
-            <p><?php echo $page_description ?></p>
+            <?php echo $page_description ?>
         </div>
     </div>
 </section>
