@@ -16,11 +16,11 @@
     <meta name="msapplication-TileColor" content="#3ab4f1">
     <meta name="theme-color" content="#3ab4f1">
 
-    <title>
-        <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME) ?>
-    </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <?php require_once DEFAULT_META; ?>
+
     <!-- css -->
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
