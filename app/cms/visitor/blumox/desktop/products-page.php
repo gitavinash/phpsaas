@@ -12,7 +12,7 @@ require_once 'header.php';
 
 <section>
     <div class="projectBox">
-        <a href="https://laskinnovita.com/download-app.php" target="_blank">
+        <a href="https://beta.oxteal.com" target="_blank">
             <div class="image">
                 <img src="<?php echo USER_IMAGES ?>oxteal-testimonial.jpg" alt="">
             </div>
