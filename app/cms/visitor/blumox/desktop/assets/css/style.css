@@ -505,6 +505,14 @@ footer {
 }
 
 @media only screen and (max-width: 800px) {
+  .logo {
+    float: left;
+    padding: 10px 5%;
+  }
+  .logo img {
+    float: left;
+    height: 50px;
+  }
   .heart {
     height: 20px;
     width: 20px;
@@ -648,5 +656,80 @@ footer {
     font-size: 16px;
     line-height: 32px;
     text-align: left;
+  }
+
+  .testimonialBox {
+    left: 0;
+    width: 100%;
+    min-height: 400px;
+    background: #3ab4f1;
+    padding: 5% !important;
+  }
+
+  .testimonialBox h2 {
+    font-size: 2.5em;
+    margin-top: 50px;
+  }
+
+  .testimonials {
+    padding: 5% 10%;
+    text-align: center;
+    color: #fff;
+  }
+
+  .testimonials h3 {
+    font-size: 18px;
+    text-align: left;
+    line-height: 32px;
+  }
+
+  .testimonials p {
+    text-align: left;
+    font-size: 16px;
+    line-height: 32px;
+  }
+
+  .linkBox {
+    padding: 10% 5% 10% 5%;
+  }
+
+  .introBox {
+    padding: 50px 5% 50px 5%;
+  }
+
+  .introBox h1 {
+    font-weight: 700;
+    padding: 50px 0px;
+    font-size: 3em;
+  }
+
+  .introBox p {
+    font-size: 18px;
+    text-align: left;
+    line-height: 42px;
+  }
+
+  .policyTextBox {
+    font-size: 14px;
+    line-height: 28px !important;
+  }
+
+  .policyTextBox p {
+    font-size: 14px;
+    line-height: 28px !important;
+  }
+
+  .policyTextBox p strong {
+    font-size: 18px;
+    line-height: 32px;
+  }
+
+  .policyTextBox b {
+    font-size: 18px;
+    line-height: 32px;
+  }
+
+  footer {
+    margin-bottom: 100px;
   }
 }
