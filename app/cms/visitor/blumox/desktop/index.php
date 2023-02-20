@@ -6,7 +6,8 @@ require_once 'header.php';
 
 <section>
     <div class="welcomeNote">
-        <h1>Hello, we’re <img src="<?php echo USER_IMAGES ?>logo.png" class="welcomeLogo" alt="<?php echo SITE_NAME ?>" />
+        <h1>Hello, we’re <img src="<?php echo USER_IMAGES ?>logo.png" class="welcomeLogo"
+                alt="<?php echo SITE_NAME ?>" />
         </h1>
         <p><strong>We <span class="heart"></span> developing websites, mobile apps and applications for small, medium
                 and large
@@ -52,7 +53,7 @@ require_once 'header.php';
 
 <section>
     <div class="linkBox">
-        <p>See our <a href="/portfolio/" class="getInTouchBtn">more work</a></p>
+        <p>See our <a href="/our-work/" class="getInTouchBtn">more work</a></p>
     </div>
 </section>
 
