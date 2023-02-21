@@ -44,6 +44,8 @@
                 <input type="submit" value="Pay Now">
             </div>
         </form>
+        <p>Powered by <a href="https://blumox.com" title="Payment solution by blumox" target="_bl
+        ">blumox</a></p>
     </section>
 
 </body>

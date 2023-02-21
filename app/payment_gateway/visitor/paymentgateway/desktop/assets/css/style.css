@@ -103,6 +103,20 @@ form .formGroup input[type="submit"] {
   letter-spacing: 2px;
 }
 
+section p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0px;
+}
+
+a {
+  text-align: center;
+  color: #3ab4f1;
+  text-decoration: none;
+  font-weight: 700;
+}
+
 @media only screen and (max-width: 600px) {
   form {
     padding: 5%;
