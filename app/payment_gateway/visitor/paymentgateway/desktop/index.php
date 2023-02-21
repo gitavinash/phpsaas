@@ -20,24 +20,19 @@
                 </div>
             </div>
             <div class="formGroup">
-                <label>full name*</label>
-                <input type="text" name="full_name" placeholder="Full name...*" required>
+                <input type="text" name="full_name" placeholder="Full name *" required>
             </div>
             <div class="formGroup">
-                <label>email*</label>
-                <input type="text" name="email" placeholder="Email...*" required>
+                <input type="text" name="email" placeholder="Email *" required>
             </div>
             <div class="formGroup">
-                <label>mobile*</label>
-                <input type="text" name="mobile" placeholder="Mobile...*" required>
+                <input type="text" name="mobile" placeholder="Mobile *" required>
             </div>
             <div class="formGroup">
-                <label>amount*</label>
-                <input type="text" name="amount" placeholder="Amount...*" required>
+                <input type="text" name="amount" placeholder="Amount *" required>
             </div>
             <div class="formGroup">
-                <label>any message</label>
-                <textarea name="message" placeholder="Any message..."></textarea>
+                <textarea name="message" placeholder="Any message "></textarea>
             </div>
             <div class="formGroup">
                 <label></label>
