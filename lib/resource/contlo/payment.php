@@ -8,7 +8,7 @@ $data = array(
     'properties' => array(
         'amount' => $cart_price,
         'delivery_charge' => $order_delivery_charges,
-        'total_amount' => $cart_price + $order_delivery_charges,
+        'total_amount' => $order_total_price,
         'products_title' => $productNameList,
         'products_qty' => $productQtyList
     ),

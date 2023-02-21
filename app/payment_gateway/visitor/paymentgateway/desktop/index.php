@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once DEFAULT_META ?>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
+</head>
+
+<body>
+
+    <section>
+        <form method="post" action="#">
+            <div class="formGroup">
+                <div class="logo">
+                    <img src="<?php echo USER_IMAGES ?>logo.png" alt="">
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>full name*</label>
+                <input type="text" name="full_name" placeholder="Full name...*" required>
+            </div>
+            <div class="formGroup">
+                <label>email*</label>
+                <input type="text" name="email" placeholder="Email...*" required>
+            </div>
+            <div class="formGroup">
+                <label>mobile*</label>
+                <input type="text" name="mobile" placeholder="Mobile...*" required>
+            </div>
+            <div class="formGroup">
+                <label>amount*</label>
+                <input type="text" name="amount" placeholder="Amount...*" required>
+            </div>
+            <div class="formGroup">
+                <label>any message</label>
+                <textarea name="message" placeholder="Any message..."></textarea>
+            </div>
+            <div class="formGroup">
+                <label></label>
+                <input type="submit" value="Pay Now">
+            </div>
+        </form>
+    </section>
+
+</body>
+
+</html>
