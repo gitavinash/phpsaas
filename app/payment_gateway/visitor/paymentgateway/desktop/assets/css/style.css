@@ -101,6 +101,7 @@ form .formGroup input[type="submit"] {
   border: none;
   font-size: 16px;
   letter-spacing: 2px;
+  cursor: pointer;
 }
 
 section p {
