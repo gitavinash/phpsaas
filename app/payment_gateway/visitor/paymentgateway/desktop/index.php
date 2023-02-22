@@ -23,13 +23,13 @@
                 <input type="text" name="full_name" placeholder="Full name *" required>
             </div>
             <div class="formGroup">
-                <input type="text" name="email" placeholder="Email *" required>
+                <input type="email" name="email" placeholder="Email *" required>
             </div>
             <div class="formGroup">
-                <input type="text" name="mobile" placeholder="Mobile *" required>
+                <input type="number" name="mobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric" required>
             </div>
             <div class="formGroup">
-                <input type="text" name="amount" placeholder="Amount *" required>
+                <input type="number" name="amount" placeholder="Amount *" inputmode="numeric" required>
             </div>
             <div class="formGroup">
                 <textarea name="message" placeholder="Any message "></textarea>
