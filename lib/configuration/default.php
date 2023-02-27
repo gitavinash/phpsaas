@@ -76,3 +76,8 @@ define('NOTIFICATION_SENDER', '611764399880');
 /** Site Settings Configuration */
 
 define('SITE_THEME_COLOUR', ((isset($site_theme_color)) ? $site_theme_color : '#00b7ff'));
+
+// Encrption and Descryption
+
+define('ENCRYPT_METHOD', 'AES-128-CTR');
+// define('ENCRYPT_KEY', 'blumox.com');

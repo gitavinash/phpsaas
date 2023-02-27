@@ -1,101 +1,95 @@
 <?php
 
-	/* url router for admin dashboard */
-	
-	header("Content-type: application/json; charset=utf-8");
+/* url router for admin dashboard */
 
-	/** Secure all request method from sql injection */
+header("Content-type: application/json; charset=utf-8");
 
-	foreach($_GET as $key => $value) {
+/** Secure all request method from sql injection */
 
-		$secure[$key]=mysqli_real_escape_string($connection, $value);
+foreach ($_GET as $key => $value) {
 
-	}
+	$secure[$key] = mysqli_real_escape_string($connection, $value);
+}
 
-	/** Convert all secure request key from secure to original */
+if (isset($secure)) {
+	extract($secure);
+}
 
-	if(isset($secure)) {
+switch ($urlStructure[1]) {
 
-		extract($secure);
-		
-	}
+	case 'secure':
+		/* for secure api request */
+		require_once LOGIN_CHECK;
+		break;
 
-	switch ($urlStructure[1]) {
+	case 'update-database':
+		if (SITE_ID == 1) {
+			require_once RESOURCE . 'database/repair-database.php';
+		} else {
 
-		case 'secure' :
-			/* for secure api request */
-			require_once LOGIN_CHECK;
-			break;
+			$genarateError = true;
+			$status = 403;
+			$msg = "Unauthorized access";
+		}
+		break;
 
-		case 'update-database' :
-			if(SITE_ID==1) {
-				require_once RESOURCE.'database/repair-database.php';
+	case 'notification':
+		require_once API_MODULES . 'notification/' . end($urlStructure) . '.php';
+		break;
+
+	default:
+
+		// Check api as per domain application
+
+		$urlAPI = API_APP_MODULES . str_replace('/api/', '', rtrim(BASE_URL, '/')) . '.php';
+
+		if (file_exists($urlAPI)) {
+
+			require_once $urlAPI;
+		} else {
+
+			/** Check API request file in system app directory */
+
+			$appAPI = API_APP_MODULES . end($urlStructure) . '.php';
+
+			if (file_exists($appAPI)) {
+
+				require_once $appAPI;
 			} else {
-				
-				$genarateError=true;
-				$status=403;
-				$msg="Unauthorized access";
 
-			}
-			break;
+				// Check Application API Request
 
-		case 'notification' :
-			require_once API_MODULES.'notification/'.end($urlStructure).'.php';
-			break;
-			
-		default:
+				$requestApiPoint = API_MODULES . rtrim(str_replace('/api/', '', ACTIVE_URL), '/') . '.php';
 
-			// Check api as per url request
+				if (file_exists($requestApiPoint)) {
 
-			$urlAPI=API_APP_MODULES.str_replace('/api/', '', rtrim(BASE_URL, '/')).'.php';
-
-			if(file_exists($urlAPI)) {
-
-				require_once $urlAPI;
-
-			} else {
-
-				/** Check API request file in system app directory */
-
-				$appAPI=API_APP_MODULES.end($urlStructure).'.php';
-				
-				if(file_exists($appAPI)) {
-
-					require_once $appAPI;
-
+					require_once $requestApiPoint;
 				} else {
 
-					// Check Application API Request
+					$systemAPI = API_MODULES . end($urlStructure) . '.php';
 
-					$systemAPI=API_MODULES.end($urlStructure).'.php';
-
-					if(file_exists($systemAPI)) {
+					if (file_exists($systemAPI)) {
 
 						require_once $systemAPI;
-
 					} else {
 
-						$genarateError=true;
-
+						$genarateError = true;
 					}
-
 				}
-
 			}
-			
-			break;
-			
-	}
+		}
 
-	if(isset($genarateError)) {
+		break;
+}
 
-		$response = array(
-			'status' => ((isset($status)) ? $status : 404 ),
-			'msg' => ((isset($msg)) ? $msg : 'Not found' ),
-		);
+if (isset($genarateError)) {
 
-		http_response_code($response['status']);
+	$response = array(
+		'status' => ((isset($status)) ? $status : 404),
+		'msg' => ((isset($msg)) ? $msg : 'Not found'),
+	);
 
-		echo json_encode($response, TRUE);
+	http_response_code($response['status']);
 
-	}
+	echo json_encode($response, TRUE);
+}

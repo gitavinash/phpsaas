@@ -93,7 +93,7 @@ form .formGroup textarea:focus {
   outline: none !important;
 }
 
-form .formGroup input[type="submit"] {
+form .formGroup .submitBtn {
   background: #3ab4f1;
   color: #fff;
   font-weight: 700;
@@ -102,6 +102,10 @@ form .formGroup input[type="submit"] {
   font-size: 16px;
   letter-spacing: 2px;
   cursor: pointer;
+  float: left;
+  width: 100%;
+  padding: 15px;
+  border-radius: 4px;
 }
 
 section p {

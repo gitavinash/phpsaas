@@ -13,30 +13,21 @@
 <body>
 
     <section>
-        <form method="post" action="#">
+        <form>
             <div class="formGroup">
                 <div class="logo">
                     <img src="<?php echo USER_IMAGES ?>logo.png" alt="">
                 </div>
             </div>
-            <div class="formGroup">
-                <input type="text" name="full_name" placeholder="Full name *" required>
-            </div>
-            <div class="formGroup">
-                <input type="email" name="email" placeholder="Email *" required>
-            </div>
-            <div class="formGroup">
-                <input type="number" name="mobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric" required>
-            </div>
-            <div class="formGroup">
-                <input type="number" name="amount" placeholder="Amount *" inputmode="numeric" required>
-            </div>
-            <div class="formGroup">
-                <textarea name="message" placeholder="Any message "></textarea>
-            </div>
-            <div class="formGroup">
-                <label></label>
-                <input type="submit" value="Pay Now">
+            <div id="searchByMobile">
+                <div class="formGroup">
+                    <input type="number" name="mobile" id="mobile" placeholder="Mobile *" pattern="[0-9]*"
+                        inputmode="numeric" required>
+                </div>
+                <div class="formGroup">
+                    <label></label>
+                    <button id="searchUser" class="submitBtn">Continue</button>
+                </div>
             </div>
         </form>
         <p>Powered by <a href="https://blumox.com" title="Payment solution by blumox" target="_bl
@@ -44,5 +35,13 @@
     </section>
 
 </body>
+
+<!-- sections end -->
+<?php include_once NOTIFICATION . 'index.php' ?>
+
+<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
+<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
+<script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
 
 </html>

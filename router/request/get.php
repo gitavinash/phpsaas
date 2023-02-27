@@ -1,69 +1,60 @@
 <?php
 
-    if($_SERVER['REQUEST_METHOD']=='GET') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-        // Call API using the exact url
+	// Call API using the exact url
 
-		$action=((isset($action)) ? $action : '');
+	$action = ((isset($action)) ? $action : '');
 
-		$apiCall=API_APP_MODULES.$type.'/'.$action.'.php';
+	$apiCall = API_APP_MODULES . $type . '/' . $action . '.php';
 
-		if(!file_exists($apiCall)) {
+	if (!file_exists($apiCall)) {
 
-			/** Website APP Api Request */
+		/** Website APP Api Request */
 
-			$apiCall=API_MODULES.$type.'/'.$action.'.php';
+		$apiCall = API_MODULES . $type . '/' . $action . '.php';
 
-			if(!file_exists($apiCall)) {
+		if (!file_exists($apiCall)) {
 
-				/** Default API Request */
+			/** Default API Request */
 
-				$apiCall=API_MODULES.str_replace('/api/', '', ltrim(rtrim(BASE_URL, '/'), '/').'.php');
+			$apiCall = API_MODULES . str_replace('api/', '', ltrim(rtrim(BASE_URL, '/'), '/') . '.php');
 
-				if(file_exists($apiCall)) {
+			if (file_exists($apiCall)) {
 
-					/** Call the API */
+				/** Call the API */
 
-					require_once $apiCall;
+				require_once $apiCall;
+			} else {
 
+				/** Call dedicated api */
+
+				$apiCall = API_MODULES . $type . '.php';
+
+				if (!file_exists($apiCall)) {
+
+					$displaErrorInJSON = TRUE;
 				} else {
 
-					/** Call dedicated api */
-
-					$apiCall=API_MODULES.$type.'.php';
-
-					if(!file_exists($apiCall)) {
-
-						$displaErrorInJSON=TRUE;
-
-					} else {
-
-                        require_once $apiCall;
-
-                    }
-
+					require_once $apiCall;
 				}
-
 			}
-
 		}
-
-    } else {
-
-        $displaErrorInJSON=TRUE;
-        $msg='Invalid request method';
-
-    }
-
-    if(isset($displaErrorInJSON)) {
-
-		$result = array(
-			'status' => ((isset($status)) ? $status : 'error' ),
-			'msg' => ((isset($msg)) ? $msg : ((DEVELOPMENT_MODE==true) ? "Not found : {$apiCall}" : 'Invalid api request')),
-		);
-		
-		echo json_encode($result, TRUE);
-
 	}
+} else {
 
-	exit();
+	$displaErrorInJSON = TRUE;
+	$msg = 'Invalid request method';
+}
+
+if (isset($displaErrorInJSON)) {
+
+	$result = array(
+		'status' => ((isset($status)) ? $status : 'error'),
+		'msg' => ((isset($msg)) ? $msg : ((DEVELOPMENT_MODE == true) ? "Not found : {$apiCall}" : 'Invalid api request')),
+	);
+
+	echo json_encode($result, TRUE);
+}
+
+exit();
