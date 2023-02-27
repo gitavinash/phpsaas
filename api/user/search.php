@@ -32,15 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if (mysqli_num_rows($checkUser) == 0) {
 
-                http_response_code(404);
                 $msg = 'No user found';
             } else {
 
                 $msg = 'User found';
+                $userFound = TRUE;
                 $data = mysqli_fetch_assoc($checkUser);
             }
         }
     }
+
+    $data['mobile'] = $value;
 } else {
 
     http_response_code(405);
@@ -49,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 $apiResponse = array(
     'message' => ((isset($msg)) ? $msg : ''),
+    'isFound' => (int)((isset($userFound)) ? 1 : 0),
     'data' => ((isset($data)) ? $data : ''),
 );
 
