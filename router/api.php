@@ -59,7 +59,7 @@ switch ($urlStructure[1]) {
 
 				// Check Application API Request
 
-				$requestApiPoint = API_MODULES . rtrim(str_replace('/api/', '', ACTIVE_URL), '/') . '.php';
+				$requestApiPoint = API_MODULES . rtrim(str_replace('/api/', '', BASE_URL), '/') . '.php';
 
 				if (file_exists($requestApiPoint)) {
 
