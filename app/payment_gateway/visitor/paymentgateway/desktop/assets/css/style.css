@@ -13,6 +13,11 @@ section {
   margin-top: 25%;
 }
 
+.btnBox {
+  float: left;
+  width: 100%;
+}
+
 form {
   float: left;
   width: 100%;
@@ -119,11 +124,12 @@ form .formGroup .submitBtn {
   border-radius: 4px;
 }
 
-section p {
+section p.credit {
   float: left;
   width: 100%;
   text-align: center;
   padding: 10px 0px;
+  margin: 0 auto;
 }
 
 a {
@@ -138,19 +144,35 @@ a {
 }
 
 @media only screen and (max-width: 600px) {
+  body {
+    background: #fff;
+  }
   form {
     padding: 5%;
+    box-shadow: none;
   }
   section {
-    margin-top: 10%;
+    margin: 0 !important;
   }
-}
+  .btnBox {
+    position: fixed;
+    bottom: 40px;
+    left: 5%;
+  }
+  section p.credit {
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 5px 0px;
+    box-sizing: border-box;
+    margin-top: -4%;
+    font-size: 13px;
+    position: fixed;
+    bottom: 10px;
+  }
 
-@media only screen and (max-width: 800px) {
-  form {
-    padding: 5%;
-  }
-  section {
-    margin-top: 5%;
+  form .formGroup .submitBtn {
+    padding: 15px 10px;
+    width: 90%;
   }
 }

@@ -25,7 +25,7 @@
                         inputmode="numeric" autofocus required>
                     <label class="error" id="mobileNumberError">Please enter valid mobile no.</label>
                 </div>
-                <div class="formGroup">
+                <div class="formGroup btnBox">
                     <label></label>
                     <button id="searchUser" class="submitBtn">Continue</button>
                 </div>
@@ -52,13 +52,13 @@
                 <div class="formGroup">
                     <textarea name="message" id="message" placeholder="Any message"></textarea>
                 </div>
-                <div class="formGroup">
+                <div class="formGroup btnBox">
                     <label></label>
                     <button id="generatePayment" class="submitBtn">Pay Now</button>
                 </div>
             </div>
         </form>
-        <p>Powered by <a href="https://blumox.com" title="Payment solution by blumox" target="_bl
+        <p class="credit">Powered by <a href="https://blumox.com" title="Payment solution by blumox" target="_bl
         ">blumox</a></p>
     </section>
 
