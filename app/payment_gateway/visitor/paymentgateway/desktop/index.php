@@ -21,8 +21,7 @@
             </div>
             <div id="searchByMobile">
                 <div class="formGroup">
-                    <input type="number" name="mobile" id="mobile" placeholder="Mobile *" pattern="[0-9]*"
-                        inputmode="numeric" autofocus required>
+                    <input type="number" name="mobile" id="mobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric" autofocus required>
                     <label class="error" id="mobileNumberError">Please enter valid mobile no.</label>
                 </div>
                 <div class="formGroup btnBox">
@@ -36,8 +35,7 @@
                     <label class="error" id="nameError">Please enter a valid name.</label>
                 </div>
                 <div class="formGroup">
-                    <input type="number" id="resMobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric"
-                        required>
+                    <input type="number" id="resMobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric" readonly>
                     <label class="error" id="mobileNumberError">Please enter valid mobile no.</label>
                 </div>
                 <div class="formGroup">
@@ -45,15 +43,14 @@
                     <label class="error" id="emailError">Please enter a valid email address.</label>
                 </div>
                 <div class="formGroup">
-                    <input type="number" name="amount" id="amount" placeholder="Amount *" pattern="[0-9]*"
-                        inputmode="numeric" required>
+                    <input type="number" name="amount" id="amount" placeholder="Amount *" pattern="[0-9]*" inputmode="numeric" required>
                     <label class="error" id="amountError">Please enter a valid amount only in number.</label>
                 </div>
                 <div class="formGroup">
                     <textarea name="message" id="message" placeholder="Any message"></textarea>
                 </div>
                 <div class="formGroup btnBox">
-                    <label></label>
+                    <input type="hidden" name="userToken" id="userToken">
                     <button id="generatePayment" class="submitBtn">Pay Now</button>
                 </div>
             </div>

@@ -40,23 +40,37 @@ $(document).ready(function () {
     } else {
       // Call Domain search API
 
+      fullName = $("#name").val();
+      mobileNo = $("#resMobile").val();
+      email = $("#email").val();
       message = $("#message").val();
       amount = $("#amount").val();
+      userToken = $("#userToken").val();
 
       if (amount == 0) {
         $("#amountError").show();
       } else {
-        $.ajax({
-          type: "GET",
-          url: `/api/payment/request/?userId=${userId}&name=${fullName}&email=${email}&mobile=${mobileNo}&amount=${amount}&message=${message}`,
-          dataType: "json",
-          success: function (response) {
-            showPaymentForm(response);
-          },
-          error: function (response) {
-            console.log(response);
-          },
-        });
+        if (isValidEmail(email) != true) {
+          $("#emailError").show();
+        } else {
+          $.ajax({
+            type: "GET",
+            url: `/api/payment/request/?name=${fullName}&email=${email}&mobile=${mobileNo}&amount=${amount}&message=${message}&userToken=${userToken}`,
+            dataType: "json",
+            success: function (response) {
+              var redirectURL = response.redirectTo;
+              if (redirectURL != undefined) {
+                window.location.href = redirectURL;
+              }
+            },
+            error: function (response) {
+              errorMsg = response.responseJSON.data.error;
+              if (errorMsg.email) {
+                $("#emailError").show();
+              }
+            },
+          });
+        }
       }
     }
     return false;
@@ -75,5 +89,11 @@ $(document).ready(function () {
     $("#name").val(fullName);
     $("#email").val(email);
     $("#resMobile").val(mobileNo);
+    $("#userToken").val(userId);
+  }
+
+  function isValidEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
   }
 });

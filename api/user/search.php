@@ -1,6 +1,9 @@
 <?php
 
+require_once MODULES . 'encryptor.php';
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
 
     // Check email and mobile number is exist
 
@@ -38,6 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $msg = 'User found';
                 $userFound = TRUE;
                 $data = mysqli_fetch_assoc($checkUser);
+
+                $Encryptor = new Encryptor();
+                $data['userId'] = $Encryptor->encrypt(ENCRYPTION_AUTH_KEY, ENCRYPTION_AUTH_IV, $data['userId']);
             }
         }
     }
