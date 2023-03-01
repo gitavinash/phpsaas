@@ -11,7 +11,7 @@ if (isset($id)) {
     switch ($orderType) {
 
         case 'link':
-            $query = "SELECT * FROM " . TABLE_PREFIX . "transaction WHERE transaction_id='{$id} AND 'transaction_site_id=" . SITE_ID;
+            $query = "SELECT order_id, order_total_price, cart_currency FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id  WHERE transaction_id='{$id} AND 'transaction_site_id=" . SITE_ID;
             $cartProduct = 'Payment link';
             break;
 
@@ -55,13 +55,6 @@ if (isset($id)) {
             $pgFile = PAYMENT_GATEWAY . PG_NAME . '/' . ((isset($urlStructure[1])) ? $urlStructure[1] : 'generate') . '.php';
 
             if (file_exists($pgFile)) {
-
-                // Send event to third party services
-
-                if (defined('ENABLE_CONTLO')) {
-
-                    // require_once CONTLO . 'payment.php';
-                }
 
                 require_once $pgFile;
             } else {
