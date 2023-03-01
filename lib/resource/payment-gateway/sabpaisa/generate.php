@@ -41,9 +41,9 @@ $data = $AesCipher->encrypt(PG_AUTH_KEY, PG_AUTH_IV, $encData);
 </form>
 <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#redirectToPaymentGateway').submit();
-    });
+$(document).ready(function() {
+    $('#redirectToPaymentGateway').submit();
+});
 </script>
 
 </html>
