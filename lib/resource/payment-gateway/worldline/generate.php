@@ -96,7 +96,7 @@ $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $or
             'responseHandler': handleResponse,
             'paymentMode': 'all',
             'checkoutElement': '',
-            'merchantLogoUrl': "<?php echo SITE_URL ?>", //provided merchant logo will be displayed
+            'merchantLogoUrl': "<?php echo SITE_LOGO ?>", //provided merchant logo will be displayed
             'merchantId': "<?php echo PG_MERCHANT_CODE ?>",
             'currency': "<?php echo $cart_currency ?>",
             'consumerId': "c<?php echo $userId ?>}", //Your unique consumer identifier to register a eMandate/eNACH
