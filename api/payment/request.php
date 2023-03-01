@@ -2,6 +2,7 @@
 
 require_once MODULES . 'encryptor.php';
 require_once MODULES . 'users.php';
+require_once MODULES . 'order.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -20,8 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // Generate new user profile
 
                 $usersModule = new Users();
-                $data['userId'] = $usersModule->createNewUser($_REQUEST);
+                $data['userId'] = $usersModule->createNewUser($connection, $_REQUEST);
             }
+
+            $ordermodule = new orderModule();
+            $data['redirectURL'] = $ordermodule->generatePaymentLinkOrder($connection, $userId, ((isset($currency)) ? $xcurrency : 'INR'), $amount);
         } else {
             $msg = 'Enter valid indian mobile no.';
         }

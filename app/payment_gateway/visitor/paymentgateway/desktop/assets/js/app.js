@@ -58,7 +58,7 @@ $(document).ready(function () {
             url: `/api/payment/request/?name=${fullName}&email=${email}&mobile=${mobileNo}&amount=${amount}&message=${message}&userToken=${userToken}`,
             dataType: "json",
             success: function (response) {
-              var redirectURL = response.redirectTo;
+              var redirectURL = response.data.redirectURL;
               if (redirectURL != undefined) {
                 window.location.href = redirectURL;
               }

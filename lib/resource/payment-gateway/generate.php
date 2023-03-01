@@ -10,6 +10,11 @@ if (isset($id)) {
 
     switch ($orderType) {
 
+        case 'link':
+            $query = "SELECT * FROM " . TABLE_PREFIX . "transaction WHERE transaction_id='{$id} AND 'transaction_site_id=" . SITE_ID;
+            $cartProduct = 'Payment link';
+            break;
+
         case 'booking':
             $query = "SELECT order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id";
             $cartProduct = 'Online booking';
