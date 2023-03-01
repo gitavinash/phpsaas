@@ -5,7 +5,6 @@ $strNo1 = rand(1, 1000000);
 
 $strCurDate = date('d-m-Y');
 
-$order_total_price = (int)((isset($order_total_price)) ? $order_total_price : 10);
 $debitStartDate = "";
 $debitEndDate = "";
 $orderId = 'OD' . $order_id;
@@ -22,11 +21,11 @@ $maxAmount = (int)"";
 $paymentFrequency = ((isset($paymentFrequency)) ? $paymentFrequency : 'ADHO');
 $paymentResponseURL = SITE_URL . "/payment/status/";
 
-$datastring = PG_MERCHANT_CODE . "|" . $orderId . "|" . number_format($order_total_price, 2) . "|" . $accountNo . "|" . $userId . "|" . $profile_mobile . "|" . $profile_email . "|" . $debitStartDate . "|" . $debitEndDate . "|" . $maxAmount . "|" . $cart_currency . "|" . $paymentFrequency . "|" . $cardNo . "|" . $cardExpiryMonth . "|" . $cardExpiryYear . "|" . $cardCVV . "|" . PG_SALT_KEY;
+$datastring = PG_MERCHANT_CODE . "|" . $orderId . "|" . $order_total_price . "|" . $accountNo . "|" . $userId . "|" . $profile_mobile . "|" . $profile_email . "|" . $debitStartDate . "|" . $debitEndDate . "|" . $maxAmount . "|" . $cart_currency . "|" . $paymentFrequency . "|" . $cardNo . "|" . $cardExpiryMonth . "|" . $cardExpiryYear . "|" . $cardCVV . "|" . PG_SALT_KEY;
 
 $hashed = hash('sha512', $datastring);
 
-$data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, number_format($order_total_price, 2), $debitStartDate, $debitEndDate, $maxAmount, $cart_currency, $paymentFrequency, $userId, $profile_mobile, $profile_email, $accountNo, $paymentResponseURL, $profile_display_name, PG_SCHEMA, $cart_currency, $accountName, $accountIFSC, $accountType));
+$data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $order_total_price, $debitStartDate, $debitEndDate, $maxAmount, $cart_currency, $paymentFrequency, $userId, $profile_mobile, $profile_email, $accountNo, $paymentResponseURL, $profile_display_name, PG_SCHEMA, $cart_currency, $accountName, $accountIFSC, $accountType));
 
 ?>
 
