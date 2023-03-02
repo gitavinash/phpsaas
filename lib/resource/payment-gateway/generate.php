@@ -62,13 +62,13 @@ if (isset($id)) {
             }
         } else {
 
-            echo $msg = 'Invalid Transactional ID';
+            $msg = 'Invalid Transactional ID';
         }
     } else {
 
-        echo $msg = 'Something is wrong while fetching order details';
+        $msg = 'Something is wrong while fetching order details';
     }
 } else {
 
-    echo $msg = 'No transaction id found';
+    $msg = 'No transaction id found';
 }

@@ -25,8 +25,6 @@ $hashed = hash('sha512', $datastring);
 
 $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $order_total_price, $debitStartDate, $debitEndDate, $maxAmount, $amountType, $paymentFrequency, $userId, $profile_mobile, $profile_email, $accountNo, $paymentResponseURL, $profile_display_name, PG_SCHEMA, $cart_currency, $accountName, $accountIFSC, $accountType));
 
-print_r($data);
-
 ?>
 
 
@@ -72,10 +70,10 @@ print_r($data);
         'tarCall': false,
         'features': {
             'showPGResponseMsg': true,
-            'enableNewWindowFlow': true, //for hybrid applications please disable this by passing false
+            'enableNewWindowFlow': true,
             'enableAbortResponse': true,
-            'enableExpressPay': true, //if unique customer identifier is passed then save card functionality for end  end customer
-            'enableInstrumentDeRegistration': false, //if unique customer identifier is passed then option to delete saved card by end customer
+            'enableExpressPay': true,
+            'enableInstrumentDeRegistration': false,
             'enableMerTxnDetails': true,
             'siDetailsAtMerchantEnd': false,
             'enableSI': false,
@@ -88,21 +86,18 @@ print_r($data);
         },
         'consumerData': {
             'deviceId': 'WEBSH2',
-            //possible values 'WEBSH1', 'WEBSH2' and 'WEBMD5'
-            //'debitDay':'10',
             'token': "<?php echo $hashed ?>",
             'returnUrl': "<?php echo $paymentResponseURL ?>",
-            /*'redirectOnClose': 'https://www.tekprocess.co.in/MerchantIntegrationClient/MerchantResponsePage.jsp',*/
             'responseHandler': handleResponse,
             'paymentMode': 'all',
             'checkoutElement': '',
-            'merchantLogoUrl': "<?php echo SITE_LOGO ?>", //provided merchant logo will be displayed
+            'merchantLogoUrl': "<?php echo SITE_LOGO ?>",
             'merchantId': "<?php echo PG_MERCHANT_CODE ?>",
             'currency': "<?php echo $cart_currency ?>",
-            'consumerId': "<?php echo $userId ?>", //Your unique consumer identifier to register a eMandate/eNACH
+            'consumerId': "<?php echo $userId ?>",
             'consumerMobileNo': "<?php echo $profile_mobile ?>",
             'consumerEmailId': "<?php echo $profile_email ?>",
-            'txnId': "<?php echo $orderId ?>", //Unique merchant transaction ID
+            'txnId': "<?php echo $orderId ?>",
             'items': [{
                 'itemId': "<?php echo PG_SCHEMA ?>",
                 'amount': "<?php echo $order_total_price ?>",
@@ -114,20 +109,20 @@ print_r($data);
                 "value": "<?php echo $orderId ?>"
             }],
             'customStyle': {
-                'PRIMARY_COLOR_CODE': '#3977b7', //merchant primary color code
-                'SECONDARY_COLOR_CODE': '#FFFFFF', //provide merchant's suitable color code
-                'BUTTON_COLOR_CODE_1': '#1969bb', //merchant's button background color code
-                'BUTTON_COLOR_CODE_2': '#FFFFFF' //provide merchant's suitable color code for button text
+                'PRIMARY_COLOR_CODE': '#3977b7',
+                'SECONDARY_COLOR_CODE': '#FFFFFF',
+                'BUTTON_COLOR_CODE_1': '#1969bb',
+                'BUTTON_COLOR_CODE_2': '#FFFFFF'
             },
-            'accountNo': "<?php echo $accountNo ?>", //Pass this if accountNo is captured at merchant side for eMandate/eNACH
-            'accountHolderName': "<?php echo $accountName ?>", //Pass this if accountHolderName is captured at merchant side for ICICI eMandate & eNACH registration this is mandatory field, if not passed from merchant Customer need to enter in Checkout UI.
-            'ifscCode': "<?php echo $accountIFSC ?>", //Pass this if ifscCode is captured at merchant side.
-            'accountType': "<?php echo $accountType ?>", //Required for eNACH registration this is mandatory field
+            'accountNo': "<?php echo $accountNo ?>",
+            'accountHolderName': "<?php echo $accountName ?>",
+            'ifscCode': "<?php echo $accountIFSC ?>",
+            'accountType': "<?php echo $accountType ?>",
             'debitStartDate': "<?php echo $debitStartDate ?>",
             'debitEndDate': "<?php echo $debitEndDate ?>",
             'maxAmount': "<?php echo $maxAmount ?>",
             'amountType': "<?php echo $accountType ?>",
-            'frequency': "<?php echo $paymentFrequency ?>" //  Available options DAIL, WEEK, MNTH, QURT, MIAN, YEAR, BIMN and ADHO
+            'frequency': "<?php echo $paymentFrequency ?>"
         }
     };
 
