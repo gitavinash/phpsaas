@@ -11,7 +11,7 @@ if (isset($id)) {
     switch ($orderType) {
 
         case 'link':
-            $query = "SELECT order_id, order_total_price, cart_currency FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id  WHERE transaction_id='{$id} AND 'transaction_site_id=" . SITE_ID;
+            $query = $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND order_cart_session_id=cart_session_id AND cart_status=0";
             $cartProduct = 'Payment link';
             break;
 
@@ -30,8 +30,7 @@ if (isset($id)) {
         if (mysqli_num_rows($checkStatus) != 0) {
 
             extract(mysqli_fetch_assoc($checkStatus));
-
-            if ($checkOrderMeta = mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1 AND order_meta_site_id=" . APP_SITE_ID)) {
+            if ($checkOrderMeta = mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1")) {
 
                 if (mysqli_num_rows($checkOrderMeta) != 0) {
 
@@ -63,13 +62,13 @@ if (isset($id)) {
             }
         } else {
 
-            $msg = 'Invalid Transactional ID';
+            echo $msg = 'Invalid Transactional ID';
         }
     } else {
 
-        $msg = 'Something is wrong while fetching order details';
+        echo $msg = 'Something is wrong while fetching order details';
     }
 } else {
 
-    $msg = 'No transaction id found';
+    echo $msg = 'No transaction id found';
 }

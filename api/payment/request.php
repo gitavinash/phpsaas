@@ -6,22 +6,22 @@ require_once MODULES . 'order.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
+    $data = array();
+
     if (filter_var($email, FILTER_VALIDATE_EMAIL) == true) {
 
         if (is_numeric($mobile)) {
 
-            $userId = 0;
-
             if ($userToken != '') {
-
                 $Encryptor = new Encryptor();
-                $data['userId'] = $Encryptor->decrypt(ENCRYPTION_AUTH_KEY, ENCRYPTION_AUTH_IV, $userToken);
+                $userId = $Encryptor->decrypt(ENCRYPTION_AUTH_KEY, ENCRYPTION_AUTH_IV, $userToken);
             } else {
 
                 // Generate new user profile
 
                 $usersModule = new Users();
-                $data['userId'] = $usersModule->createNewUser($connection, $_REQUEST);
+                $createNewUserResponse = $usersModule->createNewUser($connection, $_REQUEST);
+                $userId = $createNewUserResponse['userId'];
             }
 
             $ordermodule = new orderModule();
@@ -34,8 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data['error']['email'] = true;
         $msg = 'Please enter valid email';
     }
-
-    $data['mobile'] = $mobile;
 } else {
 
     http_response_code(400);

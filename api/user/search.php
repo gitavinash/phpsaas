@@ -35,6 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if (mysqli_num_rows($checkUser) == 0) {
 
+                if ($type == 'mobile') {
+                    $data['mobile'] = $value;
+                } else {
+                    $data['email'] = $value;
+                }
                 $msg = 'No user found';
             } else {
 
@@ -47,8 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
     }
-
-    $data['mobile'] = $value;
 } else {
 
     http_response_code(405);

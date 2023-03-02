@@ -1,31 +1,31 @@
 <?php
 
-$strNo = rand(1, 10000000000);
-$strNo1 = rand(1, 1000000);
-
+$amountType = 'F';
+$cart_currency = ((isset($cart_currency)) ? $cart_currency : 'INR');
 $strCurDate = date('d-m-Y');
-
 $debitStartDate = "";
 $debitEndDate = "";
 $orderId = 'OD' . $order_id;
 $userId = ((isset($userId)) ? $userId : 0);
 $accountName = "";
-$accountNo = (int)"";
+$accountNo = "";
 $accountIFSC = "";
 $accountType = "";
-$cardNo = (int)"";
-$cardExpiryMonth = (int)"";
-$cardExpiryYear = (int)"";
-$cardCVV = (int)"";
-$maxAmount = (int)"";
+$cardNo = "";
+$cardExpiryMonth = "";
+$cardExpiryYear = "";
+$cardCVV = "";
+$maxAmount = "";
 $paymentFrequency = ((isset($paymentFrequency)) ? $paymentFrequency : 'ADHO');
 $paymentResponseURL = SITE_URL . "/payment/status/";
 
-$datastring = PG_MERCHANT_CODE . "|" . $orderId . "|" . $order_total_price . "|" . $accountNo . "|" . $userId . "|" . $profile_mobile . "|" . $profile_email . "|" . $debitStartDate . "|" . $debitEndDate . "|" . $maxAmount . "|" . $cart_currency . "|" . $paymentFrequency . "|" . $cardNo . "|" . $cardExpiryMonth . "|" . $cardExpiryYear . "|" . $cardCVV . "|" . PG_SALT_KEY;
+$datastring = PG_MERCHANT_CODE . "|" . $orderId . "|" . $order_total_price . "|" . $accountNo . "|" . $userId . "|" . $profile_mobile . "|" . $profile_email . "|" . $debitStartDate . "|" . $debitEndDate . "|" . $maxAmount . "|" . $amountType . "|" . $paymentFrequency . "|" . $cardNo . "|" . $cardExpiryMonth . "|" . $cardExpiryYear . "|" . $cardCVV . "|" . PG_SALT_KEY;
 
 $hashed = hash('sha512', $datastring);
 
-$data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $order_total_price, $debitStartDate, $debitEndDate, $maxAmount, $cart_currency, $paymentFrequency, $userId, $profile_mobile, $profile_email, $accountNo, $paymentResponseURL, $profile_display_name, PG_SCHEMA, $cart_currency, $accountName, $accountIFSC, $accountType));
+$data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $order_total_price, $debitStartDate, $debitEndDate, $maxAmount, $amountType, $paymentFrequency, $userId, $profile_mobile, $profile_email, $accountNo, $paymentResponseURL, $profile_display_name, PG_SCHEMA, $cart_currency, $accountName, $accountIFSC, $accountType));
+
+print_r($data);
 
 ?>
 
@@ -99,7 +99,7 @@ $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $or
             'merchantLogoUrl': "<?php echo SITE_LOGO ?>", //provided merchant logo will be displayed
             'merchantId': "<?php echo PG_MERCHANT_CODE ?>",
             'currency': "<?php echo $cart_currency ?>",
-            'consumerId': "c<?php echo $userId ?>}", //Your unique consumer identifier to register a eMandate/eNACH
+            'consumerId': "<?php echo $userId ?>", //Your unique consumer identifier to register a eMandate/eNACH
             'consumerMobileNo': "<?php echo $profile_mobile ?>",
             'consumerEmailId': "<?php echo $profile_email ?>",
             'txnId': "<?php echo $orderId ?>", //Unique merchant transaction ID
@@ -108,7 +108,7 @@ $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $or
                 'amount': "<?php echo $order_total_price ?>",
                 'comAmt': '0'
             }],
-            'cartDescription': '}{custname: Avinash Kumar',
+            'cartDescription': "<?php echo $profile_display_name ?>",
             'merRefDetails': [{
                 "name": "Txn. Ref. ID",
                 "value": "<?php echo $orderId ?>"
