@@ -3,8 +3,8 @@
 $amountType = 'F';
 $cart_currency = ((isset($cart_currency)) ? $cart_currency : 'INR');
 $strCurDate = date('d-m-Y');
-$debitStartDate = "";
-$debitEndDate = "";
+$debitStartDate = date('d-m-Y');
+$debitEndDate = date('d-m-Y');
 $orderId = 'OD' . $order_id;
 $userId = ((isset($userId)) ? $userId : 0);
 $accountName = "";
@@ -15,7 +15,7 @@ $cardNo = "";
 $cardExpiryMonth = "";
 $cardExpiryYear = "";
 $cardCVV = "";
-$maxAmount = "";
+$maxAmount = $order_total_price;
 $paymentFrequency = ((isset($paymentFrequency)) ? $paymentFrequency : 'ADHO');
 $paymentResponseURL = SITE_URL . "/payment/status/";
 
@@ -103,7 +103,7 @@ $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $or
                 'amount': "<?php echo $order_total_price ?>",
                 'comAmt': '0'
             }],
-            'cartDescription': "<?php echo $profile_display_name ?>",
+            'cartDescription': "",
             'merRefDetails': [{
                 "name": "Txn. Ref. ID",
                 "value": "<?php echo $orderId ?>"
@@ -121,7 +121,7 @@ $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $or
             'debitStartDate': "<?php echo $debitStartDate ?>",
             'debitEndDate': "<?php echo $debitEndDate ?>",
             'maxAmount': "<?php echo $maxAmount ?>",
-            'amountType': "<?php echo $accountType ?>",
+            'amountType': "<?php echo $amountType ?>",
             'frequency': "<?php echo $paymentFrequency ?>"
         }
     };
