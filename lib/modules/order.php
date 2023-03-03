@@ -28,7 +28,7 @@ class orderModule
             if ($addNewOrder && $createNewCart && $initiateTransaction) {
 
                 mysqli_query($connection, "COMMIT");
-                $redirectUrl = 'https://pay.blumox.com/payment/generate/?id=' . $transaction_id . '&pg_type=link&orderType=link';
+                $redirectUrl = SITE_URL . '/payment/generate/?id=' . $transaction_id . '&pg_type=link&orderType=link';
                 session_destroy();
                 session_start();
             } else {

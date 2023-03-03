@@ -1,152 +1,131 @@
-<!--
-    
-    This file is used only with payment gateway.
-    When payment status is success.
-    Then this file will update the card, order and transaction table data
-    
--->
-
 <?php
 
-    $transaction_id=base64_decode($transaction_id);
+$transaction_id = base64_decode($transaction_id);
 
-    switch($transaction_type) {
+switch ($transaction_type) {
 
-        case 'booking':
-            
-            $validTransactionCheckQuery="SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, cart_id, cart_relation_id, cart_relation_type, booking_id, booking_enquiry_id, booking_date, booking_time, enquiry_id, CONCAT(enquiry_first_name, ' ', enquiry_last_name) as enquiry_display_name, enquiry_email as email, enquiry_mobile as mobile, enquiry_query as guest FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."cart ON cart_id=transaction_cart_id INNER JOIN ".TABLE_PREFIX."booking ON cart_relation_id=booking_id INNER JOIN ".TABLE_PREFIX."enquiry ON booking_enquiry_id=enquiry_id WHERE transaction_id='{$transaction_id}' AND cart_relation_type='booking' AND transaction_site_id=".SITE_ID;
-            break;
+    case 'booking':
 
-        default : 
-            $validTransactionCheckQuery="SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, profile_mobile as mobile, profile_email, profile_first_name, profile_last_name, profile_display_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."profile ON transaction_user_id=profile_user_id INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."address ON address_id=order_address_id INNER JOIN ".TABLE_PREFIX."city ON city_id=address_city_id INNER JOIN ".TABLE_PREFIX."state ON state_id=address_state_id INNER JOIN ".TABLE_PREFIX."country ON country_id=address_country_id WHERE transaction_id='{$transaction_id}' AND transaction_site_id=".SITE_ID;
-            break;
+        $validTransactionCheckQuery = "SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, cart_id, cart_relation_id, cart_relation_type, booking_id, booking_enquiry_id, booking_date, booking_time, enquiry_id, CONCAT(enquiry_first_name, ' ', enquiry_last_name) as enquiry_display_name, enquiry_email as email, enquiry_mobile as mobile, enquiry_query as guest FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "cart ON cart_id=transaction_cart_id INNER JOIN " . TABLE_PREFIX . "booking ON cart_relation_id=booking_id INNER JOIN " . TABLE_PREFIX . "enquiry ON booking_enquiry_id=enquiry_id WHERE transaction_id='{$transaction_id}' AND cart_relation_type='booking' AND transaction_site_id=" . SITE_ID;
+        break;
 
-    }
+    default:
+        $validTransactionCheckQuery = "SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, profile_mobile as mobile, profile_email, profile_first_name, profile_last_name, profile_display_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "profile ON transaction_user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "address ON address_id=order_address_id INNER JOIN " . TABLE_PREFIX . "city ON city_id=address_city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id INNER JOIN " . TABLE_PREFIX . "country ON country_id=address_country_id WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
+        break;
+}
 
-    /** Check transaction details is valid */
+/** Check transaction details is valid */
 
-    if($checkTransaction=mysqli_query($connection, $validTransactionCheckQuery)) {
+if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) {
 
-        if(mysqli_num_rows($checkTransaction)!=0) {
+    if (mysqli_num_rows($checkTransaction) != 0) {
 
-            extract(mysqli_fetch_assoc($checkTransaction));
+        extract(mysqli_fetch_assoc($checkTransaction));
 
-            mysqli_query($connection, "START TRANSACTION");
+        mysqli_query($connection, "START TRANSACTION");
 
-            switch($transaction_type) {
+        switch ($transaction_type) {
 
-                case 'booking':
+            case 'booking':
 
-                    // Booking thank you page process
+                // Booking thank you page process
 
-                    // Update transaction table
+                // Update transaction table
 
-                    $updateTransactionStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}'");
+                $updateTransactionStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}'");
 
-                    // Update order table
+                // Update order table
 
-                    $updateOrderStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
+                $updateOrderStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id='{$order_id}'");
 
-                    // Update cart table
+                // Update cart table
 
-                    $updateCartStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_id='{$cart_id}'");
+                $updateCartStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_id='{$cart_id}'");
 
-                    // Cancel all previous booking request
+                // Cancel all previous booking request
 
-                    $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=5 WHERE booking_date='{$booking_date}' AND booking_time='{$booking_time}'");
+                $updateBookingStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "booking SET booking_status=5 WHERE booking_date='{$booking_date}' AND booking_time='{$booking_time}'");
 
-                    // Update booking table
+                // Update booking table
 
-                    $updateBookingStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."booking SET booking_status=1 WHERE booking_id='{$booking_id}'");
+                $updateBookingStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "booking SET booking_status=1 WHERE booking_id='{$booking_id}'");
 
-                    // Update enquiry table
+                // Update enquiry table
 
-                    $updateEnquiryStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status=1 WHERE enquiry_id='{$enquiry_id}'");
+                $updateEnquiryStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_status=1 WHERE enquiry_id='{$enquiry_id}'");
 
-                    if($updateTransactionStatus && $updateOrderStatus && $updateCartStatus && $updateBookingStatus && $updateEnquiryStatus) {
+                if ($updateTransactionStatus && $updateOrderStatus && $updateCartStatus && $updateBookingStatus && $updateEnquiryStatus) {
 
-                        /** Send SMS */
+                    /** Send SMS */
 
-                        require_once APP_SMS_TEMPLATE.'order/booking-confirmation.php';
+                    require_once APP_SMS_TEMPLATE . 'order/booking-confirmation.php';
 
-                        /** Send Email */
-                                                    
-                        require_once APP_EMAIL_TEMPLATE.'order/booking-confirmation.php';
+                    /** Send Email */
 
-                        // Send copy email is admin email notification is enable 
+                    require_once APP_EMAIL_TEMPLATE . 'order/booking-confirmation.php';
 
-                        if(defined('ADMIN_EMAIL_NOTIFICATION')) {
-                                
-                            if(ADMIN_EMAIL_NOTIFICATION==1) {
+                    // Send copy email is admin email notification is enable 
 
-                                // Send booking confirmation email notice to admin
+                    if (defined('ADMIN_EMAIL_NOTIFICATION')) {
 
-                                include_once ADMIN_EMAIL_TEMPLATE.'order/booking-confirmation.php';
-                                include_once ADMIN_SMS_TEMPLATE.'order/booking-confirmation.php';
+                        if (ADMIN_EMAIL_NOTIFICATION == 1) {
 
-                            }
+                            // Send booking confirmation email notice to admin
 
+                            include_once ADMIN_EMAIL_TEMPLATE . 'order/booking-confirmation.php';
+                            include_once ADMIN_SMS_TEMPLATE . 'order/booking-confirmation.php';
                         }
-
-                        mysqli_query($connection, "COMMIT");
-
-                    } else {
-
-                        $msg='Something is wrong while updating the status';
-                        mysqli_query($connection, "ROLLBACK");
-                        
-
                     }
 
-                    break;
+                    mysqli_query($connection, "COMMIT");
+                } else {
 
-                default:
+                    $msg = 'Something is wrong while updating the status';
+                    mysqli_query($connection, "ROLLBACK");
+                }
 
-                    // default thank you page process
+                break;
 
-                    // Update order table
+            default:
 
-                    $updateOrderStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_status=1 WHERE order_id='{$order_id}'");
+                // default thank you page process
 
-                    // Update cart table
+                // Update order table
 
-                    $updateCartStatus=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_status=1 WHERE cart_id='{$transaction_cart_id}'");
-                    
-                    if($updateOrderStatus && $updateCartStatus) {
+                $updateOrderStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id='{$order_id}'");
 
-                        /** Send SMS */
+                // Update cart table
 
-                        require_once APP_SMS_TEMPLATE.'order/prepaid.php';
+                $updateCartStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_id='{$transaction_cart_id}'");
 
-                        /** Send Email */
+                if ($updateOrderStatus && $updateCartStatus) {
 
-                        require_once APP_EMAIL_TEMPLATE.'order/prepaid.php';
+                    /** Send SMS */
 
-                        mysqli_query($connection, "COMMIT");
+                    require_once APP_SMS_TEMPLATE . 'order/prepaid.php';
 
-                        header("Location: /thank-you/?id={$id}", TRUE, 301);
-                        exit();
+                    /** Send Email */
 
-                    } else {
+                    require_once APP_EMAIL_TEMPLATE . 'order/prepaid.php';
 
-                        echo mysqli_error($connection);
-                        mysqli_query($connection, "ROLLBACK");
+                    mysqli_query($connection, "COMMIT");
 
-                    }
+                    header("Location: /thank-you/?id={$id}", TRUE, 301);
+                    exit();
+                } else {
 
-                    break;
+                    echo mysqli_error($connection);
+                    mysqli_query($connection, "ROLLBACK");
+                }
 
-            }
-
-        } else {
-
-            echo 'Invalid transaction details found';
-            exit();
-
+                break;
         }
-
     } else {
 
-        echo mysqli_error($connection);
-
+        echo 'Invalid transaction details found';
+        exit();
     }
+} else {
+
+    echo mysqli_error($connection);
+}
