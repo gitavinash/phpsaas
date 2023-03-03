@@ -7,6 +7,29 @@ body {
   font-family: "PT Sans", sans-serifm !important;
 }
 
+.green {
+  color: #5d9c59;
+}
+
+.red {
+  color: #df2e38;
+}
+
+h1 {
+  float: left;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
 section {
   float: left;
   width: 100%;

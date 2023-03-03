@@ -4,6 +4,11 @@ $transaction_id = base64_decode($transaction_id);
 
 switch ($transaction_type) {
 
+    case 'link':
+
+        $validTransactionCheckQuery = "SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, transaction_type, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, cart_id, cart_relation_id, cart_relation_type FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE transaction_id='{$transaction_id}' AND cart_relation_type='link'";
+        break;
+
     case 'booking':
 
         $validTransactionCheckQuery = "SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, cart_id, cart_relation_id, cart_relation_type, booking_id, booking_enquiry_id, booking_date, booking_time, enquiry_id, CONCAT(enquiry_first_name, ' ', enquiry_last_name) as enquiry_display_name, enquiry_email as email, enquiry_mobile as mobile, enquiry_query as guest FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "cart ON cart_id=transaction_cart_id INNER JOIN " . TABLE_PREFIX . "booking ON cart_relation_id=booking_id INNER JOIN " . TABLE_PREFIX . "enquiry ON booking_enquiry_id=enquiry_id WHERE transaction_id='{$transaction_id}' AND cart_relation_type='booking' AND transaction_site_id=" . SITE_ID;
@@ -25,6 +30,31 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
         mysqli_query($connection, "START TRANSACTION");
 
         switch ($transaction_type) {
+
+            case 'link':
+
+                // default thank you page process
+
+                // Update order table
+
+                $updateOrderStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id='{$order_id}'");
+
+                // Update cart table
+
+                $updateCartStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_id='{$transaction_cart_id}'");
+
+                if ($updateOrderStatus && $updateCartStatus) {
+
+                    mysqli_query($connection, "COMMIT");
+
+                    header("Location: /thank-you/?id={$id}", TRUE, 301);
+                    exit();
+                } else {
+
+                    echo "Something went wrong";
+                    mysqli_query($connection, "ROLLBACK");
+                }
+                break;
 
             case 'booking':
 

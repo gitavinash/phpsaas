@@ -17,13 +17,22 @@ $cardExpiryYear = "";
 $cardCVV = "";
 $maxAmount = $order_total_price;
 $paymentFrequency = ((isset($paymentFrequency)) ? $paymentFrequency : 'ADHO');
-$paymentResponseURL = SITE_URL . "/payment/status/";
+$paymentResponseURL = SITE_URL . "/payment/status/?orderId=" . base64_encode($order_id);
 
 $datastring = PG_MERCHANT_CODE . "|" . $orderId . "|" . $order_total_price . "|" . $accountNo . "|" . $userId . "|" . $profile_mobile . "|" . $profile_email . "|" . $debitStartDate . "|" . $debitEndDate . "|" . $maxAmount . "|" . $amountType . "|" . $paymentFrequency . "|" . $cardNo . "|" . $cardExpiryMonth . "|" . $cardExpiryYear . "|" . $cardCVV . "|" . PG_SALT_KEY;
 
 $hashed = hash('sha512', $datastring);
 
 $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $order_total_price, $debitStartDate, $debitEndDate, $maxAmount, $amountType, $paymentFrequency, $userId, $profile_mobile, $profile_email, $accountNo, $paymentResponseURL, $profile_display_name, PG_SCHEMA, $cart_currency, $accountName, $accountIFSC, $accountType));
+
+
+// Update transaction table
+
+if (!$updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_gateway='" . PG_NAME . "', transaction_order_id='{$order_id}', transaction_status=2 WHERE transaction_id='{$id}'")) {
+
+    echo 'Something is wrong while generation transaction status';
+    exit();
+}
 
 ?>
 
