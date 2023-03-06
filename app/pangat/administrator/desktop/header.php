@@ -1,5 +1,5 @@
 <?php
-	$postType=rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
+$postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,13 +11,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title>
-        <?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL=='/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL.' '.@$_GET['type']) ).' | '.SITE_NAME )); ?>
+        <?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL == '/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL . ' ' . @$_GET['type'])) . ' | ' . SITE_NAME)); ?>
     </title>
-    <!-- <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY?>bootstrap/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>bootstrap/bootstrap.min.css"> -->
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/buttons.min.css" />
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>calender.min.css">
@@ -31,7 +31,7 @@
         <div class="left-side">
             <ul>
                 <li>
-                    <div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+                    <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
         </div>
@@ -39,13 +39,11 @@
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE!='') ? PROFILE_IMAGE : IMG_LIBRARY.'default-profile.png' ); ?>"
-                                alt=""></div>
+                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
                     </a>
                     <ul>
-                        <li><a href="setting.php?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-                        <li><a href="setting.php?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+                        <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
+                        <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                         <li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
                     </ul>
                 </li>
@@ -56,73 +54,72 @@
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="index.php"><i
-                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li <?php echo ((ADMIN_BASE_URL=='/enquiry/') ? 'class="active"' : '' ) ?>>
-                    <a href="enquiry.php?type=list&status=all"><i class="fas fa-filter"></i> Enquiry</a>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/enquiry/') ? 'class="active"' : '') ?>>
+                    <a href="enquiry/?type=list&status=all"><i class="fas fa-filter"></i> Enquiry</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
+                            <li><a href="enquiry/?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
                             </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="enquiry.php?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
+                            <li><a href="enquiry/?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <!-- <li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?> >
-						<a href="calender.php?type=manage"><i class="fas fa-calendar-alt"></i> Manage calender</a>
+                <!-- <li <?php echo ((ADMIN_BASE_URL == '/calender/') ? 'class="active"' : '') ?> >
+						<a href="calender/?type=manage"><i class="fas fa-calendar-alt"></i> Manage calender</a>
 					</li> -->
-                <li <?php echo ((ADMIN_BASE_URL=='/calender/') ? 'class="active"' : '' ) ?>>
-                    <a href="calender.php?type=single"><i class="fas fa-calendar"></i> Manage calender</a>
+                <li <?php echo ((ADMIN_BASE_URL == '/calender/') ? 'class="active"' : '') ?>>
+                    <a href="calender/?type=single"><i class="fas fa-calendar"></i> Manage calender</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="calender.php?type=single"><i class="fas fa-calendar-day"></i> Single Date
+                            <li><a href="calender/?type=single"><i class="fas fa-calendar-day"></i> Single Date
                                 </a></li>
-                            <!-- <li><a href="calender.php?type=multiple"><i class="fas fa-calendar-week"></i> Multiple
+                            <!-- <li><a href="calender/?type=multiple"><i class="fas fa-calendar-week"></i> Multiple
                                     Dates</a></li> -->
-                            <li><a href="calender.php?type=month"><i class="fas fa-calendar-alt"></i> Months</a></li>
-                            <li><a href="calender.php?type=start"><i class="fas fa-calendar-alt"></i> Calender Start</a>
+                            <li><a href="calender/?type=month"><i class="fas fa-calendar-alt"></i> Months</a></li>
+                            <li><a href="calender/?type=start"><i class="fas fa-calendar-alt"></i> Calender Start</a>
                             </li>
-                            <li><a href="calender.php?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
+                            <li><a href="calender/?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="calender.php?type=single"><i class="fas fa-calendar-day"></i> Single Date
+                            <li><a href="calender/?type=single"><i class="fas fa-calendar-day"></i> Single Date
                                 </a></li>
-                            <!-- <li><a href="calender.php?type=multiple"><i class="fas fa-calendar-week"></i> Multiple
+                            <!-- <li><a href="calender/?type=multiple"><i class="fas fa-calendar-week"></i> Multiple
                                     Dates</a></li> -->
-                            <li><a href="calender.php?type=month"><i class="fas fa-calendar-alt"></i> Months</a></li>
-                            <li><a href="calender.php?type=start"><i class="fas fa-calendar-alt"></i> Calender Start</a>
-                            <li><a href="calender.php?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
+                            <li><a href="calender/?type=month"><i class="fas fa-calendar-alt"></i> Months</a></li>
+                            <li><a href="calender/?type=start"><i class="fas fa-calendar-alt"></i> Calender Start</a>
+                            <li><a href="calender/?type=setting"><i class="fas fa-cog"></i> Setting</a></li>
                         </ul>
                     </div>
                 </li>
-                <li <?php echo ((ADMIN_BASE_URL=='/amount/') ? 'class="active"' : '' ) ?>>
-                    <a href="amount.php?type=manage"><i class="fas fa-rupee-sign"></i> Manage Amount</a>
+                <li <?php echo ((ADMIN_BASE_URL == '/amount/') ? 'class="active"' : '') ?>>
+                    <a href="amount/?type=manage"><i class="fas fa-rupee-sign"></i> Manage Amount</a>
                 </li>
-                <li <?php echo ((ADMIN_BASE_URL=='/setting/') ? 'class="active"' : '' ) ?>>
-                    <a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
+                <li <?php echo ((ADMIN_BASE_URL == '/setting/') ? 'class="active"' : '') ?>>
+                    <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-                            <li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
-                            <li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-                            <li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
-                            <li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                         </ul>
                     </div>
                 </li>

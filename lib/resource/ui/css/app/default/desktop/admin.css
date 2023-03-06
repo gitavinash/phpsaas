@@ -1862,3 +1862,7 @@ ul.tabs li.active {
   width: 750px;
   padding: 0px 20px;
 }
+
+.selectSimilarProduct {
+  min-height: 100px;
+}

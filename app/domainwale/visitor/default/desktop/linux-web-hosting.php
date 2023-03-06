@@ -12,9 +12,15 @@ require_once 'header.php';
                 <h1>Powerful Linux Web Hosting</h1>
                 <p><strong>Lightning Fast Website | One-click Script Installs | Powered by cPanel</strong></p>
                 <h2>Price starting from<strong>₹ 299<span>/mo</span></strong></h2>
-                <a href="#" class="slider-btn bg-grey">See Plans and Pricing</a>
+                <a href="<?php echo BASE_URL ?>#planBox" class="slider-btn bg-grey">See Plans and Pricing</a>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="info-section" id="planBox">
+    <div class="">
+
     </div>
 </section>
 

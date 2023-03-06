@@ -32,10 +32,10 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
             }
         }
     } else { ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/product/?type=list&status=all';
-</script>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/product/?type=list&status=all';
+        </script>
 <?php
     }
 }
@@ -49,8 +49,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
     <form id="formData" enctype="multipart/form-data">
         <div class="left-box">
             <div class="form-group">
-                <input type="text" class="form-control inside-shadow" name="title" placeholder="Title"
-                    value="<?php echo $product_title ?>" required="">
+                <input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $product_title ?>" required="">
             </div>
             <div class="form-group">
                 <div class="url">
@@ -64,8 +63,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                 </div>
             </div>
             <div class="form-group fullscreen-editor">
-                <textarea name="description"
-                    class="editor inside-shadow"><?php echo html_entity_decode($product_description); ?></textarea>
+                <textarea name="description" class="editor inside-shadow"><?php echo html_entity_decode($product_description); ?></textarea>
             </div>
 
             <!-- Product description and other things -->
@@ -83,12 +81,10 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                 <div class="productGeneral generalTab">
                     <div class="form-group">
                         <label>Product short description / Highlights</label>
-                        <textarea name="highlight" class="form-control inside-shadow"
-                            placeholder="Product short description / Highlights"><?php echo $product_highlight ?></textarea>
+                        <textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights"><?php echo $product_highlight ?></textarea>
                     </div>
                     <div class="box-1">
-                        <input type="checkbox" name="sell_online" value=0
-                            <?php echo (($inventory_sell_online == 0) ? 'checked' : '') ?>>
+                        <input type="checkbox" name="sell_online" value=0 <?php echo (($inventory_sell_online == 0) ? 'checked' : '') ?>>
                         Product is
                         only for
                         display purposes.
@@ -97,41 +93,34 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                 <div class="productInventory generalTab" style="display: none;">
 
                     <div class="box-2">
-                        <input type="checkbox" name="in_stock" value=1
-                            <?php echo (($inventory_in_stock == 1) ? 'checked' : '') ?>> In Stock
+                        <input type="checkbox" name="in_stock" value=1 <?php echo (($inventory_in_stock == 1) ? 'checked' : '') ?>> In Stock
                     </div>
                     <div class="box-2">
-                        <input type="checkbox" name="backorder" value=1
-                            <?php echo (($inventory_backorder == 1) ? 'checked' : '') ?>> Allowed Backorders (if product
+                        <input type="checkbox" name="backorder" value=1 <?php echo (($inventory_backorder == 1) ? 'checked' : '') ?>> Allowed Backorders (if product
                         is out of stock )
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" class="form-control inside-shadow"
-                                value="<?php echo $inventory_price ?>" name="salePrice" placeholder="Sale price">
+                            <input type="number" class="form-control inside-shadow" value="<?php echo $inventory_price ?>" name="salePrice" placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
-                                name="mrp" placeholder="Regular price">
+                            <input type="number" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>" name="mrp" placeholder="Regular price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>SKU</label>
-                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_sku ?>"
-                                name="sku" placeholder="SKU">
+                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_sku ?>" name="sku" placeholder="SKU">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Stock Alert</label>
-                            <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $inventory_stock_notice ?>" name="stock_warning"
-                                placeholder="Stock Alert">
+                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_stock_notice ?>" name="stock_warning" placeholder="Stock Alert">
                         </div>
                     </div>
                     <div class="box-2">
@@ -148,8 +137,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" name="taxRate" value="<?php echo $inventory_tax_rate ?>"
-                                placeholder="Tax rate ( in % )" class="form-control inside-shadow">
+                            <input type="number" name="taxRate" value="<?php echo $inventory_tax_rate ?>" placeholder="Tax rate ( in % )" class="form-control inside-shadow">
                         </div>
                     </div>
                 </div>
@@ -157,34 +145,28 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <div class="box-1">
                         <div class="form-group">
                             <label>Weight (kg)</label>
-                            <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $inventory_weight ?>" name="weight" placeholder="Weight">
+                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_weight ?>" name="weight" placeholder="Weight">
                         </div>
                     </div>
                     <label>Dimensions (cm)</label>
                     <div class="form-group">
                         <div class="box-3">
                             <label>Lenght</label>
-                            <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $inventory_lenght ?>" name="lenght" placeholder="Lenght">
+                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_lenght ?>" name="lenght" placeholder="Lenght">
                         </div>
                         <div class="box-3">
                             <label>Width</label>
-                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_width ?>"
-                                name="width" placeholder="Width">
+                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_width ?>" name="width" placeholder="Width">
                         </div>
                         <div class="box-3">
                             <label>Height</label>
-                            <input type="text" class="form-control inside-shadow"
-                                value="<?php echo $inventory_height ?>" name="height" placeholder="Height">
+                            <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_height ?>" name="height" placeholder="Height">
                         </div>
                     </div>
                     <label>Availability</label>
                     <div class="form-group">
                         <label>Available cities</label>
-                        <textarea name="productMeta[availability_cities]" id="availability_cities"
-                            class="form-control inside-shadow"
-                            placeholder="Availability cities"><?php echo $availability_cities ?></textarea>
+                        <textarea name="productMeta[availability_cities]" id="availability_cities" class="form-control inside-shadow" placeholder="Availability cities"><?php echo $availability_cities ?></textarea>
                     </div>
                 </div>
                 <div class="productGallery generalTab" style="display: none;">
@@ -224,9 +206,8 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                 <div class="productAttributesDetails generalTab" style="display: none;">
                     <div class="productDiv">
                         <div class="form-group">
-                            <label>Select product varients</label>
-                            <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct"
-                                multiple="multiple">
+                            <label>Select product varients ( select multiple )</label>
+                            <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct" multiple="multiple">
                                 <?php
 
                                 $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
@@ -268,15 +249,12 @@ window.location.href = 'dashboard/product/?type=list&status=all';
 
                     <div class="form-group">
                         <label>Care & Tips</label>
-                        <textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow"
-                            placeholder="Care & tips..."><?php echo $care_n_tips ?></textarea>
+                        <textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..."><?php echo $care_n_tips ?></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Delivery information</label>
-                        <textarea name="productMeta[delivery_information]" id="delivery_information"
-                            class="form-control inside-shadow"
-                            placeholder="Delivery information..."><?php echo $delivery_information ?></textarea>
+                        <textarea name="productMeta[delivery_information]" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..."><?php echo $delivery_information ?></textarea>
                     </div>
 
                 </div>
@@ -292,38 +270,30 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                 <div class="seo">
                     <div class="form-group">
                         <label>Meta Title</label>
-                        <input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title"
-                            class="form-control inside-shadow" placeholder="Meta title">
+                        <input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title" class="form-control inside-shadow" placeholder="Meta title">
                     </div>
                     <div class="form-group">
                         <label>Meta Description</label>
-                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow"
-                            placeholder="Meta Description"><?php echo $meta_description ?></textarea>
+                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow" placeholder="Meta Description"><?php echo $meta_description ?></textarea>
                     </div>
                     <div class="form-group">
                         <label>Meta Keywords</label>
-                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
-                            placeholder="Enter keywords of the product ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
+                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the product ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
                     </div>
                     <div class="form-group">
                         <label>Canonical URL</label>
-                        <input type="text" name="canonical" class="form-control inside-shadow"
-                            value="<?php echo $meta_canonical; ?>" id="canonical"
-                            placeholder="Actual URL of the product">
+                        <input type="text" name="canonical" class="form-control inside-shadow" value="<?php echo $meta_canonical; ?>" id="canonical" placeholder="Actual URL of the product">
                     </div>
                     <div class="form-group">
                         <label>Allow search engines to show this product in search results?</label>
                         <select name="robots" class="form-control inside-shadow">
-                            <option value="index, follow"
-                                <?php echo (($meta_robots == 'index, follow') ? 'selected' : '') ?>>Yes</option>
-                            <option value="noindex, nofollow"
-                                <?php echo (($meta_robots == 'noindex, nofollow') ? 'selected' : '') ?>>No</option>
+                            <option value="index, follow" <?php echo (($meta_robots == 'index, follow') ? 'selected' : '') ?>>Yes</option>
+                            <option value="noindex, nofollow" <?php echo (($meta_robots == 'noindex, nofollow') ? 'selected' : '') ?>>No</option>
                         </select>
                     </div>
                 </div>
                 <div class="fb" style="display: none;">
-                    <div class="facebookPreviewBox"
-                        style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
+                    <div class="facebookPreviewBox" style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
                         <input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
                         <div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
                         <p id="facebookChangeImage" class='changeImage'>Remove facebook feature image</p>
@@ -334,13 +304,11 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     </div>
                     <div class="form-group">
                         <label>Facebook Title</label>
-                        <input type="text" name="fb_title" class="form-control inside-shadow"
-                            value="<?php echo $fb_title ?>" placeholder="Facebook title">
+                        <input type="text" name="fb_title" class="form-control inside-shadow" value="<?php echo $fb_title ?>" placeholder="Facebook title">
                     </div>
                     <div class="form-group">
                         <label>Facebook Description</label>
-                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow"
-                            placeholder="Facebook Description"><?php echo $fb_desc ?></textarea>
+                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description"><?php echo $fb_desc ?></textarea>
                     </div>
                 </div>
                 <div class="tw" style="display: none;">
@@ -355,21 +323,18 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     </div>
                     <div class="form-group">
                         <label>Twitter Title</label>
-                        <input type="text" name="tw_title" class="form-control inside-shadow"
-                            value="<?php echo $tw_title; ?>" placeholder="Twitter title">
+                        <input type="text" name="tw_title" class="form-control inside-shadow" value="<?php echo $tw_title; ?>" placeholder="Twitter title">
                     </div>
                     <div class="form-group">
                         <label>Twitter Description</label>
-                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow"
-                            placeholder="Twitter Description"><?php echo $tw_desc ?></textarea>
+                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description"><?php echo $tw_desc ?></textarea>
                     </div>
                 </div>
             </section>
         </div>
         <div class="right-box">
             <div class="action-box inside-shadow">
-                <input type="button" id="updatePost" class="btn btn-green btn-block"
-                    value="<?php echo (($product_status == 1) ? 'Update ' : 'Publish '); ?>product">
+                <input type="button" id="updatePost" class="btn btn-green btn-block" value="<?php echo (($product_status == 1) ? 'Update ' : 'Publish '); ?>product">
                 <!-- <input type="submit" class="btn btn-yellow btn-block" value="Save Draft"> -->
                 <input type="hidden" name='postStatus' value='<?php echo $product_status ?>'>
                 <input type="hidden" name="postType" value="<?php echo $product_type; ?>">
@@ -381,31 +346,29 @@ window.location.href = 'dashboard/product/?type=list&status=all';
             <div class="form-group">
                 <h2>feature product</h2>
                 <div class="action-box inside-shadow">
-                    <input type="checkbox" value="1" name='featurePost'
-                        <?php echo (($link_is_featured == '1') ? 'checked' : '') ?>> Mark as feature
+                    <input type="checkbox" value="1" name='featurePost' <?php echo (($link_is_featured == '1') ? 'checked' : '') ?>> Mark as feature
                 </div>
             </div>
             <?php
 
             if (SITE_ID == 32) { ?>
 
-            <h2>Brand</h2>
-            <div class="action-box height-200 inside-shadow">
+                <h2>Brand</h2>
+                <div class="action-box height-200 inside-shadow">
 
-                <?php
+                    <?php
 
                     if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
                         while ($brand = mysqli_fetch_assoc($brandList)) { ?>
-                <div class="form-group">
-                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
-                        <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
-                    <?php echo ucwords($brand['category_title']); ?>
-                </div>
-                <?php
+                            <div class="form-group">
+                                <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>" <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
+                                <?php echo ucwords($brand['category_title']); ?>
+                            </div>
+                    <?php
                         }
                     }
                     ?>
-            </div>
+                </div>
             <?php
             }
 
@@ -417,12 +380,10 @@ window.location.href = 'dashboard/product/?type=list&status=all';
 
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND link_status=200 ORDER BY category_title ASC")) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                <div class="form-group">
-                    <input type="radio" name="category"
-                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
-                    <?php echo ucwords($category['category_title']); ?>
-                </div>
+                        <div class="form-group">
+                            <input type="radio" name="category" value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
+                            <?php echo ucwords($category['category_title']); ?>
+                        </div>
                 <?php
                     }
                 }
@@ -454,16 +415,14 @@ window.location.href = 'dashboard/product/?type=list&status=all';
             </div>
             <div class="tagList" style="display: none;"></div>
             <h2>Feature Image</h2>
-            <div class="form-group featureImageUploadBox"
-                style="display: <?php echo (($product_image != '') ? 'none' : 'block') ?>;">
+            <div class="form-group featureImageUploadBox" style="display: <?php echo (($product_image != '') ? 'none' : 'block') ?>;">
                 <span>Set Feature Image</span>
                 <input type="hidden" name="oldFeatureImage" value="<?php echo $product_image ?>">
                 <input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
                 <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif, .doc, .docx, .xls,
                     .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></p>
             </div>
-            <div class="img-preview featureImagePreviewBox action-box"
-                style="display: <?php echo (($product_image != '') ? 'block' : 'none') ?>;">
+            <div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($product_image != '') ? 'block' : 'none') ?>;">
                 <img src="//<?php echo SITE_DOMAIN . $product_image ?>" id="featureImagePath" alt="">
                 <p id="featureChangeImage" class="btn btn-red btn-sm">Remove feature image</p>
             </div>

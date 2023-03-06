@@ -46,7 +46,7 @@
 
 								/** if user type is Administrator Redirect to website setup page */
 									
-								header("Location: /website-setup.php?setup_id={$encryptEmail}");
+								header("Location: /website-setup/?setup_id={$encryptEmail}");
 								exit();
 
 							} else {
@@ -116,5 +116,3 @@
 		}
 
 	}
-
-?>

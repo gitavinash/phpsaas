@@ -28,7 +28,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
         <div class="left-side">
             <ul>
                 <li>
-                    <div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+                    <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
         </div>
@@ -36,13 +36,11 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
-                                alt=""></div>
+                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
                     </a>
                     <ul>
-                        <li><a href="setting.php?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-                        <li><a href="setting.php?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+                        <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
+                        <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                         <li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
                     </ul>
                 </li>
@@ -53,20 +51,19 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="index.php"><i
-                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/lead/') ? 'class="active"' : '') ?>>
-                    <a href="lead.php?type=list&status=all"><i class="fas fa-plus"></i> Manage Leads</a>
+                    <a href="lead/?type=list&status=all"><i class="fas fa-plus"></i> Manage Leads</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
+                            <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
                             <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
+                            <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
                             <li><a href="lead/"><i class="fas fa-bullhorn"></i> Add new lead</a>
                         </ul>
                     </div>

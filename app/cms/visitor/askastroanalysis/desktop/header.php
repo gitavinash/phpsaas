@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <base href="<?php echo SITE_URL ?>">
     <meta charset="UTF-8">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
 </head>
+
 <body>
     <header>
         <div class="sticky-bar">
@@ -33,7 +35,7 @@
                 </div>
                 <div class="search-box">
                     <form action="/search/">
-                        <input type="text" name="q" class="form-control inside-shadow search-bar" placeholder="Search for astrology services..." >
+                        <input type="text" name="q" class="form-control inside-shadow search-bar" placeholder="Search for astrology services...">
                     </form>
                 </div>
             </section>
@@ -41,7 +43,7 @@
                 <section>
                     <ul>
                         <li><a href="">Home</a></li>
-                        <li><a href="/pooja.php">Pooja</a></li>
+                        <li><a href="/pooja/">Pooja</a></li>
                         <li><a href="">Horoscope</a></li>
                         <li><a href="">Astrology</a></li>
                         <li><a href="">Astrologer</a></li>

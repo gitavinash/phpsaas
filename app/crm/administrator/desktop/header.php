@@ -28,7 +28,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
         <div class="left-side">
             <ul>
                 <li>
-                    <div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+                    <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
         </div>
@@ -36,13 +36,11 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
-                                alt=""></div>
+                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
                     </a>
                     <ul>
-                        <li><a href="setting.php?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-                        <li><a href="setting.php?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+                        <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
+                        <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                         <li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
                     </ul>
                 </li>
@@ -53,45 +51,44 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="index.php"><i
-                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/order/') ? 'class="active"' : '') ?>>
-                    <a href="order.php?type=list&status=all"><i class="fas fa-funnel-dollar"></i> Manage order</a>
+                    <a href="order/?type=list&status=all"><i class="fas fa-funnel-dollar"></i> Manage order</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="order.php?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
-                            <li><a href="order.php?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
+                            <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
+                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
                             </li>
-                            <li><a href="order.php?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
                                     Order</a></li>
-                            <li><a href="order.php?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
+                            <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
                             </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="order.php?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
-                            <li><a href="order.php?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
+                            <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
+                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
                             </li>
-                            <li><a href="order.php?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
                                     Order</a></li>
-                            <li><a href="order.php?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
+                            <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/lead/') ? 'class="active"' : '') ?>>
-                    <a href="lead.php?type=list&status=all"><i class="fas fa-bullhorn"></i> Manage Leads</a>
+                    <a href="lead/?type=list&status=all"><i class="fas fa-bullhorn"></i> Manage Leads</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
+                            <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
                             <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="lead.php?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
+                            <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
                             <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
                         </ul>
                     </div>
@@ -100,70 +97,70 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 
                 if (SITE_ID == 17) { ?>
 
-                <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
-                    <a href="subscription.php?type=list&status=all"><i class="fas fa-crown"></i> Manage
-                        Subscription</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="subscription.php?type=list&status=all"><i class="fas fa-list"></i> All
-                                    Subscription</a></li>
-                            <li><a href="subscription.php?type=list&status=1"><i class="fas fa-check"></i> Confirm
-                                    Subscription</a></li>
-                            <li><a href="subscription.php?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                    Subscription</a></li>
-                            <li><a href="subscription.php?type=list&status=2"><i class="fas fa-times"></i> Cancel
-                                    Subscription</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="subscription.php?type=list&status=all"><i class="fas fa-list"></i> All
-                                    Subscription</a></li>
-                            <li><a href="subscription.php?type=list&status=1"><i class="fas fa-check"></i> Confirm
-                                    Subscription</a></li>
-                            <li><a href="subscription.php?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                    Subscription</a></li>
-                            <li><a href="subscription.php?type=list&status=2"><i class="fas fa-times"></i> Cancel
-                                    Subscription</a></li>
-                        </ul>
-                    </div>
-                </li>
+                    <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
+                        <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Manage
+                            Subscription</a>
+                        <div class="side-menu">
+                            <ul>
+                                <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
+                                        Subscription</a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-menu">
+                            <ul>
+                                <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
+                                        Subscription</a></li>
+                            </ul>
+                        </div>
+                    </li>
 
                 <?php
                 }
 
                 ?>
                 <li <?php echo ((ADMIN_BASE_URL == '/customer/') ? 'class="active"' : '') ?>>
-                    <a href="customer.php?type=list&status=all"><i class="fas fa-users"></i> Manage Customer</a>
+                    <a href="customer/?type=list&status=all"><i class="fas fa-users"></i> Manage Customer</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="customer.php?type=list&status=all"><i class="fas fa-list"></i> All customer</a>
+                            <li><a href="customer/?type=list&status=all"><i class="fas fa-list"></i> All customer</a>
                             </li>
-                            <!-- <li><a href="customer.php?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
+                            <!-- <li><a href="customer/?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="customer.php?type=list&status=all"><i class="fas fa-list"></i> All customer</a>
+                            <li><a href="customer/?type=list&status=all"><i class="fas fa-list"></i> All customer</a>
                             </li>
-                            <!-- <li><a href="customer.php?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
+                            <!-- <li><a href="customer/?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
                         </ul>
                     </div>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
-                    <a href="user.php?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
+                    <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="user.php?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
                             </li>
-                            <li><a href="user.php?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="user.php?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
                             </li>
-                            <li><a href="user.php?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
                         </ul>
                     </div>
                 </li>

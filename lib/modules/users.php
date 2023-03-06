@@ -38,7 +38,7 @@ class Users
                 }
 
                 /** Start mysql transaction */
-                $verifyURL = SITE_DOMAIN . '/verify/email.php?user_id=' . $saltKey . '&email=' . base64_encode($email);
+                $verifyURL = SITE_DOMAIN . '/verify/email/?user_id=' . $saltKey . '&email=' . base64_encode($email);
 
                 mysqli_query($connection, "START TRANSACTION");
 

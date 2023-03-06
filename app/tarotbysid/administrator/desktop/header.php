@@ -25,7 +25,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 		<div class="left-side">
 			<ul>
 				<li>
-					<div class="logo"><a href="index.php"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+					<div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
 				</li>
 			</ul>
 		</div>
@@ -36,8 +36,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 						<div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
 					</a>
 					<ul>
-						<li><a href="setting.php?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-						<li><a href="setting.php?type=password"><i class="fas fa-key"></i> Change Password</a></li>
+						<li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
+						<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
 						<li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
 					</ul>
 				</li>
@@ -48,19 +48,19 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 	<aside>
 		<nav class="side-nav">
 			<ul>
-				<li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+				<li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 				<li <?php echo ((ADMIN_BASE_URL == '/service/') ? 'class="active"' : '') ?>>
-					<a href="service.php?type=list"><i class="fas fa-laptop-house"></i> Service</a>
+					<a href="service/?type=list"><i class="fas fa-laptop-house"></i> Service</a>
 					<div class="side-menu">
 						<ul>
-							<li><a href="service.php?type=list&status=all"><i class="fas fa-list"></i> All Services</a></li>
-							<li><a href="service.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Service</a></li>
+							<li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All Services</a></li>
+							<li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add New Service</a></li>
 						</ul>
 					</div>
 					<div class="bottom-menu">
 						<ul>
-							<li><a href="service.php?type=list&status=all"><i class="fas fa-list"></i> All Services</a></li>
-							<li><a href="service.php?type=add&editor=true"><i class="fas fa-plus"></i>Add New Service</a></li>
+							<li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All Services</a></li>
+							<li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add New Service</a></li>
 						</ul>
 					</div>
 				</li>
@@ -80,42 +80,42 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 					</div>
 				</li>
 				<li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
-					<a href="media.php?type=list"><i class="fas fa-folder-open"></i> Media</a>
+					<a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
 					<div class="side-menu">
 						<ul>
-							<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
-							<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
-							<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-							<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-							<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+							<li><a href="media/?type=list"><i class="fas fa-list"></i> All Media</a></li>
+							<li><a href="media/?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+							<li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
+							<li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+							<li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 						</ul>
 					</div>
 					<div class="bottom-menu">
 						<ul>
-							<li><a href="media.php?type=list"><i class="fas fa-list"></i> All Media</a></li>
-							<li><a href="media.php?type=add"><i class="fas fa-plus"></i> Add New</a></li>
-							<li><a href="media.php?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-							<li><a href="media.php?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-							<li><a href="media.php?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+							<li><a href="media/?type=list"><i class="fas fa-list"></i> All Media</a></li>
+							<li><a href="media/?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+							<li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
+							<li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+							<li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
 						</ul>
 					</div>
 				</li>
 				<li <?php echo ((ADMIN_BASE_URL == '/setting/') ? 'class="active"' : '') ?>>
-					<a href="setting.php?type=configuration"><i class="fas fa-cog"></i> Settings</a>
+					<a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
 					<div class="side-menu">
 						<ul>
-							<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-							<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
+							<li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+							<li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 							<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
-							<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+							<li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
 						</ul>
 					</div>
 					<div class="bottom-menu">
 						<ul>
-							<li><a href="setting.php?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-							<li><a href="setting.php?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
+							<li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
+							<li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a></li>
 							<li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
-							<li><a href="setting.php?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+							<li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
 						</ul>
 					</div>
 				</li>
