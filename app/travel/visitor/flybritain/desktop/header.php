@@ -20,7 +20,7 @@
         <div class="section">
             <div class="sectionBox">
                 <div class="logo">
-                    <a href="/"><img src="<?php echo SITE_LOGO ?>" alt=""></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt="<?php echo SITE_NAME ?>"></a>
                 </div>
                 <div class="menu">
                     <ul>
