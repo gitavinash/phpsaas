@@ -6,8 +6,7 @@
                     <img src="<?php echo USER_IMAGES ?>logo-white.png" alt="<?php echo SITE_NAME ?>">
                     <address>
                         <a href="https://goo.gl/maps/ke44vuTmJjwhTLJ89" target="_blank"> <span><img src="https://img.icons8.com/small/32/f86915/visit.png" class="footerIcon" alt=""></span> 20-22 Wenlock
-                            Road,
-                            London,United Kingdom | N17GU</a>
+                            Road,<br /> London, United Kingdom | N17GU</a>
                     </address>
                     <p><a href="tel:02071838045"><span><img src="https://img.icons8.com/small/32/f86915/phone.png" class="footerIcon" alt=""></span>02071838045</a></p>
                     <p><a href="mailto:sales@flybritain.co.uk"><span><img src="https://img.icons8.com/small/32/f86915/new-post.png" class="footerIcon" alt=""></span>sales@flybritain.co.uk</a></p>
@@ -55,9 +54,9 @@
             <div class="creditSite">
                 <p>&copy; <?php echo date('Y'); ?> All Rights Reserved by <?php echo SITE_NAME ?></p>
             </div>
-            <div class="creditDeveloper">
+            <!-- <div class="creditDeveloper">
                 <p>Made with &hearts; by <a href="https://blumox.com">Blumox Technologies</a> in India</p>
-            </div>
+            </div> -->
         </div>
     </div>
 </footer>

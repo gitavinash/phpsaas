@@ -117,8 +117,8 @@ section {
 .menu li a {
   box-sizing: border-box;
   float: left;
-  padding: 7px 10px;
-  margin: 7px 10px;
+  padding: 8px 10px;
+  margin: 11px 10px;
   text-transform: uppercase;
   font-weight: 300;
   text-decoration: none;
@@ -230,6 +230,7 @@ footer address {
   box-sizing: border-box;
   margin-bottom: 15px;
   line-height: 28px;
+  font-style: normal;
 }
 
 footer address a {
@@ -301,8 +302,8 @@ footer ul.footerMenu li a:hover {
 .trustBox .trustBoxImages {
   float: left;
   height: 100px;
-  box-shadow: rgb(0 0 0 / 6%) 0 2px 4px 0 inset;
-  background: #f9782c;
+  /* box-shadow: rgb(0 0 0 / 6%) 0 2px 4px 0 inset; */
+  /* background: #f9782c; */
   padding: 0 20px;
   margin: 50px 0;
   box-sizing: border-box;
