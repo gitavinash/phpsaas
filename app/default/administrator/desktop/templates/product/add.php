@@ -20,7 +20,8 @@ if (mysqli_num_rows(($allProductList)) != 0) {
     <form method="POST" id="formData" enctype="multipart/form-data">
         <div class="left-box">
             <div class="form-group">
-                <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title" autofocus required>
+                <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title"
+                    autofocus required>
             </div>
             <div class="form-group">
                 <div class="url">
@@ -48,7 +49,8 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                 <div class="productGeneral generalTab">
                     <div class="form-group">
                         <label>Product short description / Highlights</label>
-                        <textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights"></textarea>
+                        <textarea name="highlight" class="form-control inside-shadow"
+                            placeholder="Product short description / Highlights"></textarea>
                     </div>
                     <div class="box-1">
                         <input type="checkbox" name="sell_online" value=0> Product is only for display purposes.
@@ -66,13 +68,15 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" name="salePrice" placeholder="Sale price">
+                            <input type="number" class="form-control inside-shadow" name="salePrice"
+                                placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" name="mrp" placeholder="Regular price">
+                            <input type="number" class="form-control inside-shadow" name="mrp"
+                                placeholder="Regular price">
                         </div>
                     </div>
                     <div class="box-2">
@@ -84,7 +88,8 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <div class="box-2">
                         <div class="form-group">
                             <label>Stock Alert</label>
-                            <input type="text" class="form-control inside-shadow" name="stock_warning" placeholder="Stock Alert">
+                            <input type="text" class="form-control inside-shadow" name="stock_warning"
+                                placeholder="Stock Alert">
                         </div>
                     </div>
                     <div class="box-2">
@@ -99,7 +104,8 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow">
+                            <input type="number" name="taxRate" placeholder="Tax rate ( in % )"
+                                class="form-control inside-shadow">
                         </div>
                     </div>
                 </div>
@@ -128,7 +134,8 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <label>Availability</label>
                     <div class="form-group">
                         <label>Available cities</label>
-                        <textarea name="productMeta[availability_cities]" id="availability_cities" class="form-control inside-shadow" placeholder="Availability cities">Delhi</textarea>
+                        <textarea name="productMeta[availability_cities]" id="availability_cities"
+                            class="form-control inside-shadow" placeholder="Availability cities"></textarea>
                     </div>
                 </div>
                 <div class="productGallery generalTab" style="display: none;">
@@ -142,7 +149,8 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <div class="productDiv">
                         <div class="form-group">
                             <label>Select product varients ( select multiple )</label>
-                            <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct" multiple="multiple">
+                            <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct"
+                                multiple="multiple">
                                 <?php echo $allProductOptionsDropDown ?>
                             </select>
                         </div>
@@ -153,12 +161,14 @@ if (mysqli_num_rows(($allProductList)) != 0) {
 
                     <div class="form-group">
                         <label>Care & Tips</label>
-                        <textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow" placeholder="Care & tips..."></textarea>
+                        <textarea name="productMeta[care_n_tips]" id="care_n_tips" class="form-control inside-shadow"
+                            placeholder="Care & tips..."></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Delivery information</label>
-                        <textarea name="productMeta[delivery_information]" id="delivery_information" class="form-control inside-shadow" placeholder="Delivery information..."></textarea>
+                        <textarea name="productMeta[delivery_information]" id="delivery_information"
+                            class="form-control inside-shadow" placeholder="Delivery information..."></textarea>
                     </div>
 
                 </div>
@@ -176,19 +186,23 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                 <div class="seo generalTab">
                     <div class="form-group">
                         <label>Meta Title</label>
-                        <input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow" placeholder="Meta title">
+                        <input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow"
+                            placeholder="Meta title">
                     </div>
                     <div class="form-group">
                         <label>Meta Description</label>
-                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow" placeholder="Meta Description"></textarea>
+                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow"
+                            placeholder="Meta Description"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Meta Keywords</label>
-                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the post ( use , to seprate keywords )"></textarea>
+                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
+                            placeholder="Enter keywords of the post ( use , to seprate keywords )"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Canonical URL</label>
-                        <input type="text" name="canonical" class="form-control inside-shadow" id="canonical" placeholder="Actual URL of the <?php echo $postType ?>">
+                        <input type="text" name="canonical" class="form-control inside-shadow" id="canonical"
+                            placeholder="Actual URL of the <?php echo $postType ?>">
                     </div>
                     <div class="form-group">
                         <label>Allow search engines to show this Post in search results?</label>
@@ -209,11 +223,13 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     </div>
                     <div class="form-group">
                         <label>Facebook Title</label>
-                        <input type="text" name="fb_title" id="fb_title" class="form-control inside-shadow" placeholder="Facebook title">
+                        <input type="text" name="fb_title" id="fb_title" class="form-control inside-shadow"
+                            placeholder="Facebook title">
                     </div>
                     <div class="form-group">
                         <label>Facebook Description</label>
-                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description"></textarea>
+                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow"
+                            placeholder="Facebook Description"></textarea>
                     </div>
                 </div>
                 <div class="tw generalTab" style="display: none;">
@@ -227,11 +243,13 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     </div>
                     <div class="form-group">
                         <label>Twitter Title</label>
-                        <input type="text" name="tw_title" id="tw_title" class="form-control inside-shadow" placeholder="Twitter title">
+                        <input type="text" name="tw_title" id="tw_title" class="form-control inside-shadow"
+                            placeholder="Twitter title">
                     </div>
                     <div class="form-group">
                         <label>Twitter Description</label>
-                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description"></textarea>
+                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow"
+                            placeholder="Twitter Description"></textarea>
                     </div>
                 </div>
             </section>
@@ -253,20 +271,21 @@ if (mysqli_num_rows(($allProductList)) != 0) {
             <?php
 
             if (SITE_ID == 32) { ?>
-                <h2>Brand</h2>
-                <div class="action-box height-200 inside-shadow">
-                    <?php
+            <h2>Brand</h2>
+            <div class="action-box height-200 inside-shadow">
+                <?php
                     if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
                         while ($brand = mysqli_fetch_assoc($brandList)) { ?>
-                            <div class="form-group">
-                                <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>" <?php echo (($brand['category_id'] == 1) ? 'checked' : '') ?>>
-                                <?php echo ucwords($brand['category_title']); ?>
-                            </div>
-                    <?php
+                <div class="form-group">
+                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
+                        <?php echo (($brand['category_id'] == 1) ? 'checked' : '') ?>>
+                    <?php echo ucwords($brand['category_title']); ?>
+                </div>
+                <?php
                         }
                     }
                     ?>
-                </div>
+            </div>
             <?php
             }
 
@@ -276,10 +295,12 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                 <?php
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND  link_status=200 ORDER BY category_title ASC")) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="category" value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="category"
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                    <?php echo ucwords($category['category_title']); ?>
+                </div>
                 <?php
                     }
                 }
