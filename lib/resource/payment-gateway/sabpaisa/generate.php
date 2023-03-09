@@ -9,7 +9,7 @@ $payerAddress = 'Patna, Bihar';
 
 $mcc = 5137;
 $channelId = 'W';
-$callbackUrl = SITE_DOMAIN . '/payment/status/';
+$callbackUrl = SITE_URL . '/payment/status/';
 
 $encData = "?clientCode=" . PG_CLIENT_CODE . "&transUserName=" . PG_USERNAME . "&transUserPassword=" . PG_PASSWORD . "&amount=" . $order_total_price .
     "&amountType=" . $cart_currency . "&clientTxnId=OD" . $order_id . "&payerName=" . $payerName . "&payerMobile=" . $payerMobile .
@@ -41,9 +41,9 @@ $data = $AesCipher->encrypt(PG_AUTH_KEY, PG_AUTH_IV, $encData);
 </form>
 <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#redirectToPaymentGateway').submit();
-    });
+$(document).ready(function() {
+    $('#redirectToPaymentGateway').submit();
+});
 </script>
 
 </html>
