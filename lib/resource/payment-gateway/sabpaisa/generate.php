@@ -2,18 +2,13 @@
 
 require_once MODULES . 'encryptor.php';
 
-$payerName = 'YUVRAJ MISHRA';
-$payerEmail = 'yuvraj.mishra@sabpaisa.in';
-$payerMobile = '9990026008';
-$payerAddress = 'Patna, Bihar';
-
 $mcc = 5137;
 $channelId = 'W';
 $callbackUrl = SITE_URL . '/payment/status/';
 
 $encData = "?clientCode=" . PG_CLIENT_CODE . "&transUserName=" . PG_USERNAME . "&transUserPassword=" . PG_PASSWORD . "&amount=" . $order_total_price .
-    "&amountType=" . $cart_currency . "&clientTxnId=OD" . $order_id . "&payerName=" . $payerName . "&payerMobile=" . $payerMobile .
-    "&payerEmail=" . $payerEmail . "&mcc=" . $mcc . "&channelId=" . $channelId . "&callbackUrl=" . $callbackUrl;
+    "&amountType=" . $cart_currency . "&clientTxnId=OD" . $order_id . "&payerName=" . $profile_display_name . "&payerMobile=" . $profile_mobile .
+    "&payerEmail=" . $profile_email . "&mcc=" . $mcc . "&channelId=" . $channelId . "&callbackUrl=" . $callbackUrl;
 
 $AesCipher = new Encryptor();
 $data = $AesCipher->encrypt(PG_AUTH_KEY, PG_AUTH_IV, $encData);
@@ -41,9 +36,9 @@ $data = $AesCipher->encrypt(PG_AUTH_KEY, PG_AUTH_IV, $encData);
 </form>
 <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('#redirectToPaymentGateway').submit();
-});
+    $(document).ready(function() {
+        $('#redirectToPaymentGateway').submit();
+    });
 </script>
 
 </html>
