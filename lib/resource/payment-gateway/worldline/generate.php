@@ -28,7 +28,7 @@ $data = array("hash" => $hashed, "data" => array(PG_MERCHANT_CODE, $orderId, $or
 
 // Update transaction table
 
-if (!$updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_gateway='" . PG_NAME . "', transaction_order_id='{$order_id}', transaction_status=2 WHERE transaction_id='{$id}'")) {
+if (!$updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_order_id='{$order_id}', transaction_status=2 WHERE transaction_id='{$id}'")) {
 
     echo 'Something is wrong while generation transaction status';
     exit();

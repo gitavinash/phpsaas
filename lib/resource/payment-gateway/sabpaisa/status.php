@@ -6,70 +6,82 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $AesCipher = new Encryptor();
     $response = $AesCipher->decrypt(PG_AUTH_KEY, PG_AUTH_IV, $_POST['encResponse']);
 
-    // while ($response !== false) {
-    //     $i = $i + 1;
-    //     $token1 = strchr($token, "=");
-    //     $token = strtok("&");
-    //     $tokenValue = ltrim($token1, "=");
-    //     if ($i == 4)
-    //         $order_id = $tokenValue;
-    //     if ($i == 12)
-    //         $status = $tokenValue;
-    //     if ($i == 15)
-    //         $paymentTransactionID = $tokenValue;
-    //     if ($i == 20)
-    //         $bankTxnId = $tokenValue;
-    // }
+    if ($response != '') {
 
-    print_r($response);
+        $splitReponse = explode('&', $response);
 
-    // switch (strtolower($status)) {
+        for ($i = 0; $i < sizeof($splitReponse); $i++) {
+            $breakQuery = explode('=', $splitReponse[$i]);
 
-    //     case 'success':
-    //         $transactionStatus = 1;
-    //         break;
+            if ($i == 3) {
+                $order_id = end($breakQuery);
+            }
 
-    //     default:
-    //         $transactionStatus = 3;
-    //         break;
-    // }
+            if ($i == 11) {
+                $status = strtolower(end($breakQuery));
+            }
 
-    // $order_id = str_replace('OD', '', $order_id);
-    // $id = base64_encode($order_id);
+            if ($i == 14) {
+                $paymentTransactionID = end($breakQuery);
+            }
 
-    // /** Check order id is valid or not */
+            if ($i == 16) {
+                $paymentMethod = end($breakQuery);
+            }
 
-    // if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transaction_cart_id, transaction_type FROM " . TABLE_PREFIX . "transaction WHERE transaction_order_id='{$order_id}'")) {
+            if ($i == 19) {
+                $bankTxnId = end($breakQuery);
+            }
+        }
+    }
 
-    //     if (mysqli_num_rows($checkTransaction) != 0) {
+    switch ($status) {
 
-    //         extract(mysqli_fetch_assoc($checkTransaction));
+        case 'success':
+            $transactionStatus = 1;
+            break;
 
-    //         /** Update transaction details into transaction table */
+        default:
+            $transactionStatus = 3;
+            break;
+    }
 
-    //         if ($updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_reference_id='{$paymentTransactionID}', transaction_status=1 WHERE transaction_order_id='{$order_id}'")) {
+    $order_id = str_replace('OD', '', $order_id);
+    $id = base64_encode($order_id);
 
-    //             $transaction_id = base64_encode($transaction_id);
+    /** Check order id is valid or not */
 
-    //             if ($transactionStatus != 1) {
-    //                 header("Location: /payment-failed/?id={$id}", TRUE, 301);
-    //                 exit();
-    //             }
+    if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transaction_cart_id, transaction_type FROM " . TABLE_PREFIX . "transaction WHERE transaction_order_id='{$order_id}'")) {
 
-    //             require_once PAYMENT_GATEWAY . 'success.php';
-    //         } else {
+        if (mysqli_num_rows($checkTransaction) != 0) {
 
-    //             echo mysqli_error($connection);
-    //         }
-    //     } else {
+            extract(mysqli_fetch_assoc($checkTransaction));
 
-    //         echo 'Invalid transaction id found';
-    //     }
-    // } else {
+            /** Update transaction details into transaction table */
 
-    //     echo mysqli_error($connection);
-    //     exit();
-    // }
+            if ($updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_payment_id='{$paymentTransactionID}', transaction_reference_id = '{$bankTxnId}', transaction_payment_mode='{$paymentMethod}', transaction_status=1 WHERE transaction_order_id='{$order_id}'")) {
+
+                $transaction_id = base64_encode($transaction_id);
+
+                if ($transactionStatus != 1) {
+                    header("Location: /payment-failed/?id={$id}", TRUE, 301);
+                    exit();
+                }
+
+                require_once PAYMENT_GATEWAY . 'success.php';
+            } else {
+
+                echo mysqli_error($connection);
+            }
+        } else {
+
+            echo 'Invalid transaction id found';
+        }
+    } else {
+
+        echo mysqli_error($connection);
+        exit();
+    }
 } else {
     echo "Invalid request method";
 }

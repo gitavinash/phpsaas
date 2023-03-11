@@ -22,7 +22,7 @@ class orderModule
 
             $createNewCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$orderId}', 'link', '1', '{$amount}', 0, NOW())");
 
-            $initiateTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(" . SITE_ID . ", '{$user_id}', '{$orderId}', 'online', '{$currency}', '{$amount}', 'link', 0)");
+            $initiateTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_gateway, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(" . SITE_ID . ", '{$user_id}', '{$orderId}', 'online', '" . PG_NAME . "', '{$currency}', '{$amount}', 'link', 0)");
             $transaction_id = base64_encode(mysqli_insert_id($connection));
 
             if ($addNewOrder && $createNewCart && $initiateTransaction) {
