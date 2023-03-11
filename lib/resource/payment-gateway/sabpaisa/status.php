@@ -6,22 +6,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $AesCipher = new Encryptor();
     $response = $AesCipher->decrypt(PG_AUTH_KEY, PG_AUTH_IV, $_POST['encResponse']);
 
-    print_r($response);
+    while ($response !== false) {
+        $i = $i + 1;
+        $token1 = strchr($token, "=");
+        $token = strtok("&");
+        $tokenValue = ltrim($token1, "=");
+        if ($i == 4)
+            $order_id = $tokenValue;
+        if ($i == 12)
+            $status = $tokenValue;
+        if ($i == 15)
+            $paymentTransactionID = $tokenValue;
+        if ($i == 20)
+            $bankTxnId = $tokenValue;
+    }
 
-    // while ($response !== false) {
-    //     $i = $i + 1;
-    //     $token1 = strchr($token, "=");
-    //     $token = strtok("&");
-    //     $tokenValue = ltrim($token1, "=");
-    //     if ($i == 4)
-    //         $order_id = $tokenValue;
-    //     if ($i == 12)
-    //         $status = $tokenValue;
-    //     if ($i == 15)
-    //         $paymentTransactionID = $tokenValue;
-    //     if ($i == 20)
-    //         $bankTxnId = $tokenValue;
-    // }
+    print_r($response);
 
     // switch (strtolower($status)) {
 
