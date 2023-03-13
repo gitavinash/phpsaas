@@ -66,25 +66,45 @@
 <script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js"></script>
 <script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('#departureDate').daterangepicker({
-        autoUpdateInput: false,
-        minDate: 0,
-        showCustomRangeLabel: true,
-        locale: {
-            cancelLabel: 'Clear'
-        }
+    $(document).ready(function() {
+        $(document).mouseup(function(e) {
+            var passangerPopUp = $(".passangerPopUp");
+            var tripPopUp = $(".tripPopUp");
+            var classPopUp = $(".classPopUp");
+            if (!passangerPopUp.is(e.target) && passangerPopUp.has(e.target).length === 0) {
+                passangerPopUp.hide();
+            }
+            if (!tripPopUp.is(e.target) && tripPopUp.has(e.target).length === 0) {
+                tripPopUp.hide();
+            }
+            if (!classPopUp.is(e.target) && classPopUp.has(e.target).length === 0) {
+                classPopUp.hide();
+            }
+        });
+        $('#departureDate').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+        $('.slider').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: false,
+        });
+        $('#passangerPopUp').on('click', function() {
+            $('.passangerPopUp').show();
+        });
+        $('#tripPopUp').on('click', function() {
+            $('.tripPopUp').show();
+        });
+        $('#classPopUp').on('click', function() {
+            $('.classPopUp').show();
+        });
     });
-    $('.slider').slick({
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        arrows: false,
-    });
-
-});
 </script>
 </body>
 
