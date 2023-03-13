@@ -54,8 +54,7 @@ require_once 'header.php';
                                 </div>
                                 <div class="box">
                                     <label>Depart & Return Date</label>
-                                    <input type="text" class="returnDatePicker" id="departureDate"
-                                        placeholder="Departure & Return date">
+                                    <input type="text" class="returnDatePicker" id="departureDate" placeholder="Departure & Return date">
                                 </div>
                             </div>
                             <!-- <div class="form-group">
@@ -117,29 +116,23 @@ require_once 'header.php';
 <section>
     <h3>Have your travel plans been affected?</h3>
     <div class="container">
-        <div class="row">
-            <div class="col-3">
-                <div class="info-box">
-                    <div class="info">
-                        <div class="img"></div>
-                        <p>Why you should book with us?</p>
-                    </div>
+        <div class="row flex-3">
+            <div class="info-box">
+                <div class="info">
+                    <div class="img"></div>
+                    <p>Why you should book with us?</p>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="info-box">
-                    <div class="info">
-                        <div class="img"></div>
-                        <p>Best fare guaranteed - Safe & Secure Booking</p>
-                    </div>
+            <div class="info-box">
+                <div class="info">
+                    <div class="img"></div>
+                    <p>Best fare guaranteed - Safe & Secure Booking</p>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="info-box">
-                    <div class="info">
-                        <div class="img"></div>
-                        <p>24/7 Customer Care</p>
-                    </div>
+            <div class="info-box">
+                <div class="info">
+                    <div class="img"></div>
+                    <p>24/7 Customer Care</p>
                 </div>
             </div>
         </div>
@@ -153,8 +146,7 @@ require_once 'header.php';
                 <div class="slider">
                     <div class="slideBox">
                         <div class="bgImage">
-                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1"
-                                alt="">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
                         </div>
                         <div class="text">
                             <a href="">
@@ -168,8 +160,7 @@ require_once 'header.php';
                     </div>
                     <div class="slideBox">
                         <div class="bgImage">
-                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1"
-                                alt="">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
                         </div>
                         <div class="text">
                             <a href="">
@@ -185,8 +176,7 @@ require_once 'header.php';
                     </div>
                     <div class="slideBox">
                         <div class="bgImage">
-                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1"
-                                alt="">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
                         </div>
                         <div class="text">
                             <a href="">
@@ -202,8 +192,7 @@ require_once 'header.php';
                     </div>
                     <div class="slideBox">
                         <div class="bgImage">
-                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1"
-                                alt="">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
                         </div>
                         <div class="text">
                             <a href="">
@@ -219,8 +208,7 @@ require_once 'header.php';
                     </div>
                     <div class="slideBox">
                         <div class="bgImage">
-                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1"
-                                alt="">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
                         </div>
                         <div class="text">
                             <a href="">
@@ -236,8 +224,7 @@ require_once 'header.php';
                     </div>
                     <div class="slideBox">
                         <div class="bgImage">
-                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1"
-                                alt="">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
                         </div>
                         <div class="text">
                             <a href="">

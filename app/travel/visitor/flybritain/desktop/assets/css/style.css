@@ -182,7 +182,7 @@ section {
   float: left;
   width: 100%;
   margin-top: 105px;
-  background: url("https://tup-cdn.azureedge.net/tup-web/images/newbanner/maldives/Maldives_bg.webp")
+  background: url("/app/travel/visitor/flybritain/desktop/assets/images/maldives_bg.jpg")
     no-repeat no-repeat;
   background-size: cover;
   height: 520px;
@@ -505,22 +505,36 @@ h3 {
   font-weight: bold;
   font-size: 18px;
   margin-bottom: 30px;
+  color: #00387c;
+}
+
+.flex-3 {
+  display: flex;
+  justify-content: center;
+  padding: 0px 20px;
 }
 
 .info-box {
   float: left;
-  max-width: 100%;
+  width: 100%;
   flex: 0 0 33.33%;
   box-sizing: border-box;
   margin-bottom: 25px;
 }
 
 .info-box .info {
-  width: 100%;
+  width: 90%;
   box-sizing: border-box;
-  padding: 0 40px;
+  padding: 18px 40px;
   border: 2px solid #00387c;
-  box-shadow: 0px 6px #00387c, 0px 1px #00387c, 0px 0px #00387c;
+  box-shadow: 0 6px #00387c, 0 1px #00387c, 0 0 #00387c;
+  border-radius: 7px;
+}
+
+.info-box .info p {
+  font-size: 13px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .slides {
