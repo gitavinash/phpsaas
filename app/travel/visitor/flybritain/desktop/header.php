@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>favicon.png">
@@ -35,10 +37,25 @@
                             <li><a href="">First Class</a></li>
                             <li><a href="">About Us</a></li>
                             <li><a href="">Contact Us</a></li>
-                            <li><a href="tel:+91-9990026008" class="contact">
-                                    <p><span>Call Us</span>+91-9990026008</p>
-                                </a></li>
+                            <li><a href="tel:" class="npm"><img src="<?php echo USER_IMAGES ?>icons/call.png" alt=""></a>
+                            </li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="desktop">
+            <div class="headerInfo">
+                <div class="container">
+                    <div class="row">
+                        <img src="<?php echo USER_IMAGES ?>icons/like.png" alt="Great value deals">
+                        <p>Great value deals</p>
+                        <img src="<?php echo USER_IMAGES ?>icons/calendar.png" alt="Book with confidence">
+                        <p>Book with confidence</p>
+                        <img src="<?php echo USER_IMAGES ?>icons/flight.png" alt="Fly Now Pay Later">
+                        <p>Fly Now Pay Later</p>
+                        <img src="<?php echo USER_IMAGES ?>icons/ponds.png" alt="Best fare guarantee">
+                        <p>Best Fare Guarantee</p>
                     </div>
                 </div>
             </div>

@@ -62,6 +62,20 @@
 </footer>
 <!-- sections end -->
 <?php include_once NOTIFICATION . 'index.php' ?>
+<script src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#departureDate').daterangepicker({
+            autoUpdateInput: false,
+            minDate: 0,
+            showCustomRangeLabel: true,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+    });
+</script>
 </body>
 
 </html>
