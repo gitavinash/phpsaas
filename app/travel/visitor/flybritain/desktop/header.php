@@ -7,8 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>favicon.png">

@@ -46,8 +46,7 @@ require_once 'header.php';
                                 </div>
                                 <div class="box">
                                     <label>Depart & Return Date</label>
-                                    <input type="text" class="returnDatePicker" id="departureDate"
-                                        placeholder="Departure & Return date">
+                                    <input type="text" class="returnDatePicker" id="departureDate" placeholder="Departure & Return date">
                                 </div>
                             </div>
                             <!-- <div class="form-group">
@@ -99,7 +98,105 @@ require_once 'header.php';
 <section>
     <div class="container">
         <div class="row">
-            tex
+            <div class="slides">
+                <h1>Popular Destinations</h1>
+                <div class="slider">
+                    <div class="slideBox">
+                        <div class="bgImage">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="">
+                                <h2>Africa</h2>
+                            </a>
+                        </div>
+                        <div class="priceBox">
+                            <div class="text">flights from</div>
+                            <div class="price">£ 9956</div>
+                        </div>
+                    </div>
+                    <div class="slideBox">
+                        <div class="bgImage">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="">
+                                <h2>Africa</h2>
+                            </a>
+                        </div>
+                        <div class="priceBox">
+                            <div class="priceInfo">
+                                <div class="text">flights from</div>
+                                <div class="price">£356</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slideBox">
+                        <div class="bgImage">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="">
+                                <h2>Africa</h2>
+                            </a>
+                        </div>
+                        <div class="priceBox">
+                            <div class="priceInfo">
+                                <div class="text">flights from</div>
+                                <div class="price">£356</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slideBox">
+                        <div class="bgImage">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="">
+                                <h2>Africa</h2>
+                            </a>
+                        </div>
+                        <div class="priceBox">
+                            <div class="priceInfo">
+                                <div class="text">flights from</div>
+                                <div class="price">£356</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slideBox">
+                        <div class="bgImage">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="">
+                                <h2>Africa</h2>
+                            </a>
+                        </div>
+                        <div class="priceBox">
+                            <div class="priceInfo">
+                                <div class="text">flights from</div>
+                                <div class="price">£356</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slideBox">
+                        <div class="bgImage">
+                            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/02/98/0d/elephant-in-tarangire.jpg?w=1200&h=-1&s=1" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="">
+                                <h2>Africa</h2>
+                            </a>
+                        </div>
+                        <div class="priceBox">
+                            <div class="priceInfo">
+                                <div class="text">flights from</div>
+                                <div class="price">£356</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

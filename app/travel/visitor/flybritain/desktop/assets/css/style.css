@@ -55,6 +55,11 @@ section {
   width: 100%;
 }
 
+.col-auto {
+  float: left;
+  width: auto;
+}
+
 .col-5 {
   float: left;
   width: 20%;
@@ -311,7 +316,7 @@ section {
 .secondaryInputs .form-group .darkBg {
   background: #efefef;
   color: #333;
-  padding: 5px 20px;
+  padding: 5px 20px 4px 20px;
   border: none;
   float: left;
   font-size: 12px;
@@ -333,16 +338,129 @@ section {
     0% 0% no-repeat padding-box;
 }
 
+.slides {
+  float: left;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.slides {
+  float: left;
+  width: 100%;
+}
+
+.slides .slider {
+  float: left;
+  width: 100%;
+}
+
+.slides h1 {
+  float: left;
+  width: 100%;
+  padding: 10px 0px;
+  color: #00387c;
+}
+
+.slides .slideBox {
+  float: left;
+  height: 250px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.slides .slideBox .bgImage {
+  float: left;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.slides .slideBox .bgImage img {
+  z-index: -100;
+  min-height: 100%;
+  min-width: 100%;
+  animation-name: zoom-effect;
+  animation-duration: 9s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.slides .slideBox .text {
+  float: left;
+  width: 100%;
+  height: 250px;
+  margin-top: -250px;
+}
+
+.slides .slideBox .text a {
+  line-height: 250px;
+  font-weight: 600;
+  font-size: 32px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.slides .slideBox .priceBox {
+  float: right;
+  height: 250px;
+  margin-top: -50px;
+  bottom: 0;
+  position: relative;
+  background: #fff;
+  margin: -75px 15px -1px 0px;
+  width: 160px;
+  height: 50px;
+  border-radius: 4px;
+}
+
+.slides .slideBox .priceBox .text {
+  float: left;
+  width: 40%;
+  box-sizing: border-box;
+  height: 50px;
+  margin: 0px;
+  padding: 15px 15px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.slides .slideBox .priceBox .price {
+  box-sizing: border-box;
+  float: right;
+  width: 60%;
+  line-height: 50px;
+  color: #f86915;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+}
+
 footer {
   float: left;
   width: 100%;
-  padding: 50px 0px;
+  padding: 20px 0px;
+  font-size: 12px;
   background: #00387c;
+  color: #f2f2f2;
+  text-align: left;
+}
+
+footer label {
+  font-size: 12px;
 }
 
 .footerLogo img {
   height: 50px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 img.footerIcon {
@@ -352,34 +470,13 @@ img.footerIcon {
   margin-bottom: 0px;
 }
 
-footer address {
-  float: left;
-  width: 100%;
-  padding: 0px 0px;
-  color: #f2f2f2;
-  box-sizing: border-box;
-  margin-bottom: 15px;
-  line-height: 28px;
-  font-style: normal;
-}
-
-footer address a {
-  color: inherit;
-  text-decoration: none;
-}
-
-footer address a:hover {
-  color: #f86915;
-  text-decoration: none;
-}
-
 footer p {
   float: left;
   width: 100%;
   padding: 0px 0px;
   color: #f2f2f2;
   box-sizing: border-box;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 footer p a {
@@ -401,23 +498,140 @@ footer h2 {
   letter-spacing: 2px;
 }
 
-footer ul.footerMenu {
+footer .logoCol {
   float: left;
-  width: 100%;
+  width: 220px;
+  box-sizing: border-box;
+  text-align: left;
+  padding-right: 20px;
 }
 
-footer ul.footerMenu li {
-  list-style: none;
+footer .menuCol {
+  float: left;
+  width: 250px;
+  box-sizing: border-box;
+  text-align: left;
+  padding: 0px 10px;
+}
+
+.contactCol {
+  float: left;
+  width: 300px;
+}
+
+.contactCol .phone {
   float: left;
   width: 100%;
+  text-align: left;
+}
+
+.contactCol p {
+  float: left;
+  width: 100%;
+  text-align: left;
+  padding: 5px 0px;
+  font-size: 12px;
+  color: #f2f2f2;
+  line-height: 24px;
+}
+
+.contactCol .phone a {
+  font-size: 32px;
+  color: #f86915;
+  text-decoration: none;
+  text-align: left;
+}
+
+.newsletterCol {
+  float: left;
+  width: 280px;
+}
+
+.newsletterCol .form-group {
+  float: left;
   margin-bottom: 10px;
 }
 
-footer ul.footerMenu li a {
+.newsletterCol label {
+  float: left;
+  width: 100%;
+  font-size: 10px;
+  line-height: 18px;
+  margin-bottom: 20px;
+}
+
+.newsletterCol .input {
+  float: left;
+  width: 80%;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  height: 30px;
+}
+
+.newsletterCol .submitBtn {
+  float: left;
+  width: 20%;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  height: 30px;
+  background: #f86915;
   color: #f2f2f2;
-  font-size: 14px;
+}
+
+.imagesCol {
+  float: left;
+  width: auto;
+}
+
+.imagesCol .socialMedia {
+  float: left;
+  width: 50px;
+  box-sizing: border-box;
+  padding-right: 20px;
+}
+
+.imagesCol .socialMedia img {
+  margin-bottom: 20px;
+}
+
+.imagesCol .banner {
+  float: left;
+  box-sizing: border-box;
+}
+
+.imagesCol img {
+  float: left;
+  width: 100%;
+}
+
+footer .footerMenu {
+  float: left;
+  width: 100%;
+}
+
+footer .footerMenu ul {
+  float: left;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+footer .footerMenu li {
+  list-style: none;
+  float: left;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+footer .footerMenu li a {
+  color: #f2f2f2;
+  font-size: 12px;
   text-decoration: none;
-  letter-spacing: 2px;
 }
 
 footer ul.footerMenu li a:hover {
@@ -454,33 +668,17 @@ footer ul.footerMenu li a:hover {
   margin-right: 0px;
 }
 
-.credit {
-  width: 1280px;
-  margin: 0 auto;
-}
-
 footer .creditSite {
   float: left;
-  width: 50%;
+  width: 100%;
   text-align: left;
-}
-
-footer .creditDeveloper {
-  float: right;
-  width: 50%;
-  text-align: right;
 }
 
 footer .creditSite p {
   padding: 0;
   margin: 0;
-  font-size: 14px;
-}
-
-footer .creditDeveloper p {
-  padding: 0;
-  margin: 0;
-  font-size: 14px;
+  font-size: 9px;
+  text-transform: uppercase;
 }
 
 @media only screen and (max-width: 768px) {
