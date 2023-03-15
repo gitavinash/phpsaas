@@ -23,7 +23,8 @@
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swa" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Righteous&display=swap"
+        rel="stylesheet">
 
     <script type="text/javascript">
     (function(c, l, a, r, i, t, y) {
