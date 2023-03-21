@@ -145,7 +145,10 @@
                 </div>
 
                 <div class="d-flex align-items-center cart_div">
-                    <button class="add_to_cart">ADD TO CART</button>
+                    <p style="display:none" id="productInfo"
+                        value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
+                    </p>
+                    <button class="add_to_cart add_cart" id="addToCart">ADD TO CART</button>
                     <div class="like ms-3">
                         <img src="<?php echo USER_IMAGES ?>heart.png" alt="" />
                     </div>

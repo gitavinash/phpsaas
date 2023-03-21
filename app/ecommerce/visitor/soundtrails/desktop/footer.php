@@ -75,6 +75,7 @@
 <!-- Option 1: Bootstrap Bundle with Popper -->
 
 <script src="<?php echo USER_JS ?>app.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
 <script src="<?php echo USER_JS ?>popup.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
