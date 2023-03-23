@@ -11,21 +11,23 @@
             </p>
             <h1 class="title_section">Guru ji- Best Vastu Consultant</h1>
             <p class="semi_para">
-                A visionary, humanitarian and philanthropist, Guruji is a civil
-                engineer by profession. He is committed to the vision of creating a
-                happy and helping society through Manava Abhivruddhi Abhiyaan, since
-                last 2 decades. Millions of his followers got enlightened by
-                following his secret mantra of leading a happy and blissful life.
+                Guruji is a compassionate and selfless professional who is dedicated to helping people overcome their
+                life's hurdles. He has extensive knowledge and expertise in KP astrology, Vedic astrology, gemstones,
+                yantra, and Lal Kitab. Through his years of experience, he has found that Lal Kitab is a particularly
+                powerful tool for providing quick and effective solutions to people's problems.
             </p>
             <p class="semi_para mt-2 mt-sm-3">
-                As per Guruji, we can ‘Get whatever we want’ by following his simple
-                and unique path of harnessing the infinite power of cosmic energy
+                Guruji's compassion and understanding of his clients' issues enable him to provide the most suitable and
+                easily achievable solutions for them. He is grateful for the blessings and guidance he has received from
+                his Guruji, GURUDEV G D VASHISTH, which have undoubtedly helped him become the excellent astrologer that
+                he is today.
             </p>
             <div class="mt-4 d-flex align-items-center wrap_2">
-                <a href="#" class="common_btn common_btn d-inline-flex align-items-center"><span
+                <a href="tel:+91-8505850919" class="common_btn common_btn d-inline-flex align-items-center"><span
                         class="material-symbols-sharp me-2"> phone_in_talk </span>
                     Call Now</a>
-                <a href="#" class="common_btn common_btn d-inline-flex align-items-center ms-4 margin_zero"><i
+                <a href="https://wa.me/91s8505850919"
+                    class="common_btn common_btn d-inline-flex align-items-center ms-4 margin_zero"><i
                         class="fa-brands fa-whatsapp me-2"></i> Live Chat Now on</a>
             </div>
         </div>
@@ -43,14 +45,9 @@
                 Make Your Appointment To Discuss Any Problem
             </h1>
             <p class="semi_para">
-                There are many variations of passages of Lorem Ipsum available, but
-                the majority have suffered alteration in some form, by injected
-                humour, or randomised words which don’t look even slightly
-                believable. If you are going to use a passage of Lorem Ipsum, you
-                need to be sure there isn’t anything embarrassing hidden in the
-                middle of text. All the Lorem Ipsum generators on the Internet tend
-                to repeat predefined chunks as necessary, making this the first true
-                generator on the Internet.
+                If you are facing challenges in your life and are seeking guidance, we highly recommend consulting with
+                Guruji. By sharing your birth details, Guruji can use his expertise in astrology to provide you with
+                personalized and effective solutions that can work like magic in transforming your life.
             </p>
         </div>
         <div class="col-12 mt-5 bg_appointment">
