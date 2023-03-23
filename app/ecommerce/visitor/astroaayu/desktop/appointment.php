@@ -9,7 +9,7 @@
             <p class="title_semi">
                 Your Consultant <span class="title_semi_line"></span>
             </p>
-            <h1 class="title_section">Guru ji- Best Vastu Consultant</h1>
+            <h1 class="title_section">Guru ji - Red Book Expert</h1>
             <p class="semi_para">
                 Guruji is a compassionate and selfless professional who is dedicated to helping people overcome their
                 life's hurdles. He has extensive knowledge and expertise in KP astrology, Vedic astrology, gemstones,
