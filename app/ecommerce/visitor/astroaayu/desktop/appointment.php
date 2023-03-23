@@ -238,6 +238,11 @@
                     <div class="col-12 mt-3">
                         <input type="submit" value="Make An Appointment" class="submit submit_btn">
                     </div>
+                    <p>
+                        <br /><strong>Note: </strong>For booking your appointment you can call on: +91 8505850919.
+                        <br />Appointment booking timing Monday to Saturday 10:00 a.m. to 6:00 p.m.
+                        <br />Consultation fee per kundli ₹ 3100 /- Only.
+                    </p>
                 </form>
             </div>
         </div>
