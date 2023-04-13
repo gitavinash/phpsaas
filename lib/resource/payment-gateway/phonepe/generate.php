@@ -50,9 +50,16 @@ curl_close($curl);
 
 $response = json_decode($response, TRUE);
 
-print_r($response);
+if ($response['code'] == 'PAYMENT_INITIATED') {
 
-$clientRedirectUrl = $response['data']['instrumentResponse']['redirectInfo']['url'];
+    $clientRedirectUrl = $response['data']['instrumentResponse']['redirectInfo']['url'];
+    header("Location: " . $clientRedirectUrl, TRUE, 301);
+} else {
+    echo "Something went wrong while redirection to payment gateway.";
+    if (DEVELOPMENT_MODE == true) {
+        echo "Encode request body : " . $encodeRequestBody;
+        echo "xVerify request body : " . $xVerify;
+    }
+}
 
-header("Location: " . $clientRedirectUrl, TRUE, 301);
 exit();
