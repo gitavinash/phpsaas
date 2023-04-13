@@ -1,5 +1,11 @@
 <?php
 
+if (DEVELOPMENT_MODE == true) {
+    $phonePeEndPoint = 'https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay';
+} else {
+    $phonePeEndPoint = 'https://api.phonepe.com/apis/hermes/pg/v1/pay';
+}
+
 $redirectUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id);
 $callbackUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id);
 
@@ -30,7 +36,7 @@ $postRequestBody = json_encode(array(
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://api.phonepe.com/apis/hermes/pg/v1/pay",
+    CURLOPT_URL => $phonePeEndPoint,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -57,8 +63,9 @@ if ($response['code'] == 'PAYMENT_INITIATED') {
 } else {
     echo "Something went wrong while redirection to payment gateway.";
     if (DEVELOPMENT_MODE == true) {
-        echo "Encode request body : " . $encodeRequestBody;
+        echo "Encode request body : " . $encodeRequestBody . '<br />';
         echo "xVerify request body : " . $xVerify;
+        print_r($response);
     }
 }
 
