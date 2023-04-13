@@ -10,7 +10,10 @@ if (isset($id)) {
 
         if (mysqli_num_rows($checkOrder) != 0) {
             extract(mysqli_fetch_assoc($checkOrder));
-            echo "<h1 class='green' >Thank You</h1><p>Your transaction is successful.</p><p>Order Id : OD{$order_id}</p><p>Transaction Id : {$transaction_reference_id}</p>";
+            echo "<h1 class='green' >Thank You</h1><p>Your transaction is successful.</p><p>Order Id : OD{$order_id}</p>";
+            if ($transaction_reference_id != '') {
+                echo "<p>Transaction Id : {$transaction_reference_id}</p>";
+            }
         }
     }
 }
