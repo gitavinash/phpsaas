@@ -49,6 +49,9 @@ $response = curl_exec($curl);
 curl_close($curl);
 
 $response = json_decode($response, TRUE);
+
+print_r($response);
+
 $clientRedirectUrl = $response['data']['instrumentResponse']['redirectInfo']['url'];
 
 header("Location: " . $clientRedirectUrl, TRUE, 301);
