@@ -30,7 +30,7 @@ $postRequestBody = json_encode(array(
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay",
+    CURLOPT_URL => "https://api.phonepe.com/apis/hermes/pg/v1/pay",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
