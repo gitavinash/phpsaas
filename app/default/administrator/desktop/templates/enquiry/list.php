@@ -98,12 +98,11 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-        <tr <?php echo (($enquiry_status == 1) ? 'style="background: red; color: #fff"' : '') ?>>
+        <tr>
             <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
             <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
             <td><?php echo $enquiry_mobile; ?></td>
             <td><?php echo ucfirst($enquiry_message); ?></td>
-            </td>
             <td>
                 <?php
 
