@@ -85,7 +85,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             <th>Name</th>
             <th>Mobile</th>
             <th>Message</th>
-            <th></th>
+            <!-- <th></th> -->
         </tr>
     </thead>
     <tbody>
