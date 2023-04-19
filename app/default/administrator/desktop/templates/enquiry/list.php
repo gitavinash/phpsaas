@@ -85,7 +85,6 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             <th>Name</th>
             <th>Mobile</th>
             <th>Message</th>
-            <th>Status</th>
             <th></th>
         </tr>
     </thead>
@@ -103,27 +102,27 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
             <td><?php echo $enquiry_mobile; ?></td>
             <td><?php echo ucfirst($enquiry_message); ?></td>
-            <td>
+            <!-- <td>
                 <?php
 
-                            switch ($enquiry_status) {
+                    switch ($enquiry_status) {
 
-                                case 1:
-                                    echo "<a href='" . base64_encode($enquiry_id) . "' msg='You are cancelling the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='cancel' class='btn btn-sm btn-red bookingCancelBtn'><i class='fas fa-times-circle'></i> Cancel</a>";
-                                    break;
+                        case 1:
+                            echo "<a href='" . base64_encode($enquiry_id) . "' msg='You are cancelling the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='cancel' class='btn btn-sm btn-red bookingCancelBtn'><i class='fas fa-times-circle'></i> Cancel</a>";
+                            break;
 
-                                case 2:
-                                    echo "<a href='" . base64_encode($enquiry_id) . "' date='" . date('Y-m-d') . "' time='{$enquiry_time}' msg='You want to cancel previous bookings and confirm the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='confirm' class='btn btn-sm btn-blue bookingConfirmBtn'><i class='fas fa-times-circle'></i> Cancel Previous and Confirm</a>";
-                                    break;
+                        case 2:
+                            echo "<a href='" . base64_encode($enquiry_id) . "' date='" . date('Y-m-d') . "' time='{$enquiry_time}' msg='You want to cancel previous bookings and confirm the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='confirm' class='btn btn-sm btn-blue bookingConfirmBtn'><i class='fas fa-times-circle'></i> Cancel Previous and Confirm</a>";
+                            break;
 
-                                default:
-                                    echo "<a href='" . base64_encode($enquiry_id) . "' date='" . date('Y-m-d') . "' time='{$enquiry_time}' msg='You are confirm the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='confirm' class='btn btn-sm btn-green bookingConfirmBtn'><i class='fas fa-times-circle'></i> Confirm</a>";
-                                    echo "<a href='" . base64_encode($enquiry_id) . "' msg='You are cancelling the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='cancel' class='btn btn-sm btn-red bookingCancelBtn'><i class='fas fa-times-circle'></i> Cancel</a>";
-                                    break;
-                            }
+                        default:
+                            echo "<a href='" . base64_encode($enquiry_id) . "' date='" . date('Y-m-d') . "' time='{$enquiry_time}' msg='You are confirm the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='confirm' class='btn btn-sm btn-green bookingConfirmBtn'><i class='fas fa-times-circle'></i> Confirm</a>";
+                            echo "<a href='" . base64_encode($enquiry_id) . "' msg='You are cancelling the pangat booked on " . date('d-M-Y', strtotime($enquiry_time)) . " by " . $enquiry_first_name . "' data='{$enquiry_id}' action='cancel' class='btn btn-sm btn-red bookingCancelBtn'><i class='fas fa-times-circle'></i> Cancel</a>";
+                            break;
+                    }
 
-                            ?>
-            </td>
+                ?>
+            </td> -->
         </tr>
         <?php
 
