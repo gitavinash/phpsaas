@@ -71,13 +71,6 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 
                 ?>
             </select>
-            <select class="form-control" name="slot" id="changeSlot">
-                <option value="">Select booking slot</option>
-                <option value="breakfast" <?php echo (($selectedSlot == 'breakfast') ? 'selected' : '') ?>>Breakfast
-                </option>
-                <option value="lunch" <?php echo (($selectedSlot == 'lunch') ? 'selected' : '') ?>>Lunch</option>
-                <option value="dinner" <?php echo (($selectedSlot == 'dinner') ? 'selected' : '') ?>>Dinner</option>
-            </select>
             <input type="submit" class="btn" value="Filter">
         </form>
     </div>
@@ -88,12 +81,10 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 <table id="table">
     <thead>
         <tr>
-            <th>Booked Date & Slot</th>
-            <th>Booking Time</th>
+            <th>Enquiry Time</th>
             <th>Name</th>
             <th>Mobile</th>
-            <th>Coming?</th>
-            <th>Guest?</th>
+            <th>Message</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -108,13 +99,10 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
         <tr <?php echo (($enquiry_status == 1) ? 'style="background: red; color: #fff"' : '') ?>>
-            <td><?php echo date('d-M-Y', strtotime($enquiry_time)) . ' ' . $enquiry_time; ?></td>
             <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
             <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
             <td><?php echo $enquiry_mobile; ?></td>
-            <td><?php echo ucfirst($enquiry_details); ?></td>
-            <td><?php echo (($enquiry_query != '') ? $enquiry_query : 'No'); ?></td>
-            <td><?php echo (($enquiry_status == 1) ? 'Confirmed' : ((($enquiry_status) == 0) ? 'Pending' : 'Cancelled')); ?>
+            <td><?php echo ucfirst($enquiry_message); ?></td>
             </td>
             <td>
                 <?php
