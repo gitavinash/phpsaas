@@ -75,7 +75,7 @@
 </footer>
 
 <!-- sections end -->
-<?php include_once NOTIFICATION.'index.php' ?>
+<?php include_once NOTIFICATION . 'index.php' ?>
 
 <!--Jquery Cdn-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
