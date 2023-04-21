@@ -1010,7 +1010,6 @@ input[type="number"] {
   width: 100%;
   height: 700px;
   background: #fbeee2;
-  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1409,7 +1408,8 @@ textarea {
     font-size: 16px;
   }
   .singel_product .sm-image-group {
-    height: 122px;
+    width: 100px;
+    height: 100px;
   }
   .filter .colr_div {
     height: 59px;
@@ -1418,7 +1418,8 @@ textarea {
 
 @media (max-width: 1500px) {
   .singel_product .product_image {
-    height: 550px;
+    width: 450px;
+    height: 450px;
   }
 }
 
@@ -1475,7 +1476,8 @@ textarea {
     font-size: 24px;
   }
   .singel_product .product_image {
-    height: 368px;
+    width: 350px;
+    height: 350px;
   }
 }
 
