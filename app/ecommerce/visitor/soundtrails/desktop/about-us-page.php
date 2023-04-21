@@ -131,22 +131,21 @@
                                 <h2 class="accordion-header" id="headingOne">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        What Questions Should I Ask A speaker?
+                                        Official Online/Offline Retailer
                                     </button>
                                 </h2>
                                 <div id="collapseOne" class="accordion-collapse collapse show"
                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <strong>This is the first item's accordion body.</strong>
-                                        It is shown by default, until the collapse plugin adds
-                                        the appropriate classes that we use to style each
-                                        element. These classes control the overall appearance,
-                                        as well as the showing and hiding via CSS transitions.
-                                        You can modify any of this with custom CSS or overriding
-                                        our default variables. It's also worth noting that just
-                                        about any HTML can go within the
-                                        <code>.accordion-body</code>, though the transition does
-                                        limit overflow.
+                                        <p>We are officially partnered authorised retailers with over 40 AV
+                                            manufacturers from around the world and stand behind the authenticity and
+                                            quality of our offerings. As AV enthusiasts ourselves, we use our expertise
+                                            and many years of experience to deliver the best possible home entertainment
+                                            systems.</p>
+                                        <p>Amongst our goals is ensuring that AVStore customers receive the finest, most
+                                            authentic and fun shopping experience online or in-store at our experience
+                                            centre - AVXellence. If anything goes wrong with your new purchase, we will
+                                            be there to fix it.</p>
                                     </div>
                                 </div>
                             </div>
@@ -154,22 +153,20 @@
                                 <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        How Long Will It Be Before I Get A Refund
+                                        Curated Collection
                                     </button>
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <strong>This is the second item's accordion body.</strong>
-                                        It is hidden by default, until the collapse plugin adds
-                                        the appropriate classes that we use to style each
-                                        element. These classes control the overall appearance,
-                                        as well as the showing and hiding via CSS transitions.
-                                        You can modify any of this with custom CSS or overriding
-                                        our default variables. It's also worth noting that just
-                                        about any HTML can go within the
-                                        <code>.accordion-body</code>, though the transition does
-                                        limit overflow.
+                                        <p>When we first got started in the business, we knew we only wanted to showcase
+                                            products that we truly believed in. Our team members spend hours every day
+                                            testing the gear you see on our website so you get the best possible advice
+                                            and recommendations to build your perfect system. Additionally, our
+                                            management team have visited numerous international trade shows and visited
+                                            the manufacturing facilities of many different AV brands to ensure we curate
+                                            a collection of high quality products that are worthy of your time and
+                                            investment.</p>
                                     </div>
                                 </div>
                             </div>
@@ -178,22 +175,17 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseThree" aria-expanded="false"
                                         aria-controls="collapseThree">
-                                        How Long Will It Be Before I Get A Refund
+                                        In-House Experts
                                     </button>
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse"
                                     aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <strong>This is the third item's accordion body.</strong>
-                                        It is hidden by default, until the collapse plugin adds
-                                        the appropriate classes that we use to style each
-                                        element. These classes control the overall appearance,
-                                        as well as the showing and hiding via CSS transitions.
-                                        You can modify any of this with custom CSS or overriding
-                                        our default variables. It's also worth noting that just
-                                        about any HTML can go within the
-                                        <code>.accordion-body</code>, though the transition does
-                                        limit overflow.
+                                        <p>We have been helping audiophiles and videophiles make informed purchase
+                                            decisions for over a decade. We know you spend countless hours researching
+                                            between speakers, headphones, amplifiers etc. to narrow down on the perfect
+                                            one for you. However, that process can get confusing and our in-house team
+                                            of AVXperts are always on hand to help you in your journey,</p>
                                     </div>
                                 </div>
                             </div>

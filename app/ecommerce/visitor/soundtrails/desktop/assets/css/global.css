@@ -741,6 +741,11 @@ main {
   /* margin-top: -76px; */
 }
 
+.testi-img img {
+  width: 150px;
+  height: 150px;
+}
+
 .testi-des {
   color: var(--golden);
   text-transform: capitalize;

@@ -874,93 +874,22 @@
             <div class="row vertical-padding">
 
                 <div class="testi">
-                    <!-- <div class=" col-4 px-2 text-center">
-                            <div class=" py-3 bg-white">
-                            <div>
-                            <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class ="img-fluid d-block m-auto">
-                            
-                            </div>
-                                <div class="t-content py-3">
-                                    <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3">
-                            <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly. 
-                                Item very well described and in great condition.</p>    
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
-                                </div>
-                            </div>
-                            </div>
 
-                        </div>
-                        <div class=" col-4 px-5 text-center">
-                            <div class=" py-3 bg-white">
-                            <div>
-                            <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class ="img-fluid d-block m-auto">
-                            
-                            </div>
-                                <div class="t-content py-3">
-                                    <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3">
-                            <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly. 
-                                Item very well described and in great condition.</p>    
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
-                                </div>
-                            </div>
-                            </div>
-
-                        </div>
-                        <div class=" col-4 px-5 text-center">
-                            <div class=" py-3 bg-white">
-                            <div>
-                            <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class ="img-fluid d-block m-auto">
-                            
-                            </div>
-                                <div class="t-content py-3">
-                                    <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3">
-                            <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly. 
-                                Item very well described and in great condition.</p>    
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
-                                </div>
-                            </div>
-                            </div>
-
-                        </div>
-
-                        <div class=" col-4 px-5 text-center">
-                            <div class=" py-3 bg-white">
-                            <div>
-                            <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt="" class ="img-fluid d-block m-auto">
-                            
-                            </div>
-                                <div class="t-content py-3">
-                                    <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3">
-                            <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly. 
-                                Item very well described and in great condition.</p>    
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
-                                </div>
-                            </div>
-                            </div>
-
-                        </div> -->
-
-                    <div class=" mx-3 p-4 bg-white text-center">
+                    <div class="mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
+                                <img src="<?php echo USER_IMAGES ?>female-avatar.svg" alt=""
                                     class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
                                 <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3 m-auto d-block pt-3">
-                                <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly.
-                                    Item very well described and in great condition.</p>
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
+                                <p class="my-3">With amazingly exclusive brands in home theatre audio, Soundtrails is a
+                                    haven for all quality sound enthusiasts. And shoutout to Sahil, who takes a
+                                    personalised client approach, depending on needs and space, he ensures that you have
+                                    an amazing buying...</p>
+                                <h5>Monisa Nadeem</h5>
+                                <!-- <p class="testi-des"></p> -->
                             </div>
                         </div>
                     </div>
@@ -969,16 +898,18 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
+                                <img src="<?php echo USER_IMAGES ?>male-avatar.svg" alt=""
                                     class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
                                 <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3 m-auto d-block pt-3">
-                                <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly.
-                                    Item very well described and in great condition.</p>
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
+                                <p class="my-3">Great products, very professional service. Owner (Mr. Sahil) is a
+                                    knowledgeable person, spends time to understand your requirements, makes
+                                    recommendations, customises the solution and personally ensures that the setup is
+                                    done as per the...</p>
+                                <h5>Pawan Agarwal</h5>
+                                <!-- <p class="testi-des"></p> -->
                             </div>
                         </div>
                     </div>
@@ -986,16 +917,18 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
+                                <img src="<?php echo USER_IMAGES ?>female-avatar.svg" alt=""
                                     class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
                                 <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3 m-auto d-block pt-3">
-                                <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly.
-                                    Item very well described and in great condition.</p>
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
+                                <p class="my-3">I happened to walk in soundtrails just to enquire about earphones and I
+                                    was amazed! Sahil guided me so well on home theatre systems and sound systems about
+                                    which I was clueless. They have the best brands and know very well about which
+                                    system has...</p>
+                                <h5>Namrata Dalal</h5>
+                                <!-- <p class="testi-des"></p> -->
                             </div>
                         </div>
                     </div>
@@ -1003,37 +936,21 @@
                     <div class=" mx-3 p-4 bg-white text-center">
                         <div>
                             <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
+                                <img src="<?php echo USER_IMAGES ?>male-avatar.svg" alt=""
                                     class="img-fluid d-block m-auto">
 
                             </div>
                             <div class="t-content py-3">
                                 <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3 m-auto d-block pt-3">
-                                <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly.
-                                    Item very well described and in great condition.</p>
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
+                                <p class="my-3">Visited Sahil's Shop recently. Had an amazing experience and
+                                    conversation. Very genuine and helpful individual. Professional dealing. Suggested
+                                    me equipments as per my requirements, loving your suggestions Sahil. Thanks a ton.
+                                    Will see you soon.</p>
+                                <h5>Utkarsh Garg</h5>
+                                <!-- <p class="testi-des"></p> -->
                             </div>
                         </div>
                     </div>
-
-                    <div class=" mx-3 p-4 bg-white text-center">
-                        <div>
-                            <div class="testi-img">
-                                <img src="<?php echo USER_IMAGES ?>Ellipse 10.png" alt=""
-                                    class="img-fluid d-block m-auto">
-
-                            </div>
-                            <div class="t-content py-3">
-                                <img src="<?php echo USER_IMAGES ?>mark.svg" alt="" class="Py-3 m-auto d-block pt-3">
-                                <p class="my-3">Excellent seller. Accommodated a layaway plan and shipped swiftly.
-                                    Item very well described and in great condition.</p>
-                                <h5>jason</h5>
-                                <p class="testi-des">Shop Hipster</p>
-                            </div>
-                        </div>
-                    </div>
-
 
                 </div>
 

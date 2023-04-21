@@ -22,49 +22,36 @@
 
         <div class="contianer-fluid">
             <div class="row vertical-padding">
+
+                <?php
+
+                if ($categoryList = mysqli_query($connection, "SELECT il.link_url, ic.category_image, ic.category_title  FROM " . TABLE_PREFIX . "link il INNER JOIN " . TABLE_PREFIX . "category ic ON ic.category_id = il.link_relation_id WHERE il.link_type = 'category' AND il.link_status = 200 AND link_site_id = " . SITE_ID . " AND ic.category_parent_id = 0 AND ic.category_type='product'")) {
+
+                    if (mysqli_num_rows($categoryList) != 0) {
+
+                        while ($categoryListData = mysqli_fetch_assoc($categoryList)) {
+
+                            extract($categoryListData); ?>
+
                 <div class="col-12 col-md-2 col-lg-3">
-                    <a href="/category/speakers/">
-                        <img src="<?php echo USER_IMAGES ?>image_34.png" alt="" class="d-block m-auto" />
+                    <a href="<?php echo $link_url ?>">
+                        <img src="<?php echo (($category_image != '') ? $category_image : USER_IMAGES . 'image_34.png') ?>"
+                            alt="" class="d-block m-auto" />
                         <div class="cont py-3">
                             <h3 class="text-white font-size-31 px-3">
-                                Speakers
+                                <?php echo $category_title ?>
                             </h3>
                         </div>
                     </a>
                 </div>
 
-                <div class="col-12 col-md-2 col-lg-3">
-                    <a href="/category/audio-components/">
-                        <img src="<?php echo USER_IMAGES ?>image_34.png" alt="" class="d-block m-auto" />
-                        <div class="cont py-3">
-                            <h3 class="text-white font-size-31 px-3">
-                                Audio Components
-                            </h3>
-                        </div>
-                    </a>
-                </div>
+                <?php
+                        }
+                    }
+                }
 
-                <div class="col-12 col-md-2 col-lg-3">
-                    <a href="/category/turntables/">
-                        <img src="<?php echo USER_IMAGES ?>image_34.png" alt="" class="d-block m-auto" />
-                        <div class="cont py-3">
-                            <h3 class="text-white font-size-31 px-3">
-                                Turntables
-                            </h3>
-                        </div>
-                    </a>
-                </div>
+                ?>
 
-                <div class="col-12 col-md-2 col-lg-3">
-                    <a href="/category/pro-audio/">
-                        <img src="<?php echo USER_IMAGES ?>image_34.png" alt="" class="d-block m-auto" />
-                        <div class="cont py-3">
-                            <h3 class="text-white font-size-31 px-3">
-                                Pro Audio
-                            </h3>
-                        </div>
-                    </a>
-                </div>
             </div>
         </div>
     </section>
