@@ -92,7 +92,7 @@
                 </div>
                 <div class="col-12 col-sm-4 cardss mt-sm-4 col-md-4 d-flex justify-content-center text-center">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>vector.png" alt="" class="img-fluid"
+                        <img src="<?php echo USER_IMAGES ?>customers.png" alt="" class="img-fluid"
                             style="padding: 8px 0px" />
                         <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                             578 <span class="goldan-clr">+</span>
