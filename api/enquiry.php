@@ -184,7 +184,5 @@ $email_body = "
 
 require SEND_EMAIL;
 
-exit();
-
 header("Location: " . $redirect_url, TRUE, 301);
 exit();
