@@ -73,7 +73,7 @@ $(document).ready(function() {
 
 			<?php
 
-			if ($_GET['type'] == 'list' || $_GET['type'] == 'single' || $_GET['type'] == 'multiple') { ?>
+			if (@$_GET['type'] == 'list' || @$_GET['type'] == 'single' || @$_GET['type'] == 'multiple') { ?>
 			<script>
 $('#table').DataTable({
     dom: 'Bfrtip',

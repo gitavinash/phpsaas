@@ -150,7 +150,7 @@ if (SITE_ID == 35) {
     mysqli_query($connection, "START TRANSACTION");
 
 
-    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$name}', '{$email}', '{$mobile}', '{$messageDB}', 'enquiry', 1)");
+    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
     $enquiryID = mysqli_insert_id($connection);
 
     if ($addNewEnquiry) {
