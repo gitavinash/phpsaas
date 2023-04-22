@@ -100,6 +100,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
                     extract($data) ?>
         <tr>
             <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
+            <td><?php echo $enquiry_subject; ?></td>
             <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
             <td><?php echo $enquiry_mobile; ?></td>
             <td><?php echo ucfirst($enquiry_message); ?></td>
