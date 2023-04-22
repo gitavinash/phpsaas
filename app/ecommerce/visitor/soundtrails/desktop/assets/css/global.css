@@ -502,6 +502,10 @@ main {
     padding: 20px;
     margin-top: 20px;
   }
+  .categoryImage {
+    height: auto;
+    width: 100%;
+  }
 }
 
 /* contact */
@@ -744,6 +748,11 @@ main {
 .testi-img img {
   width: 150px;
   height: 150px;
+}
+
+.categoryImage {
+  height: 300px;
+  width: auto;
 }
 
 .testi-des {

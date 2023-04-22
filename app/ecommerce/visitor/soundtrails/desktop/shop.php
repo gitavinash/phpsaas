@@ -36,7 +36,7 @@
                 <div class="col-12 col-md-2 col-lg-3">
                     <a href="<?php echo $link_url ?>">
                         <img src="<?php echo (($category_image != '') ? $category_image : USER_IMAGES . 'image_34.png') ?>"
-                            alt="" class="d-block m-auto" />
+                            alt="" class="d-block m-auto categoryImage" />
                         <div class="cont py-3">
                             <h3 class="text-white font-size-31 px-3">
                                 <?php echo $category_title ?>
