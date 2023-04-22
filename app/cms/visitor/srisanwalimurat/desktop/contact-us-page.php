@@ -1,6 +1,6 @@
 <?php
 
-    include_once 'header.php';
+include_once 'header.php';
 
 ?>
 
@@ -20,7 +20,7 @@
                 <textarea name="message" placeholder="Enter Message"></textarea>
                 <input type="hidden" name="type" value="enquiry">
                 <input type="hidden" name="action" value="new">
-                <input type="hidden" name="subject" value="Contact us form">
+                <input type="hidden" name="subject" value="Contact us">
                 <input type="hidden" name="sender" value="c2hyaXNhbndhbGltdXJhdEBnbWFpbC5jb20=">
                 <input type="hidden" name="redirect_url"
                     value="/thank-you/?msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
@@ -51,6 +51,6 @@
 
 <?php
 
-    include_once 'footer.php';
+include_once 'footer.php';
 
 ?>

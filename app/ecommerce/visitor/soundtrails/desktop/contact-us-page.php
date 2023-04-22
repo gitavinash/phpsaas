@@ -30,8 +30,7 @@
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                                 <span class="font-size-40">WhatsApp</span>
                             </h4>
-                            <h4 class="text-white text-center"><a href="tel:+91-9560030646"
-                                    target="_blank"></a>+91-9560030646</h4>
+                            <h4 class="text-white text-center">+91-9560030646</h4>
                         </a>
                     </div>
                 </div>
@@ -42,8 +41,7 @@
                             <h4 class="font-size-57 fw-bold mt-3 text-white text-center my-3">
                                 <span class="font-size-40">Call Us</span>
                             </h4>
-                            <h4 class="text-white text-center"><a href="tel:+91-9560030646"
-                                    target="_blank"></a>+91-9560030646</h4>
+                            <h4 class="text-white text-center">+91-9560030646</h4>
                         </a>
                     </div>
                 </div>
@@ -69,15 +67,21 @@
     <div class="container">
         <div class="row d-flex justify-content-center">
             <div class="col-12 col-md-8">
-                <form action="">
+                <form method="post" action="">
                     <h3 class="text-white text-center">Fill this form to contact us.<br /><br /></h3>
                     <div class="d-flex flex-column">
-                        <input type="text" class="forms" placeholder="Enter Your name" />
+                        <input type="text" class="forms" name="name" placeholder="Enter Your name" />
 
-                        <input type="text" class="forms" placeholder="Enter Your Email" />
-                        <input type="text" class="forms" placeholder="Enter Your phone" />
-                        <textarea name="" id="" cols="30" rows="10" placeholder="Message"></textarea>
+                        <input type="text" class="forms" name="email" placeholder="Enter Your Email" />
+                        <input type="text" class="forms" name="mobile" placeholder="Enter Your phone" />
+                        <textarea name="message" id="" cols="30" rows="10" placeholder="Message"></textarea>
 
+                        <input type="hidden" name="type" value="enquiry">
+                        <input type="hidden" name="action" value="new">
+                        <input type="hidden" name="subject" value="Contact Us">
+                        <input type="hidden" name="sender" value="<?php echo base64_encode('sahil@soundtrails.in') ?>">
+                        <input type="hidden" name="redirect_url"
+                            value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                         <input type="submit" value="Submit" class="submit  text-center" />
                     </div>
                 </form>
