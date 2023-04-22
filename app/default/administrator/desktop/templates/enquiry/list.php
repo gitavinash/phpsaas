@@ -17,9 +17,6 @@ if ($selectedDate != '') {
     $enquiryDate .= (($selectedYear == '') ? '' : " AND year(enquiry_time)={$selectedYear}");
 }
 
-// echo $enquiryDate;
-// exit();
-
 $selectedSlot = mysqli_real_escape_string($connection, ((isset($_GET['slot'])) ? $_GET['slot'] : ''));
 $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'");
 
@@ -92,7 +89,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_time >= CURDATE() {$postStatus} {$enquiryDate} {$enquirySlot} AND enquiry_site_id=" . APP_SITE_ID . " ORDER BY enquiry_time DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id=" . APP_SITE_ID . " {$postStatus} {$enquiryDate} {$enquirySlot} ORDER BY enquiry_time DESC")) {
 
             if (mysqli_num_rows($dataList) != 0) {
 
