@@ -28,7 +28,7 @@
                                 $galleryImages = json_decode($product_gallery, TRUE);
 
                                 if ($galleryImages != '') { ?>
-                            <div class="sm-image-group mt-4 mt-xl-0">
+                            <div class="sm-image-group mt-3 mt-xl-0">
                                 <img src="<?php echo $product_image ?>" class="img-fluid"
                                     alt="<?php echo $product_title ?>" />
                             </div>
@@ -37,7 +37,7 @@
                                     for ($i = 0; $i < sizeof($galleryImages); $i++) {
 
                                         extract($galleryImages[$i]); ?>
-                            <div class="sm-image-group mt-4">
+                            <div class="sm-image-group mt-3">
                                 <img src="<?php echo $path ?>" class="img-fluid" alt="<?php echo $name ?>" />
                             </div>
                             <?php
@@ -62,7 +62,7 @@
                                                     if ($galleryImages != '') {
 
                                                 ?>
-                                <div class="sm-image-group mt-4 mt-xl-0 mx-3">
+                                <div class="sm-image-group mt-3 mt-xl-0 mx-3">
                                     <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
                                         alt="<?php echo $name ?>" />
                                 </div>
@@ -71,7 +71,7 @@
                                                         for ($i = 0; $i < sizeof($galleryImages); $i++) {
 
                                                             extract($galleryImages[$i]); ?>
-                                <div class="sm-image-group mt-4 mt-xl-0 mx-3">
+                                <div class="sm-image-group mt-3 mt-xl-0 mx-3">
                                     <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
                                         alt="<?php echo $name ?>" />
                                 </div>
