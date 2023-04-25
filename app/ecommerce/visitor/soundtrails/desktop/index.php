@@ -139,32 +139,34 @@
 
                                         <?php
 
-                                        if ($allProductList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND product_site_id = " . SITE_ID . " AND link_status=200 ORDER BY RAND() LIMIT 0,4")) {
+                                        if ($allProductList = mysqli_query($connection, "SELECT link_url, product_image, product_title, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND product_site_id = " . SITE_ID . " AND link_status=200 ORDER BY RAND() LIMIT 0,4")) {
 
                                             if (mysqli_num_rows($allProductList) != 0) {
                                                 while ($productData = mysqli_fetch_assoc(($allProductList))) {
                                                     extract($productData) ?>
 
                                         <div class="col-12 col-sm-6 col-md-6 col-xl-6 col-xxl-3 products-list">
-                                            <img src="<?php echo $product_image ?>" alt=""
-                                                class="img-fluid mx-auto d-block " />
-                                            <div class="product-details">
-                                                <p class="text-white font-size-20 font-family-sans text-center">
-                                                    <?php echo $product_title ?>
-                                                </p>
-                                            </div>
-                                            <div class="rating-price d-flex justify-content-around">
-                                                <div class="price text-white font-size-20 font-family-sans ">
-                                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?>
+                                            <a href="<?php echo $link_url ?>">
+                                                <img src="<?php echo $product_image ?>" alt=""
+                                                    class="img-fluid mx-auto d-block " />
+                                                <div class="product-details">
+                                                    <p class="text-white font-size-20 font-family-sans text-center">
+                                                        <?php echo $product_title ?>
+                                                    </p>
                                                 </div>
-                                                <!-- <div class="rating d-flex">
+                                                <div class="rating-price d-flex justify-content-around">
+                                                    <div class="price text-white font-size-20 font-family-sans ">
+                                                        <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?>
+                                                    </div>
+                                                    <!-- <div class="rating d-flex">
                                                     <i class="fa-solid fa-star"></i>
                                                     <i class="fa-solid fa-star"></i>
                                                     <i class="fa-solid fa-star"></i>
                                                     <i class="fa-solid fa-star"></i>
                                                     <i class="fa-solid fa-star"></i>
                                                 </div> -->
-                                            </div>
+                                                </div>
+                                            </a>
                                         </div>
                                         <?php
                                                 }
