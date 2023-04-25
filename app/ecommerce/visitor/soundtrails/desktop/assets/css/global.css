@@ -1231,14 +1231,14 @@ textarea {
 input:focus,
 textarea:focus {
   color: #777;
-  border-bottom: 3px solid rgba(0, 161, 217, 1);
+  border-bottom: 1px solid rgba(0, 161, 217, 1);
   opacity: 1;
   text-indent: 0;
 }
 
 input[type="url"]:focus {
   color: #777;
-  border-bottom: 3px solid rgba(0, 161, 217, 1) !important;
+  border-bottom: 1px solid rgba(0, 161, 217, 1) !important;
   opacity: 1;
   text-indent: 0;
 }
