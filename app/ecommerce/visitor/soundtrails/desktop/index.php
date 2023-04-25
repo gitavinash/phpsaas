@@ -99,7 +99,7 @@
                                 </div>
                             </div> -->
 
-                        <ul class="nav nav-pills d-flex justify-content-center d-none d-md-flex " id="pills-tab"
+                        <!-- <ul class="nav nav-pills d-flex justify-content-center d-none d-md-flex " id="pills-tab"
                             role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="product-data" data-bs-toggle="pill"
@@ -128,7 +128,7 @@
                                     data-bs-target="#Homecinema" type="button" role="tab" aria-controls="pills-contact"
                                     aria-selected="false">Home cinema</button>
                             </li>
-                        </ul>
+                        </ul> -->
 
                         <div class="tab-content" id="myTabContent">
 
