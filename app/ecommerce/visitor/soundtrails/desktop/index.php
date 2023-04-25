@@ -139,7 +139,7 @@
 
                                         <?php
 
-                                        if ($allProductList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND link_status=200 ORDER BY RAND() LIMIT 0,4")) {
+                                        if ($allProductList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND product_site_id = " . SITE_ID . " AND link_status=200 ORDER BY RAND() LIMIT 0,4")) {
 
                                             if (mysqli_num_rows($allProductList) != 0) {
                                                 while ($productData = mysqli_fetch_assoc(($allProductList))) {
