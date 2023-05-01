@@ -118,7 +118,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             <?php
                         } else {
                             $missData = json_decode($enquiry_message, TRUE);
-                            print_r($missData);
+
                             if (isset($missData['dateOfBirth'])) {
                                 echo "<td>{$missData['dateOfBirth']} {$missData['hourOfBirth']}:{$missData['minuteOfBirth']}</td>";
                                 echo "<td>{$missData['placeOfBirth']}</td>";
