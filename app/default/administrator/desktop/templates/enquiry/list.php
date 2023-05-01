@@ -82,7 +82,18 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             <th>Enquiry For</th>
             <th>Name</th>
             <th>Mobile</th>
-            <th>Message</th>
+            <?php
+
+            if (SITE_ID != 35) {
+                echo "<th>Message</th>";
+            } else {
+                echo "<th>Date & Time of Birth</th>";
+                echo "<th>Place of Birth</th>";
+                echo "<th>Others</th>";
+            }
+
+            ?>
+
             <!-- <th></th> -->
         </tr>
     </thead>
@@ -100,7 +111,26 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             <td><?php echo $enquiry_subject; ?></td>
             <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
             <td><?php echo $enquiry_mobile; ?></td>
+            <?php
+
+                        if (SITE_ID != 35) { ?>
             <td><?php echo ucfirst($enquiry_message); ?></td>
+            <?php
+                        } else {
+                            $missData = json_decode($enquiry_message, TRUE);
+                            print_r($missData);
+                            if (isset($missData['dateOfBirth'])) {
+                                echo "<td>{$missData['dateOfBirth']} {$missData['hourOfBirth']}:{$missData['minuteOfBirth']}</td>";
+                                echo "<td>{$missData['placeOfBirth']}</td>";
+                                echo "<td></td>";
+                            } else {
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td>{$missData['message']}</td>";
+                            }
+                        }
+
+                        ?>
             <!-- <td>
                 <?php
 
