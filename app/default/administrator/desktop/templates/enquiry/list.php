@@ -6,11 +6,11 @@ $selectedMonth = mysqli_real_escape_string($connection, ((isset($_GET['month']))
 $selectedYear = mysqli_real_escape_string($connection, ((isset($_GET['year'])) ? $_GET['year'] : date('Y')));
 
 $selectedDate = mysqli_real_escape_string($connection, ((isset($_GET['date'])) ? $_GET['date'] : ''));
-// $yearStatus=(($selectedDate=='') ? '' : "AND year(enquiry_time) = {$selectedDate}" );
+$yearStatus = (($selectedDate == '') ? '' : "AND year(enquiry_time) = {$selectedDate}");
 
 if ($selectedDate != '') {
 
-    $enquiryDate = "AND enquiry_time='" . date("{$selectedYear}-{$selectedMonth}-{$selectedDate}") . "'";
+    $enquiryDate = "AND enquiry_time BETWEEN '" . date("{$selectedYear}-{$selectedMonth}-{$selectedDate} 00:00:00") . "' AND '" . date("{$selectedYear}-{$selectedMonth}-{$selectedDate} 23:59:59") . "'";
 } else {
 
     $enquiryDate = (($selectedMonth == '') ? '' : " AND month(enquiry_time)={$selectedMonth}");
