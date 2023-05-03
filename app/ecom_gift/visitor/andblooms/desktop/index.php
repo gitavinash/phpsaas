@@ -90,7 +90,7 @@ include_once 'header.php';
 
             <div class="col-md-12">
                 <div class="head-1">
-                    <a>
+                    <a href="/shop/">
                         <h2>New Collection</h2>
                     </a>
                     <span class="cart-bodr-h2"></span>
