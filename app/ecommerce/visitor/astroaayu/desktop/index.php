@@ -176,7 +176,7 @@ require_once 'header.php';
                 <label for="time" class="form-label form_label2 p-0">Time Of Birth</label>
                 <div class="col-6 col-sm-6 mb-3 mb-sm-3 pe-1 pe-sm-2">
 
-                    <select name="timeOfBirthHour" class="form-select form_select form_control" id="time">
+                    <select name="hourOfBirth" class="form-select form_select form_control" id="time">
                         <option value="" disabled="" selected="">HH</option>
                         <option value="00">00 (12 midnight)</option>
                         <option value="01">01 (am)</option>
@@ -205,7 +205,7 @@ require_once 'header.php';
                     </select>
                 </div>
                 <div class="col-6 col-sm-6 mb-3 mb-sm-3 ps-1 ps-sm-2">
-                    <select name="timeOfBirthMinutes" class="form-select form_select ">
+                    <select name="minuteOfBirth" class="form-select form_select ">
                         <option value="">MM</option>
                         <option value="00">00</option>
                         <option value="01">01</option>

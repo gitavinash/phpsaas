@@ -87,9 +87,10 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
             if (SITE_ID != 35) {
                 echo "<th>Message</th>";
             } else {
-                echo "<th>Date & Time of Birth</th>";
+                echo "<th>Date of Birth</th>";
+                echo "<th>Time of Birth</th>";
                 echo "<th>Place of Birth</th>";
-                echo "<th>Others</th>";
+                echo "<th>Message</th>";
             }
 
             ?>
@@ -119,15 +120,10 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
                         } else {
                             $missData = json_decode($enquiry_message, TRUE);
 
-                            if (isset($missData['dateOfBirth'])) {
-                                echo "<td>{$missData['dateOfBirth']} {$missData['hourOfBirth']}:{$missData['minuteOfBirth']}</td>";
-                                echo "<td>{$missData['placeOfBirth']}</td>";
-                                echo "<td></td>";
-                            } else {
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td>{$missData['message']}</td>";
-                            }
+                            echo "<td>" . ((isset($missData['dateOfBirth'])) ? $missData['dateOfBirth'] : '') . "</td>";
+                            echo "<td>" . ((isset($missData['hourOfBirth'])) ? $missData['hourOfBirth'] . ':' . $missData['minuteOfBirth'] : '') . "</td>";
+                            echo "<td>" . ((isset($missData['placeOfBirth'])) ? $missData['placeOfBirth'] : '') . "</td>";
+                            echo "<td>" . ((isset($missData['message'])) ? $missData['message'] : '') . "</td>";
                         }
 
                         ?>

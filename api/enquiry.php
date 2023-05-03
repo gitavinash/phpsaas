@@ -47,13 +47,6 @@ if (isset($mobile)) {
     unset($_REQUEST['mobile']);
 }
 
-if (isset($message)) {
-
-    // Remove message varible from array
-
-    unset($_REQUEST['message']);
-}
-
 if (isset($source)) {
 
     // Remove enquiry source varible from array
@@ -135,11 +128,11 @@ $subject = $subject;
 unset($enquiryMeta['redirect_url']);
 unset($enquiryMeta['subject']);
 
-$message = '';
+$messageForm = '';
 
 foreach ($enquiryMeta as $key => $value) {
 
-    $message .= "<strong>{$key} : </strong> $value<br />";
+    $messageForm .= "<strong>{$key} : </strong> $value<br />";
 }
 
 $messageDB = json_encode($enquiryMeta, TRUE);
@@ -177,7 +170,7 @@ $email_body = "
         </tr>
         <tr>
             <td>Message: </td>
-            <td>{$message}</td>
+            <td>{$messageForm}</td>
         </tr>
     </table>
     ";

@@ -30,8 +30,8 @@
                                 placeholder="Your Email" name="email" />
                         </div>
                         <div class="col-12 mb-3 mb-sm-4 p-0">
-                            <textarea class="form-control form_control3" id="exampleFormControlTextarea1" name="message"
-                                rows="6" placeholder="Your Message"></textarea>
+                            <textarea class="form-control form_control3" name="message" rows="6"
+                                placeholder="Your Message"></textarea>
                         </div>
 
                         <input type="hidden" name="type" value="enquiry">
