@@ -8,9 +8,11 @@ include_once 'header.php';
     <div class="container-fluid">
         <div class="row">
             <div class="card-ban">
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/1.png"></div>
+                <div class="slider"><a href="/tag/mother/"><img src="<?php echo USER_IMAGES ?>banner/1.png"></a></div>
                 <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/2.png"></div>
                 <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/3.png"></div>
+                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/4.png"></div>
+                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/5.png"></div>
             </div>
         </div>
     </div>
