@@ -343,7 +343,7 @@
                                     <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff"
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"><b>Blooms of
-                                                <?php echo strtolower(date('F')) ?></b></a>
+                                                <?php echo date('F') ?></b></a>
                                     </li>
                                     <!-- <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/mother/"><b>Mother's
