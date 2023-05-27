@@ -135,7 +135,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="web-detail dn-s">
-                            <p>Latest Update: Delivery Available in selected Cities</p>
+                            <p>Latest Update: Delivery available in Delhi NCR & Kolkata only</p>
                             <!-- <p><span class="material-icons">email</span></p> -->
                         </div>
 
