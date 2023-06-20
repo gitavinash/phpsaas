@@ -218,9 +218,9 @@ form = $("#test");
 close = $(".closep");
 
 //event listeners
-form.addEventListener("click", testfunc, true);
+// form.addEventListener("click", testfunc, true);
 var r = document.getElementById("contactform");
-r.style.display = "none";
+// r.style.display = "none";
 function testfunc() {
   if (r.style.display == "none") {
     r.style.display = "block";
@@ -229,7 +229,7 @@ function testfunc() {
   }
 }
 
-close.addEventListener("click", closefunc, true);
+// close.addEventListener("click", closefunc, true);
 var r = document.getElementById("contactform");
 
 function closefunc() {

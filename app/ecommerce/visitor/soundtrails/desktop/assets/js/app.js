@@ -19,13 +19,13 @@ function popUpMessage(msgPostion, msgTxt, msgType) {
   });
 }
 
-serachIcon.addEventListener("click", () => {
-  serachBox.classList.toggle("active");
-});
+// serachIcon.addEventListener("click", () => {
+//   serachBox.classList.toggle("active");
+// });
 
-serachCross.addEventListener("click", () => {
-  serachBox.classList.remove("active");
-});
+// serachCross.addEventListener("click", () => {
+//   serachBox.classList.remove("active");
+// });
 
 //
 
@@ -41,9 +41,9 @@ allimg.forEach((el) => {
 let navBtn = document.querySelector(".navbar-global .mobile-tpggle");
 let mobliemenu = document.querySelector(".side-nav");
 
-navBtn.addEventListener("click", () => {
-  mobliemenu.classList.toggle("active");
-});
+// navBtn.addEventListener("click", () => {
+//   mobliemenu.classList.toggle("active");
+// });
 
 /** Add to cart */
 
