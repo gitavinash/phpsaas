@@ -312,6 +312,8 @@
                                                 <a class="dropdown-item" href="/category/flower/">Fresh Flowers</a>
                                                 <a class="dropdown-item" href="/category/artistic-artificial/">Artistic
                                                     Artificial</a>
+                                                <a class="dropdown-item" href="/tag/everlasting/">Infinity Everlasting
+                                                    Flowers</a>
                                             </div>
                                         </div>
                                     </li>
@@ -355,9 +357,6 @@
                                         </div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/tag/everlasting/">Infinity Everlasting Flowers</a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="nav-link" href="/category/planters/">Planters</a>
                                     </li>
                                     <li class="nav-item">
@@ -365,15 +364,15 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <!-- <li class="nav-item " style="background: #F19EB5;">
+                                    <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff"
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"><b>Blooms of
                                                 <?php echo date('F') ?></b></a>
-                                    </li> -->
-                                    <li class="nav-item " style="background: #F19EB5;">
+                                    </li>
+                                    <!-- <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/father/"><b>Father's
                                                 Day</b></a>
-                                    </li>
+                                    </li> -->
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
