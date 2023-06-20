@@ -79,11 +79,11 @@
         <div class="container-fluid">
             <div class="row p-0">
                 <h5 class="text-center font-dancing font-size-31" style="color: var(--golden)">
-                    Treding Product
+                    Trending Product
                 </h5>
 
                 <h3 class="text-center font-size-57 font-work-sans text-white">
-                    Our produts
+                    Our Products
                 </h3>
 
                 <div class="container-fluid tabs  ">
@@ -631,11 +631,11 @@
 <section class="vertical-padding sidepadding ">
     <div class="container-fluid">
         <h5 class="text-center font-dancing font-size-31" style="color: var(--golden)">
-            FEATURE PRODUCT
+            Feature Products
         </h5>
 
         <h3 class="text-center font-size-57  text-white">
-            Best collections
+            Best Collections
         </h3>
         <div class="row products my-5">
 
