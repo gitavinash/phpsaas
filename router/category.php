@@ -39,7 +39,8 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				}
 			}
 
-			$sortBy = 'link_is_featured, link_published DESC';
+			// $sortBy = 'link_is_featured, link_published DESC';
+			$sortBy = 'link_published DESC';
 
 			if (isset($_GET['sort'])) {
 

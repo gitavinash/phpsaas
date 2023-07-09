@@ -73,7 +73,8 @@ if (is_array($tagPost)) {
 
             <?php
 
-                $sortBy = 'link_is_featured, link_published DESC';
+                // $sortBy = 'link_is_featured, link_published DESC';
+                $sortBy = 'link_published DESC';
 
                 if (isset($_GET['sort'])) {
 
