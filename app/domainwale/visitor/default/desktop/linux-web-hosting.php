@@ -1,7 +1,5 @@
 <?php
 
-header("Location: https://rzp.io/l/linux-web-hosting", TRUE, 301);
-
 require_once 'header.php';
 
 ?>
