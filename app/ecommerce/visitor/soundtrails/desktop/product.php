@@ -181,8 +181,8 @@
                     <div class="tabs_div active_div">
                         <p>DESCRIPTION</p>
                     </div>
-                    <div class="py-3">
-                        <p class="productDescription"><?php echo $product_description ?></p>
+                    <div class="productDescription py-3">
+                        <?php echo $product_description ?>
                     </div>
                 </div>
                 <!-- <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3 my-3 mt-xl-0">
