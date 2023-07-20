@@ -102,13 +102,22 @@
 
                 <div class="product_details">
                     <div>
-                        <p>Brand: <a href="<?php echo $brandURL ?>"><?php echo $brandName ?></a></p>
+                        <p><strong>Brand:</strong> <a href="<?php echo $brandURL ?>"><?php echo $brandName ?></a></p>
                     </div>
                     <div>
-                        <p>Product Code: <?php echo $inventory_sku ?></p>
+                        <p><strong>Product Code:</strong> <?php echo $inventory_sku ?></p>
                     </div>
                     <div>
-                        <p>Availability: <?php echo (($inventory_in_stock == 1) ? 'In stock' : 'Out off stock') ?></p>
+                        <p><strong>Availability:</strong>
+                            <?php echo (($inventory_in_stock == 1) ? 'In stock' : 'Out off stock') ?></p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="product_details">
+                        <div>
+                            <p><strong>Highlights: </strong></p>
+                            <p><?php echo $product_highlight ?></p>
+                        </div>
                     </div>
                 </div>
                 <div class="price_div py-3 mt-4 prive_top_bodder">
@@ -116,10 +125,17 @@
                         <h4>₹
                             <?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $inventory_price); ?>/-
                         </h4>
+                        <?php
+
+                        if ($inventory_price != $inventory_mrp) { ?>
                         <p class="ms-5 line">
                             ₹
                             <?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $inventory_mrp); ?>/-
                         </p>
+                        <?php
+                        }
+
+                        ?>
                     </div>
                 </div>
 
@@ -158,30 +174,33 @@
     </section>
     <!-- single product -->
 
-    <!-- <section class="product_discription sidepadding">
-      <div class="container-fluid py-5">
-        <div class="row gx-0 justify-content-center justify-content-xxl-start">
-          <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3">
-            <div class="tabs_div active_div">
-              <p>DESCRIPTION</p>
+    <section class="product_discription sidepadding">
+        <div class="container-fluid py-5">
+            <div class="row gx-0 justify-content-center justify-content-xxl-start">
+                <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3">
+                    <div class="tabs_div active_div">
+                        <p>DESCRIPTION</p>
+                    </div>
+                    <div class="py-3">
+                        <p class="productDescription"><?php echo $product_description ?></p>
+                    </div>
+                </div>
+                <!-- <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3 my-3 mt-xl-0">
+                    <div class="tabs_div ">
+                        <p>CUSTOMER REVIEWS</p>
+                    </div>
+                </div> -->
+                <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3">
+                    <div class="tabs_div ">
+                        <p>SHIPPING & RETURNS</p>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3 my-3 mt-xl-0">
-            <div class="tabs_div ">
-              <p>CUSTOMER REVIEWS</p>
-            </div>
-          </div>
-          <div class="col-12 col-sm-12 col-md-10 col-xl-4 col-xxl-3">
-            <div class="tabs_div ">
-              <p>SHIPPING & RETURNS</p>
-            </div>
-          </div>
         </div>
-      </div>
-      </div>
-    </section> -->
+        </div>
+    </section>
 
-    <section class="products-section pb-5 mb-5 mt-4 mt-xxl-0">
+    <!-- <section class="products-section pb-5 mb-5 mt-4 mt-xxl-0">
         <div class="container-fluid">
             <div class="row align-items-center">
                 <div class="col-12 col-sm-12 col-md-12 col-xl-6 text-center text-xl-start">
@@ -255,9 +274,9 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <section class="spec sidepadding py-5">
+    <!-- <section class="spec sidepadding py-5">
         <div class="container-fluid table">
             <div class="row">
                 <div class="col-12 border_bottom py-4 px-4">
@@ -444,9 +463,9 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <section class="vertical-padding sidepadding">
+    <!-- <section class="vertical-padding sidepadding">
         <div class="container-fluid">
             <div class="row">
                 <h5 class="text-center font-dancing font-size-31" style="color: var(--golden)">
@@ -544,7 +563,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 </main>
 
 <!-- treding product -->

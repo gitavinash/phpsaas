@@ -1812,3 +1812,8 @@ nav input {
   font-size: 45px;
   font-weight: 600;
 }
+
+.productDescription {
+  color: #ffffff !important;
+  line-height: 28px;
+}

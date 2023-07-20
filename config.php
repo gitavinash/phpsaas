@@ -12,7 +12,7 @@ if (DEVELOPMENT_MODE == true) {
 
 	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
 	define('DB_USER', 'root');		// database username ex :- root
-	define('DB_PASS', '12345');		// datapase user password :- 12345
+	define('DB_PASS', '');		// datapase user password :- 12345
 	define('DB_NAME', 'isw');		// database name ex :- cms_db
 	define('MONGO_DB_CONNECTION_URL', 'mongodb://localhost:27017/');		// MongoDB Connection URL
 
