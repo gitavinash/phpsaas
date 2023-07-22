@@ -13,31 +13,16 @@
                     <option value="csv">CSV</option>
                 </select>
             </div>
-            <div id="importCategoryBox" class="form-group" style="display:none">
-                <label>Step 2</label>
-                <select name="categoryID" id='importCategory' class='form-control inside-shadow' required>
-                    <option value="">Select product category</option>
-                    <?php
-                    if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_id=link_relation_id AND link_type='category' AND meta_relation_id=link_id AND category_type='{$type}' AND category_site_id='" . SITE_ID . "' AND link_status=200 ORDER BY category_title ASC")) {
-                        if (mysqli_num_rows($categoryList) != 0) {
-                            while ($categoryData = mysqli_fetch_assoc($categoryList)) {
-                                echo "<option value='{$categoryData['category_id']}_{$categoryData['link_url']}'>{$categoryData['category_title']}</option>";
-                            }
-                        } else {
-                            echo "<option>Please add new product category</option>";
-                        }
-                    }
-                    ?>
-                </select>
-            </div>
 
             <div id='importFileBox' style="display:none" class='import-box'>
-                <label style="float: left; margin-bottom: 10px">Step 3</label>
+                <label style="float: left; margin-bottom: 10px">Step 2</label>
                 <div class='import-file-box'>
                     <div class="form-group">
                         <label>Upload product csv file</label>
-                        <input type="file" id='importFile' name='importFile' class='form-control inside-shadow'
-                            required>
+                        <input type="file" id='importFile' name='importFile' class='form-control inside-shadow' required>
+                        <label><a href="https://docs.google.com/spreadsheets/d/1w2-uVc5hcGcqg4SwIoxVm9VhfY8LwD908HqfHrBd2NE/edit?usp=sharing" target="_blank"><span>Click
+                                    here to download
+                                    sample product import file</span></a></label>
                     </div>
                 </div>
             </div>

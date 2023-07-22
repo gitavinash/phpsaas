@@ -38,9 +38,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
-                                alt=""></div>
+                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
                     </a>
                     <ul>
                         <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
@@ -55,8 +53,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
-                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li <?php echo ((ADMIN_BASE_URL == '/product/') ? 'class="active"' : '') ?>>
                     <a href="product/?type=list&status=all"><i class="fas fa-box-open"></i> Product</a>
                     <div class="side-menu">
@@ -221,8 +218,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
-                            <li><a href="setting/?type=sliders"><i class="fas fa-images"></i>
-                                    Sliders</a></li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change password</a></li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <!-- <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
@@ -233,8 +228,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
-                            <li><a href="setting/?type=sliders"><i class="fas fa-images"></i>
-                                    Sliders</a></li>
                             <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <!-- <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->

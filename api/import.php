@@ -7,77 +7,71 @@ $success = 0;
 $failed = 0;
 $dublicate = 0;
 
-if ($categoryID != '') {
+if ($_FILES['importFile']['error'] == 0) {
 
-    if ($_FILES['importFile']['error'] == 0) {
+    $extension = explode('.', $_FILES['importFile']['name']);
+    $extension = end($extension);
 
-        $extension = explode('.', $_FILES['importFile']['name']);
-        $extension = end($extension);
+    $validCSV = array(
+        'text/csv',
+        'text/plain',
+        'application/csv',
+        'text/comma-separated-values',
+        'application/excel',
+        'application/vnd.ms-excel',
+        'application/vnd.msexcel',
+        'text/anytext',
+        'application/octet-stream',
+        'application/txt'
+    );
 
-        $validCSV = array(
-            'text/csv',
-            'text/plain',
-            'application/csv',
-            'text/comma-separated-values',
-            'application/excel',
-            'application/vnd.ms-excel',
-            'application/vnd.msexcel',
-            'text/anytext',
-            'application/octet-stream',
-            'application/txt'
-        );
+    /* Default upload path directory of image */
 
-        /* Default upload path directory of image */
+    $uploadPath = ROOT . '/upload/' . date('Y/m/');
 
-        $uploadPath = ROOT . '/upload/' . date('Y/m/');
+    if (!is_dir($uploadPath)) {
 
-        if (!is_dir($uploadPath)) {
+        mkdir($uploadPath, 0755, true);
 
-            mkdir($uploadPath, 0755, true);
+        /* Creating original image directory inside default upload directory */
 
-            /* Creating original image directory inside default upload directory */
+        mkdir($originalUploadDir, 0755, true);
 
-            mkdir($originalUploadDir, 0755, true);
+        /* Creating thumbnail image directory inside default upload directory */
 
-            /* Creating thumbnail image directory inside default upload directory */
+        mkdir($thumbnailUploadDir, 0755, true);
+    }
 
-            mkdir($thumbnailUploadDir, 0755, true);
-        }
+    /** Check file extension is csv or not */
 
-        /** Check file extension is csv or not */
+    if ($extension == 'csv' && (in_array($_FILES['importFile']['type'], $validCSV))) {
 
-        if ($extension == 'csv' && (in_array($_FILES['importFile']['type'], $validCSV))) {
+        $openFile = fopen($_FILES['importFile']['tmp_name'], 'r');
 
-            $openFile = fopen($_FILES['importFile']['tmp_name'], 'r');
+        $importAppModuleFile = MODULES . 'import/' . $action . '/' . SITE_APP . '/' . $importFrom . '.php';
 
-            $importAppModuleFile = MODULES . 'import/' . $action . '/' . SITE_APP . '/' . $importFrom . '.php';
-
-            if (file_exists($importAppModuleFile)) {
-                require_once $importAppModuleFile;
-            } else {
-
-                $importModuleFile = MODULES . 'import/' . $action . '/' . $importFrom . '.php';
-
-                if (file_exists($importModuleFile)) {
-
-                    require_once $importModuleFile;
-                } else {
-
-                    $status = 'warning';
-                    $msg = 'Please select a valid import method';
-                }
-            }
+        if (file_exists($importAppModuleFile)) {
+            require_once $importAppModuleFile;
         } else {
 
-            $msg = 'Please upload a valid csv file';
+            $importModuleFile = MODULES . 'import/' . $action . '/' . $importFrom . '.php';
+
+            if (file_exists($importModuleFile)) {
+
+                require_once $importModuleFile;
+            } else {
+
+                $status = 'warning';
+                $msg = 'Please select a valid import method';
+            }
         }
     } else {
 
-        $msg = 'Something is wrong while uploading CSV';
+        $msg = 'Please upload a valid csv file';
     }
 } else {
 
-    $msg = 'Please select category';
+    $msg = 'Something is wrong while uploading CSV';
 }
 
 $result = array(

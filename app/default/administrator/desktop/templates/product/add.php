@@ -40,6 +40,7 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                 <h3>Product Details</h3>
                 <ul class='tabs'>
                     <li id="productGeneral" class='active'>General</li>
+                    <li id="productSpecifications">Specifications</li>
                     <li id="productInventory">Inventory</li>
                     <li id="productShipping">Shipping</li>
                     <li id="productGallery">Gallery</li>
@@ -55,6 +56,9 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <div class="box-1">
                         <input type="checkbox" name="sell_online" value=0> Product is only for display purposes.
                     </div>
+                </div>
+                <div class="productSpecifications generalTab">
+
                 </div>
                 <div class="productInventory generalTab" style="display: none;">
 
