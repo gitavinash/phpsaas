@@ -1681,13 +1681,13 @@ ul.drop-menu {
     position: fixed;
     height: 100vh;
     width: 100%;
-    max-width: 350px;
     top: 0;
     left: -100%;
     background: #242526;
     display: block;
     padding: 50px 10px;
     line-height: 50px;
+    z-index: 999;
     overflow-y: auto;
     box-shadow: 0px 15px 15px rgba(0, 0, 0, 0.18);
     transition: all 0.3s ease;
@@ -1712,10 +1712,12 @@ ul.drop-menu {
     display: block;
   }
   .nav-links li {
-    margin: 15px 10px;
+    margin: 10px 0px;
+    float: left;
+    width: 100%;
   }
   .nav-links li a {
-    padding: 0 20px;
+    padding: 0px 0px 0px 20px;
     display: block;
     font-size: 20px;
   }
