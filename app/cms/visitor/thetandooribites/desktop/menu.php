@@ -1,6 +1,6 @@
 <?php
 
-  require_once 'header.php';
+require_once 'header.php';
 
 ?>
 
@@ -23,10 +23,10 @@
     <div class="container">
         <div class="row">
             <div class="col-12 col-lg-6">
-                <img src="<?php echo USER_IMAGES ?>menu2.jpg" alt="" class="img-fluid  my-4 my-lg-0">
+                <img src="<?php echo USER_IMAGES ?>menu1.jpg" alt="" class="img-fluid  my-4 my-lg-0">
             </div>
             <div class="col-12 col-lg-6">
-                <img src="<?php echo USER_IMAGES ?>menu1.jpg" alt="" class="img-fluid  my-4 my-lg-0">
+                <img src="<?php echo USER_IMAGES ?>menu2.jpg" alt="" class="img-fluid  my-4 my-lg-0">
             </div>
         </div>
     </div>
@@ -34,6 +34,6 @@
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
