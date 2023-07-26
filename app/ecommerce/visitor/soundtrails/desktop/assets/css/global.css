@@ -1883,3 +1883,9 @@ nav input {
     min-height: 100px;
   }
 }
+
+.product_discription img {
+  float: left;
+  max-width: 100%;
+  padding: 20px 0px;
+}
