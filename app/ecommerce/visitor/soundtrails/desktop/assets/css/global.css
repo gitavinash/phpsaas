@@ -1,4 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=IBM+Plex+Sans+Thai+Looped:wght@300;400;500;600;700&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap");
+@font-face {
+  font-family: "MS London";
+  src: url("../fonts/ms_london_bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gill Sans";
+  src: url("../fonts/gill_sans.ttc") format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -23,14 +31,13 @@ a:hover {
   --font-31: 1.8rem;
   --font-52: 3rem;
   --heading1: 5.7rem;
-  --font-ibm: "IBM Plex Sans Thai Looped", sans-serif;
-  --font-dancing: "Dancing Script", cursive;
-  --font-work-sans: "Work Sans', sans-serif";
+  --font-heading: "MS London";
+  --font-paragraph: "Gill Sans";
 }
 
 body {
   background: #000;
-  font-family: var(--font-ibm);
+  font-family: var(--font-paragraph);
 }
 
 .sidepadding {
@@ -64,15 +71,15 @@ body {
   color: var(--golden);
 }
 .fontibm {
-  font-family: var(--font-ibm);
+  font-family: var(--font-heading);
 }
 
-.font-dancing {
-  font-family: var(--font-dancing);
+.font-paragraph {
+  font-family: var(--font-paragraph);
 }
 
-.font-work-sans {
-  font-family: var(--font-work-sans);
+.font-paragraph {
+  font-family: var(--font-paragraph);
 }
 
 .font-size-31 {
@@ -81,7 +88,6 @@ body {
 
 .font-size-40 {
   font-size: 35px;
-  font-weight: 500;
 }
 
 .font-size-57 {
@@ -95,7 +101,7 @@ body {
   font-size: 1.563rem;
 }
 .font-family-sans {
-  font-family: var(--font-work-sans);
+  font-family: var(--font-paragraph);
 }
 
 /* common */
@@ -116,13 +122,11 @@ body {
 }
 .global-btn {
   margin: 0 30px;
-
   border: none;
   background: var(--golden);
   color: #fff;
   border-radius: 20px;
-  font-family: var(--font-work-sans);
-  font-weight: 500;
+  font-family: var(--font-paragraph);
   transition: 0.3s ease;
   outline: none;
 }
@@ -262,13 +266,12 @@ main {
 
 .product_banner_section h5 {
   color: var(--white);
-  font-family: "Work Sans";
+  font-family: var(--font-paragraph);
   font-size: 24px;
 }
 
 .product_banner_section span {
   color: var(--golden);
-  font-weight: 700;
 }
 
 .products img {
@@ -283,7 +286,7 @@ main {
 
 .product-details p,
 .product-details .price {
-  font-family: var(--font-ibm) !important;
+  font-family: var(--font-heading) !important;
 }
 
 @media (max-width: 1440px) {
@@ -400,8 +403,7 @@ main {
   border: 1px solid var(--golden);
   color: #fff !important;
   font-size: 20px;
-  font-family: var(--font-ibm);
-  font-weight: 500;
+  font-family: var(--font-heading);
 }
 
 .faq .accordion-body {
@@ -485,7 +487,7 @@ main {
 }
 .form-data input::placeholder {
   font-size: 15px;
-  font-family: var(--font-ibm);
+  font-family: var(--font-heading);
 }
 
 .form-data .submit {
@@ -571,7 +573,6 @@ main {
 }
 .payment-container header h3 {
   font-size: 16px;
-  font-weight: 300;
 }
 .payment-container .payment-item {
   background: transparent;
@@ -595,7 +596,6 @@ main {
   vertical-align: top;
 }
 .payment-container .payment-item .item-title {
-  font-weight: 600;
   width: 40%;
 }
 .payment-container .payment-item .item-title span {
@@ -716,8 +716,7 @@ main {
   border: none;
   background: #fff;
   border-radius: 20px;
-  font-family: var(--font-work-sans);
-  font-weight: 500;
+  font-family: var(--font-paragraph);
   transition: 0.3s ease;
   outline: none;
 }
@@ -759,7 +758,6 @@ main {
 .testi-des {
   color: var(--golden);
   text-transform: capitalize;
-  font-weight: 600;
 }
 
 .tabs .nav-pills .nav-link.active {
@@ -775,7 +773,6 @@ main {
   color: #000;
   padding: 10px 50px;
   border-radius: 20px;
-  font-weight: 500;
 }
 .newsleeter-bar {
   width: 50%;
@@ -825,7 +822,7 @@ main {
 /* product details */
 .product_banner_section h5 {
   color: var(--white);
-  font-family: "Work Sans";
+  font-family: var(--font-paragraph);
   font-size: 24px;
 }
 
@@ -835,7 +832,6 @@ main {
 
 .product_banner_section span {
   color: var(--golden);
-  font-weight: 700;
 }
 .singel_product h1 {
   color: var(--white);
@@ -847,7 +843,7 @@ main {
 }
 .product_details p {
   font-size: 18px;
-  font-family: "Work Sans";
+  font-family: var(--font-paragraph);
   letter-spacing: 0.03em;
   margin: 0.4rem 0;
   color: #ffffff;
@@ -871,8 +867,7 @@ main {
 .price_div h4 {
   color: var(--white);
   margin: 0;
-  font-family: "Work Sans";
-  font-weight: 700;
+  font-family: var(--font-paragraph);
   font-size: 40px;
 }
 .price_div .line {
@@ -887,7 +882,7 @@ main {
 .filter h5 {
   font-size: 20px;
   color: var(--white);
-  font-family: "Work Sans";
+  font-family: var(--font-paragraph);
 }
 .filter .filter-div {
   border: 1px solid var(--white);
@@ -980,7 +975,7 @@ input[type="number"] {
   text-align: center;
   color: #333;
   font-size: 13px;
-  font-family: "Trebuchet MS", Helvetica, sans-serif !important;
+  font-family: var(--font-heading);
   line-height: 1.7;
   -webkit-transform: translateX(-100%);
   transform: translateX(-100%);
@@ -1064,7 +1059,6 @@ input[type="number"] {
 }
 .products-section p {
   color: var(--gray_cl);
-  font-weight: 400;
   font-size: 20px;
   line-height: 32px;
 }
@@ -1095,7 +1089,7 @@ input[type="number"] {
 }
 
 form {
-  font-family: "Titillium Web", sans-serif !important;
+  font-family: var(--font-heading);
 }
 
 #contactform {
@@ -1197,7 +1191,6 @@ textarea {
   position: absolute;
   margin-top: -64px;
   font-size: 1em;
-  font-weight: bold;
   color: #333;
   opacity: 0.5;
   opacity: 1;
@@ -1279,7 +1272,6 @@ textarea {
   border: 0;
   background-color: #2bb673;
   color: #fff !important;
-  font-weight: bold;
   font-size: 1.3em;
   border: 0;
   opacity: 1 !important;
@@ -1296,7 +1288,6 @@ textarea {
   opacity: 0;
   color: rgba(0, 161, 217, 1);
   font-style: italic;
-  font-weight: bold;
   font-size: 0.9em;
   -webkit-transition: opacity 200ms ease-out;
   transition: opacity 200ms ease-out;
@@ -1309,7 +1300,6 @@ textarea {
   margin-bottom: 30px;
   opacity: 0;
   font-size: 0.9em;
-  font-weight: bold;
   -webkit-transition: opacity 325ms ease-out;
   transition: opacity 325ms ease-out;
 }
@@ -1321,7 +1311,6 @@ textarea {
   margin-bottom: 30px;
   opacity: 1;
   font-size: 0.9em;
-  font-weight: bold;
   -webkit-transition: opacity 325ms ease-out;
   transition: opacity 325ms ease-out;
 }
@@ -1546,7 +1535,6 @@ nav .wrapper {
 .wrapper .logo a {
   color: #f2f2f2;
   font-size: 30px;
-  font-weight: 600;
   text-decoration: none;
 }
 .wrapper .nav-links {
@@ -1560,8 +1548,8 @@ nav .wrapper {
   float: left;
   color: #f2f2f2;
   font-size: 14px;
-  font-weight: 500;
-  padding: 45px 20px 20px 15px;
+  font-family: var(--font-paragraph);
+  padding: 45px 10px 20px 10px;
   border-radius: 5px;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -1599,7 +1587,6 @@ ul.drop-menu {
   width: 100%;
   display: block;
   padding: 0px 20px;
-  font-weight: 400;
   border-radius: 0px;
   font-size: 14px;
   color: #adadad;
@@ -1635,7 +1622,6 @@ ul.drop-menu {
 .content .row header {
   color: #f2f2f2;
   font-size: 16px;
-  font-weight: 500;
   float: left;
   width: 100%;
   text-transform: uppercase;
@@ -1745,7 +1731,6 @@ ul.drop-menu {
     display: block;
     color: #f2f2f2;
     font-size: 20px;
-    font-weight: 500;
     padding-left: 20px;
     cursor: pointer;
     border-radius: 5px;
@@ -1811,7 +1796,6 @@ nav input {
 }
 .body-text div {
   font-size: 45px;
-  font-weight: 600;
 }
 
 .productDescription {
@@ -1833,8 +1817,7 @@ nav input {
   color: #3a3b3c;
   font-size: 17px;
   line-height: 27px;
-  font-weight: normal;
-  font-family: "Work Sans";
+  font-family: var(--font-paragraph);
 }
 
 .tabs__radio {
