@@ -1884,6 +1884,10 @@ nav input {
   }
 }
 
+.product_discription {
+  text-align: justify;
+}
+
 .product_discription img {
   float: left;
   width: 100%;
