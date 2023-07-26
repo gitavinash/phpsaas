@@ -850,6 +850,7 @@ main {
   font-family: "Work Sans";
   letter-spacing: 0.03em;
   margin: 0.4rem 0;
+  color: #ffffff;
 }
 .time_section p {
   font-size: 22px;
@@ -1905,4 +1906,10 @@ nav input {
   float: left;
   width: 100%;
   padding: 20px 0px;
+}
+
+.product_hightlights {
+  font-size: 14px;
+  color: #ffffff !important;
+  line-height: 24px;
 }

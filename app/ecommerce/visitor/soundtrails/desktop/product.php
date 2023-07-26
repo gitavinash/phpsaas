@@ -114,7 +114,7 @@
                 </div>
                 <div class="mt-4">
                     <div class="product_details">
-                        <div>
+                        <div class="product_hightlights">
                             <p><strong>Highlights: </strong></p>
                             <p><?php echo $product_highlight ?></p>
                         </div>
