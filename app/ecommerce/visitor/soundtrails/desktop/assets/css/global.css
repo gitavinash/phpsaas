@@ -1886,18 +1886,18 @@ nav input {
 
 .product_discription img {
   float: left;
-  max-width: 100%;
+  width: 100%;
   padding: 20px 0px;
 }
 
 .product_discription video {
   float: left;
-  max-width: 100%;
+  width: 100%;
   padding: 20px 0px;
 }
 
 .product_discription iframe {
   float: left;
-  max-width: 100%;
+  width: 100%;
   padding: 20px 0px;
 }
