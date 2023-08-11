@@ -29,12 +29,6 @@
                         <span>Nidhi Jain Seth</span>
                     </div>
                     <div class="slider">
-                        <p>They say get flowers from someone who lives flowers and that’s the case when your visit this
-                            store. It’s full of life and shall light a spark into yours the moment you visit them as
-                            well. A must visit if you love flowers. You won’t regret it.</p>
-                        <span>Rad Rider</span>
-                    </div>
-                    <div class="slider">
                         <p>I’ve ordered from And blooms at various occasions including planning my Diwali gifts to a lot
                             of clients! Stunning arrangements, extremely customised quick service and fresh exotic
                             flowers are their backbone! Love the staff and the approach and the passion towards bespoke
