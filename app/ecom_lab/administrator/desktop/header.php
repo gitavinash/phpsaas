@@ -66,19 +66,19 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                     <a href="product/?type=list&status=all"><i class="fas fa-box-open"></i> Packages</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All product</a>
+                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
                             </li>
                             <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    product</a></li>
+                                    package</a></li>
                             <li><a href="product/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All product</a>
+                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
                             </li>
                             <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    product</a></li>
+                                    package</a></li>
                             <li><a href="product/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
