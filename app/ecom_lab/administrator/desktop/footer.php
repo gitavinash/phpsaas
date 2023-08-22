@@ -23,20 +23,20 @@
 
 				if ($_GET['type'] == 'list' ||  $_GET['type'] == 'category' || $_GET['type'] == 'tags' || $_GET['type'] == 'category') { ?>
 
-			<script>
-$(document).ready(function() {
-    $('#table').DataTable();
-});
-			</script>
+					<script>
+						$(document).ready(function() {
+							$('#table').DataTable();
+						});
+					</script>
 
-			<?php
+				<?php
 				} else { ?>
 
-			<script>
-$(document).ready(function() {
-    $('.selectSimilarProduct').select2();
-})
-			</script>
+					<script>
+						$(document).ready(function() {
+							$('.selectSimilarProduct').select2();
+						})
+					</script>
 			<?php
 				}
 			}

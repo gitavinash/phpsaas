@@ -41,9 +41,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
-                                alt=""></div>
+                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
                     </a>
                     <ul>
                         <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
@@ -58,31 +56,51 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
-                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li <?php echo ((ADMIN_BASE_URL == '/brands/') ? 'class="active"' : '') ?>><a
-                        href="brand/?type=category&status=all"><i class="fas fa-asterisk"></i> Brands</a></li>
-                <li <?php echo ((ADMIN_BASE_URL == '/product/') ? 'class="active"' : '') ?>>
-                    <a href="product/?type=list&status=all"><i class="fas fa-box-open"></i> Packages</a>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/brands/') ? 'class="active"' : '') ?>><a href="brand/?type=category&status=all"><i class="fas fa-asterisk"></i> Brands</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/diagnostic/') ? 'class="active"' : '') ?>>
+                    <a href="diagnostic/?type=list&status=all"><i class="fas fa-flask"></i> Diagnostic Tests</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            <li><a href="diagnostic/?type=list&status=all"><i class="fas fa-list"></i> All tests</a>
                             </li>
-                            <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    package</a></li>
-                            <li><a href="product/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="diagnostic/?type=add&editor=true"><i class="fas fa-plus"></i>Add new test</a>
+                            </li>
+                            <li><a href="diagnostic/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            <li><a href="diagnostic/?type=list&status=all"><i class="fas fa-list"></i> All tests</a>
                             </li>
-                            <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    package</a></li>
-                            <li><a href="product/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="diagnostic/?type=add&editor=true"><i class="fas fa-plus"></i>Add new test</a>
+                            </li>
+                            <li><a href="diagnostic/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>
+
+                <!-- <li <?php echo ((ADMIN_BASE_URL == '/packages/') ? 'class="active"' : '') ?>>
+                    <a href="packages/?type=list&status=all"><i class="fas fa-cubes"></i> Packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="diagnostic/?type=list&status=all"><i class="fas fa-list"></i> All tests</a>
+                            </li>
+                            <li><a href="diagnostic/?type=add&editor=true"><i class="fas fa-plus"></i>Add new test</a>
+                            </li>
+                            <li><a href="diagnostic/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="diagnostic/?type=list&status=all"><i class="fas fa-list"></i> All tests</a>
+                            </li>
+                            <li><a href="diagnostic/?type=add&editor=true"><i class="fas fa-plus"></i>Add new test</a>
+                            </li>
+                            <li><a href="diagnostic/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li> -->
                 <li <?php echo ((ADMIN_BASE_URL == '/page/') ? 'class="active"' : '') ?>>
                     <a href="page/?type=list&status=all"><i class="fas fa-file"></i> Page</a>
                     <div class="side-menu">

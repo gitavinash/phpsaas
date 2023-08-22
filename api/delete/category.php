@@ -1,85 +1,74 @@
 <?php
 
-    function category($connection, $data) {
-        
-        extract($data);
+function category($connection, $data)
+{
 
-        if(isset($id)) {
+    extract($data);
 
-            $id=base64_decode($id);
+    if (isset($id)) {
 
-            if($checkCategory=mysqli_query($connection, "SELECT category_id, category_type, link_id FROM ".TABLE_PREFIX."category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=category_id WHERE link_type='category' AND category_id='{$id}' AND link_site_id=".SITE_ID)) {
+        $id = base64_decode($id);
 
-                if(mysqli_num_rows($checkCategory)!=0) {
+        if ($checkCategory = mysqli_query($connection, "SELECT category_id, category_type, link_id FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_type='category' AND category_id='{$id}' AND link_site_id=" . SITE_ID)) {
 
-                    extract(mysqli_fetch_assoc($checkCategory));
+            if (mysqli_num_rows($checkCategory) != 0) {
 
-                    /** Check this category is link with any other data */
+                extract(mysqli_fetch_assoc($checkCategory));
 
-                    if($checkCategoryLinks=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."{$category_type} WHERE {$category_type}_category='{$category_id}'")) {
+                /** Check this category is link with any other data */
 
-                        if(mysqli_num_rows($checkCategoryLinks)==0) {
+                $category_type = (($category_type == 'diagnostic') ? 'product' : $category_type);
 
-                            // Category is not linked with any other data
+                if ($checkCategoryLinks = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "{$category_type} WHERE {$category_type}_category='{$category_id}'")) {
 
-                            mysqli_query($connection, "START TRANSACTION");
+                    if (mysqli_num_rows($checkCategoryLinks) == 0) {
 
-                            $deleteCategory=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."category WHERE category_id='{$category_id}'");
-                            $deleteLink=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."link WHERE link_id='{$link_id}' AND link_type='category'");
-                            $deleteMeta=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."meta WHERE meta_relation_id='{$link_id}' AND meta_type='category' AND meta_site_id=".SITE_ID);
-                            $deleteTag=mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."tag WHERE tag_id='{$category_id}' AND tag_type='category' AND tag_site_id=".SITE_ID);
+                        // Category is not linked with any other data
 
-                            if($deleteCategory && $deleteLink && $deleteMeta && $deleteTag) {
+                        mysqli_query($connection, "START TRANSACTION");
 
-                                $status=200;
-                                $msg='Category delete successfully';
-                                mysqli_query($connection, "COMMIT");
+                        $deleteCategory = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "category WHERE category_id='{$category_id}'");
+                        $deleteLink = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "link WHERE link_id='{$link_id}' AND link_type='category'");
+                        $deleteMeta = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "meta WHERE meta_relation_id='{$link_id}' AND meta_type='category' AND meta_site_id=" . SITE_ID);
+                        $deleteTag = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "tag WHERE tag_id='{$category_id}' AND tag_type='category' AND tag_site_id=" . SITE_ID);
 
-                            } else {
+                        if ($deleteCategory && $deleteLink && $deleteMeta && $deleteTag) {
 
-                                echo $deleteCategory.' && '.$deleteLink.' && '.$deleteMeta.' && '.$deleteTag;
-                                $msg='Something is wrong while deleting category';
-                                mysqli_query($connection, "ROLLBACK");
-                                exit();
-
-                            }
-
-
+                            $status = 200;
+                            $msg = 'Category delete successfully';
+                            mysqli_query($connection, "COMMIT");
                         } else {
 
-                            // Category is link with other data's
-
-                            $status='warning';
-                            $msg="Category is link with other data's";
-
+                            echo $deleteCategory . ' && ' . $deleteLink . ' && ' . $deleteMeta . ' && ' . $deleteTag;
+                            $msg = 'Something is wrong while deleting category';
+                            mysqli_query($connection, "ROLLBACK");
+                            exit();
                         }
-
                     } else {
 
-                        echo "SELECT * FROM ".TABLE_PREFIX."{$category_type} WHERE {$category_type}_category='{$category_id}'";
+                        // Category is link with other data's
 
+                        $status = 'warning';
+                        $msg = "Category is link with other data's";
                     }
-
-
                 } else {
 
-                    $msg='No category found';
-
+                    $msg = 'Something went wrong while trying to find linked data with category';
                 }
-
             } else {
 
-                $msg='Somthing is wrong while fetching category';
-
+                $msg = 'No category found';
             }
+        } else {
 
+            $msg = 'Somthing is wrong while fetching category';
         }
-        
-        $result = array(
-            'status' => (isset($status)) ? $status : 'error',
-            'msg' => ((isset($msg)) ? $msg : 'Invalid response' )
-        );
-
-        echo json_encode($result, TRUE);
-
     }
+
+    $result = array(
+        'status' => (isset($status)) ? $status : 'error',
+        'msg' => ((isset($msg)) ? $msg : 'Invalid response')
+    );
+
+    echo json_encode($result, TRUE);
+}

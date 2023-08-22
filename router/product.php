@@ -57,7 +57,13 @@ switch ($link_status) {
 
                             /** Display content in default template */
 
-                            require_once USER_PATH . 'product.php';
+                            $defaultProductTemplatePath =  USER_PATH . 'product.php';
+
+                            if (file_exists($defaultProductTemplatePath)) {
+                                require_once $defaultProductTemplatePath;
+                            } else {
+                                echo '<h1>Unable to find the template path</h1>';
+                            }
                         }
                     }
 

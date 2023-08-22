@@ -9,6 +9,8 @@ function update($connection, $data)
 
     extract($data);
 
+    $taxonomyMsgType = ucwords(((isset($postType)) ? $postType : 'brand'));
+
     $featurePost = ((isset($featurePost)) ? 1 : 0);
 
     if (isset($image)) {
@@ -100,7 +102,7 @@ function update($connection, $data)
 
                             $addRedirect = FALSE;
                             $status = 'warning';
-                            $msg = "Please change {$taxonomyType} url. Because its already in used";
+                            $msg = "Please change {$taxonomyMsgType} url. Because its already in used";
                         }
                     }
                 } else {
@@ -148,7 +150,7 @@ function update($connection, $data)
                     mysqli_query($connection, 'COMMIT');
 
                     $status = 200;
-                    $msg = $taxonomyType . ' is update successfully';
+                    $msg = $taxonomyMsgType . ' is update successfully';
                     $redirect = "/dashboard/{$postType}/?type=taxonomy&editor=true&id=" . base64_encode($id) . "&taxonomy={$taxonomyType}";
                 } else {
 
@@ -163,7 +165,7 @@ function update($connection, $data)
 
     $result = array(
         'status' => ((isset($status)) ? $status : 'error'),
-        'msg' => ((isset($msg)) ? $msg : 'Something is wrong while updating ' . $taxonomyType),
+        'msg' => ((isset($msg)) ? $msg : 'Something is wrong while updating ' . $taxonomyMsgType),
         'redirect' => ((isset($redirect)) ? $redirect : '')
     );
 

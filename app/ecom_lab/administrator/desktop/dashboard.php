@@ -1,5 +1,1 @@
-<?php
-
-	print_r($_SESSION);
-
-?>
+<h2>Dashboard</h2>
