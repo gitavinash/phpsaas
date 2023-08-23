@@ -53,7 +53,7 @@ function publish($connection, $data)
 
                             /* Insert data into link table */
 
-                            $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$gallery}', '{$title}', '{$description}', '{$highlight}', '{$category}', " . USER_ID . ",'1', 'diagnostic')");
+                            $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_image, product_thumbnail, product_gallery, product_title, product_description, product_highlight, product_category, product_brand_id, product_owner_id, product_status, product_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$gallery}', '{$title}', '{$description}', '{$highlight}', '{$category}', '{$brand}', " . USER_ID . ",'1', 'diagnostic')");
                             $productID = mysqli_insert_id($connection);
 
                             $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");

@@ -57,7 +57,7 @@
                     </div>
                     <div class="box-1">
                         <div class="form-group">
-                            <label>SKU</label>
+                            <label>Lab Test ID</label>
                             <input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU">
                         </div>
                     </div>
