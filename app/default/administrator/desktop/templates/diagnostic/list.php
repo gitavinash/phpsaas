@@ -44,22 +44,25 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-                    <tr style="height: 80px">
-                        <td>
-                            <p><a href="diagnostic/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><?php echo $product_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
-                            </p>
-                            <div class="hover">
-                                <a href="diagnostic/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                <a href="#" id="<?php echo base64_encode($product_id) ?>_product" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
-                                <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
-                            </div>
-                        </td>
-                        <td><?php echo $category_title; ?></td>
-                        <td><?php echo (($inventory_in_stock == 1) ? 'Yes' : 'No'); ?></td>
-                        <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_price != '') ? $inventory_price : 0); ?></td>
-                        <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_mrp != '') ? $inventory_mrp : 0);; ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
-                    </tr>
+        <tr style="height: 80px">
+            <td>
+                <p><a
+                        href="diagnostic/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><?php echo $product_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                </p>
+                <div class="hover">
+                    <a href="diagnostic/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><i
+                            class="fas fa-pencil-alt"></i> Edit</a>
+                    <a href="#" id="<?php echo base64_encode($product_id) ?>_product" class="deleteBtn"><i
+                            class="fas fa-trash"></i> Delete</a>
+                    <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
+                </div>
+            </td>
+            <td><?php echo $category_title; ?></td>
+            <td><?php echo (($inventory_in_stock == 1) ? 'Yes' : 'No'); ?></td>
+            <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_price != '') ? $inventory_price : 0); ?></td>
+            <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_mrp != '') ? $inventory_mrp : 0);; ?></td>
+            <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
+        </tr>
         <?php
                 }
             }

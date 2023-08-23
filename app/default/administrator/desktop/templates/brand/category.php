@@ -96,7 +96,7 @@ if ($id != 0) {
                     <tr>
                         <td>
                             <p><a
-                                    href="<?php echo $postType ?>/?type=edit&editor=true&post_id=<?php echo base64_encode($category_id); ?>"><?php echo $category_title ?></a>
+                                    href="<?php echo $postType ?>/?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category"><?php echo $category_title ?></a>
                             </p>
                             <div class="hover">
                                 <a
