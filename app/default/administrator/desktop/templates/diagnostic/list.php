@@ -40,7 +40,7 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT product_id, product_title, product_owner_id, category_title, link_url, link_status, link_creation, inventory_currency_symbol, inventory_in_stock, IFNULL(inventory_mrp, 0) as inventory_mrp, IFNULL(inventory_price, 0) as inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "category ON category_id=product_category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_type='product' AND product_type='diagnostic' AND link_relation_id=product_id AND link_site_id=" . SITE_ID . " AND category_id=product_category AND link_status!=301 {$productStatus} AND inventory_status=1 AND inventory_type='product' ORDER BY link_published DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT product_id, product_title, product_owner_id, c1.category_title as category_title, c2.category_title as brand_name, link_url, link_status, link_creation, inventory_currency_symbol, inventory_in_stock, IFNULL(inventory_mrp, 0) as inventory_mrp, IFNULL(inventory_price, 0) as inventory_price FROM " . TABLE_PREFIX . "product LEFT JOIN " . TABLE_PREFIX . "category as c1 ON c1.category_id=product_category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id LEFT JOIN " . TABLE_PREFIX . "category c2 ON c2.category_id=product_brand_id WHERE link_type='product' AND product_type='diagnostic' AND link_relation_id=product_id AND link_site_id=" . SITE_ID . " AND c1.category_id=product_category AND link_status!=301 {$productStatus} AND inventory_status=1 AND inventory_type='product' ORDER BY link_published DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -58,7 +58,7 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
                 </div>
             </td>
             <td><?php echo $category_title; ?></td>
-            <td><?php echo (($inventory_in_stock == 1) ? 'Yes' : 'No'); ?></td>
+            <td><?php echo $brand_name; ?></td>
             <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_price != '') ? $inventory_price : 0); ?></td>
             <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_mrp != '') ? $inventory_mrp : 0);; ?></td>
             <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
