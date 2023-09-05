@@ -12,7 +12,7 @@
                             alt="<?php echo SITE_NAME ?> logo"></a>
                 </div>
                 <p><i class="fi-rr-marker"></i> <strong>Oxteal</strong><br />Office No. 1010, 10th Floor, Vishal Tower,
-                    District Center, Janak Puri, New Delhi - 110058</p>
+                    District Center, Janak Puri,<br /> New Delhi - 110058</p>
                 <p><a href="tel:+91-8802026069" target="_blank"><i class="fi-rr-headset"></i> +91-8802026069</a></p>
                 <p><a href="mailto:support@oxtea.com" target="_blank"><i class="fi-rr-envelope"></i>
                         support@oxteal.com</a></p>
