@@ -16,8 +16,6 @@
                 <p><a href="tel:+91-8802026069" target="_blank"><i class="fi-rr-headset"></i> +91-8802026069</a></p>
                 <p><a href="mailto:support@oxtea.com" target="_blank"><i class="fi-rr-envelope"></i>
                         support@oxteal.com</a></p>
-                <p><a href="https://wa.me/918802026069?text=Hello%0aI%20need%20a%20help." target="_blank"><i
-                            class="fab fa-whatsapp"></i> +91-8802026069</a></p>
                 <ul class="social-icon-list">
                     <li><a href="#"><i class="flaticon-021-facebook"></i></a></li>
                     <li><a href="#"><i class="flaticon-043-twitter"></i></a></li>
