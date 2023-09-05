@@ -65,7 +65,7 @@
     </section>
     <section class="footer l-w1 center">
         &copy; Copyright <a href="https://oxteal.com"><strong>Oxteal</strong></a> | A Unit of <a
-            href="https://itssoftworld.com"><strong>ITS Soft World</strong></a>
+            href="https://blumox.com"><strong>Blumox Technologies</strong></a>
     </section>
     <section class="whatsapp">
         <a href="https://wa.me/918802026069?text=Hello%0aI%20need%20a%20help."><img
