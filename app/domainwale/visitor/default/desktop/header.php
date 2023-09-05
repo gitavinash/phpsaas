@@ -73,6 +73,7 @@
                     <ul class="list-menu">
                         <li><a href="/domain-name-registration/">Domain</a></li>
                         <li><a href="/linux-web-hosting/">Hosting</a></li>
+                        <li><a href="/cloud-web-hosting/">Cloud Hosting</a></li>
                         <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>
                         <li><a href="/reseller-hosting/">Reseller Hosting</a></li>
                         <li><a href="/website-amc/">AMC</a></li>
@@ -105,10 +106,12 @@
                         <ul class="list-menu">
                             <li><a href="/domain-name-registration/"><i class="fi-rr-globe"></i>Domain Registration<i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/linux-web-hosting/"><i class="fi-rr-network-cloud"></i> Hosting <i
+                            <li><a href="/linux-web-hosting/"><i class="fi-rr-database"></i> Hosting <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/wordpress-hosting/"><i class="fi-rr-database"></i> WordPress Hosting <i
+                            <li><a href="/cloud-web-hosting/"><i class="fi-rr-network-cloud"></i> Cloud Hosting <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
+                            <li><a href="/wordpress-hosting/"><i class="fi-rr-database"></i> WordPress Hosting
+                                    <i class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/whois-lookup/"><i class="fi-rr-world"></i> WHOIS <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/website-development/"><i class="fi-rr-browser"></i> Website <i

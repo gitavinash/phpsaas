@@ -11,20 +11,21 @@
                     <a href="/"><img src="<?php echo USER_IMAGES ?>oxteal-logo-light.png"
                             alt="<?php echo SITE_NAME ?> logo"></a>
                 </div>
-                <p><i class="fi-rr-marker"></i> <strong>Oxteal</strong><br />A2/5A, WHS Block 2,<br />Kirti Nagar, New
-                    Delhi</p>
+                <p><i class="fi-rr-marker"></i> <strong>Oxteal</strong><br />Office No. 1010, 10th Floor, Vishal Tower,
+                    District Center, Janak Puri, New Delhi - 110058</p>
                 <p><a href="tel:+91-8802026069" target="_blank"><i class="fi-rr-headset"></i> +91-8802026069</a></p>
                 <p><a href="mailto:support@oxtea.com" target="_blank"><i class="fi-rr-envelope"></i>
                         support@oxteal.com</a></p>
-                <!-- <p><a href="https://wa.me/918802026069?text=Hello%0aI%20need%20a%20help." target="_blank" ><i class="fab fa-whatsapp"></i> +91-8802026069</a></p> -->
-                <!-- <ul class="social-icon-list">
-                        <li><a href="#"><i class="flaticon-021-facebook"></i></a></li>
-                        <li><a href="#"><i class="flaticon-043-twitter"></i></a></li>
-                        <li><a href="#"><i class="flaticon-045-linkedin"></i></a></li>
-                        <li><a href="#"><i class="flaticon-025-instagram"></i></a></li>
-                        <li><a href="#"><i class="flaticon-011-youtube"></i></a></li>
-                        <li><a href="#"><i class="flaticon-035-whatsapp"></i></a></li>
-                    </ul> -->
+                <p><a href="https://wa.me/918802026069?text=Hello%0aI%20need%20a%20help." target="_blank"><i
+                            class="fab fa-whatsapp"></i> +91-8802026069</a></p>
+                <ul class="social-icon-list">
+                    <li><a href="#"><i class="flaticon-021-facebook"></i></a></li>
+                    <li><a href="#"><i class="flaticon-043-twitter"></i></a></li>
+                    <li><a href="#"><i class="flaticon-045-linkedin"></i></a></li>
+                    <li><a href="#"><i class="flaticon-025-instagram"></i></a></li>
+                    <li><a href="#"><i class="flaticon-011-youtube"></i></a></li>
+                    <li><a href="#"><i class="flaticon-035-whatsapp"></i></a></li>
+                </ul>
             </div>
             <div class="f-box l-w4 l-m-w2">
                 <h3>About Oxteal</h3>
