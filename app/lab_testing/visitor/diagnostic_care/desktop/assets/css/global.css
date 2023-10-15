@@ -3,6 +3,7 @@
 :root {
   --font12: 0.75rem;
   --font15: 0.9375rem;
+  --font16: 1rem;
   --font18: 1.125rem;
   --font27: 1.25rem;
   --font28: 1.65rem;
@@ -119,7 +120,9 @@ a {
   color: black;
 }
 
-.close-icon , .filter-icon ,.filter-close {
+.close-icon,
+.filter-icon,
+.filter-close {
   background-color: #0c6ab5;
   width: 40px;
   height: 40px;
@@ -168,6 +171,10 @@ a {
 
 .isfont-18 {
   font-size: var(--font18);
+}
+
+.isfont-16 {
+  font-size: var(--font16);
 }
 
 .isfont-15 {
@@ -230,7 +237,7 @@ footer ul li a {
   border-bottom: 1px solid #fff;
 }
 
-.opacity{
+.opacity {
   height: 100vh;
   position: fixed;
   top: 0;
@@ -239,9 +246,9 @@ footer ul li a {
   z-index: 88;
   background: #0000005f;
   display: none;
-  transition: .6s ease;
+  transition: 0.6s ease;
 }
-.opacity.active{
+.opacity.active {
   display: block;
 }
 
