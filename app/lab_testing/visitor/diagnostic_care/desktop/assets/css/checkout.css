@@ -1,0 +1,32 @@
+.checkout-table td {
+  padding: 30px 0;
+  background: transparent;
+}
+
+.checkout {
+  background: #f8fcff;
+}
+
+.apointment-form {
+  padding: 30px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  margin: 0 20px;
+  background: transparent;
+}
+
+.apointment-form input {
+  padding: 20px 15px;
+}
+
+.apointment-form textarea {
+  border: 1px var(--clr1);
+  height: 100px;
+}
+
+@media (max-width: 768px) {
+  .apointment-form {
+    padding: 15px;
+    margin: 20px 0px;
+    background: transparent;
+  }
+}

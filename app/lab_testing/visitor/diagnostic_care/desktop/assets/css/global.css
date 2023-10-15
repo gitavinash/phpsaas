@@ -1,0 +1,281 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+
+:root {
+  --font12: 0.75rem;
+  --font15: 0.9375rem;
+  --font18: 1.125rem;
+  --font27: 1.25rem;
+  --font28: 1.65rem;
+  --font40: 2.1rem;
+  --textclr1: #383838;
+  --textclr2: #b0b0b0;
+  --clr1: #0077be;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ----------------------------------------------------------- navigation ---------------------------------------------------- */
+
+.navigation ul li {
+  margin: 0 10px;
+}
+
+.navigation ul li a {
+  letter-spacing: 0.8px;
+  font-size: var(--font18);
+  color: var(--textclr1);
+}
+
+/* ----------------------------------------------------------- buttons ---------------------------------------------------- */
+
+.btn1 {
+  padding: 15px 40px;
+  background: linear-gradient(
+    90deg,
+    rgba(86, 165, 224, 1) 42%,
+    rgba(30, 124, 209, 1) 96%
+  );
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.btn-pill {
+  border-radius: 40px !important;
+}
+
+.thankyoubtn {
+  padding: 10px 30px;
+  background: var(--clr1);
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+}
+
+.mobile-nav {
+  background: #e2eaf1;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  transition: 0.7s;
+  z-index: 100;
+}
+
+.mobile-nav.active {
+  right: 0;
+}
+
+.mobile-logo {
+  height: 80px;
+  width: auto;
+}
+
+.mobile-nav ul {
+  margin-top: 40px;
+}
+
+.mobile-nav ul li {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #000;
+  padding: 12px 0px;
+}
+
+.mobile-nav ul li::after {
+  font-family: "Font Awesome 5 Free";
+  content: "\f0a9";
+  display: inline-block;
+  padding-right: 3px;
+  vertical-align: middle;
+  font-weight: 900;
+  font-size: var(--font-18);
+}
+
+.mobile-nav ul li a {
+  text-decoration: none;
+  color: black;
+}
+
+.close-icon , .filter-icon ,.filter-close {
+  background-color: #0c6ab5;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  border-radius: 3px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.humburger {
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.humburger i {
+  font-size: 18px;
+}
+/* ----------------------------------------------------------- font ---------------------------------------------------- */
+
+.isfont-40 {
+  font-size: var(--font40);
+}
+
+.is-font600 {
+  font-weight: 600;
+}
+
+.isfont-27 {
+  font-size: var(--font27);
+}
+
+.isfont-28 {
+  font-size: var(--font28);
+}
+
+.isfont-12 {
+  font-size: var(--font12);
+}
+
+.isfont-15 {
+  font-size: 15px;
+}
+
+.isfont-18 {
+  font-size: var(--font18);
+}
+
+.isfont-15 {
+  font-size: var(--font15);
+}
+/* ----------------------------------------------------------- color ---------------------------------------------------- */
+
+.is-txt-color2 {
+  color: var(--textclr2);
+}
+
+.is-txt-color1 {
+  color: var(--textclr1);
+}
+
+.is-color-blue {
+  color: var(--clr1) !important;
+}
+
+/* ----------------------------------------------------------- margin ---------------------------------------------------- */
+
+.is-margin-side-20 {
+  margin: 0 20px;
+}
+
+/* ----------------------------------------------------------- Padding ---------------------------------------------------- */
+
+.vartical-padding {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+/* ----------------------------------------------------------- Padding ---------------------------------------------------- */
+
+.thank-you {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.th-center {
+}
+
+footer {
+  background: #0077be;
+}
+
+footer ul li {
+  margin: 20px 0;
+  color: #fff;
+}
+
+footer ul li a {
+  color: #fff;
+  font-size: var(--font18);
+}
+
+.footer-section {
+  border-bottom: 1px solid #fff;
+}
+
+.opacity{
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 88;
+  background: #0000005f;
+  display: none;
+  transition: .6s ease;
+}
+.opacity.active{
+  display: block;
+}
+
+@media (max-width: 1220px) {
+  .vartical-padding {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+}
+
+@media (max-width: 540px) {
+  html {
+    font-size: 80%;
+  }
+  .side-padding {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .vartical-padding {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+@media (max-width: 350px) {
+  .side-padding {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}

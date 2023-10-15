@@ -18,7 +18,6 @@ require_once 'header.php';
         </div>
         <div class="text lsBgColor">
             <h2 class="blumox">Website Designing</h2>
-            <p>Starting from : ₹ 1,500 per hour</p>
         </div>
     </div>
     <div class="projectBox">
@@ -27,7 +26,6 @@ require_once 'header.php';
         </div>
         <div class="text leftBox pkBgColor">
             <h2 class="blumox">Website Development</h2>
-            <p>Starting from : ₹ 3,000 per hour</p>
         </div>
     </div>
     <div class="projectBox">
@@ -36,7 +34,6 @@ require_once 'header.php';
         </div>
         <div class="text abBgColor">
             <h2 class="blumox">Mobile App Development</h2>
-            <p>Starting from : ₹ 5,000 per hour</p>
         </div>
     </div>
 </section>

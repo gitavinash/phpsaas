@@ -1,0 +1,31 @@
+.contact-form {
+  margin: 40px 0;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 20px;
+  border: 1px solid var(--clr1);
+  background: transparent;
+  border-radius: 25px;
+  background: #f8fcff;
+}
+
+.contact-details {
+  margin: 0 60px;
+  background: var(--clr1);
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.c-icon {
+  height: 3rem;
+  object-fit: contain;
+}
+
+@media (max-width: 1200px) {
+  .contact-details {
+    margin: 0;
+  }
+}

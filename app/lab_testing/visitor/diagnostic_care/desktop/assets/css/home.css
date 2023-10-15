@@ -1,0 +1,185 @@
+.hero {
+  background: var(--clr1);
+}
+
+.hero-input {
+  padding: 15px 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  margin-top: 30px;
+}
+
+.hero-input input {
+  border: none;
+  width: 97%;
+  padding: 15px 0;
+}
+
+.hero-input input:focus {
+  outline: none;
+}
+
+.hero-input button {
+  border: none;
+  background: #fff;
+}
+
+.parnters img {
+  height: 2.5rem;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+.pt-image {
+  padding: 40px 20px;
+  margin: 0 20px;
+  border-radius: 4px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.pt-slider .slick-slide {
+  height: 150px !important;
+}
+
+.package-parent {
+  background: #0078be1b;
+}
+
+.package-cards {
+  background: #fff;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.package-btn {
+  padding: 8px 20px !important;
+}
+
+.testi-card {
+  padding: 25px;
+  border: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  margin: 0 15px;
+  height: 330px;
+}
+
+.testi .slick-initialized .slick-slide {
+  height: 350px !important;
+
+}
+
+.testi-card img {
+  height: 5rem;
+  object-fit: contain;
+}
+
+.rating img {
+  height: 1.3rem;
+  object-fit: contain;
+}
+
+.rating {
+  display: flex;
+}
+
+.search {
+  border: 1px solid var(--clr1);
+  border-radius: 10px;
+}
+.icon-manage {
+  background: var(--clr1);
+  padding: 15px 30px;
+  border-radius: 10px;
+  color: #fff;
+  margin-left: -10px;
+}
+
+.deatil-search input {
+  border-right: none;
+  border-top: 1px solid var(--clr1);
+  border-bottom: 1px solid var(--clr1);
+  border-left: 1px solid var(--clr1);
+  padding: 10px 30px;
+  border-radius: 8px;
+
+  padding-left: 12px;
+}
+
+.prescription-form{
+  position: fixed;
+  height: 100vh;
+  width: 40%;
+  top: 0;
+  right: -100%;
+  background: #e2eaf1;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 20px 30px;
+  transition: .7s ease;
+}
+
+.prescription-form.active{
+  right: 0;
+}
+
+.prescription-form input {
+    padding: 20px;
+    border: 1px solid var(--clr1);
+    background: transparent;
+    border-radius: 10px;
+    background: #f8fcff;
+}
+
+.prescription-form textarea{
+  border: 1px solid var(--clr1);
+  background: transparent;
+  border-radius: 10px;
+  background: #f8fcff;
+  height: 100px !important;
+}
+
+@media (max-width: 1220px) {
+  .prescription-form{
+    width: 60%;
+  }
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 0;
+  }
+
+  .prescription-form{
+    width: 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .package-btn {
+    font-size: 10px;
+  }
+
+  
+  
+}
+
+@media (max-width: 420px) {
+  .parnters img {
+    height: 1.5rem;
+  }
+  .pt-image {
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .package-btn {
+    font-size: 6px;
+  }
+}
