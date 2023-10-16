@@ -25,40 +25,43 @@ require_once 'header.php';
       <div class="row vartical-padding align-items-center">
         <div class="col-12 col-lg-6">
           <div class="contact-form">
-            <form action="">
+            <form method="post" action="">
               <div class="row">
                 <div class="col-6">
                   <div class="mb-3">
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name" />
+                    <input type="text" class="form-control" name="name" placeholder="Full name" required />
                   </div>
                 </div>
 
                 <div class="col-6">
                   <div class="mb-3">
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Phone" />
+                    <input type="text" class="form-control" name="mobile" id="exampleInputEmail1" placeholder="Phone" required />
                   </div>
                 </div>
 
                 <div class="col-6">
                   <div class="mb-3">
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" />
+                    <input type="text" class="form-control" name="email" id="exampleInputEmail1" placeholder="Email" />
                   </div>
                 </div>
 
                 <div class="col-6">
                   <div class="mb-3">
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Test Details" />
+                    <input type="text" class="form-control" name="test_details" id="exampleInputEmail1" placeholder="Test Details" />
                   </div>
                 </div>
 
                 <div class="col-12">
                   <div class="mb-3">
-                    <textarea class="form-control" placeholder="Address..." id="floatingTextarea" style="height: 100px"></textarea>
+                    <textarea class="form-control" name="address" placeholder="Address..." id="floatingTextarea" style="height: 100px"></textarea>
                   </div>
 
-                  <button type="submit" class="btn btn-primary w-100 my-4 py-3">
-                    Submit
-                  </button>
+                  <input type="hidden" name="type" value="enquiry">
+                  <input type="hidden" name="action" value="new">
+                  <input type="hidden" name="subject" value="Upload prescription form">
+                  <input type="hidden" name="sender" value="<?php echo base64_encode('diagnosticcare.in@gmail.com') ?>">
+                  <input type="hidden" name="redirect_url" value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
+                  <input type="submit" class="btn w-100 btn1" value="Submit">
                 </div>
               </div>
             </form>

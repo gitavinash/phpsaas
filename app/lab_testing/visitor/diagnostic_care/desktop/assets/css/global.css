@@ -55,7 +55,7 @@ a {
     90deg,
     rgba(86, 165, 224, 1) 42%,
     rgba(30, 124, 209, 1) 96%
-  );
+  ) !important;
   border: none;
   border-radius: 5px;
   color: #fff;
