@@ -7,6 +7,16 @@ unset($_REQUEST['action']);
 
 $type = $action;
 
+$isAttachment = false;
+
+if (isset($_FILES['upload'])) {
+
+    require_once API_MODULES . './singleFileUpload.php';
+    $isAttachment = true;
+    $fileURL = SITE_URL . $uploadURL;
+    $enquiryMeta['file_url'] = $fileURL;
+}
+
 // Detect prefix enquiry table fields and remove from array
 
 if (isset($name)) {
