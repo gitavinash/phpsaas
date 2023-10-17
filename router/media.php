@@ -1,61 +1,55 @@
 <?php
 
-    /** Check link status */
+/** Check link status */
 
-    switch ($link_status) {
+switch ($link_status) {
 
-        case 301 :  require_once ROUTER.'301.php';
-                    break;
+    case 301:
+        require_once ROUTER . '301.php';
+        break;
 
-        default :   
-            
-                    /** Fetch data from database table  */
+    default:
 
-                    if($postData=mysqli_query($connection, "SELECT media_id, media_url, media_title, profile_display_name, user_username, media_type FROM ".TABLE_PREFIX."media INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=media_owner_id INNER JOIN ".TABLE_PREFIX."user ON media_owner_id=user_id WHERE media_id='{$link_relation_id}'")) {
+        /** Fetch data from database table  */
 
-                        if(mysqli_num_rows($postData)!=0) {
+        if ($postData = mysqli_query($connection, "SELECT media_id, media_url, media_title, media_type FROM " . TABLE_PREFIX . "media WHERE media_id='{$link_relation_id}'")) {
 
-                            extract(mysqli_fetch_assoc($postData));
+            // if ($postData = mysqli_query($connection, "SELECT media_id, media_url, media_title, profile_display_name, user_username, media_type FROM " . TABLE_PREFIX . "media INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=media_owner_id INNER JOIN " . TABLE_PREFIX . "user ON media_owner_id=user_id WHERE media_id='{$link_relation_id}'")) {
 
-                            if(file_exists(ROUTER.$link_status.'.php')) {
+            if (mysqli_num_rows($postData) != 0) {
 
-                                /** Include status router file */
+                extract(mysqli_fetch_assoc($postData));
 
-                                require_once ROUTER.$link_status.'.php';
+                if (file_exists(ROUTER . $link_status . '.php')) {
 
-                            } else {
+                    /** Include status router file */
 
-                                /** Check category template is avilable or not */
+                    require_once ROUTER . $link_status . '.php';
+                } else {
 
-                                $checkCategoryTemplate=USER_PATH.strtolower($link_type).'-media.php';
+                    /** Check category template is avilable or not */
 
-                                if(file_exists($checkCategoryTemplate)) {
+                    $checkCategoryTemplate = USER_PATH . strtolower($link_type) . '-media.php';
 
-                                    /** Opening category post template */
+                    if (file_exists($checkCategoryTemplate)) {
 
-                                    require_once $checkCategoryTemplate;
+                        /** Opening category post template */
 
-                                } else {
-
-                                    /** Display content in default template */
-
-                                    require_once USER_PATH.'media.php';
-
-                                }
-
-                            }
-
-                        } else {
-
-                            echo 'Error';
-
-                        }
-
+                        require_once $checkCategoryTemplate;
                     } else {
 
-                        echo mysqli_error($connection);
+                        /** Display content in default template */
 
+                        require_once USER_PATH . 'media.php';
                     }
-                    break;
+                }
+            } else {
 
-    }
+                echo 'Media Error';
+            }
+        } else {
+
+            echo mysqli_error($connection);
+        }
+        break;
+}

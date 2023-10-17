@@ -41,28 +41,7 @@ if (isset($_FILES['upload'])) {
                 $uploadURL = strtolower(str_replace(ROOT, '', $uploadPath));
                 $link = strtolower(str_replace(' ', '_', '/attachment/' . time() . '_' . $uploadFile) . '/');
 
-                /** Compressing Images */
-
-                $imageInfo = getimagesize($_FILES['upload']['tmp_name']);
-
-                if ($imageInfo['mime'] == 'image/jpeg' || $imageInfo['mime'] == 'image/jpg') {
-
-                    $compressImage = imagecreatefromjpeg($_FILES['upload']['tmp_name']);
-                    imagejpeg($compressImage, $uploadPath, 60);
-                } else if ($imageInfo['mime'] == 'image/gif') {
-
-                    $compressImage = imagecreatefromgif($_FILES['upload']['tmp_name']);
-                    //imagegif($compressImage, $uploadPath, 60);
-                    $originalUploadPath = $uploadPath;
-                } else if ($imageInfo['mime'] == 'image/png') {
-
-                    $compressImage = imagecreatefrompng($_FILES['upload']['tmp_name']);
-                    imagejpeg($compressImage, $uploadPath, 60);
-                    //$originalUploadPath=$uploadPath;
-
-                }
-
-                if (move_uploaded_file($_FILES['upload']['tmp_name'], $originalUploadPath)) {
+                if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadPath)) {
 
                     switch ($filetype) {
 
@@ -103,25 +82,27 @@ if (isset($_FILES['upload'])) {
                         }
                     }
 
-                    // mysqli_query($connection, 'START TRANSACTION');
+                    mysqli_query($connection, 'START TRANSACTION');
 
-                    // $insertPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "media(media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES('{$uploadURL}', '{$uploadFile}', '{$filetype}', '{$fileExtension}', '" . USER_ID . "', 1, '" . SITE_ID . "')");
-                    // $mediaID = mysqli_insert_id($connection);
+                    $insertPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "media(media_url, media_title, media_type, media_ext, media_status, media_site_id) VALUES('{$uploadURL}', '{$uploadFile}', '{$filetype}', '{$fileExtension}', 1, '" . SITE_ID . "')");
+                    $mediaID = mysqli_insert_id($connection);
 
-                    // $createLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES('{$link}', '{$mediaID}', 200, 'media', '" . USER_ID . "', '" . SITE_ID . "', NOW(), NOW(), NOW())");
+                    $createLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_site_id, link_creation, link_published, link_modified) VALUES('{$link}', '{$mediaID}', 200, 'media', '" . SITE_ID . "', NOW(), NOW(), NOW())");
 
-                    // if ($insertPost && $createLink) {
+                    if ($insertPost && $createLink) {
 
-                    //     $status = 200;
-                    //     mysqli_query($connection, 'COMMIT');
-                    //     $msg = $uploadURL;
-                    // } else {
+                        $status = 200;
+                        mysqli_query($connection, 'COMMIT');
+                        $msg = $uploadURL;
+                        $fileUrl = $link;
+                    } else {
 
-                    //     $status = 500;
-                    //     $msg = 'Error while insert data';
+                        $status = 500;
+                        $msg = 'Error while insert data';
 
-                    //     mysqli_query($connection, 'ROLLBACK');
-                    // }
+                        echo mysqli_error($connection);
+                        mysqli_query($connection, 'ROLLBACK');
+                    }
                 } else {
                     $status = 403;
                     $msg = 'file is not uploaded';

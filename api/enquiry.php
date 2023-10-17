@@ -13,8 +13,8 @@ if (isset($_FILES['upload'])) {
 
     require_once API_MODULES . './singleFileUpload.php';
     $isAttachment = true;
-    $fileURL = SITE_URL . $uploadURL;
-    $enquiryMeta['file_url'] = $fileURL;
+    $uploadFileURL = SITE_URL . $fileUrl;
+    $enquiryMeta['file_url'] = $uploadFileURL;
 }
 
 // Detect prefix enquiry table fields and remove from array
