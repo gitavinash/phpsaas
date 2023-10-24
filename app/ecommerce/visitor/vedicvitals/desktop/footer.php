@@ -129,9 +129,7 @@
             <div class="row">
                 <div class="col-md-12 col-12">
                     <div class="footer-btm">
-                        <p>&copy; All rights reserved by <?php echo SITE_NAME ?><br />Made with <i
-                                class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com"
-                                title="Software development company in delhi">ITS Soft World</a> in India</p>
+                        <p>&copy; All rights reserved by <?php echo SITE_NAME ?><br />Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi">Blumox Technologies</a> in India</p>
                     </div>
                 </div>
             </div>
@@ -165,7 +163,7 @@
 
 <!-- script start -->
 
-<?php include_once NOTIFICATION.'index.php' ?>
+<?php include_once NOTIFICATION . 'index.php' ?>
 
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>

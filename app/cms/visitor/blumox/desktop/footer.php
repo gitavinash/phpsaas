@@ -4,7 +4,8 @@
             <h2>Testimonials</h2>
             <div class="testimonials">
                 <div>
-                    <h3>ITS Soft World played a great role in our website & software development. Avinash is good at
+                    <h3>Blumox Technologies played a great role in our website & software development. Avinash is good
+                        at
                         what he
                         does. Good luck to the team. Highly recommended!</h3>
                     <p>Nachiket Arora, <span><i>Vedic Vitals</i></span></p>
@@ -16,7 +17,7 @@
                     <p>Avinesh Paliwal, <span><i>Pleco Migration</i></span></p>
                 </div>
                 <div>
-                    <h3>Deliver work on time. i am very happy with ITS Soft World Service.</h3>
+                    <h3>Deliver work on time. i am very happy with Blumox Technologies Service.</h3>
                     <p>Rahul Garg, <span><i>Targus Safety</i></span></p>
                 </div>
             </div>
@@ -24,7 +25,8 @@
     </section>
     <section>
         <div class="linkBox">
-            <p>Have a project in your mind? <a href="/contact-us/" class="getInTouchBtn">Let's connect</a></p>
+            <!-- <p>Have a project in your mind? <a href="/contact-us/" class="getInTouchBtn">Let's connect</a></p> -->
+            <p>Have a project in your mind? <a href="tel:+91-9990026008" class="getInTouchBtn">Let's connect</a></p>
         </div>
     </section>
 </footer>

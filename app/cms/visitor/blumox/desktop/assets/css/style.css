@@ -47,6 +47,18 @@ section {
   padding: 0% 5% !important;
 }
 
+.popUpModal {
+  position: fixed;
+  text-align: center;
+  width: 100%;
+}
+
+.popUpBox {
+  width: 500px;
+  height: 400px;
+  background: #5fc5d4;
+}
+
 .heart {
   background-color: #3ab4f1;
   display: inline-block;

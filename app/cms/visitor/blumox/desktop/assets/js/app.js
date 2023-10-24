@@ -13,4 +13,11 @@ $(document).ready(function () {
     arrows: false,
     infinite: true,
   });
+
+  // Contact Us Pop Up
+
+  // $(".getInTouchBtn").click(function (e) {
+  //   alert("test");
+  //   e.preventDefault();
+  // });
 });

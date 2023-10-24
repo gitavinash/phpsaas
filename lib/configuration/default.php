@@ -16,7 +16,7 @@ if (!isset($_SESSION['active_session_id'])) {
 
 /** Developers Credit */
 
-define('CREDIT', 'ITS Soft World');
+define('CREDIT', 'Blumox Technologies');
 define('CREDIT_MAIL', 'avinash@isw.one');
 define('CREDIT_URL', 'http://www.itssoftworld.com');
 

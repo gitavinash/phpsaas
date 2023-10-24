@@ -56,6 +56,13 @@
 
 <body>
 
+    <!-- Pop up modal -->
+
+    <!-- <div class="popUpModal">
+        <div class="popUpBox">
+
+        </div>
+    </div> -->
     <!-- header start -->
     <header>
         <?php
@@ -84,7 +91,7 @@
                         <li><a href="/refund-policy/">Refund Policy</a></li>
                         <li><a href="/terms-and-conditions/">Terms and Conditions</a></li>
                         <li><a href="/sitemap/" target="_blank">Sitemap</a></li>
-                        <li>&copy; 2022 - <?php echo date('Y'); ?> Blumox | a Unit of ITS Soft World</li>
+                        <li>&copy; 2022 - <?php echo date('Y'); ?> Blumox Technologies</li>
                     </ul>
                 </div>
             </section>
