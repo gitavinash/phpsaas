@@ -40,7 +40,7 @@
     </script>
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZBK4Z8XT71"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-00T4DDHZXS"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -49,7 +49,7 @@
     }
     gtag('js', new Date());
 
-    gtag('config', 'G-ZBK4Z8XT71');
+    gtag('config', 'G-00T4DDHZXS');
     </script>
 
 </head>
@@ -60,9 +60,13 @@
 
     <!-- <div class="popUpModal">
         <div class="popUpBox">
+            <h3>Fill this form</h3>
+            <form action="" method="POST">
 
+            </form>
         </div>
     </div> -->
+
     <!-- header start -->
     <header>
         <?php

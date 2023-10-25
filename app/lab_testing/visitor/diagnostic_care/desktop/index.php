@@ -19,7 +19,7 @@ require_once 'header.php';
                         <div class="col-12 col-lg-6 is-color-blue">
                             <div class="hero-input d-flex mt-3 py-4 px-4 Prescription">
                                 <i class="bx bx-cloud-upload isfont-40 is-margin-side-20"></i>
-                                <button class="is-color-blue isfont-27 ">
+                                <button class="is-color-blue isfont-18 ">
                                     Upload Prescription
                                 </button>
                             </div>

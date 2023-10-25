@@ -153,6 +153,10 @@ a {
   font-weight: 600;
 }
 
+.isfont-18 {
+  font-size: var(--font18);
+}
+
 .isfont-27 {
   font-size: var(--font27);
 }
