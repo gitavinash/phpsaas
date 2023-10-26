@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p class="copright"><?php echo date('Y') ?> &copy; <?php echo SITE_NAME ?>. All rights reserved.</p>
-                <p class="copright">Made with <i class="fa fa-heart"></i> by <a href="http://www.itssoftworld.com" title="Software development company in delhi" style="color: #fff">Blumox Technologies</a> in India </p>
+                <p class="copright">Made with <i class="fa fa-heart"></i> by <a href="http://www.blumox.com" title="Software development company in delhi" style="color: #fff">Blumox Technologies</a> in India </p>
             </div>
         </div>
     </div>

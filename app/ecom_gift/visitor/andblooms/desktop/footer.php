@@ -123,7 +123,7 @@
             <div class="row">
                 <div class="col-md-12 col-12">
                     <div class="footer-btm">
-                        <p>Design &amp; Developed by <a href="https://itssoftworld.com" title="Ecommerce development in delhi">Blumox Technologies</a></p>
+                        <p>Design &amp; Developed by <a href="https://blumox.com" title="Ecommerce development in delhi">Blumox Technologies</a></p>
                     </div>
                 </div>
             </div>

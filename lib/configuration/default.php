@@ -18,7 +18,7 @@ if (!isset($_SESSION['active_session_id'])) {
 
 define('CREDIT', 'Blumox Technologies');
 define('CREDIT_MAIL', 'avinash@isw.one');
-define('CREDIT_URL', 'http://www.itssoftworld.com');
+define('CREDIT_URL', 'http://www.blumox.com');
 
 /** Define website default name and description according to domain */
 

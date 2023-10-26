@@ -60,9 +60,27 @@
 
     <!-- <div class="popUpModal">
         <div class="popUpBox">
-            <h3>Fill this form</h3>
+            <h3>Share your requirments</h3>
             <form action="" method="POST">
-
+                <div class="formGroup">
+                    <label>Full name</label>
+                    <input type="text" placeholder="Enter your name" name="name" required autofocus>
+                </div>
+                <div class="formGroup">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter your email" name="email" required>
+                </div>
+                <div class="formGroup">
+                    <label>Mobile no.</label>
+                    <input type="number" placeholder="Enter your mobile no." name="mobile" required>
+                </div>
+                <div class="formGroup">
+                    <label>Requirements</label>
+                    <textarea name="requirements" placeholder="Share your requirement here"></textarea>
+                </div>
+                <div class="formGroup">
+                    <input type="submit" class="btn" value="Send request">
+                </div>
             </form>
         </div>
     </div> -->

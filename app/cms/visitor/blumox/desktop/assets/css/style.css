@@ -49,18 +49,80 @@ section {
 
 .popUpModal {
   position: fixed;
-  width: 95%;
-  top: 20%;
+  width: 100%;
+  top: 0;
   z-index: 9999 !important;
+  text-align: center;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  height: 100vh;
+  display: none;
 }
 
 .popUpBox {
-  width: 500px;
-  height: 400px;
-  background: #5fc5d4;
+  max-width: 500px;
+  height: 100vh;
+  float: right;
   margin: 0 auto;
   padding: 20px;
-  border-radius: 10px;
+  background: #fff;
+}
+
+.popUpBox h3 {
+  text-align: center;
+  font-weight: 600;
+}
+
+.formGroup {
+  float: left;
+  width: 100%;
+  text-align: left;
+}
+
+.formGroup label {
+  float: left;
+  width: 100%;
+}
+
+.formGroup input {
+  float: left;
+  width: 100%;
+  border: none;
+  padding: 7px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  outline: none;
+}
+
+.formGroup input[type="text"],
+input[type="number"],
+input[type="email"] {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+
+.formGroup input[type="submit"] {
+  text-align: left;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 10px;
+  border-radius: 0px;
+}
+
+.formGroup textarea {
+  float: left;
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  padding: 7px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  outline: none;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 }
 
 .heart {
@@ -319,6 +381,19 @@ img.welcomeLogo {
   font-weight: 700;
 }
 
+.btn {
+  border: none !important;
+  border-bottom: 2px solid #3ab4f1 !important;
+  padding: 10px 10px 6px 10px !important;
+}
+
+.btn:hover {
+  background-color: #3ab4f1;
+  color: #fff;
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+}
 a.getInTouchBtn {
   border-bottom: 2px solid #3ab4f1;
   padding: 5px 10px 5px 10px;
@@ -520,6 +595,17 @@ footer {
 }
 
 @media only screen and (max-width: 800px) {
+  .popUpBox {
+    width: 90%;
+    height: 100vh;
+    float: right;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+  }
+}
+
+@media only screen and (max-width: 800px) {
   .logo {
     float: left;
     padding: 10px 5%;
@@ -621,6 +707,15 @@ footer {
 
   .welcomeNote p strong {
     font-size: 24px;
+  }
+
+  .popUpBox {
+    max-width: 500px;
+    height: 100vh;
+    float: right;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
   }
 
   .projectBox {

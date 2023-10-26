@@ -70,7 +70,7 @@
    <div class="row" id="copyright" data-layout="default">
       <div class="container">
          <div class="col span_5">
-            <p>Copyright © 2020 <span>Tarot By Sid</span> | Design and Developed by <a href="http://www.itssoftworld.com" title="Web Developer in Delhi">Blumox Technologies</a></p>
+            <p>Copyright © 2020 <span>Tarot By Sid</span> | Design and Developed by <a href="http://www.blumox.com" title="Web Developer in Delhi">Blumox Technologies</a></p>
          </div>
          <div class="col span_7 col_last">
             <ul class="social"></ul>
