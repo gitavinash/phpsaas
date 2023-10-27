@@ -2,6 +2,14 @@
 <html lang="en">
 
 <head>
+
+    <?php
+
+    if (BASE_URL == '/booking-process/') {
+        echo "<meta http-equiv='refresh' content='60;url=/thank-you/' />";
+    }
+
+    ?>
     <base href="<?php echo SITE_URL ?>">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,9 +26,9 @@
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>checkout.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>contact.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>list.css" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>logo.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo USER_IMAGES ?>logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo USER_IMAGES ?>favicon.png">
     <link rel="mask-icon" href="<?php echo USER_IMAGES ?>favicon.png" color="#0077be">
     <meta name="msapplication-TileColor" content="#0077be">
     <meta name="theme-color" content="#0077be">

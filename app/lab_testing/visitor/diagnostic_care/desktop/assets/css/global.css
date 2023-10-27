@@ -84,12 +84,26 @@ a {
   z-index: 100;
 }
 
+.paymentDone {
+  float: left;
+  padding: 10% 5%;
+}
+
+.paymentDone h2 {
+  float: left;
+  line-height: 48px;
+}
+
+.paymentDone a {
+  float: left;
+  margin-top: 50px;
+}
+
 .mobile-nav.active {
   right: 0;
 }
 
 .mobile-logo {
-  height: 80px;
   width: auto;
 }
 

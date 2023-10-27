@@ -88,7 +88,7 @@ require_once 'header.php';
                     </div>
 
                     <div class="ms-3">
-                      <a href="#book-now/?package_id=<?php echo base64_encode($product_id) ?>" class="btn1 package-btn">Book Now</a>
+                      <a href="/book-now/?test_id=<?php echo base64_encode($product_id) ?>" class="btn1 package-btn">Book Now</a>
                     </div>
                   </div>
                 </div>
@@ -162,7 +162,7 @@ require_once 'header.php';
                     </div>
 
                     <div class="ms-3">
-                      <a href="#book-now/?package_id=<?php echo base64_encode($product_id) ?>" class="btn1 package-btn">Book Now</a>
+                      <a href="/book-now/?test_id=<?php echo base64_encode($product_id) ?>" class="btn1 package-btn">Book Now</a>
                     </div>
                   </div>
                 </div>

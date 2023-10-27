@@ -67,7 +67,6 @@
 
 .testi .slick-initialized .slick-slide {
   height: 350px !important;
-
 }
 
 .testi-card img {
@@ -107,7 +106,7 @@
   padding-left: 12px;
 }
 
-.prescription-form{
+.prescription-form {
   position: fixed;
   height: 100vh;
   width: 40%;
@@ -118,22 +117,22 @@
   display: flex;
   align-items: center;
   padding: 20px 30px;
-  transition: .7s ease;
+  transition: 0.7s ease;
 }
 
-.prescription-form.active{
+.prescription-form.active {
   right: 0;
 }
 
 .prescription-form input {
-    padding: 20px;
-    border: 1px solid var(--clr1);
-    background: transparent;
-    border-radius: 10px;
-    background: #f8fcff;
+  padding: 20px;
+  border: 1px solid var(--clr1);
+  background: transparent;
+  border-radius: 10px;
+  background: #f8fcff;
 }
 
-.prescription-form textarea{
+.prescription-form textarea {
   border: 1px solid var(--clr1);
   background: transparent;
   border-radius: 10px;
@@ -142,7 +141,7 @@
 }
 
 @media (max-width: 1220px) {
-  .prescription-form{
+  .prescription-form {
     width: 60%;
   }
 }
@@ -155,7 +154,7 @@
     padding: 40px 0;
   }
 
-  .prescription-form{
+  .prescription-form {
     width: 100%;
   }
 }
@@ -164,9 +163,6 @@
   .package-btn {
     font-size: 10px;
   }
-
-  
-  
 }
 
 @media (max-width: 420px) {
@@ -178,8 +174,8 @@
   }
 }
 
-@media (max-width: 400px) {
+/* @media (max-width: 400px) {
   .package-btn {
     font-size: 6px;
   }
-}
+} */
