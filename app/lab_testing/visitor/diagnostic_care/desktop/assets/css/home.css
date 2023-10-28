@@ -179,10 +179,11 @@
   position: absolute;
   width: 100%;
   background: #fff;
-  margin-top: 250px;
   z-index: 9;
   border-bottom-left-radius: 7px;
+  top: 70px;
 }
+
 #searchResults li {
   list-style: none;
   padding: 10px 5%;
