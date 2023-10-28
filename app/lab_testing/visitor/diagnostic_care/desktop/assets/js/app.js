@@ -132,8 +132,10 @@ $(document).ready(function () {
 
         // Handle click on a suggestion
         suggestion.on("click", function () {
-          inputSearch.val($(this).text());
-          resultsContainer.empty();
+          // inputSearch.val($(this).text());
+          window.location.href =
+            "/book-now/?test=" + encodeURI($(this).text().toLowerCase());
+          // resultsContainer.empty();
         });
       }
     });
