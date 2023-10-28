@@ -186,11 +186,11 @@
 #searchResults li {
   list-style: none;
   padding: 10px 5%;
-  border: 1px solid (--clr1);
+  border: 1px solid var(--clr1);
 }
-/* #searchResults li:last-child {
+#searchResults li:last-child {
   border: none;
-} */
+}
 
 /* @media (max-width: 400px) {
   .package-btn {
