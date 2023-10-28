@@ -120,14 +120,14 @@ $(document).ready(function () {
   function fetchData(query) {
     $.get(apiEndpoint + "?test_name=" + query, function (data) {
       // Handle the API response data
-      var results = data.results;
+      var results = data;
 
       // Clear previous results
       resultsContainer.empty();
 
       // Create autocomplete suggestions
       for (var i = 0; i < results.length; i++) {
-        var suggestion = $("<div>").text(results[i]);
+        var suggestion = $("<li>").text(results[i].product_title);
         resultsContainer.append(suggestion);
 
         // Handle click on a suggestion
