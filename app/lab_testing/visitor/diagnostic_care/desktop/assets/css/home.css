@@ -64,6 +64,7 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin: 0 15px;
   height: 330px;
+  text-align: center;
 }
 
 .testi .slick-initialized .slick-slide {
@@ -73,6 +74,9 @@
 .testi-card img {
   height: 5rem;
   object-fit: contain;
+  width: 5rem;
+  text-align: center;
+  display: inline !important;
 }
 
 .rating img {

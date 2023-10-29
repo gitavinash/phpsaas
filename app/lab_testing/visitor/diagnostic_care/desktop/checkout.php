@@ -12,7 +12,8 @@ require_once 'header.php';
                 </h2>
             </div>
             <div class="col-12 col-lg-5 my-4 my-lg-0">
-                <img src="<?php echo USER_IMAGES ?>appointment.png" alt="" class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
+                <img src="<?php echo USER_IMAGES ?>appointment.png" alt=""
+                    class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
             </div>
         </div>
     </div>
@@ -47,16 +48,16 @@ require_once 'header.php';
                                     while ($testList = mysqli_fetch_assoc($checkTest)) {
                                         extract($testList); ?>
 
-                                        <tr>
-                                            <td class="is-color-blue is-font600 isfont-27">
-                                                <?php echo ucwords($product_title) ?>
-                                            </td>
-                                            <td class="is-color-blue is-font600 isfont-18">
-                                                <?php echo $inventory_currency_symbol . ' ' . $inventory_price; ?></td>
-                                            <td class="text-center">
-                                                <i class="bx bx-x-circle text-center fs-3 text-danger removeTest"></i>
-                                            </td>
-                                        </tr>
+                            <tr>
+                                <td class="is-color-blue is-font600 isfont-27">
+                                    <?php echo ucwords($product_title) ?>
+                                </td>
+                                <td class="is-color-blue is-font600 isfont-18">
+                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price; ?></td>
+                                <td class="text-center">
+                                    <i class="bx bx-x-circle text-center fs-3 text-danger removeTest"></i>
+                                </td>
+                            </tr>
                             <?php
                                     }
                                 } else {
@@ -72,38 +73,95 @@ require_once 'header.php';
 
             <div class="col-12 col-lg-6">
                 <div class="apointment-form">
-                    <form>
+                    <form action="" method="POST">
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" id="fullName" placeholder="Your name" />
+                                    <input type="text" name="name" class="form-control" id="fullName"
+                                        placeholder="Your name *" required />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" id="email" placeholder="Email" />
+                                    <input type="email" name="email" class="form-control" id="email"
+                                        placeholder="Email" />
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="number" class="form-control" placeholder="Mobile" id="mobile" />
+                                    <input type="number" name="mobile" class="form-control" placeholder="Mobile *"
+                                        id="mobile" required />
                                 </div>
                             </div>
 
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" id="email" placeholder="Test pick-up date and time" />
+                                    <input type="text" name="pickup_date" class="form-control" id="pickupDate"
+                                        placeholder="Test pick-up date *" required />
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <select name="pickup_time" class="form-control" id="pickupTime" required>
+                                        <option value="" disabled selected>Test pick-up time *</option>
+                                        <option value="06:00 AM">06:00 AM</option>
+                                        <option value="06:30 AM">06:30 AM</option>
+                                        <option value="07:00 AM">07:00 AM</option>
+                                        <option value="07:30 AM">07:30 AM</option>
+                                        <option value="08:00 AM">08:00 AM</option>
+                                        <option value="08:30 AM">08:30 AM</option>
+                                        <option value="09:00 AM">09:00 AM</option>
+                                        <option value="09:30 AM">09:30 AM</option>
+                                        <option value="10:00 AM">10:00 AM</option>
+                                        <option value="10:30 AM">10:30 AM</option>
+                                        <option value="11:00 AM">11:00 AM</option>
+                                        <option value="11:30 AM">11:30 AM</option>
+                                        <option value="12:00 PM">12:00 PM</option>
+                                        <option value="12:30 PM">12:30 PM</option>
+                                        <option value="01:00 PM">01:00 PM</option>
+                                        <option value="01:30 PM">01:30 PM</option>
+                                        <option value="02:00 PM">02:00 PM</option>
+                                        <option value="02:30 PM">02:30 PM</option>
+                                        <option value="03:00 PM">03:00 PM</option>
+                                        <option value="03:30 PM">03:30 PM</option>
+                                        <option value="04:00 PM">04:00 PM</option>
+                                        <option value="04:30 PM">04:30 PM</option>
+                                        <option value="05:00 PM">05:00 PM</option>
+                                        <option value="05:30 PM">05:30 PM</option>
+                                        <option value="06:00 PM">06:00 PM</option>
+                                        <option value="06:30 PM">06:30 PM</option>
+                                        <option value="07:00 PM">07:00 PM</option>
+                                        <option value="07:30 PM">07:30 PM</option>
+                                        <option value="08:00 PM">08:00 PM</option>
+                                        <option value="08:30 PM">08:30 PM</option>
+                                        <option value="09:00 PM">09:00 PM</option>
+                                        <option value="09:30 PM">09:30 PM</option>
+                                        <option value="10:00 PM">10:00 PM</option>
+                                        <option value="10:30 PM">10:30 PM</option>
+                                    </select>
                                 </div>
                             </div>
 
                             <div class=" col-12">
-                                <textarea class="form-control" placeholder="Address..." id="pickUpAddress"></textarea>
+                                <textarea class="form-control" placeholder="Test collection address *"
+                                    id="pickUpAddress" required></textarea>
                             </div>
                         </div>
-                        <a href="/booking-process/?price=<?php echo $inventory_price ?>" type="submit" class="btn btn-primary w-100 my-4 py-3">
+                        <!-- <a href="/booking-process/?price=<?php echo $inventory_price ?>" type="submit"
+                            class="btn btn-primary w-100 my-4 py-3">
                             Submit
-                        </a>
+                        </a> -->
+                        <input type="hidden" name="type" value="enquiry">
+                        <input type="hidden" name="action" value="new">
+                        <input type="hidden" name="subject" value="New Booking for <?php echo $product_title ?>">
+                        <input type="hidden" name="sender"
+                            value="<?php echo base64_encode("diagnosticcare.in@gmail.com") ?>">
+                        <input type="hidden" name="cc"
+                            value="<?php echo base64_encode("kushagra.catalyst@gmail.com,itssoftworld@gmail.com") ?>">
+                        <input type="hidden" name="redirect_url" value="/thank-you/">
+                        <input type="submit" class="btn btn-primary w-100 my-4 py-3" value="Book Now">
 
                         <div>
                             <p class="isfont-12 text-center text-">

@@ -18,8 +18,12 @@
   padding: 20px 15px;
 }
 
+.apointment-form select {
+  padding: 20px 15px;
+}
+
 .apointment-form textarea {
-  border: 1px var(--clr1);
+  /* border: 1px var(--clr1); */
   height: 100px;
 }
 

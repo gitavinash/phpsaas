@@ -13,22 +13,16 @@
     <base href="<?php echo SITE_URL ?>">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>
-        <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME) ?>
-    </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css" />
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>global.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>home.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>checkout.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>contact.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>list.css" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>favicon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo USER_IMAGES ?>favicon.png">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.css">
     <link rel="mask-icon" href="<?php echo USER_IMAGES ?>favicon.png" color="#0077be">
     <meta name="msapplication-TileColor" content="#0077be">
     <meta name="theme-color" content="#0077be">
@@ -39,7 +33,7 @@
     <header class="side-padding">
         <nav class="navbar navbar-expand-lg navigation">
             <div class="container">
-                <a class="navbar-brand" href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid" /></a>
+                <a class="navbar-brand" href="/"><img src="<?php echo SITE_LOGO ?>" alt="" class="img-fluid" /></a>
                 <div class="humburger d-block d-lg-none">
                     <i class='bx bx-menu isfont-28'></i>
                 </div>
@@ -68,7 +62,7 @@
         <div class="mobile-nav">
             <div class="row my-5 px-3 align-items-center">
                 <div class="col-6">
-                    <img src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid mobile-logo">
+                    <img src="<?php echo SITE_LOGO ?>" alt="" class="img-fluid mobile-logo">
                 </div>
                 <div class="col-6 d-flex justify-content-end">
                     <div class="close-icon">

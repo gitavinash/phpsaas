@@ -8,8 +8,8 @@ require_once 'header.php';
         <div class="row align-items-center">
             <div class="col-12 col-lg-7">
                 <div>
-                    <h2 class="isfont-40 text-white my-3 is-font600">
-                        Book a lab test from the lab of your choice
+                    <h2 class="isfont-28 text-white my-3 is-font600">
+                        Book a Lab Test from the lab of your choice
                     </h2>
                     <div class="hero-input d-flex align-items-center">
                         <i class="bx bx-search mx-3 isfont-40 ps-3 is-txt-color2"></i>
@@ -18,7 +18,7 @@ require_once 'header.php';
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-6 is-color-blue">
-                            <div class="hero-input d-flex mt-3 py-4 px-4 Prescription">
+                            <div class="hero-input d-flex mt-3 py-4 px-4 prescription">
                                 <i class="bx bx-cloud-upload isfont-40 is-margin-side-20"></i>
                                 <button class="is-color-blue isfont-18 ">
                                     Upload Prescription
@@ -122,7 +122,7 @@ require_once 'header.php';
 <section class="parnters vartical-padding side-padding">
     <div class="container">
         <div>
-            <h3 class="isfont-40 is-font600 is-color-blue">Our partner labs</h3>
+            <h3 class="isfont-40 is-font600 is-color-blue">Our Partner Labs</h3>
         </div>
         <div class="row my-5 pt-slider overflow-hidden">
             <?php
@@ -141,12 +141,12 @@ require_once 'header.php';
 <section class="vartical-padding package-parent side-padding">
     <div class="container">
         <div>
-            <h3 class="isfont-40 is-font600 is-color-blue">Our partner packages</h3>
+            <h3 class="isfont-40 is-font600 is-color-blue">Our Partner Packages</h3>
         </div>
         <div class="row my-4 py-3 packge-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' LIMIT 0, 9")) {
+            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' ORDER BY RAND() LIMIT 0, 9")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
                     while ($packageListInfo = mysqli_fetch_assoc($packageList)) {
@@ -311,7 +311,7 @@ require_once 'header.php';
             <div class="col-3">
                 <div class="card testi-card">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>t1.png" class="card-img-top" alt="..." />
+                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/r.png" class="card-img-top" />
                         <h4 class="isfont-18 is-color-blue text-center my-3 is-font600">
                             Rakesh Sharma
                         </h4>
@@ -337,7 +337,7 @@ require_once 'header.php';
             <div class="col-3">
                 <div class="card testi-card">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>t2.png" class="card-img-top" alt="..." />
+                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/r.png" class="card-img-top" />
                         <h4 class="isfont-18 is-color-blue text-center my-3 is-font600">
                             Ritu Yadav
                         </h4>
@@ -364,7 +364,7 @@ require_once 'header.php';
             <div class="col-3">
                 <div class="card testi-card">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>t3.png" class="card-img-top" alt="..." />
+                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/m.png" class="card-img-top" />
                         <h4 class="isfont-18 is-color-blue text-center my-3 is-font600">
                             Mohammad Zeeshan
                         </h4>
@@ -391,7 +391,7 @@ require_once 'header.php';
             <div class="col-3">
                 <div class="card testi-card">
                     <div>
-                        <img src="<?php echo USER_IMAGES ?>t4.png" class="card-img-top" alt="..." />
+                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/r.png" class="card-img-top" />
                         <h4 class="isfont-18 is-color-blue text-center my-3 is-font600">
                             Ranjana Sharma
                         </h4>

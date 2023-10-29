@@ -1,18 +1,18 @@
 $(document).ready(function () {
   $(".pt-slider").slick({
     dots: true,
-    infinite: false,
-    speed: 300,
+    infinite: true,
+    speed: 500,
     slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 1500,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToScroll: 1,
           infinite: true,
           dots: true,
         },
@@ -21,14 +21,14 @@ $(document).ready(function () {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToScroll: 1,
         },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToScroll: 1,
         },
       },
       // You can unslick at a given breakpoint now by adding:
@@ -74,24 +74,7 @@ $(document).ready(function () {
       // instead of a settings object
     ],
   });
-  const prescription = document.querySelector(".Prescription");
-  const prescriptionForm = document.querySelector(".prescription-form");
-  const opacity = document.querySelector(".opacity");
-  prescription.addEventListener("click", () => {
-    prescriptionForm.classList.add("active");
-    opacity.classList.add("active");
-  });
 
-  const closeForm = document.querySelector(".close-form");
-  closeForm.addEventListener("click", () => {
-    prescriptionForm.classList.remove("active");
-    opacity.classList.remove("active");
-  });
-
-  opacity.addEventListener("click", () => {
-    prescriptionForm.classList.remove("active");
-    opacity.classList.remove("active");
-  });
   try {
     const humburger = document.querySelector(".humburger");
     const mbNav = document.querySelector(".mobile-nav");
@@ -160,5 +143,18 @@ $(document).ready(function () {
     ) {
       resultsContainer.empty();
     }
+  });
+
+  $(".removeTest").on("click", function (e) {
+    window.location.href = "/";
+    e.preventDefault();
+  });
+
+  $("#pickupDate").datepicker({
+    todayHighlight: true,
+    startDate: "0",
+    maxViewMode: 0,
+    format: "dd MM yyyy",
+    autoclose: true,
   });
 });

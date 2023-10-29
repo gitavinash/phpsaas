@@ -1,8 +1,8 @@
-<?php $canonicalURL=str_replace('amp/', '', ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL )); ?>
+<?php $canonicalURL = str_replace('amp/', '', ((isset($meta_canonical)) ?  (($meta_canonical != '') ? $meta_canonical : HTTP_PROTOCOL . SITE_DOMAIN . BASE_URL) : HTTP_PROTOCOL . SITE_DOMAIN . BASE_URL)); ?>
 <!-- Site Default Configuration -->
 <link rel="icon" href="<?php echo SITE_ICON ?>">
 <title>
-    <?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>
+    <?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : SITE_NAME) : SITE_NAME))))) ?>
 </title>
 <!-- Canonical URL -->
 <link rel="canonical" href="<?php echo $canonicalURL; ?>" />
@@ -14,24 +14,21 @@
 
 <?php
 
-    if(defined('ENABLE_AMP')) {
+if (defined('ENABLE_AMP')) {
 
-        // AMP
-    
-        if(SITE_VERSION=='amp') {
+    // AMP
 
-            // AMP site tag
-            
-            echo "<link rel='alternate' href='{$canonicalURL}' />";
-        
-        } else {
-            
-            // Non AMP site tag
-    
-            echo "<link rel='amphtml' href='".str_replace(SITE_URL, SITE_URL.'/amp', $canonicalURL)."' >";
-    
-        }
+    if (SITE_VERSION == 'amp') {
 
+        // AMP site tag
+
+        echo "<link rel='alternate' href='{$canonicalURL}' />";
+    } else {
+
+        // Non AMP site tag
+
+        echo "<link rel='amphtml' href='" . str_replace(SITE_URL, SITE_URL . '/amp', $canonicalURL) . "' >";
     }
+}
 
 ?>

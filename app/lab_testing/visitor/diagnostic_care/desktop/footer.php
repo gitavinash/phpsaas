@@ -98,11 +98,36 @@
         h.parentNode.insertBefore(j, h);
     })(window, document, "script", "https://waw.gallabox.com");
 </script>
+<?php
+
+if (BASE_URL == '/') {
+    echo '
+        const prescription = document.querySelector(".prescription");
+        const prescriptionForm = document.querySelector(".prescription-form");
+        const opacity = document.querySelector(".opacity");
+        prescription.addEventListener("click", () => {
+          prescriptionForm.classList.add("active");
+          opacity.classList.add("active");
+        });
+      
+        const closeForm = document.querySelector(".close-form");
+        closeForm.addEventListener("click", () => {
+          prescriptionForm.classList.remove("active");
+          opacity.classList.remove("active");
+        });
+      
+        opacity.addEventListener("click", () => {
+          prescriptionForm.classList.remove("active");
+          opacity.classList.remove("active");
+        });';
+}
+
+?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 </script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
+<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
+<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
 <script src="<?php echo USER_JS ?>app.js"></script>
 </body>
 
