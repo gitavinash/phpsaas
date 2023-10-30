@@ -33,7 +33,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
         <div class="left-side">
             <ul>
                 <li>
-                    <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+                    <div class="logo"><a href="/" target="_blank"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
         </div>
@@ -132,6 +132,25 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
                                     Sliders</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
+                    <a href="import/?type=product"><i class="fas fa-upload"></i> Import</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="import/?type=lab_tests"><i class="fas fa-flask"></i>
+                                    Lab Tests</a></li>
+                            <li><a href="import/?type=product&productType=package"><i class="fas fa-medkit"></i>
+                                    Test Packages</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="import/?type=lab_tests"><i class="fas fa-flask"></i>
+                                    Lab Tests</a></li>
+                            <li><a href="import/?type=product&productType=package"><i class="fas fa-medkit"></i>
+                                    Test Packages</a></li>
                         </ul>
                     </div>
                 </li>
