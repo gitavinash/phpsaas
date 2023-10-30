@@ -42,13 +42,16 @@
                         <img src="<?php echo USER_IMAGES ?>gmail.png" alt="" class="mx-2" />diagnosticcare.in@gmail.com
                     </li>
                     <li>
-                        <a href="tel:+91-9212535996"><img src="<?php echo USER_IMAGES ?>phone.png" alt="" class="mx-2" />+91-9212535996</a>
+                        <a href="tel:+91-9212535996"><img src="<?php echo USER_IMAGES ?>phone.png" alt=""
+                                class="mx-2" />+91-9212535996</a>
                     </li>
                     <li>
-                        <a href="tel:+91-7053430002"><img src="<?php echo USER_IMAGES ?>phone.png" alt="" class="mx-2" />+91-7053430002</a>
+                        <a href="tel:+91-7053430002"><img src="<?php echo USER_IMAGES ?>phone.png" alt=""
+                                class="mx-2" />+91-7053430002</a>
                     </li>
                     <li>
-                        <a href="tel:+91-9211443544"><img src="<?php echo USER_IMAGES ?>phone.png" alt="" class="mx-2" />+91-9211443544</a>
+                        <a href="tel:+91-9211443544"><img src="<?php echo USER_IMAGES ?>phone.png" alt=""
+                                class="mx-2" />+91-9211443544</a>
                     </li>
                 </ul>
             </div>
@@ -75,33 +78,33 @@
 
 <script src="https://kit.fontawesome.com/da7bbb41f1.js" crossorigin="anonymous"></script>
 <script>
-    (function(w, d, s, u) {
-        w.gbwawc = {
-            url: u,
-            options: {
-                waId: "+91-9212535996",
-                siteName: "Diagnosticcare",
-                siteTag: "Usually Response in 5 Minute",
-                siteLogo: "https://waw.gallabox.com/chatbotavatars/2.png",
-                widgetPosition: "RIGHT",
-                triggerMessage: "",
-                welcomeMessage: "Welcome to DiagnosticCare, how can I assist you today?",
-                brandColor: "#25D366",
-                messageText: "Are you looking for Diagnostic Service?",
-                replyOptions: ["", "", ""],
-            },
-        };
-        var h = d.getElementsByTagName(s)[0],
-            j = d.createElement(s);
-        j.async = true;
-        j.src = u + "/whatsapp-widget.min.js?_=" + Math.random();
-        h.parentNode.insertBefore(j, h);
-    })(window, document, "script", "https://waw.gallabox.com");
+(function(w, d, s, u) {
+    w.gbwawc = {
+        url: u,
+        options: {
+            waId: "+91-9212535996",
+            siteName: "Diagnosticcare",
+            siteTag: "Usually Response in 5 Minute",
+            siteLogo: "https://waw.gallabox.com/chatbotavatars/2.png",
+            widgetPosition: "RIGHT",
+            triggerMessage: "",
+            welcomeMessage: "Welcome to DiagnosticCare, how can I assist you today?",
+            brandColor: "#25D366",
+            messageText: "Are you looking for Diagnostic Service?",
+            replyOptions: ["", "", ""],
+        },
+    };
+    var h = d.getElementsByTagName(s)[0],
+        j = d.createElement(s);
+    j.async = true;
+    j.src = u + "/whatsapp-widget.min.js?_=" + Math.random();
+    h.parentNode.insertBefore(j, h);
+})(window, document, "script", "https://waw.gallabox.com");
 </script>
 <?php
 
 if (BASE_URL == '/') {
-    echo '
+    echo '<script>
         const prescription = document.querySelector(".prescription");
         const prescriptionForm = document.querySelector(".prescription-form");
         const opacity = document.querySelector(".opacity");
@@ -119,11 +122,12 @@ if (BASE_URL == '/') {
         opacity.addEventListener("click", () => {
           prescriptionForm.classList.remove("active");
           opacity.classList.remove("active");
-        });';
+        });</script>';
 }
 
 ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 </script>
 <script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
