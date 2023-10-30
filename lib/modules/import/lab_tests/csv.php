@@ -87,6 +87,8 @@ if ($_FILES['importFile']['error'] == 0) {
                                         $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_brand_id, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(" . APP_SITE_ID . ", '{$test_brand}', '{$test_title}', '{$test_description}', '{$test_short_description}', '{$categoryId}', " . USER_ID . ",'1', 'diagnostic')");
                                         $productID = mysqli_insert_id($connection);
 
+                                        $addNewProductMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product_meta(product_meta_relation_id, product_meta_site_id, product_meta_key, product_meta_value, product_meta_status) VALUES('{$productID}', " . SITE_ID . ", 'delivery_time', '{$test_deivery_time}', 1)");
+
                                         $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
                                         $linkID = mysqli_insert_id($connection);
 
@@ -94,7 +96,7 @@ if ($_FILES['importFile']['error'] == 0) {
 
                                         $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id, meta_type) VALUES('{$linkID}', " . APP_SITE_ID . ",  'product')");
 
-                                        if ($addNewProduct && $addNewLink && $addNewInventory && $addNewMeta) {
+                                        if ($addNewProduct && $addNewProductMeta && $addNewLink && $addNewInventory && $addNewMeta) {
 
                                             $success++;
                                             $status = 'success';

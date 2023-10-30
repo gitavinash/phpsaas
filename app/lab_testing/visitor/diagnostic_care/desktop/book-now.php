@@ -86,7 +86,10 @@ require_once 'header.php';
 
                                 if (mysqli_num_rows($similarTestsQuery) != 0) {
                                     while ($similarTests = mysqli_fetch_assoc($similarTestsQuery)) {
-                                        extract($similarTests); ?>
+                                        extract($similarTests);
+
+
+                            ?>
 
 
 
@@ -126,7 +129,7 @@ require_once 'header.php';
                                         </div>
                                     </div>
 
-                                    <div class="d-flex align-items-center ">
+                                    <!-- <div class="d-flex align-items-center ">
                                         <div class="py-2">
                                             <img src="<?php echo USER_IMAGES ?>f-score.png" alt=""
                                                 style="height: 25px;"> :
@@ -137,7 +140,7 @@ require_once 'header.php';
                                                 <h2 class="isfont-15   is-font600 m-0">90% Accuracy</h2>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                 </div>
 
@@ -150,7 +153,7 @@ require_once 'header.php';
                                         <div class="d-flex justify-content-between">
 
                                             <div class="mx-2">
-                                                <h2 class="isfont-15   is-font600 m-0">Delivery in 24 hour</h2>
+                                                <h2 class="isfont-15   is-font600 m-0"><?php echo '' ?></h2>
                                             </div>
                                         </div>
                                     </div>
@@ -164,7 +167,7 @@ require_once 'header.php';
 
                                             <div class="mx-2">
                                                 <h2 class="isfont-15   is-font600 m-0">
-                                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?>
+                                                    <?php echo $inventory_price ?>
                                                 </h2>
                                             </div>
                                         </div>
