@@ -129,7 +129,7 @@ require_once 'header.php';
                     <!-- <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It
                         is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p> -->
                     <pc class="time">
-                        <span>Monday - Sunday <strong>11:00 AM - 11:00 PM</strong></span>
+                        <span>Monday - Sunday <strong>06:00 PM - 11:30 PM</strong></span>
                         <span><a href="tel:+91-9310406027">+91 93104 06027</a></span>
                         </p>
                 </div>
@@ -293,8 +293,7 @@ require_once 'header.php';
         </div>
     </section>
 
-    <section class="ftco-section img" style="background-image: url(<?php echo USER_IMAGES ?>bg_8.jpg)"
-        data-stellar-background-ratio="0.5">
+    <section class="ftco-section img" style="background-image: url(<?php echo USER_IMAGES ?>bg_8.jpg)" data-stellar-background-ratio="0.5">
         <div class="container">
             <div class="row d-flex">
                 <div class="col-md-7 ftco-animate makereservation p-4 px-md-5 pb-md-5">
