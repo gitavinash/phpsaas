@@ -1,18 +1,15 @@
 <?php
 
-  require_once 'header.php';
+require_once 'header.php';
 
 ?>
-<section class="hero-wrap hero-wrap-2" style="background-image: url('<?php echo USER_IMAGES ?>bg_8.jpg');"
-    data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('<?php echo USER_IMAGES ?>bg_8.jpg');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate text-center mb-4">
                 <h1 class="mb-2 bread">About</h1>
-                <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
-                                class="ion-ios-arrow-forward"></i></a></span> <span>About <i
-                            class="ion-ios-arrow-forward"></i></span></p>
+                <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>About <i class="ion-ios-arrow-forward"></i></span></p>
             </div>
         </div>
     </div>
@@ -30,7 +27,7 @@
                     <h2 class="mb-4">HOME DELIVERY</h2>
                 </div>
                 <pc class="time">
-                    <span>Monday - Sunday <strong>11:00 AM - 11:00 PM</strong></span>
+                    <span>Monday - Sunday <strong>06:00 PM - 11:30 PM</strong></span>
                     <span><a href="tel:+91-9310406027">+91 93104 06027</a></span>
                     </p>
             </div>
@@ -41,6 +38,6 @@
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

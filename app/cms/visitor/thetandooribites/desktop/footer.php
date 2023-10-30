@@ -92,35 +92,35 @@
 		</section> -->
 
 		<footer class="ftco-footer ftco-bg-dark ftco-section">
-		    <div class="container">
-		        <div class="row mb-5">
-		            <div class="col-md-6 col-lg-4">
-		                <div class="ftco-footer-widget mb-4">
-		                    <img src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid header-logo">
-		                    <!-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
+			<div class="container">
+				<div class="row mb-5">
+					<div class="col-md-6 col-lg-4">
+						<div class="ftco-footer-widget mb-4">
+							<img src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid header-logo">
+							<!-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
 		                        live the blind texts.</p>
 		                    <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-3">
 		                        <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
 		                        <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
 		                        <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
 		                    </ul> -->
-		                </div>
-		            </div>
-		            <div class="col-md-6 col-lg-4">
-		                <div class="ftco-footer-widget mb-4">
-		                    <h2 class="ftco-heading-2">Open Hours</h2>
-		                    <ul class="list-unstyled open-hours">
-		                        <li class="d-flex"><span>Monday</span><span>11:00 AM - 11:00 PM</span></li>
-		                        <li class="d-flex"><span>Tuesday</span><span>11:00 AM - 11:00 PM</span></li>
-		                        <li class="d-flex"><span>Wednesday</span><span>11:00 AM - 11:00 PM</span></li>
-		                        <li class="d-flex"><span>Thursday</span><span>11:00 AM - 11:00 PM</span></li>
-		                        <li class="d-flex"><span>Friday</span><span>11:00 AM - 11:00 PM</span></li>
-		                        <li class="d-flex"><span>Saturday</span><span>11:00 AM - 11:00 PM</span></li>
-		                        <li class="d-flex"><span>Sunday</span><span> 11:00 AM - 11:00 PM</span></li>
-		                    </ul>
-		                </div>
-		            </div>
-		            <!-- <div class="col-md-6 col-lg-3">
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<div class="ftco-footer-widget mb-4">
+							<h2 class="ftco-heading-2">Open Hours</h2>
+							<ul class="list-unstyled open-hours">
+								<li class="d-flex"><span>Monday</span><span>06:00 PM - 11:30 PM</span></li>
+								<li class="d-flex"><span>Tuesday</span><span>Closed</span></li>
+								<li class="d-flex"><span>Wednesday</span><span>06:00 PM - 11:30 PM</span></li>
+								<li class="d-flex"><span>Thursday</span><span>06:00 PM - 11:30 PM</span></li>
+								<li class="d-flex"><span>Friday</span><span>06:00 PM - 11:30 PM</span></li>
+								<li class="d-flex"><span>Saturday</span><span>06:00 PM - 11:30 PM</span></li>
+								<li class="d-flex"><span>Sunday</span><span> 06:00 PM - 11:30 PM</span></li>
+							</ul>
+						</div>
+					</div>
+					<!-- <div class="col-md-6 col-lg-3">
 		                <div class="ftco-footer-widget mb-4">
 		                    <h2 class="ftco-heading-2">Instagram</h2>
 		                    <div class="thumb d-sm-flex">
@@ -147,39 +147,38 @@
 		                    </div>
 		                </div>
 		            </div> -->
-		            <div class="col-md-6 col-lg-4">
-		                <div class="ftco-footer-widget mb-4">
-		                    <h2 class="ftco-heading-2">Our Location</h2>
-		                    <ul class="m-0 p-0">
-		                        <li class="my-2 iscolor">
-		                            <span><span class="icon-map me-2"></span></span>
-		                            25/32, East Patel Nagar, New Delhi, 110008 (Opp . SIDDHARTH Hotel)
-		                        </li>
+					<div class="col-md-6 col-lg-4">
+						<div class="ftco-footer-widget mb-4">
+							<h2 class="ftco-heading-2">Our Location</h2>
+							<ul class="m-0 p-0">
+								<li class="my-2 iscolor">
+									<span><span class="icon-map me-2"></span></span>
+									25/32, East Patel Nagar, New Delhi, 110008 (Opp . SIDDHARTH Hotel)
+								</li>
 
-		                        <li class="my-2 iscolor">
-		                            <span><span class="icon-message me-2"></span></span>
-		                            contact@thetandooribites.com
-		                        </li>
+								<li class="my-2 iscolor">
+									<span><span class="icon-message me-2"></span></span>
+									contact@thetandooribites.com
+								</li>
 
-		                        <li class="my-2 iscolor">
-		                            <span><span class="icon-phone me-2"></span></span>
-		                            <a href="tel:+91-9310406027">+91 93104 06027</a>
-		                        </li>
-		                    </ul>
+								<li class="my-2 iscolor">
+									<span><span class="icon-phone me-2"></span></span>
+									<a href="tel:+91-9310406027">+91 93104 06027</a>
+								</li>
+							</ul>
 
-		                </div>
-		            </div>
-		        </div>
-		        <div class="row">
-		            <div class="col-md-12 text-center">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-center">
 
-		                <p>
-		                    Copyright &copy; <?php echo date('Y'); ?>
-		                    </script> All rights reserved | The Tandoori Bites<br />Design and Developed by <a
-		                        href="https://blumox.com" target="_blank">Blumox</a></p>
-		            </div>
-		        </div>
-		    </div>
+						<p>
+							Copyright &copy; <?php echo date('Y'); ?>
+							</script> All rights reserved | The Tandoori Bites<br />Design and Developed by <a href="https://blumox.com" target="_blank">Blumox</a></p>
+					</div>
+				</div>
+			</div>
 		</footer>
 
 		<script src="<?php echo USER_JS ?>jquery.min.js"></script>

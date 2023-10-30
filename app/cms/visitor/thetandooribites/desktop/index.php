@@ -247,9 +247,9 @@ require_once 'header.php';
             </div>
             <div class="row my-5">
                 <div class="col-12 col-md-6 col-lg-4 mt-4">
-                    <img src="<?php echo USER_IMAGES ?>chicken.seekh (1).jpg" alt="" class="img-fluid menu-img">
+                    <img src="<?php echo USER_IMAGES ?>chicken-seekh-kabab-roll.jpg" alt="" class="img-fluid menu-img">
                     <div class="content">
-                        <h4 class="text-center">Chicken Seekh Kabab</h4>
+                        <h4 class="text-center">Chicken Seekh Kabab Roll</h4>
                     </div>
                 </div>
 
@@ -261,15 +261,15 @@ require_once 'header.php';
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-4 mt-4">
-                    <img src="<?php echo USER_IMAGES ?>Fried-veg-momos.jpg" alt="" class="img-fluid menu-img">
+                    <img src="<?php echo USER_IMAGES ?>surmai-fish-tikka.jpg" alt="" class="img-fluid menu-img">
                     <div class="content">
-                        <h4 class="text-center">Momos</h4>
+                        <h4 class="text-center">Surmai Fish Tikka</h4>
                     </div>
                 </div>
 
 
                 <div class="col-12 col-md-6 col-lg-4 mt-4">
-                    <img src="<?php echo USER_IMAGES ?>Fry-Chicken-Tawa-piecee.jpg" alt="" class="img-fluid menu-img">
+                    <img src="<?php echo USER_IMAGES ?>tawa-chicken.jpg" alt="" class="img-fluid menu-img">
                     <div class="content">
                         <h4 class="text-center">Tawa Chicken</h4>
                     </div>
@@ -284,10 +284,9 @@ require_once 'header.php';
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-4 mt-4">
-                    <img src="<?php echo USER_IMAGES ?>soya-chaap-recipe-malai-chaap-recipe-soyabean-in-a-creamy-sauce.jpg"
-                        alt="" class="img-fluid menu-img">
+                    <img src="<?php echo USER_IMAGES ?>afgani-chicken.jpg" alt="" class="img-fluid menu-img">
                     <div class="content">
-                        <h4 class="text-center">Afgani Chaap</h4>
+                        <h4 class="text-center">Afgani Chicken</h4>
                     </div>
                 </div>
             </div>
@@ -364,6 +363,6 @@ require_once 'header.php';
 
     <?php
 
-require_once 'footer.php'
+    require_once 'footer.php'
 
-?>
+    ?>
