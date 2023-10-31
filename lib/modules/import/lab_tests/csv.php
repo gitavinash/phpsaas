@@ -11,7 +11,7 @@ $failedMsg = '';
 
 if ($_FILES['importFile']['error'] == 0) {
 
-    $testType = ((isset($isPackage)) ? 'package' : 'diagnostic');
+    $testType = ((isset($isPackage)) ? 'packages' : 'diagnostic');
 
     $extension = explode('.', $_FILES['importFile']['name']);
     $extension = end($extension);
