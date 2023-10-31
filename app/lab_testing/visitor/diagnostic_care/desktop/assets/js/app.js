@@ -118,7 +118,9 @@ $(document).ready(function () {
           // inputSearch.val($(this).text());
           window.location.href =
             "/book-now/?test=" + encodeURI($(this).text().toLowerCase());
+          // $(".testsName").append("<li>" + $(this).text() + "</li>");
           // resultsContainer.empty();
+          // inputSearch.val("");
         });
       }
     });

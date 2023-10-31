@@ -5,6 +5,7 @@
   --font15: 0.9375rem;
   --font16: 1rem;
   --font18: 1.125rem;
+  --font24: 1.65rem;
   --font27: 1.25rem;
   --font28: 1.65rem;
   --font40: 2.1rem;
@@ -179,6 +180,10 @@ a {
   font-size: var(--font28);
 }
 
+.isfont-24 {
+  font-size: var(--font24);
+}
+
 .isfont-12 {
   font-size: var(--font12);
 }
@@ -321,6 +326,36 @@ footer ul li a {
 .datepicker th {
   width: 60px !important;
   height: 40px !important;
+}
+
+.cardHeading {
+  float: left;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* .card-body {
+  min-height: 270px;
+} */
+
+.card-body h5 {
+  float: left;
+  width: 100%;
+}
+
+.packageBrand {
+  float: left;
+  display: flex;
+  justify-content: center;
+  padding: 30px 5px;
+  border: 1px solid #eeeeee;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 7px;
+  max-height: 95px;
+}
+
+.packageBrand img {
+  width: 100%;
 }
 
 @media only screen and (min-width: 320px) and (max-width: 768px) {

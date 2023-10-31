@@ -202,3 +202,13 @@
     font-size: 6px;
   }
 } */
+
+.selectedTests {
+  float: left;
+  width: 100%;
+  padding: 20px 0px;
+}
+.selectedTests h4 {
+  color: #fff;
+  font-size: 1.5rem;
+}

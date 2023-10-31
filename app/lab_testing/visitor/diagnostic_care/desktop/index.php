@@ -7,36 +7,38 @@ require_once 'header.php';
     <div class="container">
         <div class="row align-items-center">
             <div class="col-12 col-lg-7">
-                <div>
-                    <h2 class="isfont-28 text-white my-3 is-font600">
-                        Book a Lab Test from the lab of your choice
-                    </h2>
-                    <div class="hero-input d-flex align-items-center">
-                        <i class="bx bx-search mx-3 isfont-40 ps-3 is-txt-color2"></i>
-                        <input type="text" id="searchBar" placeholder="Type to search test" />
-                        <div id="searchResults"></div>
+                <h2 class="isfont-28 text-white my-3 is-font600">
+                    Book a Lab Test from the lab of your choice
+                </h2>
+                <div class="hero-input d-flex align-items-center">
+                    <i class="bx bx-search mx-3 isfont-40 ps-3 is-txt-color2"></i>
+                    <input type="text" id="searchBar" placeholder="Type to search test" />
+                    <div id="searchResults"></div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-6 is-color-blue">
+                        <div class="hero-input d-flex mt-3 py-4 px-4 prescription">
+                            <i class="bx bx-cloud-upload isfont-40 is-margin-side-20"></i>
+                            <button class="is-color-blue isfont-18 ">
+                                Upload Prescription
+                            </button>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-lg-6 is-color-blue">
-                            <div class="hero-input d-flex mt-3 py-4 px-4 prescription">
-                                <i class="bx bx-cloud-upload isfont-40 is-margin-side-20"></i>
-                                <button class="is-color-blue isfont-18 ">
-                                    Upload Prescription
+
+                    <div class="col-12 col-lg-6 is-color-blue">
+                        <a href="tel:+91 9212535996">
+                            <div class="hero-input d-flex mt-3 py-4 px-4">
+                                <i class="bx bx-phone-call isfont-40 is-margin-side-20 is-color-blue"></i>
+                                <button class="is-color-blue isfont-27">
+                                    Call to book
                                 </button>
                             </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6 is-color-blue">
-                            <a href="tel:+91 9212535996">
-                                <div class="hero-input d-flex mt-3 py-4 px-4">
-                                    <i class="bx bx-phone-call isfont-40 is-margin-side-20 is-color-blue"></i>
-                                    <button class="is-color-blue isfont-27">
-                                        Call to book
-                                    </button>
-                                </div>
-                            </a>
-                        </div>
+                        </a>
                     </div>
+                </div>
+                <div class="selectedTests">
+                    <h4>Selected tests</h4>
+                    <div class="testsName"></div>
                 </div>
             </div>
             <div class="col-12 col-lg-5 my-4 my-lg-0">
@@ -140,7 +142,7 @@ require_once 'header.php';
         <div class="row my-4 py-3 packge-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'packages' ORDER BY RAND() LIMIT 0, 9")) {
+            if ($packageList = mysqli_query($connection, "SELECT category_title as productBrand, category_image as productBrandLogo, product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price, link_url FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'packages' AND link_type='product' LIMIT 0, 9")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
                     while ($packageListInfo = mysqli_fetch_assoc($packageList)) {
@@ -152,11 +154,20 @@ require_once 'header.php';
 
                                 <!-- Package card -->
                                 <div class="card-body">
-                                    <h5 class="card-title isfont-28 is-color-blue my-3 is-font600">
-                                        <?php echo ucwords($product_title) ?>
-                                    </h5>
+                                    <div class="row cardHeading">
+                                        <div class="col-4">
+                                            <div class="packageBrand">
+                                                <img src="<?php echo $productBrandLogo ?>" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <h5 class="card-title isfont-24 is-color-blue my-3 is-font600">
+                                                <?php echo ucwords($product_title) ?>
+                                            </h5>
+                                        </div>
+                                    </div>
                                     <h5 class="is-font600"><?php echo $product_highlight ?></h5>
-                                    <div class="my-4 d-flex align-items-center justify-content-between">
+                                    <div class="my-4 d-flex align-items-center cardHeading justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <div class="packge-price me-3">
                                                 <h4 class="isfont-16 is-font600 m-0">
@@ -172,8 +183,7 @@ require_once 'header.php';
 
                                                         $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
 
-                                                        echo "<h4 class='isfont-16 is-font600 m-0' >{$discountPersantage} Off</h4>
-                              <h6 class='isfont-12'>For a limited period</h6>";
+                                                        echo "<h4 class='isfont-16 text-center is-font600 m-0' ><a href='{$link_url}'>View details</a></h6>";
                                                     }
                                                 }
 
@@ -206,7 +216,7 @@ require_once 'header.php';
         <div class="row my-4 py-3 packge-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' LIMIT 0, 9")) {
+            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
                     while ($packageListInfo = mysqli_fetch_assoc($packageList)) {
@@ -217,12 +227,12 @@ require_once 'header.php';
                             <div class="card package-cards my-3">
 
                                 <!-- Package card -->
-                                <div class="card-body">
-                                    <h5 class="card-title isfont-28 is-color-blue my-3 is-font600">
+                                <div class="card-body smallCard">
+                                    <h5 class="card-title isfont-28 cardHeading is-color-blue my-3 is-font600">
                                         <?php echo ucwords($product_title) ?>
                                     </h5>
-                                    <h5 class="is-font600"><?php echo $product_highlight ?></h5>
-                                    <div class="my-4 d-flex align-items-center justify-content-between">
+                                    <h5 class="is-font600 cardHeading"><?php echo $product_highlight ?></h5>
+                                    <div class="my-4 d-flex cardHeading align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <div class="packge-price me-3">
                                                 <h4 class="isfont-16 is-font600 m-0">
