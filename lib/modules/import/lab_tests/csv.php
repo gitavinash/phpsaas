@@ -11,6 +11,8 @@ $failedMsg = '';
 
 if ($_FILES['importFile']['error'] == 0) {
 
+    $testType = ((isset($isPackage)) ? 'package' : 'diagnostic');
+
     $extension = explode('.', $_FILES['importFile']['name']);
     $extension = end($extension);
 
@@ -84,7 +86,7 @@ if ($_FILES['importFile']['error'] == 0) {
                                             }
                                         }
 
-                                        $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_brand_id, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(" . APP_SITE_ID . ", '{$test_brand}', '{$test_title}', '{$test_description}', '{$test_short_description}', '{$categoryId}', " . USER_ID . ",'1', 'diagnostic')");
+                                        $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_brand_id, product_title, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(" . APP_SITE_ID . ", '{$test_brand}', '{$test_title}', '{$test_description}', '{$test_short_description}', '{$categoryId}', " . USER_ID . ",'1', '{$testType}')");
                                         $productID = mysqli_insert_id($connection);
 
                                         $addNewProductMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product_meta(product_meta_relation_id, product_meta_site_id, product_meta_key, product_meta_value, product_meta_status) VALUES('{$productID}', " . SITE_ID . ", 'delivery_time', '{$test_deivery_time}', 1)");
@@ -117,6 +119,7 @@ if ($_FILES['importFile']['error'] == 0) {
                                 }
                             } else {
                                 $failed++;
+                                $msg = 'Brand not found';
                             }
                         } else {
                             echo mysqli_error($connection);
@@ -124,6 +127,8 @@ if ($_FILES['importFile']['error'] == 0) {
                         }
                     } else {
                         $failed++;
+                        echo mysqli_error($connection);
+                        exit();
                     }
                 } else {
                     echo mysqli_error($connection);
