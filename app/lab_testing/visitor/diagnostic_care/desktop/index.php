@@ -39,6 +39,7 @@ require_once 'header.php';
                 <div class="selectedTests">
                     <h4>Selected tests</h4>
                     <div class="testsName"></div>
+                    <a href="" class="is-color-blue isfont-18 btn1 package-btn" id="selectedTestBookNow">Book Now</a>
                 </div>
             </div>
             <div class="col-12 col-lg-5 my-4 my-lg-0">

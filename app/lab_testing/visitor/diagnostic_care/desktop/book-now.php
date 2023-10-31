@@ -9,9 +9,11 @@ require_once 'header.php';
             <div class="row align-items-center " style="height: 30vh;">
                 <div class="col-12 col-lg-12">
                     <h2 class="isfont-40 text-white my-3 is-font600 text-center ">
-                        Selected labs : <?php $testName = ucwords(urldecode($test));
-                                        echo $testName ?>
+                        Selected tests : <?php $testName = ucwords(urldecode($test));
+                                            echo str_replace('_', ', ', $testName);
+                                            $testName = str_replace('_', "', '", $testName) ?>
                     </h2>
+
                 </div>
 
             </div>
@@ -80,7 +82,7 @@ require_once 'header.php';
 
                             <?php
 
-                            $selectTestsQuery = "SELECT category_thumbnail as lab_brand_logo, category_title as lab_brand_title, product_id, product_title, product_highlight, inventory_currency_symbol, inventory_price, inventory_mrp FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_title = '" . strtolower($testName) . "' AND product_type='diagnostic' AND category_type='brand' AND product_site_id=" . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND category_site_id = " . SITE_ID;
+                            $selectTestsQuery = "SELECT category_thumbnail as lab_brand_logo, category_title as lab_brand_title, product_id, GROUP_CONCAT(product_title) as product_title, product_highlight, inventory_currency_symbol, SUM(inventory_price) as inventory_price, SUM(inventory_mrp) as inventory_mrp FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_title IN ('{$testName}')  AND product_type='diagnostic' AND category_type='brand' AND product_site_id=" . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND category_site_id = " . SITE_ID;
 
                             if ($similarTestsQuery = mysqli_query($connection, $selectTestsQuery)) {
 
@@ -146,10 +148,9 @@ require_once 'header.php';
 
                                 <div class="col-12 col-md-3 my-2">
                                     <div class="d-flex align-items-center ">
-                                        <div class="py-2">
-                                            <img src="<?php echo USER_IMAGES ?>delivery.png" alt=""
-                                                style="height: 25px;"> :
-                                        </div>
+                                        <!-- <div class="py-2">
+                                                        <img src="<?php echo USER_IMAGES ?>delivery.png" alt="" style="height: 25px;"> :
+                                                    </div> -->
                                         <div class="d-flex justify-content-between">
 
                                             <div class="mx-2">

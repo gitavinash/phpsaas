@@ -207,8 +207,82 @@
   float: left;
   width: 100%;
   padding: 20px 0px;
+  display: none;
 }
 .selectedTests h4 {
   color: #fff;
   font-size: 1.5rem;
+}
+
+.selectedTests {
+  float: left;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.selectedTests span {
+  position: relative;
+  float: left;
+  background: #fff;
+  color: #333;
+  margin-right: 10px;
+  padding: 5px 30px 5px 15px;
+  font-size: 16px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  line-height: 24px;
+}
+
+.selectedTests span:after {
+  position: absolute;
+  content: "x";
+  color: red;
+  font-size: 10px;
+  line-height: 13px;
+  margin-left: 5px;
+  float: left;
+  border: 1px solid red;
+  border-radius: 100%;
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.selectTag {
+  position: absolute;
+  float: left;
+  width: 92%;
+  top: 40px;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.selectTag li {
+  position: relative;
+  float: left;
+  width: 100%;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  background: #333;
+  color: #fff;
+  z-index: 99;
+  font-size: 14px;
+}
+
+.testsName {
+  float: left;
+  width: 100%;
+  padding: 20px 0px;
+}
+
+#selectedTestBookNow {
+  background: linear-gradient(
+    90deg,
+    rgb(144 212 141) 42%,
+    rgb(78 209 30) 96%
+  ) !important;
+  color: #000 !important;
 }

@@ -39,7 +39,7 @@ $(document).ready(function () {
 
   $(".packge-slider").slick({
     dots: true,
-    infinite: false,
+    infinite: true,
     speed: 300,
     slidesToShow: 3,
     slidesToScroll: 3,
@@ -115,15 +115,65 @@ $(document).ready(function () {
 
         // Handle click on a suggestion
         suggestion.on("click", function () {
+          // $(".selectedTests").show();
           // inputSearch.val($(this).text());
-          window.location.href =
-            "/book-now/?test=" + encodeURI($(this).text().toLowerCase());
+          // window.location.href =
+          //   "/book-now/?test=" + encodeURI($(this).text().toLowerCase());
           // $(".testsName").append("<li>" + $(this).text() + "</li>");
-          // resultsContainer.empty();
-          // inputSearch.val("");
+          showSelectedTests($(this).text());
         });
       }
     });
+  }
+
+  testLists = [];
+  testsValues = [];
+
+  function showSelectedTests(testsName) {
+    resultsContainer.empty();
+    inputSearch.val("");
+    // $(".tags").val("");
+    $(".selectTag").empty();
+    if (testsName != "") {
+      $(".selectedTests").show();
+
+      var testsName = testsName
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+      /* remove dublicate value from tags */
+
+      var position = $.inArray(testsName, testsValues);
+      if (position == -1) {
+        var tag = $("<span >" + testsName + "</span>").on("click", function () {
+          /* Remove tag on click */
+          $(this).remove();
+          $(".testsName").val(testLists);
+          var remoVePosition = $.inArray(testsName, testLists);
+          testLists.splice(remoVePosition, 1);
+          $(".testsName").val(testLists);
+        });
+
+        /* Show inserted value to user */
+
+        testsValues.push(testsName);
+
+        var bookingLink = encodeURIComponent(
+          testsValues.join("_").toLowerCase()
+        );
+        console.log(`testsValues : `, bookingLink);
+
+        $("#selectedTestBookNow").attr(
+          "href",
+          "/book-now/?test=" + bookingLink
+        );
+
+        $(".testsName").append(tag);
+      }
+    }
   }
 
   // Event listener for input changes
