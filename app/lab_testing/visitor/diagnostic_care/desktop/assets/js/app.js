@@ -198,7 +198,22 @@ $(document).ready(function () {
   });
 
   $(".removeTest").on("click", function (e) {
-    window.location.href = "/";
+    para = atob(getUrlParameter("test_id"));
+    checkoutTypePara = getUrlParameter("checkout_type");
+    var testIdArray = para.split(",");
+    // window.location.href = "/";
+    console.log(`para : `, testIdArray);
+    var idValue = $(this).attr("id_val");
+    console.log(`idValue : `, idValue);
+
+    testIdArray.indexOf(idValue) !== -1 &&
+      testIdArray.splice(testIdArray.indexOf(idValue), 1);
+    var finalUrl =
+      "/checkout/?test_id=" +
+      btoa(testIdArray.toString()) +
+      "&checkout_type=" +
+      checkoutTypePara;
+    window.location.href = finalUrl;
     e.preventDefault();
   });
 
@@ -209,4 +224,13 @@ $(document).ready(function () {
     format: "dd MM yyyy",
     autoclose: true,
   });
+
+  function getUrlParameter(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+    return results === null
+      ? ""
+      : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
 });
