@@ -14,7 +14,13 @@ require_once 'header.php';
                 <p><?php echo $product_description ?></p>
             </div>
             <div class="col-12 col-lg-5 my-4 my-lg-0">
-                <img src="<?php echo USER_IMAGES ?>r11.png" alt="" class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
+                <img src="<?php echo USER_IMAGES ?>r11.png" alt=""
+                    class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
+            </div>
+            <div class="col-12">
+                <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('&type=package') ?>"
+                    class="btn1 package-btn">Book Now at
+                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?> /-</a>
             </div>
         </div>
     </div>
