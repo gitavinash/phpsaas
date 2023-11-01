@@ -125,7 +125,7 @@ function update($connection, $data)
                         }
                     }
 
-                    $updateProduct = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "product SET product_image='{$featureImage}', product_thumbnail='{$thumbnailImage}', product_gallery='{$newProductGallery}', product_title='{$title}', product_description='{$description}', product_highlight='{$highlight}', product_category='{$category}', product_brand_id='{$brand}', product_owner_id='" . USER_ID . "', product_status=1, product_type='package' WHERE product_id='{$id}'");
+                    $updateProduct = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "product SET product_image='{$featureImage}', product_thumbnail='{$thumbnailImage}', product_gallery='{$newProductGallery}', product_title='{$title}', product_description='{$description}', product_highlight='{$highlight}', product_category='{$category}', product_brand_id='{$brand}', product_owner_id='" . USER_ID . "', product_status=1, product_type='packages' WHERE product_id='{$id}'");
 
                     $updateInventtory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1, inventory_update=current_timestamp() WHERE inventory_relation_id='{$id}'");
 
