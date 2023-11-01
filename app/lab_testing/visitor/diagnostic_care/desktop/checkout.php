@@ -40,7 +40,7 @@ require_once 'header.php';
                             $productId = base64_decode($_GET['test_id']);
 
                             $testPackage = '';
-                            $testQuery = "SELECT product_brand_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_site_id = " . SITE_ID . " AND product_id={$productId} AND inventory_site_id = " . SITE_ID . ";";
+                            $testQuery = "SELECT product_brand_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_site_id = " . SITE_ID . " AND product_id IN ($productId) AND inventory_site_id = " . SITE_ID;
                             if ($checkTest = mysqli_query($connection, $testQuery)) {
 
                                 if (mysqli_num_rows($checkTest) != 0) {
