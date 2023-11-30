@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Righteous&display=swap"
+        rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo USER_IMAGES ?>favicon/favicon-16x16.png">
@@ -19,12 +21,12 @@
     <?php require_once DEFAULT_META; ?>
 
     <!-- css -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Righteous&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Righteous&display=swap"
-        rel="stylesheet">
 
     <script type="text/javascript">
     (function(c, l, a, r, i, t, y) {
