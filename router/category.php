@@ -72,7 +72,6 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				}
 			}
 
-
 			if (file_exists($category_path)) {
 
 				/** Use custome template of this category */

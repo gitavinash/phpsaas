@@ -374,7 +374,7 @@
                                                 Day</b></a>
                                     </li> -->
                                     <li class="nav-item ">
-                                        <a class="nav-link " href="/category/workshop/">Workshop</a>
+                                        <a class="nav-link " href="/tag/christmas/">Christmas Offers</a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>

@@ -80,6 +80,7 @@
                     <div class="fot-box">
                         <ul class="dn-s">
                             <li><a href="/about-us/">About Us</a></li>
+                            <li><a href="/category/workshop/">Workshop</a></li>
                             <li><a href="/franchise/">Franchise</a></li>
                             <!-- <li><a href="">Coupons & Deals</a></li> -->
                             <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
