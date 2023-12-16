@@ -153,7 +153,7 @@ if (BASE_URL == '/') {
 <script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
-<script src="<?php echo USER_JS ?>app.js"></script>
+<script src="<?php echo USER_JS ?>app.min.js"></script>
 </body>
 
 </html>
