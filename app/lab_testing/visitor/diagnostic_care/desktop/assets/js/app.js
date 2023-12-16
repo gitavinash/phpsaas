@@ -119,7 +119,7 @@ $(document).ready(function () {
         // instead of a settings object
       ],
     },
-    1000
+    800
   );
 
   try {
