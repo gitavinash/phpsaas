@@ -11,14 +11,14 @@ require_once 'header.php';
                     Book a Lab Test from the lab of your choice
                 </h2>
                 <div class="hero-input d-flex align-items-center">
-                    <i class="bx bx-search mx-3 isfont-40 ps-3 is-txt-color2"></i>
+                    <i class="bx bx-search mx-3 isfont-24 ps-3 is-txt-color2"></i>
                     <input type="text" id="searchBar" placeholder="Type to search test" />
                     <div id="searchResults"></div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-6 is-color-blue">
-                        <div class="hero-input d-flex mt-3 py-4 px-4 prescription">
-                            <i class="bx bx-cloud-upload isfont-40 is-margin-side-20"></i>
+                        <div class="hero-input d-flex mt-3 px-4 prescription">
+                            <i class="bx bx-cloud-upload isfont-24 is-margin-side-20"></i>
                             <button class="is-color-blue isfont-18 ">
                                 Upload Prescription
                             </button>
@@ -27,9 +27,9 @@ require_once 'header.php';
 
                     <div class="col-12 col-lg-6 is-color-blue">
                         <a href="tel:+91 9212535996">
-                            <div class="hero-input d-flex mt-3 py-4 px-4">
-                                <i class="bx bx-phone-call isfont-40 is-margin-side-20 is-color-blue"></i>
-                                <button class="is-color-blue isfont-27">
+                            <div class="hero-input d-flex mt-3 px-4">
+                                <i class="bx bx-phone-call isfont-24 is-margin-side-20 is-color-blue"></i>
+                                <button class="is-color-blue isfont-18">
                                     Call to book
                                 </button>
                             </div>
@@ -43,7 +43,8 @@ require_once 'header.php';
                 </div>
             </div>
             <div class="col-12 col-lg-5 my-4 my-lg-0">
-                <img src="<?php echo USER_IMAGES ?>side-image.png" alt="" class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
+                <img src="<?php echo USER_IMAGES ?>side-image.png" alt=""
+                    class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
             </div>
         </div>
     </div>
@@ -74,14 +75,16 @@ require_once 'header.php';
                     <div class="row">
                         <div class="col-12">
                             <div class="my-3">
-                                <input type="text" class="form-control" name="name" id="uploadName" placeholder="Enter Your Name" required>
+                                <input type="text" class="form-control" name="name" id="uploadName"
+                                    placeholder="Enter Your Name" required>
 
                             </div>
                         </div>
 
                         <div class="col-12">
                             <div class="my-3">
-                                <input type="number" name="mobile" class="form-control" id="uploadMobile" placeholder="Enter Phone Number" required>
+                                <input type="number" name="mobile" class="form-control" id="uploadMobile"
+                                    placeholder="Enter Phone Number" required>
                             </div>
                         </div>
 
@@ -93,7 +96,8 @@ require_once 'header.php';
 
                         <div class="col-12">
                             <div class="form-floating">
-                                <textarea class="form-control" name="address" placeholder="Leave a comment here" id="uploadAddress" required></textarea>
+                                <textarea class="form-control" name="address" placeholder="Leave a comment here"
+                                    id="uploadAddress" required></textarea>
                                 <label for="floatingTextarea">Enter Your Address </label>
                             </div>
                         </div>
@@ -102,8 +106,10 @@ require_once 'header.php';
                             <input type="hidden" name="type" value="enquiry">
                             <input type="hidden" name="action" value="new">
                             <input type="hidden" name="subject" value="Upload prescription form">
-                            <input type="hidden" name="sender" value="<?php echo base64_encode('diagnosticcare.in@gmail.com') ?>">
-                            <input type="hidden" name="redirect_url" value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
+                            <input type="hidden" name="sender"
+                                value="<?php echo base64_encode('diagnosticcare.in@gmail.com') ?>">
+                            <input type="hidden" name="redirect_url"
+                                value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                             <input type="submit" class="btn w-100 btn1" value="Submit">
                         </div>
 
@@ -119,17 +125,25 @@ require_once 'header.php';
 <section class="parnters vartical-padding side-padding">
     <div class="container">
         <div>
-            <h3 class="isfont-40 is-font600 is-color-blue">Our Partner Labs</h3>
+            <h3 class="isfont-24 is-font600 is-color-blue">Our Partner Labs</h3>
         </div>
-        <div class="row my-5 pt-slider overflow-hidden">
+        <div class="row brandSlider overflow-hidden">
+
             <?php
-            for ($i = 1; $i <= 9; $i++) {
-                echo '  <div class="col-3">
-          <div class="pt-image">
-            <img src="' . USER_IMAGES . 'partner/t' . $i . '.png" alt="" />
-        </div>
-    </div>';
+
+            if ($brandLogo = mysqli_query($connection, "SELECT category_title, category_thumbnail FROM " . TABLE_PREFIX . "category WHERE category_site_id = " . SITE_ID . " AND category_type ='brand'")) {
+                if (mysqli_num_rows($brandLogo) != 0) {
+                    while ($brandLogoInfo = mysqli_fetch_assoc($brandLogo)) {
+                        extract($brandLogoInfo);
+                        echo '<div class="col-3">
+                            <div class="brandSliderImage">
+                              <img src="' . $category_thumbnail . '" alt="" />
+                          </div>
+                      </div>';
+                    }
+                }
             }
+
             ?>
         </div>
     </div>
@@ -138,68 +152,75 @@ require_once 'header.php';
 <section class="vartical-padding package-parent side-padding">
     <div class="container">
         <div>
-            <h3 class="isfont-40 is-font600 is-color-blue">Our Partner Packages</h3>
+            <h3 class="isfont-24 is-font600 is-color-blue">Our Partner Packages</h3>
         </div>
-        <div class="row my-4 py-3 packge-slider overflow-hidden">
+        <div class="row my-4 packge-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT category_title as productBrand, category_image as productBrandLogo, product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price, link_url FROM isw_product INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_type = 'packages' AND link_type='product' LIMIT 0, 9")) {
+            if ($packageList = mysqli_query($connection, "SELECT category_title as productBrand, category_image as productBrandLogo, product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price, link_url FROM isw_product INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_type = 'packages' AND link_type='product' LIMIT 0, 20")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
+                    $i = 1;
                     while ($packageListInfo = mysqli_fetch_assoc($packageList)) {
 
                         extract($packageListInfo); ?>
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
-                            <div class="card package-cards my-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
+                <div class="card package-cards my-3">
 
-                                <!-- Package card -->
-                                <div class="card-body">
-                                    <div class="row cardHeading">
-                                        <div class="col-4">
-                                            <div class="packageBrand">
-                                                <img src="<?php echo $productBrandLogo ?>" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <h5 class="card-title isfont-24 is-color-blue my-3 is-font600">
-                                                <?php echo ucwords($product_title) ?>
-                                            </h5>
-                                        </div>
+                    <!-- Package card -->
+                    <div class="card-body">
+                        <div class="row cardHeading">
+                            <div class="col-5">
+                                <div class="packageBrand">
+                                    <img src="<?php echo $productBrandLogo ?>" alt="">
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <h5 class="card-title isfont-24 is-color-blue my-3 is-font600">
+                                    <?php echo ucwords($product_title) ?>
+                                </h5>
+                            </div>
+                        </div>
+                        <h5 class="is-font600"><?php echo $product_highlight ?></h5>
+                        <p class="isfont-12 knowMore" data-toggle="modal" data-target="#exampleModal<?php echo $i ?>">
+                            know
+                            more</p>
+                        <div class="card-bottom">
+                            <div class="my-4 d-flex align-items-center cardHeading justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="packge-price me-3">
+                                        <h4 class="isfont-16 is-font600 m-0">
+                                            <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
+                                        <strike
+                                            class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
                                     </div>
-                                    <h5 class="is-font600"><?php echo $product_highlight ?></h5>
-                                    <div class="my-4 d-flex align-items-center cardHeading justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <div class="packge-price me-3">
-                                                <h4 class="isfont-16 is-font600 m-0">
-                                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
-                                                <strike class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
-                                            </div>
-                                            <div class="packge-price ms-3">
+                                    <div class="packge-price ms-3">
 
-                                                <?php
-                                                if ($inventory_mrp != 0) {
+                                        <?php
+                                                    if ($inventory_mrp != 0) {
 
-                                                    if ($inventory_mrp != $inventory_price) {
+                                                        if ($inventory_mrp != $inventory_price) {
 
-                                                        $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
-
-                                                        echo "<h4 class='isfont-16 text-center is-font600 m-0' ><a href='{$link_url}'>View details</a></h6>";
+                                                            $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
+                                                        }
                                                     }
-                                                }
 
-                                                ?>
-                                            </div>
-                                        </div>
-
-                                        <div class="ms-3">
-                                            <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('&type=package') ?>" class="btn1 package-btn">Book Now</a>
-                                        </div>
+                                                    ?>
                                     </div>
+                                </div>
+
+                                <div class="ms-3">
+                                    <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('package') ?>"
+                                        class="btn1 package-btn">Book Now</a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
             <?php
+                        $i++;
                     }
                 }
             }
@@ -212,9 +233,9 @@ require_once 'header.php';
 <section class="vartical-padding side-padding">
     <div class="container">
         <div>
-            <h3 class="isfont-40 is-font600 is-color-blue">Popular Tests</h3>
+            <h3 class="isfont-24 is-font600 is-color-blue">Popular Tests</h3>
         </div>
-        <div class="row my-4 py-3 packge-slider overflow-hidden">
+        <div class="row my-4 packge-slider overflow-hidden">
             <?php
 
             if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
@@ -224,47 +245,50 @@ require_once 'header.php';
 
                         extract($packageListInfo); ?>
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
-                            <div class="card package-cards my-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
+                <div class="card tests-cards my-3">
 
-                                <!-- Package card -->
-                                <div class="card-body smallCard">
-                                    <h5 class="card-title isfont-28 cardHeading is-color-blue my-3 is-font600">
-                                        <?php echo ucwords($product_title) ?>
-                                    </h5>
-                                    <h5 class="is-font600 cardHeading"><?php echo $product_highlight ?></h5>
-                                    <div class="my-4 d-flex cardHeading align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <div class="packge-price me-3">
-                                                <h4 class="isfont-16 is-font600 m-0">
-                                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
-                                                <strike class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
-                                            </div>
-                                            <div class="packge-price ms-3">
-
-                                                <?php
-                                                if ($inventory_mrp != 0) {
-
-                                                    if ($inventory_mrp != $inventory_price) {
-
-                                                        $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
-
-                                                        echo "<h4 class='isfont-16 is-font600 m-0' >{$discountPersantage} Off</h4>
-                              <h6 class='isfont-12'>For a limited period</h6>";
-                                                    }
-                                                }
-
-                                                ?>
-                                            </div>
-                                        </div>
-
-                                        <div class="ms-3">
-                                            <a href="/book-now/?test=<?php echo strtolower(urlencode($product_title)) ?>" class="btn1 package-btn">Book Now</a>
-                                        </div>
+                    <!-- Package card -->
+                    <div class="card-body smallCard">
+                        <h5 class="card-title isfont-28 cardHeading is-color-blue is-font600">
+                            <?php echo ucwords($product_title) ?>
+                        </h5>
+                        <div class="card-bottom">
+                            <div class="my-4 d-flex cardHeading align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="packge-price me-3">
+                                        <h4 class="isfont-16 is-font600 m-0">
+                                            <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
+                                        <strike
+                                            class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
                                     </div>
+                                    <div class="packge-price ms-3">
+
+                                        <?php
+                                                    if ($inventory_mrp != 0) {
+
+                                                        if ($inventory_mrp != $inventory_price) {
+
+                                                            $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
+
+                                                            echo "<h4 class='isfont-16 is-font600 m-0' >{$discountPersantage} Off</h4>
+                              <h6 class='isfont-12'>For a limited period</h6>";
+                                                        }
+                                                    }
+
+                                                    ?>
+                                    </div>
+                                </div>
+
+                                <div class="ms-3">
+                                    <a href="/book-now/?test=<?php echo strtolower(urlencode($product_title)) ?>"
+                                        class="btn1 tests-btn">Book Now</a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
             <?php
                     }
                 }
@@ -283,10 +307,10 @@ require_once 'header.php';
             </div>
             <div class="col-12 col-lg-6">
                 <div>
-                    <h3 class="isfont-40 is-font600 is-color-blue my-5">
+                    <h3 class="isfont-24 is-font600 is-color-blue my-5">
                         Why Choose Diagnostic Services?
                     </h3>
-                    <p class="lh-lg text-justify">
+                    <p class="text-justify">
                         Diagnostic Services is a premium medical health care facility,
                         with years of experience and 50,000+ satisfied customers within
                         the medical industry. Our lab's equipment and other primary
@@ -306,9 +330,9 @@ require_once 'header.php';
 <section class="vartical-padding side-padding testi">
     <div class="container">
         <div>
-            <h3 class="isfont-40 is-font600 is-color-blue">Testimonial</h3>
+            <h3 class="isfont-24 is-font600 is-color-blue">Testimonial</h3>
         </div>
-        <div class="row my-4 py-3 packge-slider overflow-hidden">
+        <div class="row my-4 packge-slider overflow-hidden">
             <div class="col-3">
                 <div class="card testi-card">
                     <div>

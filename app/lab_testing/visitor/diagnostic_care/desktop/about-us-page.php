@@ -12,7 +12,8 @@ require_once 'header.php';
                 </h2>
             </div>
             <div class="col-12 col-lg-5 my-4 my-lg-0">
-                <img src="<?php echo USER_IMAGES ?>r11.png" alt="" class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
+                <img src="<?php echo USER_IMAGES ?>r11.png" alt=""
+                    class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
             </div>
         </div>
     </div>
@@ -29,7 +30,7 @@ require_once 'header.php';
                     <h3 class="isfont-40 is-font600 is-color-blue">Fastest Blood sample collection services
                     </h3>
 
-                    <p class="lh-lg">Diagnostics Services is Leading Pathology services Provider Company. It has been
+                    <p>Diagnostics Services is Leading Pathology services Provider Company. It has been
                         serving Services from the last 14 years to lakhs of customers / Patients in Delhi
                         NCR.Diagnostics Services is an initiative by experienced medical professionals towards honest
                         healthcare with the objective of “ Delivering High Quality diagnostic services at affordable
@@ -50,7 +51,7 @@ require_once 'header.php';
                     <h3 class="isfont-40 is-font600 is-color-blue">Home sample collection
                     </h3>
 
-                    <p class="lh-lg">Fastest home sample collection service
+                    <p>Fastest home sample collection service
                         Clinically designed preventive health-check packages
                         Option of 90 minute express sample collection in Delhi-NCR
                         Reports over email

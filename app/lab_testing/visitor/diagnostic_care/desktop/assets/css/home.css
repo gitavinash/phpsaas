@@ -1,5 +1,6 @@
 .hero {
   background: var(--clr1);
+  padding-top: 50px;
 }
 
 .hero-input {
@@ -31,11 +32,12 @@
   object-fit: contain;
   display: block;
   margin: auto;
+  max-width: 100%;
 }
 
-.pt-image {
+.brandSliderImage {
   padding: 40px 20px;
-  margin: 0 20px;
+  margin: 30px 20px;
   border-radius: 4px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -52,9 +54,21 @@
   background: #fff;
   padding: 10px;
   margin-right: 10px;
+  min-height: 290px;
 }
 
 .package-btn {
+  padding: 8px 20px !important;
+}
+
+.tests-cards {
+  background: #fff;
+  padding: 10px;
+  margin-right: 10px;
+  min-height: 150px;
+}
+
+.tests-btn {
   padding: 8px 20px !important;
 }
 
@@ -174,7 +188,7 @@
   .parnters img {
     height: 1.5rem;
   }
-  .pt-image {
+  .brandSliderImage {
     margin: 0 10px;
   }
 }

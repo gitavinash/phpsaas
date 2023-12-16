@@ -4,7 +4,7 @@
             <div class="col-12 col-lg-4">
                 <img src="<?php echo USER_IMAGES ?>footer.png " alt="" />
 
-                <p class="py-2 text-white lh-lg">
+                <p class="py-2 text-white">
                     Diagnostic Services capabilities are top-notch in assessing its
                     patients with the care and expertise of reliable doctors and staff
                     members to deliver a serene solution for your health conditions.
@@ -35,7 +35,7 @@
                 <ul>
                     <li class=" d-flex align-items-start ">
                         <span><img src="<?php echo USER_IMAGES ?>location.png" alt="" class="mx-2 mt-3" /></span>
-                        <p class="lh-lg p-0"> Diagnostic Services <br> 149/1, Malviya Nagar Opp. Max Hosiptal, New
+                        <p class="p-0"> Diagnostic Services <br>149/1, Malviya Nagar Opp. Max Hosiptal,<br>New
                             Delhi - 110017</p>
                     </li>
                     <li>
@@ -69,6 +69,27 @@
                     Design & Developed By
                     <a href="http://blumox.com/" class="text-white">Blumox Technologies</a>
                 </h6> -->
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>

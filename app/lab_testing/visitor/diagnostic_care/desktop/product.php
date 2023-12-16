@@ -18,7 +18,7 @@ require_once 'header.php';
                     class="img-fluid d-none d-lg-block m-auto ms-lg-auto" />
             </div>
             <div class="col-12">
-                <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('&type=package') ?>"
+                <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('package') ?>"
                     class="btn1 package-btn">Book Now at
                     <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?> /-</a>
             </div>

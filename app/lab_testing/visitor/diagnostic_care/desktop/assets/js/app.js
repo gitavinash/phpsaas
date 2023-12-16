@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  $(".pt-slider").slick({
+  $(".brandSlider").slick({
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 1500,
@@ -11,7 +11,7 @@ $(document).ready(function () {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 4,
           slidesToScroll: 1,
           infinite: true,
           dots: true,
@@ -41,7 +41,7 @@ $(document).ready(function () {
     dots: true,
     infinite: true,
     speed: 300,
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 3,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -49,7 +49,7 @@ $(document).ready(function () {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 4,
           slidesToScroll: 3,
           infinite: true,
           dots: true,
