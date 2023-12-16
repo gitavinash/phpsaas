@@ -235,7 +235,7 @@ require_once 'header.php';
         <div>
             <h3 class="isfont-24 is-font600 is-color-blue">Popular Tests</h3>
         </div>
-        <div class="row my-4 packge-slider overflow-hidden">
+        <div class="row my-4 tests-slider overflow-hidden">
             <?php
 
             if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
