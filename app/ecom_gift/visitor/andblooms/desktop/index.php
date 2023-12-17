@@ -108,7 +108,7 @@ include_once 'header.php';
 
                     <?php
 
-                    if ($productList = mysqli_query($connection, "SELECT link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category != 170 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 12")) {
+                    if ($productList = mysqli_query($connection, "SELECT link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category != 170 AND product_category != 195 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 12")) {
 
                         if (mysqli_num_rows($productList) != 0) {
 
@@ -160,7 +160,7 @@ include_once 'header.php';
 
                     <?php
 
-                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'love%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
+                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'love%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=" . SITE_ID . " AND product_category != 195 AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
 
                         if (mysqli_num_rows($productList) != 0) {
 
@@ -210,7 +210,7 @@ include_once 'header.php';
 
                     <?php
 
-                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'anniversary%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
+                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'anniversary%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND product_category != 195 AND inventory_in_stock=1 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
 
                         if (mysqli_num_rows($productList) != 0) {
 
@@ -258,7 +258,7 @@ include_once 'header.php';
 
                     <?php
 
-                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'birthday%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
+                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'birthday%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category != 195 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
 
                         if (mysqli_num_rows($productList) != 0) {
 
@@ -306,7 +306,7 @@ include_once 'header.php';
 
                     <?php
 
-                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'luxury%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
+                    if ($productList = mysqli_query($connection, "SELECT tag_relation_id, link_id, link_url, product_title, product_image, inventory_currency, inventory_price FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE tag_type='product' AND tag_title LIKE 'luxury%' AND inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category != 195 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . "  ORDER BY link_published DESC LIMIT 0, 12")) {
 
                         if (mysqli_num_rows($productList) != 0) {
 
