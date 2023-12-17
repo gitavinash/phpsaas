@@ -1,6 +1,7 @@
 .hero {
   background: var(--clr1);
   padding-top: 50px;
+  min-height: 170px;
 }
 
 .hero-input {

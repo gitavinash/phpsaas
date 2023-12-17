@@ -141,7 +141,6 @@ unset($enquiryMeta['subject']);
 $messageForm = '';
 
 foreach ($enquiryMeta as $key => $value) {
-
     $messageForm .= "<strong>{$key} : </strong> $value<br />";
 }
 
@@ -187,5 +186,11 @@ $email_body = "
 
 require SEND_EMAIL;
 
-header("Location: " . $redirect_url, TRUE, 301);
+if (strpos($redirect_url, '/shipping/') !== false) {
+    $postUrlValue = "&name=" . urlencode($name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
+    header("Location: {$redirect_url}{$postUrlValue}", TRUE, 301);
+} else {
+    header("Location: " . $redirect_url, TRUE, 301);
+}
+
 exit();

@@ -97,7 +97,7 @@ require_once 'header.php';
                             if (count($testLenght) == 1) {
                                 $selectTestsQuery = "SELECT category_thumbnail as lab_brand_logo, category_title as lab_brand_title, product_id, product_title, product_highlight, inventory_currency_symbol, inventory_price, inventory_mrp FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_title IN ('{$testName}')  AND product_type='diagnostic' AND category_type='brand' AND product_site_id=" . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND category_site_id = " . SITE_ID;
                             } else {
-                                $selectTestsQuery = "SELECT category_thumbnail as lab_brand_logo, category_title as lab_brand_title, GROUP_CONCAT(product_id) as product_id, GROUP_CONCAT(product_title) as product_title, product_highlight, inventory_currency_symbol, SUM(inventory_price) as inventory_price, SUM(inventory_mrp) as inventory_mrp FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_title IN ('{$testName}')  AND product_type='diagnostic' AND category_type='brand' AND product_site_id=" . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND category_site_id = " . SITE_ID;
+                                $selectTestsQuery = "SELECT category_thumbnail as lab_brand_logo, category_title as lab_brand_title, GROUP_CONCAT(product_id) as product_id, GROUP_CONCAT(product_title) as product_title, product_highlight, inventory_currency_symbol, SUM(inventory_price) as inventory_price, SUM(inventory_mrp) as inventory_mrp FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id WHERE product_title IN ('{$testName}')  AND product_type='diagnostic' AND category_type='brand' AND product_site_id=" . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND category_site_id = " . SITE_ID . " GROUP BY category_title";
                             }
 
                             if ($similarTestsQuery = mysqli_query($connection, $selectTestsQuery)) {
@@ -109,42 +109,43 @@ require_once 'header.php';
 
                             ?>
 
-                                        <div class="row list-box align-items-center">
-                                            <div class="col-12 col-md-2 my-2">
-                                                <div class="">
-                                                    <div>
-                                                        <img src="<?php echo $lab_brand_logo ?>" alt="" class="img-fluid list-photo d-block m-auto pb-3" />
-                                                    </div>
+                            <div class="row list-box align-items-center">
+                                <div class="col-12 col-md-2 my-2">
+                                    <div class="">
+                                        <div>
+                                            <img src="<?php echo $lab_brand_logo ?>" alt=""
+                                                class="img-fluid list-photo d-block m-auto pb-3" />
+                                        </div>
 
-                                                </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-4 my-2">
+                                    <div class="d-flex align-items-center ">
+                                        <div class="py-2">
+                                            <img src="<?php echo USER_IMAGES ?>up.png" alt="" style="height: 25px;"> :
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+
+                                            <div class="mx-2">
+                                                <h2 class="isfont-15   is-font600 m-0">ICMR ,</h2>
                                             </div>
 
-                                            <div class="col-12 col-md-4 my-2">
-                                                <div class="d-flex align-items-center ">
-                                                    <div class="py-2">
-                                                        <img src="<?php echo USER_IMAGES ?>up.png" alt="" style="height: 25px;"> :
-                                                    </div>
-                                                    <div class="d-flex justify-content-between">
+                                            <div class="mx-2">
+                                                <h2 class="isfont-15  clrpurpl is-font600 m-0">CAP ,</h2>
+                                            </div>
 
-                                                        <div class="mx-2">
-                                                            <h2 class="isfont-15   is-font600 m-0">ICMR ,</h2>
-                                                        </div>
+                                            <div class="mx-2">
+                                                <h2 class="isfont-15  clrpurpl is-font600 m-0">ISO ,</h2>
+                                            </div>
 
-                                                        <div class="mx-2">
-                                                            <h2 class="isfont-15  clrpurpl is-font600 m-0">CAP ,</h2>
-                                                        </div>
+                                            <div class="mx-2">
+                                                <h2 class="isfont-15  clrpurpl is-font600 m-0">NABI </h2>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                                        <div class="mx-2">
-                                                            <h2 class="isfont-15  clrpurpl is-font600 m-0">ISO ,</h2>
-                                                        </div>
-
-                                                        <div class="mx-2">
-                                                            <h2 class="isfont-15  clrpurpl is-font600 m-0">NABI </h2>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- <div class="d-flex align-items-center ">
+                                    <!-- <div class="d-flex align-items-center ">
                                         <div class="py-2">
                                             <img src="<?php echo USER_IMAGES ?>f-score.png" alt=""
                                                 style="height: 25px;"> :
@@ -157,39 +158,41 @@ require_once 'header.php';
                                         </div>
                                     </div> -->
 
-                                            </div>
+                                </div>
 
-                                            <div class="col-12 col-md-3 my-2">
-                                                <div class="d-flex align-items-center ">
-                                                    <!-- <div class="py-2">
+                                <div class="col-12 col-md-3 my-2">
+                                    <div class="d-flex align-items-center ">
+                                        <!-- <div class="py-2">
                                                         <img src="<?php echo USER_IMAGES ?>delivery.png" alt="" style="height: 25px;"> :
                                                     </div> -->
-                                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-between">
 
-                                                        <div class="mx-2">
-                                                            <h2 class="isfont-15   is-font600 m-0"><?php echo '' ?></h2>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="d-flex align-items-center ">
-                                                    <div class="py-2">
-                                                        <img src="<?php echo USER_IMAGES ?>rupee-indian.png" alt="" style="height: 25px;"> :
-                                                    </div>
-                                                    <div class="d-flex justify-content-between">
-
-                                                        <div class="mx-2">
-                                                            <h2 class="isfont-15   is-font600 m-0">
-                                                                <?php echo $inventory_price ?>
-                                                            </h2>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-3 justify-content-start justify-content-lg-end d-flex ">
-                                                <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('test') ?>" class="purpal-btn btn1 listbtn ">Book now</a>
+                                            <div class="mx-2">
+                                                <h2 class="isfont-15   is-font600 m-0"><?php echo '' ?></h2>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center ">
+                                        <div class="py-2">
+                                            <img src="<?php echo USER_IMAGES ?>rupee-indian.png" alt=""
+                                                style="height: 25px;"> :
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+
+                                            <div class="mx-2">
+                                                <h2 class="isfont-15   is-font600 m-0">
+                                                    <?php echo $inventory_price ?>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3 justify-content-start justify-content-lg-end d-flex ">
+                                    <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('test') ?>"
+                                        class="purpal-btn btn1 listbtn ">Book now</a>
+                                </div>
+                            </div>
 
                             <?php
                                     }
