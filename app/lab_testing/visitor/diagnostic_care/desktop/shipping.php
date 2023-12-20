@@ -53,15 +53,15 @@ require_once 'header.php';
                                         extract($testList);
                                         $finalTestsName .= $product_title . ' | ' ?>
 
-                                        <tr>
-                                            <td class="is-color-blue is-font600 isfont-27">
-                                                <?php echo ucwords($product_title) ?>
-                                            </td>
-                                            <td class="is-color-blue is-font600 isfont-18">
-                                                <?php echo $inventory_currency_symbol . ' ' . $inventory_price;
+                            <tr>
+                                <td class="is-color-blue is-font600 isfont-27">
+                                    <?php echo ucwords($product_title) ?>
+                                </td>
+                                <td class="is-color-blue is-font600 isfont-18">
+                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price;
                                                 $productTotalPrice = $productTotalPrice + $inventory_price ?>
-                                            </td>
-                                        </tr>
+                                </td>
+                            </tr>
                             <?php
                                         $i++;
                                     }
@@ -88,8 +88,8 @@ require_once 'header.php';
             $email = $_GET['email'];
             $phone = $_GET['mobile'];
             $txnId =  base64_encode(time());
-            $surl = SITE_URL . "/payment/status/";
-            $furl = SITE_URL . "/payment/status/";
+            $surl = 'https://'.SITE_DOMAIN . "/payment/status/";
+            $furl = 'https://'.SITE_DOMAIN . "/payment/status/";
 
             $updatedProductName = str_replace('|', '_', rtrim($finalTestsName));
 
@@ -106,35 +106,41 @@ require_once 'header.php';
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" id="fullName" placeholder="<?php echo $_GET['name'] ?>" readonly />
+                                    <input type="text" class="form-control" id="fullName"
+                                        placeholder="<?php echo $_GET['name'] ?>" readonly />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" id="email" placeholder="<?php echo $_GET['email'] ?>" readonly />
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <input type="number" class="form-control" placeholder="<?php echo $_GET['mobile'] ?>" id="mobile" readonly />
+                                    <input type="email" class="form-control" id="email"
+                                        placeholder="<?php echo $_GET['email'] ?>" readonly />
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="<?php echo $_GET['pickup_date'] ?>" readonly />
+                                    <input type="number" class="form-control"
+                                        placeholder="<?php echo $_GET['mobile'] ?>" id="mobile" readonly />
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" id="pickupTime" placeholder="<?php echo $_GET['pickup_time'] ?>" readonly />
+                                    <input type="text" class="form-control"
+                                        placeholder="<?php echo $_GET['pickup_date'] ?>" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="pickupTime"
+                                        placeholder="<?php echo $_GET['pickup_time'] ?>" readonly />
                                 </div>
                             </div>
 
                             <div class=" col-12">
-                                <textarea class="form-control" name="address" placeholder="Test collection address *" id="pickUpAddress" readonly><?php echo urldecode($_GET['address']) ?></textarea>
+                                <textarea class="form-control" name="address" placeholder="Test collection address *"
+                                    id="pickUpAddress" readonly><?php echo urldecode($_GET['address']) ?></textarea>
                             </div>
                         </div>
                         <input type="hidden" name="key" value="<?php echo $merchantKey ?>" />
@@ -155,7 +161,8 @@ require_once 'header.php';
 
                         ?>
                         <input type="hidden" name="hash" value="<?php echo $hash ?>" />
-                        <input type="submit" class="btn btn-primary w-100 my-4 py-3" value="Procees to pay ₹ <?php echo $productTotalPrice ?>">
+                        <input type="submit" class="btn btn-primary w-100 my-4 py-3"
+                            value="Procees to pay ₹ <?php echo $productTotalPrice ?>">
                         <!-- <a href="<?php echo $payNowURL ?>" class="btn btn-primary w-100 my-4 py-3">Procees to pay ₹ -->
                         <!-- <?php echo $productTotalPrice ?></a> -->
 
