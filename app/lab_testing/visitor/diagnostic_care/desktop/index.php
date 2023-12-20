@@ -157,7 +157,7 @@ require_once 'header.php';
         <div class="row my-4 packge-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT category_title as productBrand, category_image as productBrandLogo, product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price, link_url FROM isw_product INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_type = 'packages' AND link_type='product' LIMIT 0, 20")) {
+            if ($packageList = mysqli_query($connection, "SELECT category_title as productBrand, category_image as productBrandLogo, product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price, link_url FROM isw_product INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_brand_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND link_status = 200 AND inventory_site_id = " . SITE_ID . " AND product_type = 'packages' AND link_type='product' LIMIT 0, 20")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
                     $i = 1;
@@ -238,7 +238,7 @@ require_once 'header.php';
         <div class="row my-4 tests-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . " AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
+            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . "  AND link_status = 200 AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
                     while ($packageListInfo = mysqli_fetch_assoc($packageList)) {

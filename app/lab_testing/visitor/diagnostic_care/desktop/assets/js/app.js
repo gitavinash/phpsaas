@@ -10,6 +10,17 @@ window.addEventListener("click", ({ target }) => {
 });
 
 $(document).ready(function () {
+  $(".paymentCondition").click(function () {
+    var selectedValue = $("input[name='paymentOptions']:checked").val();
+
+    if (selectedValue == "cashOnDelivery") {
+      $("#cashOnDeliveryBtn").show();
+      $("#onlinePaymentBtn").hide();
+    } else {
+      $("#onlinePaymentBtn").show();
+      $("#cashOnDeliveryBtn").hide();
+    }
+  });
   $(".brandSlider").slick(
     {
       dots: true,

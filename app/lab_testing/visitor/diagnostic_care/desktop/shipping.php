@@ -31,7 +31,7 @@ require_once 'header.php';
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Name</th>
+                                <th scope="col">Test or Package name</th>
                                 <th scope="col">Price</th>
                             </tr>
                         </thead>
@@ -88,8 +88,8 @@ require_once 'header.php';
             $email = $_GET['email'];
             $phone = $_GET['mobile'];
             $txnId =  base64_encode(time());
-            $surl = 'https://'.SITE_DOMAIN . "/payment/status/";
-            $furl = 'https://'.SITE_DOMAIN . "/payment/status/";
+            $surl = 'https://' . SITE_DOMAIN . "/payment/status/";
+            $furl = 'https://' . SITE_DOMAIN . "/payment/status/";
 
             $updatedProductName = str_replace('|', '_', rtrim($finalTestsName));
 
@@ -154,19 +154,33 @@ require_once 'header.php';
                         <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>" />
                         <input type="hidden" name="phone" value="<?php echo $_GET['mobile'] ?>" />
                         <input type="hidden" name="hashValue" value="<?php echo $nonEncValue ?>" />
-                        <?php
-
-                        // $pgKey = 'oYsah2L8';
-                        // $pgSaltKey = '4a4if493zX';
-
-                        ?>
                         <input type="hidden" name="hash" value="<?php echo $hash ?>" />
-                        <input type="submit" class="btn btn-primary w-100 my-4 py-3"
-                            value="Procees to pay ₹ <?php echo $productTotalPrice ?>">
-                        <!-- <a href="<?php echo $payNowURL ?>" class="btn btn-primary w-100 my-4 py-3">Procees to pay ₹ -->
-                        <!-- <?php echo $productTotalPrice ?></a> -->
 
-                        <div>
+                        <div class="paymentMode">
+                            <p><br /><strong>Select payment mode</strong><br /></p>
+                            <div class="btn-group paymentMethodGroup" role="group"
+                                aria-label="Basic radio toggle button group">
+                                <input type="radio" class="btn-check paymentCondition" name="paymentOptions"
+                                    value="cashOnDelivery" id="cashOnDelivery" autocomplete="off">
+                                <label class="btn btn-outline-primary paymentMethodGroupLable" for="cashOnDelivery">Cash
+                                    on
+                                    Delivery</label>
+
+                                <input type="radio" class="btn-check paymentCondition" name="paymentOptions"
+                                    value="onlinePayment" id="onlinePayment" autocomplete="off">
+                                <label class="btn btn-outline-primary paymentMethodGroupLable"
+                                    for="onlinePayment">Online
+                                    Payment</label>
+                            </div>
+                        </div>
+                        <input type="submit" style="display: none;" id="onlinePaymentBtn"
+                            class="btn btn-primary w-100 my-4 py-3"
+                            value="Procees to pay ₹ <?php echo $productTotalPrice ?>">
+                        <a href="/thank-you/" id="cashOnDeliveryBtn" style="display: none;"
+                            class="btn btn-primary w-100 my-4 py-3">Complete Booking
+                        </a>
+
+                        <div><br />
                             <p class=" isfont-12 text-center text-">
                                 <b>By clicking, you agree to our</b>
                                 <a href="/privacy-policy/" target="_blank">Privacy Policy</a> and

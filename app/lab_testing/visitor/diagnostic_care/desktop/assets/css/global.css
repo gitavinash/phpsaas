@@ -448,3 +448,12 @@ footer ul li a {
     opacity: 1;
   }
 }
+
+.paymentMethodGroup {
+  float: left;
+  width: 100%;
+}
+
+.paymentMethodGroupLable {
+  line-height: 20px !important;
+}
