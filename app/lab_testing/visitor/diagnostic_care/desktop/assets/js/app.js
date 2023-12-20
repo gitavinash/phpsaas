@@ -1,3 +1,14 @@
+const popups = [...document.getElementsByClassName("popup")];
+
+window.addEventListener("click", ({ target }) => {
+  const popup = target.closest(".popup");
+  const clickedOnClosedPopup = popup && !popup.classList.contains("show");
+
+  popups.forEach((p) => p.classList.remove("show"));
+
+  if (clickedOnClosedPopup) popup.classList.add("show");
+});
+
 $(document).ready(function () {
   $(".brandSlider").slick(
     {
@@ -6,7 +17,7 @@ $(document).ready(function () {
       speed: 500,
       slidesToShow: 5,
       slidesToScroll: 1,
-      autoplay: true,
+      autoplay: false,
       autoplaySpeed: 1500,
       responsive: [
         {
@@ -47,7 +58,7 @@ $(document).ready(function () {
       speed: 800,
       slidesToShow: 4,
       slidesToScroll: 1,
-      autoplay: true,
+      autoplay: false,
       autoplaySpeed: 2000,
       responsive: [
         {
@@ -88,7 +99,7 @@ $(document).ready(function () {
       speed: 800,
       slidesToShow: 4,
       slidesToScroll: 1,
-      autoplay: true,
+      autoplay: false,
       autoplaySpeed: 2000,
       responsive: [
         {

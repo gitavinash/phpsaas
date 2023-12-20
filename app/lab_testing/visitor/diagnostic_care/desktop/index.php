@@ -183,9 +183,9 @@ require_once 'header.php';
                             </div>
                         </div>
                         <h5 class="is-font600"><?php echo $product_highlight ?></h5>
-                        <p class="isfont-12 knowMore" data-toggle="modal" data-target="#exampleModal<?php echo $i ?>">
-                            know
-                            more</p>
+                        <div class="popup knowMore">know more
+                            <span class="popuptext"><?php echo $product_description ?></span>
+                        </div>
                         <div class="card-bottom">
                             <div class="my-4 d-flex align-items-center cardHeading justify-content-between">
                                 <div class="d-flex align-items-center">
