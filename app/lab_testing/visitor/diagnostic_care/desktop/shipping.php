@@ -79,58 +79,57 @@ require_once 'header.php';
             <?php
 
 
-            // Set the API endpoint URL
-            $apiEndpoint = "https://secure.payu.in/_payment";
-
             // Set the merchant key and salt
-            $merchantKey = "1rIsEcUS";
-            $salt = "RDsVo3Aq";
+            $merchantKey = "sPOfFg";
+            $salt = "nPnVuTGdoUBBtl2MvD9MRmUBBo0UTfnL";
 
             // Set the order details
             $fullName = $_GET['name'];
             $email = $_GET['email'];
             $phone = $_GET['mobile'];
-            $txnId = "TXN" . time();
+            $txnId =  base64_encode(time());
             $surl = SITE_URL . "/payment/status/";
             $furl = SITE_URL . "/payment/status/";
 
             $updatedProductName = str_replace('|', '_', rtrim($finalTestsName));
 
             // sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||SALT)
-            $hash = hash('sha512', $merchantKey . '|' . $txnId . '|' . $productTotalPrice * 100 . '|' . str_replace(' ', '_', $updatedProductName) . '|' . $fullName . '|' . $email . '|' . $phone . '||||||||||' . $salt);
+            $nonEncValue = $merchantKey . '|' . $txnId . '|' . $productTotalPrice . '|' . $updatedProductName . '|' .
+                $fullName . '|' . $email . '|||||||||||' . $salt;
+            $hash = hash('sha512', $nonEncValue);
 
             ?>
 
             <div class="col-12 col-lg-6">
                 <div class="apointment-form">
-                    <form action="https://secure.payu.in/_payment" method="POST">
+                    <form action="https://test.payu.in/_payment" method="POST">
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
-                                    <input type="text" name="name" class="form-control" id="fullName" placeholder="<?php echo $_GET['name'] ?>" readonly />
+                                    <input type="text" class="form-control" id="fullName" placeholder="<?php echo $_GET['name'] ?>" readonly />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="<?php echo $_GET['email'] ?>" readonly />
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <input type="number" name="mobile" class="form-control" placeholder="<?php echo $_GET['mobile'] ?>" id="mobile" readonly />
+                                    <input type="email" class="form-control" id="email" placeholder="<?php echo $_GET['email'] ?>" readonly />
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="text" name="pickup_date" class="form-control" placeholder="<?php echo $_GET['pickup_date'] ?>" readonly />
+                                    <input type="number" class="form-control" placeholder="<?php echo $_GET['mobile'] ?>" id="mobile" readonly />
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="text" name="pickup_time" class="form-control" id="pickupTime" placeholder="<?php echo $_GET['pickup_time'] ?>" readonly />
+                                    <input type="text" class="form-control" placeholder="<?php echo $_GET['pickup_date'] ?>" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="pickupTime" placeholder="<?php echo $_GET['pickup_time'] ?>" readonly />
                                 </div>
                             </div>
 
@@ -138,16 +137,17 @@ require_once 'header.php';
                                 <textarea class="form-control" name="address" placeholder="Test collection address *" id="pickUpAddress" readonly><?php echo urldecode($_GET['address']) ?></textarea>
                             </div>
                         </div>
-                        <?php $txnId =  base64_encode(time()); ?>
                         <input type="hidden" name="key" value="<?php echo $merchantKey ?>" />
                         <input type="hidden" name="txnid" value="<?php echo $txnId ?>" />
-                        <input type="hidden" name="productinfo" value="<?php echo $finalTestsName ?>" />
+                        <input type="hidden" name="productinfo" value="<?php echo $updatedProductName ?>" />
                         <input type="hidden" name="amount" value="<?php echo $productTotalPrice ?>" />
-                        <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>" />
+                        <input type="hidden" value="<?php echo $_GET['email'] ?>" />
                         <input type="hidden" name="firstname" value="<?php echo $_GET['name'] ?>" />
-                        <input type="hidden" name="surl" value="/payment/status/" />
-                        <input type="hidden" name="furl" value="/payment/status/" />
+                        <input type="hidden" name="surl" value="<?php echo $surl ?>" />
+                        <input type="hidden" name="furl" value="<?php echo $furl ?>" />
+                        <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>" />
                         <input type="hidden" name="phone" value="<?php echo $_GET['mobile'] ?>" />
+                        <input type="hidden" name="hashValue" value="<?php echo $nonEncValue ?>" />
                         <?php
 
                         // $pgKey = 'oYsah2L8';
