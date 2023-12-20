@@ -5,6 +5,7 @@ if ($test_id == '') {
     exit();
 }
 
+
 require_once 'header.php';
 
 ?>
@@ -79,57 +80,30 @@ require_once 'header.php';
 
 
             // Set the API endpoint URL
-            $apiEndpoint = "https://sandboxsecure.payu.in/_payment";
+            $apiEndpoint = "https://secure.payu.in/_payment";
 
             // Set the merchant key and salt
-            $merchantKey = "oYsah2L8";
-            $salt = "4a4if493zX";
+            $merchantKey = "1rIsEcUS";
+            $salt = "RDsVo3Aq";
 
             // Set the order details
             $fullName = $_GET['name'];
             $email = $_GET['email'];
             $phone = $_GET['mobile'];
             $txnId = "TXN" . time();
-            $surl = "/payment/status/";
-            $furl = "/payment/status/";
+            $surl = SITE_URL . "/payment/status/";
+            $furl = SITE_URL . "/payment/status/";
 
-            // Create a map of parameters to pass to the PayU API
-            $params = array(
-                "key" => $merchantKey,
-                "txnid" => $txnId,
-                "amount" => $productTotalPrice,
-                "productinfo" => $finalTestsName,
-                "firstname" => $fullName,
-                "email" => $email,
-                "phone" => $phone,
-                "surl" => $surl,
-                "furl" => $furl,
-            );
+            $updatedProductName = str_replace('|', '_', rtrim($finalTestsName));
 
-            // Generate the hash
-            $hash = generateHash($params, $salt);
-
-            // Add the hash to the parameter map
-            $params["hash"] = $hash;
-
-            // Build the URL for the PayU API request
-            $payNowURL = $apiEndpoint . "?" . http_build_query($params);
-
-            function generateHash($params, $salt)
-            {
-                $hashString = $params["key"] . "|" . $params["txnid"] . "|" . $params["amount"] . "|" . $params["productinfo"] . "|" . $params["firstname"] . "|" . $params["email"] . "||||||" . $salt;
-
-                // Generate the hash
-                $hash = hash("sha512", $hashString);
-
-                return $hash;
-            }
+            // sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||SALT)
+            $hash = hash('sha512', $merchantKey . '|' . $txnId . '|' . $productTotalPrice * 100 . '|' . str_replace(' ', '_', $updatedProductName) . '|' . $fullName . '|' . $email . '|' . $phone . '||||||||||' . $salt);
 
             ?>
 
             <div class="col-12 col-lg-6">
                 <div class="apointment-form">
-                    <form action="https://test.payu.in/_payment" method="POST">
+                    <form action="https://secure.payu.in/_payment" method="POST">
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
@@ -165,7 +139,7 @@ require_once 'header.php';
                             </div>
                         </div>
                         <?php $txnId =  base64_encode(time()); ?>
-                        <input type="hidden" name="key" value="JP***g" />
+                        <input type="hidden" name="key" value="<?php echo $merchantKey ?>" />
                         <input type="hidden" name="txnid" value="<?php echo $txnId ?>" />
                         <input type="hidden" name="productinfo" value="<?php echo $finalTestsName ?>" />
                         <input type="hidden" name="amount" value="<?php echo $productTotalPrice ?>" />
@@ -182,9 +156,11 @@ require_once 'header.php';
                         ?>
                         <input type="hidden" name="hash" value="<?php echo $hash ?>" />
                         <input type="submit" class="btn btn-primary w-100 my-4 py-3" value="Procees to pay ₹ <?php echo $productTotalPrice ?>">
+                        <!-- <a href="<?php echo $payNowURL ?>" class="btn btn-primary w-100 my-4 py-3">Procees to pay ₹ -->
+                        <!-- <?php echo $productTotalPrice ?></a> -->
 
                         <div>
-                            <p class="isfont-12 text-center text-">
+                            <p class=" isfont-12 text-center text-">
                                 <b>By clicking, you agree to our</b>
                                 <a href="/privacy-policy/" target="_blank">Privacy Policy</a> and
                                 <a href="/terms-and-conditions/" target="_blank">Terms of Use</a>
