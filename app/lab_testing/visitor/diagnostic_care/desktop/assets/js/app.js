@@ -28,7 +28,7 @@ $(document).ready(function () {
       speed: 500,
       slidesToShow: 5,
       slidesToScroll: 1,
-      autoplay: false,
+      autoplay: true,
       autoplaySpeed: 1500,
       responsive: [
         {
@@ -69,7 +69,7 @@ $(document).ready(function () {
       speed: 800,
       slidesToShow: 4,
       slidesToScroll: 1,
-      autoplay: false,
+      autoplay: true,
       autoplaySpeed: 2000,
       responsive: [
         {
@@ -110,7 +110,7 @@ $(document).ready(function () {
       speed: 800,
       slidesToShow: 4,
       slidesToScroll: 1,
-      autoplay: false,
+      autoplay: true,
       autoplaySpeed: 2000,
       responsive: [
         {
