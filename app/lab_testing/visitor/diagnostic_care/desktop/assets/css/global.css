@@ -396,7 +396,7 @@ footer ul li a {
 /* The actual popup */
 .popup .popuptext {
   visibility: hidden;
-  width: auto;
+  min-width: 250px;
   background-color: #0177bd;
   color: #fff;
   text-align: center;
@@ -404,15 +404,21 @@ footer ul li a {
   padding: 8px 0;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: 100%;
+  /* bottom: 125%; */
+  /* left: 100%; */
+  left: -45%;
+  top: -52%;
+  transform: translate(50%, -50%);
   margin-left: -80px;
   padding: 10px 20px;
   line-height: 28px;
+  text-align: left;
+  max-height: 250px;
+  overflow-y: scroll;
 }
 
 /* Popup arrow */
-.popup .popuptext::after {
+/* .popup .popuptext::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -421,7 +427,7 @@ footer ul li a {
   border-width: 5px;
   border-style: solid;
   border-color: #0177bd transparent transparent transparent;
-}
+} */
 
 /* Toggle this class - hide and show the popup */
 .popup.show .popuptext {
