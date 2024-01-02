@@ -43,7 +43,7 @@
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="l-w1">
-        <div class="notification-bar center">Welcome to <?php echo SITE_NAME ?>.</div>
+        <!-- <div class="notification-bar center">Welcome to <?php echo SITE_NAME ?>.</div> -->
         <section class="desktop">
             <div class="main-bar l-w1">
                 <div class="container">
@@ -71,6 +71,7 @@
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">
+                        <li><a href="/domain-name-registration/">Domain</a></li>
                         <li><a href="/linux-web-hosting/">Web Hosting</a></li>
                         <li><a href="/cloud-web-hosting/">Cloud Hosting</a></li>
                         <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>

@@ -170,14 +170,12 @@ header {
   line-height: 32px;
 }
 
-
-}
-
 .main-bar {
   float: left;
   width: 100%;
   height: auto;
-  padding: 10px 0px;
+  padding: 5px 0px;
+  background-color: #eee;
   border-bottom: 1px solid #eee;
 }
 
@@ -328,7 +326,7 @@ input.domain-search-btn {
   float: left;
   padding-top: 20px;
   width: 100%;
-  max-width: 650px;
+  max-width: 850px;
   box-sizing: border-box;
 }
 

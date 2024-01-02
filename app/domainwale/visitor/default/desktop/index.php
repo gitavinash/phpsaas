@@ -15,23 +15,20 @@ include_once 'header.php';
             <p><a href="/domain-transfer/">Transfer your Domain name</a> <a href="/domain-price-list/">View Domain price
                     list</a></p>
             <div class="domain-price">
-                <div class="l-w6">
+                <div class="l-w5">
                     <p>.com<span>₹ 799/yr.*</span></p>
                 </div>
-                <div class="l-w6">
-                    <p>.net<span>₹ 999/yr.*</span></p>
-                </div>
-                <div class="l-w6">
-                    <p>.org<span>₹ 799/yr.*</span></p>
-                </div>
-                <div class="l-w6">
+                <div class="l-w5">
                     <p>.in<span>₹ 599/yr.*</span></p>
                 </div>
-                <div class="l-w6">
-                    <p>.co<span>₹ 799/yr.*</span></p>
+                <div class="l-w5">
+                    <p>.net<span>₹ 999/yr.*</span></p>
                 </div>
-                <div class="l-w6">
-                    <p>.xyz<span>₹ 799/yr.*</span></p>
+                <div class="l-w5">
+                    <p>.org<span>₹ 799/yr.*</span></p>
+                </div>
+                <div class="l-w5">
+                    <p>.co<span>₹ 799/yr.*</span></p>
                 </div>
             </div>
         </div>
