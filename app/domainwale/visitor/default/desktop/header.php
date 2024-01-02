@@ -71,13 +71,12 @@
                 </div>
                 <div class="menu fr">
                     <ul class="list-menu">
-                        <li><a href="/domain-name-registration/">Domain</a></li>
-                        <li><a href="/linux-web-hosting/">Hosting</a></li>
+                        <li><a href="/linux-web-hosting/">Web Hosting</a></li>
                         <li><a href="/cloud-web-hosting/">Cloud Hosting</a></li>
                         <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>
                         <li><a href="/reseller-hosting/">Reseller Hosting</a></li>
-                        <li><a href="/website-amc/">AMC</a></li>
-                        <li><a href="/blog/"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="/website-amc/">Website AMC</a></li>
+                        <li><a href="https://blog.oxteal.com/"><i class="fas fa-blog"></i> Blog</a></li>
                         <li><a href="/checkout/">Cart <i class="fi-rr-shopping-cart"></i></a></li>
                     </ul>
                 </div>
@@ -104,22 +103,20 @@
                     <a href="#" class="closebtn" id="closeNav"><i class="fi-rr-cross-small"></i></a>
                     <div class="menu fl">
                         <ul class="list-menu">
-                            <li><a href="/domain-name-registration/"><i class="fi-rr-globe"></i>Domain Registration<i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/linux-web-hosting/"><i class="fi-rr-database"></i> Hosting <i
+                            <li><a href="/linux-web-hosting/"><i class="fi-rr-database"></i> Web Hosting <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/cloud-web-hosting/"><i class="fi-rr-network-cloud"></i> Cloud Hosting <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/wordpress-hosting/"><i class="fi-rr-database"></i> WordPress Hosting
                                     <i class="fi-rr-arrow-small-right fr"></i></a></li>
+                            <li><a href="/reseller-hosting/"><i class="fi-rr-database"></i> Reseller Hosting
+                                    <i class="fi-rr-arrow-small-right fr"></i></a></li>
+                            <li><a href="/website-amc/"><i class="fi-rr-pulse"></i> Website AMC <i
+                                        class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/whois-lookup/"><i class="fi-rr-world"></i> WHOIS <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/website-development/"><i class="fi-rr-browser"></i> Website <i
+                            <li><a href="https://blog.oxteal.com/"><i class="fi-rr-book-alt"></i> Blog <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="/website-amc/"><i class="fi-rr-pulse"></i> AMC <i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <!-- <li><a href="https://blog.oxteal.com/"><i class="fi-rr-book-alt"></i> Blog <i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li> -->
                         </ul>
                     </div>
                 </div>

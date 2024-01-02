@@ -47,7 +47,7 @@ input[type="submit"] {
 
 .container {
   width: 90%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: auto;
   padding: 0;
 }
@@ -163,10 +163,14 @@ header {
 .notification-bar {
   color: #f2f2f2;
   background: #009b72;
-  font-weight: 300;
   letter-spacing: 1px;
-  padding: 5px 0px;
-  font-size: 14px;
+  padding: 5px 0;
+  min-height: 32px;
+  font-size: 16px;
+  line-height: 32px;
+}
+
+
 }
 
 .main-bar {
@@ -1156,16 +1160,16 @@ button:disabled {
   .mobile-menu .menu ul.list-menu li {
     float: left;
     width: 100%;
+    padding: 5px 0px;
   }
 
   .mobile-menu .menu ul.list-menu li a {
     float: left;
     width: 100%;
-    line-height: 34px;
+    line-height: 40px;
     text-align: left;
     box-sizing: border-box;
     font-size: 18px;
-    font-weight: 300;
   }
 
   .mobile-menu .menu ul.list-menu li i {
