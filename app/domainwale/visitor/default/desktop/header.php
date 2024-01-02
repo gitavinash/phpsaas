@@ -77,7 +77,7 @@
                         <li><a href="/wordpress-hosting/">WordPress Hosting</a></li>
                         <li><a href="/reseller-hosting/">Reseller Hosting</a></li>
                         <li><a href="/website-amc/">Website AMC</a></li>
-                        <li><a href="https://blog.oxteal.com/"><i class="fas fa-blog"></i> Blog</a></li>
+                        <!-- <li><a href="https://blog.oxteal.com/"><i class="fas fa-blog"></i> Blog</a></li> -->
                         <li><a href="/checkout/">Cart <i class="fi-rr-shopping-cart"></i></a></li>
                     </ul>
                 </div>
@@ -116,8 +116,8 @@
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
                             <li><a href="/whois-lookup/"><i class="fi-rr-world"></i> WHOIS <i
                                         class="fi-rr-arrow-small-right fr"></i></a></li>
-                            <li><a href="https://blog.oxteal.com/"><i class="fi-rr-book-alt"></i> Blog <i
-                                        class="fi-rr-arrow-small-right fr"></i></a></li>
+                            <!-- <li><a href="https://blog.oxteal.com/"><i class="fi-rr-book-alt"></i> Blog <i
+                                        class="fi-rr-arrow-small-right fr"></i></a></li> -->
                         </ul>
                     </div>
                 </div>
