@@ -6,7 +6,7 @@ if (DEVELOPMENT_MODE == true) {
     $phonePeEndPoint = 'https://api.phonepe.com/apis/hermes/pg/v1/pay';
 }
 
-$redirectUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id);
+$redirectUrl = ((isset($redirectUrl)) ? $redirectUrl : SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id));
 $callbackUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id);
 
 $requestBody = json_encode(array(

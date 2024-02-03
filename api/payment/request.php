@@ -12,9 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if (is_numeric($mobile)) {
 
-            if ($userToken != '') {
+            if(isset($userToken)) {
+                if ($userToken != '') {
                 $Encryptor = new Encryptor();
                 $userId = $Encryptor->decrypt(ENCRYPTION_AUTH_KEY, ENCRYPTION_AUTH_IV, $userToken);
+            }
             } else {
 
                 // Generate new user profile
@@ -25,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             $ordermodule = new orderModule();
-            $data['redirectURL'] = $ordermodule->generatePaymentLinkOrder($connection, $userId, ((isset($currency)) ? $xcurrency : 'INR'), $amount);
+            
+            $data['redirectURL'] = $ordermodule->generatePaymentLinkOrder($connection, $userId, ((isset($currency)) ? $xcurrency : 'INR'), $amount, ((isset($redirect)) ? $redirect : ''));
         } else {
             $msg = 'Enter valid indian mobile no.';
         }
@@ -45,5 +48,7 @@ $apiResponse = array(
     'data' => ((isset($data)) ? $data : ''),
 );
 
-echo json_encode($apiResponse, TRUE);
+echo $data['redirectURL'];
+
+// header("Location: {$data['redirectURL']}", TRUE, 301);
 exit();

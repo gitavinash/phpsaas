@@ -3,10 +3,8 @@
 class orderModule
 {
 
-    function generatePaymentLinkOrder($connection, $user_id, $currency, $amount)
+    function generatePaymentLinkOrder($connection, $user_id, $currency, $amount, $redirectUrl)
     {
-
-        $redirectUrl = '';
 
         /** Create new order */
 
@@ -28,7 +26,7 @@ class orderModule
             if ($addNewOrder && $createNewCart && $initiateTransaction) {
 
                 mysqli_query($connection, "COMMIT");
-                $redirectUrl = SITE_URL . '/payment/generate/?id=' . $transaction_id . '&pg_type=link&orderType=link';
+                $redirectUrl = SITE_URL . '/payment/generate/?id=' . $transaction_id . '&pg_type=link&orderType=link&redirect='.$redirectUrl;
                 session_destroy();
                 session_start();
             } else {
