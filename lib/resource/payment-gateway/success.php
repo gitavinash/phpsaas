@@ -47,7 +47,7 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
 
                     mysqli_query($connection, "COMMIT");
 
-                    header("Location: /thank-you/?id={$id}", TRUE, 301);
+                    header("Location: /thank-you/?id={$id}&redirectUrl={$redirectTo}", TRUE, 301);
                     exit();
                 } else {
 
