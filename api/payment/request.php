@@ -48,7 +48,7 @@ $apiResponse = array(
     'data' => ((isset($data)) ? $data : ''),
 );
 
-echo $data['redirectURL'];
+// echo $data['redirectURL'];
 
-// header("Location: {$data['redirectURL']}", TRUE, 301);
+header("Location: {$data['redirectURL']}", TRUE, 301);
 exit();
