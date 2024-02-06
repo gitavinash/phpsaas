@@ -364,7 +364,7 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <li class="nav-item " style="background: #F19EB5;">
+                                    <li class="nav-item ">
                                         <a class="nav-link" style="color: #fff"
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"><b>Blooms of
                                                 <?php echo date('F') ?></b></a>
@@ -373,7 +373,7 @@
                                         <a class="nav-link" style="color: #fff" href="/tag/father/"><b>Father's
                                                 Day</b></a>
                                     </li> -->
-                                    <li class="nav-item ">
+                                    <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link " href="/tag/valentine/">Valentine's Day</a>
                                     </li>
                                     <li class="nav-item ">
