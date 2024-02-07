@@ -1,32 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <base href="<?php echo SITE_URL ?>">
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href=" ">
-    <meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1,initial-scale=1">
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Righteous&display=swap"
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>global.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>home.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>work.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>contact.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
+    <!-- or -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&family=Sora:wght@200;300;400;600&display=swap"
         rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo USER_IMAGES ?>favicon/favicon-16x16.png">
-    <link rel="manifest" href="<?php echo USER_IMAGES ?>favicon/site.webmanifest">
-    <link rel="mask-icon" href="<?php echo USER_IMAGES ?>favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#3ab4f1">
-    <meta name="theme-color" content="#3ab4f1">
-
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>/slick/slick-theme.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <?php require_once DEFAULT_META; ?>
-
-    <!-- css -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Righteous&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
 
     <script type="text/javascript">
     (function(c, l, a, r, i, t, y) {
@@ -57,71 +52,82 @@
 </head>
 
 <body>
-
-    <!-- Pop up modal -->
-
-    <!-- <div class="popUpModal">
-        <div class="popUpBox">
-            <h3>Share your requirments</h3>
-            <form action="" method="POST">
-                <div class="formGroup">
-                    <label>Full name</label>
-                    <input type="text" placeholder="Enter your name" name="name" required autofocus>
-                </div>
-                <div class="formGroup">
-                    <label>Email</label>
-                    <input type="email" placeholder="Enter your email" name="email" required>
-                </div>
-                <div class="formGroup">
-                    <label>Mobile no.</label>
-                    <input type="number" placeholder="Enter your mobile no." name="mobile" required>
-                </div>
-                <div class="formGroup">
-                    <label>Requirements</label>
-                    <textarea name="requirements" placeholder="Share your requirement here"></textarea>
-                </div>
-                <div class="formGroup">
-                    <input type="submit" class="btn" value="Send request">
-                </div>
-            </form>
-        </div>
-    </div> -->
-
-    <!-- header start -->
     <header>
-        <?php
-        if (ACTIVE_URL != '/') {
-            echo "<div class='logo' ><a href='/'><img src='" . USER_IMAGES . "logo.png' alt='" . SITE_NAME . "' ></a></div>";
-        }
-        ?>
-        <div class="menu">
-            <span></span>
-        </div>
-        <div class="menuBox">
-            <section>
-                <div class="menuList">
-                    <ul>
-                        <li><a href="/about-us/">About</a></li>
-                        <li><a href="/our-work/">Work</a></li>
-                        <li><a href="/products/">Products</a></li>
-                        <li><a href="/services/">Services</a></li>
-                        <li><a href="/contact-us/">Contact Us</a></li>
-                        <li><a href="https://pay.blumox.com/">Pay Now</a></li>
-                    </ul>
+        <!-- navbar start -->
+        <div class="container">
+            <div class="custom_nav">
+                <div class="mylogo">
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.svg" class="img-fluid" alt=""></a>
                 </div>
-                <div class="legalLinks">
-                    <ul>
-                        <li><a href="/privacy-policy/">Privacy Policy</a></li>
-                        <li><a href="/refund-policy/">Refund Policy</a></li>
-                        <li><a href="/terms-and-conditions/">Terms and Conditions</a></li>
-                        <li><a href="/sitemap/" target="_blank">Sitemap</a></li>
-                        <li>&copy; 2022 - <?php echo date('Y'); ?> Blumox Technologies</li>
-                    </ul>
+                <div class="myul">
+                    <!-- <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about-us/">About Blumox</a></li>
+                        <li><a href="/our-works/">Our works</a></li>
+                        <li><a href="/service/">What we do</a></li>
+                    </ul> -->
                 </div>
-            </section>
-            <div class="menu closeMenu">
-                <span></span>
+                <div class="contact">
+                    <a href="/contact-us/">contact us</a>
+                </div>
             </div>
         </div>
+
+        <!-- 1200px down navbar -->
+
+        <nav class="navbar navbar-expand-xl navbar-light mynav">
+            <div class="container">
+                <a class="navbar-brand" href="/"><img src="<?php echo USER_IMAGES ?>logo.svg" class="img-fluid"
+                        alt=""></a>
+
+                <button class="navbar-toggler slide" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <!-- <i class='bx bx-menu-alt-right'></i> -->
+                    <img src="<?php echo USER_IMAGES ?>svg/menu_icon.svg" class="img-fluid" alt="">
+                </button>
+                <div class="collapse navbar-collapse home_menu" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li><a href="/">home</a></li>
+                        <li><a href="/about/">about us</a></li>
+                        <li><a href="">products</a></li>
+                        <li><a href="/work/">work</a></li>
+                        <li><a href="/service/">services</a></li>
+                        <li><a href="#">pay now</a></li>
+                    </ul>
+                    <div class="contact">
+                        <a href="/contact/">contact us</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="mobile-nav ">
+            <div class="company_logo">
+                <a href="/"><img src="<?php echo USER_IMAGES ?>logo.svg" class="img-fluid" alt=""></a>
+            </div>
+            <div class="row p-2 ">
+
+                <div class="col-12 d-flex align-items-center justify-content-end ">
+
+                    <!-- <div class="crose"> <i class='bx bx-x icon-manage' id="box-change"></i> </div> -->
+                    <div class="crose"> <img src="<?php echo USER_IMAGES ?>png/close.png" id="box-change"
+                            class="img-fluid" alt=""></i> </div>
+                </div>
+                <div class="col-12 home-nav is_font_18 font_f_libre">
+                    <ul>
+                        <li><a href="/">home</a></li>
+                        <li><a href="/about/">about us</a></li>
+                        <li><a href="">products</a></li>
+                        <li><a href="/work/">work</a></li>
+                        <li><a href="/service/">services</a></li>
+                        <li><a href="#">pay now</a></li>
+                    </ul>
+                    <div class="contact">
+                        <a href="/contact/">contact us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 1200px down navbar end-->
     </header>
-    <!-- header end -->
