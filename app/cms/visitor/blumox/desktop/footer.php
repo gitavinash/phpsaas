@@ -27,27 +27,32 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="contact_form">
+                <form method="POST" class="contact_form">
                     <div class="myinput">
-                        <input type="text" required="required">
+                        <input type="text" name="name" required="required">
                         <span>Full Name</span>
                     </div>
                     <div class="myinput">
-                        <input type="text" required="required">
+                        <input type="text" name="email" required="required">
                         <span>Email</span>
                     </div>
                     <div class="myinput">
-                        <input type="text" required="required">
+                        <input type="text" name="mobile" required="required">
                         <span>Phone number</span>
                     </div>
                     <div class="myinput">
-                        <textarea cols="30" rows="3" required="required"></textarea>
+                        <textarea cols="30" name="message" rows="3" required="required"></textarea>
                         <span>Message</span>
                     </div>
-                    <div class="submit_btn">
-                        <button>Submit</button>
-                    </div>
-                </div>
+                    <input type="hidden" name="type" value="enquiry">
+                    <input type="hidden" name="action" value="new">
+                    <input type="hidden" name="subject" value="Contact form">
+                    <input type="hidden" name="sender" value="<?php echo base64_encode("avinash@blumox.com") ?>">
+                    <input type="hidden" name="cc" value="<?php echo base64_encode("avinashsharma114@gmail.com") ?>">
+                    <input type="hidden" name="redirect_url"
+                        value="/thank-you/?msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
+                    <input type="submit" class="submit_btn" value="Submit">
+                </form>
             </div>
         </div>
     </div>

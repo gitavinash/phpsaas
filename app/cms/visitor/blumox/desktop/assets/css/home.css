@@ -134,11 +134,11 @@
   }
 
   .more p {
-    font-size: 13px;
+    font-size: 18px;
   }
 
   .more a {
-    font-size: 13px;
+    font-size: 18px;
   }
 
   .banner_sky {
@@ -504,8 +504,8 @@
   }
 
   .about_parra p {
-    font-size: 15px;
-    line-height: 30px;
+    font-size: 16px;
+    line-height: 32px;
   }
 }
 
@@ -694,7 +694,7 @@ textarea:valid {
   top: -10%;
 }
 
-.submit_btn button {
+.submit_btn {
   width: 100%;
   border: 1px solid var(--blue-color);
   padding: 1rem 30px;
@@ -705,7 +705,7 @@ textarea:valid {
   font-weight: 600;
 }
 
-.submit_btn button:hover {
+.submit_btn:hover {
   background: var(--blue-color);
   color: var(--white-color);
   transition: 0.3s;
@@ -1851,12 +1851,12 @@ textarea:valid {
   }
 
   .box_content p {
-    font-size: 15px;
-    line-height: 24px;
+    font-size: 18px;
+    line-height: 38px;
     margin-top: 20px;
   }
   .box_content h3 {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .service_triangle img {
@@ -1914,8 +1914,8 @@ textarea:valid {
   }
 
   .box_content p {
-    font-size: 15px;
-    line-height: 25px;
+    font-size: 18px;
+    line-height: 38px;
   }
 
   .service_wrapper {
