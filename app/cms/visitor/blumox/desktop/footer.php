@@ -216,7 +216,7 @@
                     <a href="/privacy-policy/">Privacy Policy</a>
                     <a href="/refund-policy/">Refund Policy</a>
                     <a href="/terms-and-conditions/">Terms And Conditions</a>
-                    <a href="/sitemap/">Site map</a>
+                    <!-- <a href="/sitemap/">Site map</a> -->
                 </div>
                 <div class="copyright">
                     <p>&copy; 2018 - <?php echo date('Y') ?> Blumox Technologies</p>
