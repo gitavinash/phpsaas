@@ -78,15 +78,11 @@
             </div>
 
             <div class="client_box">
-                <img src="<?php echo USER_IMAGES ?>svg/Musafir-Go.svg" class="img-fluid" alt="">
+                <img src="<?php echo USER_IMAGES ?>svg/musafir-go-india.svg" class="img-fluid" alt="">
             </div>
             <div class="client_box">
                 <img src="<?php echo USER_IMAGES ?>svg/laskinnovita-white.svg" class="img-fluid" alt="">
             </div>
-            <div class="client_box">
-                <img src="<?php echo USER_IMAGES ?>svg/phyworld.svg" class="img-fluid" alt="">
-            </div>
-
             <div class="client_box">
                 <img src="<?php echo USER_IMAGES ?>svg/bloom.svg" class="img-fluid" alt="">
             </div>
@@ -98,9 +94,6 @@
             </div>
             <div class="client_box">
                 <img src="<?php echo USER_IMAGES ?>svg/plecomigration-white.svg" class="img-fluid" alt="">
-            </div>
-            <div class="client_box">
-                <img src="<?php echo USER_IMAGES ?>svg/musafir-go.svg" class="img-fluid" alt="">
             </div>
             <div class="client_box">
                 <img src="<?php echo USER_IMAGES ?>svg/plecomigration-white.svg" class="img-fluid" alt="">
