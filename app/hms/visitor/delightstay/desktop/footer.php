@@ -65,7 +65,7 @@
                             <a href="/privacy-policy/">Privacy Policy</a>
                         </li>
                         <li>
-                            <a href="/terms-and-condition/">Terms & COnditions</a>
+                            <a href="/terms-and-conditions/">Terms & COnditions</a>
                         </li>
                         <li>
                             <a href="/refund-policy/">Refund Policy</a>
