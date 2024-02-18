@@ -12,7 +12,7 @@
 
             if(mysqli_num_rows($checkSiteAccess)==1) {
 
-                $siteIcon=SITE_URL.$siteIcon;
+                // $siteIcon=SITE_URL.$siteIcon;
 
                 if($updateSiteIcon=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site SET site_icon='{$siteIcon}' WHERE site_id=".SITE_ID)) {
                     $status='success';
