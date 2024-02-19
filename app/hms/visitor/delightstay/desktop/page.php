@@ -15,7 +15,13 @@
 
     <section class="term_content">
         <div class="container">
-            <?php echo $page_description ?>
+            <div class="row vertical-center-row">
+                <div class="col-2"></div>
+                <div class="col-8 page_description">
+                    <?php echo $page_description ?>
+                </div>
+                <div class="col-2"></div>
+            </div>
         </div>
     </section>
 </main>

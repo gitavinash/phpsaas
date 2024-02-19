@@ -26,6 +26,10 @@
   --dark-black: #000;
 }
 
+.page_description {
+  padding: 50px 0px;
+}
+
 a {
   display: inline-block;
   text-decoration: none !important;
