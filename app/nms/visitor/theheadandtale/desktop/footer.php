@@ -7,7 +7,8 @@
                 <div class="col-xl-3 col-12">
                     <div class="footer_left">
                         <div class="footer_logo">
-                            <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></a>
+                            <a href="/"><img class="footerLogo" src="<?php echo SITE_LOGO ?>"
+                                    alt="<?php echo SITE_NAME ?>"></a>
                         </div>
                         <div class="footer_parra">
                             <p><?php echo $site_description ?></p>
@@ -39,14 +40,10 @@
                         <div class="footer_links">
                             <p>follow us on</p>
                             <div class="social">
-                                <a href="#"><img src="<?php echo USER_STYLESHEET ?>instagram.svg" class="img-fluid"
-                                        alt=""></a>
-                                <a href="#"><img src="<?php echo USER_STYLESHEET ?>facebook.svg" class="img-fluid"
-                                        alt=""></a>
-                                <a href="#"><img src="<?php echo USER_STYLESHEET ?>twitter.svg" class="img-fluid"
-                                        alt=""></a>
-                                <a href="#"><img src="<?php echo USER_STYLESHEET ?>linkden.png" class="img-fluid"
-                                        alt=""></a>
+                                <a href="#" class="facebook" target="black"><i class="fa fa-facebook"></i></a>
+                                <a href="#" class="twitter" target="black"><i class="fa fa-twitter"></i></a>
+                                <a href="#" class="instagram" target="black"><i class="fa fa-instagram"></i></a>
+                                <a href="#" class="youtube" target="black"><i class="fa fa-youtube"></i></a>
                             </div>
                         </div>
                     </div>

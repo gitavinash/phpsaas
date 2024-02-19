@@ -8,12 +8,11 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="blog_banner_img">
-                    <img src="assets/images/laravel-vs-express.avif" class="img-fluid" alt="">
+                    <img src="<?php echo $page_image ?>" class="img-fluid" alt="">
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="blog_banner__left">
-                    <span><?php echo date('d F Y', strtotime($link_published)) ?></span>
                     <h3><?php echo $page_title ?></h3>
                     <p><?php echo $meta_description ?></p>
                 </div>

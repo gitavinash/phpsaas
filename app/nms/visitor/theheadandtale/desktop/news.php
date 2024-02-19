@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="blog_banner_img">
-                    <img src="assets/images/laravel-vs-express.avif" class="img-fluid" alt="">
+                    <img src="<?php echo $news_image ?>" class="img-fluid" alt="">
                 </div>
             </div>
             <div class="col-lg-6">

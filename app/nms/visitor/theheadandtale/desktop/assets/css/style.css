@@ -270,6 +270,7 @@ section {
 }
 .social a {
   margin: 0 !important;
+  font-size: 18px;
 }
 
 /* blog */
@@ -444,4 +445,8 @@ section {
   .blog_banner__left p {
     font-size: 16px;
   }
+}
+
+img.footerLogo {
+  height: 60px;
 }
