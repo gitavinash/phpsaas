@@ -263,6 +263,9 @@ section {
   color: #fff;
   margin-bottom: 0;
 }
+.blog_parra {
+  text-align: justify;
+}
 .social {
   display: flex;
   gap: 14px;
