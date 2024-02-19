@@ -387,8 +387,43 @@
                                 <img src="<?php echo USER_IMAGES ?>svg/quote-left.svg" class="img-fluid" alt="">
                             </div>
                             <div class="testimonial_parra">
+                                <p>Avinash exceeded expectations in our project, demonstrating exceptional technical
+                                    skills, innovative solutions, and a strong work ethic. His proactive communication
+                                    and ability to collaborate effectively ensured project success. His dedication and
+                                    attention to detail were unparalleled, making him a valuable team member. Avinash's
+                                    positive attitude and commitment to quality set a high standard. We appreciate his
+                                    contributions and look forward to future collaborations.</p>
+                            </div>
+                            <div class="client_title">
+                                <div class="client_name">
+                                    <h5>Arjun Chopra</h5>
+                                    <p>Punjab Kesari Group</p>
+                                </div>
+
+                                <div class="quote_right">
+                                    <img src="<?php echo USER_IMAGES ?>svg/quote-right.svg" class="img-fluid" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="testimonial_img">
+                            <img src="<?php echo USER_IMAGES ?>testimonial/punjab-kesari-logo.jpg" class="img-fluid"
+                                alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row testimonial_reverse ">
+                    <div class="col-xl-6">
+                        <div class="testimonial_wrapper__content">
+                            <div class="quate_left">
+                                <img src="<?php echo USER_IMAGES ?>svg/quote-left.svg" class="img-fluid" alt="">
+                            </div>
+                            <div class="testimonial_parra">
                                 <p>Avinash is very helpful in answering questions as well as helping in finding the best
-                                    solution for any business domain..</p>
+                                    solution for any business domain.</p>
                             </div>
                             <div class="client_title">
                                 <div class="client_name">
@@ -450,7 +485,7 @@
                             </div>
                             <div class="testimonial_parra">
                                 <p>Very satisfied with thr Service of mr avinash , very polite and responsive. . done my
-                                    website work on time ..thanks a lot</p>
+                                    website work on time. thanks a lot</p>
                             </div>
                             <div class="client_title">
                                 <div class="client_name">
