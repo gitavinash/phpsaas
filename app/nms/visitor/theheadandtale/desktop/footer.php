@@ -18,7 +18,7 @@
                 <div class="col-xl-3 col-6">
                     <div class="footer_content">
                         <div class="footer_links">
-                            <p>Quick Links</p>
+                            <!-- <p>Quick Links</p> -->
                             <a href="/about-us/">about us</a>
                             <a href="/contact-us/">contact us</a>
                         </div>
@@ -28,7 +28,7 @@
                 <div class="col-xl-3 col-6">
                     <div class="footer_content">
                         <div class="footer_links">
-                            <p>Legal Pages</p>
+                            <!-- <p>Legal Pages</p> -->
                             <a href="/terms-and-conditions/">terms & Conditions</a>
                             <a href="/privacy-policy/">Privacy Policy</a>
                             <a href="/refund-policy/">Refund Policy</a>
@@ -46,7 +46,6 @@
                                         class="fa fa-twitter"></i></a>
                                 <a href="https://www.instagram.com/theheadandtale" class="instagram" target="black"><i
                                         class="fa fa-instagram"></i></a>
-                                <a href="#" class="youtube" target="black"><i class="fa fa-youtube"></i></a>
                             </div>
                         </div>
                     </div>
