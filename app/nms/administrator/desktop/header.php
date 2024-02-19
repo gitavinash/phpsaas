@@ -73,20 +73,20 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     </div>
                 </li>
 
-                <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
-                    <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> News</a>
+                <li <?php echo (($postType == 'news') ? 'class="active"' : '') ?>>
+                    <a href="news/?type=list&status=all"><i class="fas fa-file-alt"></i> News</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new news</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="news/?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
+                            <li><a href="news/?type=add&editor=true"><i class="fas fa-plus"></i>Add new news</a></li>
+                            <li><a href="news/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new news</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="news/?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
+                            <li><a href="news/?type=add&editor=true"><i class="fas fa-plus"></i>Add new news</a></li>
+                            <li><a href="news/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>

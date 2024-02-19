@@ -1,154 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
+    require_once 'header.php'
 
-<body>
+?>
+<section>
+    <div class="container">
+        <div class="row">
+            <?php
+            
+                    if($newsArticles=mysqli_query($connection, "SELECT news_title, news_image, news_description, link_url, link_published FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id WHERE link_type='news' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 5")) {
 
-    <main>
-        <section>
-            <div class="container">
-                <div class="row">
-                    <a href="" class="news_box">
-                        <div class="feature_image">
-                            <img src="<?php echo USER_IMAGES ?>bg.png" alt="">
-                        </div>
-                        <div class="news_intro">
-                            <h2>RBI asks Visa, Mastercard to halt vendor payments via commercial cards</h2>
-                            <p><span><strong>Published on</strong>
-                                    <?php echo date('d M Y')?>
-                                </span></p>
-                            <p>After Paytm Payments Bank and a set of lending companies, Reserve Bank of India has now
-                                come
-                                hard
-                                on fintechs offering commercial/corporate cards. According to three sources, RBI has
-                                asked
-                                Visa
-                                and Mastercard to stop transactions of vendor payments. While there has been no
-                                communication
-                                from Mastercard yet but Visa has sent out a communication […]</p>
-                        </div>
-                    </a>
-                    <a href="" class="news_box">
-                        <div class="feature_image">
-                            <img src="<?php echo USER_IMAGES ?>bg.png" alt="">
-                        </div>
-                        <div class="news_intro">
-                            <h2>RBI asks Visa, Mastercard to halt vendor payments via commercial cards</h2>
-                            <p><span><strong>Published on</strong>
-                                    <?php echo date('d M Y')?>
-                                </span></p>
-                            <p>After Paytm Payments Bank and a set of lending companies, Reserve Bank of India has now
-                                come
-                                hard
-                                on fintechs offering commercial/corporate cards. According to three sources, RBI has
-                                asked
-                                Visa
-                                and Mastercard to stop transactions of vendor payments. While there has been no
-                                communication
-                                from Mastercard yet but Visa has sent out a communication […]</p>
-                        </div>
-                    </a>
-                    <a href="" class="news_box">
-                        <div class="feature_image">
-                            <img src="<?php echo USER_IMAGES ?>bg.png" alt="">
-                        </div>
-                        <div class="news_intro">
-                            <h2>RBI asks Visa, Mastercard to halt vendor payments via commercial cards</h2>
-                            <p><span><strong>Published on</strong>
-                                    <?php echo date('d M Y')?>
-                                </span></p>
-                            <p>After Paytm Payments Bank and a set of lending companies, Reserve Bank of India has now
-                                come
-                                hard
-                                on fintechs offering commercial/corporate cards. According to three sources, RBI has
-                                asked
-                                Visa
-                                and Mastercard to stop transactions of vendor payments. While there has been no
-                                communication
-                                from Mastercard yet but Visa has sent out a communication […]</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            </div>
-        </section>
+                        if(mysqli_num_rows($newsArticles)!=0) {
 
-        <section class="newsletter_wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="newsletter">
-                        <form action="">
-                            <h3>Get them in our newsletter</h3>
-                            <input type="text" class="input newsletter_input"
-                                placeholder="Enter your email to subscribe">
-                            <input type="submit" class="btn newsletter_btn" value="Subscriber now">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+                            while($newsData=mysqli_fetch_assoc($newsArticles)) {
 
-    <footer>
-        <div class="footer_wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-3 col-12">
-                        <div class="footer_left">
-                            <div class="footer_logo">
-                                <a href="#">The head and tail</a>
-                            </div>
-                            <div class="footer_parra">
-                                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsa cumque obcaecati velit
-                                    reprehenderit tempore, iusto inventore eum voluptas excepturi quia.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-6">
-                        <div class="footer_content">
-                            <div class="footer_links">
-                                <p>Quick Links</p>
-                                <a href="#">contact us</a>
-                                <a href="#">about us</a>
-                            </div>
+                                extract($newsData);
 
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-6">
-                        <div class="footer_content">
-                            <div class="footer_links">
-                                <p>Legal Pages</p>
-                                <a href="#">terms & Conditions</a>
-                                <a href="#">Privacy Policy</a>
-                                <a href="#">Refund Policy</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-12">
-                        <div class="footer_content">
-                            <div class="footer_links">
-                                <p>follow us on</p>
-                                <div class="social">
-                                    <a href="#"><img src="assets/images/instagram.svg" class="img-fluid" alt=""></a>
-                                    <a href="#"><img src="assets/images/facebook.svg" class="img-fluid" alt=""></a>
-                                    <a href="#"><img src="assets/images/twitter.svg" class="img-fluid" alt=""></a>
-                                    <a href="#"><img src="assets/images/linkden.png" class="img-fluid" alt=""></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                echo "<a href='{$link_url}' class='news_box'>
+                                        <div class='feature_image'>
+                                            <img src='{$news_image}' alt=''>
+        </div>
+        <div class='news_intro'>
+            <h2>{$news_title}</h2>
+            <p><span><strong>Published on</strong>
+                    ".date('d M Y', strtotime($link_published))."
+            </span></p>
+            <p>{$news_description}</p>
+        </div>
+        </a>";
+
+        }
+
+        } else {
+
+        echo "<p>No news found</p>";
+
+        }
+
+        } else {
+
+        echo mysqli_error($connection);
+        exit();
+
+        }
+
+        ?>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section class="newsletter_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="newsletter">
+                <form action="">
+                    <h3>Get them in our newsletter</h3>
+                    <input type="text" class="input newsletter_input" placeholder="Enter your email to subscribe">
+                    <input type="submit" class="btn newsletter_btn" value="Subscriber now">
+                </form>
             </div>
         </div>
-    </footer>
-</body>
+    </div>
+</section>
+<?php
 
-</html>
+    require_once 'footer.php';
+
+?>

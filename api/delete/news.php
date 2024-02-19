@@ -28,7 +28,7 @@
                         mysqli_query($connection, "COMMIT");
 
                     } else {
-
+                        
                         $msg='Something is wrong while deleting news';
                         mysqli_query($connection, "ROLLBACK");
 
