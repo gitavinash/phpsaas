@@ -25,7 +25,7 @@
             <p><span><strong>Published on</strong>
                     ".date('d M Y', strtotime($link_published))."
             </span></p>
-            <p>{$news_description}</p>
+            <p>{$meta_description}</p>
         </div>
         </a>";
 
