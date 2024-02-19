@@ -8,7 +8,7 @@
         <div class="row">
             <?php
             
-                    if($newsArticles=mysqli_query($connection, "SELECT news_title, news_image, news_description, link_url, link_published FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id WHERE link_type='news' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 5")) {
+                    if($newsArticles=mysqli_query($connection, "SELECT news_title, news_image, news_description, link_url, link_published, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id = link_id WHERE link_type='news' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_id DESC LIMIT 0, 5")) {
 
                         if(mysqli_num_rows($newsArticles)!=0) {
 
