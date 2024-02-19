@@ -40,9 +40,12 @@
                         <div class="footer_links">
                             <p>follow us on</p>
                             <div class="social">
-                                <a href="#" class="facebook" target="black"><i class="fa fa-facebook"></i></a>
-                                <a href="#" class="twitter" target="black"><i class="fa fa-twitter"></i></a>
-                                <a href="#" class="instagram" target="black"><i class="fa fa-instagram"></i></a>
+                                <a href="https://www.linkedin.com/company/theheadandtale/" class="facebook"
+                                    target="black"><i class="fa fa-linkedin"></i></a>
+                                <a href="https://twitter.com/theheadandtale" class="twitter" target="black"><i
+                                        class="fa fa-twitter"></i></a>
+                                <a href="https://www.instagram.com/theheadandtale" class="instagram" target="black"><i
+                                        class="fa fa-instagram"></i></a>
                                 <a href="#" class="youtube" target="black"><i class="fa fa-youtube"></i></a>
                             </div>
                         </div>
