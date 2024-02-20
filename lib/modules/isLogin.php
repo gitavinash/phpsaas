@@ -86,13 +86,10 @@
 
 						/** Redirect to complete profile page */
 
-						if(SITE_ID!=52) {
-							if($site_name=='' && $site_icon=='' && ACTIVE_URL!='/dashboard/setting/configuration/') {
+						if($site_name=='' && $site_icon=='' && ACTIVE_URL!='/dashboard/setting/configuration/') {
 
 							header("Location: /dashboard/setting/configuration/", TRUE, 301);
 							exit();
-
-						}
 						}
 
 

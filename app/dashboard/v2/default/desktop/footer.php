@@ -2,8 +2,10 @@
 
 				<footer>
 				    <div class="credit">
-				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Made with <i
-				                    class="fi-rr-heart"></i> in India.</a></p>
+				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
+				                <a href='https://aleya.in' target="_blank"><?php echo ucwords(SITE_APP) ?></a> | Made with <i
+				                    class="fi-rr-heart"></i> in
+				                India.</a></p>
 				    </div>
 				</footer>
 				<div class="shortcut">

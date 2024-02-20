@@ -30,7 +30,7 @@
         <div class="left-side">
             <ul>
                 <li>
-                    <!-- <a href="#" class="close-nav" id="closeNav"><i class="fi-rr-settings-sliders"></i></a> -->
+                    <!-- <a href="#" class="close-nav" id="closeNav"><i class="fi-rr-setting-sliders"></i></a> -->
                 </li>
             </ul>
         </div>
@@ -44,8 +44,8 @@
                                 alt=""></div>
                     </a>
                     <ul>
-                        <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
-                        <li><a href="settings/password/"><i class="fi-rr-key"></i> Change Password</a></li>
+                        <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
+                        <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                         <li><a href="/logout/?redirect_url=<?php echo ACTIVE_URL ?>"><i class="fi-rr-power"></i> Log
                                 Out</a>
                         </li>
@@ -130,7 +130,7 @@
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="notifications/"><i class="fi fi-rr-following"></i> Clients</a>
+                    <a href="clients/"><i class="fi fi-rr-following"></i> Clients</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
@@ -150,7 +150,7 @@
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/leads/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="notifications/"><i class="fi fi-rr-following"></i> Leads</a>
+                    <a href="leads/"><i class="fi fi-rr-following"></i> Leads</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
@@ -203,34 +203,47 @@
                             <li><a href="appearance/widgets/"><i class="fi-rr-layout-fluid"></i> Widgets</a></li>
                         </ul>
                     </div>
+                </li> -->
+
+
+                <li class="header-section-name">
+                    <p>Setting<span>Manage application.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/settings/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="settings/"><i class="fi-rr-settings"></i> Settings</a>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="setting/"><i class="fi-rr-settings"></i> Setting</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="settings/menu/"><i class="fi-rr-menu-burger"></i> Menu</a></li>
-                            <li><a href="settings/configuration/"><i class="fi-rr-settings-sliders"></i>
-                                    Configuration</a>
-                            </li>
-                            <li><a href="settings/password/"><i class="fi-rr-key"></i> Change password</a></li>
-                            <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                            <li><a href="settings/redirection/"><i class="fi-rr-link"></i>
-                                    URL Redirection</a></li>
+                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
+                            <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="settings/menu/"><i class="fi-rr-menu-burger"></i> Menu</a></li>
-                            <li><a href="settings/configuration/"><i class="fi-rr-settings-sliders"></i>
-                                    Configuration</a>
-                            </li>
-                            <li><a href="settings/password/"><i class="fi-rr-key"></i> Change Password</a></li>
-                            <li><a href="settings/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                            <li><a href="settings/redirection/"><i class="fi-rr-link"></i> URL Redirection</a></li>
+                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
+                            <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
+
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="users/"><i class="fi fi-rr-user"></i> Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add New user</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add New user</a>
+                        </ul>
+                    </div>
+                </li>
 
                 <!-- Subscription module -->
 

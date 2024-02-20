@@ -1166,7 +1166,7 @@ section.form label {
   position: absolute;
   pointer-events: none;
   left: 15px;
-  top: 12px;
+  top: -12px;
   transition: 300ms ease all;
   padding: 0 2px;
 }
@@ -1180,6 +1180,20 @@ section.form label sup {
 
 section.form input:focus ~ label sup {
   color: red;
+}
+
+section.form .btn {
+  float: left;
+  font-weight: 400;
+  padding: 10px 30px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #6452ea;
+  background: #6452ea;
+  color: #fff;
+  font-family: "Fira Sans", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 section.form button {
@@ -1198,6 +1212,7 @@ section.form button {
 section.form input[type="text"],
 input[type="number"],
 input[type="email"],
+input[type="password"],
 textarea {
   background: #f5f5f5;
   color: #333;
@@ -1218,6 +1233,7 @@ textarea {
 section.form input[type="text"]:hover,
 input[type="number"]:hover,
 input[type="email"]:hover,
+input[type="password"]:hover,
 textarea:hover {
   border-bottom: 2px solid #6452ea;
   box-shadow: 0 5px 5px -7px;
@@ -1227,6 +1243,7 @@ textarea:hover {
 section.form input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="email"]:focus,
+input[type="password"]:focus,
 textarea:focus {
   background: none !important;
   outline: none;
@@ -1237,6 +1254,7 @@ textarea:focus {
 section.form input[type="text"]:focus ~ label.form-lable,
 input[type="number"]:focus ~ label.form-lable,
 input[type="email"]:focus ~ label.form-lable,
+input[type="password"]:focus ~ label.form-lable,
 textarea:focus ~ label.form-lable {
   top: -8px;
   font-size: 14px;
@@ -1248,6 +1266,7 @@ textarea:focus ~ label.form-lable {
 section.form input[type="text"]:invalid ~ label.form-lable,
 input[type="email"]:invalid ~ label.form-lable,
 input[type="number"]:invalid ~ label.form-lable,
+input[type="password"]:invalid ~ label.form-lable,
 textarea:invalid ~ label.form-lable {
   top: -10px;
   font-size: 14px;
