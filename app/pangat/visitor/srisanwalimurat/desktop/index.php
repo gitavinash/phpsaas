@@ -169,20 +169,20 @@ include_once 'header.php';
                         </div>
                         <div class="booking-select text-danger d-none">Select a date and booking slot first.</div>
                         <div class="form-cont">
-                            <input type="text" name="fname" class="firstName inputClass reqInput"
+                            <input type="text" name="first_name" class="firstName inputClass reqInput"
                                 placeholder="First Name*" required>
                             <p class="color-red">Name is required</p>
                         </div>
                         <div class="form-cont">
-                            <input type="text" name="lname" class="lastName inputClass" placeholder="Last Name">
+                            <input type="text" name="last_name" class="lastName inputClass" placeholder="Last Name">
                         </div>
                         <div class="form-cont">
-                            <input type="email" name="ename" class="emailName inputClass reqInput" placeholder="Email"
+                            <input type="email" name="email" class="emailName inputClass reqInput" placeholder="Email"
                                 required>
                             <p class="color-red">Email is required</p>
                         </div>
                         <div class="form-cont">
-                            <input type="number" name="mname" inputmode="numeric" pattern="[0-9]*"
+                            <input type="number" name="mobile" inputmode="numeric" pattern="[0-9]*"
                                 class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required
                                 min="10" max="10" pattern="[6-9]{1}[0-9]{9}"
                                 title="Enter Your 10 Digit Mobile Number only">

@@ -141,39 +141,23 @@ unset($enquiryMeta['subject']);
 $messageForm = '';
 
 foreach ($enquiryMeta as $key => $value) {
-    $messageForm .= "<strong>{$key} : </strong> $value<br />";
+    $messageForm .= "<tr><td>{$key}</td><td>$value</td></tr>";
 }
 
 $messageDB = json_encode($enquiryMeta, TRUE);
 
 // Start record enquiry data into table
 
-if (SITE_ID == 35) {
-    mysqli_query($connection, "START TRANSACTION");
+mysqli_query($connection, "START TRANSACTION");
 
 
-    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
-    $enquiryID = mysqli_insert_id($connection);
+$addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
+$enquiryID = mysqli_insert_id($connection);
 
-    if ($addNewEnquiry) {
-        mysqli_query($connection, "COMMIT");
-    } else {
-        mysqli_query($connection, "ROLLBACK");
-    }
-}
-
-if (SITE_ID == 52) {
-    mysqli_query($connection, "START TRANSACTION");
-
-
-    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
-    $enquiryID = mysqli_insert_id($connection);
-
-    if ($addNewEnquiry) {
-        mysqli_query($connection, "COMMIT");
-    } else {
-        mysqli_query($connection, "ROLLBACK");
-    }
+if ($addNewEnquiry) {
+    mysqli_query($connection, "COMMIT");
+} else {
+    mysqli_query($connection, "ROLLBACK");
 }
 
 $email_body = "
@@ -191,10 +175,7 @@ $email_body = "
             <td>Mobile: </td>
             <td>{$mobile}</td>
         </tr>
-        <tr>
-            <td>Message: </td>
-            <td>{$messageForm}</td>
-        </tr>
+        {$messageForm}
     </table>
     ";
 
