@@ -266,6 +266,10 @@ section {
 .blog_parra {
   text-align: justify;
 }
+.blog_parra img {
+  float: left;
+  width: 100% !important;
+}
 .social {
   display: flex;
   gap: 14px;
