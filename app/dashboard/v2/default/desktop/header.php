@@ -89,7 +89,7 @@
                         </ul>
                     </div>
                 </li> -->
-                <li class="header-section-name">
+                <!-- <li class="header-section-name">
                     <p>Packages<span>Manage website package.</span></p>
                 </li>
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/hostings/')!==false) ? 'class="active"' : '' ) ?>>
@@ -123,7 +123,7 @@
                             <li><a href="domains/add/"><i class="fi-rr-add"></i> Add New Domains TLD</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
                 <li class="header-section-name">
                     <p>Clients<span>Manage clients.</span></p>
@@ -133,19 +133,39 @@
                     <a href="notifications/"><i class="fi fi-rr-following"></i> Clients</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All Clients</a></li>
-                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New Client</a></li>
+                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New client</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All Clients</a></li>
-                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New Client</a>
+                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New client</a>
                         </ul>
                     </div>
                 </li>
 
                 <li class="header-section-name">
+                    <p>Leads<span>Manage leads.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/leads/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="notifications/"><i class="fi fi-rr-following"></i> Leads</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
+                            <li><a href="leads/add/"><i class="fi fi-rr-user-add"></i> Add New lead</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
+                            <li><a href="leads/add/"><i class="fi fi-rr-user-add"></i> Add New lead</a>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- <li class="header-section-name">
                     <p>Website<span>Manage layout and other options.</span></p>
                 </li>
 
@@ -210,7 +230,7 @@
                             <li><a href="settings/redirection/"><i class="fi-rr-link"></i> URL Redirection</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- Subscription module -->
 
