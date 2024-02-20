@@ -1,20 +1,7 @@
 <h2 class="heading"><?php echo ucwords($postType) ?> <span>Manage all setting and website options.</span></h2>
 <div class="main-menu-list">
     <div class="widget box-3">
-        <a href="settings/menu/">
-            <div class="widget-setting-info">
-                <div class="feature-icon">
-                    <i class="fi-rr-menu-burger"></i>
-                </div>
-                <div class="about-feature">
-                    <h3>Menu</h3>
-                    <!-- <p>this feature is used</p> -->
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="widget box-3">
-        <a href="settings/configuration/">
+        <a href="setting/configuration/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-settings-sliders"></i>
@@ -27,7 +14,7 @@
         </a>
     </div>
     <div class="widget box-3">
-        <a href="settings/password/">
+        <a href="setting/password/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-key"></i>
@@ -40,26 +27,13 @@
         </a>
     </div>
     <div class="widget box-3">
-        <a href="settings/profile/">
+        <a href="setting/profile/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-portrait"></i>
                 </div>
                 <div class="about-feature">
                     <h3>Profile</h3>
-                    <!-- <p>this feature is used</p> -->
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="widget box-3">
-        <a href="settings/redirection/">
-            <div class="widget-setting-info">
-                <div class="feature-icon">
-                    <i class="fi-rr-link"></i>
-                </div>
-                <div class="about-feature">
-                    <h3>URL Redirection</h3>
                     <!-- <p>this feature is used</p> -->
                 </div>
             </div>
