@@ -21,6 +21,14 @@ input {
   color: #3333335e;
 }
 
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
 input:read-only {
   background-color: #d8d8d8;
   cursor: default;
@@ -672,7 +680,6 @@ main .container .heading span {
 .widget-info .info-box {
   float: left;
   width: 100%;
-  height: 70px;
   padding: 10px 10px 10px 10px;
   box-sizing: border-box;
 }
@@ -914,7 +921,9 @@ table.dataTable thead td,
 table.dataTable thead {
   background: #e7e5f5;
 }
-
+table.dataTable tbody tr {
+  height: 50px !important;
+}
 table.dataTable thead td,
 table.dataTable thead th {
   text-align: left;
@@ -1448,6 +1457,7 @@ section.form
   font-weight: 300;
   letter-spacing: 1px;
   border-radius: 4px;
+  padding: 5px 10px;
 }
 
 .heading-btn {

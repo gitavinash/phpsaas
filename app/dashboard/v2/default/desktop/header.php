@@ -21,7 +21,6 @@
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
         media="screen">
-
 </head>
 
 <body>
@@ -125,6 +124,10 @@
                     </div>
                 </li> -->
 
+                <?php
+                
+                    if($site_access_type =='administrator') { ?>
+
                 <li class="header-section-name">
                     <p>Clients<span>Manage clients.</span></p>
                 </li>
@@ -144,6 +147,11 @@
                         </ul>
                     </div>
                 </li>
+
+                <?php
+                    }
+
+                ?>
 
                 <li class="header-section-name">
                     <p>Leads<span>Manage leads.</span></p>
@@ -214,19 +222,33 @@
                     <a href="setting/"><i class="fi-rr-settings"></i> Setting</a>
                     <div class="side-menu">
                         <ul>
+                            <?php
+                            if($site_access_type =='administrator') { ?>
+
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
+
+                            <?php
+                
+                    if($site_access_type =='administrator') { ?>
+
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
                 </li>
+
+                <?php
+                
+                    if($site_access_type =='administrator') { ?>
 
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/')!==false) ? 'class="active"' : '' ) ?>>
@@ -244,6 +266,9 @@
                         </ul>
                     </div>
                 </li>
+
+                <?php }
+                ?>
 
                 <!-- Subscription module -->
 

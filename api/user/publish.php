@@ -98,12 +98,13 @@ function publish($connection, $data)
         }
     }
 
+
+    $msg=urlencode($msg);
+
     if ($status === 'success') {
-
-        header("Location: /dashboard/user/?type=edit&id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+        header("Location: /dashboard/users/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
     } else {
-
-        header("Location: /dashboard/user/?type=add&responseMsg={$msg}", TRUE, 301);
+        header("Location: /dashboard/users/add/?responseMsg={$msg}&status={$status}", TRUE, 301);
     }
 
     exit();

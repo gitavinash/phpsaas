@@ -1,3 +1,15 @@
+/** SweetAlert Pop Up Box */
+
+function popUpMessage(msgPostion, msgTxt, msgType) {
+  Swal.fire({
+    position: msgPostion,
+    type: msgType,
+    title: msgTxt,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
+
 function createLineChart(
   objectID,
   chartLabel = "",
@@ -224,6 +236,10 @@ if ($("#showTableList").length) {
   });
 }
 
+if ($(".showTableListWithoutFilter").length) {
+  $(".showTableListWithoutFilter").DataTable({});
+}
+
 // Date Range picker
 
 if ($(".dateRangePicker").length) {
@@ -300,3 +316,11 @@ $(".form-control").change(function () {
     $("#" + currentClickID + "Label").addClass("heading");
   }
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const isStatus = urlParams.get("status");
+
+if (isStatus) {
+  const responseMsg = urlParams.get("responseMsg");
+  popUpMessage("center", responseMsg, isStatus);
+}

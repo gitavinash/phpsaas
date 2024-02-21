@@ -63,12 +63,12 @@
 </div>
 
 
-<div class="widget box-2">
-    <div class="widget-info">
-        <div class="info-box">
-            <p>Recent Orders</p>
-        </div>
-    </div>
+<div class="widget box-1">
+    <?php
+
+    require_once 'dashboard/widgets/recent-enquiry.php';
+
+    ?>
 </div>
 
 <div class="widget box-2">

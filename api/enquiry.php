@@ -57,6 +57,24 @@ if (isset($mobile)) {
     unset($_REQUEST['mobile']);
 }
 
+if (isset($phone)) {
+
+    // Remove mobile varible from array
+
+    $mobile = $phone;
+    unset($_REQUEST['phone']);
+}
+
+if (substr($mobile, 0, 1) === "0") {
+        // If it is, remove the first character
+        $mobile = substr($mobile, 1);
+    }
+
+if (substr($mobile, 0, 3) === "+91") {
+        // If it is, remove the first character
+        $mobile = substr($mobile, 3);
+    }
+
 if (isset($source)) {
 
     // Remove enquiry source varible from array
@@ -150,8 +168,18 @@ $messageDB = json_encode($enquiryMeta, TRUE);
 
 mysqli_query($connection, "START TRANSACTION");
 
+// Check user is exiting or not
 
-$addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
+$findUser = mysqli_query($connection, "SELECT user_id FROM ".TABLE_PREFIX."user WHERE user_email='{$email}' OR user_mobile='{$mobile}' LIMIT 1");
+
+$userId=0;
+
+if(mysqli_num_rows($findUser)!=0)  {
+    $userInfo = mysqli_fetch_assoc($findUser);
+    $userId = $userInfo['user_id'];
+}
+
+$addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
 $enquiryID = mysqli_insert_id($connection);
 
 if ($addNewEnquiry) {
