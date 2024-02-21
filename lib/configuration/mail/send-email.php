@@ -53,9 +53,11 @@
 
 				if(!$mail->Send()) {
 
-					// echo "Message could not be sent. <p>";
-					// echo "Mailer Error: " . $mail->ErrorInfo;
+					echo "Message could not be sent. <p>";
+					echo "Mailer Error: " . $mail->ErrorInfo;
 
+				} else {
+					echo "Mailer Error: " . $mail->ErrorInfo;
 				}
 
 			} else {
@@ -67,3 +69,4 @@
 		}
 	
 	}
+					exit();
