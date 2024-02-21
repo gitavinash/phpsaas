@@ -179,7 +179,16 @@ if(mysqli_num_rows($findUser)!=0)  {
     $userId = $userInfo['user_id'];
 }
 
-$addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', 1)");
+// track traffic resource
+
+$trafficSource=((isset($_GET['utm_source']) ? $_GET['utm_source'] : ((isset($_GET['fbclid'])) ? 'facebook' : ((isset($_GET['gclid'])) ? 'Google Adwords' : $trafficDomain=parse_url($_SERVER['HTTP_REFERER']))) ));
+$trafficSource=mysqli_real_escape_string($connection, ((isset($trafficDomain['host'])) ? (($trafficDomain['host']!=SITE_DOMAIN) ? $trafficDomain['host'] : '' ) : $trafficSource ));
+
+$trafficMedium=mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : (($trafficSource=='facebook') ? 'social' : '' ) )));
+$trafficCampaign=mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '' )));
+
+
+$addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1)");
 $enquiryID = mysqli_insert_id($connection);
 
 if ($addNewEnquiry) {
