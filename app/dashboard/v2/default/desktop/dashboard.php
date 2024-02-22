@@ -2,8 +2,9 @@
     <div class="form-group right">
         <label>Reporting period</label>
         <form action="" class="widgetForm">
-            <input type="text" name="daterange" class="dateRangePicker" value="<?php echo $daterange ?>"
-                id="dashboardReportingDateRangePicker" placeholder="Select date range">
+            <input type="text" name="daterange" class="dateRangePicker"
+                value="<?php echo ((isset($daterange)) ? $daterange : '') ?>" id="dashboardReportingDateRangePicker"
+                placeholder="Select date range">
             <input type="submit" value="Update report" class="btn date-btn">
         </form>
     </div>

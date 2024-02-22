@@ -3,8 +3,9 @@
 				<footer>
 				    <div class="credit">
 				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
-				                <a href='https://aleya.in' target="_blank"><?php echo ucwords(SITE_APP) ?></a> | Made with <i
-				                    class="fi-rr-heart"></i> in
+				                <a href='https://aleya.in' target="_blank"><?php echo ucwords(SITE_APP) ?><sup
+				                        class="trademark">TM</sup></a> | Made
+				                with <i class="fi-rr-heart"></i> in
 				                India.</a></p>
 				    </div>
 				</footer>

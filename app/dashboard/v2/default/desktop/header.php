@@ -124,7 +124,7 @@
                     </div>
                 </li> -->
 
-                <?php
+                <!-- <?php
                 
                     if($site_access_type =='administrator') { ?>
 
@@ -133,7 +133,7 @@
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="clients/"><i class="fi fi-rr-following"></i> Clients</a>
+                    <a href="clients/"><i class="fi fi-rr-hr-group"></i> Clients</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
@@ -151,24 +151,38 @@
                 <?php
                     }
 
-                ?>
+                ?> -->
 
                 <li class="header-section-name">
                     <p>Leads<span>Manage leads.</span></p>
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/leads/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="leads/"><i class="fi fi-rr-following"></i> Leads</a>
+                    <a href="leads/"><i class="fi fi-rr-chart-network"></i> Leads</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <li><a href="leads/add/"><i class="fi fi-rr-user-add"></i> Add New lead</a></li>
+                            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li>
+                            <li><a href="leads/list/?status=1"><i class="fi-rr-check"></i> Confirmed leads</a>
+                            </li>
+                            <li><a href="leads/list/?status=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
+                            </li>
+                            <li><a href="leads/list/?status=2"><i class="fi-rr-comment"></i> Follow ups leads</a></li>
+                            <li><a href="leads/list/?status=3"><i class="fi-rr-cross-circle"></i> Cancelled leads</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <li><a href="leads/add/"><i class="fi fi-rr-user-add"></i> Add New lead</a>
+                            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li>
+                            <li><a href="leads/list/?status=1"><i class="fi-rr-check"></i> Confirmed leads</a>
+                            </li>
+                            <li><a href="leads/list/?status=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
+                            </li>
+                            <li><a href="leads/list/?status=2"><i class="fi-rr-comment"></i> Follow ups leads</a></li>
+                            <li><a href="leads/list/?status=3"><i class="fi-rr-cross-circle"></i> Cancelled leads</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

@@ -64,12 +64,12 @@ textarea {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #6452ea;
+  background: #01647b;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #7c74dc;
+  background: #167a92;
 }
 
 /* Defalt container size */
@@ -263,7 +263,7 @@ strong {
 .right-side ul li:hover ul {
   display: block;
   position: absolute;
-  background: #7c74dc;
+  background: #167a92;
   right: 0;
   width: 250px;
   margin: 0 auto;
@@ -284,7 +284,7 @@ strong {
   padding: 0px 0px 0px 15px;
   font-weight: 400;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   cursor: pointer;
   box-sizing: border-box;
@@ -376,14 +376,14 @@ nav.side-nav ul li a {
   font-weight: 400;
   text-decoration: none;
   color: #333;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 28px;
   cursor: pointer;
   box-sizing: border-box;
 }
 
 nav.side-nav ul li a:hover {
-  background: #6452ea;
+  background: #01647b;
   color: #fff;
 }
 
@@ -398,7 +398,7 @@ nav.side-nav ul li a:hover i {
 }
 
 nav.side-nav ul li.active {
-  background: #6452ea;
+  background: #01647b;
   color: #fff;
 }
 
@@ -424,7 +424,7 @@ nav.side-nav ul li.active:after {
 
 nav.side-nav ul li.active > .bottom-menu ul {
   display: block;
-  background: #7c74dc;
+  background: #167a92;
 }
 
 nav.side-nav ul li.active:hover > .side-menu ul {
@@ -451,7 +451,7 @@ nav.side-nav ul li:hover > .side-menu ul {
   display: block;
   position: absolute;
   width: 240px;
-  background: #7c74dc;
+  background: #167a92;
   left: 240px;
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
@@ -465,7 +465,7 @@ nav.side-nav ul li:hover > .side-menu ul:after {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-right-color: #7c74dc;
+  border-right-color: #167a92;
   margin-top: 11px;
   margin-left: -16px;
 }
@@ -498,7 +498,7 @@ nav .header-section-name {
   margin: 10px 3%;
   padding: 10px 10px;
   box-sizing: border-box;
-  background: #e7e5f5;
+  background: #e7f5e5;
   width: 94% !important;
   border-radius: 7px;
 }
@@ -506,13 +506,14 @@ nav .header-section-name {
 nav .header-section-name p {
   float: left;
   width: 100%;
-  color: #6452eb;
+  font-size: 14px;
+  color: #40b56f;
 }
 
 nav .header-section-name p span {
   float: left;
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
   padding: 5px 0px 0px 0px;
   color: #333;
 }
@@ -556,7 +557,7 @@ main {
 }
 
 .i-m-here-pagination ul li a {
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   line-height: 18px;
   margin-top: 1px;
@@ -564,7 +565,7 @@ main {
 }
 
 .i-m-here-pagination ul li:first-child a {
-  color: #6452eb;
+  color: #01647b;
 }
 
 main .container {
@@ -577,7 +578,7 @@ main .container {
 main .container .heading {
   float: left;
   margin-top: -40px;
-  color: #6452eb;
+  color: #01647b;
   padding-left: 10px;
   box-sizing: border-box;
 }
@@ -779,7 +780,7 @@ main .container .heading span {
   width: 60px;
   padding: 14px;
   box-sizing: border-box;
-  background: #7c74dc;
+  background: #167a92;
   height: 60px;
   text-align: center;
   margin: 10px;
@@ -802,7 +803,7 @@ main .container .heading span {
 .widget-setting-info .about-feature h3 {
   float: left;
   width: 100%;
-  color: #7c74dc;
+  color: #167a92;
   font-weight: 400;
   margin: 0;
   padding: 8px 0px 5px 0px;
@@ -813,12 +814,12 @@ main .container .heading span {
   width: 100%;
   margin: 0;
   padding: 0;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   padding-right: 10px;
   box-sizing: border-box;
   text-align: left;
-  line-height: 18px;
+  line-height: 22px;
 }
 
 /* Default box inside container */
@@ -886,14 +887,13 @@ main .container .heading span {
   box-sizing: border-box;
   outline: 0;
   height: 33px !important;
-  font-size: 14px;
+  font-size: 16px;
   background: no-repeat;
 }
 
 .list-box {
   float: left;
   width: 100%;
-  margin-bottom: 20px;
 }
 
 /* Footer section */
@@ -924,7 +924,7 @@ footer p a {
 
 table.dataTable thead td,
 table.dataTable thead {
-  background: #e7e5f5;
+  background: #e7f5e5;
 }
 table.dataTable tbody tr {
   height: 50px !important;
@@ -932,7 +932,7 @@ table.dataTable tbody tr {
 table.dataTable thead td,
 table.dataTable thead th {
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 1px;
 }
 
@@ -962,7 +962,7 @@ table.dataTable thead th {
   width: 100% !important;
   margin-top: 2px !important;
   height: 33px !important;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .dataTables_filter {
@@ -997,15 +997,20 @@ table.dataTable thead th {
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-  background: #e7e5f5 !important;
-  border: 1px solid #e7e5f5 !important;
+  background: #e7f5e5 !important;
+  border: 1px solid #e7f5e5 !important;
   border-radius: 4px !important;
+}
+
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
+  height: 520px !important;
+  max-height: 520px !important;
 }
 
 /* Date range picker */
 
 .daterangepicker td.in-range {
-  background: #e7e5f5 !important;
+  background: #e7f5e5 !important;
 }
 
 .daterangepicker td.off,
@@ -1016,12 +1021,12 @@ table.dataTable thead th {
 }
 
 .daterangepicker .ranges li.active {
-  background: #6452eb !important;
+  background: #40b56f !important;
 }
 
 .daterangepicker td.active,
 .daterangepicker td.active:hover {
-  background: #6452eb !important;
+  background: #40b56f !important;
 }
 
 /* Shortcut */
@@ -1030,7 +1035,7 @@ table.dataTable thead th {
   position: fixed;
   border: none;
   border-radius: 100%;
-  background: #6452eb;
+  background: #40b56f;
   text-align: center;
   right: 2%;
   bottom: 3%;
@@ -1089,7 +1094,7 @@ table.dataTable thead th {
   font-weight: 400;
   float: left;
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 1px;
   line-height: 25px;
   cursor: default;
@@ -1108,11 +1113,11 @@ table.dataTable thead th {
 }
 
 .steps-tab .active span {
-  background: #6452ea;
+  background: #01647b;
 }
 
 .steps-tab .active {
-  color: #6452ea;
+  color: #01647b;
   font-weight: 600;
 }
 
@@ -1124,7 +1129,7 @@ table.dataTable thead th {
 /* New main form style */
 
 .list-add-new-btn {
-  background: #6452ea;
+  background: #01647b;
   color: #fff;
 }
 
@@ -1168,7 +1173,7 @@ section.form .form-header {
 
 section.form .form-header h1 {
   font-size: 42px;
-  color: #6452ea;
+  color: #01647b;
   float: left;
   width: 70%;
   line-height: 150px;
@@ -1210,8 +1215,8 @@ section.form .btn {
   padding: 10px 30px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid #6452ea;
-  background: #6452ea;
+  border: 1px solid #01647b;
+  background: #01647b;
   color: #fff;
   font-family: "Fira Sans", sans-serif;
   font-size: 18px;
@@ -1223,8 +1228,8 @@ section.form button {
   padding: 10px 30px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid #6452ea;
-  background: #6452ea;
+  border: 1px solid #01647b;
+  background: #01647b;
   color: #fff;
   font-family: "Fira Sans", sans-serif;
   font-size: 18px;
@@ -1257,7 +1262,7 @@ input[type="number"]:hover,
 input[type="email"]:hover,
 input[type="password"]:hover,
 textarea:hover {
-  border-bottom: 2px solid #6452ea;
+  border-bottom: 2px solid #01647b;
   box-shadow: 0 5px 5px -7px;
   background: #efefef;
 }
@@ -1269,8 +1274,8 @@ input[type="password"]:focus,
 textarea:focus {
   background: none !important;
   outline: none;
-  border: 1px solid #6452ea;
-  /* border-bottom: 2px solid #6452ea; */
+  border: 1px solid #01647b;
+  /* border-bottom: 2px solid #01647B; */
 }
 
 section.form input[type="text"]:focus ~ label.form-lable,
@@ -1279,8 +1284,8 @@ input[type="email"]:focus ~ label.form-lable,
 input[type="password"]:focus ~ label.form-lable,
 textarea:focus ~ label.form-lable {
   top: -8px;
-  font-size: 14px;
-  color: #6452ea;
+  font-size: 16px;
+  color: #01647b;
   left: 11px;
   background: #fff;
 }
@@ -1291,17 +1296,17 @@ input[type="number"]:invalid ~ label.form-lable,
 input[type="password"]:invalid ~ label.form-lable,
 textarea:invalid ~ label.form-lable {
   top: -10px;
-  font-size: 14px;
-  color: #6452ea;
+  font-size: 16px;
+  color: #01647b;
   left: 11px;
 }
 
 section.form .form-group .heading {
   top: -10px;
-  font-size: 14px;
+  font-size: 16px;
   margin: 0;
   padding: 0;
-  color: #6452ea;
+  color: #01647b;
   left: 11px;
   border-bottom: none;
 }
@@ -1337,7 +1342,7 @@ section.form .form-group-box p {
   width: 100%;
   font-size: 16px;
   letter-spacing: 1px;
-  color: #6452ea;
+  color: #01647b;
   padding-bottom: 10px;
 }
 
@@ -1346,7 +1351,7 @@ section.form .form-group p {
   width: 100%;
   font-size: 16px;
   letter-spacing: 1px;
-  color: #6452ea;
+  color: #01647b;
   padding-bottom: 10px;
 }
 
@@ -1395,7 +1400,7 @@ section.form
   input[type="checkbox"]:checked
   + label.radio-button {
   color: #fff;
-  background: #6452ea;
+  background: #01647b;
 }
 
 section.form .form-group-box .input-box input[type="radio"] {
@@ -1424,7 +1429,7 @@ section.form
   input[type="radio"]:checked
   + label.radio-button {
   color: #fff;
-  background: #6452ea;
+  background: #01647b;
 }
 
 .select2-container {
@@ -1445,7 +1450,7 @@ section.form
   .select2-selection--single
   .select2-selection__rendered {
   line-height: 50px;
-  color: #6452ea;
+  color: #01647b;
 }
 
 .select2-container--default .select2-search--dropdown .select2-search__field {
@@ -1460,12 +1465,12 @@ section.form
 }
 .select2-container--default
   .select2-results__option--highlighted[aria-selected] {
-  background: #6452ea;
+  background: #01647b;
 }
 
 .btn {
-  background: #6452eb;
-  border: 1px solid #6452eb;
+  background: #40b56f;
+  border: 1px solid #40b56f;
   color: #fff;
   font-weight: 300;
   letter-spacing: 1px;
@@ -1474,16 +1479,26 @@ section.form
   cursor: pointer !important;
 }
 
+.dataTableBtn {
+  float: left;
+  margin-top: 5px;
+}
+.dataTableSubmitBtn {
+  margin-right: 10px;
+  height: 31px;
+  background: #01647b !important;
+  border-color: #01647b !important;
+}
 .date-btn {
   margin-left: 20px;
   line-height: 20px;
   color: #fff;
-  background: #6452eb !important;
+  background: #40b56f !important;
   font-weight: 400;
 }
 
 .heading-btn {
-  background: #4caf50;
+  background: #01647b;
   color: #fff;
   font-size: 12px;
   border-radius: 10 px;
@@ -1516,4 +1531,9 @@ section.form
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.trademark {
+  font-size: 10px;
+  margin-left: 2px;
 }

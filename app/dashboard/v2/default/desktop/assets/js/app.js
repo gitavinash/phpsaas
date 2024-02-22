@@ -50,16 +50,9 @@ function createPieChart(objectID, chartData) {
     },
     options: {
       options: {
-        layout: {
-          padding: {
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-          },
-        },
         plugins: {
           legend: {
+            position: "bottom",
             labels: {
               fontSize: 16, // Adjust label font size
               formatter: function (value, context) {
@@ -73,7 +66,7 @@ function createPieChart(objectID, chartData) {
             },
           },
         },
-        radius: "40%", // Adjust the pie chart area size
+        radius: "50%", // Adjust the pie chart area size
       },
     },
   });
@@ -460,8 +453,8 @@ $(".form-control").change(function () {
 
 const urlParams = new URLSearchParams(window.location.search);
 const isStatus = urlParams.get("status");
+const responseMsg = urlParams.get("responseMsg");
 
-if (isStatus) {
-  const responseMsg = urlParams.get("responseMsg");
+if (isStatus && responseMsg) {
   popUpMessage("center", responseMsg, isStatus);
 }

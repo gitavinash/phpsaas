@@ -14,6 +14,19 @@
         </a>
     </div>
     <div class="widget box-3">
+        <a href="leads/add/">
+            <div class="widget-setting-info">
+                <div class="feature-icon">
+                    <i class="fi-rr-add"></i>
+                </div>
+                <div class="about-feature">
+                    <h3>Add new lead</h3>
+                    <!-- <p>this feature is used</p> -->
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="widget box-3">
         <a href="leads/list/?status=1">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -43,7 +56,7 @@
         <a href="leads/list/?status=2">
             <div class="widget-setting-info">
                 <div class="feature-icon">
-                    <i class="fi-rr-hourglass-end"></i>
+                    <i class="fi-rr-comment"></i>
                 </div>
                 <div class="about-feature">
                     <h3>Follow ups leads</h3>
