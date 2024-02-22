@@ -49,27 +49,32 @@ function createPieChart(objectID, chartData) {
       ],
     },
     options: {
-      elements: {
-        arc: {
-          borderWidth: 0,
+      options: {
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          },
         },
-      },
-      plugins: {
-        legend: {
-          labels: {
-            fontSize: 16, // Adjust label font size
-            formatter: function (value, context) {
-              return (
-                context.chart.data.labels[context.dataIndex] +
-                ": " +
-                Math.round(context.parsed * 100) +
-                "%"
-              );
+        plugins: {
+          legend: {
+            labels: {
+              fontSize: 16, // Adjust label font size
+              formatter: function (value, context) {
+                return (
+                  context.chart.data.labels[context.dataIndex] +
+                  ": " +
+                  Math.round(context.parsed * 100) +
+                  "%"
+                );
+              },
             },
           },
         },
+        radius: "40%", // Adjust the pie chart area size
       },
-      radius: "70%", // Adjust the pie chart area size
     },
   });
 }

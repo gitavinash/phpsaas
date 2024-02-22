@@ -1513,5 +1513,6 @@ section.form
   align-items: center;
   float: left;
   width: 100%;
-  padding: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
