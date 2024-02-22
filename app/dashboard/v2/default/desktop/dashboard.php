@@ -1,65 +1,56 @@
 <div class="box-1 dashboard-datepicker">
     <div class="form-group right">
         <label>Reporting period</label>
-        <input type="text" class="dateRangePicker" id="dashboardReportingDateRangePicker"
-            placeholder="Select date range">
+        <form action="" class="widgetForm">
+            <input type="text" name="daterange" class="dateRangePicker" id="dashboardReportingDateRangePicker"
+                placeholder="Select date range">
+            <input type="submit" value="Update report" class="btn date-btn">
+        </form>
     </div>
 </div>
-<div class="widget box-3">
-    <div class="widget-info" id="totalOrder">
-        <div class="info-box">
-            <p>Total Orders
-                <span id="totalOrderValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt=""></span>
-            </p>
-        </div>
-        <div class="chart-box">
-            <canvas id="totalOrderChart"></canvas>
-        </div>
-    </div>
+<div class="widget box-4">
+    <?php
+
+        require_once 'dashboard/widgets/enquiry.php';
+
+    ?>
 </div>
-<div class="widget box-3">
-    <div class="widget-info" id="totalOrderAmount">
-        <div class="info-box">
-            <p>Total Orders<span class="right">₹</span>
-                <span id="totalOrderAmountValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif"
-                        alt=""></span>
-                </span>
-            </p>
-        </div>
-        <div class="chart-box">
-            <canvas id="totalOrderAmountChart"></canvas>
-        </div>
-    </div>
+<div class="widget box-4">
+    <?php
+
+        require_once 'dashboard/widgets/confirmed-enquiry.php';
+
+    ?>
 </div>
-<div class="widget box-3">
-    <div class="widget-info">
-        <div class="info-box" id="recentOrderAmount">
-            <p>Recent Orders<span class="right">Last 7 Days</span>
-                <span id="recentOrderAmountValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt="">
-                </span>
-                </span>
-            </p>
-        </div>
-        <div class="chart-box">
-            <canvas id="recentOrderAmountChart"></canvas>
-        </div>
-    </div>
+<div class="widget box-4">
+    <?php
+
+        require_once 'dashboard/widgets/pending-enquiry.php';
+
+    ?>
+</div>
+<div class="widget box-4">
+    <?php
+
+        require_once 'dashboard/widgets/follow-up-enquiry.php';
+
+    ?>
 </div>
 
-<div class="widget box-3-1">
-    <div class="widget-info">
-        <div class="info-box">
-            <p>Daily Visitors<span class="right">Last 30 Days</span></p>
-        </div>
-    </div>
+<div class="widget box-2">
+    <?php
+
+        require_once 'dashboard/widgets/top-enquiry-source.php';
+
+    ?>
 </div>
 
-<div class="widget box-3-2">
-    <div class="widget-info">
-        <div class="info-box">
-            <p>Recent added products</p>
-        </div>
-    </div>
+<div class="widget box-2">
+    <?php
+
+        require_once 'dashboard/widgets/enquiry-performance.php';
+
+    ?>
 </div>
 
 
@@ -69,12 +60,4 @@
     require_once 'dashboard/widgets/recent-enquiry.php';
 
     ?>
-</div>
-
-<div class="widget box-2">
-    <div class="widget-info">
-        <div class="info-box">
-            <p>Recent added products</p>
-        </div>
-    </div>
 </div>

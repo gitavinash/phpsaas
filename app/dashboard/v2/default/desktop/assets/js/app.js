@@ -1,3 +1,10 @@
+const urlQuery = new URLSearchParams(window.location.search);
+let dateRangeParams = urlQuery.get("daterange");
+dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
+if (typeof tempId !== "undefined") {
+  // Update dateRangeParams to include userId=tempId if tempId is not empty
+  dateRangeParams += "&userId=" + tempId;
+}
 /** SweetAlert Pop Up Box */
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
@@ -7,6 +14,63 @@ function popUpMessage(msgPostion, msgTxt, msgType) {
     title: msgTxt,
     showConfirmButton: false,
     timer: 1500,
+  });
+}
+
+function createPieChart(objectID, chartData) {
+  // Extract labels and counts
+  const labels = chartData.labels;
+  const counts = chartData.data;
+
+  const objectDiv = `${objectID}Chart`;
+
+  var myChart = new Chart(document.getElementById(objectDiv).getContext("2d"), {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          data: counts,
+          backgroundColor: [
+            "#2ca02c",
+            "#FFD700",
+            "#87CEEB",
+            "#FFA07A",
+            "#98FB98",
+            "#FFB6C1",
+            "#B0E0E6",
+            "#FFDEAD",
+            "#DDA0DD",
+            "#F0E68C",
+            // Add more colors if needed
+          ],
+          borderWidth: 0,
+        },
+      ],
+    },
+    options: {
+      elements: {
+        arc: {
+          borderWidth: 0,
+        },
+      },
+      plugins: {
+        legend: {
+          labels: {
+            fontSize: 16, // Adjust label font size
+            formatter: function (value, context) {
+              return (
+                context.chart.data.labels[context.dataIndex] +
+                ": " +
+                Math.round(context.parsed * 100) +
+                "%"
+              );
+            },
+          },
+        },
+      },
+      radius: "70%", // Adjust the pie chart area size
+    },
   });
 }
 
@@ -100,12 +164,9 @@ function increaseCountingNumberAnimation(
   var obj = document.getElementById(objectID);
   var timer = setInterval(function () {
     current += increment;
-    obj.innerHTML =
-      "₹ " +
-      current +
-      '<span class="danger"><i class="fi-rr-arrow-small-down"></i>' +
-      percentage +
-      "%";
+    obj.innerHTML = current;
+    // '+ <span class="danger"><i class="fi-rr-arrow-small-down"></i>' +
+    // percentage + "%";
     if (current == end) {
       clearInterval(timer);
     }
@@ -139,12 +200,10 @@ function decreaseCountingNumberAnimation(
   }, stepTime);
 }
 
-// Total Order
-
-if ($("#totalOrder").length) {
-  increaseCountingNumberAnimation("totalOrderValue", 500 - 100, 500, 1, 86);
+function comparisonWidgetChart(objectID, data) {
+  increaseCountingNumberAnimation(`totalLeadsValue`, 500 - 100, 500, 1, 86);
   createLineChart(
-    (objectID = "totalOrderChart"),
+    (objectID = `${objectID}Chart`),
     (chartLabel = [
       "Monday",
       "Tueday",
@@ -163,6 +222,114 @@ if ($("#totalOrder").length) {
   );
 }
 
+function dashboardWidgetWithChart(objectID, data) {
+  console.log(`Object ID`, objectID);
+  increaseCountingNumberAnimation(
+    `${objectID}Value`,
+    data.totalLeads - 10,
+    data.totalLeads,
+    1,
+    86
+  );
+  createLineChart(
+    (objectID = `${objectID}Chart`),
+    (chartLabel = [
+      "Monday",
+      "Tueday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ]),
+    (currentDataLabel = "1st May 2021 - 8th May 2021"),
+    (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
+    (currentDataColor = "#239B56"),
+    (previousDataLabel = "1st May 2021 - 8th May 2021"),
+    (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
+    (previousDataColor = "#D1F9D1")
+  );
+}
+
+function dashboardWidgetWithoutChart(objectID, data) {
+  increaseCountingNumberAnimation(
+    `${objectID}Value`,
+    data.totalLeads - 10,
+    data.totalLeads,
+    1,
+    86
+  );
+}
+
+// Total leads
+
+if ($("#totalLeads").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/total-leads/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      dashboardWidgetWithoutChart("totalLeads", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+// Source lead
+
+if ($("#sourceData").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/enquiry-source/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      createPieChart("sourceData", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+if ($("#enquiryPerformace").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/enquiry-performance/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      createPieChart("enquiryPerformace", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+// Total Order
+if ($("#totalOrder").length) {
+  increaseCountingNumberAnimation("totalOrderValue", 500 - 100, 500, 1, 86);
+  // createLineChart(
+  //   (objectID = "totalOrderChart"),
+  //   (chartLabel = [
+  //     "Monday",
+  //     "Tueday",
+  //     "Wednesday",
+  //     "Thursday",
+  //     "Friday",
+  //     "Saturday",
+  //     "Sunday",
+  //   ]),
+  //   (currentDataLabel = "1st May 2021 - 8th May 2021"),
+  //   (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
+  //   (currentDataColor = "#239B56"),
+  //   (previousDataLabel = "1st May 2021 - 8th May 2021"),
+  //   (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
+  //   (previousDataColor = "#D1F9D1")
+  // );
+}
+
 // Total Amount of sale
 
 if ($("#totalOrderAmount").length) {
@@ -173,54 +340,24 @@ if ($("#totalOrderAmount").length) {
     1,
     86
   );
-  createLineChart(
-    (objectID = "totalOrderAmountChart"),
-    (chartLabel = [
-      "Monday",
-      "Tueday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ]),
-    (currentDataLabel = "1st May 2021 - 8th May 2021"),
-    (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
-    (currentDataColor = "#E74C3C"),
-    (previousDataLabel = "1st May 2021 - 8th May 2021"),
-    (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
-    (previousDataColor = "#F9D1D1")
-  );
-}
-
-// Recent orders
-
-if ($("#recentOrderAmount").length) {
-  increaseCountingNumberAnimation(
-    "recentOrderAmountValue",
-    500 - 100,
-    500,
-    1,
-    86
-  );
-  createLineChart(
-    (objectID = "recentOrderAmountChart"),
-    (chartLabel = [
-      "Monday",
-      "Tueday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ]),
-    (currentDataLabel = "1st May 2021 - 8th May 2021"),
-    (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
-    (currentDataColor = "#F1C40F"),
-    (previousDataLabel = "1st May 2021 - 8th May 2021"),
-    (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
-    (previousDataColor = "#F9EFD1")
-  );
+  // createLineChart(
+  //   (objectID = "totalOrderAmountChart"),
+  //   (chartLabel = [
+  //     "Monday",
+  //     "Tueday",
+  //     "Wednesday",
+  //     "Thursday",
+  //     "Friday",
+  //     "Saturday",
+  //     "Sunday",
+  //   ]),
+  //   (currentDataLabel = "1st May 2021 - 8th May 2021"),
+  //   (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
+  //   (currentDataColor = "#E74C3C"),
+  //   (previousDataLabel = "1st May 2021 - 8th May 2021"),
+  //   (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
+  //   (previousDataColor = "#F9D1D1")
+  // );
 }
 
 // Order List
