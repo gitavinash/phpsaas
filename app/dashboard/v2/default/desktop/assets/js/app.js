@@ -338,13 +338,7 @@ if ($("#totalOrder").length) {
 // Total Amount of sale
 
 if ($("#totalOrderAmount").length) {
-  increaseCountingNumberAnimation(
-    "totalOrderAmountValue",
-    500 - 100,
-    500,
-    1,
-    86
-  );
+  increaseCountingNumberAnimation("totalOrderAmountValue", 0, 0, 1, 86);
   // createLineChart(
   //   (objectID = "totalOrderAmountChart"),
   //   (chartLabel = [
