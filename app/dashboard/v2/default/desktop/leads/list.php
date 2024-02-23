@@ -73,7 +73,7 @@
                                     <?php
                                         
                                             for($i=0; $i<sizeof($userList); $i++) {
-                                                echo "<option value='".base64_encode($userList[$i]['id'].'_'.$userList[$i]['name'])."'>{$userList[$i]['email']}</option>";
+                                                echo "<option value='".base64_encode($userList[$i]['id'].'_'.$userList[$i]['name'])."'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
                                             }
 
                                         ?>
