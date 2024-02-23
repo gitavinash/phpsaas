@@ -47,13 +47,14 @@
                         <th>Email</th>
                         <th>Mobile</th>
                         <th>Subject</th>
+                        <th>Time</th>
                         <th>Assign to</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$statusCondition} enquiry_site_id = ".SITE_ID)) {
+        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_time, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$statusCondition} enquiry_site_id = ".SITE_ID." ORDER BY enquiry_time DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -62,6 +63,7 @@
                         <td><?php echo $enquiry_email; ?></td>
                         <td><?php echo $enquiry_mobile; ?></td>
                         <td><?php echo $enquiry_subject; ?></td>
+                        <td><?php echo date('d M Y, H:i', strtotime($enquiry_time)); ?></td>
                         <td>
                             <form method="POST" class="">
                                 <?php
