@@ -13,7 +13,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <!-- <div class="widget box-3">
         <a href="leads/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -21,13 +21,12 @@
                 </div>
                 <div class="about-feature">
                     <h3>Add new lead</h3>
-                    <!-- <p>this feature is used</p> -->
                 </div>
             </div>
         </a>
-    </div>
+    </div> -->
     <div class="widget box-3">
-        <a href="leads/list/?status=1">
+        <a href="leads/list/?leadStatus=1">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-check"></i>
@@ -40,7 +39,7 @@
         </a>
     </div>
     <div class="widget box-3">
-        <a href="leads/list/?status=0">
+        <a href="leads/list/?leadStatus=0">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-hourglass-end"></i>
@@ -53,7 +52,7 @@
         </a>
     </div>
     <div class="widget box-3">
-        <a href="leads/list/?status=2">
+        <a href="leads/list/?leadStatus=2">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-comment"></i>
@@ -66,7 +65,7 @@
         </a>
     </div>
     <div class="widget box-3">
-        <a href="leads/list/?status=3">
+        <a href="leads/list/?leadStatus=3">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-cross"></i>

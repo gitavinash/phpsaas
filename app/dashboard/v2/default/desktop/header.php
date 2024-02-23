@@ -162,26 +162,30 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li>
-                            <li><a href="leads/list/?status=1"><i class="fi-rr-check"></i> Confirmed leads</a>
+                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li> -->
+                            <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed leads</a>
                             </li>
-                            <li><a href="leads/list/?status=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
+                            <li><a href="leads/list/?leadStatus=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
                             </li>
-                            <li><a href="leads/list/?status=2"><i class="fi-rr-comment"></i> Follow ups leads</a></li>
-                            <li><a href="leads/list/?status=3"><i class="fi-rr-cross-circle"></i> Cancelled leads</a>
+                            <li><a href="leads/list/?leadStatus=2"><i class="fi-rr-comment"></i> Follow ups leads</a>
+                            </li>
+                            <li><a href="leads/list/?leadStatus=3"><i class="fi-rr-cross-circle"></i> Cancelled
+                                    leads</a>
                             </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li>
-                            <li><a href="leads/list/?status=1"><i class="fi-rr-check"></i> Confirmed leads</a>
+                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li> -->
+                            <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed leads</a>
                             </li>
-                            <li><a href="leads/list/?status=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
+                            <li><a href="leads/list/?leadStatus=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
                             </li>
-                            <li><a href="leads/list/?status=2"><i class="fi-rr-comment"></i> Follow ups leads</a></li>
-                            <li><a href="leads/list/?status=3"><i class="fi-rr-cross-circle"></i> Cancelled leads</a>
+                            <li><a href="leads/list/?leadStatus=2"><i class="fi-rr-comment"></i> Follow ups leads</a>
+                            </li>
+                            <li><a href="leads/list/?leadStatus=3"><i class="fi-rr-cross-circle"></i> Cancelled
+                                    leads</a>
                             </li>
                         </ul>
                     </div>

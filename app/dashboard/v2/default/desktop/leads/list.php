@@ -1,7 +1,7 @@
 <?php
     $statusCondition = '';
-    if(isset($status)){
-        $statusCondition = "enquiry_status={$status} AND ";
+    if(isset($leadStatus)){
+        $statusCondition = "enquiry_status={$leadStatus} AND ";
     }
 
     $userList=array();
@@ -53,7 +53,7 @@
                 <tbody>
                     <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$statusCondition} enquiry_site_id = ".SITE_ID)) {
+        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$statusCondition} enquiry_site_id = ".SITE_ID)) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -63,36 +63,31 @@
                         <td><?php echo $enquiry_mobile; ?></td>
                         <td><?php echo $enquiry_subject; ?></td>
                         <td>
-                            <?php
-                                
-                                    if($site_access_type!='agent') { ?>
-                            <form action="">
-                                <select class="selectJS form-control" name="user">
-                                    <option value="#">Select user</option>
+                            <form method="POST" class="">
+                                <?php
+                                    if($site_access_type!='agent' && $enquiry_status==0 && $enquiry_agent==0) { ?>
+                                <select class="selectJS form-control" name="userId" required>
+                                    <option value="">Select user</option>
                                     <?php
                                         
                                             for($i=0; $i<sizeof($userList); $i++) {
-                                                echo "<option value='{$userList[$i]['id']}'>{$userList[$i]['email']}</option>";
+                                                echo "<option value='".base64_encode($userList[$i]['id'].'_'.$userList[$i]['name'])."'>{$userList[$i]['email']}</option>";
                                             }
 
                                         ?>
                                 </select>
                                 <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
+                                <input type="hidden" name="action" value="assign">
+                                <input type="hidden" name="type" value="leads">
                                 <input type="submit" value="Assign lead to user"
                                     class="btn dataTableSubmitBtn dataTableBtn">
+                                <?php
+                                    }
+                                ?>
                                 <a href="leads/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
                                     class="btn dataTableBtn">View
                                     lead details</a>
                             </form>
-                            <?php
-                                    } else { ?>
-                            <a href="leads/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
-                                class="btn dataTableBtn">View
-                                lead details</a>
-                            <?php
-                                    }
-
-                                ?>
                         </td>
                     </tr>
                     <?php

@@ -366,7 +366,7 @@ if ($("#showTableList").length) {
 }
 
 if ($(".showTableListWithoutFilter").length) {
-  $(".showTableListWithoutFilter").DataTable({});
+  $(".showTableListWithoutFilter").DataTable();
 }
 
 // Date Range picker
@@ -456,5 +456,5 @@ const isStatus = urlParams.get("status");
 const responseMsg = urlParams.get("responseMsg");
 
 if (isStatus && responseMsg) {
-  popUpMessage("center", responseMsg, isStatus);
+  popUpMessage("center", decodeURI(responseMsg), isStatus);
 }
