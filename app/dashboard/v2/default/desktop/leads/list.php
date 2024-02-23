@@ -63,19 +63,26 @@
                         <td><?php echo $enquiry_subject; ?></td>
                         <td>
                             <form action="">
+                                <?php
+                                
+                                    if($site_access_type!='agent') { ?>
                                 <select class="selectJS form-control" name="user">
                                     <option value="#">Select user</option>
                                     <?php
-                                
-                                    for($i=0; $i<sizeof($userList); $i++) {
-                                        echo "<option value='{$userList[$i]['id']}'>{$userList[$i]['email']}</option>";
-                                    }
+                                        
+                                            for($i=0; $i<sizeof($userList); $i++) {
+                                                echo "<option value='{$userList[$i]['id']}'>{$userList[$i]['email']}</option>";
+                                            }
 
-                                ?>
+                                        ?>
                                 </select>
                                 <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
                                 <input type="submit" value="Assign lead to user"
                                     class="btn dataTableSubmitBtn dataTableBtn">
+                                <?php
+                                    }
+
+                                ?>
                                 <a href="leads/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
                                     class="btn dataTableBtn">View
                                     lead details</a>
