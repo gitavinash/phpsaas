@@ -4,6 +4,12 @@
         $statusCondition = "enquiry_status={$leadStatus} AND ";
     }
 
+    $user_filter='';
+
+    if($site_access_type=='agent') {
+        $user_filter=" enquiry_agent='".USER_ID."' AND ";
+    }
+
     $userList=array();
 
         if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_site_id=" . SITE_ID)) {
@@ -54,7 +60,7 @@
                 <tbody>
                     <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_time, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$statusCondition} enquiry_site_id = ".SITE_ID." ORDER BY enquiry_time DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_time, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$user_filter} {$statusCondition} enquiry_site_id = ".SITE_ID." ORDER BY enquiry_time DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -86,7 +92,7 @@
                                 <?php
                                     }
                                 ?>
-                                <a href="leads/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
+                                <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
                                     class="btn dataTableBtn">View
                                     lead details</a>
                             </form>
