@@ -458,3 +458,54 @@ const responseMsg = urlParams.get("responseMsg");
 if (isStatus && responseMsg) {
   popUpMessage("center", decodeURI(responseMsg), isStatus);
 }
+
+// Lead details page
+
+$("#leadDetailsBtn").click(function (e) {
+  $("#leadDetailsBtn").addClass("btn-green");
+  $("#noteDetailsBtn").removeClass("btn-green");
+  $("#paymentDetailsBtn").removeClass("btn-green");
+  e.preventDefault();
+});
+$("#noteDetailsBtn").click(function (e) {
+  $("#noteDetailsBtn").addClass("btn-green");
+  $("#leadDetailsBtn").removeClass("btn-green");
+  $("#paymentDetailsBtn").removeClass("btn-green");
+  e.preventDefault();
+});
+$("#paymentDetailsBtn").click(function (e) {
+  $("#paymentDetailsBtn").addClass("btn-green");
+  $("#leadDetailsBtn").removeClass("btn-green");
+  $("#noteDetailsBtn").removeClass("btn-green");
+  e.preventDefault();
+});
+
+function closePopup(btn) {
+  var popupContainer = btn.closest(".popUp");
+  popupContainer.style.display = "none";
+  document.querySelector(".popUp").style.display = "none";
+}
+
+$("#noteBtn").click(function (e) {
+  document.querySelector(".notesBox").style.display = "flex";
+  $(".notesBox").show();
+  e.preventDefault();
+});
+
+$("#paymentBtn").click(function (e) {
+  document.querySelector(".paymentLinkBox").style.display = "flex";
+  $(".paymentLinkBox").show();
+  e.preventDefault();
+});
+
+$("#followUpBtn").click(function (e) {
+  document.querySelector(".followUpBox").style.display = "flex";
+  $(".followUpBox").show();
+  e.preventDefault();
+});
+
+$("#intenaryBtn").click(function (e) {
+  document.querySelector(".intenaryBox").style.display = "flex";
+  $(".intenaryBox").show();
+  e.preventDefault();
+});

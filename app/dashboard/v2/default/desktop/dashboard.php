@@ -5,7 +5,7 @@
             <input type="text" name="daterange" class="dateRangePicker"
                 value="<?php echo ((isset($daterange)) ? $daterange : '') ?>" id="dashboardReportingDateRangePicker"
                 placeholder="Select date range" autocomplete="off">
-            <input type="submit" value="Update report" class="btn date-btn">
+            <input type="submit" value="Update report" class="btn btn-green date-btn">
         </form>
     </div>
 </div>
@@ -38,7 +38,7 @@
     ?>
 </div>
 
-<div class="widget box-2">
+<div class="widget box-5">
     <?php
 
         require_once 'dashboard/widgets/top-enquiry-source.php';
@@ -46,7 +46,7 @@
     ?>
 </div>
 
-<div class="widget box-2">
+<div class="widget box-5">
     <?php
 
         require_once 'dashboard/widgets/enquiry-performance.php';

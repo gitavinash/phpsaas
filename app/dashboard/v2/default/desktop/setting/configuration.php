@@ -53,7 +53,7 @@
                          </div>
                          <div class="form-group-box">
                              <p>Allow Search Engine to index site</p>
-                             <div class="box-2 left p-right-10">
+                             <div class="box-5 left p-right-10">
                                  <div class="form-group">
                                      <div class="input-box">
                                          <input type="radio" id="radio1" name="site_index" value="index, follow"
@@ -62,7 +62,7 @@
                                      </div>
                                  </div>
                              </div>
-                             <div class="box-2 left p-left-10">
+                             <div class="box-5 left p-left-10">
                                  <div class="form-group">
                                      <div class="input-box">
                                          <input type="radio" id="radio2" name="site_index" value="no"

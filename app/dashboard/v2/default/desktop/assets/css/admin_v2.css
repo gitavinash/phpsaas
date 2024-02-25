@@ -9,6 +9,18 @@ body {
   overflow-x: hidden;
 }
 
+.btn-green {
+  background: #01647b !important;
+  color: #fff !important;
+  border: #01647b !important;
+}
+
+.btn-grey {
+  background: #a9a9a9 !important;
+  color: #fff !important;
+  border: #a9a9a9 !important;
+}
+
 #url {
   text-transform: lowercase;
 }
@@ -120,6 +132,36 @@ canvas {
 
 .box-3-2 {
   width: 33.33%;
+  box-sizing: border-box;
+}
+
+.box-7 {
+  width: 70%;
+  box-sizing: border-box;
+}
+
+.box-7-5 {
+  width: 75%;
+  box-sizing: border-box;
+}
+
+.box-8 {
+  width: 80%;
+  box-sizing: border-box;
+}
+
+.box-2 {
+  width: 20%;
+  box-sizing: border-box;
+}
+
+.box-5 {
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.box-2-5 {
+  width: 25%;
   box-sizing: border-box;
 }
 
@@ -824,6 +866,10 @@ main .container .heading span {
 
 /* Default box inside container */
 
+.main-box:first-child {
+  margin-bottom: -10px;
+}
+
 .main-box {
   float: left;
   width: 100%;
@@ -1476,8 +1522,10 @@ section.form
 }
 
 .btn {
-  background: #40b56f;
-  border: 1px solid #40b56f;
+  /* background: #40b56f;
+  border: 1px solid #40b56f; */
+  background: #a9a9a9;
+  border: 1px solid #a9a9a9;
   color: #fff;
   font-weight: 300;
   letter-spacing: 1px;
@@ -1486,9 +1534,17 @@ section.form
   cursor: pointer !important;
 }
 
+.btn-group {
+  float: left;
+  width: 100%;
+  padding: 10px 0px;
+}
+
 .dataTableBtn {
   float: left;
   margin-top: 5px;
+  background: #177347;
+  border-color: #177347;
 }
 .dataTableSubmitBtn {
   margin-right: 10px;
@@ -1500,7 +1556,6 @@ section.form
   margin-left: 20px;
   line-height: 20px;
   color: #fff;
-  background: #40b56f !important;
   font-weight: 400;
 }
 
@@ -1543,4 +1598,155 @@ section.form
 .trademark {
   font-size: 10px;
   margin-left: 2px;
+}
+
+.leadProfileCard {
+  float: left;
+  width: 100%;
+}
+
+.leadProfileCard .img {
+  float: left;
+  width: 70px;
+  text-align: left;
+}
+
+.leadProfileCard .img img {
+  float: left;
+  width: 60px;
+  height: 60px;
+  border-radius: 10%;
+  text-align: left;
+}
+
+.leadProfileCard .info {
+  float: left;
+  width: 300px;
+  text-align: left;
+}
+
+.leadProfileCard .info .heading {
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding-bottom: 7px;
+  font-size: 28px;
+}
+
+.leadProfileCard .info p {
+  float: left;
+  width: 100%;
+  padding-left: 10px;
+  margin: 0;
+  font-size: 16px;
+}
+
+.leadProfileCard .verifications {
+  float: right;
+  width: auto;
+  text-align: left;
+}
+
+.leadQuickLinks {
+  min-height: 50vh;
+}
+
+.leadQuickLinks .btn {
+  float: left;
+  width: 90%;
+  margin-bottom: 15px;
+  line-height: 28px;
+  font-weight: 400;
+}
+
+.leadInfo {
+  float: left;
+  width: 100%;
+  padding: 10px 0px;
+}
+
+.leadActions a {
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 10px 20px;
+}
+
+.popUp {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.popUp .widget {
+  margin: 0px;
+  padding: 0px;
+}
+
+.popUp .contentArea {
+  background: #fff;
+  min-height: 400px;
+}
+
+.popUp .actionArea {
+  min-height: 400px;
+  background: #01647b;
+  padding: 10% 5%;
+  box-sizing: border-box;
+}
+
+.popUp .actionArea .popUpBtn {
+  background: #fff;
+  color: #01647b;
+  font-weight: 400;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 0px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: none;
+  line-height: 20px;
+  font-size: 16px;
+}
+
+.popUp .actionArea .popUpBtn i {
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.smallPopUpBox {
+  width: 800px;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+.fullScreenPopUpBox {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+.fullScreenPopUpBox .contentArea {
+  height: 100vh;
+}
+
+.fullScreenPopUpBox .actionArea {
+  height: 100vh;
 }
