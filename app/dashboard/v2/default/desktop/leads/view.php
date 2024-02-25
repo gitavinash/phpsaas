@@ -29,8 +29,8 @@
             <div class="widget box-1">
                 <div class="leadProfileCard">
                     <div class="img">
-                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo $enquiry_first_name[0] ?>.png" alt=""
-                            srcset="">
+                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower($enquiry_first_name[0]) ?>.png"
+                            alt="" srcset="">
                     </div>
                     <div class="info">
                         <h2 class="heading"><?php echo $enquiry_first_name.' '.$enquiry_last_name ?></h2>
