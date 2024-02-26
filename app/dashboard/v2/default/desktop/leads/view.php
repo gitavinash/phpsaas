@@ -88,8 +88,8 @@
                             </div>
                             <div class="form-group">
                                 <p>Title <sup>*</sup></p>
-                                <select class="selectJS form-control" name="userRole" id="select">
-                                    <option value="">Select user role</option>
+                                <select class="selectJS form-control" name="title">
+                                    <option value="">Select reason</option>
                                     <option value="Not interested">Not Interested</option>
                                     <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                     <option value="Unqualified Lead">Unqualified Lead</option>
@@ -161,7 +161,6 @@
     <div class="smallPopUpBox">
         <div class="widget box-7">
             <div class="contentArea">
-
                 <form method="POST" action="#">
                     <section class="form">
                         <div class="step-open-box step_1_box">
@@ -170,8 +169,8 @@
                             </div>
                             <div class="form-group">
                                 <p>Title <sup>*</sup></p>
-                                <select class="selectJS form-control" name="userRole" id="select">
-                                    <option value="">Select user role</option>
+                                <select class="selectJS form-control" name="title">
+                                    <option value="">Select reason</option>
                                     <option value="Not interested">Not Interested</option>
                                     <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                     <option value="Unqualified Lead">Unqualified Lead</option>
