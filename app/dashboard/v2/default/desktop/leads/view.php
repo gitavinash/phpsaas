@@ -89,7 +89,6 @@
                             <div class="form-group">
                                 <p>Title <sup>*</sup></p>
                                 <select class="selectJS form-control" name="title">
-                                    <option value="">Select reason</option>
                                     <option value="Not interested">Not Interested</option>
                                     <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                     <option value="Unqualified Lead">Unqualified Lead</option>
@@ -170,7 +169,6 @@
                             <div class="form-group">
                                 <p>Title <sup>*</sup></p>
                                 <select class="selectJS form-control" name="title">
-                                    <option value="">Select reason</option>
                                     <option value="Not interested">Not Interested</option>
                                     <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                     <option value="Unqualified Lead">Unqualified Lead</option>
