@@ -1181,7 +1181,7 @@ table.dataTable thead th {
 }
 
 form {
-  width: 700px; /* Can be in percentage also. */
+  max-width: 700px; /* Can be in percentage also. */
   height: auto;
   margin: 0 auto;
   padding: 10px;
@@ -1678,11 +1678,11 @@ section.form
   align-items: center;
   height: 100vh;
   margin: 0;
-  position: absolute;
+  position: fixed;
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 9999;
+  z-index: 9;
   background-color: rgba(255, 255, 255, 0.8);
 }
 
@@ -1693,11 +1693,39 @@ section.form
 
 .popUp .contentArea {
   background: #fff;
-  min-height: 400px;
+  min-height: 500px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.popUp .contentArea form {
+  padding: 0;
+}
+
+.popUp .contentArea .heading {
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 24px;
+  padding: 0;
+}
+
+.popUp .contentArea .form-group {
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.popUp .contentArea .form-group:last-child {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+.popUp .contentArea .form-group textarea {
+  min-height: 260px;
 }
 
 .popUp .actionArea {
-  min-height: 400px;
+  min-height: 500px;
   background: #01647b;
   padding: 10% 5%;
   box-sizing: border-box;
@@ -1724,8 +1752,8 @@ section.form
 }
 
 .smallPopUpBox {
-  width: 800px;
-  min-height: 400px;
+  width: 1000px;
+  min-height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -68,7 +68,7 @@
 <div class="widget box-2-5">
     <div class="main-box">
         <section class="leadQuickLinks">
-            <a href="" class="btn btn-green" id="noteBtn">Add final notes</a>
+            <a href="" class="btn btn-green" id="noteBtn">Final Interaction Note</a>
             <a href="" class="btn btn-green" id="paymentBtn">Send payment links</a>
             <a href="" class="btn btn-green" id="followUpBtn">Follow-ups</a>
             <a href="" class="btn btn-green" id="intenaryBtn">Send itinerary</a>
@@ -80,7 +80,30 @@
     <div class="smallPopUpBox">
         <div class="widget box-7">
             <div class="contentArea">
-
+                <form method="POST" action="#">
+                    <section class="form">
+                        <div class="step-open-box step_1_box">
+                            <div class="form-header">
+                                <h4 class="heading">Conclusion & Summary</h4>
+                            </div>
+                            <div class="form-group">
+                                <p>Title <sup>*</sup></p>
+                                <select class="selectJS form-control" name="userRole" id="select">
+                                    <option value="">Select user role</option>
+                                    <option value="Not interested">Not Interested</option>
+                                    <option value="Purchased Elsewhere">Purchased Elsewhere</option>
+                                    <option value="Unqualified Lead">Unqualified Lead</option>
+                                    <option value="Fake Enquiry">Fake Enquiry</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea type="text" name="first_name" id="first_name" placeholder="First name*"
+                                    class="form-control" required></textarea>
+                                <label class="form-lable" id="first_nameLabel">First name<sup>*</sup></label>
+                            </div>
+                        </div>
+                </form>
             </div>
         </div>
         <div class="widget box-3">
@@ -97,7 +120,32 @@
     <div class="smallPopUpBox">
         <div class="widget box-7">
             <div class="contentArea">
-
+                <form method="POST" action="#">
+                    <section class="form">
+                        <div class="step-open-box step_1_box">
+                            <div class="form-header">
+                                <h4 class="heading">Send payment link</h4>
+                            </div>
+                            <div class="form-group-box">
+                                <div class="box-1">
+                                    <div class="form-group">
+                                        <div class="input-box">
+                                            <input type="checkbox" id="fullPaymentBtn" name="paymentLink" value="yes" />
+                                            <label class="radio-button">Full Payment</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box-1">
+                                    <div class="form-group">
+                                        <div class="input-box">
+                                            <input type="checkbox" id="minPaymentLink" name="paymentLink" value="yes" />
+                                            <label class="radio-button" selected>Min payment</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </form>
             </div>
         </div>
         <div class="widget box-3">
@@ -114,6 +162,30 @@
         <div class="widget box-7">
             <div class="contentArea">
 
+                <form method="POST" action="#">
+                    <section class="form">
+                        <div class="step-open-box step_1_box">
+                            <div class="form-header">
+                                <h4 class="heading">Add Follow-Up Reminder</h4>
+                            </div>
+                            <div class="form-group">
+                                <p>Title <sup>*</sup></p>
+                                <select class="selectJS form-control" name="userRole" id="select">
+                                    <option value="">Select user role</option>
+                                    <option value="Not interested">Not Interested</option>
+                                    <option value="Purchased Elsewhere">Purchased Elsewhere</option>
+                                    <option value="Unqualified Lead">Unqualified Lead</option>
+                                    <option value="Fake Enquiry">Fake Enquiry</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea type="text" name="first_name" id="first_name" placeholder="First name*"
+                                    class="form-control" required></textarea>
+                                <label class="form-lable" id="first_nameLabel">First name<sup>*</sup></label>
+                            </div>
+                        </div>
+                </form>
             </div>
         </div>
         <div class="widget box-3">
