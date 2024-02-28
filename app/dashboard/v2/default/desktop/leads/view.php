@@ -29,7 +29,7 @@
             <div class="widget no-padding box-1">
                 <div class="leadProfileCard">
                     <div class="img">
-                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower((($enquiry_first_name[0]!='')? $enquiry_first_name[0] : 'unknown')) ?>.png"
+                        <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower((($enquiry_first_name[0]!=' ')? $enquiry_first_name[0] : 'unknown')) ?>.png"
                             alt="" srcset="">
                     </div>
                     <div class="info">
