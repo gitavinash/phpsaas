@@ -1,7 +1,7 @@
 <h2 class="heading"><?php echo ucwords($postType) ?> <span>Manage members who have purchased a subscription
         package.</span></h2>
 <div class="main-menu-list">
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscribers/list/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -14,7 +14,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscribers/list/?status=1">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -27,7 +27,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscribers/list/?status=2">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -40,7 +40,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscribers/list/?status=3">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -53,7 +53,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscribers/list/?status=4">
             <div class="widget-setting-info">
                 <div class="feature-icon">

@@ -4,7 +4,8 @@
     <form method="POST" id="formData" enctype="multipart/form-data">
         <div class="left-box">
             <div class="form-group">
-                <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title" autofocus required>
+                <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title"
+                    autofocus required>
             </div>
             <div class="form-group">
                 <div class="url">
@@ -31,7 +32,8 @@
                 <div class="productGeneral generalTab">
                     <div class="form-group">
                         <label>Product short description / Highlights</label>
-                        <textarea name="highlight" class="form-control inside-shadow" placeholder="Product short description / Highlights"></textarea>
+                        <textarea name="highlight" class="form-control inside-shadow"
+                            placeholder="Product short description / Highlights"></textarea>
                     </div>
                 </div>
                 <div class="productInventory generalTab" style="display: none;">
@@ -46,13 +48,15 @@
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" name="salePrice" placeholder="Sale price">
+                            <input type="number" class="form-control inside-shadow" name="salePrice"
+                                placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" name="mrp" placeholder="Regular price">
+                            <input type="number" class="form-control inside-shadow" name="mrp"
+                                placeholder="Regular price">
                         </div>
                     </div>
                     <div class="box-2">
@@ -64,7 +68,8 @@
                     <div class="box-2">
                         <div class="form-group">
                             <label>Stock Alert</label>
-                            <input type="text" class="form-control inside-shadow" name="stock_warning" placeholder="Stock Alert">
+                            <input type="text" class="form-control inside-shadow" name="stock_warning"
+                                placeholder="Stock Alert">
                         </div>
                     </div>
                     <div class="box-2">
@@ -79,7 +84,8 @@
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow">
+                            <input type="number" name="taxRate" placeholder="Tax rate ( in % )"
+                                class="form-control inside-shadow">
                         </div>
                     </div>
                 </div>
@@ -92,15 +98,15 @@
                     </div>
                     <label>Dimensions (cm)</label>
                     <div class="form-group">
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Lenght</label>
                             <input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght">
                         </div>
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Width</label>
                             <input type="text" class="form-control inside-shadow" name="width" placeholder="Width">
                         </div>
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Height</label>
                             <input type="text" class="form-control inside-shadow" name="height" placeholder="Height">
                         </div>
@@ -135,19 +141,23 @@
                 <div class="seo generalTab">
                     <div class="form-group">
                         <label>Meta Title</label>
-                        <input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow" placeholder="Meta title">
+                        <input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow"
+                            placeholder="Meta title">
                     </div>
                     <div class="form-group">
                         <label>Meta Description</label>
-                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow" placeholder="Meta Description"></textarea>
+                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow"
+                            placeholder="Meta Description"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Meta Keywords</label>
-                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow" placeholder="Enter keywords of the post ( use , to seprate keywords )"></textarea>
+                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
+                            placeholder="Enter keywords of the post ( use , to seprate keywords )"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Canonical URL</label>
-                        <input type="text" name="canonical" class="form-control inside-shadow" id="canonical" placeholder="Actual URL of the <?php echo $postType ?>">
+                        <input type="text" name="canonical" class="form-control inside-shadow" id="canonical"
+                            placeholder="Actual URL of the <?php echo $postType ?>">
                     </div>
                     <div class="form-group">
                         <label>Allow search engines to show this Post in search results?</label>
@@ -168,11 +178,13 @@
                     </div>
                     <div class="form-group">
                         <label>Facebook Title</label>
-                        <input type="text" name="fb_title" id="fb_title" class="form-control inside-shadow" placeholder="Facebook title">
+                        <input type="text" name="fb_title" id="fb_title" class="form-control inside-shadow"
+                            placeholder="Facebook title">
                     </div>
                     <div class="form-group">
                         <label>Facebook Description</label>
-                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow" placeholder="Facebook Description"></textarea>
+                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow"
+                            placeholder="Facebook Description"></textarea>
                     </div>
                 </div>
                 <div class="tw generalTab" style="display: none;">
@@ -186,11 +198,13 @@
                     </div>
                     <div class="form-group">
                         <label>Twitter Title</label>
-                        <input type="text" name="tw_title" id="tw_title" class="form-control inside-shadow" placeholder="Twitter title">
+                        <input type="text" name="tw_title" id="tw_title" class="form-control inside-shadow"
+                            placeholder="Twitter title">
                     </div>
                     <div class="form-group">
                         <label>Twitter Description</label>
-                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow" placeholder="Twitter Description"></textarea>
+                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow"
+                            placeholder="Twitter Description"></textarea>
                     </div>
                 </div>
             </section>
@@ -215,10 +229,12 @@
 
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="category" value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>" <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="category"
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                    <?php echo ucwords($category['category_title']); ?>
+                </div>
                 <?php
                     }
                 }

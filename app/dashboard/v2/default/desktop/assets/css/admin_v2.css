@@ -106,61 +106,73 @@ canvas {
 }
 
 .box-1 {
+  float: left;
   width: 100%;
   box-sizing: border-box;
 }
 
 .box-2 {
+  float: left;
   width: 50%;
   box-sizing: border-box;
 }
 
 .box-3 {
-  width: 33.33%;
+  float: left;
+  width: 30%;
   box-sizing: border-box;
 }
 
 .box-4 {
+  float: left;
   width: 25%;
   box-sizing: border-box;
 }
 
 .box-3-1 {
+  float: left;
   width: 66.67%;
   box-sizing: border-box;
 }
 
 .box-3-2 {
+  float: left;
   width: 33.33%;
   box-sizing: border-box;
 }
 
 .box-7 {
+  float: left;
   width: 70%;
   box-sizing: border-box;
 }
 
 .box-7-5 {
+  float: left;
   width: 75%;
   box-sizing: border-box;
 }
 
 .box-8 {
+  float: left;
   width: 80%;
   box-sizing: border-box;
 }
 
 .box-2 {
+  float: left;
   width: 20%;
   box-sizing: border-box;
 }
 
 .box-5 {
+  float: left;
   width: 50%;
   box-sizing: border-box;
 }
 
 .box-2-5 {
+  float: left;
   width: 25%;
   box-sizing: border-box;
 }
@@ -351,7 +363,7 @@ aside {
   width: 240px;
   top: 0;
   bottom: 0;
-  height: 100vh;
+  min-height: 100vh;
   padding: 10px 0 10px 0;
   display: block;
   background: #fff;
@@ -360,6 +372,8 @@ aside {
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
+  margin-bottom: 50px;
+  overflow: auto;
 }
 
 aside::-webkit-scrollbar {
@@ -839,7 +853,7 @@ main .container .heading span {
 
 .widget-setting-info .about-feature {
   float: left;
-  width: 74%;
+  max-width: 70%;
 }
 
 .widget-setting-info .about-feature h3 {
@@ -1524,14 +1538,18 @@ section.form
 .btn {
   /* background: #40b56f;
   border: 1px solid #40b56f; */
-  background: #a9a9a9;
-  border: 1px solid #a9a9a9;
-  color: #fff;
+  background: #d8e9ed;
+  border: 1px solid #d8e9ed;
+  color: #333;
   font-weight: 300;
   letter-spacing: 1px;
   border-radius: 4px;
   padding: 5px 10px;
   cursor: pointer !important;
+}
+
+.right-btn {
+  float: right !important;
 }
 
 .btn-group {
@@ -1543,12 +1561,16 @@ section.form
 .dataTableBtn {
   float: left;
   margin-top: 5px;
-  background: #177347;
-  border-color: #177347;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  background: #e7f5e5;
+  border-color: #e7f5e5;
 }
 .dataTableSubmitBtn {
   margin-right: 10px;
-  height: 31px;
+  font-weight: 400;
+  color: #fff;
   background: #01647b !important;
   border-color: #01647b !important;
 }
@@ -1665,11 +1687,57 @@ section.form
   padding: 10px 0px;
 }
 
+.leadInfo .heading {
+  margin: 0px !important;
+  padding: 0 !important;
+}
+
+.leadInfo table {
+  border: 1px solid #edefef;
+  border-radius: 10px;
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.leadInfo table tr {
+  float: left;
+  width: 100%;
+  background-color: #fff;
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
+
+.leadInfo table tr:nth-child(2n) {
+  float: left;
+  width: 100%;
+  background-color: #d8e9ed;
+}
+
+.leadInfo td {
+  float: left;
+  padding: 10px 0px;
+}
+
 .leadActions a {
   margin-right: 10px;
   font-size: 16px;
   font-weight: 400;
   padding: 10px 20px;
+}
+
+.leadActions .right-btn {
+  margin-top: -10px;
+}
+
+.leadActions .highlight {
+  background-color: #03637b;
+  color: #fff;
+}
+
+.leadActions a i {
+  font-size: 14px;
 }
 
 .popUp {
@@ -1777,4 +1845,16 @@ section.form
 
 .fullScreenPopUpBox .actionArea {
   height: 100vh;
+}
+
+#noteDetailsBox {
+  display: none;
+}
+
+#paymentDetailsBox {
+  display: none;
+}
+
+#leadEditBox {
+  display: none;
 }

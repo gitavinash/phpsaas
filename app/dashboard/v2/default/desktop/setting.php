@@ -1,6 +1,6 @@
 <h2 class="heading"><?php echo ucwords($postType) ?> <span>Manage all setting and website options.</span></h2>
 <div class="main-menu-list">
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="setting/configuration/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -13,7 +13,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="setting/password/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -26,7 +26,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="setting/profile/">
             <div class="widget-setting-info">
                 <div class="feature-icon">

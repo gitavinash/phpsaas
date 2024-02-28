@@ -96,14 +96,14 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
-                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add new Package</a></li>
                             <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="hostings/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
-                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add New Package</a></li>
+                            <li><a href="hostings/add/"><i class="fi-rr-add"></i> Add new Package</a></li>
                             <li><a href="hostings/category/"><i class="fi-rr-bookmark"></i> Hosting Category</a></li>
                         </ul>
                     </div>
@@ -113,13 +113,13 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="domains/list/"><i class="fi-rr-apps-sort"></i> All Domains TLDs</a></li>
-                            <li><a href="domains/add/"><i class="fi-rr-add"></i> Add New Domains TLD</a></li>
+                            <li><a href="domains/add/"><i class="fi-rr-add"></i> Add new Domains TLD</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="domains/list/"><i class="fi-rr-apps-sort"></i> All Domains TLDs</a></li>
-                            <li><a href="domains/add/"><i class="fi-rr-add"></i> Add New Domains TLD</a></li>
+                            <li><a href="domains/add/"><i class="fi-rr-add"></i> Add new Domains TLD</a></li>
                         </ul>
                     </div>
                 </li> -->
@@ -137,13 +137,13 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
-                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New client</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
-                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add New client</a>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a>
                         </ul>
                     </div>
                 </li>
@@ -154,6 +154,90 @@
                 ?> -->
 
                 <li class="header-section-name">
+                    <p>Vendors<span>Manage vendor.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/transporter/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="transporter/"><i class="fi fi-rr-bus"></i> Transporter vendor</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="transporter/list/"><i class="fi-rr-apps-sort"></i> All transporters</a></li>
+                            <li><a href="transporter/add/"><i class="fi fi-rr-add"></i> Add new transporter</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All transporters</a></li>
+                            <li><a href="transporter/add/"><i class="fi fi-rr-add"></i> Add new transporter</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hotel/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="hotel/"><i class="fi fi-rr-hotel"></i> Hotel Vendors</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
+                            <li><a href="hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
+                            <li><a href="hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/dmc/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="dmc/"><i class="fi fi-rr-shop"></i> DMC Vendor</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
+                            <li><a href="dmc/add/"><i class="fi fi-rr-add"></i> Add New DMC</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
+                            <li><a href="dmc/add/"><i class="fi fi-rr-add"></i> Add New dmc</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="header-section-name">
+                    <p>Packages<span>Manage all tour packages.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/inbound/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="inbound/"><i class="fi fi-rr-suitcase-alt"></i> Inbound packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="vendor/list/"><i class="fi-rr-apps-sort"></i> All vendor</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> Outbound packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="vendor/list/"><i class="fi-rr-apps-sort"></i> All vendor</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="header-section-name">
                     <p>Leads<span>Manage leads.</span></p>
                 </li>
 
@@ -162,7 +246,7 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li> -->
+                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add new lead</a></li> -->
                             <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed leads</a>
                             </li>
                             <li><a href="leads/list/?leadStatus=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
@@ -177,7 +261,7 @@
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add New lead</a></li> -->
+                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add new lead</a></li> -->
                             <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed leads</a>
                             </li>
                             <li><a href="leads/list/?leadStatus=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
@@ -274,13 +358,13 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add New user</a></li>
+                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add New user</a>
+                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
                         </ul>
                     </div>
                 </li>
@@ -299,13 +383,13 @@
     <div class="side-menu">
         <ul>
             <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
-            <li><a href="subscriptions/add/"><i class="fi-rr-add"></i>Add New Subscription</a></li>
+            <li><a href="subscriptions/add/"><i class="fi-rr-add"></i>Add new Subscription</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="subscriptions/list/"><i class="fi-rr-apps-sort"></i> All subscriptions</a></li>
-            <li><a href="subscriptions/add/"><i class="fi-rr-add"></i>Add New Subscription</a></li>
+            <li><a href="subscriptions/add/"><i class="fi-rr-add"></i>Add new Subscription</a></li>
         </ul>
     </div>
 </li>

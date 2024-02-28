@@ -509,3 +509,39 @@ $("#intenaryBtn").click(function (e) {
   $(".intenaryBox").show();
   e.preventDefault();
 });
+
+$("#leadDetailsBtn").click(function (e) {
+  document.querySelector("#leadDetailsBox").style.display = "block";
+  document.querySelector("#noteDetailsBox").style.display = "none";
+  document.querySelector("#paymentDetailsBox").style.display = "none";
+  document.querySelector("#leadEditBox").style.display = "none";
+  document.querySelector("#leadEditBtn").style.display = "block";
+  e.preventDefault();
+});
+
+$("#noteDetailsBtn").click(function (e) {
+  document.querySelector("#noteDetailsBox").style.display = "block";
+  document.querySelector("#leadDetailsBox").style.display = "none";
+  document.querySelector("#paymentDetailsBox").style.display = "none";
+  document.querySelector("#leadEditBox").style.display = "none";
+  document.querySelector("#leadEditBtn").style.display = "none";
+  e.preventDefault();
+});
+
+$("#paymentDetailsBtn").click(function (e) {
+  document.querySelector("#paymentDetailsBox").style.display = "block";
+  document.querySelector("#leadDetailsBox").style.display = "none";
+  document.querySelector("#noteDetailsBox").style.display = "none";
+  document.querySelector("#leadEditBox").style.display = "none";
+  document.querySelector("#leadEditBtn").style.display = "none";
+  e.preventDefault();
+});
+
+$("#leadEditBtn").click(function (e) {
+  document.querySelector("#leadEditBox").style.display = "block";
+  document.querySelector("#paymentDetailsBox").style.display = "none";
+  document.querySelector("#leadDetailsBox").style.display = "none";
+  document.querySelector("#noteDetailsBox").style.display = "none";
+  document.querySelector("#leadEditBtn").style.display = "block";
+  e.preventDefault();
+});

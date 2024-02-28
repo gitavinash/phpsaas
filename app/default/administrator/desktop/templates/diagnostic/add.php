@@ -94,15 +94,15 @@
                     </div>
                     <label>Dimensions (cm)</label>
                     <div class="form-group">
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Lenght</label>
                             <input type="text" class="form-control inside-shadow" name="lenght" placeholder="Lenght">
                         </div>
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Width</label>
                             <input type="text" class="form-control inside-shadow" name="width" placeholder="Width">
                         </div>
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Height</label>
                             <input type="text" class="form-control inside-shadow" name="height" placeholder="Height">
                         </div>

@@ -148,17 +148,17 @@ window.location.href = 'dashboard/diagnostic/?type=list&status=all';
                     </div>
                     <label>Dimensions (cm)</label>
                     <div class="form-group">
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Lenght</label>
                             <input type="text" class="form-control inside-shadow"
                                 value="<?php echo $inventory_lenght ?>" name="lenght" placeholder="Lenght">
                         </div>
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Width</label>
                             <input type="text" class="form-control inside-shadow" value="<?php echo $inventory_width ?>"
                                 name="width" placeholder="Width">
                         </div>
-                        <div class="box-3">
+                        <div class="box-2-5">
                             <label>Height</label>
                             <input type="text" class="form-control inside-shadow"
                                 value="<?php echo $inventory_height ?>" name="height" placeholder="Height">

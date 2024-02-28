@@ -43,6 +43,11 @@ if (isset($name)) {
     $name = $first_name . ' ' . $last_name;
 }
 
+$name = explode(' ', $name);
+$first_name = $name[0];
+unset($name[0]);
+$last_name=implode(' ', $name);
+
 if (isset($email)) {
 
     // Remove email varible from array

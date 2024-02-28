@@ -2,7 +2,7 @@
         subscription
         packages.</span></h2>
 <div class="main-menu-list">
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscriptions/list/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -15,7 +15,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="subscriptions/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">

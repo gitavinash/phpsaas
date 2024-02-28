@@ -1,6 +1,6 @@
 <h2 class="heading"><?php echo ucwords($postType) ?> <span>Single line intro about this section</span></h2>
 <div class="main-menu-list">
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="leads/list/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -13,7 +13,7 @@
             </div>
         </a>
     </div>
-    <!-- <div class="widget box-3">
+    <!-- <div class="widget box-2-5">
         <a href="leads/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -25,7 +25,7 @@
             </div>
         </a>
     </div> -->
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="leads/list/?leadStatus=1">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -38,7 +38,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="leads/list/?leadStatus=0">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -51,7 +51,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="leads/list/?leadStatus=2">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -64,7 +64,7 @@
             </div>
         </a>
     </div>
-    <div class="widget box-3">
+    <div class="widget box-2-5">
         <a href="leads/list/?leadStatus=3">
             <div class="widget-setting-info">
                 <div class="feature-icon">
