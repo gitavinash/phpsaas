@@ -106,7 +106,7 @@
                         
                         foreach($enquiryMessage as $key => $value)  {
                             echo "<tr>
-                                <td class='box-3'><strong>".ucwords($key)."</strong></td>
+                                <td class='box-3'><strong>".str_replace('_', ' ', ucwords($key))."</strong></td>
                                 <td class='box-7'>{$value}</td>
                             </tr>";
                         }
