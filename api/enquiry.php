@@ -43,6 +43,10 @@ if (isset($name)) {
     $name = $first_name . ' ' . $last_name;
 }
 
+unset($_REQUEST['submit']);
+unset($_REQUEST['enquiry']);
+
+
 $name = explode(' ', $name);
 $first_name = $name[0];
 unset($name[0]);
