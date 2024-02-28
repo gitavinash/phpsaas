@@ -56,7 +56,7 @@
             </div>
             <div class="widget no-padding box-1" id="leadDetailsBox">
                 <div class="leadInfo">
-                    <h3 class="heading"><?php $enquiry_subject ?> Lead details</h3>
+                    <h3 class="heading"><?php echo $enquiry_subject ?> Lead details</h3>
                     <table>
                         <?php
                     
