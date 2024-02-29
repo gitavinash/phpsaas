@@ -141,7 +141,7 @@
                 <a href="" class="btn btn-green" id="noteBtn">Final Interaction Note</a>
                 <a href="" class="btn btn-green" id="paymentBtn">Send payment links</a>
                 <a href="" class="btn btn-green" id="followUpBtn">Follow-ups</a>
-                <a href="" class="btn btn-green" id="intenaryBtn">Send itinerary</a>
+                <a href="" class="btn btn-green" id="itineraryBtn">Send itinerary</a>
             </section>
         </div>
     </div>
@@ -200,7 +200,7 @@
                                     <div class="box-1">
                                         <div class="form-group">
                                             <div class="input-box">
-                                                <input type="checkbox" id="fullPaymentBtn" name="paymentLink"
+                                                <input type="radio" id="fullPaymentBtn" name="paymentLink"
                                                     value="yes" />
                                                 <label class="radio-button">Full Payment</label>
                                             </div>
@@ -209,9 +209,9 @@
                                     <div class="box-1">
                                         <div class="form-group">
                                             <div class="input-box">
-                                                <input type="checkbox" id="minPaymentLink" name="paymentLink"
-                                                    value="yes" />
-                                                <label class="radio-button" selected>Min payment</label>
+                                                <input type="radio" id="minPaymentLink" name="paymentLink" value="yes"
+                                                    checked />
+                                                <label class="radio-button">Min payment</label>
                                             </div>
                                         </div>
                                     </div>
@@ -261,7 +261,7 @@
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-check"></i> Submit</a>
+                    <a href="#" class="btn popUpBtn"><i class="fi-rr-check"></i> Set reminder</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
@@ -269,7 +269,7 @@
         </div>
     </div>
 
-    <div class="popUp intenaryBox">
+    <div class="popUp itineraryBox">
         <div class="fullScreenPopUpBox">
             <div class="widget box-8">
                 <div class="contentArea">
@@ -278,7 +278,8 @@
             </div>
             <div class="widget box-2">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-check"></i> Submit</a>
+                    <a href="#" class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
+                    <a href="#" class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload itinerary</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>

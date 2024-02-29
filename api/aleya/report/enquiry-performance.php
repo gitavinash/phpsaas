@@ -1,4 +1,6 @@
 <?php
+
+    require_once LOGIN_CHECK;
 if ($daterange != 'null') {
     $dates = explode(" - ", $daterange);
     $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
@@ -18,11 +20,15 @@ if(isset($userId)) {
 $labels = array(); // Initialize labels array
 $data = array(); // Initialize data array
 
-if ($enquiry = mysqli_query($connection, "SELECT enquiry_status, COUNT(*) AS totalLeads FROM " . TABLE_PREFIX . "enquirys WHERE enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' AND {$userId} enquiry_site_id=" . SITE_ID . " GROUP BY enquiry_status")) {
+if ($enquiry = mysqli_query($connection, "SELECT enquiry_status 
+        WHEN 0 THEN 'pending'
+        WHEN 1 THEN 'confirm'
+        ELSE 'Unknown'
+    END AS status_label, COUNT(*) AS totalLeads FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' AND {$userId} enquiry_site_id=" . SITE_ID . " GROUP BY enquiry_status")) {
 
     if (mysqli_num_rows($enquiry) != 0) {
         while ($sourceData = mysqli_fetch_assoc($enquiry)) {
-            $enquiry_source = ($sourceData['enquiry_status'] == '') ? 'Direct' : $sourceData['enquiry_status'];
+            $enquiry_source = $sourceData['enquiry_status'];
             $totalLeads = $sourceData['totalLeads'];
             // Append label and data to respective arrays
             $labels[] = ucwords($enquiry_source);

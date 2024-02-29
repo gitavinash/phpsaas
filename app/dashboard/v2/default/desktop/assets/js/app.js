@@ -506,9 +506,9 @@ $("#followUpBtn").click(function (e) {
   e.preventDefault();
 });
 
-$("#intenaryBtn").click(function (e) {
-  document.querySelector(".intenaryBox").style.display = "flex";
-  $(".intenaryBox").show();
+$("#itineraryBtn").click(function (e) {
+  document.querySelector(".itineraryBox").style.display = "flex";
+  $(".itineraryBox").show();
   e.preventDefault();
 });
 

@@ -1,5 +1,7 @@
 <?php
 
+    require_once LOGIN_CHECK;
+
     if($daterange!='null') {
         $dates = explode(" - ", $daterange);
         $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
@@ -9,8 +11,7 @@
         $endDate = date('Y-m-d 23:59:59');
     }
     
-    if($site_access_type='agent') {
-        $userId = base64_decode($userId);
+    if($site_access_type=='agent') {
         $userId = "AND enquiry_agent = '".USER_ID."'";
     } else {
         $userId='';

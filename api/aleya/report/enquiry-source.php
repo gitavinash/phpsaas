@@ -1,4 +1,6 @@
 <?php
+
+    require_once LOGIN_CHECK;
 if ($daterange != 'null') {
     $dates = explode(" - ", $daterange);
     $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
