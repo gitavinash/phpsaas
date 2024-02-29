@@ -1663,6 +1663,10 @@ section.form
   font-size: 16px;
 }
 
+.leadProfileCard .info p span {
+  font-size: 12px;
+}
+
 .leadProfileCard .verifications {
   float: right;
   width: auto;
@@ -1856,5 +1860,9 @@ section.form
 }
 
 #leadEditBox {
+  display: none;
+}
+
+#leadUpdateBtn {
   display: none;
 }

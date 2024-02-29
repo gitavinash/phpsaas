@@ -35,7 +35,8 @@
                         </div>
                         <div class="info">
                             <h2 class="heading"><?php echo $enquiry_first_name.' '.$enquiry_last_name ?></h2>
-                            <p><span>New client</span></p>
+                            <p><span><strong>Last Update:
+                                    </strong><?php echo date('d M Y H:i:s', strtotime($enquiry_update)) ?></span></p>
                         </div>
                         <div class="verifications">
 
@@ -52,7 +53,9 @@
                         <a href="#" id="noteDetailsBtn" class="btn">Notes</a>
                         <a href="#" id="paymentDetailsBtn" class="btn">Payment history</a>
                         <a href="#" id="leadEditBtn" class="btn right-btn highlight"><i class="fi-rr-edit"></i> Edit
-                            profile</a>
+                            lead</a>
+                        <a href="#" id="leadUpdateBtn" class="btn right-btn highlight"><i class="fi-rr-disk"></i> Update
+                            lead</a>
                     </div>
                 </div>
                 <div class="widget no-padding box-1" id="leadDetailsBox">

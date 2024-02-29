@@ -568,6 +568,7 @@ $("#leadDetailsBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "block";
+  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -577,6 +578,7 @@ $("#noteDetailsBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
+  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -586,6 +588,7 @@ $("#paymentDetailsBtn").click(function (e) {
   document.querySelector("#noteDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
+  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -594,7 +597,18 @@ $("#leadEditBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadDetailsBox").style.display = "none";
   document.querySelector("#noteDetailsBox").style.display = "none";
+  document.querySelector("#leadEditBtn").style.display = "none";
+  document.querySelector("#leadUpdateBtn").style.display = "block";
+  e.preventDefault();
+});
+
+$("#leadUpdateBtn").click(function (e) {
+  document.querySelector("#leadEditBox").style.display = "block";
+  document.querySelector("#paymentDetailsBox").style.display = "none";
+  document.querySelector("#leadDetailsBox").style.display = "none";
+  document.querySelector("#noteDetailsBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "block";
+  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
