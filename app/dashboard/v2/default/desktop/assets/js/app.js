@@ -1,5 +1,6 @@
 const urlQuery = new URLSearchParams(window.location.search);
 let dateRangeParams = urlQuery.get("daterange");
+let leadId = urlQuery.get("id");
 dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
 if (typeof tempId !== "undefined") {
   // Update dateRangeParams to include userId=tempId if tempId is not empty
@@ -545,5 +546,43 @@ $("#leadEditBtn").click(function (e) {
   document.querySelector("#leadDetailsBox").style.display = "none";
   document.querySelector("#noteDetailsBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "block";
+  e.preventDefault();
+});
+
+// Update notes
+
+$("#updateNotes").click(function (e) {
+  var title = $("#notesTitle").val();
+  var msg = $("#noteMsg").val();
+
+  if (title.trim() !== "") {
+    if (title.trim() !== "other" || msg.trim() !== "") {
+      $.ajax({
+        type: "POST",
+        url: "/api/leads/notes/",
+        dataType: "json",
+        data: {
+          leadId,
+          title,
+          msg,
+          finalNotes: true,
+        },
+        success: function (response) {
+          console.log(`Response : `, response);
+          popUpMessage("center", response.msg, response.status);
+        },
+        error: function (response) {
+          console.log(response);
+        },
+      });
+    } else {
+      popUpMessage("center", "Message cannot be blank", "warning");
+    }
+  } else {
+    popUpMessage("center", "Title cannot be blank", "warning");
+  }
+  setTimeout(function () {
+    document.querySelector(".notesBox").style.display = "none";
+  }, 1500);
   e.preventDefault();
 });

@@ -31,6 +31,14 @@ Transaction status
 2 : Proceed to payment gateway
 3 : Failed
 
+Lead status
+
+0 : Initiate
+1 : Success
+2 : Pending
+3 : follow up
+4 : Failed
+
 Cart Status
 
 0 : Initiate

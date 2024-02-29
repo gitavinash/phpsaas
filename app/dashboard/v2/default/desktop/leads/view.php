@@ -158,19 +158,20 @@
                                 </div>
                                 <div class="form-group">
                                     <p>Title <sup>*</sup></p>
-                                    <select class="selectJS form-control" name="title">
+                                    <select class="selectJS form-control" id="notesTitle" name="title">
+                                        <option value=""></option>
                                         <option value="Not interested">Not Interested</option>
                                         <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                         <option value="Unqualified Lead">Unqualified Lead</option>
                                         <option value="Fake Enquiry">Fake Enquiry</option>
                                         <option value="Client is not Picking call">Client is not Picking call</option>
-                                        <option value="Other">Other</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
                                         class="form-control" required></textarea>
-                                    <label class="form-lable" id="noteMsgLabel">Message<sup>*</sup></label>
+                                    <label class="form-lable" id="noteMsgLabel">Message</label>
                                 </div>
                             </div>
                     </form>
@@ -178,7 +179,7 @@
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-check"></i> Submit</a>
+                    <a href="#" class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Submit</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
@@ -243,6 +244,7 @@
                                 <div class="form-group">
                                     <p>Title <sup>*</sup></p>
                                     <select class="selectJS form-control" name="title">
+                                        <option value=""></option>
                                         <option value="Not interested">Not Interested</option>
                                         <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                         <option value="Unqualified Lead">Unqualified Lead</option>
