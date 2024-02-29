@@ -10,15 +10,15 @@
         $startDate = date('Y-m-d 00:00:00', strtotime("-1 month"));
         $endDate = date('Y-m-d 23:59:59');
     }
-    
+
     if(isset($userId)) {
         $userId = base64_decode($userId);
-        $userId = "AND enquiry_agent = '{$userId}'";
+        $userId = "AND enquiry_agent = '{$userId}' AND ";
     } else {
-        $userId='';
+        $userId=' AND ';
     }
     
-    if($enquiry=mysqli_query($connection, "SELECT count(enquiry_id) as totalLeads FROM ".TABLE_PREFIX."enquiry WHERE enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' AND {$userId} enquiry_site_id=".SITE_ID)) {
+    if($enquiry=mysqli_query($connection, "SELECT count(enquiry_id) as totalLeads FROM ".TABLE_PREFIX."enquiry WHERE enquiry_status=1 AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' {$userId} enquiry_site_id=".SITE_ID)) {
 
         if(mysqli_num_rows($enquiry)!=0) {
             extract(mysqli_fetch_assoc($enquiry));

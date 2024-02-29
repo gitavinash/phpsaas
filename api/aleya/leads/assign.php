@@ -12,7 +12,7 @@
 
             extract(mysqli_fetch_assoc($checkLead));
 
-            if($updateLead=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_agent='{$userId}' WHERE enquiry_id='{$leadId}' AND enquiry_status=0 AND enquiry_site_id=".SITE_ID)) {
+            if($updateLead=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_agent='{$userId}' WHERE enquiry_id='{$leadId}' AND enquiry_status=2 AND enquiry_site_id=".SITE_ID)) {
                 $status='success';
                 $responseMsg="Lead assing to {$userName} successfully";
             } else {

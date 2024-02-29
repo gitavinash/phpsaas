@@ -200,6 +200,7 @@ function decreaseCountingNumberAnimation(
 }
 
 function comparisonWidgetChart(objectID, data) {
+  console.log(`Data : `, data);
   increaseCountingNumberAnimation(`totalLeadsValue`, 500 - 100, 500, 1, 86);
   createLineChart(
     (objectID = `${objectID}Chart`),
@@ -269,6 +270,54 @@ if ($("#totalLeads").length) {
     dataType: "json",
     success: function (response) {
       dashboardWidgetWithoutChart("totalLeads", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+// Confirm leads
+
+if ($("#totalConfirmLeads").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/confirm-leads/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      dashboardWidgetWithoutChart("totalConfirmLeads", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+// Pending leads
+
+if ($("#totalPendingLeads").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/pending-leads/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      dashboardWidgetWithoutChart("totalPendingLeads", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+// Followups leads
+
+if ($("#totalFollowupLeads").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/followup-leads/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      dashboardWidgetWithoutChart("totalFollowupLeads", response);
     },
     error: function (response) {
       console.log(response);
