@@ -38,22 +38,28 @@
     ?>
 </div>
 
+<?php
+
+    if($site_access_type=='administrator') { ?>
 <div class="widget box-5">
     <?php
 
-        require_once 'dashboard/widgets/top-enquiry-source.php';
+            require_once 'dashboard/widgets/top-enquiry-source.php';
 
-    ?>
+        ?>
 </div>
 
 <div class="widget box-5">
     <?php
 
-        require_once 'dashboard/widgets/enquiry-performance.php';
+            require_once 'dashboard/widgets/enquiry-performance.php';
 
-    ?>
+        ?>
 </div>
+<?php
+    }
 
+?>
 
 <div class="widget box-1">
     <?php
