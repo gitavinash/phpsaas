@@ -9,9 +9,9 @@
         $endDate = date('Y-m-d 23:59:59');
     }
     
-    if(isset($userId)) {
+    if($site_access_type='agent') {
         $userId = base64_decode($userId);
-        $userId = "AND enquiry_agent = '{$userId}'";
+        $userId = "AND enquiry_agent = '".USER_ID."'";
     } else {
         $userId='';
     }
