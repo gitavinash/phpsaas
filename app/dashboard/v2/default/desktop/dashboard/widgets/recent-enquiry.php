@@ -25,7 +25,7 @@
                 <td><?php echo $enquiry_subject; ?></td>
                 <td><?php echo date('d-m-Y H:i:s', strtotime($enquiry_time)); ?></td>
                 <td>
-                    <a href="leads/view/?id=<?php echo base64_encode($user_id); ?>" class="btn">View
+                    <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn">View
                         enquiry</a>
                 </td>
             </tr>
