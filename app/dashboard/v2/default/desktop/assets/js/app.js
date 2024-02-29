@@ -362,6 +362,8 @@ if ($("#showTableList").length) {
       sLengthMenu: "Display _MENU_ records",
       searchPlaceholder: "Search records",
     },
+    columnDefs: [{ type: "date", targets: [4] }],
+    order: [[4, "desc"]],
   });
 }
 

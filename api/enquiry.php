@@ -6,7 +6,6 @@ unset($_REQUEST['action']);
 // Define action parameter as form type
 
 $type = $action;
-
 $isAttachment = false;
 
 if (isset($_FILES['upload'])) {
@@ -15,6 +14,12 @@ if (isset($_FILES['upload'])) {
     $isAttachment = true;
     $uploadFileURL = SITE_URL . $fileUrl;
     $enquiryMeta['file_url'] = $uploadFileURL;
+}
+
+
+if(isset($disableEmailNotification)) {
+    $doNotSendEmail = true;
+    unset($_REQUEST['disableEmailNotification']);
 }
 
 // Detect prefix enquiry table fields and remove from array
@@ -51,6 +56,7 @@ $name = explode(' ', $name);
 $first_name = $name[0];
 unset($name[0]);
 $last_name=implode(' ', $name);
+
 
 if (isset($email)) {
 
@@ -123,10 +129,6 @@ if (isset($sender)) {
     // Admin email id or where email will be send
 
     $toAddress = base64_decode($sender);
-} else {
-
-    echo $msg = 'Sender email is not found';
-    exit();
 }
 
 if (isset($cc)) {
@@ -197,9 +199,9 @@ $trafficMedium=mysqli_real_escape_string($connection, ((isset($_GET['utm_medium'
 $trafficCampaign=mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '' )));
 
 if(SITE_ID==35)  {
-    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1)");
+    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1)");
 } else {
-    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0)");
+    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status) VALUES(" . SITE_ID . ", '{$userId}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0)");
 }
 
 $enquiryID = mysqli_insert_id($connection);
@@ -228,13 +230,22 @@ $email_body = "
         {$messageForm}
     </table>
     ";
-
-require SEND_EMAIL;
+    
+    if(isset($sender)) {
+        if(!isset($doNotSendEmail)) {
+            require SEND_EMAIL;
+        }
+    }
 
 if (strpos($redirect_url, '/shipping/') !== false) {
     $postUrlValue = "&name=" . urlencode($name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
     header("Location: {$redirect_url}{$postUrlValue}", TRUE, 301);
 } else {
+
+    if(!isset($redirect_url)) {
+        $redirect_url = '/dashboard/leads/view/?id='.base64_encode($enquiryID);
+    }
+
     header("Location: " . $redirect_url, TRUE, 301);
 }
 

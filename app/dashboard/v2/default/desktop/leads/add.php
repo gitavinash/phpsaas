@@ -1,98 +1,63 @@
-<h2 class="heading"><?php echo 'Add New '.ucwords($urlStructure[1]) ?><span>Add new domain tld for domain
-        registration.</span>
+<h2 class="heading"><?php echo 'Add New lead' ?><span>Insert new lead into CRM</span>
 </h2>
 <div class="main-box">
     <section>
         <ul class="steps-tab">
-            <li class="step-box active" id="step_1"><span>1</span>Hosting details</li>
+            <li class="step-box active" id="step_1"><span>1</span>Basic details</li>
             <!-- <li class="step-box" id="step_2"><span>2</span>Domain validity</li> -->
         </ul>
         <div class="steps-box">
-            <form action="#" id="addNewForm">
+            <form action="#" method="POST" id="addNewForm">
                 <section class="form">
                     <div class="step-open-box step_1_box">
                         <div class="form-header">
-                            <h1>Hosting package details</h1>
+                            <h1>Enter basic details</h1>
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hosting.png" alt="Add new Hosting tld">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="name" type="text" />
+                            <input class="form-control" id="name" name="first_name" type="text" required />
                             <label class="form-lable" id="nameLabel">
-                                Domain TLD's ( Domain extension: Like: .com, .net, .in etc ). <sup>*</sup>
+                                First name <sup>*</sup>
                             </label>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" id="textarea"></textarea>
-                            <label class="form-lable" id="textareaLabel">Domain details</label>
+                            <input class="form-control" id="name" name="last_name" type="text" />
+                            <label class="form-lable" id="nameLabel">
+                                Last name <sup>*</sup>
+                            </label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="mrpPrice" type="email" />
-                            <label class="form-lable" id="mrpPriceLabel">MRP price. ( in ₹ ) <sup>*</sup></label>
+                            <input class="form-control" id="name" name="email" type="text" />
+                            <label class="form-lable" id="nameLabel">
+                                Email <sup>*</sup>
+                            </label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="sellingPrice" type="number" />
-                            <label class="form-lable" id="sellingPriceLabel">Selling price. ( in ₹ )
-                                <sup>*</sup></label>
+                            <input class="form-control" id="name" name="mobile" type="text" required />
+                            <label class="form-lable" id="nameLabel">
+                                Mobile <sup>*</sup>
+                            </label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="costPrice" type="number" />
-                            <label class="form-lable" id="costPriceLabel">Cost on domain. ( in ₹ )</label>
-                        </div>
-                        <div class="form-group-box">
-                            <p>Mark domain as featured</p>
-                            <div class="box-2 left p-right-10">
-                                <div class="form-group">
-                                    <div class="input-box">
-                                        <input type="radio" id="radio1" name="demo02" value="yes" />
-                                        <label class="radio-button" for="radio1Lable">Yes</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-2 left p-left-10">
-                                <div class="form-group">
-                                    <div class="input-box">
-                                        <input type="radio" id="radio2" name="demo02" value="no" checked />
-                                        <label class="radio-button" for="radio2Lable">No</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group-box">
-                            <p>Select Multiple button ( any one )</p>
-                            <div class="box-2 left p-right-10">
-                                <div class="form-group">
-                                    <div class="input-box">
-                                        <input type="checkbox" id="check1" name="demo02" value="yes" />
-                                        <label class="radio-button" for="check1Lable">Hello World 11</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-2 left p-left-10">
-                                <div class="form-group">
-                                    <div class="input-box">
-                                        <input type="checkbox" id="check2" name="demo02" value="yes" />
-                                        <label class="radio-button" for="check2Lable">Hello World 12</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <p>Select Multiple button ( any one )</p>
-                            <select class="selectJS form-control" name="select" id="select">
-                                <option value="">Select drop down</option>
-                                <option value="2">Hello 21</option>
-                                <option value="2">Hello 22</option>
-                                <option value="2">Hello 23</option>
-                                <option value="2">Hello 24</option>
-                                <option value="2">Hello 25</option>
-                                <option value="2">Hello 26</option>
-                                <option value="2">Hello 27</option>
-                                <option value="2">Hello 28</option>
+                            <p>Tour package <sup>*</sup></p>
+                            <select class="selectJS form-control" name="subject" id="select" required>
+                                <option value=""></option>
+                                <option value="Himachal tour package">Himachal tour package</option>
+                                <option value="Manali tour package">Manali tour package</option>
+                                <option value="Shimla tour package">Shimla tour package</option>
+                                <option value="Kerala tour package">Kerala tour package</option>
+                                <option value="Kashmir tour package">Kashmir tour package</option>
+                                <option value="Rajastha tour package">Rajastha tour package</option>
+                                <option value="Uttarakhand tour package">Uttarakhand tour package</option>
+                                <option value="Chardham tour package">Chardham tour package</option>
                             </select>
                         </div>
                         <div class="box-2">
                             <div class="form-group">
-                                <button>Next</button>
+                                <input type="hidden" name="type" value="enquiry">
+                                <input type="hidden" name="action" value="new">
+                                <input type="hidden" name="disableEmailNotification" value="true">
+                                <input type="submit" class="btn btn-green" value="Add new lead">
                             </div>
                         </div>
                     </div>

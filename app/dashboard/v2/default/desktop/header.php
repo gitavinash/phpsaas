@@ -124,34 +124,9 @@
                     </div>
                 </li> -->
 
-                <!-- <?php
-                
-                    if($site_access_type =='administrator') { ?>
-
-                <li class="header-section-name">
-                    <p>Clients<span>Manage clients.</span></p>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="clients/"><i class="fi fi-rr-hr-group"></i> Clients</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
-                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
-                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a>
-                        </ul>
-                    </div>
-                </li>
-
                 <?php
-                    }
-
-                ?> -->
+                
+                if($site_access_type=='administrator') { ?>
 
                 <li class="header-section-name">
                     <p>Vendors<span>Manage vendor.</span></p>
@@ -236,6 +211,10 @@
                         </ul>
                     </div>
                 </li>
+                <?php
+                }
+
+                ?>
 
                 <li class="header-section-name">
                     <p>Leads<span>Manage leads.</span></p>
@@ -246,7 +225,7 @@
                     <div class="side-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add new lead</a></li> -->
+                            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add new lead</a></li>
                             <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed leads</a>
                             </li>
                             <li><a href="leads/list/?leadStatus=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
@@ -261,7 +240,7 @@
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
-                            <!-- <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add new lead</a></li> -->
+                            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add new lead</a></li>
                             <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed leads</a>
                             </li>
                             <li><a href="leads/list/?leadStatus=0"><i class="fi-rr-hourglass-end"></i> Pending leads</a>
@@ -274,6 +253,36 @@
                         </ul>
                     </div>
                 </li>
+
+
+                <?php
+                
+                    if($site_access_type =='administrator') { ?>
+
+                <li class="header-section-name">
+                    <p>Clients<span>Manage clients.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="clients/"><i class="fi fi-rr-hr-group"></i> Clients</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="clients/list/"><i class="fi-rr-apps-sort"></i> All clients</a></li>
+                            <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a>
+                        </ul>
+                    </div>
+                </li>
+
+                <?php
+                    }
+
+                ?>
 
                 <!-- <li class="header-section-name">
                     <p>Website<span>Manage layout and other options.</span></p>
