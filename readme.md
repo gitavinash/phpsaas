@@ -35,7 +35,7 @@ Lead status
 
 0 : Initiate
 1 : Success
-2 : Pending
+2 : Pending because it's assign to some agent
 3 : follow up
 4 : Failed
 

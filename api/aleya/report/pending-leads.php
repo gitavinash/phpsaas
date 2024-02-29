@@ -27,7 +27,7 @@
     }
 
     $result = array(
-        'totalLeads' => ((isset($totalEnquiry)) ? $totalEnquiry : 0)
+        'totalLeads' => ((isset($totalLeads)) ? $totalLeads : 0)
     );
 
     echo json_encode($result, TRUE);
