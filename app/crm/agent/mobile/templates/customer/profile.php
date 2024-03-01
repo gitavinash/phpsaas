@@ -7,7 +7,7 @@
 
 <?php
 
-    if($employeeProfile=mysqli_query($connection, "SELECT profile_display_name, user_email, user_mobile, user_act_time FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id WHERE user_id={$user_id}")) {
+    if($employeeProfile=mysqli_query($connection, "SELECT profile_display_name, user_email, user_mobile, user_reg_time FROM ".TABLE_PREFIX."user INNER JOIN ".TABLE_PREFIX."profile ON profile_user_id=user_id WHERE user_id={$user_id}")) {
 
         if(mysqli_num_rows($employeeProfile)!=0) {
 
