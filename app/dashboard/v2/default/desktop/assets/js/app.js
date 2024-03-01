@@ -2,10 +2,17 @@ const urlQuery = new URLSearchParams(window.location.search);
 let dateRangeParams = urlQuery.get("daterange");
 let leadId = urlQuery.get("id");
 dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
-if (typeof tempId !== "undefined") {
+if (dateRangeParams == null) {
+  dateRangeValue = "";
+} else {
+  dateRangeValue = dateRangeParams;
+}
+console.log(`dateRangeParams : `, dateRangeParams);
+if (typeof tempId !== null) {
   // Update dateRangeParams to include userId=tempId if tempId is not empty
   dateRangeParams += "&userId=" + tempId;
 }
+
 /** SweetAlert Pop Up Box */
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
@@ -463,7 +470,7 @@ if ($(".dateRangePicker").length) {
       },
       cb
     )
-    .val(dateRangeParams);
+    .val(dateRangeValue);
 
   cb(start, end);
 }

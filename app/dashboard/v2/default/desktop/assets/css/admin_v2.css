@@ -47,6 +47,10 @@ input {
   color: #3333335e;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .no-margin {
   margin: 0 !important;
 }
@@ -386,7 +390,7 @@ aside {
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
-  margin-bottom: 50px;
+  padding-bottom: 50px;
 }
 
 aside::-webkit-scrollbar {
@@ -646,6 +650,15 @@ main .container {
   box-sizing: border-box;
 }
 
+.report-heading {
+  float: left;
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 0px;
+  color: #01647b;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
 main .container .heading {
   float: left;
   margin-top: -40px;
