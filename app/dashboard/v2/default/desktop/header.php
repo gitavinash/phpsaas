@@ -65,6 +65,10 @@
                 <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="/dashboard/"><i
                             class="fi-rr-home"></i> Dashboard</a></li>
 
+                <?php
+                
+                if($site_access_type=='administrator') { ?>
+
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/report/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="report/"><i class="fi fi-rr-chart-histogram"></i> Reports</a>
                     <div class="side-menu">
@@ -81,10 +85,6 @@
                         </ul>
                     </div>
                 </li>
-
-                <?php
-                
-                if($site_access_type=='administrator') { ?>
 
                 <li class="header-section-name">
                     <p>Vendors<span>Manage vendor.</span></p>
