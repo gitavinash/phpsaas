@@ -12,6 +12,16 @@
 
 <?php
 
+    if(isset($daterange)) {
+        $dates = explode(" - ", $daterange);
+        $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
+        $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
+    } else {
+        $currentMonth=date('m');
+        $startDate = date("Y-{$currentMonth}-01 00:00:00");
+        $endDate = date("Y-{$currentMonth}-31 23:59:59");
+    }
+
     if($checkEmployees=mysqli_query($connection, "SELECT 
     user_id, 
     profile_display_name, 
@@ -48,7 +58,7 @@ FROM
         SELECT 4
     ) AS statuses
 LEFT JOIN 
-    isw_enquiry AS enquiry ON statuses.enquiry_status = enquiry.enquiry_status AND enquiry.enquiry_agent='{$user_id}' AND enquiry.enquiry_site_id = ".SITE_ID."
+    isw_enquiry AS enquiry ON statuses.enquiry_status = enquiry.enquiry_status AND enquiry.enquiry_agent='{$user_id}' AND enquiry.enquiry_site_id = ".SITE_ID." AND enquiry_time BETWEEN '".date('Y-m-d 00:00:00', strtotime($startDate))."' AND '".date('Y-m-d 00:00:00', strtotime($endDate))."'
 GROUP BY 
     statuses.enquiry_status;
 "));

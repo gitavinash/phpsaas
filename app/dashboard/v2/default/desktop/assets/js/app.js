@@ -7,8 +7,7 @@ if (dateRangeParams == null) {
 } else {
   dateRangeValue = dateRangeParams;
 }
-console.log(`dateRangeParams : `, dateRangeParams);
-if (typeof tempId !== null) {
+if (typeof tempId !== "undefined") {
   // Update dateRangeParams to include userId=tempId if tempId is not empty
   dateRangeParams += "&userId=" + tempId;
 }
