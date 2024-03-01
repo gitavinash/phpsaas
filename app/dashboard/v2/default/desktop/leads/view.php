@@ -122,6 +122,51 @@
                 <div class="widget no-padding box-1" id="noteDetailsBox">
                     <div class="leadInfo">
                         <h3 class="heading">Follow ups history</h3>
+                        <div class="historyBox">
+                            <ol class="timeline">
+                                <?php
+                                
+                                    if($leadHistory=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."enquiry_notes WHERE enquiry_notes_ref_id='{$leadId}'")) {
+                                        if(mysqli_num_rows($leadHistory)!=0) {
+                                            while($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                                extract($leadHistoryData); 
+                                                $commentBox='';
+                                                
+                                                switch($enquiry_notes_meta_type) {
+                                                    case "assign" :
+                                                        $icon='link';
+                                                        $msg=str_replace('Lead assign', '<strong>Lead assign</strong>', $enquiry_notes_meta_value);
+                                                        break;
+
+                                                    default:
+                                                        $msg= "<strong>{$enquiry_notes_meta_type}</strong>";
+                                                        $icon='comment-alt';
+                                                        if($enquiry_notes_meta_value!='') {
+                                                            $commentBox="<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                                        }
+                                                        break;
+                                                }
+
+                                                echo "<li class='timeline-item ".(($commentBox!='') ? ' | extra-space' : '')."'>
+                                                    <span class='timeline-item-icon | faded-icon'>
+                                                        <i class='fi-rr-{$icon}'></i>
+                                                    </span>
+                                                    <div class='timeline-item-description'>
+                                                        <span>{$msg}
+                                                            on <time>".date('d M Y, H:i:s', strtotime(($enquiry_notes_update)))."</time></span>
+                                                    </div>
+                                                    {$commentBox}
+                                                </li>";
+
+                                            }
+                                        }
+                                    } else {
+                                        echo "Something went wrong";
+                                    }
+
+                                ?>
+                            </ol>
+                        </div>
                     </div>
                 </div>
                 <div class="widget no-padding box-1" id="paymentDetailsBox">

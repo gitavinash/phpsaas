@@ -12,7 +12,7 @@
 
             if($enquiry_status!=4) {
 
-                if($updateNotes=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry_notes(enquiry_notes_ref_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES('{$leadId}', '{$title}', '{$msg}')")) {
+                if($updateNotes=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES('{$leadId}', '".USER_ID."', '{$title}', '{$msg}')")) {
 
                     if(isset($finalNotes)) {
                         $enquiryStatus=4;
