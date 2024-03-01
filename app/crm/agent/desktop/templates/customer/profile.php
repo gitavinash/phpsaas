@@ -13,27 +13,27 @@
 
             extract(mysqli_fetch_assoc($employeeProfile)); ?>
 
-            <table style='margin-bottom: 20px;'>
-                <tr>
-                    <td>Name</td>
-                    <td><?php echo $profile_display_name; ?></td>
-                    <td>Email</td>
-                    <td><?php echo $user_email ?></td>
-                </tr>
-                <tr>
-                    <td>Mobile</td>
-                    <td><?php echo $user_mobile; ?></td>
-                    <td>Customer From </td>
-                    <td><?php echo date('d F Y', strtotime($user_act_time)) ?></td>
-                </tr>
+<table style='margin-bottom: 20px;'>
+    <tr>
+        <td>Name</td>
+        <td><?php echo $profile_display_name; ?></td>
+        <td>Email</td>
+        <td><?php echo $user_email ?></td>
+    </tr>
+    <tr>
+        <td>Mobile</td>
+        <td><?php echo $user_mobile; ?></td>
+        <td>Customer From </td>
+        <td><?php echo date('d F Y', strtotime($user_reg_time)) ?></td>
+    </tr>
 
-            </table>
+</table>
 
-            <table>
-                <tr>
-                    <td>
-                        <h2>Order History</h2>
-                        <?php
+<table>
+    <tr>
+        <td>
+            <h2>Order History</h2>
+            <?php
                         
                             /** Check order history */
 
@@ -62,10 +62,10 @@
                             }
 
                         ?>
-                    </td>
-                    <td>
-                        <h2>Address</h2>
-                        <?php
+        </td>
+        <td>
+            <h2>Address</h2>
+            <?php
                         
                             /** Check order history */
 
@@ -94,11 +94,11 @@
                             }
 
                         ?>
-                    </td>
-                </tr>
-            </table>
+        </td>
+    </tr>
+</table>
 
-            <?php
+<?php
 
             
 
