@@ -410,21 +410,22 @@ if ($("#totalOrderAmount").length) {
 
 // Order List
 
-if ($("#showTableList").length) {
-  $("#showTableList").DataTable({
-    scrollY: 400,
-    language: {
-      search: "Filter Table",
-      sLengthMenu: "Display _MENU_ records",
-      searchPlaceholder: "Search records",
-    },
-    columnDefs: [{ type: "date", targets: [4] }],
+if ($(".showTableList").length) {
+  $(".showTableList").DataTable({
+    columnDefs: [
+      { type: "date", targets: 4 }, // Assuming the date column is the first column (index 0)
+    ],
     order: [[4, "desc"]],
   });
 }
 
 if ($(".showTableListWithoutFilter").length) {
-  $(".showTableListWithoutFilter").DataTable();
+  $(".showTableListWithoutFilter").DataTable({
+    columnDefs: [
+      { type: "date", targets: 4 }, // Assuming the date column is the first column (index 0)
+    ],
+    order: [[4, "desc"]],
+  });
 }
 
 // Date Range picker
@@ -574,7 +575,6 @@ $("#leadDetailsBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "block";
-  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -584,7 +584,6 @@ $("#noteDetailsBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
-  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -594,7 +593,6 @@ $("#paymentDetailsBtn").click(function (e) {
   document.querySelector("#noteDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
-  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -604,17 +602,6 @@ $("#leadEditBtn").click(function (e) {
   document.querySelector("#leadDetailsBox").style.display = "none";
   document.querySelector("#noteDetailsBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
-  document.querySelector("#leadUpdateBtn").style.display = "block";
-  e.preventDefault();
-});
-
-$("#leadUpdateBtn").click(function (e) {
-  document.querySelector("#leadEditBox").style.display = "block";
-  document.querySelector("#paymentDetailsBox").style.display = "none";
-  document.querySelector("#leadDetailsBox").style.display = "none";
-  document.querySelector("#noteDetailsBox").style.display = "none";
-  document.querySelector("#leadEditBtn").style.display = "block";
-  document.querySelector("#leadUpdateBtn").style.display = "none";
   e.preventDefault();
 });
 
@@ -653,5 +640,11 @@ $("#updateNotes").click(function (e) {
   setTimeout(function () {
     document.querySelector(".notesBox").style.display = "none";
   }, 1500);
+  e.preventDefault();
+});
+
+// Update leads data
+
+$("#updateEnquiry").click(function (e) {
   e.preventDefault();
 });

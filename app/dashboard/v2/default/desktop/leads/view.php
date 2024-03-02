@@ -7,6 +7,7 @@
     } else {
         $enquiryQuery = "SELECT * FROM ".TABLE_PREFIX."enquiry WHERE enquiry_id='{$leadId}' AND enquiry_site_id=".SITE_ID;
     }
+    
 
     if($checkEnquiry=mysqli_query($connection, $enquiryQuery)) {
         if(mysqli_num_rows($checkEnquiry)!=0) {
@@ -53,8 +54,6 @@
                         <a href="#" id="noteDetailsBtn" class="btn">Notes</a>
                         <a href="#" id="paymentDetailsBtn" class="btn">Payment history</a>
                         <a href="#" id="leadEditBtn" class="btn right-btn highlight"><i class="fi-rr-edit"></i> Edit
-                            lead</a>
-                        <a href="#" id="leadUpdateBtn" class="btn right-btn highlight"><i class="fi-rr-disk"></i> Update
                             lead</a>
                     </div>
                 </div>
@@ -135,11 +134,15 @@
                                                 switch($enquiry_notes_meta_type) {
                                                     case "assign" :
                                                         $icon='link';
-                                                        $msg=str_replace('Lead assign', '<strong>Lead assign</strong>', $enquiry_notes_meta_value);
+                                                        $msg=str_replace('Lead assign', '<a href="#">Lead assign</a>', $enquiry_notes_meta_value);
+                                                        break;
+                                                    case "payment" :
+                                                        $icon='indian-rupee-sign';
+                                                        $msg='<a href="#">Payment</a>'.$enquiry_notes_meta_value;
                                                         break;
 
                                                     default:
-                                                        $msg= "<strong>{$enquiry_notes_meta_type}</strong>";
+                                                        $msg= "<a href='#'>{$enquiry_notes_meta_type}</a>";
                                                         $icon='comment-alt';
                                                         if($enquiry_notes_meta_value!='') {
                                                             $commentBox="<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
@@ -176,7 +179,121 @@
                 </div>
                 <div class="widget no-padding box-1" id="leadEditBox">
                     <div class="leadInfo">
-                        <h3 class="heading">Edit lead details</h3>
+                        <h3 class="heading">Update <?php echo ucfirst(strtolower($enquiry_subject)) ?> - lead details
+                        </h3>
+                        <table>
+                            <form action="#" id="updateLeadForm" autocomplete="off">
+                                <tr>
+                                    <td class="box-3"><strong>First name<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="firstName"
+                                            id="firstName" value="<?php echo $enquiry_first_name ?>" required></td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Middle name</strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="middleName"
+                                            id="middleName" value="<?php echo $enquiry_middle_name ?>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Last name</strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="lastName"
+                                            id="lastName" value="<?php echo $enquiry_last_name ?>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Email<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="email" id="email"
+                                            value="<?php echo $enquiry_email ?>" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Mobile<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="mobile" id="mobile"
+                                            value="<?php echo $enquiry_mobile ?>" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Destination<sup>*</sup></strong></td>
+                                    <td class="box-7">
+                                        <select class="selectJS form-control" name="site_lang" id="select">
+                                            <option value="">Select destination</option>
+                                            <option value="himachal">Himachal</option>
+                                            <option value="uttarakhand">Uttarakhand</option>
+                                            <option value="jammu & kashmir">Jammu & Kashmir</option>
+                                            <option value="ladakh">Ladakh</option>
+                                            <option value="punjab">Punjab</option>
+                                            <option value=""></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Date of travel<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control datepickerForFutureDate"
+                                            name="dateOfTravel" id="dateOfTravel" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Duration of travel<span class="secondLine">( in Nights
+                                                )</span><sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="travelDuration"
+                                            id="travelDuration" placeholder="3" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Number of adults<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="noOfAdults"
+                                            id="noOfAdults" placeholder="0" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Number of children<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="noOfChildrens"
+                                            id="noOfChildrens" placeholder="0" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Number of infants<span class="secondLine">( Below 12
+                                                years)</span><sup>*</sup></strong>
+                                    </td>
+                                    <td class="box-7"><input type="text" class="form-control" name="noOfInfants"
+                                            id="noOfInfants" placeholder="0" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Current location<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="currentLocation"
+                                            id="currentLocation" value="" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Pickup location<sup>*</sup></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="pickUpLocation"
+                                            id="pickUpLocation" value="" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Drop location<span class="secondLine">( ignore if same
+                                                )</span></strong></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="dropLocation"
+                                            id="dropLocation" value="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Any requirments</strong></td>
+                                    <td class="box-7">
+                                        <textarea name="requirments" class="form-control"
+                                            id="requirments"><?php echo $enquiry_message ?></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="box-3">
+                                    </td>
+                                    <td class="box-7">
+                                        <input type="submit" id="updateEnquiry" class="btn btn-green"
+                                            value="Update lead">
+                                    </td>
+                                </tr>
+                            </form>
+                        </table>
                     </div>
                 </div>
             </section>

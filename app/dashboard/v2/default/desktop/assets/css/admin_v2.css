@@ -59,6 +59,24 @@ input {
   padding: 0 !important;
 }
 
+.form-control {
+  float: left;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  float: left;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
 input:read-only {
   background-color: #d8d8d8;
   cursor: default;
@@ -1331,7 +1349,8 @@ section.form button {
   cursor: pointer;
 }
 
-section.form input[type="text"],
+input,
+input[type="text"],
 input[type="number"],
 input[type="email"],
 input[type="password"],
@@ -1352,7 +1371,8 @@ textarea {
   transition: border 1s ease-out !important;
 }
 
-section.form input[type="text"]:hover,
+input:hover,
+[type="text"]:hover,
 input[type="number"]:hover,
 input[type="email"]:hover,
 input[type="password"]:hover,
@@ -1362,7 +1382,8 @@ textarea:hover {
   background: #efefef;
 }
 
-section.form input[type="text"]:focus,
+input:focus,
+[type="text"]:focus,
 input[type="number"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
@@ -1373,7 +1394,8 @@ textarea:focus {
   /* border-bottom: 2px solid #01647B; */
 }
 
-section.form input[type="text"]:focus ~ label.form-lable,
+input:focus ~ label.form-lable,
+input[type="text"]:focus ~ label.form-lable,
 input[type="number"]:focus ~ label.form-lable,
 input[type="email"]:focus ~ label.form-lable,
 input[type="password"]:focus ~ label.form-lable,
@@ -1385,7 +1407,8 @@ textarea:focus ~ label.form-lable {
   background: #fff;
 }
 
-section.form input[type="text"]:invalid ~ label.form-lable,
+input:invalid ~ label.form-lable,
+input[type="text"]:invalid ~ label.form-lable,
 input[type="email"]:invalid ~ label.form-lable,
 input[type="number"]:invalid ~ label.form-lable,
 input[type="password"]:invalid ~ label.form-lable,
@@ -1396,7 +1419,7 @@ textarea:invalid ~ label.form-lable {
   left: 11px;
 }
 
-section.form .form-group .heading {
+.form-group .heading {
   top: -10px;
   font-size: 16px;
   margin: 0;
@@ -1406,16 +1429,16 @@ section.form .form-group .heading {
   border-bottom: none;
 }
 
-section.form input:focus ~ .bar:before,
+input:focus ~ .bar:before,
 textarea:focus ~ .bar:before {
   width: 100%;
 }
 
-section.form input[type="password"] {
+input[type="password"] {
   letter-spacing: 0.3em;
 }
 
-section.form .form-group {
+.form-group {
   position: relative;
   float: left;
   width: 100%;
@@ -1601,6 +1624,9 @@ section.form
   color: #fff;
   background: #01647b !important;
   border-color: #01647b !important;
+  height: auto;
+  line-height: 16px;
+  width: auto;
 }
 .date-btn {
   margin-left: 20px;
@@ -1716,6 +1742,15 @@ section.form
   float: left;
   width: 100%;
   padding: 10px 0px;
+}
+
+.leadInfo form {
+  width: 100%;
+  max-width: 100%;
+}
+
+.leadInfo select.form-control {
+  height: 40px !important;
 }
 
 .leadInfo .heading {
@@ -1983,7 +2018,7 @@ section.form
 }
 .timeline-item-description a {
   color: var(--c-grey-500);
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
 .timeline-item-description a:hover,
@@ -2019,4 +2054,11 @@ section.form
   box-shadow: 0 4px 4px 0 var(--c-grey-100);
   border-radius: 6px;
   padding: 16px;
+}
+
+.secondLine {
+  float: left;
+  font-size: 12px;
+  width: 100%;
+  margin-top: 5px;
 }

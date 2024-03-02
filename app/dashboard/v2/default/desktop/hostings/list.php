@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="list-box">
-            <table id="showTableList">
+            <table class="showTableList">
                 <thead>
                     <tr>
                         <th><?php echo ucwords($urlStructure[1]) ?> Name.</th>

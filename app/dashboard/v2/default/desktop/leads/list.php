@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="list-box">
-            <table id="showTableList">
+            <table class="showTableList">
                 <thead>
                     <tr>
                         <th>Name.</th>
