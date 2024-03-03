@@ -9,11 +9,13 @@
 
     $enquiryQuery="SELECT * FROM ".TABLE_PREFIX."enquiry LEFT JOIN ".TABLE_PREFIX."enquiry_profile ON enquiry_profile_ref_id=enquiry_id WHERE enquiry_id='{$leadId}' {$accessFilter} AND status=1 AND enquiry_site_id=".SITE_ID;
 
+
     if($checkEnquiry=mysqli_query($connection, $enquiryQuery)) {
         if(mysqli_num_rows($checkEnquiry)!=0) {
             extract(mysqli_fetch_assoc($checkEnquiry));
         } else {
-            echo "Invalid request";
+            echo mysqli_error($connection);
+            // echo "Invalid request";
             exit();
         }
     } else {
