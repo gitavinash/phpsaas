@@ -623,6 +623,9 @@ $("#updateNotes").click(function (e) {
         success: function (response) {
           console.log(`Response : `, response);
           popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            document.querySelector(".notesBox").style.display = "none";
+          }, 1500);
         },
         error: function (response) {
           console.log(response);
@@ -634,9 +637,50 @@ $("#updateNotes").click(function (e) {
   } else {
     popUpMessage("center", "Title cannot be blank", "warning");
   }
-  setTimeout(function () {
-    document.querySelector(".notesBox").style.display = "none";
-  }, 1500);
+  e.preventDefault();
+});
+
+// Follow up reminder
+
+$("#addFollowUp").click(function (e) {
+  var title = $("#reason").val();
+  var followupTime = $("#followUpTime").val();
+  var msg = $("#comment").val();
+
+  if (title.trim() !== "") {
+    if (followupTime.trim() !== "") {
+      if (title.trim() !== "other" || msg.trim() !== "") {
+        $.ajax({
+          type: "POST",
+          url: "/api/leads/notes/",
+          dataType: "json",
+          data: {
+            leadId,
+            title,
+            msg,
+            followupTime,
+            finalNotes: false,
+          },
+          success: function (response) {
+            console.log(`Response : `, response);
+            popUpMessage("center", response.msg, response.status);
+            setTimeout(function () {
+              document.querySelector(".followUpBox").style.display = "none";
+            }, 1500);
+          },
+          error: function (response) {
+            console.log(response);
+          },
+        });
+      } else {
+        popUpMessage("center", "Comment cannot be blank", "warning");
+      }
+    } else {
+      popUpMessage("center", "Please select follow up time", "warning");
+    }
+  } else {
+    popUpMessage("center", "Reason cannot be blank", "warning");
+  }
   e.preventDefault();
 });
 

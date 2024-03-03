@@ -240,7 +240,7 @@
                                                         $icon='refresh';
                                                         $msg='<a href="#">Update </a>by '.$enquiry_notes_meta_value;
                                                         break;
-
+                                                        
                                                     default:
                                                         $icon='comment-alt';
                                                         $msg= "<a href='#'>{$enquiry_notes_meta_type}</a>";
@@ -340,7 +340,7 @@
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Date of travel<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control datepickerForFutureDate"
+                                    <td class="box-7"><input type="text" class="datepickerForFutureDate"
                                             name="date_of_travel" id="date_of_travel"
                                             value="<?php echo date('d-m-Y', strtotime($date_of_travel)) ?>" required>
                                     </td>
@@ -527,20 +527,25 @@
                                     <h4 class="heading">Add Follow-Up Reminder</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Title <sup>*</sup></p>
-                                    <select class="selectJS form-control" name="title">
+                                    <p>Reason <sup>*</sup></p>
+                                    <select class="selectJS form-control" id="reason" name="reason">
                                         <option value=""></option>
                                         <option value="Not interested">Not Interested</option>
                                         <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                         <option value="Unqualified Lead">Unqualified Lead</option>
                                         <option value="Fake Enquiry">Fake Enquiry</option>
-                                        <option value="Other">Other</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="first_name" id="first_name" placeholder="First name*"
-                                        class="form-control" required></textarea>
-                                    <label class="form-lable" id="first_nameLabel">First name<sup>*</sup></label>
+                                    <input type="text" class="datepickerForFutureDateWithTime" name="followupTime"
+                                        id="followUpTime">
+                                    <label class="form-lable">Follow up time</label>
+                                </div>
+                                <div class="form-group">
+                                    <textarea type="text" name="comment" id="comment"
+                                        placeholder="Add your comment"></textarea>
+                                    <label class="form-lable" id="commentLable">Any comment</label>
                                 </div>
                             </div>
                     </form>
@@ -548,9 +553,9 @@
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-check"></i> Set reminder</a>
+                    <span href="#" class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Set reminder</span>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</a>
+                        Cancel</span>
                 </div>
             </div>
         </div>

@@ -12,25 +12,32 @@
 
             if($enquiry_status!=4) {
 
-                if(!isset($followup_time)) {
+                if($msg=='') {
                     $msg=$logginUserName;
                 }
 
                 if($updateNotes=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES('{$leadId}', '".USER_ID."', '{$title}', '{$msg}')")) {
 
-                    if(isset($finalNotes)) {
-                        $enquiryStatus=4;
-                    } else {
+                    $addFollowUp='';
+                    if(isset($followupTime)) {
                         $enquiryStatus=3;
+                        $addFollowUp=", enquiry_followup='".date('Y-m-d H:i:s', strtotime($followupTime))."' ";
+                    } else {
+                        $enquiryStatus=4;
                     }
 
-                    if($updateEnquiry=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status={$enquiryStatus} WHERE enquiry_id='{$leadId}' AND enquiry_site_id=".SITE_ID)) {
+                    if($updateEnquiry=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status={$enquiryStatus} {$addFollowUp} WHERE enquiry_id='{$leadId}' AND enquiry_site_id=".SITE_ID)) {
                         $status='success';
-                        $msg='Notes update successfully';
+                        if(isset($followupTime)) {
+                            $msg='Follow up added successfully';
+                        } else {
+                            $msg='Notes update successfully';
+                        }
                         mysqli_query($connection, "COMMIT");
                     } else {
+                        echo mysqli_error($connection);
                         $status='error';
-                        $msg='Something went wrong while updating the enquiry status';
+                        $msg='Something went wrong while updating the notes';
                         mysqli_query($connection, "ROLLBACK");
                     }
 

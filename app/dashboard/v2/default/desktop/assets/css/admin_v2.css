@@ -1866,10 +1866,6 @@ section.form
   margin-top: 0px;
 }
 
-.popUp .contentArea .form-group textarea {
-  min-height: 260px;
-}
-
 .popUp .actionArea {
   min-height: 500px;
   background: #01647b;
