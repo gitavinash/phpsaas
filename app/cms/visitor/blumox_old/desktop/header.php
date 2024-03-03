@@ -62,7 +62,7 @@
 
     <!-- <div class="popUpModal">
         <div class="popUpBox">
-            <h3>Share your requirments</h3>
+            <h3>Share your requirements</h3>
             <form action="" method="POST">
                 <div class="formGroup">
                     <label>Full name</label>

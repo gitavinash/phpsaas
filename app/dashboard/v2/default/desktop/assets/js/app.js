@@ -502,9 +502,6 @@ if ($(".steps-tab").length) {
 $(".form-control").change(function () {
   currentClickID = $(this).attr("id");
   currentValue = $(this).val();
-
-  console.log("Current value : " + currentValue);
-
   if (currentValue != "") {
     $("#" + currentClickID + "Label").addClass("heading");
   }
@@ -643,8 +640,52 @@ $("#updateNotes").click(function (e) {
   e.preventDefault();
 });
 
+// Add new lead
+
+$("#addEnquiry").click(function (e) {
+  var formData = $("#addNewForm").serialize();
+  $.ajax({
+    type: "POST",
+    url: "/api/leads/create/",
+    dataType: "json",
+    data: formData,
+    success: function (response) {
+      popUpMessage("center", response.msg, response.status);
+      if (response.status == "success") {
+        setTimeout(function () {
+          const leadIdBase64 = btoa(response.leadId);
+          window.location.href = `/dashboard/leads/view/?id=${leadIdBase64}`;
+        }, 1500);
+      }
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+  e.preventDefault();
+});
+
 // Update leads data
 
 $("#updateEnquiry").click(function (e) {
+  var formData = $("#updateLeadForm").serialize();
+  $.ajax({
+    type: "POST",
+    url: "/api/leads/update/",
+    dataType: "json",
+    data: formData,
+    success: function (response) {
+      popUpMessage("center", response.msg, response.status);
+      if (response.status == "success") {
+        setTimeout(function () {
+          const leadIdBase64 = btoa(response.leadId);
+          window.location.href = `/dashboard/leads/view/?id=${leadIdBase64}`;
+        }, 1500);
+      }
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
   e.preventDefault();
 });

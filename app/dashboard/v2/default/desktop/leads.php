@@ -13,7 +13,7 @@
             </div>
         </a>
     </div>
-    <!-- <div class="widget box-2-5">
+    <div class="widget box-2-5">
         <a href="leads/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
@@ -24,7 +24,7 @@
                 </div>
             </div>
         </a>
-    </div> -->
+    </div>
     <div class="widget box-2-5">
         <a href="leads/list/?leadStatus=1">
             <div class="widget-setting-info">
