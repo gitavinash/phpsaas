@@ -7,7 +7,8 @@
         $accessFilter = " AND enquiry_agent='".USER_ID."'";
     }
 
-    $enquiryQuery="SELECT * FROM ".TABLE_PREFIX."enquiry LEFT JOIN ".TABLE_PREFIX."enquiry_profile ON enquiry_profile_ref_id=enquiry_id WHERE enquiry_id='{$leadId}' {$accessFilter} AND status=1 AND enquiry_site_id=".SITE_ID;
+    echo $enquiryQuery="SELECT * FROM ".TABLE_PREFIX."enquiry LEFT JOIN ".TABLE_PREFIX."enquiry_profile ON enquiry_profile_ref_id=enquiry_id WHERE enquiry_id='{$leadId}' {$accessFilter} AND status=1 AND enquiry_site_id=".SITE_ID;
+
 
 
     if($checkEnquiry=mysqli_query($connection, $enquiryQuery)) {
