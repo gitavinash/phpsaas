@@ -39,6 +39,7 @@ WHERE
 ORDER BY 
     CASE WHEN site_access_type = 'administrator' THEN 0 ELSE 1 END, 
     user_id")) {
+        
         if(mysqli_num_rows($checkEmployees)!=0) {
             while($employeesData = mysqli_fetch_assoc($checkEmployees)) {
 
@@ -77,7 +78,7 @@ ORDER BY
         while($checkPerformaceData = mysqli_fetch_assoc($checkPerformace)) {
             extract($checkPerformaceData);
 
-            $agentLeadURL="/dashboard/leads/list/?agentId={$user_id}".(($enquiry_status!='total' || $enquiry_status!='') ? "&leadStatus={$enquiry_status}" : '')."&daterange={$startDate} - {$endDate}";
+            $agentLeadURL="/dashboard/leads/list/?agentId={$user_id}".(($enquiry_status!='total' || $enquiry_status!=null) ? "&leadStatus={$enquiry_status}" : '')."&daterange={$startDate} - {$endDate}";
 
             echo "
                 <div class='widget box-2'>
