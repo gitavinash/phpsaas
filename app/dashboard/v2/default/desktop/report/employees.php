@@ -84,7 +84,7 @@ ORDER BY
                     <div class='widget-info'>
                         <a href='{$agentLeadURL}'>
                             <div class='info-box'>
-                                <p>".(($enquiry_status=='total') ? 'Total Leads' : (($enquiry_status==1) ? 'Confirmed': (($enquiry_status==2) ? 'Pending': (($enquiry_status==3) ? 'Follow-ups': (($enquiry_status==4) ? 'Rejected': 'U/A Status')))))." enquiries
+                                <p>".(($enquiry_status=='total') ? 'Total Leads' : (($enquiry_status==1) ? 'Confirmed': (($enquiry_status==2) ? 'Pending': (($enquiry_status==3) ? 'Follow-ups': (($enquiry_status==4) ? 'Rejected': 'U/A Status')))))." {$enquiry_status} enquiries
                                     <span>{$totalLeads}</span>
                                 </p>
                             </div>
