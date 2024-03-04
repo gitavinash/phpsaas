@@ -53,7 +53,7 @@
                 <td><?php echo $enquiry_mobile; ?></td>
                 <td><?php echo $enquiry_subject; ?></td>
                 <td><?php echo $enquiry_source; ?></td>
-                <td></span><?php echo date('d-m-Y H:i:s', strtotime($enquiry_time)); ?>
+                <td></span><?php echo date('d-m-Y H:i:s', strtotime($enquiry_followup)); ?>
                 </td>
                 <td>
                     <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn">View
