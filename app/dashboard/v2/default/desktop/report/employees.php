@@ -77,7 +77,7 @@ ORDER BY
         while($checkPerformaceData = mysqli_fetch_assoc($checkPerformace)) {
             extract($checkPerformaceData);
 
-            $agentLeadURL="/dashboard/leads/list/?agentId={$user_id}".(($enquiry_status!='total') ? "&leadStatus={$enquiry_status}" : '')."&daterange={$startDate} - {$endDate}";
+            $agentLeadURL="/dashboard/leads/list/?agentId={$user_id}".(($enquiry_status!='total' || $enquiry_status!='') ? "&leadStatus={$enquiry_status}" : '')."&daterange={$startDate} - {$endDate}";
 
             echo "
                 <div class='widget box-2'>
