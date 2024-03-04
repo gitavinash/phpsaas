@@ -64,6 +64,14 @@
 <div class="widget box-1">
     <?php
 
+    require_once 'dashboard/widgets/recent-followup-enquiry.php';
+
+    ?>
+</div>
+
+<div class="widget box-1">
+    <?php
+
     require_once 'dashboard/widgets/recent-enquiry.php';
 
     ?>

@@ -35,7 +35,9 @@
                                 alt="" srcset="">
                         </div>
                         <div class="info">
-                            <h2 class="heading"><?php echo $enquiry_first_name.' '.$enquiry_last_name ?></h2>
+                            <h2 class="heading" <?php echo (($enquiry_status==4)? "style='color:#f44336'" : "") ?>>
+                                <?php echo $enquiry_first_name.' '.$enquiry_last_name.(($enquiry_status==4)? ' ( closed ) ' : '') ?>
+                            </h2>
                             <p><span><strong>Last Update:
                                     </strong><?php echo date('d M Y H:i:s', strtotime($enquiry_update)) ?></span></p>
                         </div>
