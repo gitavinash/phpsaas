@@ -45,36 +45,50 @@ ORDER BY
                 extract($employeesData);
 
                 if($checkPerformace=mysqli_query($connection, "SELECT 
-    statuses.enquiry_status,
-    COUNT(enquiry.enquiry_id) AS totalLeads
+    enquiry_status, 
+    totalLeads 
 FROM 
-    (
-        SELECT 1 AS enquiry_status
-        UNION ALL
-        SELECT 2
-        UNION ALL
-        SELECT 3
-        UNION ALL
-        SELECT 4
-    ) AS statuses
-LEFT JOIN 
-    isw_enquiry AS enquiry ON statuses.enquiry_status = enquiry.enquiry_status AND enquiry.enquiry_agent='{$user_id}' AND enquiry.enquiry_site_id = ".SITE_ID." AND enquiry_time BETWEEN '".date('Y-m-d 00:00:00', strtotime($startDate))."' AND '".date('Y-m-d 00:00:00', strtotime($endDate))."'
-GROUP BY 
-    statuses.enquiry_status;
-"));
+    (SELECT 
+         CASE 
+             WHEN statuses.enquiry_status IS NULL THEN 'total'
+             ELSE CAST(statuses.enquiry_status AS CHAR)
+         END AS enquiry_status, 
+         COUNT(enquiry.enquiry_id) AS totalLeads 
+     FROM 
+         (SELECT 1 AS enquiry_status 
+          UNION ALL 
+          SELECT 2 
+          UNION ALL 
+          SELECT 3 
+          UNION ALL 
+          SELECT 4) AS statuses 
+     LEFT JOIN 
+         ".TABLE_PREFIX."enquiry AS enquiry ON statuses.enquiry_status = enquiry.enquiry_status 
+                                AND enquiry.enquiry_agent = '{$user_id}' 
+                                AND enquiry.enquiry_site_id = ".SITE_ID." 
+                                AND enquiry.enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' 
+     GROUP BY 
+         statuses.enquiry_status WITH ROLLUP) AS results
+ORDER BY 
+    CASE WHEN enquiry_status = 'total' THEN 0 ELSE 1 END, enquiry_status ASC"));
 
     if(mysqli_num_rows($checkPerformace)!= 0) {
         echo "<div class='box-1'><h3 class='report-heading' >{$profile_display_name}".(($site_access_type=='administrator') ? ' ( Administrator )' : '')."</h4>";
         while($checkPerformaceData = mysqli_fetch_assoc($checkPerformace)) {
             extract($checkPerformaceData);
+
+            $agentLeadURL="/dashboard/leads/list/?agentId={$user_id}".(($enquiry_status!='total') ? "&leadStatus={$enquiry_status}" : '')."&daterange={$startDate} - {$endDate}";
+
             echo "
-                <div class='widget box-4'>
+                <div class='widget box-2'>
                     <div class='widget-info'>
-                        <div class='info-box'>
-                            <p>".(($enquiry_status==1) ? 'Confirmed': (($enquiry_status==2) ? 'Pending': (($enquiry_status==3) ? 'Follow-ups': (($enquiry_status==4) ? 'Rejected': 'U/A Status'))))." enquiries
-                                <span>{$totalLeads}</span>
-                            </p>
-                        </div>
+                        <a href='{$agentLeadURL}'>
+                            <div class='info-box'>
+                                <p>".(($enquiry_status=='total') ? 'Total Leads' : (($enquiry_status==1) ? 'Confirmed': (($enquiry_status==2) ? 'Pending': (($enquiry_status==3) ? 'Follow-ups': (($enquiry_status==4) ? 'Rejected': 'U/A Status')))))." enquiries
+                                    <span>{$totalLeads}</span>
+                                </p>
+                            </div>
+                        </a>
                     </div>
             </div>";
         }

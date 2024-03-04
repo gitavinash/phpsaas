@@ -10,6 +10,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php
+        if($postType==''){
+            echo "<meta http-equiv='refresh' content='300'>";
+        }
+    ?>
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title><?php echo $dashboardPageTitle.' | '.SITE_NAME; ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css">

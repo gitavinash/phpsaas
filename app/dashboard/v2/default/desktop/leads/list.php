@@ -4,10 +4,24 @@
         $statusCondition = "enquiry_status={$leadStatus} AND ";
     }
 
+    if(isset($daterange)) {
+        $dates = explode(" - ", $daterange);
+        $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
+        $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
+    } else {
+        $currentMonth=date('m');
+        $startDate = date("Y-{$currentMonth}-01 00:00:00");
+        $endDate = date("Y-{$currentMonth}-31 23:59:59");
+    }
+
     $user_filter='';
 
     if($site_access_type=='agent') {
         $user_filter=" enquiry_agent='".USER_ID."' AND ";
+    }
+
+    if(isset($agentId)) {
+        $user_filter=" enquiry_agent='{$agentId}' AND ";
     }
 
     $userList=array();
@@ -61,7 +75,7 @@
                 <tbody>
                     <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_time, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_source, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$user_filter} {$statusCondition} enquiry_site_id = ".SITE_ID." ORDER BY enquiry_time DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_time, enquiry_agent, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_subject, enquiry_source, enquiry_status FROM ".TABLE_PREFIX."enquiry WHERE {$user_filter} {$statusCondition} enquiry_site_id = ".SITE_ID." AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' ORDER BY enquiry_time DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data);
