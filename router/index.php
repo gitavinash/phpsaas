@@ -111,6 +111,10 @@ switch ($urlStructure[0]) {
 		require_once STATUS;
 		break;
 
+	case 'webhook':
+		require_once 'webhook.php';
+		break;
+
 	case 'amp':
 		require_once 'amp.php';
 		break;
