@@ -9,4 +9,6 @@
     $email_body = $_REQUEST;
     require_once SEND_EMAIL;
 
+    echo 'im here';
+
 ?>
