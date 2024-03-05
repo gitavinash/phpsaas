@@ -28,9 +28,7 @@ $email_body = "
     ";
     
     if(isset($sender)) {
-        if(!isset($doNotSendEmail)) {
-            require SEND_EMAIL;
-        }
+        require SEND_EMAIL;
     }
 
 exit();
