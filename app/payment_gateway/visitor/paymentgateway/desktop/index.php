@@ -27,8 +27,8 @@ require_once 'header.php';
         <label class="error" id="emailError">Please enter a valid email address.</label>
     </div>
     <div class="formGroup">
-        <input type="number" name="amount" id="amount" placeholder="Amount *" pattern="[0-9]*" inputmode="numeric"
-            required>
+        <input type="number" name="amount" id="amount" placeholder="Amount *" value="<?php echo $_GET['amount'] ?>"
+            pattern="[0-9]*" inputmode="numeric" required>
         <label class="error" id="amountError">Please enter a valid amount only in number.</label>
     </div>
     <div class="formGroup">
