@@ -11,7 +11,7 @@
     if(count($_REQUEST)!=0) {
         $email_body = $_REQUEST;
     } else {
-        $email_body='test body';
+        $email_body='test body ->'.SITE_DOMAIN;
     }
 
     require_once SEND_EMAIL;
