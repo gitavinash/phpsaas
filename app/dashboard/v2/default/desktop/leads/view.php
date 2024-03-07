@@ -532,11 +532,11 @@
                                     <p>Reason <sup>*</sup></p>
                                     <select class="selectJS form-control" id="reason" name="reason">
                                         <option value=""></option>
-                                        <option value="Not interested">Not Interested</option>
-                                        <option value="Purchased Elsewhere">Purchased Elsewhere</option>
-                                        <option value="Unqualified Lead">Unqualified Lead</option>
-                                        <option value="Fake Enquiry">Fake Enquiry</option>
-                                        <option value="other">Other</option>
+                                        <option value="Busy">Busy</option>
+                                        <option value="Mobile is not reachable">Mobile is not reachable</option>
+                                        <option value="Client is not Picking call">Client is not Picking call</option>
+                                        <option value="Interested">Interested</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
