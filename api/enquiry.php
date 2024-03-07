@@ -211,6 +211,7 @@ if(SITE_ID==35)  {
     $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '".IP."', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
 } else {
     $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '".IP."', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
+    $leadId=mysqli_insert_id($connection);
 }
 
 $enquiryID = mysqli_insert_id($connection);
@@ -226,7 +227,7 @@ $email_body = "
     <table>
         <tr>
             <td>Name: </td>
-            <td>{$name}</td>
+            <td>{$first_name} {$last_name}</td>
         </tr>
         <tr>
             <td>Email: </td>
@@ -243,6 +244,7 @@ $email_body = "
     if(isset($sender)) {
         if(!isset($doNotSendEmail)) {
             require SEND_EMAIL;
+            require_once APP_EMAIL_TEMPLATE.'enquiry-thank-you.php';
         }
     }
 
