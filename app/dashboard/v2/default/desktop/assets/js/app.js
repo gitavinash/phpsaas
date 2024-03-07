@@ -103,6 +103,12 @@ function createPieChart(objectID, chartData) {
       plugins: {
         legend: {
           position: "bottom",
+          labels: {
+            font: {
+              size: 14, // Set font size to 14
+              weight: 500, // Set font weight to 500
+            },
+          },
         },
       },
       radius: "90%", // Adjust the pie chart area size
@@ -118,6 +124,12 @@ function createPieChart(objectID, chartData) {
       plugins: {
         legend: {
           position: "top",
+          labels: {
+            font: {
+              size: 14, // Set font size to 14
+              weight: 500, // Set font weight to 500
+            },
+          },
         },
         tooltip: {
           callbacks: {
