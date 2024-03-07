@@ -91,7 +91,7 @@
                     </div>
                 </li>
 
-                <li class="header-section-name">
+                <!-- <li class="header-section-name">
                     <p>Vendors<span>Manage vendor.</span></p>
                 </li>
 
@@ -173,7 +173,7 @@
                             <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
                 <?php
                 }
 
@@ -222,7 +222,7 @@
                 
                     if($site_access_type =='administrator') { ?>
 
-                <li class="header-section-name">
+                <!-- <li class="header-section-name">
                     <p>Clients<span>Manage clients.</span></p>
                 </li>
 
@@ -240,7 +240,7 @@
                             <li><a href="clients/add/"><i class="fi fi-rr-user-add"></i> Add new client</a>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
                 <?php
                     }
