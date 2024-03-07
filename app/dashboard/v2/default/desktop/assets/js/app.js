@@ -31,49 +31,106 @@ function createPieChart(objectID, chartData) {
 
   const objectDiv = `${objectID}Chart`;
 
+  var colors = {};
+
+  // Predefined colors for the next 10 unmatched labels
+  const predefinedColors = [
+    "#FFD1DC",
+    "#AEC6CF",
+    "#BDFCC9",
+    "#E6E6FA",
+    "#FFDAB9",
+    "#FFFFE0",
+    "#D3D3D3",
+    "#F08080",
+    "#E0B0FF",
+    "#98FB98",
+  ];
+  let nextColorIndex = 0;
+
+  labels.forEach((label, index) => {
+    switch (label.toLowerCase()) {
+      case "google adwords":
+        colors[label] = "#BFE6FF";
+        break;
+      case "facebook":
+        colors[label] = "#6D84B4";
+        break;
+      case "direct":
+        colors[label] = "#CCCCCC";
+        break;
+      case "fresh":
+        colors[label] = "#AED6F1";
+        break;
+      case "pending":
+        colors[label] = "#F2F3F4";
+        break;
+      case "follow up":
+        colors[label] = "#FFD699";
+        break;
+      case "cancel":
+        colors[label] = "#FFCCCC";
+        break;
+      case "confirm":
+        colors[label] = "#C7EAE4";
+        break;
+
+      default:
+        if (nextColorIndex < predefinedColors.length) {
+          colors[label] = predefinedColors[nextColorIndex];
+          nextColorIndex++;
+        } else {
+          colors[label] = "#4CAF50";
+        }
+    }
+  });
+
+  var datasets = [
+    {
+      data: counts,
+      backgroundColor: labels.map((label) => colors[label]), // Map label names to colors
+      borderWidth: 0,
+    },
+  ];
+
   var myChart = new Chart(document.getElementById(objectDiv).getContext("2d"), {
     type: "pie",
     data: {
       labels: labels,
-      datasets: [
-        {
-          data: counts,
-          backgroundColor: [
-            "#2ca02c",
-            "#FFD700",
-            "#87CEEB",
-            "#FFA07A",
-            "#98FB98",
-            "#FFB6C1",
-            "#B0E0E6",
-            "#FFDEAD",
-            "#DDA0DD",
-            "#F0E68C",
-            // Add more colors if needed
-          ],
-          borderWidth: 0,
-        },
-      ],
+      datasets: datasets,
     },
     options: {
-      options: {
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: {
-              fontSize: 16, // Adjust label font size
-              formatter: function (value, context) {
-                return (
-                  context.chart.data.labels[context.dataIndex] +
-                  ": " +
-                  Math.round(context.parsed * 100) +
-                  "%"
-                );
-              },
+      plugins: {
+        legend: {
+          position: "bottom",
+        },
+      },
+      radius: "90%", // Adjust the pie chart area size
+      // Add the 3D effect
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        },
+      },
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              let label = context.label || "";
+              if (label) {
+                label += ": ";
+              }
+              label += context.formattedValue;
+              return label;
             },
           },
         },
-        radius: "50%", // Adjust the pie chart area size
       },
     },
   });

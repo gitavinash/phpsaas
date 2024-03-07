@@ -82,16 +82,16 @@
                     
                     switch ($enquiry_status) {
                         case 1:
-                            $backgroundColor='#ABEBC6';
+                            $backgroundColor='#C7EAE4';
                             break;
                         case 2:
                             $backgroundColor='#F2F3F4';
                             break;
                         case 3:
-                            $backgroundColor='#FCF3CF';
+                            $backgroundColor='#FFD699';
                             break;
                         case 4:
-                            $backgroundColor='#FADBD8';
+                            $backgroundColor='#FFCCCC';
                             break;
                         default:
                         $backgroundColor= '#FFFFFF';
