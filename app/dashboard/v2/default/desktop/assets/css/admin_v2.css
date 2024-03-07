@@ -29,6 +29,10 @@ ol {
   border: #01647b !important;
 }
 
+.bgred {
+  background: #761b1b !important;
+}
+
 .btn-red {
   background: #761b1b !important;
   color: #fff !important;
