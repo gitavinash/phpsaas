@@ -78,11 +78,28 @@ ORDER BY
         while($checkPerformaceData = mysqli_fetch_assoc($checkPerformace)) {
             extract($checkPerformaceData);
 
+            switch ($enquiry_status) {
+                case 1:
+                    $backgroundColor='#C7EAE4';
+                    break;
+                case 2:
+                    $backgroundColor='#F2F3F4';
+                    break;
+                case 3:
+                    $backgroundColor='#FFD699';
+                    break;
+                case 4:
+                    $backgroundColor='#FFCCCC';
+                    break;
+                default:
+                    $backgroundColor= '#FFFFFF';
+            }
+
             $agentLeadURL="/dashboard/leads/list/?agentId={$user_id}".(($enquiry_status=='total' || $enquiry_status=='') ? '' :"&leadStatus={$enquiry_status}")."&daterange={$startDate} - {$endDate}";
 
             echo "
                 <div class='widget box-2'>
-                    <div class='widget-info'>
+                    <div class='widget-info' style='background: {$backgroundColor}' >
                         <a href='{$agentLeadURL}'>
                             <div class='info-box'>
                                 <p>".(($enquiry_status=='total' || $enquiry_status=='') ? 'Total Leads' : (($enquiry_status==1) ? 'Confirmed': (($enquiry_status==2) ? 'Pending': (($enquiry_status==3) ? 'Follow-ups': (($enquiry_status==4) ? 'Rejected': 'U/A Status')))))." enquiries
