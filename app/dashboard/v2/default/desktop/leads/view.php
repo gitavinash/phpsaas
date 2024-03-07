@@ -466,7 +466,7 @@
             </div>
             <div class="widget box-3">
                 <div class="actionArea bgred">
-                    <a href="#" class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Submit</a>
+                    <a href="#" class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Mark as closed</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
