@@ -29,6 +29,12 @@ ol {
   border: #01647b !important;
 }
 
+.btn-red {
+  background: #761b1b !important;
+  color: #fff !important;
+  border: #761b1b !important;
+}
+
 .btn-grey {
   background: #a9a9a9 !important;
   color: #fff !important;
@@ -1609,6 +1615,12 @@ section.form
   cursor: pointer !important;
 }
 
+.btn i {
+  margin-top: 2px;
+  float: left;
+  margin-right: 10px;
+}
+
 .right-btn {
   float: right !important;
 }
@@ -1799,14 +1811,11 @@ section.form
 }
 
 .leadActions a {
+  float: left;
   margin-right: 10px;
   font-size: 16px;
   font-weight: 400;
   padding: 10px 20px;
-}
-
-.leadActions .right-btn {
-  margin-top: -10px;
 }
 
 .leadActions .highlight {

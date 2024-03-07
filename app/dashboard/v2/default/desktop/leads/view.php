@@ -424,7 +424,7 @@
     <div class="widget no-padding box-2-5">
         <div class="main-box">
             <section class="leadQuickLinks">
-                <a href="" class="btn btn-green" id="noteBtn"><i class="fi-rr-note"></i> Final Interaction Note</a>
+                <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
                 <!-- <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-link-alt"></i> Send payment links</a> -->
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <!-- <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
