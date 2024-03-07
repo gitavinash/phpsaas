@@ -67,4 +67,4 @@
 
 	$toAddress = ((isset($email)) ? $email : $profile_email ); // Email receiver id
 	
-	require_once SEND_EMAIL;
+	require SEND_EMAIL;
