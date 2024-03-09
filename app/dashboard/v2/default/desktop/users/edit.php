@@ -44,17 +44,17 @@ window.location.href = 'dashboard/user/?type=list&status=all';
                         </div>
                         <div class="form-group">
                             <input type="text" name="mobile" id="mobile" placeholder="Mobile no*"
-                                value="<?php echo $user_mobile ?>" class="form-control" required />
+                                value="<?php echo $user_mobile ?>" class="form-control" readonly />
                             <label class="form-lable">Mobile No.<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control" id="email" placeholder="Email address*"
-                                name="email" value="<?php echo $user_email ?>" disabled />
+                            <input type="email" class="form-control" name='email' id="email"
+                                placeholder="Email address*" name="email" value="<?php echo $user_email ?>" readonly />
                             <label class="form-lable">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <p>User role <sup>*</sup></p>
-                            <select class="selectJS form-control" name="site_lang" id="select">
+                            <select class="selectJS form-control" name="userRole" id="select">
                                 <option value="">Select user role</option>
                                 <?php
                                     if ($roleList = mysqli_query($connection, "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1")) {

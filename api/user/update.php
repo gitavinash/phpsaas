@@ -1,11 +1,14 @@
 <?php
 
 require_once LOGIN_CHECK;
-
-function publish($connection, $data)
+function update($connection, $data)
 {
 
     extract($data);
+    $user_id=base64_decode($user_id);
+    
+    $msg='';
+    $status='warning';
 
     if ($first_name == '') {
 
@@ -16,73 +19,48 @@ function publish($connection, $data)
 
         $msg = 'Please enter a mobile number';
     }
+    
+    if ($userRole == '') {
 
-    if ($password == '') {
-
-        $msg = 'Password cannot be blank';
-    }
-
-    if ($password != $confirm_password) {
-
-        $msg = 'Password is not matched';
+        $msg = 'Please select user role';
     }
 
     // User registraion process
 
-    if ($checkEmail = mysqli_query($connection, "SELECT user_email FROM " . TABLE_PREFIX . "user WHERE user_id='{$user_id}'")) {
+    if($msg=='') {
 
-        if (mysqli_num_rows($checkEmail) == 0) {
+        if ($verifyUser = mysqli_query($connection, "SELECT user_email FROM " . TABLE_PREFIX . "user WHERE user_id='{$user_id}' AND user_email='{$email}' AND user_mobile='{$mobile}'")) {
 
-            /** Check mobile number is available or not */
+            if (mysqli_num_rows($verifyUser) != 0) {
 
-            if ($checkMobile = mysqli_query($connection, "SELECT profile_mobile FROM " . TABLE_PREFIX . "profile WHERE profile_mobile='{$mobile}'")) {
+                mysqli_query($connection, "START TRANSACTION");
 
-                if (mysqli_num_rows($checkMobile) == 0) {
+                $displayName=$first_name.' '.$last_name;
 
-                    /** Start the user registration process */
+                $updateProfileQuery=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$displayName}' WHERE profile_user_id='{$user_id}'");
 
-                    mysqli_query($connection, "START TRANSACTION");
+                $updateUserAccessQuery=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_access SET site_access_type='{$userRole}' WHERE site_access_user_id='{$user_id}' AND site_access_site_id=".SITE_ID);
 
-                    /* Insert data into user table */
-
-                    $updateUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES('{$username}', '{$mobile}', '{$enc_password}', '$saltKey', 1, NOW(), '" . IP . "')");
-                    $userID = mysqli_insert_id($connection);
-
-                    $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$mobile}', '{$profile_display_name}')");
-
-                    if ($insertUser && $insertProfile) {
-
-                        $status = 'success';
-                        $msg = 'User update successfully';
-                        mysqli_query($connection, 'COMMIT');
-
-                    } else {
-
-                        $status = 'error';
-                        $msg = 'Something is wrong while trying to update user';
-                        mysqli_query($connection, 'ROLLBACK');
-                    }
+                if($updateProfileQuery && $updateUserAccessQuery) {
+                    $status='success';
+                    $msg='User update successfully';
+                    mysqli_query($connection, "COMMIT");
                 } else {
-
-                    $status = 'warning';
-                    $msg = 'This mobile number is already in use';
+                    $status='error';
+                    $msg='Something went wrong while updating the user';
+                    mysqli_query($connection, "ROLLBACK");
                 }
-            }
-        } else {
+                
+            } else {
 
-            $status = 'warning';
-            $msg = 'This email is already in use.';
+                $status = 'error';
+                $msg = 'Invalid user request received';
+            }
         }
     }
 
-
     $msg=urlencode($msg);
-
-    if ($status === 'success') {
-        header("Location: /dashboard/users/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
-    } else {
-        header("Location: /dashboard/users/edit/?responseMsg={$msg}&status={$status}", TRUE, 301);
-    }
+    header("Location: /dashboard/users/edit/?id=" . base64_encode($user_id) . "&responseMsg={$msg}&status={$status}", TRUE, 301);
 
     exit();
 }

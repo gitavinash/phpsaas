@@ -316,26 +316,134 @@
                                     <td class="box-7">
                                         <select class="selectJS form-control" name="package" id="select">
                                             <option value="">Select destination</option>
-                                            <option value="himachal"
-                                                <?php echo (($enquiry_subject=='himachal') ? 'selected': '') ?>>Himachal
+                                            <option value="Andaman and Nicobar Islands"
+                                                <?php echo (($enquiry_subject=='Andaman and Nicobar Islands') ? 'selected': '') ?>>
+                                                Andaman and Nicobar Islands
                                             </option>
-                                            <option value="uttarakhand"
-                                                <?php echo (($enquiry_subject=='uttarakhand') ? 'selected': '') ?>>
-                                                Uttarakhand
+                                            <option value="Andhra Pradesh"
+                                                <?php echo (($enquiry_subject=='Andhra Pradesh') ? 'selected': '') ?>>
+                                                Andhra Pradesh
                                             </option>
-                                            <option value="jammu & kashmir"
-                                                <?php echo (($enquiry_subject=='jammu & kashmir') ? 'selected': '') ?>>
+                                            <option value="Arunachal Pradesh"
+                                                <?php echo (($enquiry_subject=='Arunachal Pradesh') ? 'selected': '') ?>>
+                                                Arunachal Pradesh
+                                            </option>
+                                            <option value="Assam"
+                                                <?php echo (($enquiry_subject=='Assam') ? 'selected': '') ?>>Assam
+                                            </option>
+                                            <option value="Bihar"
+                                                <?php echo (($enquiry_subject=='Bihar') ? 'selected': '') ?>>Bihar
+                                            </option>
+                                            <option value="Chandigarh"
+                                                <?php echo (($enquiry_subject=='Chandigarh') ? 'selected': '') ?>>
+                                                Chandigarh
+                                            </option>
+                                            <option value="Chhattisgarh"
+                                                <?php echo (($enquiry_subject=='Chhattisgarh') ? 'selected': '') ?>>
+                                                Chhattisgarh
+                                            </option>
+                                            <option value="Dadra and Nagar Haveli and Daman & Diu"
+                                                <?php echo (($enquiry_subject=='Dadra and Nagar Haveli and Daman & Diu') ? 'selected': '') ?>>
+                                                Dadra and Nagar Haveli and Daman & Diu
+                                            </option>
+                                            <option value="Delhi"
+                                                <?php echo (($enquiry_subject=='Delhi') ? 'selected': '') ?>>
+                                                Delhi
+                                            </option>
+                                            <option value="Goa"
+                                                <?php echo (($enquiry_subject=='Goa') ? 'selected': '') ?>>Goa
+                                            </option>
+                                            <option value="Gujarat"
+                                                <?php echo (($enquiry_subject=='Gujarat') ? 'selected': '') ?>>Gujarat
+                                            </option>
+                                            <option value="Haryana"
+                                                <?php echo (($enquiry_subject=='Haryana') ? 'selected': '') ?>>Haryana
+                                            </option>
+                                            <option value="Himachal Pradesh"
+                                                <?php echo (($enquiry_subject=='Himachal Pradesh') ? 'selected': '') ?>>
+                                                Himachal Pradesh
+                                            </option>
+                                            <option value="Jammu & Kashmir"
+                                                <?php echo (($enquiry_subject=='Jammu & Kashmir') ? 'selected': '') ?>>
                                                 Jammu & Kashmir
                                             </option>
-                                            <option value="ladakh"
-                                                <?php echo (($enquiry_subject=='ladakh') ? 'selected': '') ?>>Ladakh
+                                            <option value="Jharkhand"
+                                                <?php echo (($enquiry_subject=='Jharkhand') ? 'selected': '') ?>>
+                                                Jharkhand
                                             </option>
-                                            <option value="punjab"
-                                                <?php echo (($enquiry_subject=='punjab') ? 'selected': '') ?>>Punjab
+                                            <option value="Karnataka"
+                                                <?php echo (($enquiry_subject=='Karnataka') ? 'selected': '') ?>>
+                                                Karnataka
                                             </option>
-                                            <option value="" <?php echo (($enquiry_subject=='') ? 'selected': '') ?>>
+                                            <option value="Kerala"
+                                                <?php echo (($enquiry_subject=='Kerala') ? 'selected': '') ?>>Kerala
                                             </option>
-                                            <option value="" <?php echo (($enquiry_subject=='') ? 'selected': '') ?>>
+                                            <option value="Ladakh"
+                                                <?php echo (($enquiry_subject=='Ladakh') ? 'selected': '') ?>>Ladakh
+                                            </option>
+                                            <option value="Lakshadweep"
+                                                <?php echo (($enquiry_subject=='Lakshadweep') ? 'selected': '') ?>>
+                                                Lakshadweep
+                                            </option>
+                                            <option value="Madhya Pradesh"
+                                                <?php echo (($enquiry_subject=='Madhya Pradesh') ? 'selected': '') ?>>
+                                                Madhya Pradesh
+                                            </option>
+                                            <option value="Maharashtra"
+                                                <?php echo (($enquiry_subject=='Maharashtra') ? 'selected': '') ?>>
+                                                Maharashtra
+                                            </option>
+                                            <option value="Manipur"
+                                                <?php echo (($enquiry_subject=='Manipur') ? 'selected': '') ?>>Manipur
+                                            </option>
+                                            <option value="Meghalaya"
+                                                <?php echo (($enquiry_subject=='Meghalaya') ? 'selected': '') ?>>
+                                                Meghalaya
+                                            </option>
+                                            <option value="Mizoram"
+                                                <?php echo (($enquiry_subject=='Mizoram') ? 'selected': '') ?>>Mizoram
+                                            </option>
+                                            <option value="Nagaland"
+                                                <?php echo (($enquiry_subject=='Nagaland') ? 'selected': '') ?>>Nagaland
+                                            </option>
+                                            <option value="Odisha"
+                                                <?php echo (($enquiry_subject=='Odisha') ? 'selected': '') ?>>Odisha
+                                            </option>
+                                            <option value="Puducherry"
+                                                <?php echo (($enquiry_subject=='Puducherry') ? 'selected': '') ?>>
+                                                Puducherry
+                                            </option>
+                                            <option value="Punjab"
+                                                <?php echo (($enquiry_subject=='Punjab') ? 'selected': '') ?>>Punjab
+                                            </option>
+                                            <option value="Rajasthan"
+                                                <?php echo (($enquiry_subject=='Rajasthan') ? 'selected': '') ?>>
+                                                Rajasthan
+                                            </option>
+                                            <option value="Sikkim"
+                                                <?php echo (($enquiry_subject=='Sikkim') ? 'selected': '') ?>>Sikkim
+                                            </option>
+                                            <option value="Tamil Nadu"
+                                                <?php echo (($enquiry_subject=='Tamil Nadu') ? 'selected': '') ?>>Tamil
+                                                Nadu
+                                            </option>
+                                            <option value="Telangana"
+                                                <?php echo (($enquiry_subject=='Telangana') ? 'selected': '') ?>>
+                                                Telangana
+                                            </option>
+                                            <option value="Tripura"
+                                                <?php echo (($enquiry_subject=='Tripura') ? 'selected': '') ?>>Tripura
+                                            </option>
+                                            <option value="Uttarakhand"
+                                                <?php echo (($enquiry_subject=='Uttarakhand') ? 'selected': '') ?>>
+                                                Uttarakhand</option>
+                                            <option value="Uttar Pradesh"
+                                                <?php echo (($enquiry_subject=='Uttar Pradesh') ? 'selected': '') ?>>
+                                                Uttar Pradesh
+                                            </option>
+                                            <option value="West Bengal"
+                                                <?php echo (($enquiry_subject=='West Bengal') ? 'selected': '') ?>>West
+                                                Bengal
                                             </option>
                                         </select>
                                     </td>
