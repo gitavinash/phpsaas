@@ -12,6 +12,23 @@ if (typeof tempId !== "undefined") {
   dateRangeParams += "&userId=" + tempId;
 }
 
+/* register service worker */
+
+if ("serviceWorker" in navigator) {
+  // Register a service worker hosted at the root of the
+  // site using the default scope.
+  navigator.serviceWorker.register("./sw.min.js").then(
+    (registration) => {
+      console.log("Service worker registration succeeded:", registration);
+    },
+    (error) => {
+      console.error(`Service worker registration failed:`, error);
+    }
+  );
+} else {
+  console.error("Service workers are not supported.");
+}
+
 /** SweetAlert Pop Up Box */
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
@@ -798,6 +815,26 @@ $("#updateEnquiry").click(function (e) {
     },
     error: function (response) {
       console.log(response);
+    },
+  });
+  e.preventDefault();
+});
+
+$(".duplicateLead").click(function (e) {
+  var id = $(this).attr("id");
+
+  $.ajax({
+    type: "GET",
+    url: "/api/leads/duplicate/?id=" + id,
+    dataType: "json",
+    success: function (response) {
+      popUpMessage("center", response.msg, response.status);
+      setTimeout(function () {
+        location.reload();
+      }, 1500);
+    },
+    error: function (response) {
+      console.log(`Error : `, response);
     },
   });
   e.preventDefault();

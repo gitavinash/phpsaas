@@ -76,8 +76,21 @@
                         <?php
                                     }
                                 ?>
-                        <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn">View
+                        <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn"><i
+                                class="fi-rr-eye"></i> View
                             lead details</a>
+                        <?php
+                        
+                        if($enquiry_status==0) { ?>
+
+                        <a href="#" class="btn dataTableBtn duplicateLead"
+                            id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
+                            as duplicate lead</a>
+
+                        <?php
+                        }
+                        
+                        ?>
                     </form>
                 </td>
             </tr>

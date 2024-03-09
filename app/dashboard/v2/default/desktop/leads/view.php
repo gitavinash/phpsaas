@@ -35,8 +35,9 @@
                                 alt="" srcset="">
                         </div>
                         <div class="info">
-                            <h2 class="heading" <?php echo (($enquiry_status==4)? "style='color:#f44336'" : "") ?>>
-                                <?php echo $enquiry_first_name.' '.$enquiry_last_name.(($enquiry_status==4)? ' ( closed ) ' : '') ?>
+                            <h2 class="heading"
+                                <?php echo (($enquiry_status==4 || $enquiry_status==5)? "style='color:#f44336'" : "") ?>>
+                                <?php echo $enquiry_first_name.' '.$enquiry_last_name.(($enquiry_status==4)? ' ( Closed ) ' : (($enquiry_status==5) ? '( Duplicate )' : '' )) ?>
                             </h2>
                             <p><span><strong>Last Update:
                                     </strong><?php echo date('d M Y H:i:s', strtotime($enquiry_update)) ?></span></p>
@@ -58,8 +59,15 @@
                             history</a>
                         <a href="#" id="paymentDetailsBtn" class="btn"><i class="fi-rr-money-check"></i> Payment
                             history</a>
+                        <?php
+            
+                if($enquiry_status!=5) { ?>
                         <a href="#" id="leadEditBtn" class="btn right-btn highlight"><i class="fi-rr-edit"></i> Edit
                             lead</a>
+                        <?php
+                            
+                }
+                ?>
                     </div>
                 </div>
                 <div class="widget no-padding box-1" id="leadDetailsBox">
@@ -241,6 +249,11 @@
                                                     case "update" :
                                                         $icon='refresh';
                                                         $msg='<a href="#">Update </a>by '.$enquiry_notes_meta_value;
+                                                        break;
+                                                        
+                                                    case "duplicate" :
+                                                        $icon='refresh';
+                                                        $msg='<a href="#">Lead mark Duplicate by </a>by '.$enquiry_notes_meta_value;
                                                         break;
                                                         
                                                     default:
@@ -532,11 +545,20 @@
     <div class="widget no-padding box-2-5">
         <div class="main-box">
             <section class="leadQuickLinks">
+                <?php
+            
+                if($enquiry_status!=5) { ?>
+
                 <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
                 <!-- <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-link-alt"></i> Send payment links</a> -->
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <!-- <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
                 <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a> -->
+
+                <?php
+                }
+                
+                ?>
             </section>
         </div>
     </div>

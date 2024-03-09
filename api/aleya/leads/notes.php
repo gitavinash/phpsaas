@@ -10,7 +10,7 @@
         if(mysqli_num_rows($checkEnquiryAccess)!=0) {
             extract((mysqli_fetch_assoc($checkEnquiryAccess)));
 
-            if($enquiry_status!=4) {
+            if($enquiry_status!=4 || $enquiry_status!=5) {
 
                 if($msg=='') {
                     $msg=$logginUserName;

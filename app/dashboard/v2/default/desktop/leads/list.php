@@ -64,7 +64,7 @@
                 <thead>
                     <tr>
                         <th>Name.</th>
-                        <th>Email</th>
+                        <!-- <th>Email</th> -->
                         <th>Mobile</th>
                         <th>Subject</th>
                         <th>Time</th>
@@ -100,7 +100,7 @@
                     ?>
                     <tr style="background: <?php echo $backgroundColor; ?>">
                         <td><?php echo $enquiry_first_name; ?></td>
-                        <td><?php echo $enquiry_email; ?></td>
+                        <!-- <td><?php echo $enquiry_email; ?></td> -->
                         <td><?php echo $enquiry_mobile; ?></td>
                         <td><?php echo $enquiry_subject; ?></td>
                         <td><?php echo date('d M Y, H:i', strtotime($enquiry_time)); ?></td>
@@ -128,8 +128,20 @@
                                     }
                                 ?>
                                 <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
-                                    class="btn dataTableBtn">View
+                                    class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
                                     lead details</a>
+                                <?php
+                        
+                        if($enquiry_status==0) { ?>
+
+                                <a href="#" class="btn dataTableBtn duplicateLead"
+                                    id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
+                                    as duplicate lead</a>
+
+                                <?php
+                        }
+                        
+                        ?>
                             </form>
                         </td>
                     </tr>

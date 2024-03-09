@@ -38,6 +38,7 @@ Lead status
 2 : Pending because it's assign to some agent
 3 : follow up
 4 : Failed
+5 : Duplicate
 
 Cart Status
 
