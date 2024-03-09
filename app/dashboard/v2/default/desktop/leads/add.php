@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group">
                             <input id="email" name="email" type="text" />
-                            <label class="form-lable" id="Label">Emai</label>
+                            <label class="form-lable" id="Label">Email</label>
                         </div>
                         <div class="form-group">
                             <input id="mobile" name="mobile" type="text" required />
