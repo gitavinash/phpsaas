@@ -93,6 +93,9 @@
                         case 4:
                             $backgroundColor='#FFCCCC';
                             break;
+                        case 5:
+                            $backgroundColor='#AED6F1';
+                            break;
                         default:
                         $backgroundColor= '#FFFFFF';
                     }

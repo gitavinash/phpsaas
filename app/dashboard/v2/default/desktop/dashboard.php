@@ -9,35 +9,45 @@
         </form>
     </div>
 </div>
-<div class="widget box-4">
+<div class="widget box-2">
     <?php
 
         require_once 'dashboard/widgets/enquiry.php';
 
     ?>
 </div>
-<div class="widget box-4">
+<div class="widget box-2">
     <?php
 
         require_once 'dashboard/widgets/confirmed-enquiry.php';
 
     ?>
 </div>
-<div class="widget box-4">
+<div class="widget box-2">
     <?php
 
         require_once 'dashboard/widgets/pending-enquiry.php';
 
     ?>
 </div>
-<div class="widget box-4">
+<div class="widget box-2">
     <?php
 
         require_once 'dashboard/widgets/follow-up-enquiry.php';
 
     ?>
 </div>
+<div class="widget box-2">
+    <?php
 
+        if($site_access_type=='administrator') {
+            require_once 'dashboard/widgets/duplicate-enquiry.php';
+        } else {
+            require_once 'dashboard/widgets/cancle-enquiry.php';
+        }
+
+    ?>
+</div>
 <?php
 
     if($site_access_type=='administrator') { ?>

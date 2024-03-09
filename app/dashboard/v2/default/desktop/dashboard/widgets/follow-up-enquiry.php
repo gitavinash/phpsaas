@@ -9,14 +9,14 @@
     $url="/dashboard/leads/list/{$userFilter}leadStatus=3&daterange={$startDate} - {$endDate}";
 
 ?>
-<div class="widget-info" style="background: #FFD699" id="totalFollowupLeads">
-    <a href="<?php echo $url ?>">
+<a href="<?php echo $url ?>">
+    <div class="widget-info" style="background: #FFD699" id="totalFollowupLeads">
         <div class="info-box">
-            <p>Follow-up enquiries
+            <p>Follow-ups enquiries
                 <span id="totalFollowupLeadsValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif"
                         alt=""></span>
                 </span>
             </p>
         </div>
-    </a>
-</div>
+    </div>
+</a>

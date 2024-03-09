@@ -417,6 +417,38 @@ if ($("#totalFollowupLeads").length) {
   });
 }
 
+// Duplicate leads
+
+if ($("#totalDuplicateLeads").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/duplicate-leads/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      dashboardWidgetWithoutChart("totalDuplicateLeads", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+// Cancel leads
+
+if ($("#totalCancelLeads").length) {
+  $.ajax({
+    type: "GET",
+    url: "/api/report/cancel-leads/?daterange=" + dateRangeParams,
+    dataType: "json",
+    success: function (response) {
+      dashboardWidgetWithoutChart("totalCancelLeads", response);
+    },
+    error: function (response) {
+      console.log(response);
+    },
+  });
+}
+
 // Source lead
 
 if ($("#sourceData").length) {
