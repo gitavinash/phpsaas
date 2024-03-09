@@ -106,7 +106,7 @@
                         <!-- <td><?php echo $enquiry_email; ?></td> -->
                         <td><?php echo $enquiry_mobile; ?></td>
                         <td><?php echo $enquiry_subject; ?></td>
-                        <td><?php echo date('d M Y, H:i', strtotime($enquiry_time)); ?></td>
+                        <td><?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
                         <td><?php echo $enquiry_source ?></td>
                         <td>
                             <form method="POST" class="">

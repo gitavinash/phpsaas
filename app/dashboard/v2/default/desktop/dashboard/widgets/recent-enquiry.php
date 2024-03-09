@@ -53,7 +53,7 @@
                 <td><?php echo $enquiry_mobile; ?></td>
                 <td><?php echo $enquiry_subject; ?></td>
                 <td><?php echo $enquiry_source; ?></td>
-                <td></span><?php echo date('d-m-Y H:i:s', strtotime($enquiry_time)); ?>
+                <td></span><?php echo date('d-m-Y h:i A', strtotime($enquiry_time)); ?>
                 </td>
                 <td>
                     <form method="POST" class="">

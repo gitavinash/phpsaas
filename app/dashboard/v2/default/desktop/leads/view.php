@@ -40,7 +40,7 @@
                                 <?php echo $enquiry_first_name.' '.$enquiry_last_name.(($enquiry_status==4)? ' ( Closed ) ' : (($enquiry_status==5) ? '( Duplicate )' : '' )) ?>
                             </h2>
                             <p><span><strong>Last Update:
-                                    </strong><?php echo date('d M Y H:i:s', strtotime($enquiry_update)) ?></span></p>
+                                    </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span></p>
                         </div>
                         <div class="verifications">
 
@@ -271,7 +271,7 @@
                                                     </span>
                                                     <div class='timeline-item-description'>
                                                         <span>{$msg}
-                                                            on <time>".date('d M Y, H:i:s', strtotime(($enquiry_notes_update)))."</time></span>
+                                                            on <time>".date('d-m-Y h:i A', strtotime(($enquiry_notes_update)))."</time></span>
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
