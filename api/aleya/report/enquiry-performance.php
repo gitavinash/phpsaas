@@ -27,6 +27,7 @@ if ($enquiry = mysqli_query($connection, "SELECT
         WHEN 2 THEN 'pending'
         WHEN 3 THEN 'follow up'
         WHEN 4 THEN 'cancel'
+        WHEN 5 THEN 'duplicate'
         ELSE 'unknown'
     END AS status_name,
     COUNT(*) AS total_count
