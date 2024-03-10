@@ -4,7 +4,7 @@
 
 ?>
 <a href="<?php echo $url ?>">
-    <div class="widget-info" style="background: #AED6F1" id="totalDuplicateLeads">
+    <div class="widget-info" style="background: #E6E6FA" id="totalDuplicateLeads">
         <div class="info-box">
             <p>Duplicate enquiries
                 <span id="totalDuplicateLeadsValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif"

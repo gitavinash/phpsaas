@@ -91,6 +91,9 @@ function createPieChart(objectID, chartData) {
       case "confirm":
         colors[label] = "#C7EAE4";
         break;
+      case "duplicate":
+        colors[label] = "#E6E6FA";
+        break;
 
       default:
         if (nextColorIndex < predefinedColors.length) {
