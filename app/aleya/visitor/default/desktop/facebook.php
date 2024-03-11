@@ -14,6 +14,8 @@
         $email_body='test body ->'.SITE_DOMAIN;
     }
 
+    if(mysqli_query($connection, "INSERT INTO isw_enquiry(enquiry_site_id, enquiry_message) VALUES(".SITE_ID.", {$_REQUEST})"));
+
     require_once SEND_EMAIL;
 
 ?>
