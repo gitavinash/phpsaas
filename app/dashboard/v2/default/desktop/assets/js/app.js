@@ -1,3 +1,4 @@
+// $(document).ready(function () {
 const urlQuery = new URLSearchParams(window.location.search);
 let dateRangeParams = urlQuery.get("daterange");
 let leadId = urlQuery.get("id");
@@ -12,22 +13,45 @@ if (typeof tempId !== "undefined") {
   dateRangeParams += "&userId=" + tempId;
 }
 
+function showPageLoader() {
+  $(".pageLoader").fadeIn();
+}
+
+function hidePageLoader() {
+  $(".pageLoader").fadeOut();
+}
+
+$(window).on("load", function () {
+  hidePageLoader();
+});
+
+// $(document).click(function () {
+//   showPageLoader();
+//   setTimeout(function () {
+//     hidePageLoader();
+//   }, 500);
+// });
+
+function isNumeric(input) {
+  return /^\d+$/.test(input);
+}
+
 /* register service worker */
 
-if ("serviceWorker" in navigator) {
-  // Register a service worker hosted at the root of the
-  // site using the default scope.
-  navigator.serviceWorker.register("./sw.min.js").then(
-    (registration) => {
-      console.log("Service worker registration succeeded:", registration);
-    },
-    (error) => {
-      console.error(`Service worker registration failed:`, error);
-    }
-  );
-} else {
-  console.error("Service workers are not supported.");
-}
+// if ("serviceWorker" in navigator) {
+//   // Register a service worker hosted at the root of the
+//   // site using the default scope.
+//   navigator.serviceWorker.register("./sw.min.js").then(
+//     (registration) => {
+//       console.log("Service worker registration succeeded:", registration);
+//     },
+//     (error) => {
+//       console.error(`Service worker registration failed:`, error);
+//     }
+//   );
+// } else {
+//   console.error("Service workers are not supported.");
+// }
 
 /** SweetAlert Pop Up Box */
 
@@ -295,7 +319,6 @@ function decreaseCountingNumberAnimation(
 }
 
 function comparisonWidgetChart(objectID, data) {
-  console.log(`Data : `, data);
   increaseCountingNumberAnimation(`totalLeadsValue`, 500 - 100, 500, 1, 86);
   createLineChart(
     (objectID = `${objectID}Chart`),
@@ -318,7 +341,6 @@ function comparisonWidgetChart(objectID, data) {
 }
 
 function dashboardWidgetWithChart(objectID, data) {
-  console.log(`Object ID`, objectID);
   increaseCountingNumberAnimation(
     `${objectID}Value`,
     data.totalLeads - 10,
@@ -367,7 +389,7 @@ if ($("#totalLeads").length) {
       dashboardWidgetWithoutChart("totalLeads", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -383,7 +405,7 @@ if ($("#totalConfirmLeads").length) {
       dashboardWidgetWithoutChart("totalConfirmLeads", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -399,7 +421,7 @@ if ($("#totalPendingLeads").length) {
       dashboardWidgetWithoutChart("totalPendingLeads", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -415,7 +437,7 @@ if ($("#totalFollowupLeads").length) {
       dashboardWidgetWithoutChart("totalFollowupLeads", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -431,7 +453,7 @@ if ($("#totalDuplicateLeads").length) {
       dashboardWidgetWithoutChart("totalDuplicateLeads", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -447,7 +469,7 @@ if ($("#totalCancelLeads").length) {
       dashboardWidgetWithoutChart("totalCancelLeads", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -463,7 +485,7 @@ if ($("#sourceData").length) {
       createPieChart("sourceData", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -477,7 +499,7 @@ if ($("#enquiryPerformace").length) {
       createPieChart("enquiryPerformace", response);
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
 }
@@ -610,11 +632,13 @@ if ($(".steps-tab").length) {
   $(".step-box").click(function (e) {
     e.preventDefault();
     currentElementID = $(this).attr("id");
-
-    $(".step-open-box").hide();
+    $(".step-box").removeClass("active");
     showCurrentBox = currentElementID + "_box";
-    console.log(currentElementID + " -> " + showCurrentBox);
+    showCurrentLable = currentElementID;
+    $(".step-open-box").hide();
+    $("#" + showCurrentLable).addClass("active");
     $("." + showCurrentBox).show();
+    hidePageLoader();
   });
 }
 
@@ -642,18 +666,21 @@ $("#leadDetailsBtn").click(function (e) {
   $("#leadDetailsBtn").addClass("btn-green");
   $("#noteDetailsBtn").removeClass("btn-green");
   $("#paymentDetailsBtn").removeClass("btn-green");
+  hidePageLoader();
   e.preventDefault();
 });
 $("#noteDetailsBtn").click(function (e) {
   $("#noteDetailsBtn").addClass("btn-green");
   $("#leadDetailsBtn").removeClass("btn-green");
   $("#paymentDetailsBtn").removeClass("btn-green");
+  hidePageLoader();
   e.preventDefault();
 });
 $("#paymentDetailsBtn").click(function (e) {
   $("#paymentDetailsBtn").addClass("btn-green");
   $("#leadDetailsBtn").removeClass("btn-green");
   $("#noteDetailsBtn").removeClass("btn-green");
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -666,24 +693,28 @@ function closePopup(btn) {
 $("#noteBtn").click(function (e) {
   document.querySelector(".notesBox").style.display = "flex";
   $(".notesBox").show();
+  hidePageLoader();
   e.preventDefault();
 });
 
 $("#paymentBtn").click(function (e) {
   document.querySelector(".paymentLinkBox").style.display = "flex";
   $(".paymentLinkBox").show();
+  hidePageLoader();
   e.preventDefault();
 });
 
 $("#followUpBtn").click(function (e) {
   document.querySelector(".followUpBox").style.display = "flex";
   $(".followUpBox").show();
+  hidePageLoader();
   e.preventDefault();
 });
 
 $("#itineraryBtn").click(function (e) {
   document.querySelector(".itineraryBox").style.display = "flex";
   $(".itineraryBox").show();
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -693,6 +724,7 @@ $("#leadDetailsBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "block";
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -702,6 +734,7 @@ $("#noteDetailsBtn").click(function (e) {
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -711,10 +744,12 @@ $("#paymentDetailsBtn").click(function (e) {
   document.querySelector("#noteDetailsBox").style.display = "none";
   document.querySelector("#leadEditBox").style.display = "none";
   document.querySelector("#leadEditBtn").style.display = "none";
+  hidePageLoader();
   e.preventDefault();
 });
 
 $("#leadEditBtn").click(function (e) {
+  hidePageLoader();
   document.querySelector("#leadEditBox").style.display = "block";
   document.querySelector("#paymentDetailsBox").style.display = "none";
   document.querySelector("#leadDetailsBox").style.display = "none";
@@ -722,6 +757,25 @@ $("#leadEditBtn").click(function (e) {
   document.querySelector("#leadEditBtn").style.display = "none";
   e.preventDefault();
 });
+
+// Assign leads
+
+// $(".assignBtn").click(function (e) {
+//   var form = $(this).closest("form");
+
+//   // Get the values from the form
+//   var userId = form.find('select[name="userId"]').val();
+//   var leadId = form.find('input[name="leadId"]').val();
+//   var action = form.find('input[name="action"]').val();
+//   var type = form.find('input[name="type"]').val();
+
+//   // Do something with the values (for demonstration purposes, just log them)
+//   console.log("User ID:", userId);
+//   console.log("Lead ID:", leadId);
+//   console.log("Action:", action);
+//   console.log("Type:", type);
+//   e.preventDefault();
+// });
 
 // Update notes
 
@@ -742,14 +796,13 @@ $("#updateNotes").click(function (e) {
           finalNotes: true,
         },
         success: function (response) {
-          console.log(`Response : `, response);
           popUpMessage("center", response.msg, response.status);
           setTimeout(function () {
             document.querySelector(".notesBox").style.display = "none";
           }, 1500);
         },
         error: function (response) {
-          console.log(response);
+          console.log(`Error : `, response);
         },
       });
     } else {
@@ -758,6 +811,7 @@ $("#updateNotes").click(function (e) {
   } else {
     popUpMessage("center", "Title cannot be blank", "warning");
   }
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -783,14 +837,13 @@ $("#addFollowUp").click(function (e) {
             finalNotes: false,
           },
           success: function (response) {
-            console.log(`Response : `, response);
             popUpMessage("center", response.msg, response.status);
             setTimeout(function () {
               document.querySelector(".followUpBox").style.display = "none";
             }, 1500);
           },
           error: function (response) {
-            console.log(response);
+            console.log(`Error : `, response);
           },
         });
       } else {
@@ -802,6 +855,7 @@ $("#addFollowUp").click(function (e) {
   } else {
     popUpMessage("center", "Reason cannot be blank", "warning");
   }
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -824,9 +878,10 @@ $("#addEnquiry").click(function (e) {
       }
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
+  hidePageLoader();
   e.preventDefault();
 });
 
@@ -849,15 +904,16 @@ $("#updateEnquiry").click(function (e) {
       }
     },
     error: function (response) {
-      console.log(response);
+      console.log(`Error : `, response);
     },
   });
+  hidePageLoader();
   e.preventDefault();
 });
 
 $(".duplicateLead").click(function (e) {
+  showPageLoader();
   var id = $(this).attr("id");
-
   $.ajax({
     type: "GET",
     url: "/api/leads/duplicate/?id=" + id,
@@ -867,10 +923,69 @@ $(".duplicateLead").click(function (e) {
       setTimeout(function () {
         location.reload();
       }, 1500);
+      hidePageLoader();
     },
     error: function (response) {
       console.log(`Error : `, response);
+      hidePageLoader();
     },
   });
+  hidePageLoader();
   e.preventDefault();
 });
+
+if ($("#fixedDiv").length) {
+  window.onscroll = function () {
+    fixDiv();
+  };
+
+  var fixedDiv = document.getElementById("fixedDiv");
+  var prevScrollpos = window.pageYOffset;
+
+  function fixDiv() {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      fixedDiv.classList.remove("fixed");
+    } else {
+      if (currentScrollPos > 100) {
+        fixedDiv.classList.add("fixed");
+      } else {
+        fixedDiv.classList.remove("fixed");
+      }
+    }
+    prevScrollpos = currentScrollPos;
+  }
+}
+
+$(".paymentLink").click(function (e) {
+  var id = $(this).attr("id");
+
+  if (id == "customPaymentLink") {
+    $("#minPaymentLinkBox").show();
+    $("#paymentValue").focus();
+  } else {
+    $("#minPaymentLinkBox").hide();
+  }
+  hidePageLoader();
+});
+
+$("#sendPaymentLink").click(function (e) {
+  var selectedValue = "";
+  selectedValue = $('input[name="paymentLink"]:checked').val();
+  if (selectedValue == 0) {
+    selectedValue = $("#paymentValue").val();
+  }
+
+  if (selectedValue != "") {
+    if (isNumeric(selectedValue)) {
+      popUpMessage("center", "Payment link sent to customer", "warning");
+    } else {
+      popUpMessage("center", "Please enter valid amount", "warning");
+    }
+  } else {
+    popUpMessage("center", "Please enter amount", "warning");
+  }
+  hidePageLoader();
+  e.preventDefault();
+});
+// });

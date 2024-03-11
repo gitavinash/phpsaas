@@ -224,7 +224,7 @@
                             <ol class="timeline">
                                 <?php
                                 
-                                    if($leadHistory=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."enquiry_notes WHERE enquiry_notes_ref_id='{$leadId}' ORDER BY enquiry_notes_update DESC")) {
+                                    if($leadHistory=mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM ".TABLE_PREFIX."enquiry_notes INNER JOIN ".TABLE_PREFIX."profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' ORDER BY enquiry_notes_update DESC")) {
                                         if(mysqli_num_rows($leadHistory)!=0) {
                                             while($leadHistoryData = mysqli_fetch_array($leadHistory)) {
                                                 extract($leadHistoryData); 
@@ -238,27 +238,27 @@
                                                         
                                                     case "payment" :
                                                         $icon='indian-rupee-sign';
-                                                        $msg='<a href="#">Payment</a>'.$enquiry_notes_meta_value;
+                                                        $msg='<a href="#">Payment</a>'.$profile_display_name;
                                                         break;
                                                         
                                                     case "generate" :
                                                         $icon='plus';
-                                                        $msg='<a href="#">Added </a>by '.$enquiry_notes_meta_value;
+                                                        $msg='<a href="#">Added </a>by '.$profile_display_name;
                                                         break;
                                                         
                                                     case "update" :
                                                         $icon='refresh';
-                                                        $msg='<a href="#">Update </a>by '.$enquiry_notes_meta_value;
+                                                        $msg='<a href="#">Lead update </a>by '.$profile_display_name;
                                                         break;
                                                         
                                                     case "duplicate" :
                                                         $icon='refresh';
-                                                        $msg='<a href="#">Lead mark Duplicate by </a>by '.$enquiry_notes_meta_value;
+                                                        $msg='<a href="#">Lead mark Duplicate </a> updated by '.$profile_display_name;
                                                         break;
                                                         
                                                     default:
                                                         $icon='comment-alt';
-                                                        $msg= "<a href='#'>{$enquiry_notes_meta_type}</a>";
+                                                        $msg= "<a href='#'>{$enquiry_notes_meta_type}</a> updated by ".$profile_display_name;
                                                         if($enquiry_notes_meta_value!='') {
                                                             $commentBox="<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
                                                         }
@@ -542,7 +542,7 @@
         </div>
     </div>
 
-    <div class="widget no-padding box-2-5">
+    <div class="widget no-padding box-2-5" id="fixedDiv">
         <div class="main-box">
             <section class="leadQuickLinks">
                 <?php
@@ -550,7 +550,10 @@
                 if($enquiry_status!=5) { ?>
 
                 <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
-                <!-- <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-link-alt"></i> Send payment links</a> -->
+                <!-- <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
+                    links</a>
+                <a href="" class="btn btn-green" id="updatePayment"><i class="fi-rr-notes"></i> Update payment
+                    records</a> -->
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <!-- <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
                 <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a> -->
@@ -614,22 +617,45 @@
                                 <div class="form-header">
                                     <h4 class="heading">Send payment link</h4>
                                 </div>
-                                <div class="form-group-box">
-                                    <div class="box-1">
-                                        <div class="form-group">
-                                            <div class="input-box">
-                                                <input type="radio" id="fullPaymentBtn" name="paymentLink"
-                                                    value="yes" />
-                                                <label class="radio-button">Full Payment</label>
+                                <div class="sendPaymentLinkBox">
+                                    <div class="form-group-box">
+                                        <div class="box-1">
+                                            <div class="form-group">
+                                                <div class="input-box">
+                                                    <input type="radio" class="paymentLink" id="fullPaymentBtn"
+                                                        name="paymentLink" value="yes" />
+                                                    <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
+                                                        Full
+                                                        Payment</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="box-1">
-                                        <div class="form-group">
-                                            <div class="input-box">
-                                                <input type="radio" id="minPaymentLink" name="paymentLink" value="yes"
-                                                    checked />
-                                                <label class="radio-button">Min payment</label>
+                                        <div class="box-1">
+                                            <div class="form-group">
+                                                <div class="input-box">
+                                                    <input type="radio" class="paymentLink" id="minPaymentLink"
+                                                        name="paymentLink" value="yes" checked />
+                                                    <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
+                                                        Minimum payment</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-1">
+                                            <div class="form-group">
+                                                <div class="input-box">
+                                                    <input type="radio" class="paymentLink" id="customPaymentLink"
+                                                        name="paymentLink" value="0" />
+                                                    <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
+                                                        Custom
+                                                        amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-1" id="minPaymentLinkBox" style="display:none">
+                                            <div class="form-group">
+                                                <input type="number" id="paymentValue" name="paymentLink" />
+                                                <label class="form-lable" id="paymentAmount">Enter
+                                                    amount<sup>*</sup></label>
                                             </div>
                                         </div>
                                     </div>
@@ -640,7 +666,8 @@
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-check"></i> Submit</a>
+                    <a href="#" class="btn popUpBtn" id="sendPaymentLink"><i class="fi-rr-paper-plane"></i> Send payment
+                        link</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>

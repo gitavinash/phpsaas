@@ -18,6 +18,34 @@ body {
   overflow-x: hidden;
 }
 
+.pageLoader {
+  position: fixed;
+  top: 0;
+  float: left;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  z-index: 99;
+}
+
+.pageLoader img {
+  height: 120px;
+  animation: fadeInOut 4s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 ul,
 ol {
   list-style: none;
@@ -311,10 +339,11 @@ strong {
 .right-side {
   float: right;
   width: auto;
+  min-width: 300px;
 }
 
 .right-side ul {
-  float: left;
+  float: right;
   list-style: none;
   margin: 0 auto;
   padding: 0;
@@ -1214,7 +1243,7 @@ table.dataTable thead th {
   font-size: 16px;
   letter-spacing: 1px;
   line-height: 25px;
-  cursor: default;
+  cursor: pointer;
 }
 
 .steps-tab .step-box span {
@@ -1541,6 +1570,12 @@ section.form
   background: #01647b;
 }
 
+section.form input[type="radio"]:checked + label.radio-button {
+  color: #fff;
+  font-weight: 600;
+  background: #01647b;
+}
+
 section.form .form-group-box .input-box input[type="radio"] {
   width: 100%;
   height: 40px;
@@ -1763,7 +1798,7 @@ section.form
 
 .leadQuickLinks .btn {
   float: left;
-  width: 90%;
+  width: 92%;
   margin-bottom: 15px;
   line-height: 28px;
   font-weight: 400;
@@ -1792,12 +1827,15 @@ section.form
 }
 
 .leadInfo table {
+  display: contents;
   border: 1px solid #edefef;
   border-radius: 10px;
   float: left;
   width: 100%;
+  max-width: 800px;
   margin-top: 10px;
   box-sizing: border-box;
+  word-break: break-all;
 }
 
 .leadInfo table tr {
@@ -2085,4 +2123,35 @@ section.form
   font-size: 12px;
   width: 100%;
   margin-top: 5px;
+}
+
+#fixedDiv {
+  position: relative;
+  top: 0;
+  transition: top 0.3s;
+}
+
+.fixed {
+  position: fixed !important;
+  top: 50px !important;
+  max-width: 20%;
+  right: 0;
+}
+
+.sendPaymentLinkBox {
+  float: left;
+  width: 100%;
+  padding: 10% 0%;
+}
+
+.sendPaymentLinkBox .box-1 {
+  padding: 15px 0px;
+}
+
+.sendPaymentLinkBox .box-1:first-child {
+  padding-top: 0px;
+}
+
+.sendPaymentLinkBox .box-1:last-child {
+  padding-bottom: 0px;
 }

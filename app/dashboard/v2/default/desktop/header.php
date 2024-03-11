@@ -40,7 +40,9 @@
 </head>
 
 <body>
-
+    <div class="pageLoader">
+        <img src="/upload/others/aleya-logo.png" alt="Aleya logo">
+    </div>
     <header>
         <div class="left-side">
             <ul>
@@ -270,6 +272,8 @@
                             if($site_access_type =='administrator') { ?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <li><a href="setting/payment/"><i class="fi-rr-indian-rupee-sign"></i>
+                                    Payments</a></li>
                             <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
@@ -283,6 +287,8 @@
                     if($site_access_type =='administrator') { ?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <li><a href="setting/payment/"><i class="fi-rr-indian-rupee-sign"></i>
+                                    Payments</a></li>
                             <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
