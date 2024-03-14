@@ -36,8 +36,8 @@
 
 
             if($site_access_type=='administrator') {
+                $userFilter=" enquiry_agent='0' AND ";
                 $enquiryFilter=" AND enquiry_status=0";
-                $userFilter=' AND enquiry_status=0';
             } else {
                 $userFilter=" enquiry_agent='".USER_ID."' AND ";
                 $enquiryFilter=" AND enquiry_status=2";
