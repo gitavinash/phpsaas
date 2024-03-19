@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php'
+    require_once 'header.php';
 
 ?>
 <section>
@@ -47,20 +47,6 @@
         ?>
         </div>
     </div>
-    </div>
-</section>
-
-<section class="newsletter_wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="newsletter">
-                <form action="">
-                    <h3>Get them in our newsletter</h3>
-                    <input type="text" class="input newsletter_input" placeholder="Enter your email to subscribe">
-                    <input type="submit" class="btn newsletter_btn" value="Subscriber now">
-                </form>
-            </div>
-        </div>
     </div>
 </section>
 <?php

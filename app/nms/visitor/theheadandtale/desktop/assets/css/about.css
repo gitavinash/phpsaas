@@ -1,0 +1,222 @@
+.about_wrapper{
+    padding: 90px 0 30px 0;
+    background-color: #fae9e7;
+}
+.about_bg{
+    background-color: #fae9e7;
+}
+.about_content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.about_content h1{
+    font-size: 44px;
+    text-transform: capitalize;
+}
+.client_img img{
+    width: 100%;
+    object-fit: cover;
+    /* aspect-ratio: 3/2; */
+}
+.about_container{
+    padding: 70px 0 150px 0;
+    /* background-color: #f6f6f6; */
+}
+.about_parra{
+    padding-right: 6rem;
+}
+.about_parra p{
+    margin-top: 1rem;
+    font-size: 18px;
+}
+.title{
+    font-size: 20px !important;
+    font-weight: 600;
+    color: red;
+}
+.about_parra strong{
+    margin-top: 1rem !important;
+    display: block;
+    font-size: 22px;
+}
+.client_img{
+    position: sticky;
+    top: 0;
+}
+.email{
+    margin-top: 2rem;
+}
+.email a{
+    font-size: 18px;
+    font-weight: 600;
+    color: red;
+}
+.thanks{
+    font-style: italic;
+}
+.policy_list ul{
+    margin-top: 10px;
+}
+.policy_list ul li{
+    font-size: 18px;
+}
+.policy_box{
+    margin-top: 3rem;
+}
+.policy_box p span{
+    color: var(--black-color);
+    font-weight: 700;
+}
+
+.policy_list{
+    margin-top: 2rem;
+}
+.policy_list span{
+    font-weight: 700;
+    font-size: 18px;
+}
+.security{
+    margin-top: 2rem;
+}
+.security span{
+    color: var(--black-color);
+    font-weight: 700;
+    font-size: 18px;
+}
+.security p a{
+    color: red;
+    font-weight: 700;
+}
+.about_parra .bold{
+    font-weight: 700;
+}
+.about_parra .red{
+    color: red;
+}
+.use_information{
+    margin-top: 3rem;
+}
+.use_information span{
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.cookies{
+    margin-top: 2rem;
+    display: block;
+}
+/* terms_container */
+.terms_container{
+    padding: 60px 0;
+}
+.terms_heading p span{
+    font-weight: 700;
+}
+.terms_list{
+    margin-top: 2rem;
+}
+.terms_list ul li{
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.terms_heading p{
+    margin-top: 16px;
+    font-size: 18px;
+}
+.terms_heading p span{
+    font-weight: 700;
+}
+.terms_heading p a{
+    color: red;
+    text-decoration: none;
+}
+.refund_wrapper{
+    padding: 200px 0;
+}
+.refund__content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4rem;
+    align-items: center;
+}
+.refund__content h3{
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+}
+.refund__content p{
+    text-align: center;
+    font-size: 20px;
+}
+.refund__content p a{
+    color: red;
+}
+
+
+@media(max-width:992px){
+    .about_parra{
+        padding-right: 2rem;
+    }
+}
+@media(max-width:768px){
+    .about_content h1{
+        font-size: 34px;
+    }
+    .about_flex{
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 2rem;
+    }
+    .client_img img{
+        width: 100%;
+        aspect-ratio: 3/2;
+        object-fit: contain;
+    }
+    .about_container{
+        padding: 100px 0;
+    }
+    .about_parra{
+        padding-right: 0;
+    }
+    .refund_wrapper{
+        padding: 170px 0;
+    }
+    .refund__content h3{
+        font-size: 26px;
+    }
+    .refund__content{
+        gap: 3rem;
+    }
+    .refund__content p{
+        font-size: 18px;
+    }
+    .refund__content h3{
+        font-size: 22px;
+    }
+    .refund__content p{
+        font-size: 16px;
+        line-height: 26px;
+    }
+}
+@media(max-width:576px){
+    .about_parra p{
+        font-size: 16px;
+    }
+    .about_parra strong{
+        font-size: 20px;
+    }
+    .about_content h1{
+        font-size: 26px;
+    }
+    .terms_container p{
+        font-size: 16px;
+    }
+    .terms_list ul li, .policy_list ul li{
+        font-size: 16px;
+    }
+    .about_container{
+        padding: 50px 0;
+    }
+}

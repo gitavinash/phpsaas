@@ -3,40 +3,30 @@
     require_once 'header.php';
 
 ?>
-<section class="blog_banner">
+<!-- about -->
+<section class="about_wrapper">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="blog_banner_img">
-                    <img src="<?php echo $page_image ?>" class="img-fluid" alt="">
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="blog_banner__left">
-                    <h3><?php echo $page_title ?></h3>
-                    <p><?php echo $meta_description ?></p>
-                </div>
-            </div>
-
+        <div class="about_content">
+            <h1><?php echo $page_title ?></h1>
         </div>
     </div>
 </section>
 
-<!-- blog container -->
-<section class="blog_container">
+<!-- about banner -->
+<section class="about_container">
     <div class="container">
         <div class="row">
-            <div class="col-lg-2 col-12"></div>
-            <div class="col-lg-8 col-12">
-                <div class="blog_parra">
-                    <?php echo $page_description ?>
+            <div class="col-lg-12">
+                <div class="about_parra">
+                    <?php echo $page_description; ?>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
 <?php
 
-require_once 'footer.php';
+    require_once 'footer.php';
 
 ?>
