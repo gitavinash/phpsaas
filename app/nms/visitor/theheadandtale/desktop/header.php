@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.css">
