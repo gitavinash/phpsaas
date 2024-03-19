@@ -213,6 +213,7 @@
         <div class="container">
             <div class="footer_wrapper__end">
                 <div class="ftr_policy">
+                    <a href="https://pay.blumox.com">Pay now</a>
                     <a href="/privacy-policy/">Privacy Policy</a>
                     <a href="/refund-policy/">Refund Policy</a>
                     <a href="/terms-and-conditions/">Terms And Conditions</a>
