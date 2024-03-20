@@ -57,7 +57,7 @@
                         <input type="hidden" name="action" value="login">
                         <input type="hidden" name="redirect_url" value="/">
                         <input type="hidden" name="hardRedirect" value="true">
-                        <input type="hidden" name="hardRedirectURL" value="/">
+                        <input type="hidden" name="hardRedirectURL" value="/dashboard/">
                         <input type="submit" class="button" value="Sign in">
                     </div>
                 </form>

@@ -13,9 +13,9 @@ function subscriber($connection, $data)
         $msg = 'Please enter a valid email';
     }
 
-    if ($first_name == '') {
+    if ($name == '') {
 
-        $msg = 'Please enter a first name';
+        $msg = 'Please enter a name';
     }
 
     if ($mobile == '') {
@@ -54,8 +54,6 @@ function subscriber($connection, $data)
                         $saltKey = hash('sha256', uniqid(mt_rand(), true) . $email . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
                         $enc_password = hash('sha256', $saltKey . $password);
 
-                        $profile_display_name = $first_name . ' ' . $last_name;
-
                         /** Checking Username is avilable or not */
 
                         $username = strtolower(str_replace(' ', '', $first_name . $last_name));
@@ -75,7 +73,7 @@ function subscriber($connection, $data)
 
                         $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(" . SITE_ID . ", '{$userID}', '{$userRole}', 1)");
 
-                        $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$mobile}', '{$profile_display_name}', '{$email}')");
+                        $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '{$name}', '{$mobile}', '{$name}', '{$email}')");
 
                         if ($insertUser && $insertSiteAccess && $insertProfile) {
 
