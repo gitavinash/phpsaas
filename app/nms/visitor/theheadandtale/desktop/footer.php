@@ -22,8 +22,7 @@
                 <div class="col-6">
                     <div class="footer_left">
                         <div class="footer_logo">
-                            <a href="/"><img src="<?php echo USER_IMAGES ?>main_logo.png" class="img-fluid"
-                                    alt="logo"></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
                             <p>Dive into the dynamic realm of fintech with firsthand insights and balanced
                                 journalism at The Head and Tale.</p>
                         </div>

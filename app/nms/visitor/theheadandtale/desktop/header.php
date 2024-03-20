@@ -23,8 +23,7 @@
                 <div class="container">
                     <div class="header_flex">
                         <div class="company-logo">
-                            <a href="/"><img src="<?php echo USER_IMAGES ?>main_logo.png" class="img-fluid"
-                                    alt="logo"></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
                         </div>
                         <?php
                         
