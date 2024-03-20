@@ -29,7 +29,6 @@ function login($connection, $data)
 					setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
 
 					ob_end_flush();
-
 					$status = 'success';
 					$msg = 'Login Successfully';
 					$url = urldecode((isset($redirect_url)) ? $redirect_url : '/dashboard/');
@@ -69,5 +68,11 @@ function login($connection, $data)
 		'url' => ((isset($url)) ? $url : '#')
 	);
 
-	echo json_encode($return, TRUE);
+	if(isset($hardRedirect)) {
+		header("Location: {$hardRedirectURL}", TRUE, 301);
+	} else {
+		echo json_encode($return, TRUE);
+	}
+	exit();
+
 }

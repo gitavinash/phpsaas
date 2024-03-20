@@ -27,8 +27,7 @@
                         </div>
                         <?php
                         
-                            if(isset($_COOKIE['isLogin'])) {
-                                if($_COOKIE['isLogin']==1) { ?>
+                            if(isset($_COOKIE['user_data'])) { ?>
 
                         <div class="header_right">
                             <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
@@ -48,6 +47,7 @@
                                     <div class="user--content">
                                         <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
                                         <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                        <a href="/logout/">Logout</a>
                                     </div>
                                 </div>
 
@@ -66,7 +66,6 @@
                         </div>
 
                         <?php
-                                }
                             } else { ?>
 
 

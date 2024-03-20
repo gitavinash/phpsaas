@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
-    <link rel="stylesheet" href="assets/css/thankyou.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <!-- or -->
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
@@ -22,8 +22,7 @@
                 <div class="container">
                     <div class="header_flex">
                         <div class="company-logo">
-                            <a href="index.html"><img src="assets/images/main_logo.png" class="img-fluid"
-                                    alt="logo"></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
                         </div>
                     </div>
                 </div>
