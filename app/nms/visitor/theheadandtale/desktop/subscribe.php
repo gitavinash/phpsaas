@@ -27,14 +27,14 @@
                 <p>1-month</p>
                 <h6>INR 899</h6>
                 <div class="continue">
-                    <a href='/signip/?duration=monthly' class="button">continue</a>
+                    <a href='/login/?duration=monthly' class="button">continue</a>
                 </div>
             </div>
             <div class="subscription_card__box">
                 <p>1-Year (Annual)</p>
                 <h6>INR 3299</h6>
                 <div class="continue">
-                    <a href='/signip/?duration=yearly' class="button">continue</a>
+                    <a href='/login/?duration=yearly' class="button">continue</a>
                 </div>
             </div>
         </div>
