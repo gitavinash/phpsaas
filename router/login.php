@@ -4,11 +4,7 @@
 
     $themeLoginFile = USER_PATH.$urlStructure[0].'.php';
     
-    if(file_exists($themeLoginFile)) {
-
-        $themeLoginFile=USER_PATH.$urlStructure[0].'.php';
-
-    } else {
+    if(!file_exists($themeLoginFile)) {
 
         $themeLoginFile=str_replace('/default/', '/'.USER_TYPE.'/', ADMIN_PATH).$urlStructure[0].'.php';
             
@@ -16,7 +12,9 @@
 
             $themeLoginFile=ADMIN_PATH.$urlStructure[0].'.php';
 
-        } else if(!file_exists($themeLoginFile)) {
+        }
+        
+        if(!file_exists($themeLoginFile)) {
 
             // Default dashboard theme login template
 
