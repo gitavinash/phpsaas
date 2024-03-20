@@ -2,12 +2,12 @@
     <div class="container container--box">
         <div class="row">
             <div class="newsletter">
-                <form action="">
+                <form action="/thankyou_newsletter/">
                     <h3>Sign up for concise summaries of powerful fintech insights delivered straight to your
                         inbox every time we publish.</h3>
                     <div class="input_btn">
                         <input type="text" class="input newsletter_input" placeholder="Enter your email to subscribe">
-                        <button class=" newsletter_btn"><i class='bx bxs-paper-plane'></i></button>
+                        <button class="newsletter_btn"><i class='bx bxs-paper-plane'></i></button>
                     </div>
                 </form>
             </div>

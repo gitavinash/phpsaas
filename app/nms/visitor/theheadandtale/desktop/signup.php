@@ -45,21 +45,16 @@
             <div class="form_box">
                 <form method="POST" action="">
                     <div class="login_input">
-                        <input type="text" placeholder="Enter First Name" name="first_name" required>
-                    </div>
-                    <div class="login_input">
-                        <input type="text" placeholder="Enter Last Name" name="last_name" required>
+                        <input type="text" placeholder="Enter Name" name="name" required>
                     </div>
                     <div class="login_input">
                         <input type="text" placeholder="Email" name="email" required>
                     </div>
                     <div class="login_input">
-                        <input type="text" placeholder="Mobile" name="mobile" required>
-                    </div>
-                    <div class="login_input">
                         <input type="password" placeholder="Password" name="password" required>
                     </div>
                     <div class="sign--in_btn">
+                        <input type="hidden" name="mobile" value="<?php echo time() ?>">
                         <input type="hidden" name="userRole" value="subscriber">
                         <input type="hidden" name="type" value="user">
                         <input type="hidden" name="action" value="subscriber">
