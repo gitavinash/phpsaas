@@ -41,9 +41,50 @@
 
             </div>
             <div class="details_box">
+                <?php
+                
+                    if($news_paid==1) { ?>
+
+                <div class="details_box__content">
+                    <p><?php echo $meta_description ?></p>
+                </div>
+                <section class="subscribe_wrapper">
+                    <div class="container">
+                        <div class="subscribe_wrapper__heading">
+                            <h6>Subscribe to read the full story </h6>
+                            <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
+                            <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
+                        </div>
+
+                        <div class="subscription_card">
+                            <div class="subscription_card__box">
+                                <p>1-month</p>
+                                <h6>INR 899</h6>
+                                <div class="continue">
+                                    <a href='/login/?duration=monthly' class="button">continue</a>
+                                </div>
+                            </div>
+                            <div class="subscription_card__box">
+                                <p>1-Year (Annual)</p>
+                                <h6>INR 3299</h6>
+                                <div class="continue">
+                                    <a href='/login/?duration=yearly' class="button">continue</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <?php
+                    } else { ?>
+
                 <div class="details_box__content">
                     <p><?php echo $news_description ?></p>
                 </div>
+
+                <?php
+                    }
+
+                ?>
             </div>
             <div class="user_content">
                 <p>The author is the Founder and Editor of The Head and Tale. She can be reached at <a
