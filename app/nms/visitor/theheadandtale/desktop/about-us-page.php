@@ -55,7 +55,7 @@
             </div>
             <div class="col-md-3">
                 <div class="client_img">
-                    <img src="assets/images/client.jpg" class="img-fluid" alt="">
+                    <img src="<?php echo $page_image ?>" class="img-fluid" alt="">
                 </div>
             </div>
         </div>
