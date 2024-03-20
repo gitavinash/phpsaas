@@ -19,7 +19,7 @@
 <body>
     <header>
         <nav>
-            <div class="myHeader">
+            <div class="myHeader <?php echo (($link_type=='page') ? 'about_bg' : '') ?>">
                 <div class="container">
                     <div class="header_flex">
                         <div class="company-logo">
@@ -87,4 +87,4 @@
             </div>
         </nav>
     </header>
-    <main>
+    <main <?php echo (($link_type=='page') ? 'style="border-top: 0px"' : '') ?>>
