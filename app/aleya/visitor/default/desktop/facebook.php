@@ -1,7 +1,8 @@
 <?php
 
-    if(!isset($_REQUEST['hub_challenge'])) {
-        $_REQUEST['hub_challenge']='';
+    if(isset($_REQUEST['hub_challenge'])) {
+        echo $_REQUEST['hub_challenge']='';
+        exit();
     }
 
     $subject='Test email from facebook webhook';
