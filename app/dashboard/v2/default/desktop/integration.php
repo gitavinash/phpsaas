@@ -1,7 +1,7 @@
 <h2 class="heading"><?php echo ucwords($postType) ?><span>Manage third party resources to connect in Aleya</span></h2>
 <div class="main-menu-list">
     <div class="widget box-2-5">
-        <a href="integration/facebook/" target='blank'>
+        <a href="integration/facebook/">
             <div class="widget-setting-info">
                 <div class="integration-logo">
                     <img src='<?php echo ADMIN_IMAGES ?>integration/facebook.png' alt="Facebook">

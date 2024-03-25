@@ -66,7 +66,7 @@
             <table class="showTableList">
                 <thead>
                     <tr>
-                        <th>Nam</th>
+                        <th>Name</th>
                         <!-- <th>Email</th> -->
                         <th>Mobile</th>
                         <th>Subject</th>
