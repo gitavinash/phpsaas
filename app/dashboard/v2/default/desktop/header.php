@@ -44,16 +44,9 @@
         <img src="/upload/others/aleya-logo.png" alt="Aleya logo">
     </div>
     <header>
-        <div class="left-side">
-            <ul>
-                <li>
-                    <!-- <a href="#" class="close-nav" id="closeNav"><i class="fi-rr-setting-sliders"></i></a> -->
-                </li>
-            </ul>
-        </div>
         <div class="right-side">
             <ul>
-                <!-- <li><a href="#"><i class="fi-rr-bell"></i></a></li> -->
+                <li><a href="#"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
@@ -151,7 +144,7 @@
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
-                            <li><a href="dmc/add/"><i class="fi fi-rr-add"></i> Add New dmc</a></li>
+                            <li><a href="dmc/add/"><i class="fi fi-rr-add"></i> Add New DMC</a></li>
                         </ul>
                     </div>
                 </li>
@@ -164,12 +157,18 @@
                     <a href="inbound/"><i class="fi fi-rr-suitcase-alt"></i> Inbound packages</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="vendor/list/"><i class="fi-rr-apps-sort"></i> All vendor</a></li>
+                            <li><a href="inbound/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            </li>
+                            <li><a href="inbound/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
+                            <li><a href="inbound/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            </li>
+                            <li><a href="inbound/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -178,15 +177,21 @@
                     <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> Outbound packages</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="vendor/list/"><i class="fi-rr-apps-sort"></i> All vendor</a></li>
+                            <li><a href="outbound/list/"><i class="fi-rr-apps-sort"></i> All vendor</a>
+                            </li>
+                            <li><a href="outbound/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All leads</a></li>
+                            <li><a href="outbound/list/"><i class="fi-rr-add"></i> All leads</a></li>
+                            <li><a href="outboundadd/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
                         </ul>
                     </div>
                 </li> -->
+
                 <?php
                 }
 
@@ -261,6 +266,14 @@
                 ?>
 
                 <li class="header-section-name">
+                    <p>Integration<span>Manage third party resources.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/integration/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="integration/"><i class="fi fi-rr-plug-connection"></i> Plugins</a>
+                </li>
+
+                <li class="header-section-name">
                     <p>Setting<span>Manage application.</span></p>
                 </li>
 
@@ -272,8 +285,6 @@
                             if($site_access_type =='administrator') { ?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
-                            <li><a href="setting/payment/"><i class="fi-rr-indian-rupee-sign"></i>
-                                    Payments</a></li>
                             <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
@@ -287,8 +298,6 @@
                     if($site_access_type =='administrator') { ?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
-                            <li><a href="setting/payment/"><i class="fi-rr-indian-rupee-sign"></i>
-                                    Payments</a></li>
                             <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
