@@ -10,7 +10,6 @@
     }
     if(!isset($new)){
         $new='false';
-        exit();
     }
 
 ?>
