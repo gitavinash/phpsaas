@@ -96,7 +96,7 @@
                         <li><a href="#">pay now</a></li>
                     </ul>
                     <div class="contact">
-                        <a href="/contact/">contact us</a>
+                        <a href="/contact-us/">contact us</a>
                     </div>
                 </div>
             </div>
