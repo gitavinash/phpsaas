@@ -11,6 +11,8 @@
 
             $extendedTokenData=file_get_contents($extendedToken);
 
+            print_r(($extendedTokenData));            
+
             $extendedTokenData=json_decode($extendedTokenData, TRUE);
             $expiryDate=date('Y-m-d', strtotime('+90 days'));
 
