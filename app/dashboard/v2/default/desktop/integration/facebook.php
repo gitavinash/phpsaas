@@ -87,7 +87,7 @@
                 echo "</section>";
 
             } else {
-                $redirectURL = "https://aleya.in/facebook/?redirect_url=https://".base64_encode(SITE_DOMAIN)."=&new=true"; ?>
+                $redirectURL = "https://aleya.in/facebook/?redirect_url=".base64_encode('https://'.SITE_DOMAIN)."=&new=true"; ?>
     <script>
     window.location.href = '<?php echo $redirectURL ?>'
     </script>
