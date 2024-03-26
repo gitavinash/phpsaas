@@ -11,6 +11,7 @@
 
             $extendedTokenData=file_get_contents($extendedToken);
 
+            echo $extendedToken;
             print_r(($extendedTokenData));            
 
             $extendedTokenData=json_decode($extendedTokenData, TRUE);
