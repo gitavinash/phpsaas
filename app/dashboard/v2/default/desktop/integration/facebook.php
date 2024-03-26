@@ -14,7 +14,8 @@
             $extendedTokenData=json_decode($extendedTokenData, TRUE);
             $expiryDate=date('Y-m-d', strtotime('+90 days'));
 
-            if($saveToken=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."fb(fb_user_id, fb_site_id, fb_access_token, fb_extended_token, fb_token_expiry, fb_token_status) VALUES('{$accessUserId}', '".SITE_ID."', '{$accessToken}', '{$extendedTokenData['access_token']}', '{$expiryDate}', true)")) {
+           if($extendedTokenData['access_token']!='') {
+             if($saveToken=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."fb(fb_user_id, fb_site_id, fb_access_token, fb_extended_token, fb_token_expiry, fb_token_status) VALUES('{$accessUserId}', '".SITE_ID."', '{$accessToken}', '{$extendedTokenData['access_token']}', '{$expiryDate}', true)")) {
                 
             $curl = curl_init();
 
@@ -63,6 +64,9 @@
             } else {
                 echo mysqli_error($connection);
             }
+           } else {
+            echo "Something went wrong while extending facebook token";
+           }
 
             /* Get facebook page list */
 
