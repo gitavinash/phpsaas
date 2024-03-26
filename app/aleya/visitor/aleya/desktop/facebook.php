@@ -157,7 +157,7 @@
                     var accessUserId = response.authResponse.userID;
 
                     var url =
-                        <?php echo base64_decode(SITE_URL) ?> '/api/aleya/integration/facebook/?accessToken=' +
+                        <?php echo base64_decode($redirect_url) ?> '/api/aleya/integration/facebook/?accessToken=' +
                         accessToken + '&accessExpiry' + accessExpiry + '&accessUserId=' +
                         accessUserId + '&new=<?php echo $new ?>'; // Replace with your endpoint URL
 
