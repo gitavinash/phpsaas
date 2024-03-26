@@ -12,9 +12,6 @@
 
             $extendedTokenData=file_get_contents($extendedToken);
 
-            echo $extendedToken;
-            print_r(($extendedTokenData));            
-
             $extendedTokenData=json_decode($extendedTokenData, TRUE);
             $expiryDate=date('Y-m-d', strtotime('+90 days'));
 
@@ -51,14 +48,13 @@
                     echo mysqli_num_rows($connection);
                     exit();
                 }
-            }
-    //         } ?>
+            
+            } ?>
 
-    // <script>
-    // setTimeout(function() {
-    //     window.location.href = '/dashboard/integration/facebook/';
-    // }, 10000)
-    // 
+    <script>
+    setTimeout(function() {
+        window.location.href = '/dashboard/integration/facebook/';
+    }, 10000)
     </script>
 
     //
