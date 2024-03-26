@@ -2201,6 +2201,10 @@ section.form
   padding: 10px 0px;
   float: left;
   width: 100%;
+  border-bottom: 1px solid #d3d3d3;
+}
+.fb_page_list .box:last-child {
+  border-bottom: none;
 }
 .fb_page_list .box p {
   float: left;
