@@ -46,15 +46,17 @@
                     echo mysqli_num_rows($connection);
                     exit();
                 }
+            }
+    //         } ?>
 
-            } ?>
-
-    <script>
-    setTimeout(function() {
-        window.location.href = '/dashboard/integration/facebook/';
-    }, 10000)
+    // <script>
+    // setTimeout(function() {
+    //     window.location.href = '/dashboard/integration/facebook/';
+    // }, 10000)
+    // 
     </script>
 
+    //
     <?php
             exit();
 
