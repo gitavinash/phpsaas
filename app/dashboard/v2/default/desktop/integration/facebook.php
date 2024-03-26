@@ -1,4 +1,4 @@
-<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All hostings list will be displayed her</span>
+<h2 class="heading">Facebook pages list<span>All facebook list assign to your account</span>
 </h2>
 <div class="main-box">
     <?php
