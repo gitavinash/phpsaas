@@ -44,9 +44,31 @@
                 
                 extract($fbPageResponseData['data'][$i]);
 
-                if(!$savePageData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."fb_pages(fb_page_id, fb_page_site_id, fb_page_name, fb_page_access_token, fb_page_category, fb_page_status) VALUES('{$id}', '".SITE_ID."', '{$name}', '{$access_token}', '{$category}', true)")) {
-                    echo mysqli_num_rows($connection);
-                    exit();
+                $curl = curl_init();
+
+                $webhookURL = "https://app.aleya.in/webhook/facebook/";
+
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://graph.facebook.com/{$id}/subscribed_apps?subscribed_fields=leadgen&access_token={$access_token}&link={$webhookURL}",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                ));
+
+                $webhookResponse = curl_exec($curl);
+                $webhookResponse = json_decode($webhookResponse, TRUE);
+
+                curl_close($curl);
+
+                if(isset($webhookResponse['success'])) {
+                    if(!$savePageData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."fb_pages(fb_page_id, fb_page_site_id, fb_page_name, fb_page_access_token, fb_page_category, fb_page_status) VALUES('{$id}', '".SITE_ID."', '{$name}', '{$access_token}', '{$category}', true)")) {
+                        echo mysqli_num_rows($connection);
+                        exit();
+                    }
                 }
             
             } ?>
@@ -89,7 +111,7 @@
                             <p>{$fb_page_name}<span>{$fb_page_category}</span></p>
                         </div>
                         <div class='widget box-3'>
-                            <a href='/dashboard/integration/facebook/page/?id={$fb_page_id}' class='btn dataTableBtn' >View lead forms</a>
+                            <a href='/dashboard/integration/facebook/page/?id={$fb_page_id}&name={$fb_page_name}' class='btn dataTableBtn' >View lead forms</a>
                         </div>
                     </div>";
 
