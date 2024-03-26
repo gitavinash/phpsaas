@@ -44,6 +44,8 @@
                 
                 extract($fbPageResponseData['data'][$i]);
 
+                // subscribe to facebook webhook
+
                 $curl = curl_init();
 
                 $webhookURL = "https://app.aleya.in/webhook/facebook/";

@@ -66,6 +66,28 @@
                                     
                                 }
 
+                                // subscribe to facebook webhook
+
+                                $curl = curl_init();
+
+                                $webhookURL = "https://app.aleya.in/webhook/facebook/";
+
+                                curl_setopt_array($curl, array(
+                                CURLOPT_URL => "https://graph.facebook.com/{$fb_page_id}/subscribed_apps?subscribed_fields=leadgen&access_token={$fb_page_access_token}&link={$webhookURL}",
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                ));
+
+                                $webhookResponse = curl_exec($curl);
+                                $webhookResponse = json_decode($webhookResponse, TRUE);
+
+                                curl_close($curl);
+
                                 echo "<script>location.reload();</script>";
 
                             } else {
