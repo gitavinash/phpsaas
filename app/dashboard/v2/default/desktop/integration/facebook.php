@@ -42,12 +42,17 @@
                 
                 extract($fbPageResponseData['data'][$i]);
 
-                $savePageData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."fb_pages(fb_page_id, fb_page_site_id, fb_page_name, fb_page_access_token, fb_page_category, fb_page_status) VALUES('{$id}', '".SITE_ID."', '{$name}', '{$access_token}', '{$category}', true)");
+                if(!$savePageData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."fb_pages(fb_page_id, fb_page_site_id, fb_page_name, fb_page_access_token, fb_page_category, fb_page_status) VALUES('{$id}', '".SITE_ID."', '{$name}', '{$access_token}', '{$category}', true)")) {
+                    echo mysqli_num_rows($connection);
+                    exit();
+                }
 
             } ?>
 
     <script>
-    window.location.href = '/dashboard/integration/facebook/';
+    setTimeout(function() {
+        window.location.href = '/dashboard/integration/facebook/';
+    }, 10000)
     </script>
 
     <?php
