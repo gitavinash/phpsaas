@@ -2192,3 +2192,29 @@ section.form
 .sendPaymentLinkBox .box-1:last-child {
   padding-bottom: 0px;
 }
+
+.fb_page_list {
+  float: left;
+  width: 100%;
+}
+.fb_page_list .box {
+  padding: 10px 0px;
+  float: left;
+  width: 100%;
+}
+.fb_page_list .box p {
+  float: left;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  color: #03637b;
+  margin-bottom: 5px;
+}
+.fb_page_list .box p span {
+  float: left;
+  width: 100%;
+  float: left;
+  font-weight: 300;
+  font-size: 12px;
+  color: #404040;
+}

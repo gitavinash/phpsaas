@@ -147,9 +147,8 @@
         // Function to handle login button click
         function loginWithFacebook() {
             FB.login(function(response) {
-                console.log(`loginWithFacebook : `, response);
-                statusChangeCallback(response);
-                console.log(`Res : `, response.status);
+                // statusChangeCallback(response);
+
                 if (response.status === 'connected') {
 
                     var accessToken = response.authResponse.accessToken;
