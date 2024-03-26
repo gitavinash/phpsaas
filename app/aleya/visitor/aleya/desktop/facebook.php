@@ -161,20 +161,22 @@
                         accessToken + '&accessExpiry' + accessExpiry + '&accessUserId=' +
                         accessUserId + '&new=<?php echo $new ?>'; // Replace with your endpoint URL
 
-                    fetch(url)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json(); // Assuming response is JSON
-                            window.history.back()
-                        })
-                        .then(data => {
-                            console.log(data); // Process the response data
-                        })
-                        .catch(error => {
-                            console.error('Fetch request failed:', error);
-                        });
+                    window.location.href = url
+
+                    // fetch(url)
+                    //     .then(response => {
+                    //         if (!response.ok) {
+                    //             throw new Error('Network response was not ok');
+                    //         }
+                    //         return response.json(); // Assuming response is JSON
+                    //         window.history.back()
+                    //     })
+                    //     .then(data => {
+                    //         console.log(data); // Process the response data
+                    //     })
+                    //     .catch(error => {
+                    //         console.error('Fetch request failed:', error);
+                    //     });
 
                 }
             }, {
