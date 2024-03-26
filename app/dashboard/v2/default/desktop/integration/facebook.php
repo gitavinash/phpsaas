@@ -7,7 +7,8 @@
 
         if(isset($accessToken)) {
         
-            $extendedToken = "https://graph.facebook.com/".FB_API_VERSION."/oauth/access_token?grant_type=fb_exchange_token&client_id=".FB_APP_ID."&client_secret=".FB_APP_SECRET."&fb_exchange_token={$accessToken}";
+            $extendedToken = "https://graph.facebook.com/v19.0/oauth/access_token?grant_type=fb_exchange_token&client_id=927866918819525&client_secret=cad41f15510295ec0ed95b8f9a1ec0f6&fb_exchange_token={$accessToken}";
+            // $extendedToken = "https://graph.facebook.com/".FB_API_VERSION."/oauth/access_token?grant_type=fb_exchange_token&client_id=".FB_APP_ID."&client_secret=".FB_APP_SECRET."&fb_exchange_token={$accessToken}";
 
             $extendedTokenData=file_get_contents($extendedToken);
 
