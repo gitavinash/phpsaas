@@ -1,10 +1,6 @@
 <?php
 
-    if(!isset($token)){
-        echo "Something went wrong";
-        exit();
-    }
-    if(!isset($site)){
+    if(!isset($redirect_url)){
         echo "Something went wrong";
         exit();
     }
@@ -153,7 +149,7 @@
             FB.login(function(response) {
                 console.log(`loginWithFacebook : `, response);
                 statusChangeCallback(response);
-
+                console.log(`Res : `, response.status);
                 if (response.status === 'connected') {
 
                     var accessToken = response.authResponse.accessToken;
@@ -161,9 +157,9 @@
                     var accessUserId = response.authResponse.userID;
 
                     var url =
-                        '/api/aleya/integration/facebook/?token=<?php echo $token ?>&site=<?php echo $site ?>&new=<?php echo $new ?>&accessToken=' +
+                        <?php echo base64_decode(SITE_URL) ?> '/api/aleya/integration/facebook/?accessToken=' +
                         accessToken + '&accessExpiry' + accessExpiry + '&accessUserId=' +
-                        accessUserId; // Replace with your endpoint URL
+                        accessUserId + '&new=<?php echo $new ?>'; // Replace with your endpoint URL
 
                     fetch(url)
                         .then(response => {

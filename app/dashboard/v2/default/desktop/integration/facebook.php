@@ -14,8 +14,7 @@
         } else { ?>
 
     <script>
-    window.location.href = 'https://aleya.in/facebook/?token=' + '<?php echo base64_encode($user_salt_key); ?>' +
-        '&site=' + '<?php echo base64_encode(SITE_ID); ?>' +
+    window.location.href = 'https://aleya.in/facebook/?redirect_url=' + '<?php echo base64_encode(SITE_URL); ?>' +
         '&new=true';
     </script>
 
