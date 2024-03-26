@@ -158,7 +158,7 @@
 
                     var url =
                         '<?php echo base64_decode($redirect_url) ?>' +
-                        '/api/aleya/integration/facebook/?accessToken=' +
+                        '/dashboard/integration/facebook/?accessToken=' +
                         accessToken + '&accessExpiry' + accessExpiry + '&accessUserId=' +
                         accessUserId + '&new=<?php echo $new ?>'; // Replace with your endpoint URL
 
