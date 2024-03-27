@@ -33,7 +33,7 @@
                             </ul>
                         </div>
                         <div class="contact">
-                            <a href="#" class="global_btn">Request a demo</a>
+                            <a href="#contact" class="global_btn">Request a demo</a>
                         </div>
                         <div class="menu_icon">
                             <i class='bx bx-menu'></i>
@@ -54,13 +54,13 @@
                         </div>
                         <div class="mobile_menu">
                             <ul>
-                                <li><a href="#home">Home</a></li>
-                                <li><a href="#feature">Features</a></li>
-                                <li><a href="#price">Pricing</a></li>
-                                <li><a href="#contact">Contact Us</a></li>
+                                <li><a href="#home" id="homeBtn">Home</a></li>
+                                <li><a href="#feature" id="featureBtn">Features</a></li>
+                                <li><a href="#price" id="priceBtn">Pricing</a></li>
+                                <li><a href="#contact" id="contactBtn">Contact Us</a></li>
                             </ul>
                             <div class="mobile_contact">
-                                <a href="#contact" class="global_btn">Request a demo</a>
+                                <a href="#contact" id="demoBtn" class="global_btn">Request a demo</a>
                             </div>
                         </div>
                     </div>
@@ -262,7 +262,7 @@
                                 </ul>
                             </div>
                             <div class="buy_now">
-                                <a href="#">Buy Now</a>
+                                <a href="#">Start now</a>
                             </div>
                         </div>
                     </div>
@@ -312,7 +312,7 @@
                                 </ul>
                             </div>
                             <div class="buy_now">
-                                <a href="#">Buy Now</a>
+                                <a href="#">Start now</a>
                             </div>
                         </div>
                     </div>
@@ -363,9 +363,15 @@
                 <div class="col-lg-6">
                     <div class="contact_wrapper__right">
                         <h3>Experience it live - Request your demo now</h3>
-                        <p><strong>Phone: </strong>+91-9355239595, +91-9355239494</p>
-                        <p><strong>Email: </strong>sales@aleya.in, contact@aleya.in</p>
-                        <p><strong>Corporate Office: </strong>B-38, Vishal Enclave, Rajouri Garden, New Delhi - 110027
+                        <p><strong>Phone: </strong><a href="tel:+91-9355239595">+91-9355239595</a>, <a
+                                href="tel:+91-9355239494">+91-9355239494</a></p>
+                        <p><strong>Email: </strong><a href="mailto:sales@aleya.in">sales@aleya.in</a>, <a
+                                href="mailto:contact@aleya.in">contact@aleya.in</a></p>
+                        <p><strong>Corporate Office: </strong><a href="https://maps.app.goo.gl/JoFYSsRLWAwjAg5q8"
+                                target="_blank">B-38,
+                                Upper Ground Floor, Vishal Enclave,
+                                Rajouri Garden, New Delhi
+                                - 110027</a>
                         </p>
                         <div class="social_links">
                             <a href="https://wa.me/919355239595?text=Hi" target="_blank"><img
@@ -406,40 +412,41 @@
     </section>
 
     <!-- footer -->
-    <!-- <footer>
+    <footer>
         <div class="footer_wrapper">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-3 col-4">
+                    <div class="col-lg-3 col-6">
                         <div class="footer_box">
                             <h3>Pages</h3>
                             <div class="footer_links">
-                                <a href="#">Home</a>
-                                <a href="#">About</a>
-                                <a href="#">Contact</a>
-                                <a href="#">Blog</a>
+                                <a href="#home">Home</a>
+                                <a href="#feature">Features</a>
+                                <a href="#price">Pricing</a>
+                                <a href="#contact">Contact Us</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-4">
+                    <div class="col-lg-3 col-6">
                         <div class="footer_box">
-                            <h3>Pages</h3>
+                            <h3>Quick links</h3>
                             <div class="footer_links">
-                                <a href="#">Home</a>
-                                <a href="#">About</a>
-                                <a href="#">Contact</a>
-                                <a href="#">Blog</a>
+                                <a href="https://blumox.com/privacy-policy/" target="_blank">Privacy policy</a>
+                                <a href="https://blumox.com/terms-and-conditions/" target="_blank">Terms of service</a>
+                                <a href="https://blumox.com/refund-policy/" target="_blank">Refund policy</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-4">
+                    <div class="col-lg-3 col-12">
                         <div class="footer_box">
-                            <h3>Pages</h3>
+                            <h3>Office Address</h3>
                             <div class="footer_links">
-                                <a href="#">Home</a>
-                                <a href="#">About</a>
-                                <a href="#">Contact</a>
-                                <a href="#">Blog</a>
+                                <a href="https://maps.app.goo.gl/THLd4FMV3x8WChe76" target="_blank"><strong>Registered
+                                        Office Address:</strong><br />A2/5A, First Floor, WHS Block 2, Near Richi Rich
+                                    Banquet Hall, Kirti Nagar, New Delhi - 110015</a>
+                                <a href="https://maps.app.goo.gl/JoFYSsRLWAwjAg5q8" target="_blank"><strong>Corporate
+                                        Office Address:</strong><br />
+                                    B-38, Upper Ground Floor, Vishal Enclave, Rajouri Garden, New Delhi - 110027</a>
                             </div>
                         </div>
                     </div>
@@ -448,14 +455,16 @@
                             <div class="footer_logo">
                                 <img src="<?php echo USER_IMAGES ?>aleya_logo.png" class="img-fluid" alt="">
                             </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore.</p>
                         </div>
                     </div>
                 </div>
+                <div class="row credit">
+                    <p>&copy; <?php echo date('Y') ?> Aleya | A unit of <a href="https://blumox.com">Blumox
+                            Technologies</a></p>
+                </div>
             </div>
         </div>
-    </footer> -->
+    </footer>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -530,20 +539,20 @@
     </script>
 
     <script>
-    $('#home').click(function() {
-        $('.mobile_nav active').hide();
+    $('#homeBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
     })
-    $('#feature').click(function() {
-        $('.mobile_nav active').hide();
+    $('#featureBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
     })
-    $('#price').click(function() {
-        $('.mobile_nav active').hide();
+    $('#priceBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
     })
-    $('#contact').click(function() {
-        $('.mobile_nav active').hide();
+    $('#contactBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
     })
-    $('.mobile_nav').click(function() {
-        $('.mobile_nav active').show();
+    $('#demoBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
     })
     </script>
 
