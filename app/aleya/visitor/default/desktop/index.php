@@ -1,7 +1,7 @@
 <?php
 
-    header("Location: /login/", TRUE, 301);
-    exit();
+    // header("Location: /login/", TRUE, 301);
+    // exit();
 
 ?>
 <!DOCTYPE html>
