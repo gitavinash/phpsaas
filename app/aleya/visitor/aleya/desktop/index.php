@@ -362,9 +362,11 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="contact_wrapper__right">
-                        <h3>Experience it live -<br />Request your demo now</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore.</p>
+                        <h3>Experience it live - Request your demo now</h3>
+                        <p><strong>Phone: </strong>+91-9355239595, +91-9355239494</p>
+                        <p><strong>Email: </strong>sales@aleya.in, contact@aleya.in</p>
+                        <p><strong>Corporate Office: </strong>B-38, Vishal Enclave, Rajouri Garden, New Delhi - 110027
+                        </p>
                         <div class="social_links">
                             <a href="#" target="_blank"><img src="<?php echo USER_IMAGES ?>whatsapp-icon.png"
                                     class="img-fluid" alt=""></a>
