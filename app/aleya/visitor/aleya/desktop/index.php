@@ -368,8 +368,8 @@
                         <p><strong>Corporate Office: </strong>B-38, Vishal Enclave, Rajouri Garden, New Delhi - 110027
                         </p>
                         <div class="social_links">
-                            <a href="#" target="_blank"><img src="<?php echo USER_IMAGES ?>whatsapp-icon.png"
-                                    class="img-fluid" alt=""></a>
+                            <a href="https://wa.me/919355239595?text=Hi" target="_blank"><img
+                                    src="<?php echo USER_IMAGES ?>whatsapp-icon.png" class="img-fluid" alt=""></a>
                             <a href="https://www.instagram.com/aleyaerp" target="_blank"><img
                                     src="<?php echo USER_IMAGES ?>black-instagram-icon.png" class="img-fluid"
                                     alt=""></a>
