@@ -217,7 +217,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="pricing_box first_box">
                             <div class="pricing_box__content">
-                                <h3>CRM</h3>
+                                <h3>CRM for All</h3>
                                 <p>Streamline customer interactions, boost sales efficiency.</p>
                             </div>
                             <div class="price">
@@ -259,7 +259,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="pricing_box">
                             <div class="pricing_box__content">
-                                <h3>Starter plan</h3>
+                                <h3>Travel ERP Software</h3>
                                 <p>Optimize operations, drive business growth seamlessly.</p>
                             </div>
                             <div class="price">
