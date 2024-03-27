@@ -217,8 +217,8 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="pricing_box first_box">
                             <div class="pricing_box__content">
-                                <h3>Starter plan</h3>
-                                <p>Everything uou need to start creating</p>
+                                <h3>CRM</h3>
+                                <p>Streamline customer interactions, boost sales efficiency.</p>
                             </div>
                             <div class="price">
                                 <p class="myPrice1">₹ 999</p>
@@ -232,33 +232,23 @@
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Lead Acquisition from Google & Facebook</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Customer Engagement</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Performance Tracking</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> User Management</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
-                                    <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
-                                            class="img-fluid black-check" alt=""> <img
-                                            src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Employee Management</li>
                                 </ul>
                             </div>
                             <div class="buy_now">
@@ -270,7 +260,7 @@
                         <div class="pricing_box">
                             <div class="pricing_box__content">
                                 <h3>Starter plan</h3>
-                                <p>Everything uou need to start creating</p>
+                                <p>Optimize operations, drive business growth seamlessly.</p>
                             </div>
                             <div class="price">
                                 <p class="myPrice2">₹ 2,499</p>
@@ -282,33 +272,39 @@
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Everything in CRM</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Supplier Management</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Itinerary Management</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Invoice Management</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Voucher Management</li>
                                     <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
                                             class="img-fluid black-check" alt=""> <img
                                             src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
-                                            alt=""> Unlimited
-                                        projects</li>
+                                            alt=""> Booking Management</li>
+                                    <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
+                                            class="img-fluid black-check" alt=""> <img
+                                            src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
+                                            alt=""> Vouchers Management</li>
+                                    <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
+                                            class="img-fluid black-check" alt=""> <img
+                                            src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
+                                            alt=""> Client Tour Management</li>
+                                    <li><img src="<?php echo USER_IMAGES ?>comment-check 1.png"
+                                            class="img-fluid black-check" alt=""> <img
+                                            src="<?php echo USER_IMAGES ?>white-check.png" class="img-fluid white-check"
+                                            alt=""> New feature will announcement soon</li>
                                 </ul>
                             </div>
                             <div class="buy_now">
