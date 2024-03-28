@@ -1,119 +1,125 @@
-@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700;800&display=swap");
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Karla', sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Karla", sans-serif;
 }
-:root{
-    --black-color: #000;
-    --white-color: #fafafa;
-    --white-fade: #f8f9fa;
-    --main-color : #00647a;
-    --red-color : #BA3135;
-    --secondory-red: #FD411C;
-    --grey-color: #444444;
-    --grey-fade: #888888;
-    --sky-blue: #EDF4FE;
-    --sky-blue-fade: #ACB1CE;
-    --blue-color: #2A61FF;
-    --blue-fade: #ECF1FF;
-    --yellow-color: #FFBB36;
-    --yellow-fade: #FFF9EF;
-    --green-color: #00A94C;
-    --green-fade: #E9FFE9;
-    --green-shade: #BFDBE1;
-    --border-color: #E5ECF2;
-    --silver-color: #dedede;
+:root {
+  --black-color: #000;
+  --white-color: #fafafa;
+  --white-fade: #f8f9fa;
+  --main-color: #00647a;
+  --red-color: #ba3135;
+  --secondory-red: #fd411c;
+  --grey-color: #444444;
+  --grey-fade: #888888;
+  --sky-blue: #edf4fe;
+  --sky-blue-fade: #acb1ce;
+  --blue-color: #2a61ff;
+  --blue-fade: #ecf1ff;
+  --yellow-color: #ffbb36;
+  --yellow-fade: #fff9ef;
+  --green-color: #00a94c;
+  --green-fade: #e9ffe9;
+  --green-shade: #bfdbe1;
+  --border-color: #e5ecf2;
+  --silver-color: #dedede;
 }
-h1,h3,h6,p{
-    margin-bottom: 0 !important;
+h1,
+h3,
+h6,
+p {
+  margin-bottom: 0 !important;
 }
-a{
-    text-decoration: none !important;
+a {
+  text-decoration: none !important;
 }
-.global_btn{
-    border: 1px solid var(--main-color);
-    background-color: var(--main-color);
-    color: var(--white-color);
-    font-size: 18px;
-    width: 100%;
-    padding: 12px 0;
-    border-radius: 4px;
+.global_btn {
+  border: 1px solid var(--main-color);
+  background-color: var(--main-color);
+  color: var(--white-color) !important;
+  font-size: 18px;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 4px;
 }
-button{
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 18px;
-    font-weight: 500;
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 500;
 }
-input,textarea{
-    border: 1px solid var(--main-color);
-    border-radius: 4px;
-    padding: 14px;
-    color: var(--grey-color) !important;
+input,
+textarea {
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  padding: 14px;
+  color: var(--grey-color) !important;
 }
-input:focus,textarea:focus{
-    border: 1px solid var(--main-color) !important;
-    outline: none;
+input:focus,
+textarea:focus {
+  border: 1px solid var(--main-color) !important;
+  outline: none;
 }
-input::placeholder, textarea::placeholder{
-    color: var(--grey-color);
-    font-size: 18px;
-    font-weight: 500;
+input::placeholder,
+textarea::placeholder {
+  color: var(--grey-color);
+  font-size: 18px;
+  font-weight: 500;
 }
-.form-select{
-    /* background-image: url('../images/select.png') !important; */
+.form-select {
+  /* background-image: url('../images/select.png') !important; */
 }
-.green_btn{
-    background: var(--main-color) !important;
-    color: var(--white-color) !important;
-    font-size: 18px !important;
+.green_btn {
+  background: var(--main-color) !important;
+  color: var(--white-color) !important;
+  font-size: 18px !important;
 }
-.cancel_btn{
-    background: #EFF0F1 !important;
-    color: var(--black-fade) !important;
-    font-size: 18px !important;
+.cancel_btn {
+  background: #eff0f1 !important;
+  color: var(--black-fade) !important;
+  font-size: 18px !important;
 }
 /* color */
-.red{
-    color: var(--secondory-red);
+.red {
+  color: var(--secondory-red);
 }
-.blue{
-    color: var(--blue-color);
+.blue {
+  color: var(--blue-color);
 }
 
 /* datepicker css */
-.daterangepicker .calendar-table td{
-    font-size: 16px !important;
+.daterangepicker .calendar-table td {
+  font-size: 16px !important;
 }
 .daterangepicker .ranges li {
-    font-size: 16px !important;
+  font-size: 16px !important;
 }
-.daterangepicker .calendar-table th{
-    font-size: 16px !important;
+.daterangepicker .calendar-table th {
+  font-size: 16px !important;
 }
-.daterangepicker .drp-selected{
-    font-size: 16px !important;
+.daterangepicker .drp-selected {
+  font-size: 16px !important;
 }
-.daterangepicker .drp-buttons .btn{
-    font-size: 16px !important;
+.daterangepicker .drp-buttons .btn {
+  font-size: 16px !important;
 }
 
 .modal.show .modal-dialog {
-    transform: translate(0, 24%) !important;
+  transform: translate(0, 24%) !important;
 }
 
-@media(max-width:576px){
-    .global_btn{
-        font-size: 16px;
-    }
-    label{
-        font-size: 16px !important;
-    }
-    input{
-        padding: 8px;
-    }
+@media (max-width: 576px) {
+  .global_btn {
+    font-size: 16px;
+  }
+  label {
+    font-size: 16px !important;
+  }
+  input {
+    padding: 8px;
+  }
 }

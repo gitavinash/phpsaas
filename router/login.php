@@ -22,7 +22,7 @@
 
         }
     }
-
+    
     require_once $themeLoginFile;
     
     exit();
