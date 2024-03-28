@@ -3,10 +3,11 @@
 				<footer>
 				    <div class="credit">
 				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
-				                <a href='https://aleya.in' target="_blank"><?php echo ucwords(SITE_APP) ?><sup
-				                        class="trademark">TM</sup></a> | Made
+				                <a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
+				                    target="_blank"><?php echo ucwords(SITE_APP) ?><sup class="trademark">TM</sup></a> | Made
 				                with <i class="fi-rr-heart"></i> in
-				                India.</a></p>
+				                India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
+				                        Technologies</strong></a></p>
 				    </div>
 				</footer>
 				<div class="shortcut">

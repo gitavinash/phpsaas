@@ -704,6 +704,13 @@ $("#paymentBtn").click(function (e) {
   e.preventDefault();
 });
 
+$("#updatePaymentBtn").click(function (e) {
+  document.querySelector(".updatePaymentBox").style.display = "flex";
+  $(".updatePaymentBox").show();
+  hidePageLoader();
+  e.preventDefault();
+});
+
 $("#followUpBtn").click(function (e) {
   document.querySelector(".followUpBox").style.display = "flex";
   $(".followUpBox").show();
@@ -714,6 +721,13 @@ $("#followUpBtn").click(function (e) {
 $("#itineraryBtn").click(function (e) {
   document.querySelector(".itineraryBox").style.display = "flex";
   $(".itineraryBox").show();
+  hidePageLoader();
+  e.preventDefault();
+});
+
+$("#voucherBtn").click(function (e) {
+  document.querySelector(".voucherBox").style.display = "flex";
+  $(".voucherBox").show();
   hidePageLoader();
   e.preventDefault();
 });

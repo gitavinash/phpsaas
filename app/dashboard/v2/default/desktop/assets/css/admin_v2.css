@@ -448,6 +448,8 @@ aside {
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
   padding-bottom: 50px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 aside::-webkit-scrollbar {
@@ -703,7 +705,7 @@ main {
 main .container {
   float: left;
   width: 100%;
-  min-height: 600px;
+  min-height: 85vh;
   box-sizing: border-box;
 }
 
@@ -2221,4 +2223,13 @@ section.form
   font-weight: 300;
   font-size: 12px;
   color: #404040;
+}
+
+.appVersion {
+  text-align: center;
+  padding: 20px 0px;
+}
+
+.appVersion p {
+  font-size: 12px;
 }
