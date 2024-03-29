@@ -50,11 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $email='';
                                 $mobile='';
 
-
                                 for($i=0; $i<count($formData); $i++) {
                                     
                                     switch($formData[$i]['name']) {
                                         case 'full_name':
+                                            $name = $formData[$i]['values'][0];
+                                            break;
+                                        case 'name':
                                             $name = $formData[$i]['values'][0];
                                             break;
                                         case 'email':
@@ -62,6 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             break;
                                         case 'phone_number':
                                             $mobile = $formData[$i]['values'][0];
+                                            break;
+                                        case 'whatsapp_number':
+                                            $mobile = $formData[$i]['values'][0];
+                                            break;
+                                        default:
                                             break;
                                     }
                                 }
