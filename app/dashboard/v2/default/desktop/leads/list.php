@@ -74,7 +74,7 @@
                         <?php
                         
                         if($site_access_type!='agent') {
-                            echo "<th>Assign to</th>";
+                            echo "<th>Source</th><th>Assign to</th>";
                         }
 
                         ?>
@@ -157,8 +157,9 @@ LIMIT
                         <?php
                             
                             if($site_access_type!='agent') { ?>
+                        <td><?php echo $enquiry_source ?></td>
                         <td>
-                            <form method="POST" class="">
+                            <form method="POST">
                                 <?php
                                             if($site_access_type!='agent' && $enquiry_status==0 && $agent_display_name==null) { ?>
                                 <select class="selectJS form-control" name="userId" required>

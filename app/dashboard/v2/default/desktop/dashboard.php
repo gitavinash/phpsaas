@@ -74,7 +74,9 @@
 <div class="widget box-1">
     <?php
 
-    require_once 'dashboard/widgets/recent-followup-enquiry.php';
+        if($site_access_type=='agent') {
+            require_once 'dashboard/widgets/recent-followup-enquiry.php';
+        }
 
     ?>
 </div>

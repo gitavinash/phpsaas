@@ -68,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         case 'whatsapp_number':
                                             $mobile = $formData[$i]['values'][0];
                                             break;
+                                        case 'whatsapp_no':
+                                            $mobile = $formData[$i]['values'][0];
+                                            break;
                                         default:
                                             break;
                                     }
