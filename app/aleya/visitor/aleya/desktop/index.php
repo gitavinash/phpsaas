@@ -378,34 +378,41 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="contact_wrapper__left">
-                        <form action="">
+                        <form method="POST">
                             <div class="contaact_form">
                                 <div class="contact_flex">
                                     <div class="contact_input">
                                         <label for="">Full name</label>
-                                        <input type="text">
+                                        <input type="text" name="name" required>
                                     </div>
                                     <div class="contact_input">
                                         <label for="">Email address</label>
-                                        <input type="email">
+                                        <input type="email" name="email" required>
                                     </div>
                                 </div>
                                 <div class="contact_flex">
                                     <div class="contact_input">
                                         <label for="">Phone number</label>
-                                        <input type="number">
+                                        <input type="number" name="mobile" required>
                                     </div>
                                     <div class="contact_input">
                                         <label for="">Subject</label>
-                                        <input type="text">
+                                        <input type="text" name="subject">
                                     </div>
                                 </div>
                                 <div class="contact_input">
                                     <label for="">Message</label>
-                                    <textarea name="" id="" cols="30" rows="4"></textarea>
+                                    <textarea name="" id="" cols="30" name="message" rows="4"></textarea>
                                 </div>
                                 <div class="send_btn">
-                                    <button class="global_btn">send message</button>
+                                    <input type="hidden" name="type" value="enquiry">
+                                    <input type="hidden" name="action" value="new">
+                                    <input type="hidden" name="subject" value="Contact us">
+                                    <input type="hidden" name="sender"
+                                        value="<?php echo base64_encode("avinash.kumar@aleya.in") ?>">
+                                    <input type="hidden" name="redirect_url" value="https://aleya.in/">
+                                    <input type="submit" value="send message" style="color: #fff !important"
+                                        class="global_btn">
                                 </div>
                             </div>
                         </form>
