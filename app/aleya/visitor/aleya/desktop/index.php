@@ -2,6 +2,18 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4HB2C27FJJ"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-4HB2C27FJJ');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
@@ -109,37 +121,28 @@
                     <div class="row manage_flex">
                         <div class="col-lg-6">
                             <div class="manage_wrapper__left">
-                                <img src="<?php echo USER_IMAGES ?>mangeimg.png" class="img-fluid" alt="">
+                                <img src="<?php echo USER_IMAGES ?>features/enquiry_source.png" class="img-fluid"
+                                    alt="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="manage_wrapper__content">
                                 <div class="manage_content">
-                                    <h6><img src="<?php echo USER_IMAGES ?>Profile.png" class="img-fluid"
-                                            alt="">customer</h6>
-                                    <h3>Manage all your prospects in one place</h3>
+                                    <h3>Manage all your query in one place</h3>
                                 </div>
                                 <div class="manage_box">
                                     <div class="manage_box__flex">
-                                        <div class="manage_icon">
-                                            <img src="<?php echo USER_IMAGES ?>lead.png" class="img-fluid" alt="">
-                                        </div>
                                         <div class="manage_box__content">
-                                            <h3>Individual lead profile</h3>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia,
-                                                molestias?
-                                                Ipsam inventore consequatur molestias.</p>
+                                            <h3>Never miss any lead</h3>
+                                            <p>With timely follow-ups, Aleya can manage queries and leads effectively,
+                                                ensuring no client is ever missed.</p>
                                         </div>
                                     </div>
                                     <div class="manage_box__flex">
-                                        <div class="manage_icon">
-                                            <img src="<?php echo USER_IMAGES ?>Graph.png" class="img-fluid" alt="">
-                                        </div>
                                         <div class="manage_box__content">
-                                            <h3>Advanced deal tracking</h3>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia,
-                                                molestias?
-                                                Ipsam inventore consequatur molestias.</p>
+                                            <h3>Advanced lead collection</h3>
+                                            <p>Centralize lead collection from Facebook, Instagram, Google, and more
+                                                with Aleya. Simplify management in one place</p>
                                         </div>
                                     </div>
                                 </div>
@@ -150,37 +153,71 @@
                     <div class="row manage_flex">
                         <div class="col-lg-6">
                             <div class="manage_wrapper__left">
-                                <img src="<?php echo USER_IMAGES ?>mangeimg.png" class="img-fluid" alt="">
+                                <img src="<?php echo USER_IMAGES ?>features/enquiry_performace.png" class="img-fluid"
+                                    alt="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="manage_wrapper__content">
                                 <div class="manage_content">
-                                    <h6><img src="<?php echo USER_IMAGES ?>Profile.png" class="img-fluid"
-                                            alt="">customer</h6>
-                                    <h3>Manage all your prospects in one place</h3>
+                                    <h3>Manage all your report's in one place</h3>
                                 </div>
                                 <div class="manage_box">
                                     <div class="manage_box__flex">
-                                        <div class="manage_icon">
-                                            <img src="<?php echo USER_IMAGES ?>lead.png" class="img-fluid" alt="">
-                                        </div>
                                         <div class="manage_box__content">
-                                            <h3>Individual lead profile</h3>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia,
-                                                molestias?
-                                                Ipsam inventore consequatur molestias.</p>
+                                            <h3>Employees performance</h3>
+                                            <p>Track and monitor employee performance effectively on Aleya, ensuring
+                                                optimal productivity and team success.</p>
                                         </div>
                                     </div>
                                     <div class="manage_box__flex">
-                                        <div class="manage_icon">
-                                            <img src="<?php echo USER_IMAGES ?>Graph.png" class="img-fluid" alt="">
-                                        </div>
                                         <div class="manage_box__content">
-                                            <h3>Advanced deal tracking</h3>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia,
-                                                molestias?
-                                                Ipsam inventore consequatur molestias.</p>
+                                            <h3>Leads performance</h3>
+                                            <p>Analyze lead performance seamlessly with Aleya's comprehensive tracking
+                                                tools, optimizing your sales strategy for success.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row manage_flex">
+                        <div class="col-lg-6">
+                            <div class="manage_wrapper__left">
+                                <img src="<?php echo USER_IMAGES ?>features/coming_soon.png" class="img-fluid" alt="">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="manage_wrapper__content">
+                                <div class="manage_content">
+                                    <h3>Upcoming Features That Will Wow You</h3>
+                                </div>
+                                <div class="manage_box">
+                                    <div class="manage_box__flex">
+                                        <div class="manage_box__content">
+                                            <h3><a href="https://oxpay.in" target="_blank">Ox Pay</a> - Payment
+                                                collector</h3>
+                                        </div>
+                                    </div>
+                                    <div class="manage_box__flex">
+                                        <div class="manage_box__content">
+                                            <h3>Itinerary Management</h3>
+                                        </div>
+                                    </div>
+                                    <div class="manage_box__flex">
+                                        <div class="manage_box__content">
+                                            <h3>Vendor Management</h3>
+                                        </div>
+                                    </div>
+                                    <div class="manage_box__flex">
+                                        <div class="manage_box__content">
+                                            <h3>Voucher Management</h3>
+                                        </div>
+                                    </div>
+                                    <div class="manage_box__flex">
+                                        <div class="manage_box__content">
+                                            <h3>and many more...</h3>
                                         </div>
                                     </div>
                                 </div>

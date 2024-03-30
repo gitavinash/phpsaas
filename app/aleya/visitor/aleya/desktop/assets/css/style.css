@@ -484,6 +484,10 @@ textarea::placeholder {
   text-transform: capitalize;
   font-weight: 400;
 }
+.manage_box__content h3 a {
+  color: inherit;
+  font-weight: 600;
+}
 .manage_box__content p {
   font-size: 18px;
   max-width: 440px;
@@ -501,7 +505,11 @@ textarea::placeholder {
   position: relative;
 }
 .manage_wrapper__left {
-  height: 0;
+  text-align: center;
+}
+.slick-slide img {
+  display: inline !important;
+  border-radius: 20px;
 }
 .manage_wrapper__left img {
   height: 530px;
