@@ -193,25 +193,27 @@
                             
                         }
                     
-                        if($enquiry_source!='') {
-                            echo "<tr>
-                                <td class='box-3'><strong>Enquiry source</strong></td>
-                                <td class='box-7'>{$enquiry_source}</td>
-                            </tr>";
-                        }
-                    
-                        if($enquiry_medium!='') {
-                            echo "<tr>
-                                <td class='box-3'><strong>Enquiry medium</strong></td>
-                                <td class='box-7'>{$enquiry_medium}</td>
-                            </tr>";
-                        }
-                    
-                        if($enquiry_campaign!='') {
-                            echo "<tr>
-                                <td class='box-3'><strong>Enquiry campaign</strong></td>
-                                <td class='box-7'>{$enquiry_campaign}</td>
-                            </tr>";
+                        if($site_access_type!='agent') {
+                            if($enquiry_source!='') {
+                                echo "<tr>
+                                    <td class='box-3'><strong>Enquiry source</strong></td>
+                                    <td class='box-7'>{$enquiry_source}</td>
+                                </tr>";
+                            }
+                        
+                            if($enquiry_medium!='') {
+                                echo "<tr>
+                                    <td class='box-3'><strong>Enquiry medium</strong></td>
+                                    <td class='box-7'>{$enquiry_medium}</td>
+                                </tr>";
+                            }
+                        
+                            if($enquiry_campaign!='') {
+                                echo "<tr>
+                                    <td class='box-3'><strong>Enquiry campaign</strong></td>
+                                    <td class='box-7'>{$enquiry_campaign}</td>
+                                </tr>";
+                            }
                         }
 
                     ?>
@@ -547,18 +549,26 @@
             <section class="leadQuickLinks">
                 <?php
             
-                if($enquiry_status!=5) { ?>
-
-                <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
+                if($enquiry_status!=5) {
+                    if($enquiry_status!=4) { ?>
                 <!-- <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                    links</a>
-                <a href="" class="btn btn-green" id="updatePayment"><i class="fi-rr-notes"></i> Update payment
+                    links</a> -->
+                <!-- <a href="" class="btn btn-green" id="updatePaymentBtn"><i class="fi-rr-notes"></i> Update payment
                     records</a> -->
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <!-- <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
                 <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a> -->
+                <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
 
                 <?php
+                    } else { ?>
+
+                <form method="POST" class="">
+                    <!-- Design a form to assign lead to intern -->
+                </form>
+
+                <?php
+                    }
                 }
                 
                 ?>
@@ -675,6 +685,56 @@
         </div>
     </div>
 
+    <div class="popUp updatePaymentBox">
+        <div class="smallPopUpBox">
+            <div class="widget box-7">
+                <div class="contentArea">
+                    <form method="POST" action="#">
+                        <section class="form">
+                            <div class="step-open-box step_1_box">
+                                <form method="POST" action="#">
+                                    <section class="form">
+                                        <div class="step-open-box step_1_box">
+                                            <div class="form-header">
+                                                <h4 class="heading">Update payment details</h4>
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Payment method <sup>*</sup></p>
+                                                <select class="selectJS form-control" id="paymentRecordTitle"
+                                                    name="title">
+                                                    <option value=""></option>
+                                                    <option value="upi">UPI</option>
+                                                    <option value="net_banking">Net banking</option>
+                                                    <option value="credit_card">Credit Card</option>
+                                                    <option value="debit_card">Debit Card</option>
+                                                    <option value="wallet">Wallet</option>
+                                                    <option value="other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea type="text" name="paymentRecordMsg" id="noteMsg"
+                                                    placeholder="Payment details*" class="form-control"
+                                                    required></textarea>
+                                                <label class="form-lable" id="paymentRecordMsgLabel">Payment
+                                                    details</label>
+                                            </div>
+                                        </div>
+                                </form>
+                            </div>
+                    </form>
+                </div>
+            </div>
+            <div class="widget box-3">
+                <div class="actionArea">
+                    <a href="#" class="btn popUpBtn" id="paymentRecordLink"><i class="fi-rr-check"></i> Update
+                        records</a>
+                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                        Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="popUp followUpBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
@@ -724,13 +784,31 @@
         <div class="fullScreenPopUpBox">
             <div class="widget box-8">
                 <div class="contentArea">
-                    <h4 class="heading"><?php echo $enquiry_subject ?></span></h2>
+                    <h4 class="heading"><?php echo $enquiry_subject ?> Itinerary</span></h2>
                 </div>
             </div>
             <div class="widget box-2">
                 <div class="actionArea">
                     <a href="#" class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
                     <a href="#" class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload itinerary</a>
+                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                        Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popUp voucherBox">
+        <div class="fullScreenPopUpBox">
+            <div class="widget box-8">
+                <div class="contentArea">
+                    <h4 class="heading"><?php echo $enquiry_subject ?> Vouchers</span></h2>
+                </div>
+            </div>
+            <div class="widget box-2">
+                <div class="actionArea">
+                    <a href="#" class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send vouchers</a>
+                    <a href="#" class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload vouchers</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
