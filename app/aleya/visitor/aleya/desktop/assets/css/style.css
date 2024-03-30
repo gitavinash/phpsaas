@@ -477,6 +477,7 @@ textarea::placeholder {
   display: flex;
   gap: 12px;
   margin-bottom: 2rem;
+  width: 100%;
 }
 .manage_box__content h3 {
   color: var(--white-color);
@@ -893,6 +894,11 @@ textarea::placeholder {
   padding-left: 80px;
   border-left: 1px solid var(--white-color);
 }
+
+.manage_box__flex {
+  float: left;
+}
+
 .get_started {
   display: flex;
   align-items: center;
@@ -912,6 +918,15 @@ textarea::placeholder {
 .get_started a:hover {
   color: var(--main-color);
 }
+
+.manage_box .get_started {
+  float: left;
+}
+
+.manage_box .get_started a {
+  padding: 10px 24px;
+}
+
 .contact_wrapper__left {
   transform: translateY(130px);
 }

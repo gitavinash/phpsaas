@@ -145,6 +145,12 @@
                                                 with Aleya. Simplify management in one place</p>
                                         </div>
                                     </div>
+                                    <div class="get_started">
+                                        <a href="/register/">Try now <img src="<?php echo USER_IMAGES ?>right-arrow.png"
+                                                class="img-fluid white-arrow" alt="">
+                                            <img src="<?php echo USER_IMAGES ?>black-right-arrow.png" `
+                                                class="img-fluid black-arrow" alt=""></a>
+                                    </div>
                                 </div>
                             </div>
 
@@ -176,6 +182,12 @@
                                             <p>Analyze lead performance seamlessly with Aleya's comprehensive tracking
                                                 tools, optimizing your sales strategy for success.</p>
                                         </div>
+                                    </div>
+                                    <div class="get_started">
+                                        <a href="/register/">Try now <img src="<?php echo USER_IMAGES ?>right-arrow.png"
+                                                class="img-fluid white-arrow" alt="">
+                                            <img src="<?php echo USER_IMAGES ?>black-right-arrow.png" `
+                                                class="img-fluid black-arrow" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -219,6 +231,12 @@
                                         <div class="manage_box__content">
                                             <h3>and many more...</h3>
                                         </div>
+                                    </div>
+                                    <div class="get_started">
+                                        <a href="/register/">Try now <img src="<?php echo USER_IMAGES ?>right-arrow.png"
+                                                class="img-fluid white-arrow" alt="">
+                                            <img src="<?php echo USER_IMAGES ?>black-right-arrow.png" `
+                                                class="img-fluid black-arrow" alt=""></a>
                                     </div>
                                 </div>
                             </div>
