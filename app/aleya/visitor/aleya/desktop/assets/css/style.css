@@ -64,6 +64,9 @@ textarea::placeholder {
   font-size: 18px;
   font-weight: 500;
 }
+.red-bg {
+  background: #b93034 !important;
+}
 .global_btn {
   background-color: var(--main-color);
   color: var(--white-color);
@@ -325,7 +328,7 @@ textarea::placeholder {
 .feature_wrapper {
   /* clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%); */
   /* background-color: var(--green-fade); */
-  padding: 150px 0 950px 0;
+  padding: 100px 0 100px 0;
 }
 
 .main_heading h6 {
@@ -498,12 +501,13 @@ textarea::placeholder {
 }
 .manage_wrapper {
   height: 100%;
-  position: absolute;
+  position: relative;
   left: 0;
   top: 25rem;
 }
 .manage--container {
   position: relative;
+  margin: 50px 0px;
 }
 .manage_wrapper__left {
   text-align: center;
@@ -516,6 +520,7 @@ textarea::placeholder {
   height: 530px;
   /* width: 100%; */
   object-fit: contain;
+  border-radius: 20px;
 }
 .testimonial_wrapper {
   padding: 155px 0;
@@ -1898,7 +1903,8 @@ textarea::placeholder {
     transition: 0.3s ease-in;
   }
   .manage_wrapper__box {
-    border-radius: 0;
+    border-radius: 10px;
+    min-height: 880px;
   }
   .testimonial_wrapper {
     padding: 11rem 0 70px 0;
@@ -1970,13 +1976,10 @@ textarea::placeholder {
     padding: 40px 0;
   }
   .feature_wrapper {
-    padding: 50px 0 54rem 0;
+    padding: 50px 0 5rem 0;
   }
   .pricing_wrapper {
     padding-top: 11rem;
-  }
-  .feature_wrapper {
-    background-color: var(--main-color);
   }
 }
 @media (max-width: 450px) {
@@ -2006,7 +2009,10 @@ textarea::placeholder {
     right: 36%;
   }
   .manage_wrapper__left img {
-    height: 415px;
+    width: 100%;
+    border-radius: 20px !important;
+    height: auto;
+    padding: 40px 0px;
   }
   .manage_wrapper__content {
     padding-bottom: 5rem;

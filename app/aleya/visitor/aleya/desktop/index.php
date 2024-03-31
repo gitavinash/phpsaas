@@ -113,11 +113,10 @@
 
     <!-- feature section -->
     <section class="feature_wrapper" id="feature">
-
         <!-- manage section -->
         <div class="container manage--container">
             <section class="manage_wrapper">
-                <div class="container manage_wrapper__box manage_slider">
+                <div class="container manage_wrapper__box">
                     <div class="row manage_flex">
                         <div class="col-lg-6">
                             <div class="manage_wrapper__left">
@@ -146,24 +145,24 @@
                                         </div>
                                     </div>
                                     <div class="get_started">
-                                        <a href="/register/">Try now <img src="<?php echo USER_IMAGES ?>right-arrow.png"
+                                        <a href="/register/">Try now <img
+                                                src="<?php echo USER_IMAGES ?>black-right-arrow.png"
                                                 class="img-fluid white-arrow" alt="">
-                                            <img src="<?php echo USER_IMAGES ?>black-right-arrow.png" `
-                                                class="img-fluid black-arrow" alt=""></a>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
+                </div>
+            </section>
+        </div>
+        <div class="container manage--container">
+            <section class="manage_wrapper">
+                <div class="container manage_wrapper__box red-bg">
                     <div class="row manage_flex">
-                        <div class="col-lg-6">
-                            <div class="manage_wrapper__left">
-                                <img src="<?php echo USER_IMAGES ?>features/enquiry_performace.png" class="img-fluid"
-                                    alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6" style="padding-left: 5%">
                             <div class="manage_wrapper__content">
                                 <div class="manage_content">
                                     <h3>Manage all your report's in one place</h3>
@@ -184,16 +183,28 @@
                                         </div>
                                     </div>
                                     <div class="get_started">
-                                        <a href="/register/">Try now <img src="<?php echo USER_IMAGES ?>right-arrow.png"
+                                        <a href="/register/">Try now <img
+                                                src="<?php echo USER_IMAGES ?>black-right-arrow.png"
                                                 class="img-fluid white-arrow" alt="">
-                                            <img src="<?php echo USER_IMAGES ?>black-right-arrow.png" `
-                                                class="img-fluid black-arrow" alt=""></a>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
+                        <div class="col-lg-6">
+                            <div class="manage_wrapper__left">
+                                <img src="<?php echo USER_IMAGES ?>features/enquiry_performace.png" class="img-fluid"
+                                    alt="">
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </section>
+        </div>
+        <div class="container manage--container">
+            <section class="manage_wrapper">
+                <div class="container manage_wrapper__box">
                     <div class="row manage_flex">
                         <div class="col-lg-6">
                             <div class="manage_wrapper__left">
@@ -233,10 +244,10 @@
                                         </div>
                                     </div>
                                     <div class="get_started">
-                                        <a href="/register/">Try now <img src="<?php echo USER_IMAGES ?>right-arrow.png"
+                                        <a href="/register/">Try now <img
+                                                src="<?php echo USER_IMAGES ?>black-right-arrow.png"
                                                 class="img-fluid white-arrow" alt="">
-                                            <img src="<?php echo USER_IMAGES ?>black-right-arrow.png" `
-                                                class="img-fluid black-arrow" alt=""></a>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
