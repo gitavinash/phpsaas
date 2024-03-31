@@ -555,6 +555,7 @@ if ($("#totalOrderAmount").length) {
 
 if ($(".showTableList").length) {
   $(".showTableList").DataTable({
+    pageLength: 50,
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the first column (index 0)
     ],
