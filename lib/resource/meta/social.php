@@ -8,7 +8,7 @@
 <meta property="og:description"
     content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" />
 <meta property="og:url"
-    content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) : HTTP_PROTOCOL.SITE_DOMAIN.BASE_URL ) ?>" />
+    content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical!='') ? $meta_canonical : 'https://'.SITE_DOMAIN.BASE_URL ) : 'https://'.SITE_DOMAIN.BASE_URL ) ?>" />
 <meta property="og:image"
     content="<?php if(isset($fb_image)) {echo $fb_image;} else {echo ((isset(${$link_type.'_image'})) ? ${$link_type.'_image'} : SITE_LOGO );} ?>" />
 <meta property="og:site_name" content="<?php echo SITE_NAME ?>" />
