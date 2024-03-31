@@ -56,7 +56,7 @@ define('REGISTRATION_PATH', '/register/');
 
 /* Active domain and URL information */
 
-define('HTTP_PROTOCOL', $_SERVER['REQUEST_SCHEME'] . '://'); // Check HTTP protocol is secure or not
+define('HTTP_PROTOCOL', 'https://'); // Check HTTP protocol is secure or not
 define('SITE_DOMAIN', $_SERVER['HTTP_HOST']); // return only site domain with protocol
 define('SITE_URL', HTTP_PROTOCOL . $_SERVER['HTTP_HOST']); // return site domain without protocol
 define('MAIN_DOMAIN', implode('.', array_slice(explode('.', SITE_DOMAIN), -2, 3, true))); // show only the actual domain like :- example.com
