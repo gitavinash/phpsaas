@@ -14,7 +14,7 @@
                     while($desktopSliderData=mysqli_fetch_assoc($desktopSlider)) {
                         extract($desktopSliderData);
                         echo "<div class='banner_img>
-                            <img src='{$slider_image}' class='img-fluid' alt='{$slider_title}'>
+                            <img src='{$slide_image}' class='img-fluid' alt='{$slide_title}'>
                         </div>";
                     }
                 }
