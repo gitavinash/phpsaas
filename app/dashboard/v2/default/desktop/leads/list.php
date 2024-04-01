@@ -9,9 +9,8 @@
         $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
         $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
     } else {
-        $currentMonth=date('m');
-        $startDate = date("Y-{$currentMonth}-01 00:00:00");
-        $endDate = date("Y-{$currentMonth}-31 23:59:59");
+        $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
+        $endDate = date("Y-m-d 23:59:59");
     }
 
     $user_filter='';
