@@ -13,7 +13,7 @@
                 if($numberOfSlider!=0) {
                     while($desktopSliderData=mysqli_fetch_assoc($desktopSlider)) {
                         extract($desktopSliderData);
-                        echo "<div class='banner_img>
+                        echo "<div class='banner_img'>
                             <img src='{$slide_image}' class='img-fluid' alt='{$slide_title}'>
                         </div>";
                     }
