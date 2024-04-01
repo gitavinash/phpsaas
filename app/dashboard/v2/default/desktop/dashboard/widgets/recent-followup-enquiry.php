@@ -26,7 +26,13 @@
                 <th>Name</th>
                 <th>Mobile</th>
                 <th>Enquiry for</th>
-                <th>Source</th>
+                <?php
+                
+                    if($site_access_type!='agent') {
+                        echo "<th>Source</th>";
+                    }
+
+                ?>
                 <th>Time</th>
                 <th></th>
             </tr>
@@ -52,7 +58,13 @@
                 <td><?php echo $name; ?></td>
                 <td><?php echo $enquiry_mobile; ?></td>
                 <td><?php echo $enquiry_subject; ?></td>
-                <td><?php echo $enquiry_source; ?></td>
+                <?php
+                
+                    if($site_access_type!='agent') {
+                        echo "<td>{$enquiry_source}</td>";
+                }
+
+                ?>
                 <td></span><?php echo date('d-m-Y h:i A', strtotime($enquiry_followup)); ?>
                 </td>
                 <td>

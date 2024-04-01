@@ -18,7 +18,15 @@
 ?>
 <div class="widget-info">
     <div class="info-box">
-        <p>Recent enquiry</p>
+        <?php
+        
+            if($site_access_type!='agent') {
+                echo "<p>Fresh enquiry</p>";
+            } else {
+                echo "<p>Recent enquiry</p>";
+            }
+
+        ?>
     </div>
     <table class="no-margin showTableListWithoutFilter">
         <thead>
@@ -26,7 +34,7 @@
                 <th>Name</th>
                 <th>Mobile</th>
                 <th>Enquiry for</th>
-                <th>Source</th>
+                <?php if($site_access_type!='agent') { echo "<th>Source</th>"; } ?>
                 <th>Time</th>
                 <th>Assign to</th>
             </tr>
@@ -51,7 +59,7 @@
                 <td><?php echo $name; ?></td>
                 <td><?php echo $enquiry_mobile; ?></td>
                 <td><?php echo $enquiry_subject; ?></td>
-                <td><?php echo $enquiry_source; ?></td>
+                <?php if($site_access_type!='agent') {echo "<td>{$$enquiry_source}</td>"; } ?>
                 <td></span><?php echo date('d-m-Y h:i A', strtotime($enquiry_time)); ?>
                 </td>
                 <td>
