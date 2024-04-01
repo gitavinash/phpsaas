@@ -96,7 +96,12 @@
                     </div>
                 </li>
 
-                <!-- <li class="header-section-name">
+                <?php
+                
+                if(SITE_ID==57) { ?>
+
+
+                <li class="header-section-name">
                     <p>Vendors<span>Manage vendor.</span></p>
                 </li>
 
@@ -174,9 +179,9 @@
                             </li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
 
-                <!-- <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> International packages</a>
                     <div class="side-menu">
                         <ul>
@@ -193,7 +198,12 @@
                             </li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
+
+                <?php
+                }
+                
+                ?>
 
                 <?php
                 }
