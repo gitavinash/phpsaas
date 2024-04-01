@@ -1,40 +1,65 @@
 <?php
         
+if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM " . TABLE_PREFIX . "product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=" . SITE_ID)) {
+
+    if (mysqli_num_rows($checkProductMeta) != 0) {
+
+        $productMeta = array();
+
+        while ($checkProductMetaData = mysqli_fetch_assoc($checkProductMeta)) {
+
+
+            // Create dynamic variable in the name of product_meta_key value
+
+            ${$checkProductMetaData['product_meta_key']} = $checkProductMetaData['product_meta_value'];
+        }
+    }
+}
+
     require_once 'header.php';
 
 ?>
 <section class="singel_wrapper">
     <div class="container">
         <div class="singel_slider">
-            <div class="product_img">
-                <img src="assets/images/img1.jpg" class="img-fluid" alt="">
-            </div>
-            <div class="product_img">
-                <img src="assets/images/img2.jpg" class="img-fluid" alt="">
-            </div>
-            <div class="product_img">
-                <img src="assets/images/img3.jpg" class="img-fluid" alt="">
-            </div>
-            <div class="product_img">
-                <img src="assets/images/img1.jpg" class="img-fluid" alt="">
-            </div>
-            <div class="product_img">
-                <img src="assets/images/img2.jpg" class="img-fluid" alt="">
-            </div>
-            <div class="product_img">
-                <img src="assets/images/img3.jpg" class="img-fluid" alt="">
-            </div>
+            <?php
+
+                if ($product_gallery != '') {
+
+                    $galleryImages = json_decode($product_gallery, TRUE);
+
+                    if ($galleryImages != '') {
+
+                        echo "<div class='product_img'>
+                                <img src='{$product_image}' class='img-fluid' alt='{$product_title}'>
+                            </div>";
+
+                        for ($i = 0; $i < sizeof($galleryImages); $i++) {
+
+                            extract($galleryImages[$i]);
+                            echo "<div class='product_img'>
+                                    <img src='{$path}' class='img-fluid' alt=''>
+                                </div>";
+                        }
+
+                        echo '</ul>';
+                    } else {
+
+                         echo "<div class='product_img'>
+                                    <img src='{$path}' class='img-fluid' alt='{$product_title}'>
+                                </div>";
+                    }
+                }
+            ?>
         </div>
         <div class="singel_slider__content">
-            <h6>Floral Printed Pashmina Stole – Ochre Blue</h6>
+            <h1><?php echo $product_title ?></h1>
             <div class="product_price">
-                <p>MRP (Inc. tax) <span>₹ 7,952</span></p>
+                <p>MRP (Inc. tax) <span><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></span>
+                </p>
             </div>
             <div class="product_details">
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit deserunt
-                    sequi qui sunt beatae molestias molestiae perferendis harum consectetur.</p>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id temporibus dolorum, ullam sequi
-                    vel fugiat fugit tempora officia voluptatibus eius!</p>
+                <?php echo $product_description ?>
             </div>
 
 
@@ -43,7 +68,7 @@
 </section>
 
 <!-- cart page -->
-<section class="cart_wrapper">
+<!-- <section class="cart_wrapper">
     <div class="cart_content">
         <div class="cart_header">
             <h6>your cart</h6>
@@ -129,10 +154,10 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- related product -->
-<section class="related_wrapper">
+<!-- <section class="related_wrapper">
     <div class="container">
         <div class="related_product">
             <div class="related_product__img">
@@ -189,9 +214,9 @@
 
         </div>
     </div>
-</section>
+</section> -->
 
-<section class="faq_wrapper">
+<!-- <section class="faq_wrapper">
     <div class="container">
 
         <div class="faq_heading">
@@ -232,7 +257,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 <?php
         
     require_once 'footer.php';

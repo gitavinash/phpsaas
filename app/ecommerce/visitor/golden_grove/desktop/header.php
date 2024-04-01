@@ -42,6 +42,28 @@
                     </div>
                 </div>
             </div>
+
+            <?php
+
+                $showBottomBar=((isset($link_type)) ? $link_type : 'normal');
+
+                if($showBottomBar=='product') { ?>
+            <div class="bottom_nav singel_product__nav">
+                <div class="bottom_nav__flex singel_product__flex">
+                    <div class="bottom_nav__item our_cart">
+                        <button>
+                            <i class="bx bxs-cart-alt"></i>add to cart
+                        </button>
+                    </div>
+                    <div class="bottom_nav__item buy_now">
+                        <button>
+                            <i class="bx bxs-cart-download"></i>buy now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <?php
+                } else { ?>
             <div class="bottom_nav">
                 <div class="container">
                     <div class="bottom_nav__flex">
@@ -49,7 +71,7 @@
                             <a href="/" class="active_menu"><i class='bx bxs-home'></i>Home</a>
                         </div>
                         <div class="bottom_nav__item">
-                            <a href="/category/"><i class='bx bx-category'></i>category</a>
+                            <a href="/categories/"><i class='bx bx-category'></i>category</a>
                         </div>
                         <div class="bottom_nav__item search">
                             <a href="#"><i class='bx bx-search'></i>Search</a>
@@ -63,7 +85,7 @@
                                     <a href="/">Home</a>
                                     <a href="/about-us/">About</a>
                                     <a href="/contact-us/">Contact</a>
-                                    <a href="/category/">Category</a>
+                                    <a href="/categories/">Category</a>
                                     <a href="/contact-us/">Contact us</a>
                                 </div>
                             </div>
@@ -71,6 +93,10 @@
                     </div>
                 </div>
             </div>
+            <?php
+                }
+
+            ?>
 
             <div class="menu_wrapper">
                 <div class="menu_box">
@@ -86,7 +112,7 @@
                         <a href="/">Home</a>
                         <a href="/about-us/">About</a>
                         <a href="/contact-us/">Contact</a>
-                        <a href="/category/">Category</a>
+                        <a href="/categories/">Category</a>
                         <a href="/contact-us/">Contact us</a>
                     </div>
                 </div>
