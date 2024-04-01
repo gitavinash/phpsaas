@@ -6,9 +6,8 @@
         $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
         $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
     } else {
-        $currentMonth=date('m');
-        $startDate = date("Y-{$currentMonth}-01 00:00:00");
-        $endDate = date("Y-{$currentMonth}-31 23:59:59");
+        $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
+        $endDate = date("Y-m-d 23:59:59");
     }
     
 ?>
@@ -153,28 +152,32 @@
                     <p>Packages<span>Manage all tour packages.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/inbound/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="inbound/"><i class="fi fi-rr-suitcase-alt"></i> Inbound packages</a>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/domestic/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic packages</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="inbound/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            <li><a href="domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
                             </li>
-                            <li><a href="inbound/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            <li><a href="domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
+                            <li><a href="domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
                             </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="inbound/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            <li><a href="domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
                             </li>
-                            <li><a href="inbound/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            <li><a href="domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
+                            <li><a href="domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/')!==false) ? 'class="active"' : '' ) ?>>
-                    <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> Outbound packages</a>
+                <!-- <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/')!==false) ? 'class="active"' : '' ) ?>>
+                    <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> International packages</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="outbound/list/"><i class="fi-rr-apps-sort"></i> All vendor</a>
@@ -328,6 +331,10 @@
 
                 <?php }
                 ?>
+
+                <li class="appVersion">
+                    <p>App version : 1.0.0</p>
+                </li>
             </ul>
         </nav>
     </aside>
