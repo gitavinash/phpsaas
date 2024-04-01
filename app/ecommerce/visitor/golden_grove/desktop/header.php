@@ -31,7 +31,7 @@
                             <i class='bx bx-menu'></i>
                         </div>
                         <div class="logo">
-                            <a href="#"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
                         </div>
                         <div class="cart">
                             <a href="#"><i class='bx bxs-cart-alt'></i></a>
@@ -63,8 +63,8 @@
                                     <a href="/">Home</a>
                                     <a href="/about-us/">About</a>
                                     <a href="/contact-us/">Contact</a>
-                                    <!-- <a href="#">Blog</a> -->
                                     <a href="/category/">Category</a>
+                                    <a href="/contact-us/">Contact us</a>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                 <div class="menu_box">
                     <div class="menu_header">
                         <div class="menu_logo">
-                            <a href="#"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
                         </div>
                         <div class="menu_cancel">
                             <i class='bx bx-x'></i>
@@ -86,7 +86,6 @@
                         <a href="/">Home</a>
                         <a href="/about-us/">About</a>
                         <a href="/contact-us/">Contact</a>
-                        <!-- <a href="#">Blog</a> -->
                         <a href="/category/">Category</a>
                         <a href="/contact-us/">Contact us</a>
                     </div>

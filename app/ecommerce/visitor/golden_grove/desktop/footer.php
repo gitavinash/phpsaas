@@ -18,7 +18,7 @@
                     <i class='bx bx-chevron-down'></i>
                 </div>
                 <div class="footer_content">
-                    <a href="#">About Us</a>
+                    <a href="/about-us/">About Us</a>
                 </div>
             </div>
             <div class="footer_faq">
@@ -27,10 +27,19 @@
                     <i class='bx bx-chevron-down'></i>
                 </div>
                 <div class="footer_content">
-                    <a href="#">KCS story</a>
-                    <a href="#">Privacy policy</a>
-                    <a href="#">Cookies policy</a>
-                    <a href="#">Terms & conditions</a>
+
+                    <?php
+            
+                        if($checkCategory=mysqli_query($connection, "SELECT category_title, link_url FROM ".TABLE_PREFIX."category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=category_id WHERE link_site_id=".SITE_ID." AND link_type='category' AND link_status=200 ORDER BY link_is_featured, link_modified DESC LIMIT 0, 5")) {
+                            if(mysqli_num_rows($checkCategory)!=0) {
+                                while($categoryData=mysqli_fetch_assoc($checkCategory)) {
+                                    extract($categoryData);
+                                    echo "<a href='{$link_url}' title='{$category_title}' >{$category_title}</a>";
+                                }
+                            }
+                        }
+                    ?>
+
                 </div>
             </div>
             <div class="footer_faq">

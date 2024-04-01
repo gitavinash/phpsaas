@@ -144,7 +144,7 @@
 
                 <?php
             
-                if($checkCategory=mysqli_query($connection, "SELECT category_title, category_image, category_thumbnail, link_url, link_is_featured FROM ".TABLE_PREFIX."category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=category_id WHERE link_site_id=".SITE_ID." AND link_type='category' AND link_status=200 ORDER BY link_relation_id, link_modified DESC LIMIT 0, 5")) {
+                if($checkCategory=mysqli_query($connection, "SELECT category_title, category_image, category_thumbnail, link_url FROM ".TABLE_PREFIX."category INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=category_id WHERE link_site_id=".SITE_ID." AND link_type='category' AND link_status=200 ORDER BY link_is_featured, link_modified DESC LIMIT 0, 5")) {
                  if(mysqli_num_rows($checkCategory)!=0) {
                     while($categoryData=mysqli_fetch_assoc($checkCategory)) {
                         extract($categoryData);
