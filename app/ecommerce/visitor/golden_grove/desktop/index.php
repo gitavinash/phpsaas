@@ -8,7 +8,7 @@
 
         <?php
         
-            if($desktopSlider=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."slide WHERE slider_device='desktop' AND slide_site_id=".SITE_ID)) {
+            if($desktopSlider=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."slide WHERE slide_staatus=1 AND  slide_site_id=".SITE_ID)) {
                 $numberOfSlider=mysqli_num_rows($desktopSlider);
                 if($numberOfSlider!=0) {
                     while($desktopSliderData=mysqli_fetch_assoc($desktopSlider)) {
