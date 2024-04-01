@@ -1,6 +1,6 @@
 <div class="box-1 dashboard-datepicker">
     <div class="form-group right">
-        <label>Reporting period ( <?php echo ((isset($daterange)) ? $daterange : 'Current month') ?> )</label>
+        <label>Reporting period ( <?php echo ((isset($daterange)) ? $daterange : 'Last 30 days') ?> )</label>
         <form action="" class="widgetForm">
             <input type="text" name="daterange" class="dateRangePicker"
                 value="<?php echo ((isset($daterange)) ? $daterange : '') ?>" id="dashboardReportingDateRangePicker"

@@ -542,7 +542,6 @@
 
     <script src="<?php echo USER_JS ?>stickynav.js"></script>
     <script src="<?php echo USER_JS ?>pricetoggle.js"></script>
-    <!-- <script src="<?php echo USER_JS ?>slider.js"></script> -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
