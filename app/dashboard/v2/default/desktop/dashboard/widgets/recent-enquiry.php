@@ -59,7 +59,7 @@
                 <td><?php echo $name; ?></td>
                 <td><?php echo $enquiry_mobile; ?></td>
                 <td><?php echo $enquiry_subject; ?></td>
-                <?php if($site_access_type!='agent') {echo "<td>{$$enquiry_source}</td>"; } ?>
+                <?php if($site_access_type!='agent') {echo "<td>{$enquiry_source}</td>"; } ?>
                 <td></span><?php echo date('d-m-Y h:i A', strtotime($enquiry_time)); ?>
                 </td>
                 <td>
