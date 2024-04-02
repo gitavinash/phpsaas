@@ -4,7 +4,7 @@ if (isset($sliderId)) {
 
     $sliderId = base64_decode($sliderId);
 
-    if ($checkSlider = mysqli_query($connection, "SELECT slide_image as featureImage, slide_device, slide_title as title, slide_description as description, slide_link, slide_cta FROM " . TABLE_PREFIX . "slide WHERE slide_id='{$sliderId}' AND slide_site_id=" . APP_SITE_ID)) {
+    if ($checkSlider = mysqli_query($connection, "SELECT slide_image as featureImage, slider_device, slide_title as title, slide_description as description, slide_link, slider_cta FROM " . TABLE_PREFIX . "slide WHERE slide_id='{$sliderId}' AND slide_site_id=" . APP_SITE_ID)) {
 
         if (mysqli_num_rows($checkSlider) == 1) {
             extract(mysqli_fetch_assoc($checkSlider));
@@ -23,7 +23,8 @@ if (isset($sliderId)) {
     $title = '';
     $description = '';
     $slide_link = '';
-    $slide_cta = '';
+    $slider_cta = '';
+    $slider_device = '';
 }
 
 ?>
@@ -46,7 +47,7 @@ if (isset($sliderId)) {
 
             <div class="form-group">
                 <label>Slider Link text</label>
-                <input type="text" id="link" value="<?php echo $slide_cta ?>" class="form-control inside-shadow"
+                <input type="text" id="link" value="<?php echo $slider_cta ?>" class="form-control inside-shadow"
                     name="cta" placeholder="Link" autofocus>
             </div>
             <div class="form-group">
@@ -57,8 +58,10 @@ if (isset($sliderId)) {
             <div class="form-group">
                 <label>Select slider Device</label>
                 <select name="device" class="form-control inside-shadow">
-                    <option value="desktop">Desktop</option>
-                    <option value="mobile">Mobile</option>
+                    <option value="desktop" <?php echo ((strtolower($slider_device)=='desktop') ? 'selected' : 
+                    '') ?>>Desktop</option>
+                    <option value="mobile" <?php echo ((strtolower($slider_device)=='mobile') ? 'selected' : 
+                    '') ?>>Mobile</option>
                 </select>
             </div>
 
