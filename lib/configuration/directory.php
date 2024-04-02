@@ -49,7 +49,7 @@ define('EDITOR', PLUGIN_LIBRARY . 'editor/editor.min.js');
 
 /** Default Service Worker */
 
-define('SERVICE_WORKER', RESOURCE . 'service-worker/sw.min.js');
+define('SERVICE_WORKER', RESOURCE . 'service-worker/sw.js');
 define('MAINFEST_JSON', SITE_URL . '/mainfest.json');
 
 /** System default and usefull modules */

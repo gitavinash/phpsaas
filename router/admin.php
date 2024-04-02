@@ -1,6 +1,6 @@
 <?php
 
-	if(ADMIN_BASE_URL=='/sw.min.js') {
+	if(ADMIN_BASE_URL=='/sw.js') {
 		require_once SERVICE_WORKER;
 		exit();
 	}

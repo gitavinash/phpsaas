@@ -83,7 +83,7 @@ switch ($urlStructure[0]) {
 
 	// Service worker
 
-	case 'sw.min.js':
+	case 'sw.js':
 		require_once 'service-worker.php';
 		break;
 
