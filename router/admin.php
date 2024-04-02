@@ -1,7 +1,7 @@
 <?php
 
 	if(ADMIN_BASE_URL=='/sw.js') {
-		require_once SERVICE_WORKER;
+		require_once 'service-worker.php';
 		exit();
 	}
 	

@@ -49,7 +49,8 @@ define('EDITOR', PLUGIN_LIBRARY . 'editor/editor.min.js');
 
 /** Default Service Worker */
 
-define('SERVICE_WORKER', RESOURCE . 'service-worker/sw.js');
+define('DASHBOARD_SERVICE_WORKER', RESOURCE . 'service-worker/admin/sw.js');
+define('VISITOR_SERVICE_WORKER', RESOURCE . 'service-worker/visitor/sw.js');
 define('MAINFEST_JSON', SITE_URL . '/mainfest.json');
 
 /** System default and usefull modules */
