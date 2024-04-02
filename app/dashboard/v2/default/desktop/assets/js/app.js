@@ -42,7 +42,7 @@ if ("serviceWorker" in navigator) {
   // declaring scope manually
   navigator.serviceWorker
     .register("./sw.min.js", {
-      scope: "/app/dashboard/v2/default/desktop/assets/js/",
+      scope: "/",
     })
     .then(
       (registration) => {

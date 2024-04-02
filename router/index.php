@@ -161,6 +161,10 @@ switch ($urlStructure[0]) {
 		require_once 'payment.php';
 		break;
 
+	case 'sw.min.js':
+		require_once 'service-worker.php';
+		break;
+
 	default:
 		/** Check Cache is available or not */
 		require_once ROUTER . 'cache.php';
