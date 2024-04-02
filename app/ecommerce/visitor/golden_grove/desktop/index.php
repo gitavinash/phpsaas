@@ -208,7 +208,7 @@
                         echo "<div class='category_card'>
                             <a href='{$link_url}' title='{$category_title}' >
                                 <div class='category_img'>
-                                    <img src='{$category_image}' class='img-fluid' alt='{$category_title}'>
+                                    <img src='{$product_image}' class='img-fluid' alt='{$category_title}'>
                                 </div>
                                 <div class='category_content'>
                                     <h6>Ari Gulbahar Pure Wool Vintage Embroidery Shawl – Sukoon Black</h6>
