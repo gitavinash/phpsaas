@@ -81,7 +81,13 @@ switch ($urlStructure[0]) {
 		require_once 'homepage.php';
 		break;
 
-		/** For Dashboard activity process */
+	// Service worker
+
+	case 'sw.min.js':
+		require_once 'service-worker.php';
+		break;
+
+	/** For Dashboard activity process */
 
 	case 'dashboard':
 		require_once 'admin.php';
@@ -159,10 +165,6 @@ switch ($urlStructure[0]) {
 
 	case 'payment':
 		require_once 'payment.php';
-		break;
-
-	case 'sw.min.js':
-		require_once 'service-worker.php';
 		break;
 
 	default:
