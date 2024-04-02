@@ -273,11 +273,6 @@
                     </div>
                 </li> -->
 
-                <?php
-                    }
-
-                ?>
-
                 <li class="header-section-name">
                     <p>Integration<span>Manage third party resources.</span></p>
                 </li>
@@ -285,6 +280,12 @@
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/integration/')!==false) ? 'class="active"' : '' ) ?>>
                     <a href="integration/"><i class="fi fi-rr-plug-connection"></i> Plugins</a>
                 </li>
+
+                <?php
+                    }
+                    
+
+                ?>
 
                 <li class="header-section-name">
                     <p>Setting<span>Manage application.</span></p>
