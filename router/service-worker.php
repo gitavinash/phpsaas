@@ -8,4 +8,3 @@
     } else {
         require_once VISITOR_SERVICE_WORKER;
     }
-    exit();
