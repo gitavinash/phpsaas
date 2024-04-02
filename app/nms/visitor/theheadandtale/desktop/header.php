@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.css">
@@ -52,7 +53,7 @@
                                 </div>
 
                                 <div class="manage_link">
-                                    <a href="/dashboard/manage_subscription/">MANAGE MY SUBSCRIPTION</a>
+                                    <a href="/manage-subscription/">MANAGE MY SUBSCRIPTION</a>
                                 </div>
 
                                 <div class="plan_card">
