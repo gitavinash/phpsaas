@@ -192,7 +192,7 @@
 <section class="category_wrapper vertical_padding">
     <div class="container">
         <div class="main_heading">
-            <h3>Feature</h3>
+            <h3>Feature products</h3>
         </div>
     </div>
     <div class="content">
