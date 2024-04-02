@@ -42,7 +42,7 @@ if ("serviceWorker" in navigator) {
   // declaring scope manually
   navigator.serviceWorker
     .register("./sw.js", {
-      scope: "/",
+      scope: "/dashboard/",
     })
     .then(
       (registration) => {
