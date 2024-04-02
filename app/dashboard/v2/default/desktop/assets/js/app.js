@@ -39,19 +39,21 @@ function isNumeric(input) {
 /* register service worker */
 
 if ("serviceWorker" in navigator) {
-  // declaring scope manually
-  navigator.serviceWorker
-    .register("./sw.js", {
-      scope: "/dashboard/",
-    })
-    .then(
-      (registration) => {
-        console.log("Service worker registration succeeded:", registration);
-      },
-      (error) => {
-        console.error(`Service worker registration failed: ${error}`);
-      }
-    );
+  window.addEventListener("load", () => {
+    // declaring scope manually
+    navigator.serviceWorker
+      .register("./sw.js", {
+        scope: "/dashboard/",
+      })
+      .then(
+        (registration) => {
+          console.log("Service worker registration succeeded:", registration);
+        },
+        (error) => {
+          console.error(`Service worker registration failed: `, error);
+        }
+      );
+  });
 } else {
   console.error("Service workers are not supported.");
 }
