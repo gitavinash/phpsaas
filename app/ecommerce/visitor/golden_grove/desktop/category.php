@@ -6,99 +6,78 @@
 <section class="category_wrapper">
     <div class="container">
         <div class="category_title">
-            <h6 class="text-capitalize">our category</h6>
+            <h6 class="text-capitalize"><?php echo $category_title ?></h6>
         </div>
         <div class="category_container">
-            <div class="category_row">
-                <div class="category_box">
-                    <a href="product_category.html"><img src="assets/images/img1.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Kalamkari</p>
-                </div>
-                <div class="category_box">
-                    <a href="product_category.html"><img src="assets/images/img2.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>men</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img3.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>women</p>
-                </div>
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img1.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Kalamkari</p>
-                </div>
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img2.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>men</p>
-                </div>
-            </div>
-            <div class="category_row">
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img1.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Kalamkari</p>
-                </div>
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img2.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>men</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img5.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>special gift</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img6.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Ari</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img7.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>kalamkari</p>
-                </div>
+
+            <?php
+
+        if (isset($categorySinglePost)) { ?>
+
+
+            <div class="row">
+
+                <?php
+
+                $j=0;
+                for ($i = 0; $i < sizeof($categorySinglePost); $i++) {
+
+                    extract($categorySinglePost[$i]);
+                    echp (($j==0) ? "<div class='category_row'>": '');
+                    echo "<div class='col-md-3 col-6'>
+                                    <a href='{$link_url}'>
+                                        <div class='col-card-3'>
+                                            <div class='event-card'>
+                                                <div class='img-cd'>
+                                                    <img src='{$product_image}'>
+                                                </div>
+                                                " . (($inventory_in_stock == 0) ? "<div class='out-of-stock' ><span>Out of Stock</span></div>" : "") . "
+                                                <h4>{$product_title}</h4>
+                                                <p class='rate'>" . $inventory_currency_symbol . ' ' . (($inventory_price != 0) ? $inventory_price : $inventory_mrp) . "</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>";
+                    
+                    if($j==4) {
+                        echo "</div>";
+                        $j=0;
+                    } else {
+                        $j++;
+                    }
+                }
+
+                ?>
 
             </div>
-            <div class="category_row">
-                <div class="category_box">
-                    <a href="product_category.html"><img src="assets/images/img1.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Kalamkari</p>
-                </div>
-                <div class="category_box">
-                    <a href="product_category.html"><img src="assets/images/img2.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>men</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img3.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>women</p>
-                </div>
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img1.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Kalamkari</p>
-                </div>
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img2.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>men</p>
-                </div>
-            </div>
-            <div class="category_row">
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img1.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Kalamkari</p>
-                </div>
-                <div class="category_box hide_card">
-                    <a href="product_category.html"><img src="assets/images/img2.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>men</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img5.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>special gift</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img6.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>Ari</p>
-                </div>
-                <div class="category_box">
-                    <a href="#"><img src="assets/images/img7.jpg" class="img-fluid" alt="Gifts"></a>
-                    <p>kalamkari</p>
-                </div>
+            <div class="center">
+                <div class="pagination">
+                    <?php
 
+                    $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
+
+                    if (PAGE_NO != 0) {
+                        echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
+                    }
+
+                    if (NEXT_PAGE <= TOTAL_PAGE) {
+                        echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$sort}'>Next page &raquo;</a>";
+                    }
+
+                    ?>
+                </div>
             </div>
+
+            <?php
+        } else {
+
+            echo "<section class='continue-shopping'>
+    <h1><span>No product found</span></h1>
+    <a href='/' class='btn btn-success'>Go to homepage</a>
+</section>";
+        }
+
+        ?>
 
         </div>
     </div>

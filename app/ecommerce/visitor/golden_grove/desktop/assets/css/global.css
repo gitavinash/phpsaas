@@ -1363,3 +1363,12 @@ input[type="range"]::-moz-range-thumb {
     min-height: 338px;
   }
 }
+
+.continue-shopping {
+  float: left;
+  width: 100%;
+  text-align: center;
+  line-height: 100px;
+  margin: 50px 0px;
+  box-sizing: content-box;
+}
