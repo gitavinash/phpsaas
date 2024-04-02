@@ -36,28 +36,6 @@ function isNumeric(input) {
   return /^\d+$/.test(input);
 }
 
-/* register service worker */
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    // declaring scope manually
-    navigator.serviceWorker
-      .register("./sw.js", {
-        scope: "/dashboard/",
-      })
-      .then(
-        (registration) => {
-          console.log("Service worker registration succeeded:", registration);
-        },
-        (error) => {
-          console.error(`Service worker registration failed: `, error);
-        }
-      );
-  });
-} else {
-  console.error("Service workers are not supported.");
-}
-
 /** SweetAlert Pop Up Box */
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
