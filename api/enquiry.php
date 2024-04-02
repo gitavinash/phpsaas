@@ -176,6 +176,23 @@ foreach ($enquiryMeta as $key => $value) {
 
 $messageDB = json_encode($enquiryMeta, TRUE);
 
+if($checkUserEnquiry=mysqli_query($connection, "SELECT enquiry_time FROM ".TABLE_PREFIX."enquiry WHERE enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_site_id=".SITE_ID." ORDER BY enquiry_time DESC LIMIT 0, 1")) {
+    if(mysqli_num_rows($checkUserEnquiry)!=0) {
+        extract(mysqli_fetch_assoc($checkUserEnquiry));
+        $time_difference = time() - strtotime($enquiry_time);
+        $time_difference_hours = $time_difference / (60 * 60);
+        if($time_difference_hours > 2){
+            $freshEnquiry=true;
+        } else {
+            $freshEnquiry=false;
+        }
+    } else {
+        $freshEnquiry=true;
+    }
+}
+
+if($freshEnquiry==true) {
+
 // Start record enquiry data into table
 
 mysqli_query($connection, "START TRANSACTION");
@@ -247,6 +264,7 @@ $email_body = "
             require_once APP_EMAIL_TEMPLATE.'enquiry-thank-you.php';
         }
     }
+}
 
 if (strpos($redirect_url, '/shipping/') !== false) {
     $postUrlValue = "&name=" . urlencode($name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
