@@ -25,7 +25,6 @@
 				<script src="<?php echo PLUGIN_LIBRARY ?>chartjs/chart.min.js" type="text/javascript"></script>
 				<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
-				<script src="<?php echo ADMIN_JS_LIBRARY ?>service.min.js"></script>
 				<?php
 				
 				if($site_access_type =='agent') { ?>
@@ -37,8 +36,7 @@ const tempId = '<?php echo base64_encode(USER_ID) ?>';
 
 				?>
 				<script src="<?php echo ADMIN_JS ?>app.min.js"></script>
-
-
+				<script src="<?php echo ADMIN_JS ?>service.min.js"></script>
 				</body>
 
 				</html>
