@@ -41,8 +41,8 @@ function isNumeric(input) {
 if ("serviceWorker" in navigator) {
   // declaring scope manually
   navigator.serviceWorker
-    .register("/app/dashboard/v2/default/desktop/assets/js/sw.min.js", {
-      scope: "/dashboard/",
+    .register("./sw.min.js", {
+      scope: "/app/dashboard/v2/default/desktop/assets/js/",
     })
     .then(
       (registration) => {
