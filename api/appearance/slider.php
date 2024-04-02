@@ -15,10 +15,9 @@ function slider($connection, $data)
     }
 
     if (isset($sliderId)) {
-
-        $query = "UPDATE " . TABLE_PREFIX . "slide SET slide_image='{$featureImage}', slide_title='{$title}', slide_description = '{$description}', slide_link='{$link}' WHERE slide_id={$sliderId} AND slide_site_id=" . APP_SITE_ID;
+        $query = "UPDATE " . TABLE_PREFIX . "slide SET slide_image='{$featureImage}', slide_title='{$title}', slide_description = '{$description}', slide_link='{$link}', slider_device='{$device}', slider_cta='{$cta}' WHERE slide_id={$sliderId} AND slide_site_id=" . APP_SITE_ID;
     } else {
-        $query = "INSERT INTO " . TABLE_PREFIX . "slide(slide_site_id, slide_image, slide_title, slide_description, slide_link, slide_status) VALUES(" . APP_SITE_ID . ", '{$featureImage}', '{$title}', '{$description}', '{$link}', 1)";
+        $query = "INSERT INTO " . TABLE_PREFIX . "slide(slide_site_id, slider_device, slide_image, slide_title, slide_description, slide_link, slider_cta, slide_status) VALUES(" . APP_SITE_ID . ", '{$device}', '{$featureImage}', '{$title}', '{$description}', '{$link}', '{$cta}', 1)";
     }
 
     if (mysqli_query($connection, $query)) {
