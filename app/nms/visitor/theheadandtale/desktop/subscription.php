@@ -16,7 +16,7 @@
 
     // Example usage:
     $message = $amount.$currencyCode.PROFILE_EMAIL.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
-    $key = "abc256";
+    $key = "abc";
 
     $hash = hmac_sha256($message, $key);
     $hashValue = bin2hex($hash);
@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <form id='myForm' name='myForm' action='https://qa.phicommerce.com/pg/api/sale' method='post'
+    <form id='myForm' name='myForm' action='https://qa.phicommerce.com/pg/api/v2/initiateSale' method='post'
         enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="merchantID" value="<?php echo $merchantId ?>" />
         <input type="hidden" name="merchantTxnNo" value="<?php echo $merchantTxnNo ?>" />
