@@ -7,7 +7,8 @@
 
     $amount=(($duration=='monthly') ? '899' : '3299');
     $currencyCode=356;
-    $merchantId = 'T_00738';
+    $customerName=PROFILE_DISPLAY_NAME;
+    $merchantId = 'T_00735';
     $merchantTxnNo = 'THT_'.$orderNumber;
     $payType=0;
     $returnURL=SITE_URL.'/payment-response/';
@@ -15,7 +16,7 @@
     $txnDate=date('YmdHis');
 
     // Example usage:
-    $message = $amount.$currencyCode.PROFILE_EMAIL.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
+    $message = $amount.$currencyCode.PROFILE_EMAIL.PROFILE_DISPLAY_NAME.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
     $key = "abc";
 
     $hash = hmac_sha256($message, $key);
