@@ -48,9 +48,9 @@
                                     <p>Don't have an account yet? <a href="/register/">Register Now</a></p>
                                 </div>
                             </form>
-                            <div class="text-center mt-3">
+                            <!-- <div class="text-center mt-3">
                                 <p>or</p>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="legal">
                             <p>By continuing you agree to our <a href="https://blumox.com/terms-and-conditions/">Terms

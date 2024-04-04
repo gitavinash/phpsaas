@@ -65,6 +65,8 @@ a {
 
 .form-bg {
   background: #e7f5e5;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .form {
@@ -162,7 +164,7 @@ a {
 
 .legal {
   float: left;
-  width: 100%;
+  width: 90%;
   text-align: center;
   font-size: 12px;
   position: absolute;
@@ -176,6 +178,9 @@ a {
 }
 
 @media screen and (max-width: 1024px) {
+  body {
+    background: #e7f5e5;
+  }
   .logo {
     float: left;
     text-align: center;
@@ -191,6 +196,10 @@ a {
   .centered-box {
     width: 100%;
     margin: 0% 0% 0% 0%;
+    box-shadow: none;
+  }
+  .form-bg {
+    border-radius: 10px;
   }
   .form {
     border-radius: 10px;
@@ -203,5 +212,6 @@ a {
     position: relative;
     bottom: 0px;
     min-height: 100px;
+    margin-top: 2rem;
   }
 }

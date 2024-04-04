@@ -2,11 +2,11 @@
 
     $orderNumber = mt_rand(10000, 99999);
 
-    $amount=(($duration=='monthly') ? '899' : '3299');
+    $amount=(($duration=='monthly') ? '899' : '3299').'.00';
     $currencyCode=356;
     $customerName=PROFILE_DISPLAY_NAME;
     $merchantId = 'T_00735';
-    $merchantTxnNo = 'THT_'.$orderNumber;
+    $merchantTxnNo = 'THT'.$orderNumber;
     $payType=0;
     $returnURL=SITE_URL.'/payment-response/';
     $transactionType='SALE';
