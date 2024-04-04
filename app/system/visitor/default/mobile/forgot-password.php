@@ -1,31 +1,39 @@
 <?php
 
-  include_once 'header.php';
+    require_once 'header.php';
 
 ?>
-           <div class="form-box">
-               <form id="forgot">
-                  <h1>Forgot your password?<span>We'll email you instructions on how to reset it</span></h1>
-                  <div class="beforeClick">
-                    <div class="form-group">
-                      <input type="email" class="form-control" id="email" placeholder="Email address" name="email" >
-                    </div>
-                    <div class="form-group">
-                      <input type="hidden" name="type" value="auth" >
-                      <input type="hidden" name="action" value="forgotPassword" >
-                      <input type="submit" id="forgotPassword" class="btn btn-block btn-success" value="Send Instructions">
-                    </div>
-                    <div class="form-group">
-                      <p class="center-link">Know your password? <a href="login/" class="center-link">Log In</a></p>
-                    </div>
-                  </div>
-                  <div class="afterClick">
-                    <p id='statusMsg'></p>
-                  </div>
-               </form>
-           </div>
-<?php
+<div class="col d-none d-lg-block">
+    <div class="slider">
+        <div class="slide">
+            <div class="img">
+                <img src="/app/system/visitor/default/desktop/assets/images/icons/forgot_password.svg" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col form-bg">
+    <div class="form">
+        <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>
+        <div class="card-body">
+            <div class="form-heading"><strong>Forgot Your Password?</strong>We'll email you instructions
+                on how to reset it
+            </div>
+            <form id="forgot" autocomplete="off">
+                <div class="form-group">
+                    <input type="text" class="form-control input-with-label" name="email" id="email"
+                        placeholder="Email">
+                </div>
+                <input type="hidden" name="type" value="auth">
+                <input type="hidden" name="action" value="forgotPassword">
+                <button type="submit" id="forgotPassword" class="button theme-button">Recover password</button>
+                <div class="form-group">
+                    <p>Know your password? <a href="/login/">Back to Log in</a></p>
+                </div>
+            </form>
+        </div>
+        <?php
 
-  include_once 'footer.php';
+    require_once 'footer.php';
 
 ?>

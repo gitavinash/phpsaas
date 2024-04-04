@@ -1,34 +1,55 @@
 <?php
 
-include_once 'header.php';
+    $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
+
+    if(isset($_COOKIE['isLogin'])) {
+        
+        header("Location: {$redirect_url}");
+        exit();
+
+    }
+
+    require_once 'header.php';
 
 ?>
-<div class="form-box">
-    <form id="login">
-        <h1>Login<span>Sign in your account</span></h1>
-        <div class="form-group">
-            <input type="email" class="form-control" id="email" placeholder="Email address*" name="email" autofocus required>
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" id="pass" placeholder="Password*" name="pass" required>
-        </div>
-        <div class="form-group">
-            <a href="forgot-password/" class="link">Forgot Password?</a>
-        </div>
-        <div class="form-group">
-            <input type="hidden" name="type" value="auth">
-            <input type="hidden" name="action" value="login">
-            <input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>">
-            <input type="submit" id="loginBtn" class="btn btn-block btn-success" value="Log In">
-        </div>
-        <div class="form-group">
-            <p class="center-link">Don't have an Account? <a href="register/" class="center-link">Join Now</a></p>
-        </div>
-    </form>
-    <p class="footer">By joining <?php echo CREDIT ?>, you agree to our <a href="//blumox.com/terms-and-services/" title="Terms of Service">Terms of Service</a> and <a href="//blumox.com/privacy-policy/" title="Privacy Policy">Privacy Policy</a></p>
-</div>
-<?php
+<div class="col d-none d-lg-block">
+    <div class="slider">
 
-include_once 'footer.php';
+    </div>
+</div>
+<div class="col form-bg">
+    <div class="form">
+        <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>
+        <div class="card-body">
+            <div class="form-heading">
+                <strong>Welcome Back!</strong> Log In to Your Account
+            </div>
+            <form id="login" autocomplete="off">
+                <div class="form-group">
+                    <input type="text" class="form-control input-with-label" name="email" id="email"
+                        placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control input-with-label" name="pass" id="pass"
+                        placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <p>Forgot your password? <a href="/forgot-password/">Click Here</a></p>
+                </div>
+                <input type="hidden" name="type" value="auth">
+                <input type="hidden" name="action" value="login">
+                <input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>">
+                <button type="submit" id="loginBtn" class="button theme-button">Log in</button>
+                <div class="form-group">
+                    <p>Don't have an account yet? <a href="/register/">Register Now</a></p>
+                </div>
+            </form>
+            <!-- <div class="text-center mt-3">
+                                <p>or</p>
+                            </div> -->
+        </div>
+        <?php
+
+    require_once 'footer.php';
 
 ?>

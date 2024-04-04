@@ -1,37 +1,20 @@
-<?php
-
-  $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
-
-  if(isset($_COOKIE['isLogin'])) {
-    
-    header("Location: {$redirect_url}");
-    exit();
-
-  }
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <base href="<?php echo SITE_URL ?>/">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" value="index">
-    <link rel="icon" href="<?php echo SITE_ICON ?>">
-    <title>
-        <?php echo ucwords(str_replace('/', '', str_replace('-', ' ', str_replace('/', ' ', BASE_URL)))).' | '.SITE_NAME ?>
-    </title>
-    <link rel="canonical" href="<?php echo SITE_URL.ACTIVE_URL ?>" />
-    <meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
-    <link rel="stylesheet" href="<?php echo ADMIN_CSS_LIBRARY ?>login.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,700" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title><?php echo ucwords(str_replace('/', '', str_replace('-', ' ', ACTIVE_URL))).' | '.SITE_NAME ?></title>
+    <link rel="icon" type="image/png" href="<?php echo SITE_ICON ?>">
+    <link href="<?php echo CSS_LIBRARY ?>bootstrap_5/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/app/system/visitor/default/desktop/assets/css/onboarding.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-
-    <section>
+    <div class="container">
+        <div class="centered-box">
+            <div class="row">
