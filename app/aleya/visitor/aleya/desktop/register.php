@@ -22,7 +22,7 @@
                         box 1
                     </div>
                 </div>
-                <div class="col">
+                <div class="col form-bg">
                     <div class="form">
                         <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>
                         <div class="card-body">

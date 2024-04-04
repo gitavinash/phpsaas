@@ -63,11 +63,15 @@ a {
   min-height: 500px;
 }
 
+.form-bg {
+  background: #e7f5e5;
+}
+
 .form {
   box-sizing: border-box;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  padding: 20px;
+  padding: 20px 20px 70px 20px;
   position: relative;
   background: #e7f5e5;
   min-height: 500px;
@@ -158,11 +162,12 @@ a {
 
 .legal {
   float: left;
-  width: 90%;
+  width: 100%;
   text-align: center;
   font-size: 12px;
   position: absolute;
   bottom: 5px;
+  background: #e7f5e5;
 }
 
 .legal a {
@@ -185,9 +190,18 @@ a {
   }
   .centered-box {
     width: 100%;
-    margin: 2rem 0% 0% 0%;
+    margin: 0% 0% 0% 0%;
   }
   .form {
     border-radius: 10px;
+  }
+  .legal {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    position: relative;
+    bottom: 0px;
+    min-height: 100px;
   }
 }
