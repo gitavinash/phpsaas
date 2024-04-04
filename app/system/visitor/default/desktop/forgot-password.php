@@ -9,6 +9,9 @@
             <div class="img">
                 <img src="/app/system/visitor/default/desktop/assets/images/icons/forgot_password.svg" alt="">
             </div>
+            <div class="text">
+                <p><strong>Lost Your Password?</strong>Let's Get You Back In!</p>
+            </div>
         </div>
     </div>
 </div>
