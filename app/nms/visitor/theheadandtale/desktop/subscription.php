@@ -1,9 +1,6 @@
 <?php
 
     $orderNumber = mt_rand(10000, 99999);
-    function hmac_sha256($msg, $key) {
-        return hash_hmac('sha256', $msg, $key);
-    }
 
     $amount=(($duration=='monthly') ? '899' : '3299');
     $currencyCode=356;
@@ -15,12 +12,30 @@
     $transactionType='SALE';
     $txnDate=date('YmdHis');
 
-    // Example usage:
+    // request values for hash value:
     $message = $amount.$currencyCode.PROFILE_EMAIL.PROFILE_DISPLAY_NAME.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
     $key = "abc";
 
-    $hash = hmac_sha256($message, $key);
-    $hashValue = bin2hex($hash);
+    // hmac function with sha256 to create hash Value
+
+    $hashValue = hash_hmac('SHA256', $message, $key);
+    $hashValue = bin2hex($hashValue);
+    $hashValue = strtolower($hashValue);
+    // exit();
+
+    echo json_encode(array(
+        "merchantId" => $merchantId,
+        "merchantTxnNo" => $merchantTxnNo,
+        "amount" => $amount,
+        "currencyCode" => 356,
+        "payType" => 0,
+        "customerEmailId" => PROFILE_EMAIL,
+        "returnURL" => $returnURL,
+        "txnDate" => $txnDate,
+        "customerName" => PROFILE_DISPLAY_NAME,
+        "secureHash" => $hashValue
+    ), true);
+    exit();
 
 
 ?>

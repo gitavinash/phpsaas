@@ -45,7 +45,7 @@
     <header>
         <div class="right-side">
             <ul>
-                <li><a href="#"><i class="fi-rr-bell"></i></a></li>
+                <li><a href="#" onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
@@ -344,7 +344,7 @@
                 ?>
 
                 <li class="appVersion">
-                    <p>App version : 1.0.0</p>
+                    <p>App version : <?php echo ALEYA_APP_VERSION ?></p>
                 </li>
             </ul>
         </nav>

@@ -351,12 +351,8 @@ strong {
 
 .right-side ul li {
   float: left;
-  padding: 0 10px;
+  /* padding: 0 10px; */
   cursor: pointer;
-}
-
-.right-side ul li:last-child {
-  padding-right: 0;
 }
 
 .right-side ul li a {
@@ -396,8 +392,8 @@ strong {
   right: 0;
   width: 250px;
   margin: 0 auto;
-  padding: 10px 0;
   border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 .right-side ul li:hover ul li {
@@ -407,7 +403,7 @@ strong {
 }
 
 .right-side ul li:hover ul li a {
-  color: #cccccc;
+  color: #f5f5f5;
   float: left;
   width: 100%;
   padding: 0px 0px 0px 15px;
@@ -426,6 +422,7 @@ strong {
 
 .right-side ul li:hover ul li a:hover {
   color: #fff;
+  background: rgba(3, 99, 123, 0.5);
 }
 
 .right-side ul li:hover ul li a:hover i {
@@ -609,7 +606,7 @@ nav.side-nav ul li:hover > .side-menu ul li {
 
 nav.side-nav ul li:hover .side-menu ul li a {
   line-height: 24px;
-  color: #cccccc;
+  color: #f5f5f5;
 }
 
 nav.side-nav ul li:hover .side-menu ul li a i {
@@ -619,7 +616,7 @@ nav.side-nav ul li:hover .side-menu ul li a i {
 nav.side-nav ul li:hover .side-menu ul li a:hover {
   line-height: 24px;
   color: #fff;
-  background: 0 0;
+  background: rgba(3, 99, 123, 0.5);
 }
 
 nav.side-nav ul li:hover .side-menu ul li a:hover i {
@@ -683,7 +680,7 @@ main {
 .i-m-here-pagination ul li::after {
   content: "\003E";
   margin: 0px 5px;
-  color: #cccccc !important;
+  color: #f5f5f5 !important;
 }
 .i-m-here-pagination ul li:last-child:after {
   content: "";
