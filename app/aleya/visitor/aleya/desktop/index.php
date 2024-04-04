@@ -25,6 +25,18 @@
     <!-- Add the slick-theme.css if you want default styling -->
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <?php require_once DEFAULT_META ?>
+    <script type="text/javascript">
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "lr85q84qkh");
+    </script>
 </head>
 
 <body>
@@ -318,7 +330,7 @@
                                 </ul>
                             </div>
                             <div class="buy_now">
-                                <a href="#">Start now</a>
+                                <a href="/register/">Start now</a>
                             </div>
                         </div>
                     </div>
@@ -374,7 +386,7 @@
                                 </ul>
                             </div>
                             <div class="buy_now">
-                                <a href="#">Start now</a>
+                                <a href="/register/">Start now</a>
                             </div>
                         </div>
                     </div>
