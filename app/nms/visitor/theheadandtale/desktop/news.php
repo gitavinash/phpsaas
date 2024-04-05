@@ -143,10 +143,17 @@
 
                 ?>
             </div>
+            <?php
+            
+                if(isset($_COOKIE['user_data'])) { ?>
             <div class="user_content">
                 <p>The author is the Founder and Editor of The Head and Tale. She can be reached at <a
                         href="mailto:<?php echo $profile_email ?>"><?php echo $profile_email ?></a></p>
             </div>
+            <?php
+                }
+
+            ?>
         </div>
     </div>
 </section>
