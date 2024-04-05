@@ -49,7 +49,7 @@
                 <section class="subscribe_wrapper">
                     <div class="container">
                         <div class="subscribe_wrapper__heading">
-                            <h6><a href="/register/">Sign up now to read the full story</a></h6>
+                            <h6><a href="/signup/">Sign up now to read the full story</a></h6>
                             <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
                             <!-- <p><a href="/register/"> Sign up now</a></p> -->
                         </div>
