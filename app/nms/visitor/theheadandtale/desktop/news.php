@@ -49,12 +49,12 @@
                 <section class="subscribe_wrapper">
                     <div class="container">
                         <div class="subscribe_wrapper__heading">
-                            <h6>Subscribe to read the full story </h6>
+                            <h6><a href="/register/">Sign up now to read the full story</a></h6>
                             <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
-                            <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
+                            <!-- <p><a href="/register/"> Sign up now</a></p> -->
                         </div>
 
-                        <div class="subscription_card">
+                        <!-- <div class="subscription_card">
                             <div class="subscription_card__box">
                                 <p>1-month</p>
                                 <h6>INR 899</h6>
@@ -77,7 +77,7 @@
                                     ?>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
