@@ -45,12 +45,38 @@
                 
                    if(!isset($_COOKIE['user_name'])) { ?>
 
+
                 <section class="subscribe_wrapper">
                     <div class="container">
                         <div class="subscribe_wrapper__heading">
-                            <h6>Sign now read the full story </h6>
+                            <h6>Subscribe to read the full story </h6>
                             <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
-                            <p><a href="/login/">Subscribe to read the full story</a></p>
+                            <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
+                        </div>
+
+                        <div class="subscription_card">
+                            <div class="subscription_card__box">
+                                <p>1-month</p>
+                                <h6>INR 899</h6>
+                                <div class="continue">
+                                    <?php
+                                    
+                                        echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
+
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="subscription_card__box">
+                                <p>1-Year (Annual)</p>
+                                <h6>INR 3299</h6>
+                                <div class="continue">
+                                    <?php
+                                    
+                                            echo "<a href='/login/?duration=yearly' class='button'>continue</a>";
+
+                                    ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
