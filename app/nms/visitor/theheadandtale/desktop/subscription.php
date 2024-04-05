@@ -4,35 +4,41 @@
 
     $amount=(($duration=='monthly') ? '899' : '3299').'.00';
     $currencyCode=356;
+    // $customerEmail=PROFILE_EMAIL;
+    $customerEmail=PROFILE_EMAIL;
     $customerName=PROFILE_DISPLAY_NAME;
     $merchantId = 'T_00735';
-    $merchantTxnNo = 'THT'.$orderNumber;
+    // $merchantTxnNo = 'THT'.$orderNumber;
+    $merchantTxnNo = 'THT'.time();
     $payType=0;
     $returnURL=SITE_URL.'/payment-response/';
     $transactionType='SALE';
     $txnDate=date('YmdHis');
 
     // request values for hash value:
-    $message = $amount.$currencyCode.PROFILE_EMAIL.PROFILE_DISPLAY_NAME.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
+    $message = $amount.$currencyCode.$customerEmail.$customerName.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
     $key = "abc";
 
     // hmac function with sha256 to create hash Value
 
-    $hashValue = hash_hmac('SHA256', $message, $key);
+    echo $message;
+
+    $hashValue = hash_hmac('sha256', $message, $key, true);
     $hashValue = bin2hex($hashValue);
     $hashValue = strtolower($hashValue);
-    // exit();
 
+        // exit();
     echo json_encode(array(
-        "merchantId" => $merchantId,
-        "merchantTxnNo" => $merchantTxnNo,
         "amount" => $amount,
         "currencyCode" => 356,
+        "customerEmailId" => $customerEmail,
+        "customerName" => $customerName,
+        "merchantId" => $merchantId,
+        "merchantTxnNo" => $merchantTxnNo,
         "payType" => 0,
-        "customerEmailId" => PROFILE_EMAIL,
         "returnURL" => $returnURL,
+        "transactionType" => $transactionType,
         "txnDate" => $txnDate,
-        "customerName" => PROFILE_DISPLAY_NAME,
         "secureHash" => $hashValue
     ), true);
     exit();

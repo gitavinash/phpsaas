@@ -45,6 +45,12 @@
                 
                    if(!isset($_COOKIE['user_name'])) { ?>
 
+                <div class="details_box__content">
+                    <p><?php
+                        $pos=strpos($news_description, ' ', 380);
+                        echo substr($news_description,0,$pos ).'...';
+                    ?></p>
+                </div>
 
                 <section class="subscribe_wrapper">
                     <div class="container">
@@ -86,7 +92,10 @@
                      if($news_paid==1) { ?>
 
                 <div class="details_box__content">
-                    <p><?php echo $meta_description ?></p>
+                    <p><?php
+                        $pos=strpos($news_description, ' ', 100);
+                        echo substr($news_description,0,$pos );
+                    ?></p>
                 </div>
                 <section class="subscribe_wrapper">
                     <div class="container">
