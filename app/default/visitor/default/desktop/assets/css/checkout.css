@@ -330,6 +330,13 @@ h2 span {
   font-size: 1.2rem;
 }
 
+.productBox .productText p span {
+  padding-left: 1rem;
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 1.5rem;
+}
+
 .creditBox {
   float: left;
   width: 100%;

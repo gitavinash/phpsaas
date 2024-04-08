@@ -19,7 +19,7 @@
             <!-- <div class='row'> -->
             <div class='col-8'>
                 <p><strong>{${$cart_relation_type.'_title'}}</strong></p>
-                <p>{${$cart_relation_type.'_description'}}</p>
+                <p><span>{${$cart_relation_type.'_description'}}</span></p>
             </div>
             <div class='col-2'>
                 <div class='price float-right'>
