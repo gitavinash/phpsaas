@@ -52,6 +52,9 @@
                     <div class="login_input">
                         <input type="password" placeholder="Password" name="pass" required>
                     </div>
+                    <div class="login_input">
+                        <p>Forgot your password? <a href="/forgot-password/">Click Here</a></p>
+                    </div>
                     <div class="sign--in_btn">
                         <input type="hidden" name="type" value="auth">
                         <input type="hidden" name="action" value="login">

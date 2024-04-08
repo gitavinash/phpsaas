@@ -61,6 +61,9 @@
                         <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/">
                         <input type="submit" class="button" value="Sign up">
                     </div>
+                    <div class="login_input">
+                        <p><br />Already have an Account? <a href="/login/">Log in</a></p>
+                    </div>
                 </form>
 
                 <div class="form_bottom">
