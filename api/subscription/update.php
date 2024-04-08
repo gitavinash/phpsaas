@@ -93,6 +93,8 @@
                         $fb_desc=(($fb_desc=='') ? $meta_desc : $fb_desc );
                         $tw_desc=(($tw_desc=='') ? $meta_desc : $tw_desc );
 
+                        $salePrice = (($salePrice==0) ? $mrp : $salePrice );
+                        
                         /** Start updating in products */
 
                         mysqli_query($connection, "START TRANSACTION");

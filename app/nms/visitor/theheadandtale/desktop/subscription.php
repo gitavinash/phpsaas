@@ -1,78 +1,42 @@
 <?php
 
-    $orderNumber = mt_rand(10000, 99999);
+    $productInfo=mysqli_query($connection, "SELECT inventory_price FROM ".TABLE_PREFIX."inventory WHERE inventory_relation_id='{$id}' AND inventory_status=1 AND inventory_type='product' AND  inventory_site_id=".SITE_ID);
 
-    $amount=(($duration=='monthly') ? '899' : '3299').'.00';
-    $currencyCode=356;
-    // $customerEmail=PROFILE_EMAIL;
-    $customerEmail=PROFILE_EMAIL;
-    $customerName=PROFILE_DISPLAY_NAME;
-    $merchantId = 'T_00735';
-    // $merchantTxnNo = 'THT'.$orderNumber;
-    $merchantTxnNo = 'THT'.time();
-    $payType=0;
-    $returnURL=SITE_URL.'/payment-response/';
-    $transactionType='SALE';
-    $txnDate=date('YmdHis');
+    extract(mysqli_fetch_assoc($productInfo));
 
-    // request values for hash value:
-    $message = $amount.$currencyCode.$customerEmail.$customerName.$merchantId.$merchantTxnNo.$payType.$returnURL.$transactionType.$txnDate;
-    $key = "abc";
+    if(!isset($inventory_price)) {
+        echo "Invalid product request received";
+        exit();
+    }
+    
+    $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-    // hmac function with sha256 to create hash Value
+    mysqli_query($connection, "START TRANSATION");
 
-    echo $message;
+    if($checkUser=mysqli_query($connection, "SELECT user_id FROM ".TABLE_PREFIX."user WHERE user_salt_key='{$userSaltKey}' AND user_status=1")) {
+        if(mysqli_num_rows($checkUser)!=0) {
+            extract(mysqli_fetch_assoc($checkUser));
+        } else {
+            echo "invalid activity found by unknown users";
+        }
+    }
 
-    $hashValue = hash_hmac('sha256', $message, $key, true);
-    $hashValue = bin2hex($hashValue);
-    $hashValue = strtolower($hashValue);
+    $taxAmount = number_format((float)(18 / 100) * $inventory_price, 2, '.', '');
+    $totalPrice=$inventory_price+$taxAmount;
 
-        // exit();
-    echo json_encode(array(
-        "amount" => $amount,
-        "currencyCode" => 356,
-        "customerEmailId" => $customerEmail,
-        "customerName" => $customerName,
-        "merchantId" => $merchantId,
-        "merchantTxnNo" => $merchantTxnNo,
-        "payType" => 0,
-        "returnURL" => $returnURL,
-        "transactionType" => $transactionType,
-        "txnDate" => $txnDate,
-        "secureHash" => $hashValue
-    ), true);
+    $addToCart=mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$totalPrice}', 2, NOW())");
+
+
+    $addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_status, order_generate) VALUES(".SITE_ID.", '{$user_id}', '".SESSION_ID."', '{$totalPrice}', 0, NOW())");
+    $order_id=base64_encode(mysqli_insert_id($connection));
+
+
+    if($addToCart && $addNewOrder) {
+        mysqli_query($connection, "COMMIT");
+        header("Location: /shipping/?id={$order_id}", TRUE, 301);
+    } else {
+        mysqli_query($connection, "ROLLBACK");
+        echo "Something went wrong while process to subscription";
+    }
+
     exit();
-
-
-?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment request processing | <?php echo SITE_NAME ?></title>
-</head>
-
-<body>
-    <form id='myForm' name='myForm' action='https://qa.phicommerce.com/pg/api/v2/initiateSale' method='post'
-        enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="merchantID" value="<?php echo $merchantId ?>" />
-        <input type="hidden" name="merchantTxnNo" value="<?php echo $merchantTxnNo ?>" />
-        <input type="hidden" name="amount" value="<?php echo $amount ?>" />
-        <input type="hidden" name="currencyCode" value="<?php echo $currencyCode ?>" />
-        <input type="hidden" name="payType" value="<?php echo $payType ?>" />
-        <input type="hidden" name="customerEmailId" value="<?php echo PROFILE_EMAIL ?>" />
-        <input type="hidden" name="transactionType" value="<?php echo $transactionType ?>" />
-        <input type="hidden" name="returnURL" value="<?php echo $returnURL ?>" />
-        <input type="hidden" name="txnDate" value="<?php echo $txnDate ?>" />
-        <input type="hidden" name="secureHash" value="<?php echo $hashValue ?>" />
-    </form>
-    <script>
-    window.onload = function() {
-        document.getElementById("myForm").submit();
-    };
-    </script>
-</body>
-
-</html>

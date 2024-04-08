@@ -1,51 +1,33 @@
-<?php
-
-    require_once 'header.php';
-
-?>
-<section class="subscribe--wrapper">
+<section class="manage_container">
     <div class="container">
-        <div class="subscribe--wrapper_box">
-            <mark>In the realm of journalism, thriving often hinges on subscription models. Subscribing not only
-                sustains quality reporting but also fosters a direct connection between readers and the content they
-                value. By selecting the optimal subscription plan, you’re not just accessing premium journalism but
-                also supporting the vital role of independent media in society.</mark>
+        <h3>Manage My Subscription</h3>
+        <div class="manage_container--wrapper">
+            <div class="manage_plane__box">
+                <h6>Your current plan</h6>
+                <p>1-Month Plan <span> (Expires on xx date)</span></p>
+                <div class="upgrade--plan">
+                    <mark>Upgrade my plan to Annual</mark>
+                </div>
+            </div>
+            <div class="cancel__subscription">
+                <p>Cancel my subscription</p>
+            </div>
+        </div>
+        <div class="manage_container--wrapper">
+            <h5>For, annual plan subscriber. This page will show.</h5>
+            <div class="manage_plane__box">
+                <h6>Your current plan</h6>
+                <p>1-Annual Plan <span> (Expires on xx date)</span></p>
+            </div>
+            <div class="cancel__subscription">
+                <p>Cancel my subscription</p>
+            </div>
         </div>
     </div>
 </section>
 
-<div class="subscribe_wrapper subscribe_padding">
-    <div class="container">
-        <div class="subscribe_wrapper__heading">
-            <!-- <h6>Subscribe to read the full story </h6> -->
-            <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
-            <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
-        </div>
-
-        <div class="subscription_card">
-            <div class="subscription_card__box">
-                <p>1-month</p>
-                <h6>INR 899</h6>
-                <div class="continue">
-                    <a href='/login/?duration=monthly' class="button">continue</a>
-                </div>
-            </div>
-            <div class="subscription_card__box">
-                <p>1-Year (Annual)</p>
-                <h6>INR 3299</h6>
-                <div class="continue">
-                    <a href='/login/?duration=yearly' class="button">continue</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="subscription_mail">
     <div class="container">
-        <div class="myMail">
-            <p>Facing some trouble while purchasing The Head and Tale subscription? Email at <a
-                    href="mailto:arti.singh@theheadandtale.com"> arti.singh@theheadandtale.com</a></p>
-        </div>
         <div class="faq_wrapper">
             <div class="faq_heading">
                 <h6>Also, please refer to our <span> FAQs (Frequently Asked Questions)</span></h6>
@@ -101,8 +83,3 @@
         </div>
     </div>
 </div>
-<?php
-
-    require_once 'footer.php';
-
-?>

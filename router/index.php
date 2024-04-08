@@ -87,6 +87,12 @@ switch ($urlStructure[0]) {
 		require_once 'service-worker.php';
 		break;
 
+	// CSS Configuration
+
+	case 'config.min.css':
+		require_once 'css-theme.php';
+		break;
+
 	/** For Dashboard activity process */
 
 	case 'dashboard':
@@ -165,6 +171,18 @@ switch ($urlStructure[0]) {
 
 	case 'payment':
 		require_once 'payment.php';
+		break;
+
+	case 'checkout':
+		require_once 'checkout.php';
+		break;
+
+	case 'cart':
+		require_once 'cart.php';
+		break;
+
+	case 'shipping':
+		require_once 'shipping.php';
 		break;
 
 	default:

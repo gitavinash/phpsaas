@@ -29,10 +29,10 @@
                         <div class="social_links">
                             <h3>Follow us on</h3>
                             <a href="https://twitter.com/theheadandtale"><img
-                                    src="<?php echo ADMIN_IMAGES ?>Shiny-Rounded-corner-Twitter-X-Icon.png"
+                                    src="<?php echo USER_IMAGES ?>Shiny-Rounded-corner-Twitter-X-Icon.png"
                                     class="img-fluid" alt="twitter"></a>
                             <a href="https://www.linkedin.com/company/theheadandtale/"><img
-                                    src="<?php echo ADMIN_IMAGES ?>linkden.png" class="img-fluid" alt="linkden"></a>
+                                    src="<?php echo USER_IMAGES ?>linkden.png" class="img-fluid" alt="linkden"></a>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
     </div>
 </footer>
 
-<script src="<?php echo ADMIN_JS ?>script.min.js"></script>
+<script src="<?php echo USER_JS ?>script.min.js"></script>
 
 </body>
 

@@ -163,6 +163,16 @@ define('USER_JS', USER_URL . 'assets/js/');
 define('USER_IMAGES', USER_URL . 'assets/images/');
 define('USER_PLUGINS', USER_URL . 'assets/plugins/');
 
+// Default theme for visitors
+
+define('DEFAULT_USER_DIR', '/app/default/visitor/default/desktop/');
+define('DEFAULT_USER_PATH', ROOT . DEFAULT_USER_DIR);
+define('DEFAULT_USER_URL', SITE_URL . DEFAULT_USER_DIR);
+define('DEFAULT_USER_STYLESHEET', DEFAULT_USER_DIR . 'assets/css/');
+define('DEFAULT_USER_JS', DEFAULT_USER_DIR . 'assets/js/');
+define('DEFAULT_USER_IMAGES', DEFAULT_USER_DIR . 'assets/images/');
+define('DEFAULT_USER_PLUGINS', DEFAULT_USER_DIR . 'assets/plugins/');
+
 /** Specific AMP Feature */
 
 define('STATUS', RESOURCE . '/amp/stories.php');

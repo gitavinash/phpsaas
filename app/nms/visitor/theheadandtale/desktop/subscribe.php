@@ -23,36 +23,40 @@
         </div>
 
         <div class="subscription_card">
+            <?php
+           
+            if($subsriptionPlan=mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=".SITE_ID)) {
+                if(mysqli_num_rows($subsriptionPlan)!=0) {
+                    while($subsriptionPlanData=mysqli_fetch_assoc($subsriptionPlan)) {
+                        extract($subsriptionPlanData); ?>
+
             <div class="subscription_card__box">
-                <p>1-month</p>
-                <h6>INR 899</h6>
+                <p><?php echo $product_title ?></p>
+                <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
                 <div class="continue">
                     <?php
-                                    
-                                        if($_COOKIE['user_data']) {
-                                            echo "<a href='/subscription/?duration=monthly' class='button'>continue</a>";
-                                        } else {
-                                            echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
-                                        }
+                                                    
+                                                        if(isset($_COOKIE['user_data'])) {
+                                                            echo "
+                                                                <form action='/subscription/' method='post' >
+                                                                    <input type='hidden' name='id' value='{$product_id}'>
+                                                                    <input type='submit' class='button' value='continue'>
+                                                                </form>
+                                                            ";
+                                                        } else {
+                                                            echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
+                                                        }
 
-                                    ?>
+                                                    ?>
                 </div>
             </div>
-            <div class="subscription_card__box">
-                <p>1-Year (Annual)</p>
-                <h6>INR 3299</h6>
-                <div class="continue">
-                    <?php
-                                    
-                                        if($_COOKIE['user_data']) {
-                                            echo "<a href='/subscription/?duration=yearly' class='button'>continue</a>";
-                                        } else {
-                                            echo "<a href='/login/?duration=yearly' class='button'>continue</a>";
-                                        }
 
-                                    ?>
-                </div>
-            </div>
+            <?php
+                    }
+                }
+            }
+
+           ?>
         </div>
     </div>
 </div>

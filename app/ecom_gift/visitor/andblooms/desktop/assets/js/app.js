@@ -242,10 +242,12 @@ $(document).ready(function() {
       formData.push({name:'order', value: $('#orderId').val()});
       formData.push({name:'paymentMode', value: 'online'});
 
+      console.log(formData);
+
       $.ajax({
           type: 'POST',
           dataType: 'json',
-          data = formData,
+          data : formData,
           success: function(data) {
               
               if(data.status==200) {

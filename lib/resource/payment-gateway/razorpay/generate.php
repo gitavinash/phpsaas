@@ -47,7 +47,7 @@ var orderValue = {
         "address": 'Razorpay Corporate Office'
     },
     "theme": {
-        "color": "#3399cc"
+        "color": "<?php SITE_THEME_COLOUR ?>"
     },
     "handler": function(response) { // After payment done status
         window.location.href =

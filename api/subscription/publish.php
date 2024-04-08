@@ -8,16 +8,21 @@
 
             require_once MODULES.'imageUploader.php';
 
-            if(isset($image['featureImage'])) {
-
                 // Extract the single upload image string to variables
+
+                if(isset($featureImage)) {
+                    $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
+                    $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));
+                } else {
+                    $featureImage = '';
+                    $facebookImage = '';
+                    $twitterImage = '';
+                    $thumbnailImage='';
+                }
 
                 $featurePost=((isset($featurePost)) ? 1 : 0 );
                 $postType=((isset($postType)) ? $postType : $type );
                 $currentStock=((isset($currentStock)) ? $currentStock : 0 );
-        
-                $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
-                $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));
 
                 if(isset($_FILES['gallery'])) {
         
@@ -51,6 +56,8 @@
                         if(mysqli_num_rows($checkURL)==0) {
 
                             require_once EDITOR_CONTENT_FILTER;
+
+                            $salePrice = (($salePrice==0) ? $mrp : $salePrice );
 
                             /** Start uploading the product */
 
@@ -132,12 +139,6 @@
                     $msg='Please select subscription category';
 
                 }
-
-            } else {
-
-                $msg='Please select subscription feature image.';
-
-            }
 
         } else {
 
