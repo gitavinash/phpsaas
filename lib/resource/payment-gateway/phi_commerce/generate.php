@@ -18,7 +18,7 @@
     $customerMobile=$profile_mobile;
     $customerName=PROFILE_DISPLAY_NAME;
     $merchantId = PG_MERCHANT_ID;
-    $merchantTxnNo = 'THT'.$transaction_id;
+    $merchantTxnNo = ((DEVELOPMENT_MODE==true) ? 'THTT'.$transaction_id : 'THT'.$transaction_id);
     $payType=0;
     $returnURL = SITE_URL."/payment/status/?id=".base64_encode($order_id)."&txn_id=".base64_encode($transaction_id);
     $transactionType='SALE';
@@ -71,6 +71,6 @@ curl_close($curl);
 if($response['tranCtx']!='') {
     header("Location: https://qa.phicommerce.com/pg/api/v2/authRedirect?tranCtx={$response['tranCtx']}", TRUE, 301);
 } else {
-    print_r($response);
+    echo $response['responseDescription'];
 }
 exit();
