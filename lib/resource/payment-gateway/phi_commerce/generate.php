@@ -68,5 +68,9 @@ $response = curl_exec($curl);
 $response = json_decode($response, TRUE);
 curl_close($curl);
 
-header("Location: https://qa.phicommerce.com/pg/api/v2/authRedirect?tranCtx={$response['tranCtx']}", TRUE, 301);
+if($response['tranCtx']!='') {
+    header("Location: https://qa.phicommerce.com/pg/api/v2/authRedirect?tranCtx={$response['tranCtx']}", TRUE, 301);
+} else {
+    print_r($response);
+}
 exit();
