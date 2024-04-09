@@ -2,6 +2,15 @@
 
     require_once 'header.php';
 
+    if($activeSubscription==true) {
+        if($subscription_mode=='year') { ?>
+<script>
+window.location.href = '/manage-subscription/';
+</script>
+<?php
+        }
+    }
+
 ?>
 <section class="subscribe--wrapper">
     <div class="container">
@@ -25,16 +34,17 @@
         <div class="subscription_card">
             <?php
            
+           $subscription_relation_id=((isset($subscription_relation_id)) ? $subscription_relation_id : 0);
+
             if($subsriptionPlan=mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=".SITE_ID)) {
                 if(mysqli_num_rows($subsriptionPlan)!=0) {
                     while($subsriptionPlanData=mysqli_fetch_assoc($subsriptionPlan)) {
-                        extract($subsriptionPlanData); ?>
-
+                        extract($subsriptionPlanData);
+                            if($product_id!=$subscription_relation_id) { ?>
             <div class="subscription_card__box">
                 <p><?php echo $product_title ?></p>
                 <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
-                <div class="continue">
-                    <?php
+                <div class="continue"> <?php
                                                     
                                                         if(isset($_COOKIE['user_data'])) {
                                                             echo "
@@ -50,12 +60,11 @@
                                                     ?>
                 </div>
             </div>
-
             <?php
                     }
                 }
             }
-
+        }
            ?>
         </div>
     </div>

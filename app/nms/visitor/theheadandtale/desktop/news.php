@@ -89,7 +89,16 @@
 
                 <?php
                    } else {
-                     if($news_paid==1) { ?>
+                    if($news_paid==1) {
+
+                        if($activeSubscription==true) { ?>
+
+                <div class="details_box__content">
+                    <p><?php echo $news_description ?></p>
+                </div>
+
+                <?php
+                        } else { ?>
 
                 <div class="details_box__content">
                     <p><?php
@@ -144,6 +153,8 @@
                     </div>
                 </section>
                 <?php
+                }
+
                     } else { ?>
 
                 <div class="details_box__content">

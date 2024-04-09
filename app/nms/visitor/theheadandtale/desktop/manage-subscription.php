@@ -2,35 +2,32 @@
 
     require_once 'header.php';
 
-?>
-
-<section class="manage_container">
-    <div class="container">
-        <h3>Manage My Subscription</h3>
-        <div class="manage_container--wrapper">
-            <div class="manage_plane__box">
-                <h6>Your current plan</h6>
-                <p>1-Month Plan <span> (Expires on xx date)</span></p>
-                <div class="upgrade--plan">
-                    <mark>Upgrade my plan to Annual</mark>
+    if($activeSubscription==true) {
+        echo "<section class='manage_container'>
+            <div class='container'>
+                <h3>Manage My Subscription</h3>
+                <div class='manage_container--wrapper'>
+                    <div class='manage_plane__box'>
+                        <h6>Your current plan</h6>
+                        <p>{${$subscription_type.'_title'}} <span> (Expires on {$expiryDate})</span></p>
+                        ".(($subscription_mode=='month') ? "<div class='upgrade--plan'>
+                            <a href='/subscribe/' style='text-decoration: none' ><mark>Upgrade my plan to Annual</mark></a>
+                        </div>" : "")."
+                    </div>
+                    <div class='cancel__subscription'>
+                        <a href='mailto:arti.singh@theheadandtale.com' style='text-decoration: none' ><p>Cancel my subscription</p></a>
+                    </div>
                 </div>
             </div>
-            <div class="cancel__subscription">
-                <p>Cancel my subscription</p>
-            </div>
-        </div>
-        <div class="manage_container--wrapper">
-            <h5>For, annual plan subscriber. This page will show.</h5>
-            <div class="manage_plane__box">
-                <h6>Your current plan</h6>
-                <p>1-Annual Plan <span> (Expires on xx date)</span></p>
-            </div>
-            <div class="cancel__subscription">
-                <p>Cancel my subscription</p>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>";
+    } else { ?>
+<script>
+window.location.href = '/';
+</script>
+<?php
+    }
+
+?>
 
 <div class="subscription_mail">
     <div class="container">

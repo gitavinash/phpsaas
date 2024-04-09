@@ -5,6 +5,31 @@
         exit();
     }
 
+    if($checkTransaction=mysqli_query($connection, "SELECT product_id, product_title, transaction_user_id, transaction_type FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."product ON order_product_id=product_id WHERE transaction_id=".base64_decode($txn_id)." AND transaction_status=1 AND transaction_site_id=".SITE_ID)) {
+        if(mysqli_num_rows($checkTransaction)!=0) {
+            extract(mysqli_fetch_assoc($checkTransaction));
+
+            if (strpos(strtolower($product_title), "month") !== false) {
+                $subscriptionDuration='month';
+            } else {
+                $subscriptionDuration='year';
+            }
+
+
+            if(!mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status) VALUES('".SITE_ID."', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', 1)")) {
+                if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."subscription SET subscription_relation_id={$product_id}, subscription_mode='{$subscriptionDuration}', subscription_time=NOW() WHERE subscription_user_id='{$transaction_user_id}' AND subscription_site_id=".SITE_ID)) {
+                    echo mysqli_fetch_assoc($connection);
+                    echo "Something went wrong while updating the subscription plan";
+                }
+            }
+        } else {
+            echo "Invalid transaction found";
+        }
+    } else {
+        echo mysqli_error($connection);
+        echo "Something went wrong";
+    }
+    
     require_once 'header.php';
 
 ?>
