@@ -18,7 +18,7 @@
     $customerMobile=$profile_mobile;
     $customerName=PROFILE_DISPLAY_NAME;
     $merchantId = PG_MERCHANT_ID;
-    $merchantTxnNo = ((DEVELOPMENT_MODE==true) ? 'THTT'.$transaction_id : 'THT'.$transaction_id);
+    $merchantTxnNo = ((DEVELOPMENT_MODE==true) ? $transaction_id : $transaction_id);
     $payType=0;
     $returnURL = SITE_URL."/payment/status/?id=".base64_encode($order_id)."&txn_id=".base64_encode($transaction_id);
     $transactionType='SALE';
@@ -53,15 +53,15 @@ $requestBody = json_encode(array(
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-CURLOPT_URL => 'https://qa.phicommerce.com/pg/api/v2/initiateSale',
-CURLOPT_RETURNTRANSFER => true,
-CURLOPT_ENCODING => '',
-CURLOPT_MAXREDIRS => 10,
-CURLOPT_TIMEOUT => 0,
-CURLOPT_FOLLOWLOCATION => true,
-CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-CURLOPT_CUSTOMREQUEST => 'POST',
-CURLOPT_POSTFIELDS => $requestBody,
+    CURLOPT_URL => 'https://qa.phicommerce.com/pg/api/v2/initiateSale',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS => $requestBody,
 ));
 
 $response = curl_exec($curl);
