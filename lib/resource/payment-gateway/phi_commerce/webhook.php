@@ -1,7 +1,4 @@
 <?php
 
-    echo json_encode(array(
-        'status' => 200,
-        'message' => 'success'
-    ), TRUE);
+    echo json_encode($_REQUEST, TRUE);
     exit();

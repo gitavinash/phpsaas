@@ -51,12 +51,12 @@
     </div>
     <div class="row common_padding footer_dark white py-3 align-items-center">
         <div class="col-12 col-sm-6 text-center text-sm-start">
-            <p>&copy 2021 Astroaayu Rights Reserved. | Design and Developed by <a href="//isw.one?ref=astroaayu.com">ITS
-                    Soft World</a></p>
+            <p>&copy 2021-<?php echo date('Y') ?> <?php echo SITE_NAME ?> Rights Reserved. | Design and Developed by <a
+                    href="//blumox.com?utm_source=astroaayu.com">Blumox Technologies</a></p>
         </div>
         <div class="col-12 col-sm-6 d-flex justify-content-center justify-content-sm-end mt-2 mt-sm-0">
             <div class="footer_icon">
-                <a href="https://www.facebook.com/Astroaayu4u">
+                <a href="https://www.facebook.com/astroaayu4u">
                     <i class="fa-brands fa-facebook-f"></i>
                 </a>
             </div>
