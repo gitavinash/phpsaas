@@ -19,7 +19,7 @@
     <header class="">
         <div class="container">
             <div class="row">
-                <div class="col-5 m-col-7">
+                <div class="col-5 m-col">
                     <div class="logo">
                         <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>">
                     </div>

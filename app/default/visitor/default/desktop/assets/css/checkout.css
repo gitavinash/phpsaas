@@ -175,7 +175,8 @@ section {
 }
 
 .logo img {
-  height: 60px;
+  height: auto;
+  max-height: 60px;
   mix-blend-mode: multiply;
   width: auto;
   max-width: 100%;
@@ -331,7 +332,6 @@ h2 span {
 }
 
 .productBox .productText p span {
-  padding-left: 1rem;
   font-size: 0.8rem;
   font-weight: 300;
   line-height: 1.5rem;
@@ -341,19 +341,23 @@ h2 span {
   float: left;
   width: 100%;
   margin: 10px;
-  display: flex;
+  display: block;
   position: fixed;
   bottom: 0px;
 }
 
 .creditBox p {
   float: left;
+  width: 100%;
+  text-align: center;
   font-size: 0.8rem;
+  font-size: #666;
   align-self: flex-end;
+  color: #666;
 }
-
-.creditBox p span {
-  float: right;
+.creditBox p a {
+  font-weight: 500;
+  color: #333;
 }
 
 @media screen and (max-width: 990px) {
@@ -431,7 +435,26 @@ h2 span {
     /* padding: 0 0.5rem; */
     /* box-sizing: border-box; */
   }
+  .logo {
+    text-align: center;
+  }
+
   .logo img {
-    height: 50px;
+    max-height: 50px;
+    height: auto;
+  }
+
+  .checkout-box .row {
+    padding: 0% !important;
+  }
+
+  .container {
+    padding: 0% 2%;
+  }
+
+  .productBox .productImage {
+    width: 30%;
+    max-width: 70px;
+    display: block;
   }
 }
