@@ -69,7 +69,7 @@ $response = json_decode($response, TRUE);
 curl_close($curl);
 
 if($response['tranCtx']!='') {
-    header("Location: https://qa.phicommerce.com/pg/api/v2/authRedirect?tranCtx={$response['tranCtx']}", TRUE, 301);
+    header("Location: https://secure-ptg.payphi.com/pg/api/v2/authRedirect?tranCtx={$response['tranCtx']}", TRUE, 301);
 } else {
     echo $response['responseDescription'];
 }
