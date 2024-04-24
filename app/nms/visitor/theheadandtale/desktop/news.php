@@ -33,10 +33,10 @@
                     <p>Share the story on</p>
                     <a href="http://twitter.com/share?text=<?php echo $news_title ?>&url=<?php echo $link_url ?>"
                         target="_blank"><i class='bx bxl-twitter'></i></a>
-                    <a href="https://wa.me/?text=<?php echo $news_title.' '.$link_url ?>" target="_blank"><i
-                            class='bx bxl-linkedin' style="color: #0b65c2"></i></a>
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo $link_url ?>&title=<?php echo $news_title ?>"
-                        target="_blank"><i class='bx bxl-whatsapp' style="color: #01e776"></i></a>
+                        target="_blank"><i class='bx bxl-linkedin' style="color: #0b65c2"></i></a>
+                    <a href="https://wa.me/?text=<?php echo $news_title.' '.$link_url ?>" target="_blank"><i
+                            class='bx bxl-whatsapp' style="color: #01e776"></i></a>
                 </div>
 
             </div>
