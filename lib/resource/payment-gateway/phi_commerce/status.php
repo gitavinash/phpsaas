@@ -26,7 +26,7 @@ $requestBody = array(
 
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://qa.phicommerce.com/pg/api/command',
+    CURLOPT_URL => 'https://secure-ptg.payphi.com/pg/api/command',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,

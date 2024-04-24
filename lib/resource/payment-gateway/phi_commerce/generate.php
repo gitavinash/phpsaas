@@ -53,7 +53,7 @@ $requestBody = json_encode(array(
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://qa.phicommerce.com/pg/api/v2/initiateSale',
+    CURLOPT_URL => 'https://secure-ptg.payphi.com/pg/api/v2/initiateSale',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
