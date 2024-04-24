@@ -36,8 +36,8 @@
                 <div class="thankyou_wrapper__content">
                     <h1>Thank You for Sign up!</h1>
                     <p>We appreciate your support and trust in us. If you have any questions, feedback, or suggestions,
-                        please don't hesitate to reach out to us at <a href="mailto: arti.singh@theheadandtale.com">
-                            arti.singh@theheadandtale.com</a></p>
+                        please don't hesitate to reach out to us at <a href="mailto: info@theheadandtale.com">
+                            info@theheadandtale.com</a></p>
                 </div>
             </div>
         </section>

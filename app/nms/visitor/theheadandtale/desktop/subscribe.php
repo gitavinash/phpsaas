@@ -73,7 +73,7 @@ window.location.href = '/manage-subscription/';
     <div class="container">
         <div class="myMail">
             <p>Facing some trouble while purchasing The Head and Tale subscription? Email at <a
-                    href="mailto:arti.singh@theheadandtale.com"> arti.singh@theheadandtale.com</a></p>
+                    href="mailto:info@theheadandtale.com"> info@theheadandtale.com</a></p>
         </div>
         <div class="faq_wrapper">
             <div class="faq_heading">
@@ -123,7 +123,7 @@ window.location.href = '/manage-subscription/';
                             cycle. Simply go to your profile, click on 'Manage My Subscription' in the drop-down
                             menu, and disable auto-renewal to stop it from renewing for the next cycle. For further
                             queries, you can connect with us at <a
-                                href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a> </p>
+                                href="mailto:info@theheadandtale.com">info@theheadandtale.com</a> </p>
                     </div>
                 </div>
             </div>

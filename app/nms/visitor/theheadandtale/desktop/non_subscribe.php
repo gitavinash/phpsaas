@@ -84,7 +84,7 @@
                 </div>
                 <!-- <div class="user_content">
                     <p>The author is the Founder and Editor of The Head and Tale. She can be reached at <a
-                            href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a></p>
+                            href="mailto:info@theheadandtale.com">info@theheadandtale.com</a></p>
                 </div> -->
             </div>
         </div>
