@@ -109,7 +109,7 @@
                 <section class="subscribe_wrapper">
                     <div class="container">
                         <div class="subscribe_wrapper__heading">
-                            <h6>Subscribe to read the full story </h6>
+                            <h6><a href="/subscribe/">Subscribe to read the full story</a></h6>
                             <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
                             <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
                         </div>
