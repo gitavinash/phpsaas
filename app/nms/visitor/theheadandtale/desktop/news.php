@@ -32,11 +32,13 @@
                 <div class="social_link">
                     <p>Share the story on</p>
                     <a href="http://twitter.com/share?text=<?php echo $news_title ?>&url=<?php echo $link_url ?>"
-                        target="_blank"><i class='bx bxl-twitter'></i></a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo $link_url ?>&title=<?php echo $news_title ?>"
-                        target="_blank"><i class='bx bxl-linkedin' style="color: #0b65c2"></i></a>
-                    <a href="https://wa.me/?text=<?php echo $news_title.' '.$link_url ?>" target="_blank"><i
-                            class='bx bxl-whatsapp' style="color: #01e776"></i></a>
+                        target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" class="share-icon"
+                            alt=""></a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL.$link_url ?>&title=<?php echo $news_title ?>"
+                        target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" class="share-icon"
+                            alt=""></a>
+                    <a href="https://wa.me/?text=<?php echo $news_title.' '.SITE_URL.$link_url ?>" target="_blank"><img
+                            src="<?php echo USER_IMAGES ?>social_media/whatsapp.png" class="share-icon" alt=""></a>
                 </div>
 
             </div>
@@ -100,10 +102,12 @@
                 <?php
                         } else { ?>
 
-                <div class="details_box__content">
+                <div class="details_box__content show-3-line">
                     <p><?php
-                        $pos=strpos($news_description, ' ', 100);
-                        echo substr($news_description,0, $pos );
+                        // $pos=strpos($news_description, ' ', 100);
+                        // echo substr($news_description,0, $pos );
+
+                        echo $news_description;
                     ?></p>
                 </div>
                 <section class="subscribe_wrapper">

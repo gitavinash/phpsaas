@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap");
 body {
   margin: 0;
   padding: 0;
   border-top: 5px solid red;
 }
-:root{
+:root {
   --white-color: #fff;
   --black-color: #000;
   --grey-color: #666;
@@ -14,13 +14,16 @@ h2,
 h3,
 h4,
 h5,
-h6,p {
+h6,
+p {
   /* font-family: "Newsreader", serif !important; */
   font-weight: 600;
   margin-bottom: 0 !important;
   color: inherit;
 }
-h1,h2,h3{
+h1,
+h2,
+h3 {
   font-family: "Geologica", sans-serif;
 }
 p,
@@ -30,7 +33,7 @@ a {
   margin: 0 auto;
   color: inherit;
 }
-button{
+button {
   border: none;
   outline: none;
   background-color: transparent;
@@ -41,14 +44,12 @@ button{
   font-weight: 600;
   text-transform: capitalize !important;
 }
-button:hover{
-  opacity: .7;
+button:hover {
+  opacity: 0.7;
 }
 .black-bg {
   background: #000;
 }
-
-
 
 .logo {
   text-align: center;
@@ -57,24 +58,24 @@ button:hover{
 .logo img {
   max-height: 80px;
 }
-.header_flex{
+.header_flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.myHeader{
+.myHeader {
   padding: 2.4rem 0;
   background-color: #f1f0f1;
 }
-.company-logo img{
+.company-logo img {
   width: 340px;
 }
-.header_right{
+.header_right {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-.header_right a{
+.header_right a {
   padding: 12px;
   border-radius: 10px;
   text-decoration: none;
@@ -82,11 +83,11 @@ button:hover{
   text-transform: capitalize;
   font-size: 18px;
 }
-.header_right .subscribe{
+.header_right .subscribe {
   background-color: red;
   color: var(--white-color);
 }
-.header_right .sign_in{
+.header_right .sign_in {
   background-color: peachpuff;
   color: var(--black-color);
   font-weight: 700;
@@ -138,10 +139,10 @@ section {
   border-radius: 10px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
-.news_box:hover{
+.news_box:hover {
   color: var(--black-color);
 }
-.news_box__width{
+.news_box__width {
   width: 80% !important;
 }
 .news_box:first-child {
@@ -206,14 +207,14 @@ section {
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.date{
+.date {
   margin: 24px 0 !important;
   color: gray;
 }
-.newsletter_wrapper{
+.newsletter_wrapper {
   background-color: #fbe5d4;
 }
 .newsletter {
@@ -227,11 +228,11 @@ section {
   /* color: #fff; */
 }
 
-.input_btn{
+.input_btn {
   position: relative;
   display: flex;
-    margin: 0 auto;
-    width: 45%;
+  margin: 0 auto;
+  width: 45%;
 }
 .newsletter h3 {
   font-size: 32px;
@@ -250,7 +251,7 @@ section {
   border-radius: 4px;
   border: 1px solid var(--black-color);
 }
-.newsletter_btn{
+.newsletter_btn {
   padding: 10px !important;
   background: var(--black-color) !important;
   color: var(--white-color) !important;
@@ -263,7 +264,7 @@ section {
   padding: 0 20px !important;
   height: 100%;
 }
-.newsletter_btn i{
+.newsletter_btn i {
   font-size: 32px;
 }
 
@@ -288,92 +289,89 @@ section {
   cursor: pointer;
 }
 
-
-
 /* blog */
-.blog_banner{
+.blog_banner {
   padding: 100px 0;
 }
-.blog_banner__left{
+.blog_banner__left {
   display: flex;
   justify-content: center;
   flex-direction: column;
   height: 100%;
 }
-.blog_banner__left span{
+.blog_banner__left span {
   color: var(--grey-color);
   font-size: 18px;
 }
-.blog_banner__left h3{
+.blog_banner__left h3 {
   font-size: 48px;
   font-weight: 600;
   margin-top: 12px;
 }
-.blog_banner__left p{
+.blog_banner__left p {
   margin-top: 12px;
   color: var(--grey-color);
   font-size: 18px;
 }
-.blog_banner_img img{
+.blog_banner_img img {
   width: 100%;
   border-radius: 20px;
 }
-.blog_container{
+.blog_container {
   padding: 0 0 60px 0;
 }
-.blog_parra p{
+.blog_parra p {
   font-size: 20px;
   margin-top: 1rem;
 }
-.laravel_content{
+.laravel_content {
   margin-top: 2.5rem;
 }
-.laravel_content h3{
+.laravel_content h3 {
   font-size: 45px;
   font-weight: 500;
 }
-.laravel_content h6{
+.laravel_content h6 {
   font-size: 30px;
   margin-top: 2rem;
 }
-.laravel_content p{
+.laravel_content p {
   margin-top: 1.2rem;
   font-size: 18px;
 }
-.laravel_box{
+.laravel_box {
   margin-top: 2rem;
 }
 
-
-@media(max-width:992px){
-  .blog_banner__left{
+@media (max-width: 992px) {
+  .blog_banner__left {
     margin-top: 1rem;
   }
-  .container{
+  .container {
     max-width: 100% !important;
   }
 }
-@media(max-width:768px){
-  .input_btn{
+@media (max-width: 768px) {
+  .input_btn {
     width: 80%;
   }
-  .newsletter h3{
+  .newsletter h3 {
     font-size: 24px;
     line-height: 28px;
   }
-  .news_box__width{
+  .news_box__width {
     width: 100% !important;
   }
 }
 @media (max-width: 720px) {
-  .news_box:first-child { 
-    margin-top: 30px; 
+  .news_box:first-child {
+    margin-top: 30px;
   }
-  .container--box{
+  .container--box {
     padding-right: 0 !important;
     padding-left: 1rem !important;
   }
-  .news_box{
+  .news_box {
     height: 100%;
   }
   .logo img {
@@ -384,7 +382,7 @@ section {
     max-width: 95%;
     width: 95%;
   }
-  .details_box{
+  .details_box {
     padding: 1rem;
   }
   .news_box .feature_image {
@@ -410,7 +408,6 @@ section {
     border-radius: 10px;
   }
 
-
   .news_box .news_intro {
     float: left;
     width: 100%;
@@ -418,11 +415,11 @@ section {
     margin-top: 1rem;
     box-sizing: border-box;
   }
-  button{
+  button {
     font-size: 16px !important;
     padding: 12px;
   }
-  .company-logo img{
+  .company-logo img {
     width: 210px;
   }
   .news_box:first-child .news_intro {
@@ -454,94 +451,98 @@ section {
     line-height: 28px;
   }
 
-
-  .blog_banner__left h3{
+  .blog_banner__left h3 {
     font-size: 32px;
     margin-top: 0;
   }
-  .blog_banner__left span{
+  .blog_banner__left span {
     font-size: 16px;
   }
-  .blog_banner{
+  .blog_banner {
     padding: 40px 0;
   }
-  .blog_parra p{
+  .blog_parra p {
     font-size: 16px;
     line-height: 1.6;
   }
-  .laravel_content h3{
+  .laravel_content h3 {
     font-size: 34px;
   }
-  .laravel_content h6{
+  .laravel_content h6 {
     font-size: 25px;
   }
-  .laravel_content p{
+  .laravel_content p {
     margin-top: 14px;
     font-size: 16px;
   }
-  .blog_banner__left p{
+  .blog_banner__left p {
     font-size: 16px;
   }
-  .header_right a{
+  .header_right a {
     font-size: 16px;
   }
 }
 
-@media(max-width:576px){
-  .newsletter_input{
+@media (max-width: 576px) {
+  .newsletter_input {
     width: 100% !important;
     margin-bottom: 1rem;
   }
-  .newsletter_btn{
+  .newsletter_btn {
     height: auto;
     padding: 3px 20px !important;
   }
-  .input_btn{
+  .input_btn {
     width: 100%;
   }
-  .newsletter h3{
+  .newsletter h3 {
     font-size: 18px;
-    
   }
-  .news_intro h2{
+  .news_intro h2 {
     font-size: 23px;
     line-height: 30px;
   }
-  .newsletter{
+  .newsletter {
     padding: 30px 0;
   }
-  .news_box:last-child{
+  .news_box:last-child {
     margin-bottom: 60px;
   }
 }
-@media(max-width:500px){
-  .company-logo img{
+@media (max-width: 500px) {
+  .company-logo img {
     width: 180px;
   }
-  .header_right{
+  .header_right {
     gap: 10px;
   }
   .news_box:first-child {
     margin: 20px 0px;
   }
 }
-@media(max-width:410px){
-  .header_right a{
+@media (max-width: 410px) {
+  .header_right a {
     font-size: 14px;
     padding: 6px;
   }
-  .myHeader{
+  .myHeader {
     padding: 2rem 0;
   }
-  .header_right{
+  .header_right {
     gap: 7px;
   }
-  .header_flex{
+  .header_flex {
     gap: 5px;
   }
 }
-@media(max-width:360px){
-  .company-logo img{
+@media (max-width: 360px) {
+  .company-logo img {
     width: 153px;
   }
+}
+
+.share-icon {
+  height: 30px;
+  width: auto;
+  padding-right: 10px;
 }

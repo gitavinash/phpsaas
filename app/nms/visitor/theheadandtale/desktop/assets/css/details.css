@@ -20,9 +20,13 @@
 .news_right p {
   font-size: 18px;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  /* -webkit-line-clamp: 3; */
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.show-3-line {
+  -webkit-line-clamp: 3;
 }
 
 .header_right p {
