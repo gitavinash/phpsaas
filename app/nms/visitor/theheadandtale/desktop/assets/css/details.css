@@ -98,6 +98,13 @@
   margin: 0 auto !important;
   color: inherit !important;
 }
+
+.details_box__content div {
+  font-family: "Noto Sans", sans-serif !important;
+  font-weight: 300 !important;
+  margin: 0 auto !important;
+  color: inherit !important;
+}
 .details_box__content img {
   max-width: 100%;
 }
