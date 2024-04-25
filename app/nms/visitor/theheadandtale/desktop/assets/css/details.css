@@ -97,6 +97,8 @@
   font-weight: 300 !important;
   margin: 0 auto !important;
   color: inherit !important;
+  font-size: 18px !important;
+  line-height: 36px !important;
 }
 
 .details_box__content div {
@@ -104,7 +106,10 @@
   font-weight: 300 !important;
   margin: 0 auto !important;
   color: inherit !important;
+  font-size: 18px !important;
+  line-height: 36px !important;
 }
+
 .details_box__content img {
   max-width: 100%;
 }
@@ -113,14 +118,14 @@
   font-weight: 300 !important;
   margin: 0 auto !important;
   color: inherit !important;
-  font-size: 18px !important;
-  line-height: 33px !important;
   margin-bottom: 30px !important;
   background: none !important;
+  font-size: 18px !important;
+  line-height: 36px !important;
 }
 .details_box__content span {
   font-size: 18px !important;
-  line-height: 33px !important;
+  line-height: 36px !important;
 }
 .details_box__img img {
   width: 50%;
