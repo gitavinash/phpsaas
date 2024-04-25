@@ -87,10 +87,21 @@
   margin: 2rem 5rem;
   background-color: #fff9f9;
 }
+
+.details_box__content {
+  font-family: "Noto Sans", sans-serif !important;
+  font-weight: 300 !important;
+  margin: 0 auto !important;
+  color: inherit !important;
+}
 .details_box__content img {
   max-width: 100%;
 }
 .details_box__content p {
+  font-family: "Noto Sans", sans-serif !important;
+  font-weight: 300 !important;
+  margin: 0 auto !important;
+  color: inherit !important;
   font-size: 18px !important;
   line-height: 33px !important;
   margin-bottom: 30px !important;
@@ -108,11 +119,18 @@
 .details_box__img {
   margin: 2rem 0;
 }
-.user_content {
+/* .user_content {
   display: flex;
   justify-content: space-between;
   align-items: start;
   margin: 0 0 5rem 0;
+} */
+.user_content {
+  display: block;
+  /* justify-content: space-between;
+  align-items: start; */
+  margin: 0 0 10rem 5rem;
+  text-align: left;
 }
 .profile_cancel i {
   position: absolute;
@@ -126,7 +144,7 @@
   color: red;
 }
 .user_content p {
-  font-size: 18px;
+  font-size: 16px;
   font-style: italic;
   /* margin: 0; */
 }

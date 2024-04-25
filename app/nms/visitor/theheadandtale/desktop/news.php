@@ -160,7 +160,6 @@
                 }
 
                     } else { ?>
-
                 <div class="details_box__content">
                     <p><?php echo $news_description ?></p>
                 </div>
