@@ -24,11 +24,24 @@
     $taxAmount = number_format((float)(18 / 100) * $inventory_price, 2, '.', '');
     $totalPrice=$inventory_price+$taxAmount;
 
-    $addToCart=mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$totalPrice}', 2, NOW())");
+    if($checkCart = mysqli_query($connection, "SELECT cart_id FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."' AND cart_site_id='".SITE_ID."'")) {
+        if(mysqli_num_rows($checkCart)==0) {
+            $addToCart=mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$totalPrice}', 2, NOW())");
+        } else {
+            $addToCart=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."cart SET cart_relation_id='{$id}', cart_price='{$totalPrice}' WHERE cart_session_id='".SESSION_ID."' AND cart_site_id='".SITE_ID."'");
+        }
+    }
 
-
-    $addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_status, order_generate) VALUES(".SITE_ID.", '{$user_id}', '".SESSION_ID."', '{$totalPrice}', 0, NOW())");
-    $order_id=base64_encode(mysqli_insert_id($connection));
+    if($checkOrder=mysqli_query($connection, "SELECT order_id FROM ".TABLE_PREFIX."order WHERE order_cart_session_id='".SESSION_ID."' AND order_site_id='".SITE_ID."'")) {
+        if(mysqli_num_rows($checkOrder)==0) {
+            $addNewOrder=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_status, order_generate) VALUES(".SITE_ID.", '{$user_id}', '".SESSION_ID."', '{$totalPrice}', 0, NOW())");
+            $order_id=base64_encode(mysqli_insert_id($connection));
+        } else {
+            extract(mysqli_fetch_assoc($checkOrder));
+            $addNewOrder=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."order SET order_product_price='{$totalPrice}' WHERE order_cart_session_id='".SESSION_ID."' AND order_site_id='".SITE_ID."'");
+            $order_id=base64_encode($order_id);
+        }
+    }
 
 
     if($addToCart && $addNewOrder) {
