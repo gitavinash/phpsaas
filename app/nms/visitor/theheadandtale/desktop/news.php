@@ -47,10 +47,11 @@
                 
                    if(!isset($_COOKIE['user_name'])) { ?>
 
-                <div class="details_box__content">
+                <div class="details_box__content show-3-line">
                     <p><?php
-                        $pos=strpos($news_description, ' ', 380);
-                        echo substr($news_description,0, $pos ).'...';
+                        // $pos=strpos($news_description, ' ', 380);
+                        // echo substr($news_description,0, $pos ).'...';
+                        echo $news_description;
                     ?></p>
                 </div>
 
