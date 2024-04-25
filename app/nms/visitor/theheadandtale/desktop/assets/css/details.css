@@ -26,7 +26,11 @@
 }
 
 .show-3-line {
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 3 !important;
+  height: 140px !important;
+  overflow: hidden;
+  padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .header_right p {
