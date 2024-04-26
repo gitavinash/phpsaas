@@ -27,7 +27,7 @@
 
 .show-3-line {
   -webkit-line-clamp: 3 !important;
-  height: 140px !important;
+  height: 280px !important;
   overflow: hidden;
   padding-bottom: 10px;
   box-sizing: border-box;
@@ -94,7 +94,7 @@
 
 .details_box__content {
   font-family: "Noto Sans", sans-serif !important;
-  font-weight: 300 !important;
+  font-weight: 500 !important;
   margin: 0 auto !important;
   color: inherit !important;
   font-size: 18px !important;
@@ -103,7 +103,7 @@
 
 .details_box__content div {
   font-family: "Noto Sans", sans-serif !important;
-  font-weight: 300 !important;
+  font-weight: 500 !important;
   margin: 0 auto !important;
   color: inherit !important;
   font-size: 18px !important;
@@ -115,7 +115,7 @@
 }
 .details_box__content p {
   font-family: "Noto Sans", sans-serif !important;
-  font-weight: 300 !important;
+  font-weight: 500 !important;
   margin: 0 auto !important;
   color: inherit !important;
   margin-bottom: 30px !important;
@@ -383,6 +383,9 @@
   }
 }
 @media (max-width: 768px) {
+  .user_content {
+    margin: 0 0 10rem 0rem;
+  }
   .details_box__content p {
     line-height: 32px !important;
     font-size: 18px !important;
@@ -470,6 +473,6 @@
     margin: 2rem 0;
   }
   .show-3-line {
-    height: 135px !important;
+    height: 270px !important;
   }
 }

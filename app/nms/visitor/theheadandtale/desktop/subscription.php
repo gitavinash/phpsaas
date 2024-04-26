@@ -1,6 +1,6 @@
 <?php
 
-    $productInfo=mysqli_query($connection, "SELECT inventory_price FROM ".TABLE_PREFIX."inventory WHERE inventory_relation_id='{$id}' AND inventory_status=1 AND inventory_type='product' AND  inventory_site_id=".SITE_ID);
+    $productInfo=mysqli_query($connection, "SELECT inventory_price, inventory_tax_status, inventory_tax_rate FROM ".TABLE_PREFIX."inventory WHERE inventory_relation_id='{$id}' AND inventory_status=1 AND inventory_type='product' AND  inventory_site_id=".SITE_ID);
 
     extract(mysqli_fetch_assoc($productInfo));
 
@@ -21,7 +21,12 @@
         }
     }
 
-    $taxAmount = number_format((float)(18 / 100) * $inventory_price, 2, '.', '');
+    if($inventory_tax_status==1){
+        $taxAmount = number_format((float)($inventory_tax_rate / 100) * $inventory_price, 2, '.', '');
+    } else {
+        $taxAmount = 0;
+    }
+    
     $totalPrice=$inventory_price+$taxAmount;
 
     if($checkCart = mysqli_query($connection, "SELECT cart_id FROM ".TABLE_PREFIX."cart WHERE cart_session_id='".SESSION_ID."' AND cart_site_id='".SITE_ID."'")) {

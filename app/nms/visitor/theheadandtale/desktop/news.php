@@ -31,14 +31,15 @@
                 </div>
                 <div class="social_link">
                     <p>Share the story on</p>
-                    <a href="http://twitter.com/share?text=<?php echo $news_title ?>&url=<?php echo $link_url ?>"
+                    <a href="http://twitter.com/share?text=<?php echo urlencode($news_title) ?>&url=<?php echo SITE_URL.$link_url ?>"
                         target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" class="share-icon"
                             alt=""></a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL.$link_url ?>&title=<?php echo $news_title ?>"
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo SITE_URL.$link_url ?>&title=<?php echo urlencode($news_title) ?>"
                         target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" class="share-icon"
                             alt=""></a>
-                    <a href="https://wa.me/?text=<?php echo $news_title.' '.SITE_URL.$link_url ?>" target="_blank"><img
-                            src="<?php echo USER_IMAGES ?>social_media/whatsapp.png" class="share-icon" alt=""></a>
+                    <a href="https://wa.me/?text=<?php echo urlencode($news_title).' '.SITE_URL.$link_url ?>"
+                        target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/whatsapp.png" class="share-icon"
+                            alt=""></a>
                 </div>
 
             </div>

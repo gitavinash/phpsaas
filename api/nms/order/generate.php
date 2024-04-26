@@ -4,7 +4,6 @@ function generate($connection, $data)
 {
 
     extract($data);
-
     $coupon = ((isset($coupon)) ? $coupon : '');
     $orderType = ((isset($orderType)) ? $orderType : 'product');
     $discountValue = 0;
