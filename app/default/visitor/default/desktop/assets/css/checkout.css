@@ -193,6 +193,7 @@ section {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 0px 0px 0px;
   padding: 1rem;
   box-sizing: border-box;
+  width: 100%;
 }
 
 h2 {
@@ -367,6 +368,7 @@ h2 span {
   .only-mobile {
     display: block;
   }
+
   .m-col {
     float: left;
     width: 100%;
