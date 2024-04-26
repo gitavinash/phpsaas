@@ -176,8 +176,11 @@
             
                 if(isset($_COOKIE['user_data'])) { ?>
             <div class="user_content">
-                <p>The author is the Founder and Editor of The Head and Tale. She can be reached at <a
-                        href="mailto:<?php echo $profile_email ?>"><?php echo $profile_email ?></a></p>
+                <p>The author is Founder and Editor of The Head and Tale. She can be reached at
+                    <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a>
+                    Tweets <a href='https://twitter.com/artijourno' target="_blank"
+                        style="font-style: italic">@artijourno</a>
+                </p>
             </div>
             <?php
                 }
