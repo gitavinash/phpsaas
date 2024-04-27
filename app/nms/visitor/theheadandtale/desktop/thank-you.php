@@ -34,7 +34,7 @@
 
 ?>
 
-<div class="subscribe_wrapper subscribe_padding" style="padding: 5rem 0px !important;">
+<!-- <div class="subscribe_wrapper subscribe_padding" style="padding: 5rem 0px !important;">
     <div class="container">
         <div class="subscribe_wrapper__heading">
             <h6>Thank you</h6>
@@ -44,14 +44,27 @@
         <div class="subscription_card">
             <div class="subscription_card__box">
                 <p>Manage subscription</p>
-                <!-- <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6> -->
+                <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
                 <div class="continue">
                     <a href='/manage-subscription/' class='button'>continue</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div> -->
+<section class="thankyou_wrapper">
+    <div class="container">
+        <div class="thankyou_wrapper__content">
+            <h1>Thank You for Subscribing!</h1>
+            <p>Welcome to The Head and Tale. Your subscription means the world to us.</p>
+            <p>As a valued subscriber, stay tuned for thought-provoking articles, exclusive news, reports, and
+                much more.</p>
+            <p>We appreciate your support and trust in us. If you have any questions, feedback, or suggestions,
+                please don't hesitate to reach out to us at <a href="mailto: info@theheadandtale.com">
+                    info@theheadandtale.com</a></p>
+        </div>
+    </div>
+</section>
 <?php
 
     require_once 'footer.php';

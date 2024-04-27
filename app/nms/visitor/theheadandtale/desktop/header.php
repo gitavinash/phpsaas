@@ -45,7 +45,7 @@
     <?php
     
         if(BASE_URL=='/thank-you/') {
-            echo "<meta http-equiv='refresh' content='5; URL=/manage-subscription/'>";
+            echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
         }
 
     ?>
