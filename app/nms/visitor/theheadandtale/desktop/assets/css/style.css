@@ -168,6 +168,10 @@ section {
   box-sizing: border-box;
 }
 
+.news_box:first-child .feature_image img {
+  height: 430px !important;
+}
+
 .feature_image img {
   width: 100%;
   border-radius: 10px;

@@ -164,6 +164,9 @@ section {
   width: 55%;
   box-sizing: border-box;
 }
+.news_box:first-child .feature_image img {
+  height: 430px !important;
+}
 
 .feature_image img {
   width: 100%;
