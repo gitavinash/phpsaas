@@ -4,8 +4,8 @@
 
 ?>
 <section>
-    <div class="container">
-        <div class="row">
+    <div class="row">
+        <div class="container">
             <?php
             
                     if($newsArticles=mysqli_query($connection, "SELECT news_title, news_image, news_description, link_url, link_published, meta_description FROM ".TABLE_PREFIX."news INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=news_id INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id = link_id WHERE link_type='news' AND link_status=200 AND link_site_id=".SITE_ID." ORDER BY link_published, link_is_featured DESC LIMIT 0, 5")) {
@@ -16,9 +16,9 @@
 
                                 extract($newsData);
 
-                                echo "<a href='{$link_url}' class='news_box'>
+                                echo "<div class='news_box'><a href='{$link_url}'>
                                         <div class='feature_image'>
-                                            <img src='{$news_image}' alt=''>
+                                            <img src='{$news_image}' alt='{$news_title}'>
         </div>
         <div class='news_intro'>
             <h2>{$news_title}</h2>
@@ -27,7 +27,7 @@
             </span></p>
             <p>{$meta_description}</p>
         </div>
-        </a>";
+        </a></div>";
 
         }
 
