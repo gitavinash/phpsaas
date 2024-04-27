@@ -165,13 +165,12 @@ section {
   box-sizing: border-box;
 }
 .news_box:first-child .feature_image img {
-  height: 430px !important;
+  height: 430px;
 }
 
 .feature_image img {
   width: 100%;
   border-radius: 10px;
-  height: 350px;
   object-fit: cover;
 }
 
@@ -404,6 +403,10 @@ section {
     width: 100% !important;
     height: auto;
     box-sizing: border-box;
+  }
+
+  .news_box:first-child .feature_image img {
+    height: auto;
   }
 
   .feature_image img {
