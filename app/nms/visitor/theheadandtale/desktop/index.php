@@ -15,7 +15,7 @@ INNER JOIN ".TABLE_PREFIX."meta ON meta_relation_id = link_id
 WHERE link_type = 'news' 
 AND link_status = 200 
 AND link_site_id = ".SITE_ID." 
-ORDER BY link_is_featured DESC, link_modified DESC 
+ORDER BY link_is_featured DESC
 LIMIT 0, 5")) {
 
                         if(mysqli_num_rows($newsArticles)!=0) {

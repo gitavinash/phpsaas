@@ -252,7 +252,7 @@
 
 /* subscribe_wrapper__heading */
 .subscribe_wrapper {
-  padding: 0 0 120px 0;
+  padding: 20px 0 120px 0;
 }
 .subscribe_wrapper__heading {
   display: flex;
@@ -438,7 +438,7 @@
     height: 260px;
   }
   .subscribe_wrapper {
-    padding: 0 0 70px 0;
+    padding: 30px 0 70px 0;
   }
   .news_right h3 {
     font-size: 24px;
@@ -473,6 +473,6 @@
     margin: 2rem 0;
   }
   .show-3-line {
-    height: 270px !important;
+    height: 260px !important;
   }
 }
