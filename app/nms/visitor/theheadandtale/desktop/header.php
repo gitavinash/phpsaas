@@ -31,12 +31,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
