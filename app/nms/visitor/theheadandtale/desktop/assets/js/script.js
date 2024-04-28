@@ -158,6 +158,9 @@ $("#updatePassword").on("click", function (event) {
           $(".afterClick").show();
           $("#statusMsg").text(data.msg);
           popUpMessage("center", data.msg, data.status);
+          setInterval(() => {
+            window.href = "/login/";
+          }, 1500);
         } else {
           popUpMessage("center", data.msg, data.status);
         }
