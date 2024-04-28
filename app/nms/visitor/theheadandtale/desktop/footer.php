@@ -22,18 +22,16 @@
                 <div class="col-6">
                     <div class="footer_left">
                         <div class="footer_logo">
-                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="logo"></a>
                             <p>Dive into the dynamic realm of fintech with firsthand insights and balanced
                                 journalism at The Head and Tale.</p>
                         </div>
                         <div class="social_links">
                             <h3>Follow us on</h3>
                             <a href="https://twitter.com/theheadandtale"><img
-                                    src="<?php echo USER_IMAGES ?>social_media/twitter.png" class="img-fluid"
-                                    alt="twitter"></a>
+                                    src="<?php echo USER_IMAGES ?>social_media/twitter.png" alt="twitter"></a>
                             <a href="https://www.linkedin.com/company/theheadandtale/"><img
-                                    src="<?php echo USER_IMAGES ?>social_media/linkedin.png" class="img-fluid"
-                                    alt="linkden"></a>
+                                    src="<?php echo USER_IMAGES ?>social_media/linkedin.png" alt="linkden"></a>
                         </div>
                     </div>
                 </div>
