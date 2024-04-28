@@ -129,3 +129,46 @@ $("#forgotPassword").on("click", function (event) {
     },
   });
 });
+
+/* Update Forgot Password form */
+
+$("#updatePassword").on("click", function (event) {
+  event.preventDefault();
+  $("#updatePassword").hide();
+
+  var password = $("#password").val();
+  var confirmPassword = $("#confirmPassword").val();
+
+  var isPasswordSame = password.localeCompare(confirmPassword);
+
+  if (password == "") {
+    popUpMessage("center", "Please enter your password", "warning");
+    $("#updatePassword").show();
+  } else if (confirmPassword == "") {
+    popUpMessage("center", "Please confirm your password", "warning");
+    $("#updatePassword").show();
+  } else if (isPasswordSame === 0) {
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      data: $("#update").serialize(),
+      success: function (data) {
+        if (data.status == "success") {
+          $(".beforeClick").hide();
+          $(".afterClick").show();
+          $("#statusMsg").text(data.msg);
+          popUpMessage("center", data.msg, data.status);
+        } else {
+          popUpMessage("center", data.msg, data.status);
+        }
+      },
+      error: function (data) {
+        console.log(data);
+        $("#updatePassword").show();
+      },
+    });
+  } else {
+    popUpMessage("center", "Your password not matched", "warning");
+    $("#updatePassword").show();
+  }
+});
