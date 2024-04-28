@@ -1,28 +1,26 @@
 <?php
 
-    $activeSubscription = false;
-    if(isset($_COOKIE['user_data'])) {
-        $userSaltKey = base64_decode($_COOKIE['user_data']);
+$activeSubscription = false;
+if (isset($_COOKIE['user_data'])) {
+    $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-        if($checkUser=mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time FROM ".TABLE_PREFIX."user LEFT JOIN ".TABLE_PREFIX."subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_site_id=".SITE_ID)) {
-            if(mysqli_num_rows($checkUser)!=0) {
-                extract(mysqli_fetch_assoc($checkUser));
-                if($subscription_status==1) {
-                    $activeSubscription=true;
+    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_site_id=" . SITE_ID)) {
+        if (mysqli_num_rows($checkUser) != 0) {
+            extract(mysqli_fetch_assoc($checkUser));
+            if ($subscription_status == 1) {
+                $activeSubscription = true;
 
-                    // Fetch subscription details
+                // Fetch subscription details
 
-                    if($subsriptionDetails=mysqli_query($connection, "SELECT {$subscription_type}_image, {$subscription_type}_title, {$subscription_type}_description, {$subscription_type}_highlight, {$subscription_type}_type, inventory_currency_symbol, inventory_price, inventory_mrp FROM ".TABLE_PREFIX."{$subscription_type} INNER JOIN ".TABLE_PREFIX."inventory ON {$subscription_type}_id=inventory_relation_id WHERE {$subscription_type}_id='{$subscription_relation_id}' AND {$subscription_type}_type='subscription' AND {$subscription_type}_site_id=".SITE_ID)) {
-                        if(mysqli_num_rows($subsriptionDetails)!=0) {
-                            extract(mysqli_fetch_assoc($subsriptionDetails));
-                        }
+                if ($subsriptionDetails = mysqli_query($connection, "SELECT {$subscription_type}_image, {$subscription_type}_title, {$subscription_type}_description, {$subscription_type}_highlight, {$subscription_type}_type, inventory_currency_symbol, inventory_price, inventory_mrp FROM " . TABLE_PREFIX . "{$subscription_type} INNER JOIN " . TABLE_PREFIX . "inventory ON {$subscription_type}_id=inventory_relation_id WHERE {$subscription_type}_id='{$subscription_relation_id}' AND {$subscription_type}_type='subscription' AND {$subscription_type}_site_id=" . SITE_ID)) {
+                    if (mysqli_num_rows($subsriptionDetails) != 0) {
+                        extract(mysqli_fetch_assoc($subsriptionDetails));
                     }
-
                 }
             }
         }
-
     }
+}
 
 ?>
 <!DOCTYPE html>
@@ -43,10 +41,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <?php
-    
-        if(BASE_URL=='/thank-you/') {
-            echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
-        }
+
+    if (BASE_URL == '/thank-you/') {
+        echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
+    }
 
     ?>
 </head>
@@ -54,15 +52,15 @@
 <body>
     <header>
         <nav>
-            <div class="myHeader <?php echo (($link_type=='page') ? 'about_bg' : '') ?>">
+            <div class="myHeader <?php echo (($link_type == 'page') ? 'about_bg' : '') ?>">
                 <div class="container">
                     <div class="header_flex">
                         <div class="company-logo">
                             <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
                         </div>
                         <?php
-                        
-                            if(isset($_COOKIE['user_data'])) { ?>
+
+                        if (isset($_COOKIE['user_data'])) { ?>
 
                         <div class="header_right">
                             <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
@@ -87,39 +85,39 @@
                                 </div>
 
                                 <?php
-                                
-                                if($activeSubscription==true) {
 
-                                    if($subscription_mode=='month') {
-                                        $increseDuration= "+1 month";
-                                    } else {
-                                        $increseDuration= "+1 year";
-                                    }
+                                    if ($activeSubscription == true) {
 
-                                    $expiryDate = date('d M Y', strtotime($subscription_time . $increseDuration));;
+                                        if ($subscription_mode == 'month') {
+                                            $increseDuration = "+1 month";
+                                        } else {
+                                            $increseDuration = "+1 year";
+                                        }
 
-                                    echo "<div class='manage_link'>
+                                        $expiryDate = date('d M Y', strtotime($subscription_time . $increseDuration));;
+
+                                        echo "<div class='manage_link'>
                                             <a href='/manage-subscription/'>MANAGE MY SUBSCRIPTION</a>
                                         </div>
 
                                         <div class='plan_card'>
                                             <h6>YOUR CURRENT PLAN</h6>
-                                            <h3>{${$subscription_type.'_title'}}</h3>
+                                            <h3>{${$subscription_type . '_title'}}</h3>
                                             <p>Next billing date : {$expiryDate}</p>
                                         </div>";
-                                } else {
-                                    echo "<div class='manage_link'>
+                                    } else {
+                                        echo "<div class='manage_link'>
                                             <a href='/subscribe/'>BUY SUBSCRIPTION</a>
                                         </div>";
-                                }
+                                    }
 
-                                ?>
+                                    ?>
 
                             </div>
                         </div>
 
                         <?php
-                            } else { ?>
+                        } else { ?>
 
 
                         <div class="header_right">
@@ -130,7 +128,7 @@
                         </div>
 
                         <?php
-                            }
+                        }
 
                         ?>
                     </div>
@@ -138,4 +136,4 @@
             </div>
         </nav>
     </header>
-    <main <?php echo (($link_type=='page') ? 'style="border-top: 0px"' : '') ?>>
+    <main <?php echo (($link_type == 'page') ? 'style="border-top: 0px"' : '') ?>>

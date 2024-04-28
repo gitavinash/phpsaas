@@ -2,6 +2,18 @@ var profileSideBar = document.querySelector(".profile--sideBar");
 var faqBox = document.querySelector(".faq__box");
 var loginBox = document.querySelector(".login");
 
+/** SweetAlert Pop Up Box */
+
+function popUpMessage(msgPostion, msgTxt, msgType) {
+  Swal.fire({
+    position: msgPostion,
+    type: msgType,
+    title: msgTxt,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
+
 if (profileSideBar) {
   const profile = document.querySelector(".profile--sideBar");
   const profileBtn = document.querySelector(".user--name");
@@ -90,3 +102,30 @@ document.onkeydown = function (e) {
     return false;
   }
 };
+
+/* Forgot Password form */
+
+$("#forgotPassword").on("click", function (event) {
+  event.preventDefault();
+  $("#forgotPassword").hide();
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    data: $("#forgot").serialize(),
+    success: function (data) {
+      if (data.status == "success") {
+        $(".beforeClick").hide();
+        $(".afterClick").show();
+        $("#statusMsg").text(data.msg);
+        popUpMessage("center", data.msg, data.status);
+      } else {
+        popUpMessage("center", data.msg, data.status);
+        $("#forgotPassword").show();
+      }
+    },
+    error: function (data) {
+      console.log(data);
+      $("#forgotPassword").show();
+    },
+  });
+});

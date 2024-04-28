@@ -1,17 +1,16 @@
 <?php
 
-  $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
+$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
-  if(isset($responseMsg)) {
+if (isset($responseMsg)) {
     echo "<script>alert('{$responseMsg}')</script>";
-  }
-  
-  if(isset($_COOKIE['user_data'])) {
-    
+}
+
+if (isset($_COOKIE['user_data'])) {
+
     header("Location: {$redirect_url}");
     exit();
-
-  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -28,6 +27,7 @@
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
 </head>
 
 <body>
@@ -36,23 +36,15 @@
             <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
         </div>
         <div class="login_content">
-            <!-- <div class="or">
-                <p>or</p>
-            </div> -->
-            <!-- <button><img src="assets/images/google.png" class="img-fluid" alt=""> login with google</button> -->
-            <!-- <div class="or">
-                <p>or</p>
-            </div> -->
-            <!-- <button>sign in using email</button> -->
-            <div class="form_box login">
-                <form method="POST" id="login">
+            <div class="form_box">
+                <form id="forgot" method="POST">
                     <div class="login_input">
                         <input type="text" placeholder="Email" id="email" name="email" required>
                     </div>
                     <div class="sign--in_btn">
                         <input type="hidden" name="type" value="auth">
                         <input type="hidden" name="action" value="forgotPassword">
-                        <input type="submit" class="button" value="Recover password">
+                        <input type="submit" id="forgotPassword" class="button" value="Recover password">
                     </div>
                 </form>
                 <div class="form_bottom">
@@ -64,6 +56,8 @@
             </div>
         </div>
     </div>
+    <script src="<?php echo JS_LIBRARY ?>jquery.min.js" type="text/javascript"></script>
+    <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="<?php echo USER_JS ?>script.min.js"></script>
 </body>
 

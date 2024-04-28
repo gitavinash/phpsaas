@@ -1,17 +1,16 @@
 <?php
 
-  $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
+$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
-  if(isset($responseMsg)) {
+if (isset($responseMsg)) {
     echo "<script>alert('{$responseMsg}')</script>";
-  }
-  
-  if(isset($_COOKIE['user_data'])) {
-    
+}
+
+if (isset($_COOKIE['user_data'])) {
+
     header("Location: {$redirect_url}");
     exit();
-
-  }
+}
 
 ?>
 <!DOCTYPE html>
