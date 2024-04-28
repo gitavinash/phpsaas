@@ -9,8 +9,11 @@
   gap: 2rem;
   padding-left: 4rem;
 }
+.img-fluid {
+  border-radius: 10px;
+}
 .news_right h3 {
-  font-size: 42px;
+  font-size: 2rem;
   font-weight: 700;
 }
 .news_right .news_date {
