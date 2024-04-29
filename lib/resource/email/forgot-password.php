@@ -1,10 +1,10 @@
 <?php
 
-	include_once 'header.php';
+include_once 'header.php';
 
-	$subject='Forgot Password';
+$subject = 'Forgot Password';
 
-	$email_body = "
+$email_body = "
 		
 		<table style='font-weight: normal;border-collapse: collapse;border: 0;margin: 0;padding: 0;font-family: Arial, sans-serif; width: 100%' >
 			<tr>
@@ -16,7 +16,7 @@
 			<tr>
 				<td stye='text-align: center' >
 					<h3>Looks like you lost your password?</h3>
-					<p>We’re here to help. Click on the button below to change your password.</p>
+					<p>We are here to help. Click on the button below to change your password.</p>
 				</td>
 			</tr>
 			<tr>
@@ -32,6 +32,4 @@
     
 	";
 
-	include_once 'footer.php';
-
-?>
+include_once 'footer.php';
