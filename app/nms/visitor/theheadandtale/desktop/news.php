@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <section class="newsDetails">
@@ -31,13 +31,13 @@
                 </div>
                 <div class="social_link">
                     <p>Share the story on</p>
-                    <a href="http://twitter.com/share?text=<?php echo urlencode($news_title) ?>&url=<?php echo SITE_URL.$link_url ?>"
+                    <a href="http://twitter.com/share?text=<?php echo urlencode($news_title) ?>&url=<?php echo SITE_URL . $link_url ?>"
                         target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" class="share-icon"
                             alt=""></a>
-                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo SITE_URL.$link_url ?>&title=<?php echo urlencode($news_title) ?>"
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL . $link_url ?>&title=<?php echo urlencode($news_title) ?>"
                         target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" class="share-icon"
                             alt=""></a>
-                    <a href="https://wa.me/?text=<?php echo urlencode($news_title).' '.SITE_URL.$link_url ?>"
+                    <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url ?>"
                         target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/whatsapp.png" class="share-icon"
                             alt=""></a>
                 </div>
@@ -45,15 +45,15 @@
             </div>
             <div class="details_box">
                 <?php
-                
-                   if(!isset($_COOKIE['user_name'])) { ?>
+
+                if (!isset($_COOKIE['user_name'])) { ?>
 
                 <div class="details_box__content show-3-line">
                     <p><?php
-                        // $pos=strpos($news_description, ' ', 380);
-                        // echo substr($news_description,0, $pos ).'...';
-                        echo $news_description;
-                    ?></p>
+                            // $pos=strpos($news_description, ' ', 380);
+                            // echo substr($news_description,0, $pos ).'...';
+                            echo $news_description;
+                            ?></p>
                 </div>
 
                 <section class="subscribe_wrapper">
@@ -70,8 +70,8 @@
                                 <h6>INR 799</h6>
                                 <div class="continue">
                                     <?php
-                                    
-                                        echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
+
+                                    echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
 
                                     ?>
                                 </div>
@@ -81,8 +81,8 @@
                                 <h6>INR 3299</h6>
                                 <div class="continue">
                                     <?php
-                                    
-                                            echo "<a href='/login/?duration=yearly' class='button'>continue</a>";
+
+                                    echo "<a href='/login/?duration=yearly' class='button'>continue</a>";
 
                                     ?>
                                 </div>
@@ -92,10 +92,10 @@
                 </section>
 
                 <?php
-                   } else {
-                    if($news_paid==1) {
+                } else {
+                    if ($news_paid == 1) {
 
-                        if($activeSubscription==true) { ?>
+                        if ($activeSubscription == true) { ?>
 
                 <div class="details_box__content">
                     <p><?php echo $news_description ?></p>
@@ -106,11 +106,11 @@
 
                 <div class="details_box__content show-3-line">
                     <p><?php
-                        // $pos=strpos($news_description, ' ', 100);
-                        // echo substr($news_description,0, $pos );
+                                    // $pos=strpos($news_description, ' ', 100);
+                                    // echo substr($news_description,0, $pos );
 
-                        echo $news_description;
-                    ?></p>
+                                    echo $news_description;
+                                    ?></p>
                 </div>
                 <section class="subscribe_wrapper">
                     <div class="container">
@@ -122,45 +122,44 @@
 
                         <div class="subscription_card">
                             <?php
-           
-            if($subsriptionPlan=mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=".SITE_ID)) {
-                if(mysqli_num_rows($subsriptionPlan)!=0) {
-                    while($subsriptionPlanData=mysqli_fetch_assoc($subsriptionPlan)) {
-                        extract($subsriptionPlanData); ?>
+
+                                        if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
+                                            if (mysqli_num_rows($subsriptionPlan) != 0) {
+                                                while ($subsriptionPlanData = mysqli_fetch_assoc($subsriptionPlan)) {
+                                                    extract($subsriptionPlanData); ?>
 
                             <div class="subscription_card__box">
                                 <p><?php echo $product_title ?></p>
                                 <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
                                 <div class="continue">
                                     <?php
-                                                    
-                                                        if(isset($_COOKIE['user_data'])) {
-                                                            echo "
+
+                                                            if (isset($_COOKIE['user_data'])) {
+                                                                echo "
                                                                 <form action='/subscription/' method='post' >
                                                                     <input type='hidden' name='id' value='{$product_id}'>
                                                                     <input type='submit' class='button' value='continue'>
                                                                 </form>
                                                             ";
-                                                        } else {
-                                                            echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
-                                                        }
+                                                            } else {
+                                                                echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
+                                                            }
 
-                                                    ?>
+                                                            ?>
                                 </div>
                             </div>
 
                             <?php
-                    }
-                }
-            }
+                                                }
+                                            }
+                                        }
 
-           ?>
+                                        ?>
                         </div>
                     </div>
                 </section>
                 <?php
-                }
-
+                        }
                     } else { ?>
                 <div class="details_box__content">
                     <p><?php echo $news_description ?></p>
@@ -168,13 +167,13 @@
 
                 <?php
                     }
-                   }
+                }
 
                 ?>
             </div>
             <?php
-            
-                if(isset($_COOKIE['user_data'])) { ?>
+
+            if (isset($_COOKIE['user_data'])) { ?>
             <div class="user_content">
                 <p>The author is Founder and Editor of The Head and Tale. She can be reached at
                     <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a>
@@ -183,7 +182,7 @@
                 </p>
             </div>
             <?php
-                }
+            }
 
             ?>
         </div>
@@ -191,6 +190,6 @@
 </section>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
