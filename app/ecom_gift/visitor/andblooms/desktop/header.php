@@ -18,16 +18,14 @@
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;400;600&family=Lato&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;400;600&family=Lato&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>zoom-gallery/zoom.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <script type='text/javascript' async=''
-        src='https://marketing.contlo.com/js/contlo_messaging_v3.js?v=3&shop_id=0ae781f421ea9e9f9a0c48de4572354e'>
+    <script type='text/javascript' async='' src='https://marketing.contlo.com/js/contlo_messaging_v3.js?v=3&shop_id=0ae781f421ea9e9f9a0c48de4572354e'>
     </script>
 
     <?php require_once DEFAULT_META; ?>
@@ -37,39 +35,39 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-69G2SPCWHX"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'G-69G2SPCWHX');
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-69G2SPCWHX');
     </script>
 
     <!-- Global site tag (gtag.js) - Google Ads: 628904231 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-628904231"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'AW-628904231');
+        gtag('config', 'AW-628904231');
     </script>
 
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "dw3u1ggui2");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "dw3u1ggui2");
     </script>
 
     <?php
@@ -82,14 +80,14 @@
 
     ?>
 
-    <script>
-    gtag('event', 'conversion', {
-        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
-        'value': 1,
-        'currency': 'INR',
-        'transaction_id': ''
-    });
-    </script>
+                <script>
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
+                        'value': 1,
+                        'currency': 'INR',
+                        'transaction_id': ''
+                    });
+                </script>
     <?php
 
             }
@@ -100,47 +98,46 @@
 
     <!-- Meta Pixel Code -->
     <script>
-    ! function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '577779820444463');
-    fbq('track', 'PageView');
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '577779820444463');
+        fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=577779820444463&ev=PageView&noscript=1" /></noscript>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=577779820444463&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
 
     <!-- Google Tag Manager -->
     <script>
-    (function(w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s),
-            dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
     </script>
     <!-- End Google Tag Manager -->
 
@@ -149,8 +146,7 @@
 <body>
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K46P78T" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K46P78T" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- header start -->
@@ -191,9 +187,7 @@
                     <div class="col-md-7">
                         <div class="search-box">
                             <form action="/search/" class="form-inline">
-                                <input class="form-control" name="q" type="search"
-                                    value="<?php echo ((isset($_GET['q'])) ? $_GET['q'] : ''); ?>"
-                                    placeholder="Search for gifts, flowers...">
+                                <input class="form-control" name="q" type="search" value="<?php echo ((isset($_GET['q'])) ? $_GET['q'] : ''); ?>" placeholder="Search for gifts, flowers...">
                             </form>
                         </div>
                         <div class="search-pro">
@@ -216,10 +210,7 @@
                                         }
 
                                         ?>
-                                        <li><a href="/checkout/"><img
-                                                    src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span
-                                                class="crt-crcl"
-                                                totalCartItems="<?php $cartItems ?>"><?php echo $cartItems ?>
+                                        <li><a href="/checkout/"><img src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span class="crt-crcl" totalCartItems="<?php $cartItems ?>"><?php echo $cartItems ?>
 
                                             </span><span class="span-item">Cart</span></li>
                                         <!-- user acount -->
@@ -267,9 +258,7 @@
                     <div class="col-md-12 mobile-bg">
                         <nav class="navbar navbar-expand-lg menu-top fixed">
                             <a href="" class="dn-l"><img src="<?php echo USER_IMAGES ?>logo1.png" class="logo-mb"></a>
-                            <button class="navbar-toggler bar-mnu" type="button" data-toggle="collapse"
-                                data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-                                aria-label="Toggle navigation">
+                            <button class="navbar-toggler bar-mnu" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-icon bar-1"></span>
                                 <span class="navbar-icon bar-2"></span>
                                 <span class="navbar-icon bar-1"></span>
@@ -279,8 +268,7 @@
                                 <div class="cart-mob">
                                     <!-- <a href="" class="mob-bag sr-mob" id="searchBtn"><img
                                             src="<?php echo USER_IMAGES ?>search-fa.svg"></a></span> -->
-                                    <a href="/checkout/" class="mob-bag"><img
-                                            src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">
+                                    <a href="/checkout/" class="mob-bag"><img src="<?php echo USER_IMAGES ?>cart.svg"></a><span class="crt-crcl">
 
                                         <?php
 
@@ -302,13 +290,11 @@
                                         <a class="nav-link" href="/">Home</a>
                                     </li>
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="/tag/luxury/" id="navbardrop"
-                                            data-toggle="dropdown">Luxury Collections
+                                        <a class="nav-link dropdown-toggle" href="/tag/luxury/" id="navbardrop" data-toggle="dropdown">Luxury Collections
                                         </a>
                                         <div class="dropdown-menu mega-menu">
                                             <div class="mega1">
-                                                <div class="menu-titl"><a href="">New Arivals<span
-                                                            class="cart-bodr"></span></a></div>
+                                                <div class="menu-titl"><a href="">New Arivals<span class="cart-bodr"></span></a></div>
                                                 <a class="dropdown-item" href="/category/flower/">Fresh Flowers</a>
                                                 <a class="dropdown-item" href="/category/artistic-artificial/">Artistic
                                                     Artificial</a>
@@ -318,27 +304,23 @@
                                         </div>
                                     </li>
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop"
-                                            data-toggle="dropdown">Occasions
+                                        <a class="nav-link dropdown-toggle" href="/tag/occasions/" id="navbardrop" data-toggle="dropdown">Occasions
                                         </a>
                                         <div class="dropdown-menu mega-menu">
                                             <div class="mega2">
                                                 <div class="mega-gry flot-menu">
-                                                    <div class="menu-titl"><a href="#">By Theme<span
-                                                                class="cart-bodr"></span></a></div>
+                                                    <div class="menu-titl"><a href="#">By Theme<span class="cart-bodr"></span></a></div>
                                                     <a class="dropdown-item" href="/tag/anniversary">Anniversary</a>
                                                     <a class="dropdown-item" href="/tag/birthday/">Birthday</a>
                                                     <a class="dropdown-item" href="/tag/corporate-gift/">Corporate
                                                         Gifting</a>
-                                                    <a class="dropdown-item"
-                                                        href="/tag/congratulation/">Congratulation</a>
+                                                    <a class="dropdown-item" href="/tag/congratulation/">Congratulation</a>
                                                     <a class="dropdown-item" href="/tag/get-well/">Get Well</a>
                                                     <a class="dropdown-item" href="/tag/house-warming/">House
                                                         Warming</a>
                                                 </div>
                                                 <div class="mega-wht flot-menu">
-                                                    <div class="menu-titl"><a href="#">By Type<span
-                                                                class="cart-bodr"></span></a></div>
+                                                    <div class="menu-titl"><a href="#">By Type<span class="cart-bodr"></span></a></div>
                                                     <a class="dropdown-item" href="/tag/i-m-sorry/">I'M Sorry</a>
                                                     <a class="dropdown-item" href="/tag/just-because/">Just Because</a>
                                                     <a class="dropdown-item" href="/tag/new-baby/">New Baby</a>
@@ -347,8 +329,7 @@
                                                     <a class="dropdown-item" href="/tag/sympathy/">Sympathy</a>
                                                 </div>
                                                 <div class="mega-gry flot-menu">
-                                                    <div class="menu-titl"><a href="/tag/bumper-sale/">Offer <span
-                                                                class="cart-bodr"></span></a></div>
+                                                    <div class="menu-titl"><a href="/tag/bumper-sale/">Offer <span class="cart-bodr"></span></a></div>
                                                     <a class="dropdown-item" href="#">
                                                         <img class="mega-img" src="">
                                                     </a>
@@ -364,15 +345,15 @@
                                         <!-- <a class="nav-link " href="/tag/everlasting/"
                                             style="font-weight: 600; color: #D4946E">New Collection</a> -->
                                     </li>
-                                    <li class="nav-item">
+                                    <!-- <li class="nav-item">
                                         <a class="nav-link"
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/">Blooms of
                                             <?php echo date('F') ?></a>
-                                    </li>
-                                    <!-- <li class="nav-item " style="background: #F19EB5;">
-                                        <a class="nav-link" style="color: #fff" href="/tag/father/"><b>Father's
-                                                Day</b></a>
                                     </li> -->
+                                    <li class="nav-item " style="background: #F19EB5;">
+                                        <a class="nav-link" style="color: #fff" href="/tag/mother/"><b>Mother's
+                                                Day</b></a>
+                                    </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
@@ -393,10 +374,7 @@
                             <a href=""><img src="<?php echo USER_IMAGES ?>ping-map.svg">Select the city</a>
                         </div>
                         <div id="search-mob-div" class="searchInput">
-                            <input title="Enter the terms you wish to search for." type="text" id="search_block"
-                                name="search_block_form" size="15" maxlength="128"
-                                class="form-text ui-autocomplete-input" placeholder="Search for gifts, flowers..."
-                                autocomplete="off" value="">
+                            <input title="Enter the terms you wish to search for." type="text" id="search_block" name="search_block_form" size="15" maxlength="128" class="form-text ui-autocomplete-input" placeholder="Search for gifts, flowers..." autocomplete="off" value="">
                             <div id="close">x</div>
 
                         </div>
