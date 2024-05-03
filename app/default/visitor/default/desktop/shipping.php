@@ -88,10 +88,11 @@
             <div class="col">
                 <p>By continuing you agree to our <a href="/terms-and-conditions">Terms &amp; Conditions</a> and
                     <a href="/privacy-policy/">Privacy
-                        Policy</a> | &nbsp;<span>Powered by <a href="https://cartt.in"
+                        Policy</a> | &nbsp;
+                    <!-- <span>Powered by <a href="https://cartt.in"
                             title="Build online e-commerce store">Cartt -
                             Craft Your Online Success with
-                            Cartt.</a></span>
+                            Cartt.</a></span> -->
                 </p>
             </div>
         </div>
