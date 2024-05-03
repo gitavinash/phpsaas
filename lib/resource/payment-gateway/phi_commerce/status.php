@@ -83,7 +83,8 @@ if (isset($response['responseCode'])) {
                 mysqli_query($connection, "COMMIT");
             } else {
 
-                echo "Something went wrong => " . $updateTransaction . " | " . $updateOrderStatus . " | " . $updateCartStatus;
+                // echo "Something went wrong => " . $updateTransaction . " | " . $updateOrderStatus . " | " . $updateCartStatus;
+                echo "UPDATE " . TABLE_PREFIX . "transaction SET transaction_reference_id='{$paymentReferenceId}', transaction_payment_id={$paymentID}, transaction_payment_mode='{$paymentMode}', transaction_status={$transactionStatus} WHERE transaction_id={$transactionID} AND transaction_order_id={$orderId} AND transaction_site_id=" . SITE_ID;
                 mysqli_query($connection, "ROLLBACK");
                 exit();
             }
