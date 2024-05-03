@@ -41,6 +41,8 @@ $response = curl_exec($curl);
 $response = json_decode($response, TRUE);
 curl_close($curl);
 
+print_r($response);
+
 if (isset($response['responseCode'])) {
 
     /** Check order id is valid or not */
