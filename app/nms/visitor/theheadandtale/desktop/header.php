@@ -43,6 +43,11 @@ if (isset($_COOKIE['user_data'])) {
     <?php
 
     if (BASE_URL == '/thank-you/') {
+
+        /** Send Email */
+
+        require_once APP_EMAIL_TEMPLATE . 'newSubscription.php';
+
         echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
     }
 
