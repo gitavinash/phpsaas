@@ -12,7 +12,6 @@ include_once 'header.php';
                 <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/2.png"></div>
                 <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/3.png"></div>
                 <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/4.png"></div>
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/5.png"></div>
             </div>
         </div>
     </div>
