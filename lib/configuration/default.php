@@ -73,8 +73,8 @@ define('IMAGE_THUMBNAIL_HEIGHT', ((isset($site_thumbnail_height)) ? $site_thumbn
 
 /** Notification Configuration */
 
-define('NOTIFICATION_KEY', 'AAAAjm__7wg:APA91bE09Yzo6K0GidEpDzpkbTRdWpkAcjXSwi3mL7gasl4ZMi0tkpBUhFzSFdBORh-SWDsgWo-OU7xO3epzU7b85zBSku8LIQWfnjJkUTK-ngp-WRjJIE9sUdd4yjf1cjwlkRFwJkns');
-define('NOTIFICATION_SENDER', '611764399880');
+define('NOTIFICATION_KEY', 'AAAAgnIKZIQ:APA91bGxzdlnWBlb23in5M7H5JIZHraI9K2IxKRnndl9QgDa1aUA7wM4oMkej_S_MnsJDQLeLrHXDVQ-tvjg9TGf0o0YUDeiwSZKT-wd0TVVK-ybfj7Dlj6e4vX68MMiKqvNhDL7WPTF');
+define('NOTIFICATION_SENDER', '560259032196');
 
 /** Site Settings Configuration */
 
