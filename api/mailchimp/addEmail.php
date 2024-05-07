@@ -20,10 +20,10 @@ if (!defined('MAILCHIMP_API_KEY')) {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => "{
-                'email_address': '{$email}',
-                'status': 'subscribed'
-            }",
+        CURLOPT_POSTFIELDS => json_encode(array(
+            'email_address' => $email,
+            'status' => 'subscribed'
+        )),
         CURLOPT_HTTPHEADER => array(
             "Authorization: {$apiKey}",
         ),
@@ -32,7 +32,7 @@ if (!defined('MAILCHIMP_API_KEY')) {
     $response = json_decode(curl_exec($curl), TRUE);
     curl_close($curl);
 
-    if ($response['status'] == 200) {
+    if ($response['status'] == "subscribed") {
         $status = "success";
         $msg = 'Email register successfully';
     } else {

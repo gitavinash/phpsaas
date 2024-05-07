@@ -194,9 +194,7 @@ $("#submitNewsletter").on("click", function (e) {
       success: function (data) {
         if (data.status == "success") {
           $("#submitNewsletter").show();
-          setInterval(() => {
-            window.href = "/thankyou_newsletter/";
-          }, 200);
+          window.location = "/thankyou_newsletter/";
         } else {
           popUpMessage("center", data.msg, data.status);
           $("#submitNewsletter").show();
