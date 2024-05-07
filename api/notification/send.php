@@ -7,39 +7,59 @@ if ($selectDevice = mysqli_query($connection, "SELECT device_token FROM " . TABL
         $deviceToken = array();
 
         while ($deviceList = mysqli_fetch_assoc($selectDevice)) {
-
             $deviceToken[] = $deviceList['device_token'];
         }
+
+        $deviceList = json_encode($deviceToken);
 
         /** Send Push Notification to devices */
 
         $url = "https://fcm.googleapis.com/fcm/send";
-        $token = implode(',', $deviceToken);
 
         $serverKey = NOTIFICATION_KEY;
 
-        $title = "Notification title";
-        $body = "Hello I am from Your php server";
-        $notification = array('title' => $title, 'body' => $body, 'icon' => 'https://isw.one/upload/2020/03/1585061746_its_soft_world_logo.png', 'sound' => 'default', 'badge' => '1');
-        $arrayToSend = array('to' => $token, 'notification' => $notification, 'priority' => 'high');
-        $json = json_encode($arrayToSend);
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: key=' . $serverKey;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //Send the request
-        $response = curl_exec($ch);
-        //Close request
-        if ($response === FALSE) {
-            die('FCM Send Error: ' . curl_error($ch));
-        }
-        curl_close($ch);
+        // Notification payload
+        $data = [
+            'notification' => [
+                'title' => 'Title',
+                'body' => 'Body',
+                'icon' => 'https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png',
+                'image' => 'https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_logo.png',
+            ],
+            'data' => [
+                'click_action' => 'https://www.youtube.com/' // URL you want to send with the notification
+            ],
+            'to' => $deviceList
+        ];
 
-        print_r($response);
+        // Initialize cURL
+        $ch = curl_init('https://fcm.googleapis.com/fcm/send');
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: key=' . $serverKey,
+            'Content-Type: application/json'
+        ]);
+
+        // Execute the request
+        $response = curl_exec($ch);
+
+        // Check for errors
+        if ($response === false) {
+            echo json_encode(curl_error($ch), TRUE);
+        } else {
+            echo json_encode(array(
+                'msg' => 'Notification send successfully',
+                'devices' => $deviceList
+            ), TRUE);
+        }
+
+        // Close cURL session
+        curl_close($ch);
     }
 }

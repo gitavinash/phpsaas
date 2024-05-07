@@ -73,8 +73,9 @@ define('IMAGE_THUMBNAIL_HEIGHT', ((isset($site_thumbnail_height)) ? $site_thumbn
 
 /** Notification Configuration */
 
-define('NOTIFICATION_KEY', 'AAAAgnIKZIQ:APA91bGxzdlnWBlb23in5M7H5JIZHraI9K2IxKRnndl9QgDa1aUA7wM4oMkej_S_MnsJDQLeLrHXDVQ-tvjg9TGf0o0YUDeiwSZKT-wd0TVVK-ybfj7Dlj6e4vX68MMiKqvNhDL7WPTF');
-define('NOTIFICATION_SENDER', '560259032196');
+define('NOTIFICATION_KEY', 'AAAAzCeiLQ0:APA91bHlGXdG7cWb1u59qKnAZAsDY55ThBF-DZPLA9c2t-g2aKNQrCLmdb0PopJdp4W8OqKC3MqkKFSisU1-p5EGpABk1MLzhUuw7dPHq0OyC0EBOKXo2Ae1vQWVFi1w2B8RPZ4y6Tip');
+define('NOTIFICATION_SENDER', '876838268173');
+define('NOTIFICATION_PUBLIC_KEY', 'BOgqBVEQIhfp7YZ-vzhQ6ih1d2bvFlSFnzL3behhenljYXpLNrMtLz0yHCPj5gJsw80NmWVyOkLtkIOFTan2i60');
 
 /** Site Settings Configuration */
 

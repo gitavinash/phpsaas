@@ -6,7 +6,7 @@ if ($checkGroupToken = mysqli_query($connection, "SELECT category_id as group_id
 
     if (mysqli_num_rows($checkGroupToken) == 0) {
 
-        $group_name = ((!isset($group_name)) ? SITE_DOMAIN . '_notification' : SITE_DOMAIN . '_' . $group_name);
+        $group_name = ((!isset($group_name)) ? SITE_DOMAIN . '_' . base64_encode(time()) : SITE_DOMAIN . '_' . $group_name);
 
         // Create New Notification Group
 
@@ -65,7 +65,7 @@ if ($checkGroupToken = mysqli_query($connection, "SELECT category_id as group_id
             /** Save group token to category table */
 
             $group_token = $response['notification_key'];
-            $generateNewGroupToken = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "category(category_title, category_description, category_site_id, category_type, category_status) VALUES('{$group_name}', '{$group_token}', " . SITE_ID . ", 'notification', 1)");
+            $generateNewGroupToken = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "category(category_title, category_description, category_site_id, category_type, category_deletable, category_status) VALUES('{$group_name}', '{$group_token}', " . SITE_ID . ", 'notification', 0, 1)");
             $group_id = mysqli_insert_id($connection);
         } else {
 
@@ -80,6 +80,9 @@ if ($checkGroupToken = mysqli_query($connection, "SELECT category_id as group_id
 
             $status = 200;
             $msg = 'Device is registered successfully';
+        } else {
+            // $msg = $registerDevice . ' && ' . $generateNewGroupToken . ' && ' . $updateDevice;
+            $msg = "INSERT INTO " . TABLE_PREFIX . "device(device_site_id, device_user_id, device_token, device_type, device_os, device_browser, device_status) VALUES('" . SITE_ID . "', '{$user_id}','{$token}', '{$device}', '" . DEVICE_OS . "', '" . DEVICE_BROWSER . "', 1)";
         }
     } else {
 

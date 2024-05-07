@@ -1,15 +1,15 @@
 <?php
-	$postType=rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
+$postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 
-    if(isset($daterange)) {
-        $dates = explode(" - ", $daterange);
-        $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
-    } else {
-        $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
-        $endDate = date("Y-m-d 23:59:59");
-    }
-    
+if (isset($daterange)) {
+    $dates = explode(" - ", $daterange);
+    $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
+    $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
+} else {
+    $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
+    $endDate = date("Y-m-d 23:59:59");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,15 +21,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
-        if($postType==''){
-            echo "<meta http-equiv='refresh' content='300'>";
-        }
+    if ($postType == '') {
+        echo "<meta http-equiv='refresh' content='300'>";
+    }
     ?>
     <link rel="icon" href="<?php echo SITE_ICON ?>">
-    <title><?php echo $dashboardPageTitle.' | '.SITE_NAME; ?></title>
+    <title><?php echo $dashboardPageTitle . ' | ' . SITE_NAME; ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>sweetalert/sweetalert.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY?>ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
@@ -56,12 +56,19 @@
     </div>
     <header>
         <div class="right-side">
+            <div class="search-box">
+                <form action="#">
+                    <div class="form-group">
+                        <input type="text" placeholder="Search for all customers">
+                    </div>
+                </form>
+            </div>
             <ul>
                 <li><a href="#" onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE!='') ? PROFILE_IMAGE : IMG_LIBRARY.'default-profile.png' ); ?>"
+                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
                                 alt=""></div>
                     </a>
                     <ul>
@@ -84,14 +91,14 @@
                     <p>Dashboard<span>View performance reports.</span></p>
                 </li>
 
-                <li <?php echo ((ADMIN_BASE_URL=='/') ? 'class="active"' : '' ) ?>><a href="/dashboard/"><i
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
                             class="fi-rr-home"></i> Dashboard</a></li>
 
                 <?php
-                
-                if($site_access_type=='administrator') { ?>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/report/')!==false) ? 'class="active"' : '' ) ?>>
+                if ($site_access_type == 'administrator') { ?>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/report/') !== false) ? 'class="active"' : '') ?>>
                     <a href="report/"><i class="fi fi-rr-chart-histogram"></i> Reports</a>
                     <div class="side-menu">
                         <ul>
@@ -109,15 +116,15 @@
                 </li>
 
                 <?php
-                
-                if(SITE_ID==57) { ?>
+
+                    if (SITE_ID == 57) { ?>
 
 
                 <li class="header-section-name">
                     <p>Vendors<span>Manage vendor.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/transporter/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/transporter/') !== false) ? 'class="active"' : '') ?>>
                     <a href="transporter/"><i class="fi fi-rr-bus"></i> Transporter vendor</a>
                     <div class="side-menu">
                         <ul>
@@ -133,7 +140,7 @@
                     </div>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hotel/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hotel/') !== false) ? 'class="active"' : '') ?>>
                     <a href="hotel/"><i class="fi fi-rr-hotel"></i> Hotel Vendors</a>
                     <div class="side-menu">
                         <ul>
@@ -149,7 +156,7 @@
                     </div>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/dmc/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/dmc/') !== false) ? 'class="active"' : '') ?>>
                     <a href="dmc/"><i class="fi fi-rr-shop"></i> DMC Vendor</a>
                     <div class="side-menu">
                         <ul>
@@ -169,7 +176,7 @@
                     <p>Packages<span>Manage all tour packages.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/domestic/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/domestic/') !== false) ? 'class="active"' : '') ?>>
                     <a href="domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic packages</a>
                     <div class="side-menu">
                         <ul>
@@ -193,7 +200,7 @@
                     </div>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/') !== false) ? 'class="active"' : '') ?>>
                     <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> International packages</a>
                     <div class="side-menu">
                         <ul>
@@ -213,9 +220,9 @@
                 </li>
 
                 <?php
-                }
-                
-                ?>
+                    }
+
+                    ?>
 
                 <?php
                 }
@@ -226,7 +233,7 @@
                     <p>Leads<span>Manage leads.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/leads/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/leads/') !== false) ? 'class="active"' : '') ?>>
                     <a href="leads/"><i class="fi fi-rr-chart-network"></i> Leads</a>
                     <div class="side-menu">
                         <ul>
@@ -262,14 +269,14 @@
 
 
                 <?php
-                
-                    if($site_access_type =='administrator') { ?>
+
+                if ($site_access_type == 'administrator') { ?>
 
                 <!-- <li class="header-section-name">
                     <p>Clients<span>Manage clients.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/clients/') !== false) ? 'class="active"' : '') ?>>
                     <a href="clients/"><i class="fi fi-rr-hr-group"></i> Clients</a>
                     <div class="side-menu">
                         <ul>
@@ -289,13 +296,13 @@
                     <p>Integration<span>Manage third party resources.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/integration/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/integration/') !== false) ? 'class="active"' : '') ?>>
                     <a href="integration/"><i class="fi fi-rr-plug-connection"></i> Plugins</a>
                 </li>
 
                 <?php
-                    }
-                    
+                }
+
 
                 ?>
 
@@ -303,12 +310,12 @@
                     <p>Setting<span>Manage application.</span></p>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'class="active"' : '') ?>>
                     <a href="setting/"><i class="fi-rr-settings"></i> Setting</a>
                     <div class="side-menu">
                         <ul>
                             <?php
-                            if($site_access_type =='administrator') { ?>
+                            if ($site_access_type == 'administrator') { ?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
@@ -320,8 +327,8 @@
                         <ul>
 
                             <?php
-                
-                    if($site_access_type =='administrator') { ?>
+
+                            if ($site_access_type == 'administrator') { ?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
@@ -332,11 +339,11 @@
                 </li>
 
                 <?php
-                
-                    if($site_access_type =='administrator') { ?>
+
+                if ($site_access_type == 'administrator') { ?>
 
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/')!==false) ? 'class="active"' : '' ) ?>>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/') !== false) ? 'class="active"' : '') ?>>
                     <a href="users/"><i class="fi fi-rr-user"></i> Users</a>
                     <div class="side-menu">
                         <ul>
@@ -367,22 +374,21 @@
         <div class="container">
 
             <?php
-            
-            if(ADMIN_BASE_URL!='/') { ?>
+
+            if (ADMIN_BASE_URL != '/') { ?>
 
             <div class="i-m-here-pagination">
                 <ul>
                     <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
                     <?php
-                        
-                            $paginationURL='';
 
-                            for($i=0; $i<sizeof($urlStructure); $i++) {
+                        $paginationURL = '';
 
-                                $paginationURL=$paginationURL.'/'.strtolower($urlStructure[$i]);
-                                echo "<li><a href='{$paginationURL}/'>".ucwords($urlStructure[$i])."</a></li>";
+                        for ($i = 0; $i < sizeof($urlStructure); $i++) {
 
-                            }
+                            $paginationURL = $paginationURL . '/' . strtolower($urlStructure[$i]);
+                            echo "<li><a href='{$paginationURL}/'>" . ucwords($urlStructure[$i]) . "</a></li>";
+                        }
 
                         ?>
                 </ul>

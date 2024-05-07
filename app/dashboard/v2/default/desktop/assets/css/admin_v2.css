@@ -339,7 +339,7 @@ strong {
 .right-side {
   float: right;
   width: auto;
-  min-width: 300px;
+  min-width: 100%;
 }
 
 .right-side ul {
@@ -776,13 +776,20 @@ main .container .heading span {
 
 .dashboard-datepicker input[type="text"] {
   float: left;
-  width: 235px;
+  width: 240px;
   padding: 7px 10px;
   border: 1px solid #c7c7c7;
   border-radius: 4px;
   outline: none;
   box-sizing: border-box;
   height: 33px;
+  background: #fff !important;
+  color: #3d3d3d !important;
+}
+
+.dashboard-datepicker input[type="text"]:focus {
+  background: #fff !important;
+  color: #3d3d3d !important;
 }
 
 .widget {
@@ -2229,4 +2236,31 @@ section.form
 
 .appVersion p {
   font-size: 12px;
+}
+
+.search-box {
+  float: left;
+  position: revert;
+  margin-left: 250px;
+  padding: 0;
+}
+
+.search-box form {
+  padding: 0;
+  margin: 0 auto;
+}
+
+.search-box form .form-group {
+  padding: 0;
+  margin: 0 auto;
+}
+.search-box form .form-group input {
+  min-width: 400px;
+  background: #fff !important;
+  border: 1px solid #b8b8b8;
+  padding: 2px 5px;
+  height: auto;
+  margin-top: 4px;
+  border-radius: 4px;
+  font-size: 16px;
 }

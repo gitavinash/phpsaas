@@ -81,19 +81,23 @@ switch ($urlStructure[0]) {
 		require_once 'homepage.php';
 		break;
 
-	// Service worker
+		// Service worker
 
 	case 'sw.js':
 		require_once 'service-worker.php';
 		break;
 
-	// CSS Configuration
+	case 'firebase-messaging-sw.js':
+		require_once 'service-worker.php';
+		break;
+
+		// CSS Configuration
 
 	case 'config.min.css':
 		require_once 'css-theme.php';
 		break;
 
-	/** For Dashboard activity process */
+		/** For Dashboard activity process */
 
 	case 'dashboard':
 		require_once 'admin.php';
