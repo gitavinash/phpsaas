@@ -17,7 +17,7 @@ require_once 'header.php';
                             $fileName = str_replace('_', ' ', str_replace('-', ' ', str_replace('image source', '<strong>Image source:</strong>', end($fileName))));
                             $fileName = explode(' ', $fileName);
                             array_shift($fileName);
-                            $fileName = implode(' ', $fileName);
+                            echo implode(' ', $fileName);
                             ?>
                         </figcaption>
                     </figure>
