@@ -4,8 +4,9 @@ figcaption {
   background: #fff4f4;
   font-style: italic;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 22px;
   margin-top: -10px;
+  word-wrap: break-word;
 }
 .newsDetails {
   padding: 120px 0 60px 0;
