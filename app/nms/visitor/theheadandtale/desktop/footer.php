@@ -49,8 +49,9 @@
             </div>
 
             <div class="copyright">
-                <p>Copyright <?php echo date('Y') ?> @ Head and Tale Media Pvt Ltd | Design and Developed by <a
-                        href="https://blumox.com" title="News website development company in new delhi">Blumox
+                <p>Copyright <?php echo date('Y') ?> @ <?php echo SITE_NAME ?></p>
+                <p class="right">Design and Developed by <a href="https://blumox.com"
+                        title="News website development company in new delhi">Blumox
                         Technologies</a></p>
             </div>
         </div>
