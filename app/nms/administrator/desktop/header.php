@@ -99,7 +99,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="subscription/?type=add&editor=true"><i class="fas fa-plus"></i>Add New
                                     Subscription</a></li>
                             <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <!-- <li><a href="subscription/?type=tags"><i class="fas fa-tags"></i>Tags</a></li> -->
+                            <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Subscriber</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
