@@ -4,7 +4,7 @@ require_once 'header.php';
 
 ?>
 <section class="newsDetails">
-    <div class="container">
+    <div class="container container--box">
         <div class="row">
             <div class="col-lg-7">
                 <div class="news_img">
