@@ -1,19 +1,25 @@
-<section class="newsletter_wrapper">
-    <div class="container container--box">
-        <div class="row">
-            <div class="newsletter">
-                <form action="/thankyou_newsletter/">
+<?php
+
+if (ACTIVE_URL != '/thankyou_newsletter/') {
+    echo "<section class='newsletter_wrapper'>
+    <div class='container container--box'>
+        <div class='row'>
+            <div class='newsletter'>
+                <form action='/thankyou_newsletter/'>
                     <h3>Sign up for concise summaries of powerful fintech insights delivered straight to your
                         inbox every time we publish.</h3>
-                    <div class="input_btn">
-                        <input type="text" class="input newsletter_input" placeholder="Enter your email to subscribe">
-                        <button class="newsletter_btn"><i class='bx bxs-paper-plane'></i></button>
+                    <div class='input_btn'>
+                        <input type='text' class='input newsletter_input' id='newsletterEmail' placeholder='Enter your email to subscribe'>
+                        <button class='newsletter_btn' id='submitNewsletter' ><i class='bx bxs-paper-plane'></i></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</section>
+</section>";
+}
+
+?>
 </main>
 <footer>
     <div class="footer_wrapper">
@@ -58,6 +64,8 @@
     </div>
 </footer>
 
+<script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo USER_JS ?>script.min.js"></script>
 
 </body>

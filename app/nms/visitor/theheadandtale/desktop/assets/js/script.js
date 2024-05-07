@@ -175,3 +175,40 @@ $("#updatePassword").on("click", function (event) {
     $("#updatePassword").show();
   }
 });
+
+function validateEmail(email) {
+  // Regular expression for basic email validation
+  var regex = /^\S+@\S+\.\S+$/;
+  return regex.test(email);
+}
+
+$("#submitNewsletter").on("click", function (e) {
+  e.preventDefault();
+  const email = $("#newsletterEmail").val();
+  $("#submitNewsletter").hide();
+  if (validateEmail(email)) {
+    $.ajax({
+      url: "/api/mailchimp/addEmail/?list=6366f51d70&email=" + email,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        if (data.status == "success") {
+          $("#submitNewsletter").show();
+          setInterval(() => {
+            window.href = "/thankyou_newsletter/";
+          }, 200);
+        } else {
+          popUpMessage("center", data.msg, data.status);
+          $("#submitNewsletter").show();
+        }
+      },
+      error: function (data) {
+        console.error(`error: `, data);
+        $("#submitNewsletter").show();
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter valid email address", "warning");
+    $("#submitNewsletter").show();
+  }
+});
