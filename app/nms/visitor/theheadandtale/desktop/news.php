@@ -14,10 +14,10 @@ require_once 'header.php';
                             <?php
                             $fileName = explode('/', $news_image);
                             $fileName = str_replace('.png', '', str_replace('.jpg', '', str_replace('.jpeg', '', $fileName)));
-                            $fileName = str_replace('_', ' ', str_replace('-', ' ', str_replace('image credit', '<strong>Image credit:</strong>', end($fileName))));
+                            $fileName = str_replace('_', ' ', str_replace('-', ' ', end($fileName)));
                             $fileName = explode(' ', $fileName);
                             array_shift($fileName);
-                            echo implode(' ', $fileName);
+                            echo '<strong>Image credit: </strong>' . implode(' ', $fileName);
                             ?>
                         </figcaption>
                     </figure>
