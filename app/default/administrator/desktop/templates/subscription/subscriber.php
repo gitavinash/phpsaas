@@ -29,16 +29,16 @@ FROM " . TABLE_PREFIX . "site_access sa
 LEFT JOIN " . TABLE_PREFIX . "subscription sub ON site_access_user_id = subscription_user_id
 LEFT JOIN " . TABLE_PREFIX . "product prod ON subscription_relation_id = product_id
 INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id
-WHERE site_access_type='subscriber' AND site_access_site_id = " . SITE_ID." ORDER BY subscription_time DESC )) {
+WHERE site_access_type='subscriber' AND site_access_site_id = " . SITE_ID . " ORDER BY subscription_time DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-        <tr>
-            <td><?php echo $profile_display_name; ?></td>
-            <td><?php echo $profile_email; ?></td>
-            <td><?php echo $product_title; ?></td>
-            <td>
-                <?php
+                    <tr>
+                        <td><?php echo $profile_display_name; ?></td>
+                        <td><?php echo $profile_email; ?></td>
+                        <td><?php echo $product_title; ?></td>
+                        <td>
+                            <?php
 
                             if ($subscription_time != null) {
 
@@ -52,8 +52,8 @@ WHERE site_access_type='subscriber' AND site_access_site_id = " . SITE_ID." ORDE
                             }
 
                             ?>
-            </td>
-        </tr>
+                        </td>
+                    </tr>
         <?php
                 }
             }
