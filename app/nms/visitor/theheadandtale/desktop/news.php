@@ -8,7 +8,16 @@ require_once 'header.php';
         <div class="row">
             <div class="col-lg-7">
                 <div class="news_img">
-                    <img src="<?php echo $news_image ?>" class="img-fluid" alt="">
+                    <figure>
+                        <img src="<?php echo $news_image ?>" class="img-fluid" alt="">
+                        <figcaption>
+                            <?php
+                            $fileName = explode('/', $news_image);
+                            $fileName = str_replace('.png', '', str_replace('.jpg', '', str_replace('.jpeg', '', $fileName)));
+                            echo end($fileName);
+                            ?>
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
             <div class="col-lg-5">
