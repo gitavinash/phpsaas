@@ -10,16 +10,6 @@ require_once 'header.php';
                 <div class="news_img">
                     <figure>
                         <img src="<?php echo $news_image ?>" class="img-fluid" alt="">
-                        <figcaption>
-                            <?php
-                            $fileName = explode('/', $news_image);
-                            $fileName = str_replace('.png', '', str_replace('.jpg', '', str_replace('.jpeg', '', $fileName)));
-                            $fileName = str_replace('_', ' ', str_replace('-', ' ', end($fileName)));
-                            $fileName = explode(' ', $fileName);
-                            array_shift($fileName);
-                            echo 'Image credit: ' . implode(' ', $fileName);
-                            ?>
-                        </figcaption>
                     </figure>
                 </div>
             </div>
