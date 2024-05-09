@@ -17,6 +17,17 @@ function record($connection, $data)
 
     mysqli_query($connection, "START TRANSACTION");
 
+    if (isset($_COOKIE['user_data'])) {
+        $user_salt_key = base64_decode($_COOKIE['user_data']);
+        if ($checkUserIsReal = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$user_salt_key}'")) {
+            if (mysqli_num_rows($checkUserIsReal) != 0) {
+                extract(mysqli_fetch_assoc($checkUserIsReal));
+            }
+        }
+    } else {
+        $user_id = 0;
+    }
+
     // Check IP Location data is available or not
 
     if ($checkIPData = mysqli_query($connection, "SELECT ip_id FROM " . TABLE_PREFIX . "ip WHERE ip_address='" . IP . "'")) {
@@ -46,7 +57,7 @@ function record($connection, $data)
         }
     }
 
-    $recordAnalytics = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "analytics(analytics_site_id, analytics_link_url, analytics_link_original, analytics_session_id, analytics_site_version, analytics_ip, analytics_os, analytics_browser, analytics_source, analytics_medium, analytics_campaign) VALUE(" . SITE_ID . ", '" . ACTIVE_URL_NON_QUERY . "', '" . ACTIVE_URL . "', '" . SESSION_ID . "', '" . SITE_VERSION . "', '" . IP . "', '" . DEVICE_OS . "', '" . DEVICE_BROWSER . "', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}')");
+    $recordAnalytics = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "analytics(analytics_site_id, analytics_user_id, analytics_link_url, analytics_link_original, analytics_session_id, analytics_site_version, analytics_ip, analytics_os, analytics_browser, analytics_source, analytics_medium, analytics_campaign) VALUE(" . SITE_ID . ", '{$user_id}', '" . ACTIVE_URL_NON_QUERY . "', '" . ACTIVE_URL . "', '" . SESSION_ID . "', '" . SITE_VERSION . "', '" . IP . "', '" . DEVICE_OS . "', '" . DEVICE_BROWSER . "', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}')");
 
     if ($recordIPData && $recordAnalytics) {
 
