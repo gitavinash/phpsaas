@@ -34,10 +34,8 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
                         </div>
                         <div class="social_links">
                             <h3>Follow us on</h3>
-                            <a href="https://twitter.com/theheadandtale"><img
-                                    src="<?php echo USER_IMAGES ?>social_media/twitter.png" alt="twitter"></a>
-                            <a href="https://www.linkedin.com/company/theheadandtale/"><img
-                                    src="<?php echo USER_IMAGES ?>social_media/linkedin.png" alt="linkden"></a>
+                            <a href="https://twitter.com/theheadandtale"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" alt="twitter"></a>
+                            <a href="https://www.linkedin.com/company/theheadandtale/"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" alt="linkden"></a>
                         </div>
                     </div>
                 </div>
@@ -56,18 +54,16 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
             <div class="copyright">
                 <p>Copyright <?php echo date('Y') ?> @ <?php echo SITE_NAME ?></p>
-                <p class="right">Design and Developed by <a href="https://blumox.com"
-                        title="News website development company in new delhi">Blumox
+                <p class="right">Design and Developed by <a href="https://blumox.com" title="News website development company in new delhi">Blumox
                         Technologies</a></p>
             </div>
         </div>
     </div>
 </footer>
 
-<script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
+<?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo USER_JS ?>script.min.js"></script>
-<?php require_once NOTIFICATION . 'index.php'; ?>
 </body>
 
 </html>

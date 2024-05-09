@@ -211,11 +211,10 @@ $("#submitNewsletter").on("click", function (e) {
   }
 });
 
-window.addEventListener("contextmenu", function (e) {
-  e.preventDefault();
+$("body").on("contextmenu", function (e) {
+  return false;
 });
 
-window.addEventListener("selectstart", function (e) {
+$("body").bind("cut copy", function (e) {
   e.preventDefault();
-  return false;
 });
