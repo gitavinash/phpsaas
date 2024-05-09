@@ -1,5 +1,11 @@
 <?php
 
+if (DEVELOPMENT_MODE == true) {
+    $requestURL = 'https://qa.phicommerce.com/pg/api/command';
+} else {
+    $requestURL = 'https://secure-ptg.payphi.com/pg/api/command';
+}
+
 $transactionID = base64_decode($txn_id);
 $orderId = base64_decode($id);
 $transactionStatus = 3;
@@ -24,9 +30,8 @@ $requestBody = array(
     'secureHash' => $hashValue,
 );
 
-
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://secure-ptg.payphi.com/pg/api/command',
+    CURLOPT_URL => $requestURL,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -40,8 +45,6 @@ curl_setopt_array($curl, array(
 $response = curl_exec($curl);
 $response = json_decode($response, TRUE);
 curl_close($curl);
-
-print_r($response);
 
 if (isset($response['responseCode'])) {
 

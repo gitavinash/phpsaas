@@ -2,6 +2,8 @@
 
 require_once 'header.php';
 
+$newsContent = strip_tags($news_description);
+$newsContent =  substr($newsContent, 0, 525);
 ?>
 <section class="newsDetails">
     <div class="container container--box">
@@ -40,112 +42,94 @@ require_once 'header.php';
 
             </div>
             <div class="details_box">
+
                 <?php
 
-                if (!isset($_COOKIE['user_name'])) { ?>
+                $showFullNews = false;
+                $showSubscriptionSection = false;
+                $showSignUpSection = false;
 
-                    <div class="details_box__content show-3-line">
-                        <p><?php
-                            echo "<span style='display:none' >pos 1</span>";
-                            $lines = explode("\n", $news_description);
-                            for ($i = 0; $i < 4 && isset($lines[$i]); $i++) {
-                                echo $lines[$i] . "<br>";
-                            }
+                if (isset($_COOKIE['user_data'])) {
+                    if ($activeSubscription == true) {
+                        $showFullNews = true;
+                    } else {
+                        if ($news_paid == 1) {
+                            $showSubscriptionSection = true;
+                        } else {
+                            $showFullNews = true;
+                        }
+                    }
+                } else {
+                    $showSignUpSection = true;
+                }
 
-                            ?></p>
-                    </div>
+                echo "<div class='details_box__content {$news_paid}'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
+                if ($showSignUpSection == true) {
+                    echo "<section class='subscribe_wrapper'>
+                        <div class='container'>
+                            <div class='subscribe_wrapper__heading'>
+                                <h6><a href='/signup/'>Sign up now to read the full story</a></h6>
+                                <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
+                            </div>
+                        </div>
+                    </section>";
+                }
+                if ($showSubscriptionSection == true) { ?>
+
 
                     <section class="subscribe_wrapper">
                         <div class="container">
                             <div class="subscribe_wrapper__heading">
-                                <h6><a href="/signup/">Sign up now to read the full story</a></h6>
+                                <h6><a href="/subscribe/">Subscribe to read the full story</a></h6>
                                 <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
-                            </div>
-                        </div>
-                    </section>
-
-                    <?php
-                } else {
-                    if ($news_paid == 1) {
-
-                        if ($activeSubscription == true) { ?>
-
-                            <div class="details_box__content">
-                                <?php echo "<span style='display:none' >pos 2</span>>"; ?>
-                                <p><?php echo $news_description ?></p>
+                                <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
                             </div>
 
-                        <?php
-                        } else { ?>
+                            <div class="subscription_card">
+                                <?php
 
-                            <div class="details_box__content show-3-line">
-                                <p><?php
-                                    echo "<span style='display:none' >pos 3</span>";
-                                    $lines = explode("\n", $news_description);
-                                    for ($i = 0; $i < 4 && isset($lines[$i]); $i++) {
-                                        echo $lines[$i] . "<br>";
-                                    }
-                                    ?></p>
-                            </div>
-                            <section class="subscribe_wrapper">
-                                <div class="container">
-                                    <div class="subscribe_wrapper__heading">
-                                        <h6><a href="/subscribe/">Subscribe to read the full story</a></h6>
-                                        <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
-                                        <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
-                                    </div>
+                                if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
+                                    if (mysqli_num_rows($subsriptionPlan) != 0) {
+                                        while ($subsriptionPlanData = mysqli_fetch_assoc($subsriptionPlan)) {
+                                            extract($subsriptionPlanData); ?>
 
-                                    <div class="subscription_card">
-                                        <?php
+                                            <div class="subscription_card__box">
+                                                <p><?php echo $product_title ?></p>
+                                                <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
+                                                <div class="continue">
+                                                    <?php
 
-                                        if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
-                                            if (mysqli_num_rows($subsriptionPlan) != 0) {
-                                                while ($subsriptionPlanData = mysqli_fetch_assoc($subsriptionPlan)) {
-                                                    extract($subsriptionPlanData); ?>
-
-                                                    <div class="subscription_card__box">
-                                                        <p><?php echo $product_title ?></p>
-                                                        <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
-                                                        <div class="continue">
-                                                            <?php
-
-                                                            if (isset($_COOKIE['user_data'])) {
-                                                                echo "
+                                                    if (isset($_COOKIE['user_data'])) {
+                                                        echo "
                                                                 <form action='/subscription/' method='post' >
                                                                     <input type='hidden' name='id' value='{$product_id}'>
                                                                     <input type='submit' class='button' value='continue'>
                                                                 </form>
                                                             ";
-                                                            } else {
-                                                                echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
-                                                            }
+                                                    } else {
+                                                        echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
+                                                    }
 
-                                                            ?>
-                                                        </div>
-                                                    </div>
+                                                    ?>
+                                                </div>
+                                            </div>
 
-                                        <?php
-                                                }
-                                            }
+                                <?php
                                         }
+                                    }
+                                }
 
-                                        ?>
-                                    </div>
-                                </div>
-                            </section>
-                        <?php
-                        }
-                    } else { ?>
-                        <div class="details_box__content">
-                            <?php echo "<span style='display:none' >pos 4</spapos>>"; ?>
-                            <p><?php echo $news_description ?></p>
+                                ?>
+                            </div>
                         </div>
+                    </section>
 
                 <?php
-                    }
                 }
 
+
                 ?>
+
             </div>
             <?php
 

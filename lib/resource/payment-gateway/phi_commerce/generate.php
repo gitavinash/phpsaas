@@ -1,5 +1,13 @@
 <?php
 
+if (DEVELOPMENT_MODE == true) {
+    $requestURL = 'https://qa.phicommerce.com/pg/api/v2/initiateSale';
+    $redirectURL = 'https://qa.phicommerce.com/pg/api/v2/authRedirect?tranCtx=';
+} else {
+    $requestURL = 'https://secure-ptg.payphi.com/pg/api/v2/initiateSale';
+    $redirectURL = 'https://secure-ptg.payphi.com/pg/api/v2/authRedirect?tranCtx=';
+}
+
 if ($checkOrderStatus = mysqli_query($connection, "SELECT order_user_id as userId, order_id, transaction_id, transaction_amount, cart_currency, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id")) {
     if (mysqli_num_rows($checkOrderStatus) != 0) {
         extract(mysqli_fetch_assoc($checkOrderStatus));
@@ -53,7 +61,7 @@ $requestBody = json_encode(array(
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://secure-ptg.payphi.com/pg/api/v2/initiateSale',
+    CURLOPT_URL => $requestURL,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -69,7 +77,7 @@ $response = json_decode($response, TRUE);
 curl_close($curl);
 
 if ($response['tranCtx'] != '') {
-    header("Location: https://secure-ptg.payphi.com/pg/api/v2/authRedirect?tranCtx={$response['tranCtx']}", TRUE, 301);
+    header("Location: {$redirectURL}{$response['tranCtx']}", TRUE, 301);
 } else {
     echo $response['responseDescription'];
 }
