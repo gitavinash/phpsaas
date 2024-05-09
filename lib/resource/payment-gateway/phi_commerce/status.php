@@ -52,7 +52,7 @@ if (isset($response['responseCode'])) {
         if (mysqli_num_rows($checkTransaction) != 0) {
             extract(mysqli_fetch_assoc($checkTransaction));
 
-            if ($_POST['responseCode'] == 000 && $_POST['txnStatus'] == 'SUC') {
+            if ($_POST['responseCode'] == 000 || $_POST['txnStatus'] == 'SUC') {
                 $transactionStatus = 1;
             }
 
