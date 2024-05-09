@@ -67,7 +67,7 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo USER_JS ?>script.min.js"></script>
-
+<?php require_once NOTIFICATION . 'index.php'; ?>
 </body>
 
 </html>
