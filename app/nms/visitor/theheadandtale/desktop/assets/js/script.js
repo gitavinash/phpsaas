@@ -210,3 +210,12 @@ $("#submitNewsletter").on("click", function (e) {
     $("#submitNewsletter").show();
   }
 });
+
+window.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
+
+window.addEventListener("selectstart", function (e) {
+  e.preventDefault();
+  return false;
+});
