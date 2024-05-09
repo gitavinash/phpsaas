@@ -1,36 +1,36 @@
 <?php
 
-    if(!isset($txn_id)) {
-        echo "Something went wrong";
-        exit();
-    }
+if (!isset($txn_id)) {
+    echo "Something went wrong";
+    exit();
+}
 
-    if($checkTransaction=mysqli_query($connection, "SELECT product_id, product_title, transaction_user_id, transaction_type FROM ".TABLE_PREFIX."transaction INNER JOIN ".TABLE_PREFIX."order ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."product ON order_product_id=product_id WHERE transaction_id=".base64_decode($txn_id)." AND transaction_status=1 AND transaction_site_id=".SITE_ID)) {
-        if(mysqli_num_rows($checkTransaction)!=0) {
-            extract(mysqli_fetch_assoc($checkTransaction));
+if ($checkTransaction = mysqli_query($connection, "SELECT product_id, product_title, transaction_user_id, transaction_type FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "product ON order_product_id=product_id WHERE transaction_id=" . base64_decode($txn_id) . " AND transaction_status=1 AND transaction_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($checkTransaction) != 0) {
+        extract(mysqli_fetch_assoc($checkTransaction));
 
-            if (strpos(strtolower($product_title), "month") !== false) {
-                $subscriptionDuration='month';
-            } else {
-                $subscriptionDuration='year';
-            }
-
-
-            if(!mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status) VALUES('".SITE_ID."', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', 1)")) {
-                if(!mysqli_query($connection, "UPDATE ".TABLE_PREFIX."subscription SET subscription_relation_id={$product_id}, subscription_mode='{$subscriptionDuration}', subscription_time=NOW() WHERE subscription_user_id='{$transaction_user_id}' AND subscription_site_id=".SITE_ID)) {
-                    echo mysqli_fetch_assoc($connection);
-                    echo "Something went wrong while updating the subscription plan";
-                }
-            }
+        if (strpos(strtolower($product_title), "month") !== false) {
+            $subscriptionDuration = 'month';
         } else {
-            echo "Invalid transaction found";
+            $subscriptionDuration = 'year';
+        }
+
+
+        if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status) VALUES('" . SITE_ID . "', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', 1)")) {
+            if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_relation_id={$product_id}, subscription_mode='{$subscriptionDuration}', subscription_time=NOW() WHERE subscription_user_id='{$transaction_user_id}' AND subscription_site_id=" . SITE_ID)) {
+                echo mysqli_fetch_assoc($connection);
+                echo "Something went wrong while updating the subscription plan";
+            }
         }
     } else {
-        echo mysqli_error($connection);
-        echo "Something went wrong";
+        echo "Invalid transaction found";
     }
-    
-    require_once 'header.php';
+} else {
+    echo mysqli_error($connection);
+    echo "Something went wrong";
+}
+
+require_once 'header.php';
 
 ?>
 
@@ -54,7 +54,7 @@
 </div> -->
 <section class="thankyou_wrapper">
     <div class="container">
-        <div class="thankyou_wrapper__content">
+        <div class="thankyou_wrapper__content" style="margin-bottom: 200px">
             <h1>Thank You for Subscribing!</h1>
             <p>Welcome to The Head and Tale. Your subscription means the world to us.</p>
             <p>As a valued subscriber, stay tuned for thought-provoking articles, exclusive news, reports, and
@@ -67,4 +67,4 @@
 </section>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
