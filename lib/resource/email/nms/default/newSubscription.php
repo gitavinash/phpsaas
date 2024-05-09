@@ -13,7 +13,6 @@ $email_body = "
 					<p><strong>Here are what you can look forward to:</strong></p>
 					<ul>
 						<li><strong>Exclusive Content:</strong> Dive into in-depth articles, expert analyses, and special reports that are reserved just for our subscribers.</li>
-						<li><strong>Unlimited Access:</strong> Enjoy unrestricted access to all our sections, including politics, business, technology, culture, and more.</li>
 					</ul>
 					<p><strong>Need Assistance?</strong></p>
 					<p>Our support team is here for you. If you have any questions or need help navigating the site, please visit at  " . SITE_URL . "/contact-us/</p>
