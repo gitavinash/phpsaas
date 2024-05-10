@@ -26,7 +26,7 @@ if ($selectDevice = mysqli_query($connection, "SELECT device_token FROM " . TABL
                 "title" => ((isset($title)) ? $title : 'Notification title'),
                 "body" => ((isset($body)) ? $body : 'Notification body'),
                 "icon" => ((isset($icon)) ? $icon : "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png"),
-                "image" => ((isset($image)) ? $image : "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_push_notification.jpg"),
+                "image" => ((isset($image)) ? $image : "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_push_notification.png"),
                 "click_action" => ((isset($redirectURL)) ? $redirectURL : "https://blumox.com"),
                 "sound" => "default"
             ]
