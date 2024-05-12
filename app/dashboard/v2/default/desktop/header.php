@@ -51,6 +51,11 @@ if (isset($daterange)) {
 </head>
 
 <body>
+    <!-- Show this section when notification is disable -->
+    <!-- <div class="enableNotification">
+
+    </div> -->
+    <!-- Show this section when page is loading -->
     <div class="pageLoader">
         <img src="/upload/others/aleya-logo.png" alt="Aleya logo">
     </div>
