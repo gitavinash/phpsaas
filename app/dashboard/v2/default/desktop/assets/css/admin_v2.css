@@ -2264,3 +2264,12 @@ section.form
   border-radius: 4px;
   font-size: 16px;
 }
+
+.enableNotification {
+  position: fixed;
+  float: left;
+  width: 100%;
+  height: 100vh;
+  background: #03637b;
+  z-index: 10;
+}

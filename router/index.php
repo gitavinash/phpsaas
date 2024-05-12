@@ -97,6 +97,10 @@ switch ($urlStructure[0]) {
 		require_once 'css-theme.php';
 		break;
 
+	case 'website-setup':
+		require_once 'website-setup.php';
+		break;
+
 		/** For Dashboard activity process */
 
 	case 'dashboard':

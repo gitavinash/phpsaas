@@ -36,7 +36,7 @@
                         autofocus required />
                 </div>
                 <div class="form-group">
-                    <input type="text" name="last_na me" id="last_name" placeholder="Last name*" class="form-control"
+                    <input type="text" name="last_name" id="last_name" placeholder="Last name*" class="form-control"
                         required />
                 </div>
                 <div class="form-group">

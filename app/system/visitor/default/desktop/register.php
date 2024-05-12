@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <div class="col d-none d-lg-block">
@@ -32,28 +32,22 @@
             </div>
             <form id="register" autocomplete="off">
                 <div class="form-group">
-                    <input type="text" name="first_name" id="first_name" placeholder="First name*" class="form-control"
-                        autofocus required />
+                    <input type="text" name="first_name" id="first_name" placeholder="First name*" class="form-control" autofocus required />
                 </div>
                 <div class="form-group">
-                    <input type="text" name="last_na me" id="last_name" placeholder="Last name*" class="form-control"
-                        required />
+                    <input type="text" name="last_name" id="last_name" placeholder="Last name*" class="form-control" required />
                 </div>
                 <div class="form-group">
-                    <input type="number" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control"
-                        required />
+                    <input type="number" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control" required />
                 </div>
                 <div class="form-group">
-                    <input type="email" class="form-control" id="email" placeholder="Email address*" name="email"
-                        required />
+                    <input type="email" class="form-control" id="email" placeholder="Email address*" name="email" required />
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" id="password" placeholder="Password*" name="password"
-                        required />
+                    <input type="password" class="form-control" id="password" placeholder="Password*" name="password" required />
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password*"
-                        name="confirm_password" required />
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password*" name="confirm_password" required />
                 </div>
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="register">
@@ -65,6 +59,6 @@
         </div>
         <?php
 
-    require_once 'footer.php';
+        require_once 'footer.php';
 
-?>
+        ?>

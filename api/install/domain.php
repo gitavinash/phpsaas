@@ -9,6 +9,7 @@ function domain($connection, $data)
 
     $expireDate = date('Y-m-d', strtotime('+1 years'));
     $theme = ((isset($theme)) ? $theme : 1);
+    $$domain = str_replace('http:', '', str_replace('https:', '', str_replace('/', '', $domain)));
     $checkUser = mysqli_query($connection, "SELECT user_id, site_id FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site ON site_owner_id=user_id WHERE user_username='{$username}'");
 
     if (mysqli_num_rows($checkUser) != 0) {
@@ -29,7 +30,7 @@ function domain($connection, $data)
 
                 $status = 'success';
                 $msg = 'Website setup is successfully completed';
-                $url = '/login/';
+                $url = "https://{$username}." . SITE_DOMAIN . '/login/';
 
                 mysqli_query($connection, "COMMIT");
             } else {
@@ -47,7 +48,7 @@ function domain($connection, $data)
     } else {
 
         $msg = 'error';
-        $status = 'Invalid setup id found';
+        $status = 'Invalid setup id found -> ' . $setup_id;
     }
 
     $result = array(

@@ -1,29 +1,28 @@
 <?php
 
-    $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
+$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
-    if(isset($_COOKIE['isLogin'])) {
-        
-        header("Location: {$redirect_url}");
-        exit();
+if (isset($_COOKIE['isLogin'])) {
 
-    }
+    header("Location: {$redirect_url}");
+    exit();
+}
 
-    if(SITE_VERSION=='desktop') {
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => 60
-            ]
-        ]);
+$quoteOfTheDay['quoteText'] = '';
+$quoteOfTheDay['quoteAuthor'] = '';
 
-        $quoteOfTheDay = file_get_contents("https://api.forismatic.com/api/1.0/?method=getQuote&format=json&key=1&lang=en", false, $context);
-        $quoteOfTheDay = json_decode($quoteOfTheDay, TRUE);
-    } else {
-        $$quoteOfTheDay['quoteText']='';
-        $quoteOfTheDay['quoteAuthor']='';
-    }
-    
-    require_once 'header.php';
+if (SITE_VERSION == 'desktop') {
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 60
+        ]
+    ]);
+
+    $quoteOfTheDay = file_get_contents("https://api.forismatic.com/api/1.0/?method=getQuote&format=json&key=1&lang=en", false, $context);
+    $quoteOfTheDay = json_decode($quoteOfTheDay, TRUE);
+}
+
+require_once 'header.php';
 
 ?>
 <div class="col d-none d-lg-block">
@@ -31,8 +30,17 @@
         <div class="slide">
             <div class="blockquote-wrapper">
                 <div class="blockquote">
-                    <p><?php echo $quoteOfTheDay['quoteText'] ?></p>
-                    <p><strong>&mdash; <?php echo $quoteOfTheDay['quoteAuthor'] ?></strong></p>
+                    <?php
+
+                    if ($quoteOfTheDay['quoteText'] != '') {
+                        echo '<p>' . $quoteOfTheDay['quoteText'] . '</p>';
+                    }
+                    if ($quoteOfTheDay['quoteAuthor'] != '') {
+                        echo '<p><strong>&mdash; ' . $quoteOfTheDay['quoteAuthor'] . '</strong></p>';
+                    }
+
+                    ?>
+
                 </div>
             </div>
         </div>
@@ -71,6 +79,6 @@
         </div>
         <?php
 
-    require_once 'footer.php';
+        require_once 'footer.php';
 
-?>
+        ?>

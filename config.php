@@ -16,6 +16,8 @@ if (DEVELOPMENT_MODE == true) {
 	define('DB_NAME', 'iswapp');		// database name ex :- cms_db
 	define('MONGO_DB_CONNECTION_URL', 'mongodb://localhost:27017/');		// MongoDB Connection URL
 
+	error_reporting(E_ALL);
+	ini_set('display_errors', 0);
 } else {
 
 	define('DB_HOST', 'localhost');		// database hostname ex :- hostname
@@ -23,7 +25,8 @@ if (DEVELOPMENT_MODE == true) {
 	define('DB_PASS', 'A=2ADu5P7WqCPm!Unc6*a?N^8Ka2?Htp');		// datapase user password :- 12345
 	define('DB_NAME', 'isw_saas');		// database name ex :- cms_db
 	define('MONGO_DB_CONNECTION_URL', 'mongodb+srv://iswone:!KL0KdVY65K8@cluster0.vldbb2n.mongodb.net/test');		// MongoDB Connection URL
-
+	error_reporting(0);
+	ini_set('display_errors', 0);
 }
 
 /* database table prefix */
@@ -56,7 +59,7 @@ define('REGISTRATION_PATH', '/register/');
 
 /* Active domain and URL information */
 
-if(DEVELOPMENT_MODE==true) {
+if (DEVELOPMENT_MODE == true) {
 	define('HTTP_PROTOCOL', 'http://'); // Check HTTP protocol is secure or not
 } else {
 	define('HTTP_PROTOCOL', 'https://'); // Check HTTP protocol is secure or not
