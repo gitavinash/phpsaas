@@ -1,84 +1,76 @@
 <?php
 
-	if(ADMIN_BASE_URL=='/sw.js') {
-		require_once 'service-worker.php';
-		exit();
-	}
-	
-	/* Check user is logged in or not */
+// if (ADMIN_BASE_URL == '/sw.js') {
+// 	require_once 'service-worker.php';
+// 	exit();
+// }
 
-	require_once LOGIN_CHECK;
+/* Check user is logged in or not */
 
-	/* Checking dashboard user type directory is exits or not */
+require_once LOGIN_CHECK;
 
-	if($site_dashboard_version==1) {
+/* Checking dashboard user type directory is exits or not */
 
-		// Verion 1 theme type it's use in beggining of the project
+if ($site_dashboard_version == 1) {
 
-		$dashboardDirectory=ADMIN_PATH;
+	// Verion 1 theme type it's use in beggining of the project
 
-		if(!is_dir($dashboardDirectory)) {
+	$dashboardDirectory = ADMIN_PATH;
 
-			if(!is_dir($dashboardDirectory=str_replace('/default/', '/default/', ADMIN_PATH))) {
+	if (!is_dir($dashboardDirectory)) {
 
-				$dashboardDirectory=str_replace('/mobile/', '/desktop/', $dashboardDirectory);
+		if (!is_dir($dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH))) {
 
-			}
-
+			$dashboardDirectory = str_replace('/mobile/', '/desktop/', $dashboardDirectory);
 		}
-
-	} else {
-
-		// Latest dashboard directory 
-
-		$dashboardDirectory=str_replace('/default/', '/'.USER_TYPE.'/', ADMIN_PATH);
-
-		if(!is_dir(ROOT.$dashboardDirectory)) {
-
-			$dashboardDirectory=str_replace('/default/', '/default/', ADMIN_PATH);
-
-		}
-
-
 	}
+} else {
 
+	// Latest dashboard directory 
 
-	// v2 Request url file path 
+	$dashboardDirectory = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH);
 
-	$dashboardFilePath = ((isset($type)) ? 'templates'.ADMIN_BASE_URL.$type : ((ADMIN_BASE_URL!='/') ? ltrim(rtrim(ADMIN_BASE_URL, '/'), '/') : 'dashboard' ) ).'.php';
+	if (!is_dir(ROOT . $dashboardDirectory)) {
 
-	$dashboardFile=$dashboardDirectory.$dashboardFilePath;
-
-	if(!file_exists($dashboardFile)) {
-
-		// When dashboard theme need to call file from the default theme directory ( v1 )
-
-		$dashboardFile=ROOT.'/app/default/'.USER_TYPE.'/'.SITE_VERSION.'/'.$dashboardFilePath;
-		
-		if(!file_exists($dashboardFile)) {
-
-			http_response_code(404);
-			$dashboardFile=$dashboardDirectory.'404.php';
-
-		}
-
+		$dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH);
 	}
+}
 
-	// User for detect while type of page is load
 
-	$postType=explode('/', mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') ));
-	$postType=end($postType);
-	
-	// html title tag value
+// v2 Request url file path 
 
-	$dashboardPageTitle=ucwords(str_replace('/', ' &#8702; ', mysqli_real_escape_string($connection, ((rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')!='') ? rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') : 'Dashboard' ) )).((isset($type)) ? ' &#8702; '.$type : '' ));
-	
-	// Call dashboard theme file header, footer and main required file as per uri
+$dashboardFilePath = ((isset($type)) ? 'templates' . ADMIN_BASE_URL . $type : ((ADMIN_BASE_URL != '/') ? ltrim(rtrim(ADMIN_BASE_URL, '/'), '/') : 'dashboard')) . '.php';
 
-	require_once $dashboardDirectory.'/header.php';
-	
-	require_once $dashboardFile;
+$dashboardFile = $dashboardDirectory . $dashboardFilePath;
 
-	require_once $dashboardDirectory.'/footer.php';
+if (!file_exists($dashboardFile)) {
 
-	exit();
+	// When dashboard theme need to call file from the default theme directory ( v1 )
+
+	$dashboardFile = ROOT . '/app/default/' . USER_TYPE . '/' . SITE_VERSION . '/' . $dashboardFilePath;
+
+	if (!file_exists($dashboardFile)) {
+
+		http_response_code(404);
+		$dashboardFile = $dashboardDirectory . '404.php';
+	}
+}
+
+// User for detect while type of page is load
+
+$postType = explode('/', mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')));
+$postType = end($postType);
+
+// html title tag value
+
+$dashboardPageTitle = ucwords(str_replace('/', ' &#8702; ', mysqli_real_escape_string($connection, ((rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') != '') ? rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') : 'Dashboard'))) . ((isset($type)) ? ' &#8702; ' . $type : ''));
+
+// Call dashboard theme file header, footer and main required file as per uri
+
+require_once $dashboardDirectory . '/header.php';
+
+require_once $dashboardFile;
+
+require_once $dashboardDirectory . '/footer.php';
+
+exit();
