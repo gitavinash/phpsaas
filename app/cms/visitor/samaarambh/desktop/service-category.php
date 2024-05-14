@@ -17,6 +17,23 @@ require_once 'header.php';
 </section>
 <!--Page Header End-->
 
+
+<section class="event-details">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8 col-lg-7">
+                <div class="event-details__left">
+                    <div class="event-details__top">
+                        <p class="event-details__text-1 postDescription">
+                            <?php echo $category_description ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!--Events Page Start-->
 <section class="events-page">
     <div class="container">
