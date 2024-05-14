@@ -21,9 +21,10 @@ require_once 'header.php';
 <section class="event-details">
     <div class="container">
         <div class="row">
-            <div class="col-xl-8 col-lg-7">
+            <div class="col">
                 <div class="event-details__left">
                     <div class="event-details__top">
+                        <h3 class="event-details__title"><?php echo $category_title ?></h3>
                         <p class="event-details__text-1 postDescription">
                             <?php echo $category_description ?>
                         </p>
