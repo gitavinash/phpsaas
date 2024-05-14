@@ -12,6 +12,7 @@
             <!-- <th style="width: 50px"></th> -->
             <th>Full name</th>
             <th>Email</th>
+            <th>Sunscription Active</th>
             <th>Sunscription Plan</th>
             <th>Expiry date</th>
         </tr>
@@ -33,12 +34,13 @@ WHERE site_access_type='subscriber' AND site_access_site_id = " . SITE_ID . " OR
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-                    <tr>
-                        <td><?php echo $profile_display_name; ?></td>
-                        <td><?php echo $profile_email; ?></td>
-                        <td><?php echo $product_title; ?></td>
-                        <td>
-                            <?php
+        <tr>
+            <td><?php echo $profile_display_name; ?></td>
+            <td><?php echo $profile_email; ?></td>
+            <td><?php echo (($subscription_status == 1) ? 'Yes' : 'No'); ?></td>
+            <td><?php echo $product_title; ?></td>
+            <td>
+                <?php
 
                             if ($subscription_time != null) {
 
@@ -52,8 +54,8 @@ WHERE site_access_type='subscriber' AND site_access_site_id = " . SITE_ID . " OR
                             }
 
                             ?>
-                        </td>
-                    </tr>
+            </td>
+        </tr>
         <?php
                 }
             }
