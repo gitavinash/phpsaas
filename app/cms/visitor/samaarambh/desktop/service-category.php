@@ -63,16 +63,6 @@ require_once 'header.php';
     </div>
     </div>";
                     }
-                } else {
-                    echo "<section class='page-header'>
-        <div class='page-header-bg' style='background-image: url('')'>
-        </div>
-        <div class='container'>
-            <div class='page-header__inner'>
-                <h2>No events found for {$category_title}</h2>
-            </div>
-        </div>
-    </section>";
                 }
             }
 
