@@ -91,6 +91,8 @@
                         <h3 class="footer-widget__title">Quick links</h3>
                         <ul class="footer-widget__links-list list-unstyled clearfix">
                             <li><a href="about-us/">About us</a></li>
+                            <li><a href="our-initiatives/">Our-initiatives</a></li>
+                            <li><a href="events/">Events</a></li>
                             <li><a href="contact-us/">Contact us</a></li>
                         </ul>
                     </div>
@@ -124,10 +126,8 @@
                         <div class="site-footer__social">
                             <a href="https://twitter.com/Samaarambh2"><i class="fab fa-twitter"></i></a>
                             <a href="https://www.facebook.com/SamaarambhFoundation/"><i class="fab fa-facebook"></i></a>
-                            <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i
-                                    class="fab fa-linkedin"></i></a>
-                            <a href="https://www.instagram.com/samaarambh_foundation/"><i
-                                    class="fab fa-instagram"></i></a>
+                            <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://www.instagram.com/samaarambh_foundation/"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
@@ -139,9 +139,7 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="site-footer__bottom-inner">
-                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a
-                                href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a
-                                href="https://blumox.com" href="Website designing company in delhi">Blumox
+                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a href="https://blumox.com" href="Website designing company in delhi">Blumox
                                 Technologies</a>
                         </p>
                     </div>
@@ -163,8 +161,7 @@
         <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
 
         <div class="logo-box">
-            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143"
-                    alt="" /></a>
+            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143" alt="" /></a>
         </div>
         <!-- /.logo-box -->
         <div class="mobile-nav__container"></div>
