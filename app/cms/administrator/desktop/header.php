@@ -495,6 +495,23 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 							</ul>
 						</div>
 					</li> -->
+                <li <?php echo ((ADMIN_BASE_URL == '/appearance/') ? 'class="active"' : '') ?>>
+                    <a href="appearance/?type=configuration"><i class="fas fa-paint-brush"></i> Appearance</a>
+                    <div class="side-menu">
+                        <ul>
+                            <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
+                                    Sliders</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
+                                    Sliders</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo (($postType == 'setting') ? 'class="active"' : '') ?>>
                     <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">

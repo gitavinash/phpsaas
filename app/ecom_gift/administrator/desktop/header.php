@@ -38,7 +38,9 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
+                        <div class="profile-img"><img
+                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
+                                alt=""></div>
                     </a>
                     <ul>
                         <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
@@ -53,7 +55,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
+                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li <?php echo ((ADMIN_BASE_URL == '/product/') ? 'class="active"' : '') ?>>
                     <a href="product/?type=list&status=all"><i class="fas fa-box-open"></i> Product</a>
                     <div class="side-menu">
@@ -211,6 +214,23 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 							</ul>
 						</div>
 					</li> -->
+                <li <?php echo ((ADMIN_BASE_URL == '/appearance/') ? 'class="active"' : '') ?>>
+                    <a href="appearance/?type=configuration"><i class="fas fa-paint-brush"></i> Appearance</a>
+                    <div class="side-menu">
+                        <ul>
+                            <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
+                                    Sliders</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
+                                    Sliders</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/setting/') ? 'class="active"' : '') ?>>
                     <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">
