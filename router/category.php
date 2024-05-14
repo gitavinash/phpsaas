@@ -79,14 +79,21 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				require_once $category_path;
 			} else {
 
-				/** Use parent category template */
+				$category_path = USER_PATH . $category_type . '-category.php';
 
-				if (file_exists(USER_PATH . 'category.php')) {
+				if (file_exists($category_path)) {
 
-					require_once USER_PATH . 'category.php';
+					require_once $category_path;
 				} else {
+					/** Use parent category template */
 
-					echo '<h1>Unable to find the template path</h1>';
+					if (file_exists(USER_PATH . 'category.php')) {
+
+						require_once USER_PATH . 'category.php';
+					} else {
+
+						echo '<h1>Unable to find the template path</h1>';
+					}
 				}
 			}
 		} else {

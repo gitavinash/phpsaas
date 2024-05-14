@@ -41,7 +41,7 @@ require_once 'header.php';
                                 <p class="main-slider__sub-title">Mission</p>
                                 <h2 class="main-slider__title">Let’s Reach and support Who need it Most.</h2>
                                 <div class="main-slider__btn-box">
-                                    <a href="about-us.php" class="thm-btn main-slider__btn"> Discover more</a>
+                                    <a href="about-us/" class="thm-btn main-slider__btn"> Discover more</a>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@ require_once 'header.php';
                                 <p class="main-slider__sub-title">Mission</p>
                                 <h2 class="main-slider__title">Let’s Reach and support Who need it Most.</h2>
                                 <div class="main-slider__btn-box">
-                                    <a href="about-us.php" class="thm-btn main-slider__btn"> Discover more</a>
+                                    <a href="about-us/" class="thm-btn main-slider__btn"> Discover more</a>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@ require_once 'header.php';
                                 <p class="main-slider__sub-title">Mission</p>
                                 <h2 class="main-slider__title">Let’s Reach and support Who need it Most.</h2>
                                 <div class="main-slider__btn-box">
-                                    <a href="about-us.php" class="thm-btn main-slider__btn"> Discover more</a>
+                                    <a href="about-us/" class="thm-btn main-slider__btn"> Discover more</a>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +202,7 @@ require_once 'header.php';
                         </div>
                     </div>
                     <div class="causes-one__content">
-                        <h3 class="causes-one__title"><a href="contact-us.php">Let’s education for
+                        <h3 class="causes-one__title"><a href="contact-us/">Let’s education for
                                 children get good life</a>
                         </h3>
                         <p class="causes-one__text">Join Hands with Us: Together, Let's Create a Brighter Future for
@@ -221,7 +221,7 @@ require_once 'header.php';
                         </div>
                     </div>
                     <div class="causes-one__content">
-                        <h3 class="causes-one__title"><a href="contact-us.php">It is a long established
+                        <h3 class="causes-one__title"><a href="contact-us/">It is a long established
                                 fact that a reader</a>
                         </h3>
                         <p class="causes-one__text">Your Donations Are the Building Blocks of a Better, More Inclusive
@@ -240,7 +240,7 @@ require_once 'header.php';
                         </div>
                     </div>
                     <div class="causes-one__content">
-                        <h3 class="causes-one__title"><a href="contact-us.php">There are many variations
+                        <h3 class="causes-one__title"><a href="contact-us/">There are many variations
                                 of passages</a>
                         </h3>
                         <p class="causes-one__text">Your Investment in Our Mission Is an Investment in a Better World
@@ -268,7 +268,7 @@ require_once 'header.php';
             <h3 class="become-volunteer-one__title">Join your hand with us for a <br> better life and future
             </h3>
             <div class="become-volunteer-one__btn-box">
-                <a href="contact-us.php" class="thm-btn become-volunteer-one__btn">Discover More</a>
+                <a href="contact-us/" class="thm-btn become-volunteer-one__btn">Discover More</a>
             </div>
         </div>
     </div>
@@ -289,7 +289,7 @@ require_once 'header.php';
                                 <span class="icon-help"></span>
                             </div>
                             <div class="feature-one__top-title-box">
-                                <h3 class="feature-one__top-title"><a href="contact-us.php">Vision
+                                <h3 class="feature-one__top-title"><a href="contact-us/">Vision
                                     </a></h3>
                             </div>
                         </div>
@@ -308,7 +308,7 @@ require_once 'header.php';
                         </li>
 
                     </ul>
-                    <a href="contact-us.php" class="thm-btn feature-one__btn">Donate now</a>
+                    <a href="contact-us/" class="thm-btn feature-one__btn">Donate now</a>
                 </div>
             </div>
             <div class="col-xl-6 col-lg-6  wow slideInRight" data-wow-delay="100ms" data-wow-duration="2500ms">
@@ -321,7 +321,7 @@ require_once 'header.php';
                                 <span class="icon-gift-box"></span>
                             </div>
                             <div class="feature-one__top-title-box">
-                                <h3 class="feature-one__top-title"><a href="contact-us.php">Mission
+                                <h3 class="feature-one__top-title"><a href="contact-us/">Mission
                                         <br>
                                     </a></h3>
                             </div>
@@ -338,7 +338,7 @@ require_once 'header.php';
                             </div>
                         </li>
                     </ul>
-                    <a href="contact-us.php" class="thm-btn feature-one__btn">Donate now</a>
+                    <a href="contact-us/" class="thm-btn feature-one__btn">Donate now</a>
                 </div>
             </div>
         </div>
@@ -618,62 +618,6 @@ require_once 'header.php';
     </div>
 </section>
 <!--Gallery One End-->
-
-<!--FAQ One Start-->
-<section class="faq-one">
-    <!-- <div class="faq-one-shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/faq-one-shape-1.png);"></div>
-    <div class="faq-one-bg" style="background-image: url(<?php echo USER_IMAGES ?>backgrounds/faq-one-bg.png);"></div> -->
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-6 col-lg-6">
-                <div class="faq-one__left">
-                    <div class="section-title text-left">
-                        <span class="section-title__tagline">Learn More From</span>
-                        <h2 class="section-title__title">People are frequently asking some questions from us
-                        </h2>
-                    </div>
-                    <p class="faq-one__text-1">When You Give, You Not Only Offer Resources but Also Open
-                        Doors to Opportunity, Education,
-                        and Empowerment for Those Less Fortunate</p>
-                    <a href="contact-us.php" class="thm-btn faq-one__btn">Learn how to get help</a>
-                </div>
-            </div>
-            <div class="col-xl-6 col-lg-6">
-                <div class="faq-one__right">
-                    <div class="accrodion-grp" data-grp-name="faq-one-accrodion">
-                        <div class="accrodion active">
-                            <div class="accrodion-title">
-                                <h4>1. Module of Samaarambh!</h4>
-                            </div>
-                            <div class="accrodion-content">
-                                <div class="inner">
-                                    <p>Step 1- Study REQUEST LETTERS Received from schools/ Administration and
-                                        Villagers<br>
-
-                                        Step 2- Prioritize requests based on URGENCY ,IMPACT & Number of
-                                        Beneficiaries<br>
-
-                                        Step 3- Site Visit and data collection of beneficiary<br>
-
-                                        Step 4- Cost analysis of aid and project management<br>
-
-                                        Step 5- Sharing project details with partner organisations<br>
-
-                                        Step 6- Getting required approvals and Grants from participating partners.<br>
-
-                                        Step 7- Organising and Managing entire Event.<br>
-
-                                        Step 8- Sharing completion report along with the Impact derived.</p>
-                                </div><!-- /.inner -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--FAQ One End-->
 
 <?php
 

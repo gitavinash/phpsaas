@@ -94,6 +94,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
+
                 <?php
 
                 if (SITE_ID == 9) { ?>
@@ -115,6 +116,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
+
                 <li <?php echo (($postType == 'bhajan') ? 'class="active"' : '') ?>>
                     <a href="bhajan/?type=list&status=all"><i class="fas fa-file-video"></i> Bhajan / Aarti</a>
                     <div class="side-menu">
@@ -247,6 +249,24 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
                             <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
                             <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo (($postType == 'event') ? 'class="active"' : '') ?>>
+                    <a href="event/?type=list&status=all"><i class="fas fa-gopuram"></i> Events</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="event/?type=list&status=all"><i class="fas fa-list"></i> All events</a></li>
+                            <li><a href="event/?type=add"><i class="fas fa-plus"></i> Add New event</a></li>
+                            <li><a href="event/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="event/?type=list&status=all"><i class="fas fa-list"></i> All events</a></li>
+                            <li><a href="event/?type=add"><i class="fas fa-plus"></i> Add New event</a></li>
+                            <li><a href="event/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
                         </ul>
                     </div>
                 </li>

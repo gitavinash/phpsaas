@@ -1,3 +1,67 @@
+<!--FAQ One Start-->
+<section class="faq-one">
+    <!-- <div class="faq-one-shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/faq-one-shape-1.png);"></div>
+    <div class="faq-one-bg" style="background-image: url(<?php echo USER_IMAGES ?>backgrounds/faq-one-bg.png);"></div> -->
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6">
+                <div class="faq-one__left">
+                    <div class="section-title text-left">
+                        <span class="section-title__tagline">Learn More From</span>
+                        <h2 class="section-title__title">People are frequently asking some questions from us
+                        </h2>
+                    </div>
+                    <p class="faq-one__text-1">When You Give, You Not Only Offer Resources but Also Open
+                        Doors to Opportunity, Education,
+                        and Empowerment for Those Less Fortunate</p>
+                    <a href="contact-us/" class="thm-btn faq-one__btn">Learn how to get help</a>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6">
+                <div class="faq-one__right">
+                    <div class="accrodion-grp" data-grp-name="faq-one-accrodion">
+                        <div class="accrodion active">
+                            <div class="accrodion-title">
+                                <h4>1. Module of Samaarambh!</h4>
+                            </div>
+                            <div class="accrodion-content">
+                                <div class="inner">
+                                    <p><strong>Step 1- </strong> REQUEST LETTERS Received from schools/ Administration
+                                        and
+                                        Villagers<br>
+                                        <strong>Step 2-</strong> Prioritize requests based on URGENCY ,IMPACT & Number
+                                        of
+                                        Beneficiaries<br>
+                                        <strong>Step 3-</strong> Site Visit and data collection of beneficiary<br>
+                                        <strong>Step 4-</strong> Cost analysis of aid and project management<br>
+                                        <strong>Step 5-</strong> Sharing project details with partner organisations<br>
+                                        <strong>Step 6-</strong> Getting required approvals and Grants from
+                                        participating partners.<br>
+                                        <strong>Step 7-</strong> Organising and Managing entire Event.<br>
+                                        <strong>Step 8-</strong> Sharing completion report along with the Impact
+                                        derived.
+                                    </p>
+                                </div><!-- /.inner -->
+                            </div>
+                        </div>
+                        <!-- <div class="accrodion">
+                            <div class="accrodion-title">
+                                <h4></h4>
+                            </div>
+                            <div class="accrodion-content">
+                                <div class="inner">
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--FAQ One End-->
+
 <!--Site Footer Start-->
 <footer class="site-footer">
     <div class="site-footer-bg" style="background-image: url(<?php echo USER_IMAGES ?>img-1/last-b.jpg);">
@@ -18,7 +82,7 @@
                                 residing at remote and far-flung treacherous locations of our Country.</p>
                         </div>
                         <div class="footer-widget__btn">
-                            <a href="contact-us.php"> <span class="fa fa-heart"></span>Donate now</a>
+                            <a href="contact-us/"> <span class="fa fa-heart"></span>Donate now</a>
                         </div>
                     </div>
                 </div>
@@ -26,8 +90,8 @@
                     <div class="footer-widget__column footer-widget__links clearfix">
                         <h3 class="footer-widget__title">Quick links</h3>
                         <ul class="footer-widget__links-list list-unstyled clearfix">
-                            <li><a href="about-us.php">About us</a></li>
-                            <li><a href="contact-us.php">Contact us</a></li>
+                            <li><a href="about-us/">About us</a></li>
+                            <li><a href="contact-us/">Contact us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -58,10 +122,12 @@
                             </li>
                         </ul>
                         <div class="site-footer__social">
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://twitter.com/Samaarambh2"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.facebook.com/SamaarambhFoundation/"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i
+                                    class="fab fa-linkedin"></i></a>
+                            <a href="https://www.instagram.com/samaarambh_foundation/"><i
+                                    class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
@@ -73,7 +139,9 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="site-footer__bottom-inner">
-                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a href="https://blumox.com" href="Website designing company in delhi">Blumox
+                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a
+                                href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a
+                                href="https://blumox.com" href="Website designing company in delhi">Blumox
                                 Technologies</a>
                         </p>
                     </div>
@@ -95,7 +163,8 @@
         <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
 
         <div class="logo-box">
-            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143" alt="" /></a>
+            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143"
+                    alt="" /></a>
         </div>
         <!-- /.logo-box -->
         <div class="mobile-nav__container"></div>

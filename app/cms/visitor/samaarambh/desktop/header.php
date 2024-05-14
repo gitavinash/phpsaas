@@ -5,14 +5,7 @@
     <base href="/">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Samaarambh Foundation</title>
-    <!-- favicons Icons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo USER_IMAGES ?>logo.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo USER_IMAGES ?>logo.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo USER_IMAGES ?>logo.png" />
-    <!-- <link rel="manifest" href="<?php echo USER_IMAGES ?>favicons/site.webmanifest" /> -->
-    <meta name="description" content="Samaarambh Foundation" />
-
+    <?php require_once DEFAULT_META; ?>
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -177,8 +170,28 @@
                                             class="dropdown <?php echo ((ACTIVE_URL == '/about-us/') ? 'current' : '') ?>">
                                             <a href=" about-us/">About us</a>
                                         </li>
-                                        <li <?php echo ((ACTIVE_URL == '/contact-us/') ? 'class="current"' : '') ?>">
+                                        <li <?php echo ((ACTIVE_URL == '/initiatives') ? 'class="current"' : '') ?>">
                                             <a href="contact-us/">Contact</a>
+                                        </li>
+                                        <li
+                                            <?php echo ((ACTIVE_URL == '/our-initiatives/') ? 'class="current"' : '') ?>">
+                                            <a href="our-initiatives/">Our initiatives</a>
+                                            <?php
+
+                                            if ($categoryList = mysqli_query($connection, "SELECT category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE category_type='service' AND link_status=200 AND link_site_id=" . SITE_ID)) {
+                                                if (mysqli_num_rows($categoryList) != 0) {
+                                                    echo "<ul>";
+                                                    while ($categoryData = mysqli_fetch_assoc($categoryList)) {
+                                                        echo "<li><a href='{$categoryData['link_url']}'>{$categoryData['category_title']}</a></li>";
+                                                    }
+                                                    echo "</ul>";
+                                                }
+                                            }
+
+                                            ?>
+                                        </li>
+                                        <li <?php echo ((ACTIVE_URL == '/events/') ? 'class="current"' : '') ?>">
+                                            <a href="events/">Events</a>
                                         </li>
                                         <!-- add new menu using
                                     

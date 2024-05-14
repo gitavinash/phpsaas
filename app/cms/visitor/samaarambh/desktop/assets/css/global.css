@@ -3648,6 +3648,7 @@ body.locked .page-wrapper {
   overflow: hidden;
   border-radius: var(--blumox-bdr-radius);
   z-index: 1;
+  min-height: 200px;
 }
 
 .events-one__img:before {
