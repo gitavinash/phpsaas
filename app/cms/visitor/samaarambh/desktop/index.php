@@ -21,87 +21,41 @@ require_once 'header.php';
                 }}'>
         <div class="swiper-wrapper">
 
-            <div class="swiper-slide">
-                <div class="image-layer"
-                    style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-0253-scaled.jpg);">
-                </div>
-                <!-- /.image-layer -->
+            <?php
 
-                <div class="main-slider-shape-1"
-                    style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-0253-scaled.jpg);">
-                </div>
-                <div class="main-slider-shape-2 float-bob-x">
-                    <img src="<?php echo USER_IMAGES ?>shapes/main-slider-shape-2.png" alt="">
-                </div>
+            if ($desktopSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slider_device='" . SITE_VERSION . "' AND slide_site_id=" . SITE_ID)) {
+                $numberOfSlider = mysqli_num_rows($desktopSlider);
+                if ($numberOfSlider != 0) {
+                    while ($desktopSliderData = mysqli_fetch_assoc($desktopSlider)) {
+                        extract($desktopSliderData);
+                        echo "
+                                        <div class='swiper-slide'>
+                                        <div class='image-layer' style='background-image: url(" . SITE_URL . "{$slide_image});'>
+        </div>
+        <div class='main-slider-shape-1'
+            style='background-image: url(" . SITE_URL . "{$slide_image});'>
+        </div>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-8">
-                            <div class="main-slider__content">
-                                <p class="main-slider__sub-title">Mission</p>
-                                <h2 class="main-slider__title">Let’s Reach and support Who need it Most.</h2>
-                                <div class="main-slider__btn-box">
-                                    <a href="about-us/" class="thm-btn main-slider__btn"> Discover more</a>
-                                </div>
-                            </div>
+        <div class='container'>
+            <div class='row'>
+                <div class='col-xl-6 col-lg-8'>
+                    <div class='main-slider__content'>
+                        <p class='main-slider__sub-title'>{$slide_title}</p>
+                        <h2 class='main-slider__title'>{$slide_description}</h2>
+                        <div class='main-slider__btn-box'>
+                            <a href='{$slide_link}' class='thm-btn main-slider__btn'> {$slider_cta}</a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    ";
+                    }
+                }
+            }
 
-            <div class="swiper-slide">
-                <div class="image-layer"
-                    style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-3240-scaled.jpg);">
-                </div>
-                <!-- /.image-layer -->
-
-                <div class="main-slider-shape-1"
-                    style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-3240-scaled.jpg);"></div>
-                <div class="main-slider-shape-2 float-bob-x">
-                    <img src="<?php echo USER_IMAGES ?>shapes/main-slider-shape-2.png" alt="">
-                </div>
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-8">
-                            <div class="main-slider__content">
-                                <p class="main-slider__sub-title">Mission</p>
-                                <h2 class="main-slider__title">Let’s Reach and support Who need it Most.</h2>
-                                <div class="main-slider__btn-box">
-                                    <a href="about-us/" class="thm-btn main-slider__btn"> Discover more</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="swiper-slide">
-                <div class="image-layer"
-                    style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-0303-scaled.jpg);">
-                </div>
-                <!-- /.image-layer -->
-
-                <div class="main-slider-shape-1"
-                    style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-0303-scaled.jpg);"></div>
-                <div class="main-slider-shape-2 float-bob-x">
-                    <img src="<?php echo USER_IMAGES ?>shapes/main-slider-shape-2.png" alt="">
-                </div>
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-8">
-                            <div class="main-slider__content">
-                                <p class="main-slider__sub-title">Mission</p>
-                                <h2 class="main-slider__title">Let’s Reach and support Who need it Most.</h2>
-                                <div class="main-slider__btn-box">
-                                    <a href="about-us/" class="thm-btn main-slider__btn"> Discover more</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            ?>
 
         </div>
 
@@ -122,8 +76,7 @@ require_once 'header.php';
 <!--About One Start-->
 <section class="about-one">
     <div class="about-one__shape-box-1">
-        <div class="about-one__shape-1"
-            style="background-image: url(<?php echo USER_IMAGES ?>shapes/about-one-shape-1.png);">
+        <div class="about-one__shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/about-one-shape-1.png);">
         </div>
     </div>
     <div class="container">
@@ -257,11 +210,9 @@ require_once 'header.php';
 <!--Become Volunteer One Start-->
 <section class="become-volunteer-one">
     <div class="become-volunteer-one__bg-box">
-        <div class="become-volunteer-one__bg jarallax" data-jarallax data-speed="0.2" data-imgPosition="50% 0%"
-            style="background-image: url(<?php echo USER_IMAGES ?>img-1/46-1-scaled.jpg);"></div>
+        <div class="become-volunteer-one__bg jarallax" data-jarallax data-speed="0.2" data-imgPosition="50% 0%" style="background-image: url(<?php echo USER_IMAGES ?>img-1/46-1-scaled.jpg);"></div>
     </div>
-    <div class="become-volunteer-one__shape-1"
-        style="background-image: url(<?php echo USER_IMAGES ?>shapes/become-volunteer-shape-1.png);"></div>
+    <div class="become-volunteer-one__shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/become-volunteer-shape-1.png);"></div>
     <div class="container">
         <div class="become-volunteer-one__inner">
             <p class="become-volunteer-one__sub-title">Become a Volunteers</p>
@@ -281,8 +232,7 @@ require_once 'header.php';
         <div class="row">
             <div class="col-xl-6 col-lg-6  wow slideInLeft" data-wow-delay="100ms" data-wow-duration="2500ms">
                 <div class="feature-one__single">
-                    <div class="feature-one__single-bg"
-                        style="background-image: url(<?php echo USER_IMAGES ?>shapes/feature-one-shape-1.png);"></div>
+                    <div class="feature-one__single-bg" style="background-image: url(<?php echo USER_IMAGES ?>shapes/feature-one-shape-1.png);"></div>
                     <div class="feature-one__top">
                         <div class="feature-one__top-inner">
                             <div class="feature-one__top-icon">
@@ -313,8 +263,7 @@ require_once 'header.php';
             </div>
             <div class="col-xl-6 col-lg-6  wow slideInRight" data-wow-delay="100ms" data-wow-duration="2500ms">
                 <div class="feature-one__single feature-one__single--two">
-                    <div class="feature-one__single-bg"
-                        style="background-image: url(<?php echo USER_IMAGES ?>shapes/feature-one-shape-1.png);"></div>
+                    <div class="feature-one__single-bg" style="background-image: url(<?php echo USER_IMAGES ?>shapes/feature-one-shape-1.png);"></div>
                     <div class="feature-one__top">
                         <div class="feature-one__top-inner">
                             <div class="feature-one__top-icon feature-one__top-icon--two">
@@ -420,8 +369,7 @@ require_once 'header.php';
 
 <!--Testimonial One Start-->
 <section class="testimonial-one">
-    <div class="testimonial-one-bg jarallax" data-jarallax data-speed="0.2" data-imgPosition="50% 0%"
-        style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-3240-scaled.jpg);"></div>
+    <div class="testimonial-one-bg jarallax" data-jarallax data-speed="0.2" data-imgPosition="50% 0%" style="background-image: url(<?php echo USER_IMAGES ?>img-1/IMG-3240-scaled.jpg);"></div>
     <div class="container">
         <div class="row">
             <div class="col-xl-6 col-lg-6">
@@ -474,8 +422,7 @@ require_once 'header.php';
                         <div class="item">
                             <!--Testimonial One Single Start-->
                             <div class="testimonial-one__single">
-                                <div class="testimonial-one__shape-1"
-                                    style="background-image: url(<?php echo USER_IMAGES ?>shapes/testimonial-one-shape-1.png);">
+                                <div class="testimonial-one__shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/testimonial-one-shape-1.png);">
                                 </div>
                                 <div class="testimonial-one__client-img">
                                     <img src="<?php echo USER_IMAGES ?>testimonial/testimonial-1-2.jpg" alt="">
@@ -497,8 +444,7 @@ require_once 'header.php';
                         <div class="item">
                             <!--Testimonial One Single Start-->
                             <div class="testimonial-one__single">
-                                <div class="testimonial-one__shape-1"
-                                    style="background-image: url(<?php echo USER_IMAGES ?>shapes/testimonial-one-shape-1.png);">
+                                <div class="testimonial-one__shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/testimonial-one-shape-1.png);">
                                 </div>
                                 <div class="testimonial-one__client-img">
                                     <img src="<?php echo USER_IMAGES ?>testimonial/testimonial-1-2.jpg" alt="">
@@ -521,8 +467,7 @@ require_once 'header.php';
                         <div class="item">
                             <!--Testimonial One Single Start-->
                             <div class="testimonial-one__single">
-                                <div class="testimonial-one__shape-1"
-                                    style="background-image: url(<?php echo USER_IMAGES ?>shapes/testimonial-one-shape-1.png);">
+                                <div class="testimonial-one__shape-1" style="background-image: url(<?php echo USER_IMAGES ?>shapes/testimonial-one-shape-1.png);">
                                 </div>
                                 <div class="testimonial-one__client-img">
                                     <img src="<?php echo USER_IMAGES ?>testimonial/testimonial-1-2.jpg" alt="">
