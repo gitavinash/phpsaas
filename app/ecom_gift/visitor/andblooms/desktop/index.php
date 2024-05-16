@@ -8,10 +8,19 @@ include_once 'header.php';
     <div class="container-fluid">
         <div class="row">
             <div class="card-ban">
-                <div class="slider"><a href="/tag/birthday/"><img src="<?php echo USER_IMAGES ?>banner/1.png"></a></div>
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/2.png"></div>
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/3.png"></div>
-                <div class="slider"><img src="<?php echo USER_IMAGES ?>banner/4.png"></div>
+                <?php
+
+                if ($desktopSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slider_device='" . SITE_VERSION . "' AND slide_site_id=" . SITE_ID)) {
+                    $numberOfSlider = mysqli_num_rows($desktopSlider);
+                    if ($numberOfSlider != 0) {
+                        while ($desktopSliderData = mysqli_fetch_assoc($desktopSlider)) {
+                            extract($desktopSliderData);
+                            echo "<div class='slider'><a href='{$slide_link}'><img src='{$slide_image}'></a></div>";
+                        }
+                    }
+                }
+
+                ?>
             </div>
         </div>
     </div>
