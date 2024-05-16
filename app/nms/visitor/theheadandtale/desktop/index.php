@@ -8,7 +8,7 @@ require_once 'header.php';
         <div class="container">
             <?php
 
-            if ($newsArticles = mysqli_query($connection, "SELECT link_is_featured, link_modified, news_title, news_image, news_description, link_url, link_published, meta_description 
+            if ($newsArticles = mysqli_query($connection, "SELECT link_is_featured, link_modified, news_title, news_image, news_description, news_paid, link_url, link_published, meta_description 
 FROM " . TABLE_PREFIX . "news 
 INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id 
 INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
@@ -27,6 +27,7 @@ LIMIT 0, 5")) {
                         echo "<div class='news_box'><a href='{$link_url}'>
                                         <div class='feature_image'>
                                             <img src='{$news_image}' alt='{$news_title}'>
+                                            " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
         </div>
         <div class='news_intro'>
             <h2>{$news_title}</h2>
