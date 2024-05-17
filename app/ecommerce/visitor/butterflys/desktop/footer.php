@@ -54,7 +54,7 @@
             <div class="row center">
                 <div class="col-md-12 col-12">
                     <div class="footer-btm">
-                        <p>© 2020-<?php echo date('Y') ?> <?php echo SITE_NAME; ?>. All Rights Reserved</p>
+                        <p>© <?php echo date('Y') ?> <?php echo SITE_NAME; ?>. All Rights Reserved</p>
                     </div>
                 </div>
             </div>
