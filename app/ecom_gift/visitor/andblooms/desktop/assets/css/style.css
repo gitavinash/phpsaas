@@ -3792,7 +3792,7 @@ footer {
     margin-bottom: 10px;
   }
   .card-ban {
-    height: 150px;
+    height: auto;
     overflow: hidden;
   }
   .lg-carousel-box .carousel-cell {
@@ -3878,7 +3878,7 @@ footer {
     right: 0;
   }
   .banner-section {
-    margin-top: 70px;
+    margin-top: 55px;
   }
   .header-top p {
     margin-right: 0;

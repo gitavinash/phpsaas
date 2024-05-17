@@ -89,7 +89,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
+                <!-- <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
                     <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
                     <div class="side-menu">
                         <ul>
@@ -109,10 +109,10 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
                 <?php
 
-				if (SITE_ID != 22) { ?>
+                if (SITE_ID != 22) { ?>
 
                 <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
                     <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
@@ -131,9 +131,9 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 </li>
 
                 <?php
-				}
+                }
 
-				?>
+                ?>
                 <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
                     <a href="import/?type=product"><i class="fas fa-upload"></i> Import</a>
                     <div class="side-menu">

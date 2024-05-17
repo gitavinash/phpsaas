@@ -113,7 +113,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-                <li <?php echo (($postType == 'media') ? 'class="active"' : '') ?>>
+                <!-- <li <?php echo (($postType == 'media') ? 'class="active"' : '') ?>>
                     <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
                     <div class="side-menu">
                         <ul>
@@ -129,7 +129,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
                 <li <?php echo (($postType == 'setting') ? 'class="active"' : '') ?>>
                     <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">

@@ -1,26 +1,29 @@
 <?php
 
-    $link_type=((isset($link_type)) ? $link_type : 'homepage' );
+$link_type = ((isset($link_type)) ? $link_type : 'homepage');
 
-    /** Default site information meta data */
+$pageTitle = ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME);
 
-    require_once 'site.php';
+echo "<title>{$pageTitle}</title>";
 
-    /** SEO meta data */
+/** Default site information meta data */
 
-    require_once 'seo.php';
+require_once 'site.php';
 
-    /** Social media sharing card meta data */
+/** SEO meta data */
 
-    require_once 'social.php';
+require_once 'seo.php';
 
-    /** Structure data json format */
+/** Social media sharing card meta data */
+
+require_once 'social.php';
+
+/** Structure data json format */
 
 
-    $defaultSchemaData=SCHEMA_DATA.((isset($link_type)) ? $link_type : 'organization' ).'.php';
+$defaultSchemaData = SCHEMA_DATA . ((isset($link_type)) ? $link_type : 'organization') . '.php';
 
-    if(file_exists($defaultSchemaData)) {
+if (file_exists($defaultSchemaData)) {
 
-        require_once $defaultSchemaData;
-
-    }
+    require_once $defaultSchemaData;
+}

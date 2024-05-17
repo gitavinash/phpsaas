@@ -88,7 +88,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
+                <!-- <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
                     <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
                     <div class="side-menu">
                         <ul>
@@ -108,7 +108,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
                 <li <?php echo ((ADMIN_BASE_URL == '/setting/') ? 'class="active"' : '') ?>>
                     <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">
