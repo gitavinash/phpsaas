@@ -6,7 +6,7 @@ include_once 'header.php';
 
 
 <!-- section global platform start -->
-<section class="banner-section baner-bg">
+<section class="banner-section banner-bg">
     <div class="overlay-bner"></div>
     <div class="container">
         <div class="row ">

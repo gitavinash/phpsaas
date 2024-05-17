@@ -3174,8 +3174,7 @@ main.cd-main-content {
   width: 100%;
 }
 
-.baner-bg {
-  background-image: url(/app/ecom_gift/visitor/andblooms/desktop/assets/images/dedicated-efforts.jpg);
+.banner-bg {
   background-size: cover;
   position: relative;
 }
@@ -3861,9 +3860,6 @@ footer {
   }
   .card-ban .flickity-viewport {
     border-radius: 15px;
-  }
-  .cloth-card {
-    display: none;
   }
   .mob-bag {
     position: relative;

@@ -6,7 +6,8 @@ include_once 'header.php';
 
 
 <!-- section global platform start -->
-<section class="banner-section baner-bg">
+<section class="banner-section banner-bg"
+    style="background-image: url(<?php echo (($category_image != '') ? $category_image : '/app/ecommerce/visitor/butterflys/desktop/assets/images/category-feature-image.png') ?>);">
     <div class="overlay-bner"></div>
     <div class="container">
         <div class="row ">

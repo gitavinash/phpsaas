@@ -9,20 +9,20 @@ if (is_array($tagPost)) {
 
 ?>
 
-<!-- section global platform start -->
-<section class="banner-section baner-bg">
-    <div class="overlay-bner"></div>
-    <div class="container">
-        <div class="row ">
-            <div class="col-md-12">
+    <!-- section global platform start -->
+    <section class="banner-section banner-bg">
+        <div class="overlay-bner"></div>
+        <div class="container">
+            <div class="row ">
+                <div class="col-md-12">
 
-                <div class="bg-content">
-                    <h1><?php echo ucwords($tag_title) ?></h1>
-                    <h3><?php echo $tag_description ?></h3>
+                    <div class="bg-content">
+                        <h1><?php echo ucwords($tag_title) ?></h1>
+                        <h3><?php echo $tag_description ?></h3>
+                    </div>
                 </div>
-            </div>
 
-            <?php
+                <?php
 
                 for ($i = 0; $i < sizeof($tagPost); $i++) {
 
@@ -33,45 +33,45 @@ if (is_array($tagPost)) {
 
                 ?>
 
-        </div>
-    </div>
-    </div>
-</section>
-<!-- section global platform end -->
-
-<section class="section-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-12">
-                <div class="brdcrum">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($tag_title) ?>
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-            <div class="col-md-4 col-12">
-                <div class="float-right">
-                    <select name="sort" class="form-select sorting">
-                        <option value="#">Sort by</option>
-                        <option value="latest" <?php echo ((@$_GET['sort'] == 'latest') ? 'selected' : '') ?>>Latest
-                        </option>
-                        <option value="price_low" <?php echo ((@$_GET['sort'] == 'price_low') ? 'selected' : '') ?>>
-                            Price
-                            low to high</option>
-                        <option value="price_high" <?php echo ((@$_GET['sort'] == 'price_high') ? 'selected' : '') ?>>
-                            Price high to low</option>
-                    </select>
-                </div>
             </div>
         </div>
-        <div class="row">
+        </div>
+    </section>
+    <!-- section global platform end -->
 
-            <?php
+    <section class="section-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-12">
+                    <div class="brdcrum">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Category</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><?php echo ucwords($tag_title) ?>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="float-right">
+                        <select name="sort" class="form-select sorting">
+                            <option value="#">Sort by</option>
+                            <option value="latest" <?php echo ((@$_GET['sort'] == 'latest') ? 'selected' : '') ?>>Latest
+                            </option>
+                            <option value="price_low" <?php echo ((@$_GET['sort'] == 'price_low') ? 'selected' : '') ?>>
+                                Price
+                                low to high</option>
+                            <option value="price_high" <?php echo ((@$_GET['sort'] == 'price_high') ? 'selected' : '') ?>>
+                                Price high to low</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <?php
 
                 // $sortBy = 'link_is_featured, link_published DESC';
                 $sortBy = 'link_published DESC';
@@ -122,11 +122,11 @@ if (is_array($tagPost)) {
 
                 ?>
 
-        </div>
-        <div class="row">
-            <div class="center">
-                <div class="pagination">
-                    <?php
+            </div>
+            <div class="row">
+                <div class="center">
+                    <div class="pagination">
+                        <?php
 
                         $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
 
@@ -139,11 +139,11 @@ if (is_array($tagPost)) {
                         }
 
                         ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 <?php
@@ -154,10 +154,10 @@ if (is_array($tagPost)) {
 
 ?>
 
-<section class='continue-shopping'>
-    <h1><span>No product found</span></h1>
-    <a href="/" class="btn btn-success">Go to homepage</a>
-</section>
+    <section class='continue-shopping'>
+        <h1><span>No product found</span></h1>
+        <a href="/" class="btn btn-success">Go to homepage</a>
+    </section>
 
 <?php
 

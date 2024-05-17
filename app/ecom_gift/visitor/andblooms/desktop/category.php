@@ -6,7 +6,7 @@ include_once 'header.php';
 
 
 <!-- section global platform start -->
-<section class="banner-section baner-bg">
+<section class="banner-section banner-bg">
     <div class="overlay-bner"></div>
     <div class="container">
         <div class="row ">
@@ -56,9 +56,9 @@ include_once 'header.php';
         if (isset($categorySinglePost)) { ?>
 
 
-        <div class="row">
+            <div class="row">
 
-            <?php
+                <?php
 
                 for ($i = 0; $i < sizeof($categorySinglePost); $i++) {
 
@@ -82,10 +82,10 @@ include_once 'header.php';
 
                 ?>
 
-        </div>
-        <div class="center">
-            <div class="pagination">
-                <?php
+            </div>
+            <div class="center">
+                <div class="pagination">
+                    <?php
 
                     $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
 
@@ -98,8 +98,8 @@ include_once 'header.php';
                     }
 
                     ?>
+                </div>
             </div>
-        </div>
 
         <?php
         } else {

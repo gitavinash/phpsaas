@@ -6,7 +6,7 @@ include_once 'header.php';
 
 
 <!-- section global platform start -->
-<section class="banner-section baner-bg">
+<section class="banner-section banner-bg">
     <div class="overlay-bner"></div>
     <div class="container">
         <div class="row ">
@@ -108,69 +108,69 @@ include_once 'header.php';
 
             ?>
 
-            <section class="section-content cloth-card" style="padding: 0px 0px 20px 0px">
-                <div class="container">
-                    <div class="row">
-                        <div class="main-card">
+                            <section class="section-content cloth-card" style="padding: 0px 0px 20px 0px">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="main-card">
 
-                            <a href="/tag/love/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>love.png">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Love collection</h4>
+                                            <a href="/tag/love/" class="card-link">
+                                                <div class="acce-card">
+                                                    <div class="img-acc">
+                                                        <img src="<?php echo USER_IMAGES ?>love.png">
+                                                    </div>
+                                                    <div class="acc-card-head">
+                                                        <h4>Love collection</h4>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            <a href="/tag/anniversary/" class="card-link">
+                                                <div class="acce-card">
+                                                    <div class="img-acc">
+                                                        <img src="<?php echo USER_IMAGES ?>anniversary.jpg">
+                                                    </div>
+                                                    <div class="acc-card-head">
+                                                        <h4>Anniversary</h4>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            <a href="/tag/birthday/" class="card-link">
+                                                <div class="acce-card">
+                                                    <div class="img-acc">
+                                                        <img src="<?php echo USER_IMAGES ?>birthday.jpg">
+                                                    </div>
+                                                    <div class="acc-card-head">
+                                                        <h4>Birthday</h4>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            <a href="/tag/luxury/" class="card-link">
+                                                <div class="acce-card">
+                                                    <div class="img-acc">
+                                                        <img src="<?php echo USER_IMAGES ?>luxury.jpeg">
+                                                    </div>
+                                                    <div class="acc-card-head">
+                                                        <h4>Luxury</h4>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            <a href="/category/cake/" class="card-link">
+                                                <div class="acce-card">
+                                                    <div class="img-acc">
+                                                        <img src="<?php echo USER_IMAGES ?>cake.jpg">
+                                                    </div>
+                                                    <div class="acc-card-head">
+                                                        <h4>Cake</h4>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </a>
-
-                            <a href="/tag/anniversary/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>anniversary.jpg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Anniversary</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/tag/birthday/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>birthday.jpg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Birthday</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/tag/luxury/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>luxury.jpeg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Luxury</h4>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="/category/cake/" class="card-link">
-                                <div class="acce-card">
-                                    <div class="img-acc">
-                                        <img src="<?php echo USER_IMAGES ?>cake.jpg">
-                                    </div>
-                                    <div class="acc-card-head">
-                                        <h4>Cake</h4>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                            </section>
 
             <?php
 
