@@ -38,7 +38,7 @@ if ($productCategory = mysqli_query($connection, "SELECT category_title, categor
         while ($productCategoryData = mysqli_fetch_assoc($productCategory)) {
             extract($productCategoryData);
             echo "
-                    <div class='col col-sm-2'>
+                    <div class='col col-2-mobile'>
                         <a href='{$link_url}' class='card-link'>
                     <div class='acce-card'>
                         <div class='img-acc'>
