@@ -2334,6 +2334,23 @@ a.out-of-stock:hover {
   background: #fff;
 }
 
+.account-backend p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li {
+  background: none !important;
+  color: #333 !important;
+}
+
+.account-backend ul {
+  list-style: border !important;
+}
+
 .account-tab {
   width: 20%;
   float: left;
