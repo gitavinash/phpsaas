@@ -98,12 +98,25 @@
                     </div>
                 </div>
                 <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                    <h3 class="footer-widget__title">Reach us</h3>
+                    <p class="contact-one__sub-title">
+                        <strong style="color: #fff">Registered Office:</strong><br />40 UA, first floor, Bunglow
+                        road, Kamla Nagar,
+                        Delhi
+                        110007<br />
+                    </p>
+                    <p class="contact-one__sub-title">
+                        <strong style="color: #fff">Corporate Office:</strong><br />B4/320 C, Second Floor, Keshav
+                        Puram, New Delhi - 110035<br />
+                    </p>
+                    <p class="contact-one__sub-title">
+                        <strong style="color: #fff">C/O Mr. Nitin Tyagi:</strong><br />329 , 237 Kearney st ,
+                        R2M4B5, Winnipeg, Canada<br />
+                    </p>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
                     <div class="footer-widget__column footer-widget__contact">
-                        <h3 class="footer-widget__title">Contact</h3>
-                        <p class="contact-one__sub-title">
-                            Regd. Office:<br />B4/320 C, <br />Keshav Puram, Lawrence Road, <br />Delhi<br /><br /></p>
+                        <h3 class="footer-widget__title">Contact us</h3>
                         <ul class="list-unstyled footer-widget__contact-list">
                             <li>
                                 <div class="icon">
@@ -120,14 +133,17 @@
                                 <div class="text">
                                     <p><a href="tel:+91-9999419333">+91-9999419333</a></p>
                                     <p><a href="tel:+91-9910359103">+91-9910359103</a></p>
+                                    <p><a href="tel:+1-2049631222">+1-2049631222</a></p>
                                 </div>
                             </li>
                         </ul>
                         <div class="site-footer__social">
                             <a href="https://twitter.com/Samaarambh2"><i class="fab fa-twitter"></i></a>
                             <a href="https://www.facebook.com/SamaarambhFoundation/"><i class="fab fa-facebook"></i></a>
-                            <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i class="fab fa-linkedin"></i></a>
-                            <a href="https://www.instagram.com/samaarambh_foundation/"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i
+                                    class="fab fa-linkedin"></i></a>
+                            <a href="https://www.instagram.com/samaarambh_foundation/"><i
+                                    class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
@@ -139,7 +155,9 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="site-footer__bottom-inner">
-                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a href="https://blumox.com" href="Website designing company in delhi">Blumox
+                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a
+                                href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a
+                                href="https://blumox.com" href="Website designing company in delhi">Blumox
                                 Technologies</a>
                         </p>
                     </div>
@@ -161,7 +179,8 @@
         <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
 
         <div class="logo-box">
-            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143" alt="" /></a>
+            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143"
+                    alt="" /></a>
         </div>
         <!-- /.logo-box -->
         <div class="mobile-nav__container"></div>

@@ -83,6 +83,7 @@ require_once 'header.php';
                         <p class="contact-one__sub-title">Helpline</p>
                         <h3 class="contact-one__number"><a href="tel:+91-9999419333">+91-9999419333</a></h3>
                         <h3 class="contact-one__number"><a href="tel:+91-9910359103">+91-9910359103</a></h3>
+                        <h3 class="contact-one__number"><a href="tel:+1-2049631222">+1-2049631222</a></h3>
                     </div>
                 </li>
                 <li class="contact-one__single">
@@ -94,7 +95,7 @@ require_once 'header.php';
                         <h3 class="contact-one__number"><a
                                 href="mailto:mail.samaarambh@gmail.com">mail.samaarambh@gmail.com</a></h3>
                         <h3 class="contact-one__number"><a href="mailto:mayank@smrbh.org">mayank@smrbh.org</a></h3>
-                        <h3 class="contact-one__number"><a href="mailto:coo@smrbh.org">coo@smrbh.org</a></h3>
+                        <h3 class="contact-one__number"><a href="mailto:jackson@smrbh.org">jackson@smrbh.org</a></h3>
                     </div>
                 </li>
                 <li class="contact-one__single">
