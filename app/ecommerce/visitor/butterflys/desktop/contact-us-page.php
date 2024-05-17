@@ -4,6 +4,7 @@ include_once 'header.php';
 
 ?>
 
+<!-- section global platform start -->
 <section class="banner-section pro-galery">
     <div class="container">
         <div class="row">
@@ -22,18 +23,15 @@ include_once 'header.php';
         <div class="row">
             <div class="col-md-12">
                 <div class="account-backend">
-                    <div class="branch-bx">
-                        <p><?php
-                            echo $page_description;
-                            ?></p>
-                    </div>
-
+                    <h2 class="inter-heading cont-hed"><?php echo $page_title ?></h2>
+                    <?php echo $page_description ?>
                 </div>
+
             </div>
         </div>
-
     </div>
 </section>
+<!-- section global platform end -->
 
 <?php
 
