@@ -29,15 +29,15 @@ include_once 'header.php';
 
 <?php
 
-if ($productCategory = mysqli_query($connection, "SELECT category_title, category_image, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_type='category' AND link_site_id=" . SITE_ID)) {
 
-    if (mysqli_num_rows($productCategory) != 0) {
-        echo "<section class='section-content cloth-card'>
+if (sizeof($productCategoryData) != 0) {
+    echo "<section class='section-content cloth-card'>
     <div class='container'>
         <div class='row'>";
-        while ($productCategoryData = mysqli_fetch_assoc($productCategory)) {
-            extract($productCategoryData);
-            echo "
+
+    for ($i = 0; $i < sizeof($productCategoryData); $i++) {
+        extract($productCategoryData[$i]);
+        echo "
                     <div class='col col-2-mobile'>
                         <a href='{$link_url}' class='card-link'>
                     <div class='acce-card'>
@@ -51,11 +51,10 @@ if ($productCategory = mysqli_query($connection, "SELECT category_title, categor
 </a>
 </div>
 ";
-        }
-        echo " </div>
+    }
+    echo " </div>
 </div>
 </section>";
-    }
 }
 
 ?>

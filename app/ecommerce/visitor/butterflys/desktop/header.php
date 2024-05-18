@@ -1,3 +1,16 @@
+<?php
+
+if ($productCategory = mysqli_query($connection, "SELECT category_title, category_image, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_type='category' AND link_status=200 AND link_site_id=" . SITE_ID)) {
+
+    if (mysqli_num_rows($productCategory) != 0) {
+        $productCategoryData = array();
+        while ($data = mysqli_fetch_array($productCategory)) {
+            $productCategoryData[] = $data;
+        }
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -145,12 +158,14 @@
                                         </a>
                                         <div class="dropdown-menu mega-menu">
                                             <div class="mega1">
-                                                <a class="dropdown-item" href="/category/bra/">Bra</a>
-                                                <a class="dropdown-item" href="/category/panties/">Panties</a>
-                                                <a class="dropdown-item" href="/category/shape-wear/">Shapewear</a>
-                                                <a class="dropdown-item" href="/category/sleepwear/">Sleepwear</a>
-                                                <a class="dropdown-item" href="/category/lingerie-sets/">Lingerie
-                                                    sets</a>
+                                                <?php
+
+                                                for ($i = 0; $i < sizeof($productCategoryData); $i++) {
+                                                    extract($productCategoryData[$i]);
+                                                    echo "<a class='dropdown-item' href='{$link_url}'>{$category_title}</a>";
+                                                }
+
+                                                ?>
                                             </div>
                                         </div>
                                     </li>
