@@ -1,6 +1,6 @@
 <?php
 
-if ($productCategory = mysqli_query($connection, "SELECT category_title, category_image, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_type='category' AND link_status=200 AND link_site_id=" . SITE_ID)) {
+if ($productCategory = mysqli_query($connection, "SELECT category_title as categoryTitle, category_image as categoryImage, link_url as categoryLink FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_type='category' AND link_status=200 AND link_site_id=" . SITE_ID)) {
 
     if (mysqli_num_rows($productCategory) != 0) {
         $productCategoryData = array();
@@ -162,7 +162,7 @@ if ($productCategory = mysqli_query($connection, "SELECT category_title, categor
 
                                                 for ($i = 0; $i < sizeof($productCategoryData); $i++) {
                                                     extract($productCategoryData[$i]);
-                                                    echo "<a class='dropdown-item' href='{$link_url}'>{$category_title}</a>";
+                                                    echo "<a class='dropdown-item' href='{$categoryLink}'>{$categoryTitle}</a>";
                                                 }
 
                                                 ?>

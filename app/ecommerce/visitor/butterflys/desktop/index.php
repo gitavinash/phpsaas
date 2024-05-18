@@ -39,13 +39,13 @@ if (sizeof($productCategoryData) != 0) {
         extract($productCategoryData[$i]);
         echo "
                     <div class='col col-2-mobile'>
-                        <a href='{$link_url}' class='card-link'>
+                        <a href='{$categoryLink}' class='card-link'>
                     <div class='acce-card'>
                         <div class='img-acc'>
-                            <img src='{$category_image}'>
+                            <img src='{$categoryImage}' title='{$categoryTitle}'>
 </div>
 <div class='acc-card-head'>
-    <h4>{$category_title}</h4>
+    <h4>{$categoryTitle}</h4>
 </div>
 </div>
 </a>

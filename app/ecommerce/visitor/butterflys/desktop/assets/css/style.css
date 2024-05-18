@@ -3192,8 +3192,9 @@ main.cd-main-content {
 }
 
 .banner-bg {
-  background-size: cover;
+  background-size: contain;
   position: relative;
+  background-position: center center;
 }
 
 .overlay-bner {
