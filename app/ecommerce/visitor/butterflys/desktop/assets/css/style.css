@@ -3214,6 +3214,7 @@ main.cd-main-content {
   font-size: 24px;
   color: #fff;
   font-weight: 600;
+  color: #fff !important;
 }
 
 .bg-content h3 {
