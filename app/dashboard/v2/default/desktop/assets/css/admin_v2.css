@@ -2297,6 +2297,7 @@ section.form
   border: 1px solid #ebebeb;
   background: #ebf5fb;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .amenitiesList:first-child {
