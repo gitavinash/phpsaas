@@ -514,6 +514,8 @@ nav.side-nav ul li a {
 nav.side-nav ul li a:hover {
   background: #01647b;
   color: #fff;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 nav.side-nav ul li a i {
@@ -529,6 +531,8 @@ nav.side-nav ul li a:hover i {
 nav.side-nav ul li.active {
   background: #01647b;
   color: #fff;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 nav.side-nav ul li.active i {
@@ -548,7 +552,7 @@ nav.side-nav ul li.active:after {
   position: absolute;
   pointer-events: none;
   border-right-color: #f1f1f1;
-  margin-top: 11px;
+  margin-top: 14px;
 }
 
 nav.side-nav ul li.active > .bottom-menu ul {
@@ -680,7 +684,7 @@ main {
 .i-m-here-pagination ul li::after {
   content: "\003E";
   margin: 0px 5px;
-  color: #f5f5f5 !important;
+  color: #01647b !important;
 }
 .i-m-here-pagination ul li:last-child:after {
   content: "";
@@ -702,6 +706,7 @@ main {
 main .container {
   float: left;
   width: 100%;
+  padding-right: 1%;
   min-height: 85vh;
   box-sizing: border-box;
 }
@@ -1420,8 +1425,8 @@ section.form .btn {
   padding: 10px 30px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid #01647b;
-  background: #01647b;
+  border: 1px solid #01647b !important;
+  background: #01647b !important;
   color: #fff;
   font-family: "Fira Sans", sans-serif;
   font-size: 18px;
@@ -1433,8 +1438,8 @@ section.form button {
   padding: 10px 30px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid #01647b;
-  background: #01647b;
+  border: 1px solid #01647b !important;
+  background: #01647b !important;
   color: #fff;
   font-family: "Fira Sans", sans-serif;
   font-size: 18px;
@@ -1928,7 +1933,7 @@ section.form
   left: 0;
   top: 0;
   z-index: 9;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .popUp .widget {
@@ -1941,6 +1946,8 @@ section.form
   min-height: 500px;
   padding: 20px;
   box-sizing: border-box;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .popUp .contentArea form {
@@ -1970,6 +1977,8 @@ section.form
   background: #01647b;
   padding: 10% 5%;
   box-sizing: border-box;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .popUp .actionArea .popUpBtn {
@@ -2272,4 +2281,48 @@ section.form
   height: 100vh;
   background: #03637b;
   z-index: 10;
+}
+
+.amenitiesList {
+  float: left;
+  box-sizing: border-box;
+  text-align: center;
+  width: 120px;
+  height: 120px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  line-height: 18px;
+  border-radius: 5px;
+  margin: 0px 10px;
+  border: 1px solid #ebebeb;
+  background: #ebf5fb;
+  cursor: pointer;
+}
+
+.amenitiesList:first-child {
+  margin-left: 0px;
+}
+
+.amenitiesList:hover {
+  background: #a7c1c7;
+  color: #fff;
+}
+
+.amenitiesList img {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+}
+
+.amenitiesList i {
+  font-size: 48px;
+}
+
+.addNewAmenities {
+  float: left;
+  width: 100%;
+  border-radius: 5px;
+  background: #177347;
+  color: #fff;
+  padding: 32px 0px;
 }

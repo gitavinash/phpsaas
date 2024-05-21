@@ -1,10 +1,5 @@
 <?php
 
-// if (ADMIN_BASE_URL == '/sw.js') {
-// 	require_once 'service-worker.php';
-// 	exit();
-// }
-
 /* Check user is logged in or not */
 
 require_once LOGIN_CHECK;
@@ -44,6 +39,11 @@ $dashboardFilePath = ((isset($type)) ? 'templates' . ADMIN_BASE_URL . $type : ((
 $dashboardFile = $dashboardDirectory . $dashboardFilePath;
 
 if (!file_exists($dashboardFile)) {
+
+	// $dashboardFilePath = explode('/', $dashboardFilePath);
+	// array_shift($dashboardFilePath);
+	// print_r($dashboardFilePath);
+	// exit();
 
 	// When dashboard theme need to call file from the default theme directory ( v1 )
 

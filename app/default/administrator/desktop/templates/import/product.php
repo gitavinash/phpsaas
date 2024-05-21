@@ -11,6 +11,7 @@
                     <!-- <option value="wordpress">WordPress</option>
                     <option value="etsy">Etsy</option> -->
                     <option value="csv">CSV</option>
+                    <option value="meesho">Meesho</option>
                 </select>
             </div>
 
@@ -19,8 +20,11 @@
                 <div class='import-file-box'>
                     <div class="form-group">
                         <label>Upload product csv file</label>
-                        <input type="file" id='importFile' name='importFile' class='form-control inside-shadow' required>
-                        <label><a href="https://docs.google.com/spreadsheets/d/1w2-uVc5hcGcqg4SwIoxVm9VhfY8LwD908HqfHrBd2NE/edit?usp=sharing" target="_blank"><span>Click
+                        <input type="file" id='importFile' name='importFile' class='form-control inside-shadow'
+                            required>
+                        <label><a
+                                href="https://docs.google.com/spreadsheets/d/1w2-uVc5hcGcqg4SwIoxVm9VhfY8LwD908HqfHrBd2NE/edit?usp=sharing"
+                                target="_blank"><span>Click
                                     here to download
                                     sample product import file</span></a></label>
                     </div>

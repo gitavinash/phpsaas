@@ -120,120 +120,6 @@ if (isset($daterange)) {
                     </div>
                 </li>
 
-                <?php
-
-                    if (SITE_ID == 57) { ?>
-
-
-                <li class="header-section-name">
-                    <p>Vendors<span>Manage vendor.</span></p>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/transporter/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="transporter/"><i class="fi fi-rr-bus"></i> Transporter vendor</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="transporter/list/"><i class="fi-rr-apps-sort"></i> All transporters</a></li>
-                            <li><a href="transporter/add/"><i class="fi fi-rr-add"></i> Add new transporter</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All transporters</a></li>
-                            <li><a href="transporter/add/"><i class="fi fi-rr-add"></i> Add new transporter</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/hotel/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="hotel/"><i class="fi fi-rr-hotel"></i> Hotel Vendors</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
-                            <li><a href="hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
-                            <li><a href="hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/dmc/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="dmc/"><i class="fi fi-rr-shop"></i> DMC Vendor</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
-                            <li><a href="dmc/add/"><i class="fi fi-rr-add"></i> Add New DMC</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
-                            <li><a href="dmc/add/"><i class="fi fi-rr-add"></i> Add New DMC</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="header-section-name">
-                    <p>Packages<span>Manage all tour packages.</span></p>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/domestic/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic packages</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
-                            </li>
-                            <li><a href="domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
-                            </li>
-                            <li><a href="domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
-                            </li>
-                            <li><a href="domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
-                            </li>
-                            <li><a href="domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/outbound/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="outbound/"><i class="fi fi-rr-earth-asia"></i> International packages</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="outbound/list/"><i class="fi-rr-apps-sort"></i> All vendor</a>
-                            </li>
-                            <li><a href="outbound/add/"><i class="fi fi-rr-add"></i> Add new package</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="outbound/list/"><i class="fi-rr-add"></i> All leads</a></li>
-                            <li><a href="outboundadd/"><i class="fi fi-rr-add"></i> Add new package</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <?php
-                    }
-
-                    ?>
-
-                <?php
-                }
-
-                ?>
-
                 <li class="header-section-name">
                     <p>Leads<span>Manage leads.</span></p>
                 </li>
@@ -271,6 +157,134 @@ if (isset($daterange)) {
                         </ul>
                     </div>
                 </li>
+
+                <?php
+
+                    if (SITE_ID == 57) { ?>
+                <li class="header-section-name">
+                    <p>Vendors<span>Manage vendor.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/transporter/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="vendors/transporter/"><i class="fi fi-rr-bus"></i> Transporter vendor</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="vendors/transporter/list/"><i class="fi-rr-apps-sort"></i> All transporters</a>
+                            </li>
+                            <li><a href="vendors/transporter/add/"><i class="fi fi-rr-add"></i> Add new transporter</a>
+                            </li>
+                            <li><a href="vendors/transporter/vehicle/"><i class="fi fi-rr-car-bus"></i> Manage
+                                    vehicles</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="vendors/leads/list/"><i class="fi-rr-apps-sort"></i> All transporters</a></li>
+                            <li><a href="vendors/transporter/add/"><i class="fi fi-rr-add"></i> Add new transporter</a>
+                            </li>
+                            <li><a href="vendors/transporter/vehicle/"><i class="fi fi-rr-car-bus"></i> Manage
+                                    vehicles</a>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/hotel/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="vendors/hotel/"><i class="fi fi-rr-hotel"></i> Hotel Vendors</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="vendors/hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
+                            <li><a href="vendors/hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
+                            <li><a href="vendors/hotel/amenities/"><i class="fi fi-rr-star"></i> Manage amenities</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="vendors/hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
+                            <li><a href="vendors/hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
+                            <li><a href="vendors/hotel/amenities/"><i class="fi fi-rr-star"></i> Manage amenities</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- 
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/dmc/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="vendors/dmc/"><i class="fi fi-rr-shop"></i> DMC Vendor</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="vendors/dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
+                            <li><a href="vendors/dmc/add/"><i class="fi fi-rr-add"></i> Add New DMC</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="vendors/dmc/list/"><i class="fi-rr-apps-sort"></i> All DMC's</a></li>
+                            <li><a href="vendors/dmc/add/"><i class="fi fi-rr-add"></i> Add New DMC</a></li>
+                        </ul>
+                    </div>
+                </li> -->
+
+                <li class="header-section-name">
+                    <p>Packages<span>Manage all tour packages.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/packages/domestic/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="packages/domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            </li>
+                            <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
+                            <li><a href="packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            </li>
+                            <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
+                            <li><a href="packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/international/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="packages/international/"><i class="fi fi-rr-earth-asia"></i> International packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            </li>
+                            <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
+                            <li><a href="packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                            </li>
+                            <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                            </li>
+                            <li><a href="packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <?php
+                    }
+
+                    ?>
+
+                <?php
+                }
+
+                ?>
 
 
                 <?php
