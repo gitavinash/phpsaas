@@ -151,26 +151,26 @@ if (isset($daterange)) {
                     </div>
                 </li>
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/hotel/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="vendors/hotel/"><i class="fi fi-rr-hotel"></i> Hotel Vendors</a>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/property/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="vendors/property/"><i class="fi fi-rr-hotel"></i> Property Vendors</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="vendors/hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
-                            <li><a href="vendors/hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
-                            <li><a href="vendors/hotel/amenities/"><i class="fi fi-rr-star"></i> Manage amenities</a>
+                            <li><a href="vendors/property/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
+                            <li><a href="vendors/property/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
+                            <li><a href="vendors/property/amenitie/"><i class="fi fi-rr-star"></i> Manage amenities</a>
                             </li>
-                            <li><a href="vendors/hotel/amenities/"><i class="fi fi-rr-door-open"></i> Manage room
+                            <li><a href="vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage room
                                     types</a>
                             </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="vendors/hotel/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
-                            <li><a href="vendors/hotel/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
-                            <li><a href="vendors/hotel/amenities/"><i class="fi fi-rr-star"></i> Manage amenities</a>
+                            <li><a href="vendors/property/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
+                            <li><a href="vendors/property/add/"><i class="fi fi-rr-add"></i> Add new hotel</a></li>
+                            <li><a href="vendors/property/amenitie/"><i class="fi fi-rr-star"></i> Manage amenities</a>
                             </li>
-                            <li><a href="vendors/hotel/amenities/"><i class="fi fi-rr-door-open"></i> Manage room
+                            <li><a href="vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage room
                                     types</a>
                             </li>
                         </ul>

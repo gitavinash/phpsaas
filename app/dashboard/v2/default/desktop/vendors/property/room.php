@@ -19,7 +19,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
 }
 
 ?>
-<h2 class="heading">Amenities list<span>Complete amenities list</span></h2>
+<h2 class="heading">Room types list<span>Complete room types list</span></h2>
 <div class="box-1">
 
     <div class="widget box-1 no-padding">

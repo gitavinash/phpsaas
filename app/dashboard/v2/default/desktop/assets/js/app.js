@@ -1049,7 +1049,7 @@ $("#addHotel").click(function (e) {
               if (type != "") {
                 $.ajax({
                   type: "POST",
-                  url: "/api/hotel/add/",
+                  url: "/api/property/add/",
                   dataType: "json",
                   data: {
                     name,

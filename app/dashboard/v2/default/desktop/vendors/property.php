@@ -1,7 +1,7 @@
-<h2 class="heading"><?php echo ucwords($postType) ?><span>Single line intro about this section</span></h2>
+<h2 class="heading">Manage property<span>Manage all property option quickly</span></h2>
 <div class="main-menu-list">
     <div class="widget box-2-5">
-        <a href="vendors/hotel/list/">
+        <a href="vendors/property/list/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-apps-sort"></i>
@@ -14,7 +14,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="vendors/hotel/add/">
+        <a href="vendors/property/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-add"></i>
@@ -26,13 +26,25 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="vendors/hotel/amenities/">
+        <a href="vendors/property/amenitie/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-star"></i>
                 </div>
                 <div class="about-feature">
                     <h3>Manage amenities</h3>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="widget box-2-5">
+        <a href="vendors/property/room/">
+            <div class="widget-setting-info">
+                <div class="feature-icon">
+                    <i class="fi-rr-door-open"></i>
+                </div>
+                <div class="about-feature">
+                    <h3>Manage room types</h3>
                 </div>
             </div>
         </a>

@@ -1,4 +1,4 @@
-<h2 class="heading">Hotels sist<span>All hotels list will be displayed her</span>
+<h2 class="heading">Properties list<span>All hotels list will be displayed her</span>
 </h2>
 <div class="main-box">
     <section>
