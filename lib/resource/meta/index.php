@@ -3,9 +3,6 @@
 $link_type = ((isset($link_type)) ? $link_type : 'homepage');
 
 $pageTitle = ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME);
-
-echo "<title>{$pageTitle}</title>";
-
 /** Default site information meta data */
 
 require_once 'site.php';
