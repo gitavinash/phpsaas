@@ -15,7 +15,10 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>City</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Address</th>
+                        <th>Property type</th>
                         <th></th>
                     </tr>
                 </thead>

@@ -1,42 +1,43 @@
 <?php
-    $statusCondition = '';
-    if(isset($leadStatus)){
-        $statusCondition = "e.enquiry_status={$leadStatus} AND ";
-    }
 
-    if(isset($daterange)) {
-        $dates = explode(" - ", $daterange);
-        $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
-    } else {
-        $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
-        $endDate = date("Y-m-d 23:59:59");
-    }
+$statusCondition = '';
+if (isset($leadStatus)) {
+    $statusCondition = "e.enquiry_status={$leadStatus} AND ";
+}
 
-    $user_filter='';
+if (isset($daterange)) {
+    $dates = explode(" - ", $daterange);
+    $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
+    $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
+} else {
+    $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
+    $endDate = date("Y-m-d 23:59:59");
+}
 
-    if($site_access_type=='agent') {
-        $user_filter=" e.enquiry_agent='".USER_ID."' AND ";
-    }
+$user_filter = '';
 
-    if(isset($agentId)) {
-        $user_filter=" e.enquiry_agent='{$agentId}' AND ";
-    }
+if ($site_access_type == 'agent') {
+    $user_filter = " e.enquiry_agent='" . USER_ID . "' AND ";
+}
 
-    $userList=array();
+if (isset($agentId)) {
+    $user_filter = " e.enquiry_agent='{$agentId}' AND ";
+}
 
-        if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_site_id=" . SITE_ID)) {
-            if (mysqli_num_rows($userInfoList) != 0) {
-                while ($data = mysqli_fetch_assoc($userInfoList)) {
-                    extract($data);
-                    $userList[]=array(
-                        'id' => $user_id,
-                        'name' => $profile_display_name,
-                        'email' => $user_email
-                    );
-                }
-            }
+$userList = array();
+
+if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($userInfoList) != 0) {
+        while ($data = mysqli_fetch_assoc($userInfoList)) {
+            extract($data);
+            $userList[] = array(
+                'id' => $user_id,
+                'name' => $profile_display_name,
+                'email' => $user_email
+            );
         }
+    }
+}
 
 ?>
 <h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All hostings list will be displayed her</span>
@@ -71,8 +72,8 @@
                         <th>Subject</th>
                         <th>Time</th>
                         <?php
-                        
-                        if($site_access_type!='agent') {
+
+                        if ($site_access_type != 'agent') {
                             echo "<th>Source</th><th>Assign to</th>";
                         }
 
@@ -84,7 +85,7 @@
                 <tbody>
                     <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT 
+                    if ($dataList = mysqli_query($connection, "SELECT 
     e.enquiry_id, 
     e.enquiry_time, 
     CASE 
@@ -100,122 +101,120 @@
     n.enquiry_notes_meta_type,
     n.enquiry_notes_meta_value
 FROM 
-    ".TABLE_PREFIX."enquiry e
+    " . TABLE_PREFIX . "enquiry e
 LEFT JOIN 
-    ".TABLE_PREFIX."profile p ON e.enquiry_agent = p.profile_user_id
+    " . TABLE_PREFIX . "profile p ON e.enquiry_agent = p.profile_user_id
 LEFT JOIN
     (SELECT 
          enquiry_notes_ref_id,
          MAX(enquiry_notes_update) AS latest_notes_time
      FROM 
-         ".TABLE_PREFIX."enquiry_notes
+         " . TABLE_PREFIX . "enquiry_notes
      GROUP BY 
          enquiry_notes_ref_id) latest_notes ON enquiry_id = latest_notes.enquiry_notes_ref_id
 LEFT JOIN
-    ".TABLE_PREFIX."enquiry_notes n ON enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
+    " . TABLE_PREFIX . "enquiry_notes n ON enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
 WHERE 
     {$user_filter} 
     {$statusCondition} 
-    e.enquiry_site_id = ".SITE_ID." 
+    e.enquiry_site_id = " . SITE_ID . " 
     AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' 
+    GROUP BY enquiry_id
 ORDER BY 
     e.enquiry_time DESC 
 LIMIT 
     0, 500")) {
-            if (mysqli_num_rows($dataList) != 0) {
-                while ($data = mysqli_fetch_assoc($dataList)) {
-                    extract($data);
-                    
-                    switch ($enquiry_status) {
-                        case 1:
-                            $backgroundColor='#C7EAE4';
-                            break;
-                        case 2:
-                            $backgroundColor='#F2F3F4';
-                            break;
-                        case 3:
-                            $backgroundColor='#FFD699';
-                            break;
-                        case 4:
-                            $backgroundColor='#FFCCCC';
-                            break;
-                        case 5:
-                            $backgroundColor='#E6E6FA';
-                            break;
-                        default:
-                        $backgroundColor= '#FFFFFF';
+                        if (mysqli_num_rows($dataList) != 0) {
+                            while ($data = mysqli_fetch_assoc($dataList)) {
+                                extract($data);
+
+                                switch ($enquiry_status) {
+                                    case 1:
+                                        $backgroundColor = '#C7EAE4';
+                                        break;
+                                    case 2:
+                                        $backgroundColor = '#F2F3F4';
+                                        break;
+                                    case 3:
+                                        $backgroundColor = '#FFD699';
+                                        break;
+                                    case 4:
+                                        $backgroundColor = '#FFCCCC';
+                                        break;
+                                    case 5:
+                                        $backgroundColor = '#E6E6FA';
+                                        break;
+                                    default:
+                                        $backgroundColor = '#FFFFFF';
+                                }
+
+                    ?>
+                                <tr style="background: <?php echo $backgroundColor; ?>">
+                                    <td><?php echo $enquiry_first_name; ?></td>
+                                    <!-- <td><?php echo $enquiry_email; ?></td> -->
+                                    <td><?php echo $enquiry_mobile; ?></td>
+                                    <td><?php echo $enquiry_subject; ?></td>
+                                    <td><?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                                    <?php
+
+                                    if ($site_access_type != 'agent') { ?>
+                                        <td><?php echo $enquiry_source ?></td>
+                                        <td>
+                                            <form method="POST">
+                                                <?php
+                                                if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
+                                                    <select class="selectJS form-control" name="userId" required>
+                                                        <option value="">Select user</option>
+                                                        <?php
+
+                                                        for ($i = 0; $i < sizeof($userList); $i++) {
+                                                            echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
+                                                        }
+
+                                                        ?>
+                                                    </select>
+                                                    <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
+                                                    <input type="hidden" name="action" value="assign">
+                                                    <input type="hidden" name="type" value="leads">
+                                                    <input type="submit" value="Assign lead to user" class="btn dataTableSubmitBtn dataTableBtn">
+                                                <?php
+                                                } else {
+                                                    echo $agent_display_name;
+                                                }
+                                                ?>
+                                            </form>
+                                        </td>
+                                    <?php
+                                    }
+
+                                    ?>
+                                    <td>
+                                        <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
+                                    </td>
+                                    </td>
+                                    <td>
+                                        <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
+                                            lead details</a>
+                                        <?php
+
+                                        if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
+
+
+                                            <a href="#" class="btn dataTableBtn duplicateLead" id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
+                                                as duplicate lead</a>
+
+                                        <?php
+                                        }
+
+                                        ?>
+                                    </td>
+                                </tr>
+                    <?php
+                            }
+                        }
                     }
 
                     ?>
-                    <tr style="background: <?php echo $backgroundColor; ?>">
-                        <td><?php echo $enquiry_first_name; ?></td>
-                        <!-- <td><?php echo $enquiry_email; ?></td> -->
-                        <td><?php echo $enquiry_mobile; ?></td>
-                        <td><?php echo $enquiry_subject; ?></td>
-                        <td><?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
-                        <?php
-                            
-                            if($site_access_type!='agent') { ?>
-                        <td><?php echo $enquiry_source ?></td>
-                        <td>
-                            <form method="POST">
-                                <?php
-                                            if($site_access_type!='agent' && $enquiry_status==0 && $agent_display_name==null) { ?>
-                                <select class="selectJS form-control" name="userId" required>
-                                    <option value="">Select user</option>
-                                    <?php
-                                                
-                                                    for($i=0; $i<sizeof($userList); $i++) {
-                                                        echo "<option value='".base64_encode($userList[$i]['id'].'_'.$userList[$i]['name'])."'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
-                                                    }
-
-                                                ?>
-                                </select>
-                                <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
-                                <input type="hidden" name="action" value="assign">
-                                <input type="hidden" name="type" value="leads">
-                                <input type="submit" value="Assign lead to user"
-                                    class="btn dataTableSubmitBtn dataTableBtn">
-                                <?php
-                                            } else {
-                                                echo $agent_display_name;
-                                            }
-                                        ?>
-                            </form>
-                        </td>
-                        <?php
-                                }
-
-                            ?>
-                        <td>
-                            <strong><?php echo $enquiry_notes_meta_type?></strong><br /><?php echo $enquiry_notes_meta_value ?>
-                        </td>
-                        </td>
-                        <td>
-                            <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
-                                class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
-                                lead details</a>
-                            <?php
-                        
-                        if($enquiry_status==0 && $site_access_type!='agent') { ?>
-
-
-                            <a href="#" class="btn dataTableBtn duplicateLead"
-                                id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
-                                as duplicate lead</a>
-
-                            <?php
-                        }
-                        
-                        ?>
-                        </td>
-                    </tr>
-                    <?php
-                }
-            }
-        }
-
-        ?>
                 </tbody>
             </table>
         </div>

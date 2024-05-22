@@ -175,6 +175,8 @@ if ($_FILES['importFile']['error'] == 0) {
                 //         $msg = 'Products import successfully but some dublicate products found';
                 //     }
                 // }
+
+                echo json_encode($dataLines[$j] . TRUE);
             } else {
                 $i++;
             }

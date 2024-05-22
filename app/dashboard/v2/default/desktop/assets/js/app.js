@@ -1010,39 +1010,81 @@ $("#sendPaymentLink").click(function (e) {
 });
 // });
 
+// Amenities
+
+$(".addNewAmenities").click(function (e) {
+  e.preventDefault();
+  $(".popUp").hide();
+  document.querySelector(".amenitiesBox").style.display = "flex";
+  $(".amenitiesBox").show();
+});
+
+$(".updateAmenities").click(function (e) {
+  e.preventDefault();
+  $(".popUp").hide();
+  document.querySelector(".editAmenitiesBox").style.display = "flex";
+  $(".editAmenitiesBox").show();
+});
+
+// Hotel
+
 $("#addHotel").click(function (e) {
   e.preventDefault();
   const name = $("#name").val();
+  const description = $("#description").val();
   const address = $("#address").val();
   const city = $("#city").val();
   const pinCode = $("#pinCode").val();
+  const email = $("#email").val();
+  const mobile = $("#mobile").val();
+  const type = $("#type").val();
   const googleMapUrl = $("#mapUrl").val();
 
   if (name != "") {
     if (address != "") {
       if (city != "") {
         if (pinCode != "") {
-          $.ajax({
-            type: "POST",
-            url: "/api/hotel/add/",
-            dataType: "json",
-            data: {
-              name,
-              address,
-              city,
-              pinCode,
-              googleMapUrl,
-            },
-            success: function (response) {
-              popUpMessage("center", response.msg, response.status);
-              // setTimeout(function () {
-              //   document.querySelector(".followUpBox").style.display = "none";
-              // }, 1500);
-            },
-            error: function (response) {
-              console.log(`Error : `, response);
-            },
-          });
+          if (email != "") {
+            if (mobile != "") {
+              if (type != "") {
+                $.ajax({
+                  type: "POST",
+                  url: "/api/hotel/add/",
+                  dataType: "json",
+                  data: {
+                    name,
+                    description,
+                    address,
+                    city,
+                    pinCode,
+                    email,
+                    mobile,
+                    type,
+                    googleMapUrl,
+                  },
+                  success: function (response) {
+                    popUpMessage("center", response.msg, response.status);
+                    // setTimeout(function () {
+                    //   document.querySelector(".followUpBox").style.display = "none";
+                    // }, 1500);
+                  },
+                  error: function (response) {
+                    console.log(`Error : `, response);
+                  },
+                });
+              } else {
+                popUpMessage(
+                  "center",
+                  "Please select property type",
+                  "warning"
+                );
+              }
+            } else {
+              popUpMessage("center", "Enter hotel contact number", "warning");
+            }
+          } else {
+            popUpMessage("center", "Enter hotel email address", "warning");
+          }
         } else {
           popUpMessage("center", "Enter hotel city pin code", "warning");
         }
@@ -1057,16 +1099,6 @@ $("#addHotel").click(function (e) {
   }
 });
 
-$(".addNewAmenities").click(function (e) {
+$("#updateHotel").click(function (e) {
   e.preventDefault();
-  $(".popUp").hide();
-  document.querySelector(".amenitiesBox").style.display = "flex";
-  $(".amenitiesBox").show();
-});
-
-$(".updateAmenities").click(function (e) {
-  e.preventDefault();
-  $(".popUp").hide();
-  document.querySelector(".editAmenitiesBox").style.display = "flex";
-  $(".editAmenitiesBox").show();
 });
