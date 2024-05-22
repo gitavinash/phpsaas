@@ -152,7 +152,7 @@ if (isset($daterange)) {
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/property/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="vendors/property/"><i class="fi fi-rr-hotel"></i> Property Vendors</a>
+                    <a href="vendors/property/"><i class="fi fi-rr-city"></i> Property Vendors</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="vendors/property/list/"><i class="fi-rr-apps-sort"></i> All hotels</a></li>
