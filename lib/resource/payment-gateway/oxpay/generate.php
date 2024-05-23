@@ -1,3 +1,8 @@
+<?php
+
+$order_total_price = number_format($order_total_price, 2, '.', ',');
+
+?>
 <!doctype html>
 <html lang="en">
 
