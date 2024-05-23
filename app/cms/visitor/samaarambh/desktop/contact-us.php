@@ -10,12 +10,12 @@ require_once 'header.php';
     </div>
     <div class="container">
         <div class="page-header__inner">
-            <!-- <ul class="thm-breadcrumb list-unstyled">
-                        <li><a href="index.html">Home</a></li>
-                        <li><span>/</span></li>
-                        <li class="active">Contact</li>
-                    </ul> -->
-            <h2>Contact us</h2>
+            <ul class="thm-breadcrumb list-unstyled">
+                <li><a href="/">Home</a></li>
+                <li><span>/</span></li>
+                <li class="active"><?php echo $page_title ?></li>
+            </ul>
+            <h2><?php echo $page_title ?></h2>
         </div>
     </div>
 </section>
@@ -74,43 +74,7 @@ require_once 'header.php';
 <section class="contact-one">
     <div class="container">
         <div class="contact-one__inne">
-            <ul class="list-unstyled contact-one__list">
-                <li class="contact-one__single">
-                    <div class="contact-one__icon">
-                        <span class="icon-phone-call"></span>
-                    </div>
-                    <div class="contact-one__content">
-                        <p class="contact-one__sub-title">Helpline</p>
-                        <h3 class="contact-one__number"><a href="tel:+91-9999419333">+91-9999419333</a></h3>
-                        <h3 class="contact-one__number"><a href="tel:+91-9910359103">+91-9910359103</a></h3>
-                        <h3 class="contact-one__number"><a href="tel:+1-2049631222">+1-2049631222</a></h3>
-                    </div>
-                </li>
-                <li class="contact-one__single">
-                    <div class="contact-one__icon">
-                        <span class="icon-message"></span>
-                    </div>
-                    <div class="contact-one__content">
-                        <p class="contact-one__sub-title">Send email</p>
-                        <h3 class="contact-one__number"><a
-                                href="mailto:mail.samaarambh@gmail.com">mail.samaarambh@gmail.com</a></h3>
-                        <h3 class="contact-one__number"><a href="mailto:mayank@smrbh.org">mayank@smrbh.org</a></h3>
-                        <h3 class="contact-one__number"><a href="mailto:jackson@smrbh.org">jackson@smrbh.org</a></h3>
-                    </div>
-                </li>
-                <li class="contact-one__single">
-                    <div class="contact-one__icon">
-                        <span class="icon-location"></span>
-                    </div>
-                    <div class="contact-one__content">
-                        <p class="contact-one__sub-title">
-                            Regd. Office:</p>
-                        <h3 class="contact-one__number">B4/320 C, Keshav Puram, Lawrence Road,
-                            <br />New Delhi - 110007
-                        </h3>
-                    </div>
-                </li>
-            </ul>
+            <?php echo $page_description ?>
         </div>
     </div>
 </section>
