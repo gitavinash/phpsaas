@@ -1026,9 +1026,9 @@ $(".updateAmenities").click(function (e) {
   $(".editAmenitiesBox").show();
 });
 
-// Hotel
+// Property
 
-$("#addHotel").click(function (e) {
+$("#addProperty").click(function (e) {
   e.preventDefault();
   const name = $("#name").val();
   const description = $("#description").val();
@@ -1065,7 +1065,9 @@ $("#addHotel").click(function (e) {
                   success: function (response) {
                     popUpMessage("center", response.msg, response.status);
                     // setTimeout(function () {
-                    //   document.querySelector(".followUpBox").style.display = "none";
+                    //   window.location.href =
+                    //     "/dashboard/vendors/property/update/?id" +
+                    //     btoa(response.id);
                     // }, 1500);
                   },
                   error: function (response) {
@@ -1080,25 +1082,29 @@ $("#addHotel").click(function (e) {
                 );
               }
             } else {
-              popUpMessage("center", "Enter hotel contact number", "warning");
+              popUpMessage(
+                "center",
+                "Enter property contact number",
+                "warning"
+              );
             }
           } else {
-            popUpMessage("center", "Enter hotel email address", "warning");
+            popUpMessage("center", "Enter property email address", "warning");
           }
         } else {
-          popUpMessage("center", "Enter hotel city pin code", "warning");
+          popUpMessage("center", "Enter property city pin code", "warning");
         }
       } else {
-        popUpMessage("center", "Enter hotel city name", "warning");
+        popUpMessage("center", "Enter property city name", "warning");
       }
     } else {
-      popUpMessage("center", "Enter hotel address", "warning");
+      popUpMessage("center", "Enter property address", "warning");
     }
   } else {
-    popUpMessage("center", "Enter hotel name", "warning");
+    popUpMessage("center", "Enter property name", "warning");
   }
 });
 
-$("#updateHotel").click(function (e) {
+$("#updateProperty").click(function (e) {
   e.preventDefault();
 });

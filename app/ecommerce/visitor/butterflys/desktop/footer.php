@@ -6,9 +6,8 @@
                 <h2 class="h2-socl">Spread The Love</h2>
 
                 <div class="social-1">
-                    <a href="https://www.facebook.com/andblooms"><img src="<?php echo USER_IMAGES ?>facebook.png"></a>
-                    <a href="https://www.instagram.com/andblooms/"><img
-                            src="<?php echo USER_IMAGES ?>instagram.png"></a>
+                    <a href=""><img src="<?php echo USER_IMAGES ?>facebook.png"></a>
+                    <a href=""><img src="<?php echo USER_IMAGES ?>instagram.png"></a>
                     <!-- <a href=""><img src="<?php echo USER_IMAGES ?>tweet.svg"></a>
 							<a href=""><img src="<?php echo USER_IMAGES ?>linkedin.svg"></a>
 							<a href=""><img src="<?php echo USER_IMAGES ?>pinterest.svg"></a> -->

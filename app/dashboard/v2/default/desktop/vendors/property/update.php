@@ -1,24 +1,22 @@
-<h2 class="heading"><?php echo 'Add New hotel' ?><span></span>
+<h2 class="heading"><?php echo 'Add New property' ?><span></span>
 </h2>
 <div class="main-box">
     <section>
         <ul class="steps-tab">
-            <li class="step-box active" id="step_1"><span>1</span>Hotel details</li>
-            <li class="step-box" id="step_2"><span>2</span>Hotel gallery</li>
-            <li class="step-box" id="step_3"><span>3</span>Hotel Rooms</li>
+            <li class="step-box active" id="step_1"><span>1</span>Property details</li>
         </ul>
         <div class="steps-box">
-            <form action="#" method="POST" id="addNewHotel">
+            <form action="#" method="POST">
                 <section class="form">
 
                     <div class="step-open-box step_1_box">
                         <div class="form-header">
-                            <h1>Enter hotel details</h1>
+                            <h1>Enter property details</h1>
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                         </div>
                         <div class="form-group">
                             <input id="name" name="name" type="text" />
-                            <label class="form-lable" id="Label">Hotel name<sup>*</sup></label>
+                            <label class="form-lable" id="Label">Property name<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <textarea name="description" id="description" cols="30" rows="10"></textarea>
@@ -30,7 +28,7 @@
                         </div>
                         <div class="form-group">
                             <input id="city" name="city" type="text" />
-                            <label class="form-lable" id="Label">Hotel city<sup>*</sup></label>
+                            <label class="form-lable" id="Label">Property city<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <input id="pinCode" name="pinCode" type="number" />
@@ -45,7 +43,7 @@
                             <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <p>Hotel type</p>
+                            <p>Property type</p>
                             <select class="selectJS form-control" name="type" id="type">
                                 <option value=""></option>
                                 <option value="apartments">Apartments</option>
@@ -73,17 +71,9 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addHotel" value="Add new hotel">
+                                <input type="submit" class="btn btn-green" id="updateProperty" value="Add new property">
                             </div>
                         </div>
-                    </div>
-
-                    <div class="step-open-box step_2_box" style="display: none;">
-                        test gallery
-                    </div>
-
-                    <div class="step-open-box step_3_box" style="display: none;">
-                        test rooms
                     </div>
 
                 </section>
