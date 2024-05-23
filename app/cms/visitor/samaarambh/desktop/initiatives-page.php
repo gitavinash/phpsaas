@@ -7,7 +7,7 @@ require_once 'header.php';
 <!--Page Header Start-->
 <section class="page-header">
     <!-- background-image: url('path_of_image') of event/archivment -->
-    <div class="page-header-bg" style="background-image: url(<?php echo USER_IMAGES ?>img-1/49-1-scaled.jpg)">
+    <div class="page-header-bg" style="background-image: url(<?php echo $page_image ?>)">
     </div>
     <div class="container">
         <div class="page-header__inner">
