@@ -18,6 +18,10 @@ if (file_exists('lib/configuration/index.php')) {
 	echo '<h1>Something is wrong while including configuration files</h1>';
 	exit();
 }
+if (ACTIVE_URL == '/homepage/') {
+	header("Location: /", TRUE, 301);
+	exit();
+}
 
 /** Convert all request method type parameter into strings */
 
