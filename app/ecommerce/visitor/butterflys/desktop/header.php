@@ -94,12 +94,13 @@ if ($productCategory = mysqli_query($connection, "SELECT category_title as categ
                                         }
 
                                         ?>
-                                        <li><a href="/checkout/"><img
-                                                    src="<?php echo USER_IMAGES ?>cart.svg"></a></a><span
-                                                class="crt-crcl"
-                                                totalCartItems="<?php $cartItems ?>"><?php echo $cartItems ?>
+                                        <li>
+                                            <a href="/checkout/">
+                                                <img src="<?php echo USER_IMAGES ?>cart.svg"><span class="crt-crcl"
+                                                    totalCartItems="<?php $cartItems ?>"><?php echo $cartItems ?>
 
-                                            </span><span class="span-item">Cart</span></li>
+                                                </span><span class="span-item">Cart</span></a>
+                                        </li>
                                     </ul>
                                 </div>
                             </nav>
