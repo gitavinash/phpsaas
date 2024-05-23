@@ -11,7 +11,7 @@ require_once 'header.php';
     </div>
     <div class="container">
         <div class="page-header__inner">
-            <h2>Our-initiatives</h2>
+            <h2><?php echo $page_title ?></h2>
         </div>
     </div>
 </section>
