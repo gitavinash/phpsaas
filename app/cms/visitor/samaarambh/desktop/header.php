@@ -168,7 +168,7 @@
                                         </li>
                                         <li
                                             class="dropdown <?php echo ((ACTIVE_URL == '/about-us/') ? 'current' : '') ?>">
-        u                                   <a href=" about-us/">About us</a>
+                                            <a href=" about-us/">About us</a>
                                         </li>
                                         <li
                                             <?php echo ((ACTIVE_URL == '/our-initiatives/') ? 'class="current"' : '') ?>">
