@@ -2283,7 +2283,7 @@ section.form
   z-index: 10;
 }
 
-.amenitiesList {
+.featureList {
   float: left;
   box-sizing: border-box;
   text-align: center;
@@ -2300,26 +2300,26 @@ section.form
   transition: all 0.2s ease-in-out;
 }
 
-.amenitiesList:first-child {
+.featureList:first-child {
   margin-left: 0px;
 }
 
-.amenitiesList:hover {
+.featureList:hover {
   background: #a7c1c7;
   color: #fff;
 }
 
-.amenitiesList img {
+.featureList img {
   width: 60px;
   height: 60px;
   border-radius: 5px;
 }
 
-.amenitiesList i {
+.featureList i {
   font-size: 48px;
 }
 
-.addNewAmenities {
+.addNewBtn {
   float: left;
   width: 100%;
   border-radius: 5px;

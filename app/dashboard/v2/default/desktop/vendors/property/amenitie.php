@@ -29,7 +29,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
 
                 for ($i = 0; $i < sizeof($amenitiesList); $i++) {
                     echo "
-                    <div class='amenitiesList updateAmenities' >
+                    <div class='featureList updateAmenities' >
                         <img src='" . (($amenitiesList[$i]['amenitie_image'] != '') ?
                         $amenitiesList[$i]['amenitie_image'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$amenitiesList[$i]['amenitie_title']}</p>
@@ -38,8 +38,8 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
                 }
 
                 ?>
-                <div class="amenitiesList">
-                    <a href="#" class="addNewAmenities"><i class="fi fi-rr-add"></i></a>
+                <div class="featureList">
+                    <a href="#" class="addNewAmenities addNewBtn"><i class="fi fi-rr-add"></i></a>
                 </div>
             </section>
         </div>
@@ -53,7 +53,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
                         <section class="form">
                             <div class="step-open-box step_1_box">
                                 <div class="form-header">
-                                    <h4 class="heading">Add new amenities</h4>
+                                    <h4 class="heading">Add new amenitie</h4>
                                 </div>
                                 <div class="form-group">
                                     <p>Name <sup>*</sup></p>
@@ -70,7 +70,8 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Add new amenities</a>
+                    <a href="#" class="btn popUpBtn" id="addAmenities"><i class="fi-rr-check"></i> Add new
+                        amenitie</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
@@ -103,7 +104,8 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Update amenities</a>
+                    <a href="#" class="btn popUpBtn" id="updateAmenities"><i class="fi-rr-check"></i> Update
+                        amenities</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
