@@ -98,6 +98,11 @@
                         <p><img src="<?php echo IMG_LIBRARY ?>/payment/google-pay.png" class="pg_logo" alt=""> G Pay</p>
                     </a></li>
                 <li class="list-group-item" style="padding:0px"><a
+                        href="gpay://pay?pa=<?php echo PG_UPI_ADDRESS ?>&pn=<?php echo urlencode(SITE_NAME) ?>&tr=<?php echo $order_id ?>&cu=INR&mc=0000&am=<?php echo $amount ?>&url=<?php echo SITE_URL . '/payment/status/' ?>"
+                        class="btn" style="float: left; width: 100%; text-align: left; padding: 15px 20px">
+                        <p><img src="<?php echo IMG_LIBRARY ?>/payment/google-pay.png" class="pg_logo" alt=""> G Pay</p>
+                    </a></li>
+                <li class="list-group-item" style="padding:0px"><a
                         href="upi://pay?pa=<?php echo PG_UPI_ADDRESS ?>&pn=<?php echo urlencode(SITE_NAME) ?>&tr=<?php echo $order_id ?>&cu=INR&mc=0000&am=<?php echo $amount ?>&url=<?php echo SITE_URL . '/payment/status/' ?>"
                         class="btn" style="float: left; width: 100%; text-align: left; padding: 15px 20px">
                         <p><img src="<?php echo IMG_LIBRARY ?>/payment/upi.png" class="pg_logo" alt=""> Bhim UPI</p>
