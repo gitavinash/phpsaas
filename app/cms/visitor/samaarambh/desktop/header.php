@@ -168,24 +168,24 @@
                                         </li>
                                         <li
                                             class="dropdown <?php echo ((ACTIVE_URL == '/about-us/') ? 'current' : '') ?>">
-                                            <a href=" about-us/">About us</a>
+        u                                   <a href=" about-us/">About us</a>
                                         </li>
                                         <li
                                             <?php echo ((ACTIVE_URL == '/our-initiatives/') ? 'class="current"' : '') ?>">
-                                            < href="our-initiatives/"> Initiatives</a>
-                                                <?php
+                                            <a href="our-initiatives/"> Initiatives</a>
+                                            <?php
 
-                                                if ($categoryList = mysqli_query($connection, "SELECT category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE category_type='service' AND link_status=200 AND link_site_id=" . SITE_ID)) {
-                                                    if (mysqli_num_rows($categoryList) != 0) {
-                                                        echo "<ul>";
-                                                        while ($categoryData = mysqli_fetch_assoc($categoryList)) {
-                                                            echo "<li><a href='{$categoryData['link_url']}'>{$categoryData['category_title']}</a></li>";
-                                                        }
-                                                        echo "</ul>";
+                                            if ($categoryList = mysqli_query($connection, "SELECT category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE category_type='service' AND link_status=200 AND link_site_id=" . SITE_ID)) {
+                                                if (mysqli_num_rows($categoryList) != 0) {
+                                                    echo "<ul>";
+                                                    while ($categoryData = mysqli_fetch_assoc($categoryList)) {
+                                                        echo "<li><a href='{$categoryData['link_url']}'>{$categoryData['category_title']}</a></li>";
                                                     }
+                                                    echo "</ul>";
                                                 }
+                                            }
 
-                                                ?>
+                                            ?>
                                         </li>
                                         <li <?php echo ((ACTIVE_URL == '/events/') ? 'class="current"' : '') ?>">
                                             <a href="events/">Events</a>
