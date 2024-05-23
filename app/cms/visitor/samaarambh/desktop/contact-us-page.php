@@ -6,7 +6,7 @@ require_once 'header.php';
 
 <!--Page Header Start-->
 <section class="page-header">
-    <div class="page-header-bg" style="background-image: url(<?php echo USER_IMAGES ?>img-1/contact-us.jpg)">
+    <div class="page-header-bg" style="background-image: url(<?php echo $page_image ?>)">
     </div>
     <div class="container">
         <div class="page-header__inner">
