@@ -172,7 +172,7 @@
                                         </li>
                                         <li
                                             <?php echo ((ACTIVE_URL == '/our-initiatives/') ? 'class="current"' : '') ?>">
-                                            <a href="our-initiatives/" Initiatives</a>
+                                            < href="our-initiatives/"> Initiatives</a>
                                                 <?php
 
                                                 if ($categoryList = mysqli_query($connection, "SELECT category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE category_type='service' AND link_status=200 AND link_site_id=" . SITE_ID)) {
