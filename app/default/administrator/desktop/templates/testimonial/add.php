@@ -15,7 +15,7 @@
 
             <div class="action-box inside-shadow">
                 <input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-                <!-- <input type="button" id="draftBtn"  class="btn btn-yellow btn-block" value="Save Draft"> -->
+                <input type="hidden" name="postType" value="<?php echo $postType ?>">
                 <input type="hidden" name="type" value="<?php echo ltrim(rtrim(ADMIN_BASE_URL, '/'), '/') ?>">
             </div>
 

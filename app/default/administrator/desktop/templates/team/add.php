@@ -14,6 +14,11 @@
                     <input type="text" id="url" class="form-control" name="url">
                 </div>
             </div>
+            <div class="form-group">
+                <label for="">Position</label>
+                <input type="text" id="position" class="form-control inside-shadow" name="position"
+                    placeholder="Position">
+            </div>
             <div class="form-group fullscreen-editor">
                 <textarea name="description" class="editor inside-shadow"></textarea>
             </div>

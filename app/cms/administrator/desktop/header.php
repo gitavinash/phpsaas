@@ -294,7 +294,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                 </li>
 
                 <li <?php echo (($postType == 'testimonial') ? 'class="active"' : '') ?>>
-                    <a href="testimonials/?type=list&status=all"><i class="fas fa-hand-holding-heart"></i>
+                    <a href="testimonial/?type=list&status=all"><i class="fas fa-comments"></i>
                         Testimonials</a>
                     <div class="side-menu">
                         <ul>
@@ -312,6 +312,52 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     testimonial</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo (($postType == 'brand') ? 'class="active"' : '') ?>>
+                    <a href="brand/?type=list&status=all"><i class="fas fa-thumbs-up"></i>
+                        Clients / Brands</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="brand/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    brands</a>
+                            </li>
+                            <li><a href="brand/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    brand</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="brand/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    brands</a>
+                            </li>
+                            <li><a href="brand/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    brand</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li <?php echo (($postType == 'team') ? 'class="active"' : '') ?>>
+                    <a href="team/?type=list&status=all"><i class="fas fa-users"></i>
+                        Teams</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    teams</a>
+                            </li>
+                            <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    team</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    teams</a>
+                            </li>
+                            <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    team</a></li>
                         </ul>
                     </div>
                 </li>
