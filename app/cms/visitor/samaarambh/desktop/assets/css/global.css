@@ -43,7 +43,8 @@
 }
 
 .padding-100 {
-  padding: 100px 0px;
+  padding: 100px 20px;
+  box-sizing: border-box;
 }
 
 .centerOfDiv {
@@ -8248,6 +8249,9 @@ body.locked .page-wrapper {
   }
   .testimonial-two__content {
     min-height: 300px;
+  }
+  .padding-100 {
+    padding: 10px 50px;
   }
 }
 

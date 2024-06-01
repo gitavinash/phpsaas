@@ -88,12 +88,12 @@
             </div>
             <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp padding-100" data-wow-delay="200ms">
                 <div class="footer-widget__column footer-widget__links clearfix">
-                    <h3 class="footer-widget__title">&nbsp;&nbsp;&nbsp;Quick links</h3>
+                    <h3 class="footer-widget__title">Quick links</h3>
                     <ul class="footer-widget__links-list list-unstyled clearfix">
-                        <li><a href="about-us/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;About us</a></li>
-                        <li><a href="our-initiatives/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our-initiatives</a></li>
-                        <li><a href="events/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Events</a></li>
-                        <li><a href="contact-us/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Contact us</a></li>
+                        <li><a href="about-us/">About us</a></li>
+                        <li><a href="our-initiatives/">Our-initiatives</a></li>
+                        <li><a href="events/">Events</a></li>
+                        <li><a href="contact-us/">Contact us</a></li>
                     </ul>
                 </div>
             </div>
