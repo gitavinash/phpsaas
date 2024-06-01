@@ -67,97 +67,98 @@
     <div class="site-footer-bg" style="background-image: url(<?php echo USER_IMAGES ?>img-1/last-b.jpg);">
     </div>
     <div class="site-footer__top">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
-                    <div class="footer-widget__column footer-widget__about">
-                        <div class="footer-widget__about-logo">
-                            <a href="/"><img src="<?php echo USER_IMAGES ?>footer-logo.png" alt=""></a>
-                        </div>
-                        <div class="footer-widget__about-text-box">
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp bg-white padding-100" data-wow-delay="100ms">
+                <div class="footer-widget__column footer-widget__about">
+                    <div class="footer-widget__about-logo">
+                        <a href="/"><img src="<?php echo USER_IMAGES ?>footer-logo.png" alt=""></a>
+                    </div>
+                    <!-- <div class="footer-widget__about-text-box">
                             <p class="footer-widget__about-text">Samaarambh Foundation is a Team of like-minded
                                 individuals from various
                                 Corporates and Media Houses who love to Ride/Travel to reach out and help less fortunate
                                 children/villagers
                                 residing at remote and far-flung treacherous locations of our Country.</p>
-                        </div>
-                        <div class="footer-widget__btn">
-                            <a href="contact-us/"> <span class="fa fa-heart"></span>Donate now</a>
-                        </div>
+                        </div> -->
+                    <div class="footer-widget__btn">
+                        <a href="contact-us/"> <span class="fa fa-heart"></span>Donate now</a>
                     </div>
                 </div>
-                <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
-                    <div class="footer-widget__column footer-widget__links clearfix">
-                        <h3 class="footer-widget__title">Quick links</h3>
-                        <ul class="footer-widget__links-list list-unstyled clearfix">
-                            <li><a href="about-us/">About us</a></li>
-                            <li><a href="our-initiatives/">Our-initiatives</a></li>
-                            <li><a href="events/">Events</a></li>
-                            <li><a href="contact-us/">Contact us</a></li>
-                        </ul>
-                    </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp padding-100" data-wow-delay="200ms">
+                <div class="footer-widget__column footer-widget__links clearfix">
+                    <h3 class="footer-widget__title">&nbsp;&nbsp;&nbsp;Quick links</h3>
+                    <ul class="footer-widget__links-list list-unstyled clearfix">
+                        <li><a href="about-us/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;About us</a></li>
+                        <li><a href="our-initiatives/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our-initiatives</a></li>
+                        <li><a href="events/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Events</a></li>
+                        <li><a href="contact-us/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Contact us</a></li>
+                    </ul>
                 </div>
-                <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
-                    <h3 class="footer-widget__title">Reach us</h3>
-                    <p class="contact-one__sub-title">
-                        <strong style="color: #fff">Registered Office:</strong><br />40 UA, first floor, Bunglow
-                        road, Kamla Nagar,
-                        Delhi
-                        110007<br />
-                    </p>
-                    <p class="contact-one__sub-title">
-                        <strong style="color: #fff">Corporate Office:</strong><br />B4/320 C, Second Floor, Keshav
-                        Puram, New Delhi - 110035<br />
-                    </p>
-                    <p class="contact-one__sub-title">
-                        <strong style="color: #fff">C/O Mr. Nitin Tyagi:</strong><br />329 , 237 Kearney st ,
-                        R2M4B5, Winnipeg, Canada<br />
-                    </p>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
-                    <div class="footer-widget__column footer-widget__contact">
-                        <h3 class="footer-widget__title">Contact us</h3>
-                        <ul class="list-unstyled footer-widget__contact-list">
-                            <li>
-                                <div class="icon">
-                                    <i class="fa fa-envelope"></i>
-                                </div>
-                                <div class="text">
-                                    <p><a href="mailto:mail.samaarambh@gmail.com ">mail.samaarambh@gmail.com</a></p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="icon">
-                                    <i class="fas fa-phone-alt"></i>
-                                </div>
-                                <div class="text">
-                                    <p><a href="tel:+91-9999419333">+91-9999419333</a></p>
-                                    <p><a href="tel:+91-9910359103">+91-9910359103</a></p>
-                                    <p><a href="tel:+1-2049631222">+1-2049631222</a></p>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="site-footer__social">
-                            <a href="https://twitter.com/Samaarambh2"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.facebook.com/SamaarambhFoundation/"><i class="fab fa-facebook"></i></a>
-                            <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i
-                                    class="fab fa-linkedin"></i></a>
-                            <a href="https://www.instagram.com/samaarambh_foundation/"><i
-                                    class="fab fa-instagram"></i></a>
-                        </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp padding-100" data-wow-delay="300ms">
+                <h3 class="footer-widget__title">Reach us</h3>
+                <p class="contact-one__sub-title">
+                    <strong style="color: #fff">Registered Office:</strong><br />40 UA, first floor, Bunglow
+                    road, Kamla Nagar,
+                    Delhi
+                    110007<br />
+                </p>
+                <p class="contact-one__sub-title">
+                    <strong style="color: #fff">Corporate Office:</strong><br />B4/320 C, Second Floor, Keshav
+                    Puram, New Delhi - 110035<br />
+                </p>
+                <p class="contact-one__sub-title">
+                    <strong style="color: #fff">Canada Office:</strong><br />
+                    C/O Mr. Nitin Kaushik:<br />329 , 237 Kearney st ,
+                    R2M4B5, Winnipeg, Canada<br />
+                </p>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp padding-100" data-wow-delay="400ms">
+                <div class="footer-widget__column footer-widget__contact">
+                    <h3 class="footer-widget__title">Contact us</h3>
+                    <ul class="list-unstyled footer-widget__contact-list">
+                        <li>
+                            <div class="icon">
+                                <i class="fa fa-envelope"></i>
+                            </div>
+                            <div class="text">
+                                <p><a href="mailto:info@smrbh.org">info@smrbh.org</a></p>
+                                <p><a href="mailto:mail.samaarambh@gmail.com">mail.samaarambh@gmail.com</a></p>
+                                <p><a href="mailto:mayank@smrbh.org">mayank@smrbh.org</a></p>
+                                <p><a href="mailto:operation@smrbh.org">@smrbh.org</a></p>
+                                <p><a href="mailto:jackson@smrbh.org">jackson@smrbh.org</a></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="text">
+                                <p><a href="tel:+91-9999419333">+91-9999419333</a></p>
+                                <p><a href="tel:+91-9910358103">+91-9910358103</a></p>
+                                <p><a href="tel:+1-2049631222">+1-2049631222</a></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="site-footer__social">
+                        <a href="https://twitter.com/Samaarambh2"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com/SamaarambhFoundation/"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.linkedin.com/in/samaarambh-foundation-029971243/"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/samaarambh_foundation/"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- </div> -->
     </div>
     <div class="site-footer__bottom">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="site-footer__bottom-inner">
-                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a
-                                href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a
-                                href="https://blumox.com" href="Website designing company in delhi">Blumox
+                        <p class="site-footer__bottom-text">&copy; All Copyright <?php echo date('Y'); ?> by <a href="/">Samaarambh Foundation</a> | Design &amp; Developed by <a href="https://blumox.com" href="Website designing company in delhi">Blumox
                                 Technologies</a>
                         </p>
                     </div>
@@ -179,8 +180,7 @@
         <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
 
         <div class="logo-box">
-            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143"
-                    alt="" /></a>
+            <a href="/" aria-label="logo image"><img src="<?php echo USER_IMAGES ?>resources/logo-2.png" width="143" alt="" /></a>
         </div>
         <!-- /.logo-box -->
         <div class="mobile-nav__container"></div>

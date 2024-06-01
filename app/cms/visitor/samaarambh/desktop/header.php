@@ -102,7 +102,8 @@
                                             <img src="<?php echo USER_IMAGES ?>icon/main-menu-heart-icon.png" alt="">
                                         </div>
                                         <div class="main-menu__volunteers-text-box">
-                                            <p class="main-menu__volunteers-text"><a href="contact-us/">Become
+                                            <p class="main-menu__volunteers-text"><a
+                                                    href="https://forms.gle/LNamDgHPeXHqwYib6" target="_blank">Become
                                                     a
                                                     <span>volunteer</span></a></p>
                                         </div>
@@ -136,9 +137,9 @@
                                                     <span class="icon-location"></span>
                                                 </div>
                                                 <div class="content">
-                                                    <p>Registered office</p>
-                                                    <h5>B4/320 C, Keshav Puram, New Delhi
-                                                    </h5>
+                                                    <!-- <p>Registraion number: </p> -->
+                                                    <h5><strong>80G NO. </strong>AAXTS6541FF20210</h5>
+                                                    <h5><strong>CSR No. </strong>CSR00027103</h5>
                                                 </div>
                                             </li>
                                         </ul>

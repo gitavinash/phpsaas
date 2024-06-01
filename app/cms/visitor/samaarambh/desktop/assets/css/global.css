@@ -38,6 +38,20 @@
   --blumox-bdr-radius: 20px;
 }
 
+.bg-white {
+  background: #fff;
+}
+
+.padding-100 {
+  padding: 100px 0px;
+}
+
+.centerOfDiv {
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+
 .row {
   --bs-gutter-x: 30px;
 }
@@ -576,7 +590,7 @@ ul {
 
 .main-menu__volunteers-text {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--blumox-black);
   font-family: var(--blumox-font-three);
 }
@@ -594,6 +608,7 @@ ul {
 .main-menu__volunteers-text span {
   position: relative;
   display: inline-block;
+  font-weight: 700;
 }
 
 .main-menu__volunteers-text span:before {
@@ -5058,18 +5073,28 @@ body.locked .page-wrapper {
 .site-footer__top {
   position: relative;
   display: block;
-  padding: 100px 0 98px;
+  /* padding: 100px 0 98px; */
+  padding: 0px 0px;
 }
 
 .footer-widget__about {
   position: relative;
   display: block;
   margin-right: 84px;
+  text-align: center;
+  float: left;
+  width: 100%;
 }
 
 .footer-widget__about-logo {
   position: relative;
   display: block;
+}
+
+.footer-widget__about-logo img {
+  width: 100%;
+  padding: 50px;
+  box-sizing: border-box;
 }
 
 .footer-widget__about-text-box {
