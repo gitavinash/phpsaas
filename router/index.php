@@ -171,6 +171,10 @@ switch ($urlStructure[0]) {
 		require_once 'category.php';
 		break;
 
+	case 'location':
+		require_once 'location.php';
+		break;
+
 	case 'feed':
 		require_once 'feed.php';
 		break;

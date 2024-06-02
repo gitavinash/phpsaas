@@ -26,6 +26,17 @@
   --dark-black: #000;
 }
 
+select {
+  border: none !important;
+  padding-left: 0px !important;
+}
+
+select:focus,
+select:hover {
+  border: none !important;
+  padding-left: 0px !important;
+}
+
 .page_description,
 .page_description p {
   padding: 50px 0px;

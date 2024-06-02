@@ -12,6 +12,71 @@ require_once 'header.php';
                 <p class="text-center font_size_18 text-capitalize py-3">Find bliss in every stay. From cozy corners to
                     lavish suites, MGI Hotels ensures your comfort.<br />Book now for an unforgettable experience.</p>
             </div>
+            <div class="radio d-flex align-items-center mt-5 pt-5">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" checked name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1" style="color: #fff">
+                        India
+                    </label>
+                </div>
+            </div>
+            <form action="/action_page.php" method="get">
+                <div class="row where_section p-0 py-2 d-flex align-items-center text-black mt-3 ">
+                    <div class="col-6 col-md-3  col-lg-3 col-xl-3 col-xxl-4  ps-5">
+                        <label for="">Where</label>
+                        <input type="text" class="form-control " id="datepicker" placeholder="Search destinations">
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2 col-xl-2 col-xxl-2 border_left px-5 ">
+                        <label for="">Check In</label>
+                        <input type="text" name="birthday" value="" class="form-control" placeholder="Add date">
+                    </div>
+                    <div class="col-6 col-md-3  col-lg-2 col-xl-2 col-xxl-2 border_left px-5">
+                        <label for="">Check In</label>
+                        <input type="text" name="birthday" class="form-control" id="floatingInput"
+                            placeholder="Add date">
+                    </div>
+                    <div class="col-6 col-md-3  col-lg-4 col-xl-4 col-xxl-3 border_left px-5">
+                        <label for="">No. of guests</label>
+                        <select class="form-control" name="guests" id="">
+                            <option value="1">1 person</option>
+                            <option value="2">2 persons</option>
+                            <option value="3">3 persons</option>
+                        </select>
+                    </div>
+                    <div class="col-1 ps-2 ps-md-2 ps-lg-0 ps-xl-3 ps-xxl-4 ">
+                        <div class="search_border bg_orange d-flex justify-content-center align-items-center    ">
+                            <i class="bx bx-search"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row where_section_mobile m-auto py-4 mt-5">
+                    <div class="col-12">
+                        <label for="">Where</label>
+                        <input type="text" class="form-control py-3 " id="datepicker" placeholder="Search destinations">
+                    </div>
+                    <div class="col-12 py-2">
+                        <label for="">Check In</label>
+                        <input type="text" name="birthday" value="" class="form-control py-3" placeholder="Add date">
+                    </div>
+                    <div class="col-12 py-2">
+                        <label for="">Check In</label>
+                        <input type="text" name="birthday" value="" class="form-control py-3" placeholder="Add date">
+                    </div>
+                    <div class="col-12 py-4">
+                        <select class="form-control" name="guests" id="">
+                            <option value="1">1 person</option>
+                            <option value="2">2 persons</option>
+                            <option value="3">3 persons</option>
+                        </select>
+                    </div>
+                    <div class="search_btn bg_orange  py-3  text-center mt-4 ">
+                        <a href="" class="font_size_20 text-white">
+                            Search
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
         </div>
     </section>
 
@@ -292,7 +357,8 @@ require_once 'header.php';
         <div class="container">
             <div class="row align-items-center justify-content-center overflow-hidden">
                 <div class="col-12 col-md-4 col-lg-4">
-                    <h2 class="font_size_35 text-white d-flex align-items-center justify-content-center justify-content-md-start justify-content-lg-start mt-5 mt-md-0 mt-lg-0">
+                    <h2
+                        class="font_size_35 text-white d-flex align-items-center justify-content-center justify-content-md-start justify-content-lg-start mt-5 mt-md-0 mt-lg-0">
                         Testimonials
                     </h2>
                 </div>
