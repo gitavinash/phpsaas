@@ -17,52 +17,6 @@
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
     <?php require_once DEFAULT_META ?>
-    <!-- start head script -->
-    <script type='text/javascript'>
-    const loadForm = (w, beScenario =
-        '501462') => {
-        var beScenarioPointed = '.' + beScenario;
-        ! function(e, n) {
-            var t = "bookingengine",
-                o = "integration",
-                i = e[t] = e[t] || {},
-                a = i[o] = i[o] || {},
-                r = "__cq",
-                c = "__loader",
-                d = "getElementsByTagName";
-            if (n = n || [], a[r] = a[r] ? a[r].concat(n) : n, !a[c]) {
-                a[c] = !0;
-                var l = e.document,
-                    g = l[d]("head")[0] || l[d]("body")[0];
-                ! function n(i) {
-                    if (0 !== i.length) {
-                        var a = l.createElement("script");
-                        a.type = "text/javascript", a.async = !0, a.src = "https://" + i[0] +
-                            "/integration/loader.js",
-                            a.onerror = a.onload = function(n, i) {
-                                return function() {
-                                    e[t] && e[t][o] && e[t][o].loaded || (g.removeChild(n), i())
-                                }
-                            }(a, (function() {
-                                n(i.slice(1, i.length))
-                            })), g.appendChild(a)
-                    }
-                }(
-                    ["in-ibe.hopenapi.com", "ibe.hopenapi.com", "ibe.behopenapi.com"])
-            }
-        }(window, [
-            ['setContext', 'BE-INT-delighthotelsandresort_2024-02-13' + beScenarioPointed, 'en'],
-            ['embed', 'booking-form', {
-                container: 'be-booking-form'
-            }],
-            ['embed', 'search-form', {
-                container: 'be-search-form'
-            }],
-        ]);
-    };
-    loadForm(window);
-    </script>
-    <!-- end head script -->
 
 </head>
 
@@ -72,13 +26,13 @@
             <div class="d-flex align-items-end justify-content-between py-3 nav_img ">
                 <div class="font_size_16 d-flex align-items-center ">
                     <img src="<?php echo USER_IMAGES ?>icon/nav_calling.svg" alt="" class="img-fluid ">
-                    <a href="" class="ps-2"> +91 9716689527</a>
+                    <a href="" class="ps-2"> +91 7827515902</a>
                     <img src="<?php echo USER_IMAGES ?>icon/message_nav.svg" alt=""
                         class="img-fluid ms-3 ms-md-5 ms-lg- 5">
-                    <a href="" class="ps-2">reservations@delightstay.co.in</a>
+                    <a href="" class="ps-2">reservations@mgihotels.com</a>
                 </div>
                 <div class="font_size_18">
-                    <a href="">Pay now</a>
+                    <a href="/login/">Member login</a>
                 </div>
             </div>
         </div>
@@ -88,7 +42,7 @@
                 <nav class="navbar navbar-expand-lg ">
                     <div class="container-fluid">
                         <a class="navbar-brand main_logo" href="/">
-                            <img src="<?php echo USER_IMAGES ?>icon/main_logo.svg " alt="" class="img-fluid">
+                            <img src="<?php echo USER_IMAGES ?>mgi_logo.jpeg" alt="" class="img-fluid">
                         </a>
                         <button class="menu header_menu">
                             <i class='bx bx-menu'></i>
@@ -99,15 +53,11 @@
                                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/about-us/" class="nav-link active" aria-current="page">About
+                                    <a href="/about-us/" class="nav-link" aria-current="page">About
                                         Us</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Our Hotels</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page"
-                                        href="https://blog.delighthotelsandresort.com/" target="_blank">Blog</a>
+                                    <a class="nav-link" aria-current="page" href="#">Our Hotels</a>
                                 </li>
                             </ul>
                             <form class="d-flex" role="search">
@@ -125,7 +75,7 @@
         <div class="menu_container">
             <div class="menu_container__box">
                 <div class="menu_logo">
-                    <a href="/"><img src="<?php echo USER_IMAGES ?>icon/main_logo.svg" class="img-fluid" alt=""></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>mgi_logo.jpeg" class="img-fluid" alt=""></a>
                     <div class="cut">
                         <i class='bx bx-x'></i>
                     </div>
@@ -135,7 +85,6 @@
                     <a href="/about-us/">About us</a>
                     <a href="/hotel_list/">Our hotel</a>
                     <a href="/promotions/">Promotions</a>
-                    <a href="https://blog.delighthotelsandresort.com/" target="_blank">Blog</a>
 
                 </div>
                 <div class="contact_us">

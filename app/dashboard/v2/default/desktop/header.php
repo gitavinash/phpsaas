@@ -37,18 +37,19 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap" media="screen">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
+        media="screen">
     <script type="text/javascript">
-        (function(c, l, a, r, i, t, y) {
-            c[a] = c[a] || function() {
-                (c[a].q = c[a].q || []).push(arguments)
-            };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i;
-            y = l.getElementsByTagName(r)[0];
-            y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", "lrfkm51aya");
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "lrfkm51aya");
     </script>
 </head>
 
@@ -64,17 +65,19 @@ if (isset($daterange)) {
     <header>
         <div class="right-side">
             <div class="search-box">
-                <form action="#">
+                <!-- <form action="#">
                     <div class="form-group">
                         <input type="text" placeholder="Search for all customers">
                     </div>
-                </form>
+                </form> -->
             </div>
             <ul>
                 <li><a href="#" onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
+                        <div class="profile-img"><img
+                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
+                                alt=""></div>
                     </a>
                     <ul>
                         <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
@@ -111,10 +114,10 @@ if (isset($daterange)) {
 
             if (ADMIN_BASE_URL != '/') { ?>
 
-                <div class="i-m-here-pagination">
-                    <ul>
-                        <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
-                        <?php
+            <div class="i-m-here-pagination">
+                <ul>
+                    <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
+                    <?php
 
                         $paginationURL = '';
 
@@ -125,8 +128,8 @@ if (isset($daterange)) {
                         }
 
                         ?>
-                    </ul>
-                </div>
+                </ul>
+            </div>
 
             <?php
             }

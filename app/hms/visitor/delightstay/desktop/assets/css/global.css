@@ -14,8 +14,8 @@
   --font_size_35: 2.1875rem;
   --font_size_70: 4.375rem;
   --font_weight_600: 600;
-  --ornage: #ff8c00;
-  --main-color: #ff8c00;
+  --ornage: #3c3f95;
+  --main-color: #3c3f95;
   --white-color: #fff;
   --black-shade: #444;
   --body_background_color: #f2f2f2;
@@ -26,8 +26,17 @@
   --dark-black: #000;
 }
 
-.page_description {
+.page_description,
+.page_description p {
   padding: 50px 0px;
+  font-size: 16px !important;
+  color: #333 !important;
+  line-height: 32px !important;
+  font-weight: 300 !important;
+}
+
+.page_description p strong {
+  font-weight: 600 !important;
 }
 
 a {
@@ -231,6 +240,11 @@ button {
   height: 2px;
   background: var(--main-color);
 }
+
+.main_logo img {
+  max-height: 40px;
+}
+
 .menu_wrapper a:hover::after {
   width: 100%;
 }

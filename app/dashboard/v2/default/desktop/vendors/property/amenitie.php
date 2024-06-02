@@ -60,15 +60,18 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
-                                        class="form-control" required></textarea>
+                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*" class="form-control" required></textarea>
                                     <label class="form-lable" id="noteMsgLabel">Description</label>
+                                </div>
+                                <div class="form-group">
+                                    <p>Icon <sup>*</sup></p>
+                                    <input id="icon" name="icon" type="file" accept="image/*" />
                                 </div>
                             </div>
                     </form>
                 </div>
             </div>
-            <div class="widget box-3">
+            <div class=" widget box-3">
                 <div class="actionArea">
                     <a href="#" class="btn popUpBtn" id="addAmenities"><i class="fi-rr-check"></i> Add new
                         amenitie</a>
@@ -94,8 +97,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
-                                        class="form-control" required></textarea>
+                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*" class="form-control" required></textarea>
                                     <label class="form-lable" id="noteMsgLabel">Description</label>
                                 </div>
                             </div>

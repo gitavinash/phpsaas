@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <main>
@@ -25,8 +25,8 @@
                                 </div>
                                 <div class="details">
                                     <h3>Find us</h3>
-                                    <p>114 , 1st Floor , Kirti Shikhar Tower, Distt Center , Janakpuri , New Delhi
-                                        110058</p>
+                                    <p>Musafir Go India<br />212 A, Suneja Tower 1, District Center Janakpuri,<br />New
+                                        Delhi - 110058</p>
                                 </div>
                             </div>
                             <div class="our_address">
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="details">
                                     <h3>Write to us</h3>
-                                    <a href="#">reservations@delightstay.co.in</a>
+                                    <a href="#">reservations@mgihotels.com</a>
                                 </div>
                             </div>
                             <div class="our_address">
@@ -44,9 +44,7 @@
                                 </div>
                                 <div class="details">
                                     <h3>call us</h3>
-                                    <a href="tel:+91-8929604524">+91-8929604524</a><br />
-                                    <a href="tel:+91-9773889527">+91-9773889527</a><br />
-                                    <a href="tel:+91-9728872206">+91-9728872206</a><br />
+                                    <a href="tel:+91-7827515902">+91-7827515902</a><br />
                                 </div>
                             </div>
                         </div>
@@ -82,16 +80,13 @@
 
     <section>
         <div class="map_wrapper">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14009.166186427328!2d77.0802252160038!3d28.621022960733747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d04ba6b064d0f%3A0xf609cdf712fe603e!2sJanakpuri%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1707471444282!5m2!1sen!2sin"
-                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14007.327774068734!2d77.0810984!3d28.6347985!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d049514fd1bd3%3A0x59c46822e6f8781a!2sMusafir%20Go%20India!5e0!3m2!1sen!2sin!4v1717350987974!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </section>
 </main>
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

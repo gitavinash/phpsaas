@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 
@@ -8,7 +8,7 @@
     <section class="contact_wrapper background_img">
         <div class="container">
             <div class="about_wrapper__heading">
-                <h3>Book your stay at<br /><span>Delight Stay</span></h3>
+                <h3>Book your stay at<br /><span>MGI Hotels</span></h3>
             </div>
         </div>
     </section>
@@ -30,6 +30,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

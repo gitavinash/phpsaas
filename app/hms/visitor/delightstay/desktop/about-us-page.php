@@ -1,13 +1,13 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <main>
     <section class="about_wrapper">
         <div class="container">
             <div class="about_wrapper__heading">
-                <h3>Confident travel starts at <span>DELIGHT STAY.</span></h3>
+                <h3>Confident travel starts at <span>MGI Hotels.</span></h3>
             </div>
         </div>
     </section>
@@ -95,6 +95,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

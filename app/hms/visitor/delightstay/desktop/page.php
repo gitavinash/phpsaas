@@ -5,7 +5,8 @@
 ?>
 
 <main>
-    <section class="contact_wrapper background_img">
+    <section class="contact_wrapper background_img"
+        style="url(<?php echo (($page_image!='') ? $page_image : '../img/hotel.jpeg' ) ?>)">
         <div class="container">
             <div class="contact_wrapper__heading">
                 <h3><?php echo $page_title ?></h3>

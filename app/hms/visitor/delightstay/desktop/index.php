@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <main>
@@ -8,72 +8,9 @@
         <div class="container">
             <div class="row text-white ">
                 <h1 class="font_size_70 font_family_chonburi text-center mt-5 pt-5 text-capitalize">Perfect getaway
-                    awaits at Delight Stay.</h1>
+                    awaits at MGI Hotels.</h1>
                 <p class="text-center font_size_18 text-capitalize py-3">Find bliss in every stay. From cozy corners to
-                    lavish suites, Delight Stay ensures your comfort.<br />Book now for an unforgettable experience.</p>
-                <!-- start Search form -->
-                <div id='block-search' style="margin-top: 100px">
-                    <div class='block-search__top-block'>
-                        <div class='block-search__title'>Book online</div>
-                        <div class='block-search__subtitle'>Get your guaranteed accommodation</div>
-                    </div>
-                    <form class='block-search__city-hotel visible-flex'>
-                        <div class='block-search__city'>
-                            <div class='block-search__label'>State</div>
-                            <select class='block-search__city-select'>
-                                <option value='1' data-hotel='501462'>Punjab</option>
-                                <option value='2' data-hotel='501452'>Delhi</option>
-                                <option value='3' data-hotel='501453'>Rajasthan</option>
-                                <option value='4' data-hotel='501454'>Uttarakhand</option>
-                            </select>
-                        </div>
-                        <div class='block-search__hotel'>
-                            <div class='block-search__hotel-item cont1'>
-                                <div class='block-search__label'>Hotel</div>
-                                <select id='select1'>
-                                    <option value='501462'>Hotel Grand Hriday, Amritsar</option>
-                                    <option value='501463'>Regalia Grand, Amritsar</option>
-                                    <option value='501448'>Dew Drop Shankh, Amritsar</option>
-                                    <option value='501449'>Hotel Euphoria Green, Amritsar</option>
-                                    <option value='501450'>Hotel Oscar, Amritsar</option>
-                                    <option value='501451'>Erica Royal Crown, Chandigarh</option>
-                                </select>
-                            </div>
-                            <div class='block-search__hotel-item cont2'>
-                                <div class='block-search__label'>Hotel</div>
-                                <select id='select2'>
-                                    <option value='501452'>Hotel Lee Continental, Delhi</option>
-                                </select>
-                            </div>
-                            <div class='block-search__hotel-item cont3'>
-                                <div class='block-search__label'>Hotel</div>
-                                <select id='select3'>
-                                    <option value='501453'>Hotel Lily Pool - The Heritage Jal Mahal, Jaipur</option>
-                                </select>
-                            </div>
-                            <div class='block-search__hotel-item cont4'>
-                                <div class='block-search__label'>Hotel</div>
-                                <select id='select4'>
-                                    <option value='501454'>Hotel Harshikhar, Bhimtal</option>
-                                    <option value='501455'>Hotel Hriday Retreat, Jim Corbett</option>
-                                    <option value='501457'>Olive Lakeview, Bhimtal</option>
-                                    <option value='501458'>Vaapi Comfort Inn, Nakuchiatal</option>
-                                    <option value='501459'>The Grand Alova, Rishikesh</option>
-                                    <option value='501460'>Notting Hills, Mussoorie</option>
-                                    <option value='501461'>The Maya Resort & Spa, Jim Corbett</option>
-                                    <option value='501202'>Green Retreat Corbett</option>
-                                    <option value='501200'>Maulik Mansion, Jim Corbett</option>
-                                    <option value='501197'>Hotel Shoolin Delight Stay, Haridwar</option>
-                                    <option value='501198'>Maulik Retreat, Jim Corbett</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                    <div id='be-search-form' class='be-container'>
-                        <a href='https://exely.com/' rel='nofollow' target='_blank'>Hotel management software</a>
-                    </div>
-                </div>
-                <!-- end Search form -->
+                    lavish suites, MGI Hotels ensures your comfort.<br />Book now for an unforgettable experience.</p>
             </div>
         </div>
     </section>
@@ -355,8 +292,7 @@
         <div class="container">
             <div class="row align-items-center justify-content-center overflow-hidden">
                 <div class="col-12 col-md-4 col-lg-4">
-                    <h2
-                        class="font_size_35 text-white d-flex align-items-center justify-content-center justify-content-md-start justify-content-lg-start mt-5 mt-md-0 mt-lg-0">
+                    <h2 class="font_size_35 text-white d-flex align-items-center justify-content-center justify-content-md-start justify-content-lg-start mt-5 mt-md-0 mt-lg-0">
                         Testimonials
                     </h2>
                 </div>
@@ -365,7 +301,7 @@
                         <div class="col-6 slider_2">
                             <div class="slider mx-5 mx-md-2 mx-lg-2  ">
                                 <p class="review">From the moment I checked in until my departure, every interaction
-                                    with the staff at Delight Stay was marked by professionalism and warmth. Their
+                                    with the staff at MGI Hotels was marked by professionalism and warmth. Their
                                     attention to detail and willingness to accommodate special requests made my stay
                                     truly memorable.</p>
                                 <div class="d-flex align-items-center justify-content-between">
@@ -386,7 +322,7 @@
                         </div>
                         <div class="col-6">
                             <div class="slider mx-5 mx-md-2 mx-lg-2 ">
-                                <p class="review">Delight Stay exceeded all my expectations. The room was spacious,
+                                <p class="review">MGI Hotels exceeded all my expectations. The room was spacious,
                                     elegantly
                                     furnished, and offered breathtaking views. The attention to detail and personalized
                                     service made me feel like a VIP throughout my stay. Highly recommend!</p>
@@ -408,7 +344,7 @@
                         </div>
                         <div class="col-6">
                             <div class="slider mx-5 mx-md-2 mx-lg-2  ">
-                                <p class="review">My stay at Delight Stay was truly exceptional. From the moment I
+                                <p class="review">My stay at MGI Hotels was truly exceptional. From the moment I
                                     arrived, I was
                                     greeted with warmth and hospitality. The room was impeccably clean, the amenities
                                     were top-notch, and the staff went above and beyond to ensure my comfort. I can't
@@ -462,6 +398,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 
@@ -43,7 +43,7 @@
                                                 </div>
                                                 <div class="offer_content">
                                                     <h3>Cancellation till check-in available</h3>
-                                                    <p>With Cancel For No Reason powered by Delight stay</p>
+                                                    <p>With Cancel For No Reason powered by MGI Hotels</p>
                                                 </div>
                                             </div>
                                             <div class="details_offer__box">
@@ -78,8 +78,7 @@
                                                 <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
                                             </div>
                                             <div class="book_now hotel_book">
-                                                <button class="global_btn" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">book this now</button>
+                                                <button class="global_btn" data-bs-toggle="modal" data-bs-target="#exampleModal">book this now</button>
                                             </div>
                                         </div>
                                     </div>
@@ -117,10 +116,7 @@
                                 <h3>Location</h3>
                             </div>
                             <div class="map_wrapper">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14009.166186427328!2d77.0802252160038!3d28.621022960733747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d04ba6b064d0f%3A0xf609cdf712fe603e!2sJanakpuri%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1707471444282!5m2!1sen!2sin"
-                                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14009.166186427328!2d77.0802252160038!3d28.621022960733747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d04ba6b064d0f%3A0xf609cdf712fe603e!2sJanakpuri%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1707471444282!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
                         </div>
                         <div class="amenities_wrapper">
@@ -205,8 +201,7 @@
                     </div>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
 
@@ -228,8 +223,7 @@
                                                 <input type="email" placeholder="Email *">
                                             </div>
                                             <div class="form_wrapper__input">
-                                                <textarea name="" id="" cols="30" rows="4"
-                                                    placeholder="Message *"></textarea>
+                                                <textarea name="" id="" cols="30" rows="4" placeholder="Message *"></textarea>
                                             </div>
                                             <div class="submit_form">
                                                 <button class="global_btn text-uppercase">submit</button>
@@ -301,6 +295,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
