@@ -532,7 +532,7 @@ nav.side-nav ul li.active {
   background: #01647b;
   color: #fff;
   border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  /* border-bottom-left-radius: 5px; */
 }
 
 nav.side-nav ul li.active i {
@@ -558,6 +558,7 @@ nav.side-nav ul li.active:after {
 nav.side-nav ul li.active > .bottom-menu ul {
   display: block;
   background: #167a92;
+  border-bottom-left-radius: 5px;
 }
 
 nav.side-nav ul li.active:hover > .side-menu ul {

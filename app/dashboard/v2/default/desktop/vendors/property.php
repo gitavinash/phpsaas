@@ -26,7 +26,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="vendors/property/amenitie/">
+        <a href="vendors/property/amenities/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-star"></i>

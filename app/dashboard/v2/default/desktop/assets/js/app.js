@@ -1108,3 +1108,26 @@ $("#addProperty").click(function (e) {
 $("#updateProperty").click(function (e) {
   e.preventDefault();
 });
+
+// Amenities
+
+$("#addAmenities").click(function (e) {
+  e.preventDefault();
+  var formData = new FormData($("#addAmenitiesForm")[0]);
+  $.ajax({
+    url: "/api/amenities/publish/",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      console.log(`Response`, response);
+      alert("Amenity added successfully!");
+      $("#addAmenitiesForm")[0].reset();
+    },
+    error: function (error) {
+      console.log(`Failed response`, error);
+      alert("Failed to add amenity!");
+    },
+  });
+});

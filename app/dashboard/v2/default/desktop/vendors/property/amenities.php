@@ -49,11 +49,11 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
-                    <form method="POST" action="#">
+                    <form method="POST" id="addAmenitiesForm" action="#" enctype="multipart/form-data">
                         <section class="form">
                             <div class="step-open-box step_1_box">
                                 <div class="form-header">
-                                    <h4 class="heading">Add new amenitie</h4>
+                                    <h4 class="heading">Add new amenities</h4>
                                 </div>
                                 <div class="form-group">
                                     <p>Name <sup>*</sup></p>
@@ -74,7 +74,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
             <div class=" widget box-3">
                 <div class="actionArea">
                     <a href="#" class="btn popUpBtn" id="addAmenities"><i class="fi-rr-check"></i> Add new
-                        amenitie</a>
+                        amenities</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
