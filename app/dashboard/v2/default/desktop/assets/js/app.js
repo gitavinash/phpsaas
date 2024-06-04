@@ -1037,6 +1037,7 @@ $(".editAmenities").click(function (e) {
   updateAmenitiesId = $(this).attr("id");
   amenitiesName = $(this).attr("data_name");
   amenitiesDescription = $(this).attr("data_desc");
+  $("#updateAmenities").show();
   $("#editName").val(amenitiesName);
   $("#editDescription").val(amenitiesDescription);
   document.querySelector(".editAmenitiesBox").style.display = "flex";
@@ -1129,7 +1130,7 @@ $("#updateProperty").click(function (e) {
 // Amenities
 $("#addAmenities").on("click", function (e) {
   e.preventDefault();
-
+  $("#addAmenities").hide();
   var title = $("#name").val();
   if (title != "") {
     var data = new FormData(document.getElementById("addAmenitiesForm"));
@@ -1143,24 +1144,35 @@ $("#addAmenities").on("click", function (e) {
       dataType: "JSON",
       encrypt: "multipart/form-data",
       success: function (response) {
-        console.log(`Response:`, response);
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
       },
-      error: function (error) {
-        console.error("Error:", error);
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#addAmenities").show();
       },
     });
   } else {
     popUpMessage("center", "Kindly enter amenities name", "warning");
+    $("#addAmenities").show();
   }
 });
 
 $("#updateAmenities").on("click", function (e) {
   e.preventDefault();
 
+  $("#updateAmenities").hide();
   var title = $("#editName").val();
   if (title != "") {
     var data = new FormData(document.getElementById("updateAmenitiesForm"));
     data.append("id", updateAmenitiesId);
+
     $.ajax({
       url: "/api/amenities/update/",
       type: "POST",
@@ -1170,13 +1182,22 @@ $("#updateAmenities").on("click", function (e) {
       dataType: "JSON",
       encrypt: "multipart/form-data",
       success: function (response) {
-        console.log(`Response:`, response);
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
       },
-      error: function (error) {
-        console.error("Error:", error);
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#updateAmenities").show();
       },
     });
   } else {
     popUpMessage("center", "Kindly enter amenities name", "warning");
+    $("#updateAmenities").show();
   }
 });

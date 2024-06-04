@@ -2301,7 +2301,7 @@ section.form
   letter-spacing: 1px;
   line-height: 18px;
   border-radius: 5px;
-  margin: 0px 10px;
+  margin: 0 10px 20px 0px;
   border: 1px solid #ebebeb;
   background: #ebf5fb;
   cursor: pointer;
