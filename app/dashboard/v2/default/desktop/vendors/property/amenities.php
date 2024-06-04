@@ -86,7 +86,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_par
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
-                    <form method="POST" action="#">
+                    <form method="POST" id="updateAmenitiesForm" enctype="multipart/form-data">
                         <section class="form">
                             <div class="step-open-box step_1_box">
                                 <div class="form-header">

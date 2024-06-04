@@ -117,8 +117,9 @@
                                                     <span class="icon-phone-call"></span>
                                                 </div>
                                                 <div class="content">
-                                                    <p>Helpline</p>
-                                                    <h5><a href="tel:9999419333">+91-9999419333</a></h5>
+                                                    <!-- <p>Helpline</p> -->
+                                                    <h5><a href="tel:+91-9999419333">+91-9999419333</a></h5>
+                                                    <h5><a href="tel:+91-9910358103">+91-9910358103</a></h5>
                                                 </div>
                                             </li>
                                             <li>
@@ -127,9 +128,10 @@
                                                 </div>
                                                 <div class="content">
                                                     <p>Send email</p>
-                                                    <h5><a
-                                                            href="mailto:mail.samaarambh@gmail.com">mail.samaarambh@gmail.com</a>
-                                                    </h5>
+                                                    <h5><a href="mailto:info@smrbh.org">info@smrbh.org</a>
+                                                        <h5><a
+                                                                href="mailto:mail.samaarambh@gmail.com">mail.samaarambh@gmail.com</a>
+                                                        </h5>
                                                 </div>
                                             </li>
                                             <li>

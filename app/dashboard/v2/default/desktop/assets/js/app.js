@@ -1147,7 +1147,7 @@ $("#updateAmenities").on("click", function (e) {
 
   var title = $("#editName").val();
   if (title != "") {
-    var data = new FormData(document.getElementById("addAmenitiesForm"));
+    var data = new FormData(document.getElementById("updateAmenitiesForm"));
     data.append("id", updateAmenitiesId);
     $.ajax({
       url: "/api/amenities/update/",
