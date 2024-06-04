@@ -654,7 +654,7 @@ $(".form-control").change(function () {
   currentClickID = $(this).attr("id");
   currentValue = $(this).val();
   if (currentValue != "") {
-    $("#" + currentClickID + "Label").addClass("heading");
+    $("#" + currentClickID + "Label").addClass("labelHeading");
   }
 });
 
@@ -1019,9 +1019,14 @@ $(".addNewAmenities").click(function (e) {
   $(".amenitiesBox").show();
 });
 
-$(".updateAmenities").click(function (e) {
+$(".editAmenities").click(function (e) {
   e.preventDefault();
   $(".popUp").hide();
+  updateAmenitiesId = $(this).attr("id");
+  amenitiesName = $(this).attr("data_name");
+  amenitiesDescription = $(this).attr("data_desc");
+  $("#editName").val(amenitiesName);
+  $("#editDescription").val(amenitiesDescription);
   document.querySelector(".editAmenitiesBox").style.display = "flex";
   $(".editAmenitiesBox").show();
 });
@@ -1110,24 +1115,56 @@ $("#updateProperty").click(function (e) {
 });
 
 // Amenities
-
-$("#addAmenities").click(function (e) {
+$("#addAmenities").on("click", function (e) {
   e.preventDefault();
-  var formData = new FormData($("#addAmenitiesForm")[0]);
-  $.ajax({
-    url: "/api/amenities/publish/",
-    type: "POST",
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      console.log(`Response`, response);
-      alert("Amenity added successfully!");
-      $("#addAmenitiesForm")[0].reset();
-    },
-    error: function (error) {
-      console.log(`Failed response`, error);
-      alert("Failed to add amenity!");
-    },
-  });
+
+  var title = $("#name").val();
+  if (title != "") {
+    var data = new FormData(document.getElementById("addAmenitiesForm"));
+
+    $.ajax({
+      url: "/api/amenities/publish/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        console.log(`Response:`, response);
+      },
+      error: function (error) {
+        console.error("Error:", error);
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter amenities name", "warning");
+  }
+});
+
+$("#updateAmenities").on("click", function (e) {
+  e.preventDefault();
+
+  var title = $("#editName").val();
+  if (title != "") {
+    var data = new FormData(document.getElementById("addAmenitiesForm"));
+    data.append("id", updateAmenitiesId);
+    $.ajax({
+      url: "/api/amenities/update/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        console.log(`Response:`, response);
+      },
+      error: function (error) {
+        console.error("Error:", error);
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter amenities name", "warning");
+  }
 });

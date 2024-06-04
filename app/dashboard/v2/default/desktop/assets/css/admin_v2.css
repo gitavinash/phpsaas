@@ -425,6 +425,11 @@ strong {
   background: rgba(3, 99, 123, 0.5);
 }
 
+.right-side ul li:hover ul li:last-child a:hover {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+
 .right-side ul li:hover ul li a:hover i {
   color: #fff;
 }
@@ -532,7 +537,7 @@ nav.side-nav ul li.active {
   background: #01647b;
   color: #fff;
   border-top-left-radius: 5px;
-  /* border-bottom-left-radius: 5px; */
+  border-bottom-left-radius: 5px;
 }
 
 nav.side-nav ul li.active i {
@@ -1329,10 +1334,10 @@ table.dataTable thead th {
 }
 
 form {
-  max-width: 700px; /* Can be in percentage also. */
+  /* max-width: 700px; Can be in percentage also. */
   height: auto;
   margin: 0 auto;
-  padding: 10px;
+  /* padding: 10px; */
   position: relative;
 }
 
@@ -1398,7 +1403,7 @@ section.form .form-header img {
 }
 
 section.form label {
-  color: #333;
+  color: #01647b;
   font-size: 16px;
   font-weight: normal;
   position: absolute;
@@ -1407,6 +1412,7 @@ section.form label {
   top: -12px;
   transition: 300ms ease all;
   padding: 0 2px;
+  background: #fff;
 }
 
 section.form label sup {
@@ -2003,7 +2009,8 @@ section.form
 }
 
 .smallPopUpBox {
-  width: 1000px;
+  width: 90%;
+  max-width: 900px;
   min-height: 500px;
   display: flex;
   justify-content: center;

@@ -2,7 +2,7 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, amenitie_title, amenitie_description, amenitie_is_deletable FROM " . TABLE_PREFIX . "amenities")) {
+if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_parent_id, amenitie_title, amenitie_description, amenitie_is_deletable FROM " . TABLE_PREFIX . "amenities")) {
 
     if (mysqli_num_rows($amenitiesData) != 0) {
         $amenitiesList = array();
@@ -29,7 +29,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
 
                 for ($i = 0; $i < sizeof($amenitiesList); $i++) {
                     echo "
-                    <div class='featureList updateAmenities' >
+                    <div class='featureList editAmenities' id='{$amenitiesList[$i]['amenitie_id']}' data_name='{$amenitiesList[$i]['amenitie_title']}' data_desc='{$amenitiesList[$i]['amenitie_description']}' >
                         <img src='" . (($amenitiesList[$i]['amenitie_image'] != '') ?
                         $amenitiesList[$i]['amenitie_image'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$amenitiesList[$i]['amenitie_title']}</p>
@@ -49,23 +49,23 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
-                    <form method="POST" id="addAmenitiesForm" action="#" enctype="multipart/form-data">
+                    <form method="POST" id="addAmenitiesForm" enctype="multipart/form-data">
                         <section class="form">
                             <div class="step-open-box step_1_box">
                                 <div class="form-header">
                                     <h4 class="heading">Add new amenities</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Name <sup>*</sup></p>
-                                    <input id="name" name="name" type="text" />
+                                    <label class="form-lable">Name<sup>*</sup></label>
+                                    <input id="name" name="name" type="text" placeholder="Amenities name" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*" class="form-control" required></textarea>
-                                    <label class="form-lable" id="noteMsgLabel">Description</label>
+                                    <textarea type="text" name="description" id="description" placeholder="Description" class="form-control" required></textarea>
+                                    <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                                 <div class="form-group">
-                                    <p>Icon <sup>*</sup></p>
-                                    <input id="icon" name="icon" type="file" accept="image/*" />
+                                    <label class="form-lable">Icon</label>
+                                    <input type="file" id="icon" name="icon" accept="image/*" />
                                 </div>
                             </div>
                     </form>
@@ -94,11 +94,15 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_parent_id, ameni
                                 </div>
                                 <div class="form-group">
                                     <p>Name <sup>*</sup></p>
-                                    <input id="name" name="name" type="text" />
+                                    <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*" class="form-control" required></textarea>
-                                    <label class="form-lable" id="noteMsgLabel">Description</label>
+                                    <textarea type="text" name="description" id="editDescription" placeholder="Description" class="form-control" required></textarea>
+                                    <label class="form-lable" id="editDescriptionLabel">Description</label>
+                                </div>
+                                <div class="form-group">
+                                    <p>Icon</p>
+                                    <input type="file" id="editIcon" name="icon" accept="image/*" />
                                 </div>
                             </div>
                     </form>
