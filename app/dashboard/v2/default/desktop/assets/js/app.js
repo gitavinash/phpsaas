@@ -565,7 +565,7 @@ if ($(".showTableList").length) {
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
       { width: "20%", targets: 1 },
       {
-        targets: 1, // The second column (index 1)
+        targets: "_all", // The second column (index 1)
         createdCell: function (td, cellData, rowData, row, col) {
           $(td).css({
             "max-width": "150px", // Set the maximum width (adjust as needed)
