@@ -13,7 +13,7 @@ function publish($connection, $data)
 
         if (!isset($featureImage)) {
 
-            /** if feature imaeg is not upload then set featureImage as blank */
+            /** if feature image is not upload then set featureImage as blank */
 
             $featureImage = '';
             $thumbnailImage = '';

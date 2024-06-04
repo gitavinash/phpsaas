@@ -562,8 +562,20 @@ if ($(".showTableList").length) {
   $(".showTableList").DataTable({
     pageLength: 50,
     columnDefs: [
-      { type: "date", targets: 4 }, // Assuming the date column is the first column (index 0)
+      { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
+      { width: "20%", targets: 1 },
+      {
+        targets: 1, // The second column (index 1)
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css({
+            "max-width": "150px", // Set the maximum width (adjust as needed)
+            "white-space": "normal", // Allow text wrapping
+            "word-wrap": "break-word", // Ensure words break if necessary
+          }); // Set the maximum width (adjust as needed)
+        },
+      },
     ],
+    fixedColumns: true,
     order: [[4, "desc"]],
   });
 }

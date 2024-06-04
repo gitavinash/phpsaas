@@ -60,11 +60,12 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_par
                                     <input id="name" name="name" type="text" placeholder="Amenities name" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="description" placeholder="Description" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="description" placeholder="Description"
+                                        class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-lable">Icon</label>
+                                    <label class="form-lable">Icon ( size 100px x 100px )</label>
                                     <input type="file" id="icon" name="icon" accept="image/*" />
                                 </div>
                             </div>
@@ -93,15 +94,16 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_par
                                     <h4 class="heading">Edit amenities</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Name <sup>*</sup></p>
+                                    <p>Name<sup>*</sup></p>
                                     <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="editDescription" placeholder="Description" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="editDescription"
+                                        placeholder="Description" class="form-control" required></textarea>
                                     <label class="form-lable" id="editDescriptionLabel">Description</label>
                                 </div>
                                 <div class="form-group">
-                                    <p>Icon</p>
+                                    <p>Icon ( size 100px x 100px )</p>
                                     <input type="file" id="editIcon" name="icon" accept="image/*" />
                                 </div>
                             </div>

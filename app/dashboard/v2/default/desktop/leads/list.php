@@ -68,7 +68,7 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                     <tr>
                         <th>Name</th>
                         <!-- <th>Email</th> -->
-                        <th>Mobile</th>
+                        <th style="max-width: 200px !important">Mobile</th>
                         <th>Subject</th>
                         <th>Time</th>
                         <?php
