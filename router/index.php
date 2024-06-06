@@ -111,6 +111,10 @@ switch ($urlStructure[0]) {
 		require_once 'admin.php';
 		break;
 
+	case 'oauth':
+		require_once 'oauth.php';
+		break;
+
 	case str_replace('/', '', LOGOUT_PATH):
 		require_once 'logout.php';
 		break;

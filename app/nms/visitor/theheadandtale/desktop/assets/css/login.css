@@ -92,3 +92,23 @@
     font-size: 14px;
   }
 }
+
+a.authBtn {
+  background-color: lightgrey;
+  color: var(--black-color);
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  font-weight: 400;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 7px 0px;
+  border-radius: 7px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+a.authBtn img {
+  height: 35px;
+}

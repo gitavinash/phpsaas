@@ -1,17 +1,16 @@
 <?php
 
-  $redirect_url=((isset($redirect_url)) ? $redirect_url : '/dashboard/' );
+$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
-  if(isset($responseMsg)) {
+if (isset($responseMsg)) {
     echo "<script>alert('{$responseMsg}')</script>";
-  }
+}
 
-  if(isset($_COOKIE['user_data'])) {
-    
+if (isset($_COOKIE['user_data'])) {
+
     header("Location: {$redirect_url}");
     exit();
-
-  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -61,6 +60,14 @@
                         <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/">
                         <input type="submit" class="button" value="Sign up">
                     </div>
+                    <div class="or">
+                        <p>or</p>
+                    </div>
+                    <a href='/oauth/google/' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
+                            class="img-fluid" alt=""> login
+                        with
+                        google</a>
+                    <br />
                     <div class="login_input">
                         <p><br />Already have an Account? <a href="/login/">Log in</a></p>
                     </div>

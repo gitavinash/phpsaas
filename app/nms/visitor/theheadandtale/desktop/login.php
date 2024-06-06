@@ -35,13 +35,6 @@ if (isset($_COOKIE['user_data'])) {
             <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
         </div>
         <div class="login_content">
-            <!-- <div class="or">
-                <p>or</p>
-            </div> -->
-            <!-- <button><img src="assets/images/google.png" class="img-fluid" alt=""> login with google</button> -->
-            <!-- <div class="or">
-                <p>or</p>
-            </div> -->
             <!-- <button>sign in using email</button> -->
             <div class="form_box login">
                 <form method="POST" id="login">
@@ -63,6 +56,13 @@ if (isset($_COOKIE['user_data'])) {
                         <input type="submit" class="button" value="Sign in">
                     </div>
                 </form>
+                <div class="or">
+                    <p>or</p>
+                </div>
+                <a href='/oauth/google/?redirect_url=/manage-subscription/' class="authBtn"><img
+                        src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt=""> login
+                    with
+                    google</a>
                 <br />
                 <p>Don't have an account? <a href="/signup/">Sign up</a></p>
                 <div class="form_bottom">
@@ -74,6 +74,7 @@ if (isset($_COOKIE['user_data'])) {
             </div>
         </div>
     </div>
+    <?php require_once NOTIFICATION . 'index.php'; ?>
     <script src="<?php echo USER_JS ?>script.min.js"></script>
 </body>
 

@@ -7,6 +7,7 @@ define('MODULES', ROOT . '/lib/modules/');
 define('API_MODULES', ROOT . '/api/');
 define('ROUTER', ROOT . '/router/');
 define('RESOURCE', ROOT . '/lib/resource/');
+define('SOCIAL_LOGIN', RESOURCE . 'social-login/');
 define('PAYMENT_GATEWAY', RESOURCE . 'payment-gateway/');
 define('NOTIFICATION', RESOURCE . 'notification/');
 
