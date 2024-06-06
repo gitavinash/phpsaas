@@ -57,8 +57,10 @@
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand" href="index.html">
-                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png" class="logo logo-display" alt="Logo">
-                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png" class="logo logo-scrolled" alt="Logo">
+                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png"
+                            class="logo logo-display" alt="Logo">
+                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png"
+                            class="logo logo-scrolled" alt="Logo">
                     </a>
                 </div>
                 <!-- End Header Navigation -->
@@ -66,7 +68,8 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu">
 
-                    <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png" alt="Logo">
+                    <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png"
+                        alt="Logo">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                         <i class="fa fa-times"></i>
                     </button>
@@ -106,12 +109,14 @@
 
     <!-- Start Banner Area 
     ============================================= -->
-    <div class="banner-style-one-area text-light overflow-hidden" style="background-image: url(<?php echo USER_IMAGES ?>shape/2.png);">
+    <div class="banner-style-one-area text-light overflow-hidden"
+        style="background-image: url(<?php echo USER_IMAGES ?>shape/2.png);">
 
-        <div class="banner-shape-left-top" style="background-image: url(<?php echo USER_IMAGES ?>shape/5.png);"></div>
+        <div class="banner-shape-left-top"></div>
 
         <!-- Single Item -->
-        <div class="banner-style-one">
+        <div class="banner-style-one"
+            style="background-image: url(<?php echo USER_IMAGES ?>offer-banner.jpg); background-size: contain;background-repeat: no-repeat;background-position: center;">
             <div class="container">
                 <div class="content">
 
@@ -119,12 +124,13 @@
                         <div class="col-xl-6 col-lg-6 pr-50 pr-md-15 pr-xs-15">
                             <div class="information">
 
-                                <h2 class="wow fadeInUp" data-wow-delay="500ms" data-wow-duration="400ms">Get the best
+                                <!-- <h2 class="wow fadeInUp" data-wow-delay="500ms" data-wow-duration="400ms">Get the best
                                     offer for you</h2>
 
-                                <div class="button mt-40 wow fadeInUp" data-wow-delay="1200ms" data-wow-duration="400ms">
+                                <div class="button mt-40 wow fadeInUp" data-wow-delay="1200ms"
+                                    data-wow-duration="400ms">
                                     <a class="btn btn-md circle btn-gradient animation" href="#">Order Now</a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -134,7 +140,8 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <input class="form-control" id="name" name="name" placeholder="Name" type="text">
+                                                <input class="form-control" id="name" name="name" placeholder="Name"
+                                                    type="text">
                                                 <span class="alert-error"></span>
                                             </div>
                                         </div>
@@ -142,13 +149,15 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <input class="form-control" id="email" name="email" placeholder="Email*" type="email">
+                                                <input class="form-control" id="email" name="email" placeholder="Email*"
+                                                    type="email">
                                                 <span class="alert-error"></span>
                                             </div>
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <input class="form-control" id="phone" name="phone" placeholder="Phone" type="text">
+                                                <input class="form-control" id="phone" name="phone" placeholder="Phone"
+                                                    type="text">
                                                 <span class="alert-error"></span>
                                             </div>
                                         </div>
@@ -156,7 +165,8 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-group comments">
-                                                <textarea class="form-control" id="comments" name="message" placeholder="Message *"></textarea>
+                                                <textarea class="form-control" id="comments" name="message"
+                                                    placeholder="Message *"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -197,50 +207,60 @@
                                 <!-- Additional required wrapper -->
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t1.png">
+                                        <img
+                                            src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t1.png">
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t3.png">
+                                        <img
+                                            src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t3.png">
                                     </div>
 
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t2.png" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t2.png"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/upload/2024/05/1716027522_download.png" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/upload/2024/05/1716027522_download.png"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/upload/2023/12/1702735282_agilus.jpeg" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/upload/2023/12/1702735282_agilus.jpeg"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/upload/2023/12/1702119958_unipath_logo.jpg" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/upload/2023/12/1702119958_unipath_logo.jpg"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t6.png" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t6.png"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t5.png" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t5.png"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t9.png" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t9.png"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
                                     <!-- Single Item -->
                                     <div class="swiper-slide">
-                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t8.png" alt="Thumb">
+                                        <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/partner/t8.png"
+                                            alt="Thumb">
                                     </div>
                                     <!-- End Single Item -->
 
@@ -261,7 +281,8 @@
 
     <!-- Start Services 
     ============================================= -->
-    <div class="default-padding bottom-less text-center software-style-one-area" style="background-image: url(<?php echo USER_IMAGES ?>shape/17.png);">
+    <div class="default-padding bottom-less text-center software-style-one-area"
+        style="background-image: url(<?php echo USER_IMAGES ?>shape/17.png);">
 
         <div class="container">
             <div class="row">
@@ -472,11 +493,14 @@
                             <div class="accordion" id="faqAccordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
                                             What is the home sample collection service?
                                         </button>
                                     </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                    <div id="collapseOne" class="accordion-collapse collapse show"
+                                        aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Our home sample collection service allows you to conveniently get you
@@ -489,11 +513,14 @@
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo">
                                             Which areas do you serve?
                                         </button>
                                     </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                    <div id="collapseTwo" class="accordion-collapse collapse"
+                                        aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 We currently offer our home sample collection service in Delhi NCR. We
@@ -506,11 +533,14 @@
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingThree">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                            aria-expanded="false" aria-controls="collapseThree">
                                             How do I schedule a home sample collection appointment?
                                         </button>
                                     </h2>
-                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                    <div id="collapseThree" class="accordion-collapse collapse"
+                                        aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Scheduling an appointment is easy! You can fill in the form with your
@@ -523,11 +553,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingFour">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseFour"
+                                            aria-expanded="false" aria-controls="collapseFour">
                                             What types of diagnostic tests can be done through this service?
                                         </button>
                                     </h2>
-                                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                    <div id="collapseFour" class="accordion-collapse collapse"
+                                        aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Our home sample collection service covers a wide range of diagnostic
@@ -542,11 +575,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingFive">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseFive"
+                                            aria-expanded="false" aria-controls="collapseFive">
                                             Are there any preparation requirements for the tests?
                                         </button>
                                     </h2>
-                                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                    <div id="collapseFive" class="accordion-collapse collapse"
+                                        aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Some tests may require specific preparations, such as fasting for
@@ -560,11 +596,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingSix">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseSix"
+                                            aria-expanded="false" aria-controls="collapseSix">
                                             How long does the sample collection process take?
                                         </button>
                                     </h2>
-                                    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                                    <div id="collapseSix" class="accordion-collapse collapse"
+                                        aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 The time taken for the sample collection process varies depending on the
@@ -577,11 +616,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingSeven">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseSeven"
+                                            aria-expanded="false" aria-controls="collapseSeven">
                                             Is the sample collection process safe and hygienic?
                                         </button>
                                     </h2>
-                                    <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+                                    <div id="collapseSeven" class="accordion-collapse collapse"
+                                        aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Absolutely! We prioritize your safety and adhere to strict hygiene
@@ -595,11 +637,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingEight">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseEight"
+                                            aria-expanded="false" aria-controls="collapseEight">
                                             When will I receive my test results?
                                         </button>
                                     </h2>
-                                    <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
+                                    <div id="collapseEight" class="accordion-collapse collapse"
+                                        aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Test result turnaround time may vary based on the specific tests
@@ -611,11 +656,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingNine">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseNine"
+                                            aria-expanded="false" aria-controls="collapseNine">
                                             How will I receive my test results?
                                         </button>
                                     </h2>
-                                    <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#faqAccordion">
+                                    <div id="collapseNine" class="accordion-collapse collapse"
+                                        aria-labelledby="headingNine" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Your test results will be delivered to you securely through SMS, online
@@ -629,11 +677,14 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTen">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseTen"
+                                            aria-expanded="false" aria-controls="collapseTen">
                                             How can I pay for the services?
                                         </button>
                                     </h2>
-                                    <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#faqAccordion">
+                                    <div id="collapseTen" class="accordion-collapse collapse"
+                                        aria-labelledby="headingTen" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 We accept various payment methods, including credit/debit cards, UPI,
@@ -645,11 +696,14 @@
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingEleven">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseEleven"
+                                            aria-expanded="false" aria-controls="collapseEleven">
                                             Is there a cancellation or rescheduling policy?
                                         </button>
                                     </h2>
-                                    <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#faqAccordion">
+                                    <div id="collapseEleven" class="accordion-collapse collapse"
+                                        aria-labelledby="headingEleven" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             <p>
                                                 Yes, we understand that plans can change. If you need to cancel or
@@ -672,7 +726,8 @@
 
     <!-- Start Testimonials 
     ============================================= -->
-    <div class="testimonials-area bg-gray default-padding-bottom" style="background-image: url(<?php echo USER_IMAGES ?>shape/20.png);">
+    <div class="testimonials-area bg-gray default-padding-bottom"
+        style="background-image: url(<?php echo USER_IMAGES ?>shape/20.png);">
 
         <div class="container">
             <div class="heading-left">
@@ -787,7 +842,9 @@
                     <!-- Singel Item -->
                     <div class="col-lg-5 col-md-6 footer-item pr-50 pr-xs-15 pr-md-15">
                         <div class="f-item about">
-                            <img class="logo" src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/footer.png" alt="Logo">
+                            <img class="logo"
+                                src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/footer.png"
+                                alt="Logo">
 
                             <div class="f-item newsletter">
                                 <p>
