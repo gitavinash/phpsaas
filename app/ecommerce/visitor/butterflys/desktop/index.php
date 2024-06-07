@@ -83,7 +83,7 @@ if (sizeof($productCategoryData) != 0) {
 
                         extract($productData);
 
-                        echo "<div class='col-md-4 col-sm-2'>
+                        echo "<div class='col-md-3 col-sm-2'>
 												<a href='{$link_url}'>
 													<div class='col-card-4'>
 														<div class='event-card'>
