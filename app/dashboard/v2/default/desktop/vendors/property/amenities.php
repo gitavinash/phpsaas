@@ -20,6 +20,7 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_tit
 
 $typeDropDown = '<option value="">Select amenities type</option>
                                         <option value="basic_facilities" >Basic Facilities</option>
+                                        <option value="beauty_and_spa" >Beauty and Spa</option>
                                         <option value="food_and_drinks">Food and Drinks</option>
                                         <option value="payment_services">Payment Services</option>
                                         <option value="safety_andsecurity">Safety and Security</option>
