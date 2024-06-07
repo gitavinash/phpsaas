@@ -2,7 +2,6 @@
 
 require_once LOGIN_CHECK;
 $responseCode = 500;
-extract($data);
 
 if ($name != '') {
 

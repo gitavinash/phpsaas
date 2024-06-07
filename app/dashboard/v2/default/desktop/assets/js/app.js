@@ -1044,6 +1044,103 @@ $(".editAmenities").click(function (e) {
   $(".editAmenitiesBox").show();
 });
 
+// Amenities
+$("#addAmenities").on("click", function (e) {
+  e.preventDefault();
+  $("#addAmenities").hide();
+  var title = $("#name").val();
+  if (title != "") {
+    var data = new FormData(document.getElementById("addAmenitiesForm"));
+
+    $.ajax({
+      url: "/api/amenities/publish/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#addAmenities").show();
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter amenities name", "warning");
+    $("#addAmenities").show();
+  }
+});
+
+$("#updateAmenities").on("click", function (e) {
+  e.preventDefault();
+
+  $("#updateAmenities").hide();
+  var title = $("#editName").val();
+  if (title != "") {
+    var data = new FormData(document.getElementById("updateAmenitiesForm"));
+    data.append("id", updateAmenitiesId);
+
+    $.ajax({
+      url: "/api/amenities/update/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#updateAmenities").show();
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter amenities name", "warning");
+    $("#updateAmenities").show();
+  }
+});
+
+// Room types
+
+$(".addNewRoomType").click(function (e) {
+  e.preventDefault();
+  $(".popUp").hide();
+  document.querySelector(".roomTypeBox").style.display = "flex";
+  $(".roomTypeBox").show();
+});
+
+$(".editRoomType").click(function (e) {
+  e.preventDefault();
+  $(".popUp").hide();
+  updateAmenitiesId = $(this).attr("id");
+  amenitiesName = $(this).attr("data_name");
+  amenitiesDescription = $(this).attr("data_desc");
+  $("#updateAmenities").show();
+  $("#editName").val(amenitiesName);
+  $("#editDescription").val(amenitiesDescription);
+  document.querySelector(".editRoomTypeBox").style.display = "flex";
+  $(".editRoomTypeBox").show();
+});
+
 // Property
 
 $("#addProperty").click(function (e) {
@@ -1125,79 +1222,4 @@ $("#addProperty").click(function (e) {
 
 $("#updateProperty").click(function (e) {
   e.preventDefault();
-});
-
-// Amenities
-$("#addAmenities").on("click", function (e) {
-  e.preventDefault();
-  $("#addAmenities").hide();
-  var title = $("#name").val();
-  if (title != "") {
-    var data = new FormData(document.getElementById("addAmenitiesForm"));
-
-    $.ajax({
-      url: "/api/amenities/publish/",
-      type: "POST",
-      data: data,
-      processData: false,
-      contentType: false,
-      dataType: "JSON",
-      encrypt: "multipart/form-data",
-      success: function (response) {
-        popUpMessage("center", response.msg, response.status);
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
-      },
-      error: function (error, response) {
-        popUpMessage(
-          "center",
-          error.responseJSON.msg,
-          error.responseJSON.status
-        );
-        $("#addAmenities").show();
-      },
-    });
-  } else {
-    popUpMessage("center", "Kindly enter amenities name", "warning");
-    $("#addAmenities").show();
-  }
-});
-
-$("#updateAmenities").on("click", function (e) {
-  e.preventDefault();
-
-  $("#updateAmenities").hide();
-  var title = $("#editName").val();
-  if (title != "") {
-    var data = new FormData(document.getElementById("updateAmenitiesForm"));
-    data.append("id", updateAmenitiesId);
-
-    $.ajax({
-      url: "/api/amenities/update/",
-      type: "POST",
-      data: data,
-      processData: false,
-      contentType: false,
-      dataType: "JSON",
-      encrypt: "multipart/form-data",
-      success: function (response) {
-        popUpMessage("center", response.msg, response.status);
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
-      },
-      error: function (error, response) {
-        popUpMessage(
-          "center",
-          error.responseJSON.msg,
-          error.responseJSON.status
-        );
-        $("#updateAmenities").show();
-      },
-    });
-  } else {
-    popUpMessage("center", "Kindly enter amenities name", "warning");
-    $("#updateAmenities").show();
-  }
 });
