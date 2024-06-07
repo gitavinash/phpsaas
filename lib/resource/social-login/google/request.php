@@ -97,7 +97,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
                             $userId = mysqli_insert_id($connection);
 
-                            $createProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$userId}', '{$first_name}', '{$last_name}', '{$_SESSION['google_name']}', '{$mobile}', '{$_SESSION['google_email']}')");
+                            $createProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_image, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email) VALUES('{$userId}', '{$_SESSION['google_picture']}', '{$first_name}', '{$last_name}', '{$_SESSION['google_name']}', '{$mobile}', '{$_SESSION['google_email']}')");
 
                             $userSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(" . SITE_ID . ", '{$userId}', 'subscriber', 1)");
 
@@ -110,7 +110,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
                                 setcookie('user_name', base64_encode($_SESSION['google_name']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_image', base64_encode(''), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                                setcookie('user_image', base64_encode($_SESSION['google_picture']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_data', base64_encode($saltKey), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_type', base64_encode('subscriber'), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
