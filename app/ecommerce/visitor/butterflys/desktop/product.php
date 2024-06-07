@@ -129,39 +129,7 @@ include_once 'header.php';
                     </div>
                     <div class="similar-product">
                         <h2>Product Description</h2>
-                        <p><?php echo $product_description ?></p>
-                        <?php
-
-                        if (isset($delivery_information)) {
-
-                            if ($delivery_information != '') {
-
-                                echo '<ul><li>' . str_replace('<br />', '</li><li>', $delivery_information) . '</li></ul>';
-                            } else {
-
-                        ?>
-
-                        <?php
-
-                            }
-                        } else { ?>
-
-                        <ul>
-                            <li>The image displayed is indicative. Actual product may vary in design & shape
-                            </li>
-                            <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
-                            <li>The chosen delivery time is an estimate.</li>
-                            <li>Since flowers are perishable in nature, we will be able to attempt delivery of
-                                your
-                                order once.</li>
-                            <li>Occasionally, substitution of flowers is necessary due unavailability issues.
-                            </li>
-                        </ul>
-
-                        <?php
-                        }
-
-                        ?>
+                        <p><?php echo $product_highlight ?></p>
                     </div>
                     <!-- SKU  -->
                     <?php echo (($inventory_sku != '') ? "<div class='sku'><h4>SKU:</h4><h3>{$inventory_sku}</h3></div>" : "") ?>
@@ -171,7 +139,23 @@ include_once 'header.php';
     </div>
     </div>
 </section>
+<section class="section-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head-1">
+                    <h2>Product Description</h2>
+                    <span class="cart-bodr-h2"></span>
+                </div>
+            </div>
 
+            <div class="col-md-12">
+                <?php echo $product_description ?>
+            </div>
+        </div>
+
+    </div>
+</section>
 <section class="section-content">
     <div class="container">
         <div class="row">
