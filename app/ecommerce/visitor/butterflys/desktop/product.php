@@ -128,7 +128,7 @@ include_once 'header.php';
 
                     </div>
                     <div class="similar-product">
-                        <h2>Product Description</h2>
+                        <h2>Product highlight</h2>
                         <p><?php echo $product_highlight ?></p>
                     </div>
                     <!-- SKU  -->
