@@ -22,7 +22,6 @@ if ($name != '') {
                 $msg = 'Something went wrong while updating amenities';
             }
         } else {
-            $responseCode = 409;
             $msg = 'Invalid amenities details found';
         }
     }

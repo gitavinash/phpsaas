@@ -1,4 +1,3 @@
-// $(document).ready(function () {
 const urlQuery = new URLSearchParams(window.location.search);
 let dateRangeParams = urlQuery.get("daterange");
 let leadId = urlQuery.get("id");
@@ -25,27 +24,20 @@ $(window).on("load", function () {
   hidePageLoader();
 });
 
-function showNotification() {
-  console.log(`i m cluck`);
-  if (!("Notification" in window)) {
-    // Check if the browser supports notifications
-    alert("This browser does not support desktop notification");
-  } else if (Notification.permission === "granted") {
-    // Check whether notification permissions have already been granted;
-    // if so, create a notification
-    const notification = new Notification("Hi there!");
-    // …
-  } else if (Notification.permission !== "denied") {
-    // We need to ask the user for permission
-    Notification.requestPermission().then((permission) => {
-      // If the user accepts, let's create a notification
-      if (permission === "granted") {
-        const notification = new Notification("Hi there!");
-        // …
-      }
-    });
-  }
-}
+// function showNotification() {
+//   if (!("Notification" in window)) {
+//     alert("This browser does not support desktop notification");
+//   } else if (Notification.permission === "granted") {
+//     const notification = new Notification("Hi there!");
+//   } else if (Notification.permission !== "denied") {
+//     Notification.requestPermission().then((permission) => {
+//       if (permission === "granted") {
+//         const notification = new Notification("Hi there!");
+//         // …
+//       }
+//     });
+//   }
+// }
 
 // $(document).click(function () {
 //   showPageLoader();
@@ -790,25 +782,6 @@ $("#leadEditBtn").click(function (e) {
   e.preventDefault();
 });
 
-// Assign leads
-
-// $(".assignBtn").click(function (e) {
-//   var form = $(this).closest("form");
-
-//   // Get the values from the form
-//   var userId = form.find('select[name="userId"]').val();
-//   var leadId = form.find('input[name="leadId"]').val();
-//   var action = form.find('input[name="action"]').val();
-//   var type = form.find('input[name="type"]').val();
-
-//   // Do something with the values (for demonstration purposes, just log them)
-//   console.log("User ID:", userId);
-//   console.log("Lead ID:", leadId);
-//   console.log("Action:", action);
-//   console.log("Type:", type);
-//   e.preventDefault();
-// });
-
 // Update notes
 
 $("#updateNotes").click(function (e) {
@@ -1119,7 +1092,9 @@ $("#updateAmenities").on("click", function (e) {
   }
 });
 
+// #########################################################
 // Room types
+// #########################################################
 
 $(".addNewRoomType").click(function (e) {
   e.preventDefault();
@@ -1131,17 +1106,86 @@ $(".addNewRoomType").click(function (e) {
 $(".editRoomType").click(function (e) {
   e.preventDefault();
   $(".popUp").hide();
-  updateAmenitiesId = $(this).attr("id");
-  amenitiesName = $(this).attr("data_name");
-  amenitiesDescription = $(this).attr("data_desc");
-  $("#updateAmenities").show();
-  $("#editName").val(amenitiesName);
-  $("#editDescription").val(amenitiesDescription);
+  updateRoomTypeId = $(this).attr("id");
+  roomTypeName = $(this).attr("data_name");
+  roomTypeDescription = $(this).attr("data_desc");
+  $("#updateRoomType").show();
+  $("#editName").val(roomTypeName);
+  $("#editDescription").val(roomTypeDescription);
   document.querySelector(".editRoomTypeBox").style.display = "flex";
   $(".editRoomTypeBox").show();
 });
 
+$("#addRoomType").on("click", function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  if (name != "") {
+    var description = $("#description").val();
+    $.ajax({
+      url: "/api/room_type/publish/",
+      type: "POST",
+      data: {
+        name,
+        description,
+      },
+      dataType: "JSON",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#updateAmenities").show();
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter name of room type", "warning");
+  }
+});
+
+$("#updateRoomType").on("click", function (e) {
+  e.preventDefault();
+  var name = $("#editName").val();
+  if (name != "") {
+    var description = $("#editDescription").val();
+    $.ajax({
+      url: "/api/room_type/update/",
+      type: "POST",
+      data: {
+        id: updateRoomTypeId,
+        name,
+        description,
+      },
+      dataType: "JSON",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#updateAmenities").show();
+      },
+    });
+  } else {
+    popUpMessage("center", "Kindly enter name of room type", "warning");
+  }
+});
+
+// #########################################################
 // Property
+// #########################################################
 
 $("#addProperty").click(function (e) {
   e.preventDefault();

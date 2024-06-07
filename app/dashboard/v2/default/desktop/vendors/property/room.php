@@ -61,9 +61,9 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
+                                    <textarea type="text" name="description" id="description" placeholder="Description*"
                                         class="form-control" required></textarea>
-                                    <label class="form-lable" id="noteMsgLabel">Description</label>
+                                    <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                             </div>
                     </form>
@@ -92,12 +92,12 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                 </div>
                                 <div class="form-group">
                                     <p>Name <sup>*</sup></p>
-                                    <input id="name" name="name" type="text" />
+                                    <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
-                                        class="form-control" required></textarea>
-                                    <label class="form-lable" id="noteMsgLabel">Description</label>
+                                    <textarea type="text" name="description" id="editDescription"
+                                        placeholder="Description*" class="form-control" required></textarea>
+                                    <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                             </div>
                     </form>

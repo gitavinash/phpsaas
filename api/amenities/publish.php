@@ -15,7 +15,7 @@ if ($name != '') {
     if ($checkAmenities = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "amenities WHERE amenitie_title='{$name}'")) {
         if (mysqli_num_rows($checkAmenities) == 0) {
             if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "amenities(amenitie_thumbnail, amenitie_title, amenitie_description) VALUES('{$icon}', '{$name}', '{$description}')")) {
-                $responseCode = 200;
+                $responseCode = 201;
                 $status = 'success';
                 $msg = 'Amenities added successfully';
             } else {
