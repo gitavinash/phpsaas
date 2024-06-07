@@ -1245,6 +1245,7 @@ table.dataTable thead th {
     0 100px 80px rgba(0, 0, 0, 0.12);
   width: 60px;
   height: 60px;
+  z-index: 9999;
 }
 
 .shortcut a {

@@ -43,6 +43,9 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
 <h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All hostings list will be displayed her</span>
 </h2>
 <div class="main-box">
+    <div class="shortcut">
+        <a href="/dashboard/leads/add/"><i class="fi fi-rr-plus"></i></a>
+    </div>
     <section>
         <div class="filters">
             <div class="form-group">
@@ -149,66 +152,69 @@ LIMIT
                                 }
 
                     ?>
-                                <tr style="background: <?php echo $backgroundColor; ?>">
-                                    <td><?php echo $enquiry_first_name; ?></td>
-                                    <!-- <td><?php echo $enquiry_email; ?></td> -->
-                                    <td><?php echo $enquiry_mobile; ?></td>
-                                    <td><?php echo $enquiry_subject; ?></td>
-                                    <td><?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
-                                    <?php
+                    <tr style="background: <?php echo $backgroundColor; ?>">
+                        <td><?php echo $enquiry_first_name; ?></td>
+                        <!-- <td><?php echo $enquiry_email; ?></td> -->
+                        <td><?php echo $enquiry_mobile; ?></td>
+                        <td><?php echo $enquiry_subject; ?></td>
+                        <td><?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                        <?php
 
                                     if ($site_access_type != 'agent') { ?>
-                                        <td><?php echo $enquiry_source ?></td>
-                                        <td>
-                                            <form method="POST">
-                                                <?php
+                        <td><?php echo $enquiry_source ?></td>
+                        <td>
+                            <form method="POST">
+                                <?php
                                                 if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
-                                                    <select class="selectJS form-control" name="userId" required>
-                                                        <option value="">Select user</option>
-                                                        <?php
+                                <select class="selectJS form-control" name="userId" required>
+                                    <option value="">Select user</option>
+                                    <?php
 
                                                         for ($i = 0; $i < sizeof($userList); $i++) {
                                                             echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
                                                         }
 
                                                         ?>
-                                                    </select>
-                                                    <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
-                                                    <input type="hidden" name="action" value="assign">
-                                                    <input type="hidden" name="type" value="leads">
-                                                    <input type="submit" value="Assign lead to user" class="btn dataTableSubmitBtn dataTableBtn">
-                                                <?php
+                                </select>
+                                <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
+                                <input type="hidden" name="action" value="assign">
+                                <input type="hidden" name="type" value="leads">
+                                <input type="submit" value="Assign lead to user"
+                                    class="btn dataTableSubmitBtn dataTableBtn">
+                                <?php
                                                 } else {
                                                     echo $agent_display_name;
                                                 }
                                                 ?>
-                                            </form>
-                                        </td>
-                                    <?php
+                            </form>
+                        </td>
+                        <?php
                                     }
 
                                     ?>
-                                    <td>
-                                        <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
-                                    </td>
-                                    </td>
-                                    <td>
-                                        <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
-                                            lead details</a>
-                                        <?php
+                        <td>
+                            <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
+                        </td>
+                        </td>
+                        <td>
+                            <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
+                                class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
+                                lead details</a>
+                            <?php
 
                                         if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
 
 
-                                            <a href="#" class="btn dataTableBtn duplicateLead" id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
-                                                as duplicate lead</a>
+                            <a href="#" class="btn dataTableBtn duplicateLead"
+                                id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
+                                as duplicate lead</a>
 
-                                        <?php
+                            <?php
                                         }
 
                                         ?>
-                                    </td>
-                                </tr>
+                        </td>
+                    </tr>
                     <?php
                             }
                         }
