@@ -29,7 +29,8 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_par
 
                 for ($i = 0; $i < sizeof($amenitiesList); $i++) {
                     echo "
-                    <div class='featureList editAmenities' id='{$amenitiesList[$i]['amenitie_id']}' data_name='{$amenitiesList[$i]['amenitie_title']}' data_desc='{$amenitiesList[$i]['amenitie_description']}' >
+                    <div class='featureList editAmenities' id='{$amenitiesList[$i]['amenitie_id']}' data_name='{$amenitiesList[$i]['amenitie_title']}'data_image='" . (($amenitiesList[$i]['amenitie_thumbnail'] != '') ?
+                        $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$amenitiesList[$i]['amenitie_description']}' >
                         <img src='" . (($amenitiesList[$i]['amenitie_thumbnail'] != '') ?
                         $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$amenitiesList[$i]['amenitie_title']}</p>
@@ -116,6 +117,8 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_par
                         amenities</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
+                    <p>Current icon</p>
+                    <img src="" id="amenitiesIcon" alt="">
                 </div>
             </div>
         </div>

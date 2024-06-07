@@ -1010,9 +1010,11 @@ $(".editAmenities").click(function (e) {
   updateAmenitiesId = $(this).attr("id");
   amenitiesName = $(this).attr("data_name");
   amenitiesDescription = $(this).attr("data_desc");
+  amenitiesIcon = $(this).attr("data_image");
   $("#updateAmenities").show();
   $("#editName").val(amenitiesName);
   $("#editDescription").val(amenitiesDescription);
+  $("#amenitiesIcon").attr("src", amenitiesIcon);
   document.querySelector(".editAmenitiesBox").style.display = "flex";
   $(".editAmenitiesBox").show();
 });
