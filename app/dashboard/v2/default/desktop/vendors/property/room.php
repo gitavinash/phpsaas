@@ -57,7 +57,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <h4 class="heading">Add new room type</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Name <sup>*</sup></p>
+                                    <label class="form-lable">Name<sup>*</sup></label>
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
@@ -91,7 +91,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <h4 class="heading">Edit rooms</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Name <sup>*</sup></p>
+                                    <label class="form-lable">Name<sup>*</sup></label>
                                     <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">

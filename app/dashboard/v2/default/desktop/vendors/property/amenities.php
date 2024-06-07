@@ -127,7 +127,7 @@ $typeDropDown = '<option value="">Select amenities type</option>
                                     <h4 class="heading">Edit amenities</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Name<sup>*</sup></p>
+                                    <label class="form-lable">Name<sup>*</sup></label>
                                     <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
@@ -136,11 +136,14 @@ $typeDropDown = '<option value="">Select amenities type</option>
                                     <label class="form-lable" id="editDescriptionLabel">Description</label>
                                 </div>
                                 <div class="form-group">
-                                    <p>Icon ( size 100px x 100px )</p>
+                                    <label class="form-lable">Icon ( size 100px x 100px )</label>
                                     <input type="file" id="editIcon" name="icon" accept="image/*" />
                                 </div>
-                                <select class="selectJS form-control" name="category"
-                                    id="editType"><?php echo $typeDropDown ?></select>
+                                <div class="form-group">
+                                    <p>Type</p>
+                                    <select class="selectJS form-control" name="category"
+                                        id="editType"><?php echo $typeDropDown ?></select>
+                                </div>
                             </div>
                     </form>
                 </div>
