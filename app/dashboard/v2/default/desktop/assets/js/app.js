@@ -1002,6 +1002,7 @@ $(".addNewAmenities").click(function (e) {
   $(".popUp").hide();
   document.querySelector(".amenitiesBox").style.display = "flex";
   $(".amenitiesBox").show();
+  $("#type").val("basic_facilities").change();
 });
 
 $(".editAmenities").click(function (e) {
@@ -1011,9 +1012,15 @@ $(".editAmenities").click(function (e) {
   amenitiesName = $(this).attr("data_name");
   amenitiesDescription = $(this).attr("data_desc");
   amenitiesIcon = $(this).attr("data_image");
+  amenitiesType = $(this).attr("data_type");
   $("#updateAmenities").show();
   $("#editName").val(amenitiesName);
   $("#editDescription").val(amenitiesDescription);
+  if (amenitiesType != "") {
+    $("#editType").val(amenitiesType).change();
+  } else {
+    $("#editType").val("basic_facilities").change();
+  }
   $("#amenitiesIcon").attr("src", amenitiesIcon);
   document.querySelector(".editAmenitiesBox").style.display = "flex";
   $(".editAmenitiesBox").show();
