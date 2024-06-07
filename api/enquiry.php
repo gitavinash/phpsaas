@@ -179,71 +179,70 @@ $messageDB = json_encode($enquiryMeta, TRUE);
 if ($mobile != '') {
     if (is_numeric($mobile)) {
 
-        if (strlen($mobile) == 10) {
-            if ($checkUserEnquiry = mysqli_query($connection, "SELECT enquiry_time FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_site_id=" . SITE_ID . " ORDER BY enquiry_time DESC LIMIT 0, 1")) {
-                if (mysqli_num_rows($checkUserEnquiry) != 0) {
-                    extract(mysqli_fetch_assoc($checkUserEnquiry));
-                    $time_difference = time() - strtotime($enquiry_time);
-                    $time_difference_hours = $time_difference / (60 * 60);
-                    if ($time_difference_hours > 2) {
-                        $freshEnquiry = true;
-                    } else {
-                        $freshEnquiry = false;
-                    }
-                } else {
+        if ($checkUserEnquiry = mysqli_query($connection, "SELECT enquiry_time FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_site_id=" . SITE_ID . " ORDER BY enquiry_time DESC LIMIT 0, 1")) {
+            if (mysqli_num_rows($checkUserEnquiry) != 0) {
+                extract(mysqli_fetch_assoc($checkUserEnquiry));
+                $time_difference = time() - strtotime($enquiry_time);
+                $time_difference_hours = $time_difference / (60 * 60);
+                if ($time_difference_hours > 2) {
                     $freshEnquiry = true;
+                } else {
+                    $freshEnquiry = false;
                 }
+            } else {
+                $freshEnquiry = true;
+            }
+        }
+
+        if ($freshEnquiry == true) {
+
+            // Start record enquiry data into table
+
+            mysqli_query($connection, "START TRANSACTION");
+
+            // Check user is exiting or not
+
+            $findUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' OR user_mobile='{$mobile}' LIMIT 1");
+
+            $userId = 0;
+
+            if (mysqli_num_rows($findUser) != 0) {
+                $userInfo = mysqli_fetch_assoc($findUser);
+                $userId = $userInfo['user_id'];
             }
 
-            if ($freshEnquiry == true) {
+            // track traffic resource
 
-                // Start record enquiry data into table
+            $trafficSource = ((isset($_GET['utm_source']) ? $_GET['utm_source'] : ((isset($_GET['fbclid'])) ? 'facebook' : ((isset($_GET['gad_source'])) ? 'Google Adwords' : (isset($_GET['gclid']) ? 'Google Adwords' : ((isset($_GET['gad_source']) ? 'Google Adwords' : ((isset($_GET['wbraid'])) ? 'Google Adwords' : $trafficDomain = parse_url($_SERVER['HTTP_REFERER'])))))))));
+            $trafficSource = mysqli_real_escape_string($connection, ((isset($trafficDomain['host'])) ? (($trafficDomain['host'] != SITE_DOMAIN) ? $trafficDomain['host'] : '') : $trafficSource));
 
-                mysqli_query($connection, "START TRANSACTION");
+            $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-                // Check user is exiting or not
-
-                $findUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' OR user_mobile='{$mobile}' LIMIT 1");
-
-                $userId = 0;
-
-                if (mysqli_num_rows($findUser) != 0) {
-                    $userInfo = mysqli_fetch_assoc($findUser);
-                    $userId = $userInfo['user_id'];
-                }
-
-                // track traffic resource
-
-                $trafficSource = ((isset($_GET['utm_source']) ? $_GET['utm_source'] : ((isset($_GET['fbclid'])) ? 'facebook' : ((isset($_GET['gad_source'])) ? 'Google Adwords' : (isset($_GET['gclid']) ? 'Google Adwords' : ((isset($_GET['gad_source']) ? 'Google Adwords' : ((isset($_GET['wbraid'])) ? 'Google Adwords' : $trafficDomain = parse_url($_SERVER['HTTP_REFERER'])))))))));
-                $trafficSource = mysqli_real_escape_string($connection, ((isset($trafficDomain['host'])) ? (($trafficDomain['host'] != SITE_DOMAIN) ? $trafficDomain['host'] : '') : $trafficSource));
-
-                $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-                // Append query string if available
-                if (!empty($_SERVER['QUERY_STRING'])) {
-                    $currentUrl .= '?' . $_SERVER['QUERY_STRING'];
-                }
+            // Append query string if available
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $currentUrl .= '?' . $_SERVER['QUERY_STRING'];
+            }
 
 
-                $trafficMedium = mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : (($trafficSource == 'facebook') ? 'social' : ''))));
-                $trafficCampaign = mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '')));
+            $trafficMedium = mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : (($trafficSource == 'facebook') ? 'social' : ''))));
+            $trafficCampaign = mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '')));
 
-                if (SITE_ID == 35) {
-                    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
-                } else {
-                    $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
-                    $leadId = mysqli_insert_id($connection);
-                }
+            if (SITE_ID == 35) {
+                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
+            } else {
+                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
+                $leadId = mysqli_insert_id($connection);
+            }
 
-                $enquiryID = mysqli_insert_id($connection);
+            $enquiryID = mysqli_insert_id($connection);
 
-                if ($addNewEnquiry) {
-                    mysqli_query($connection, "COMMIT");
-                } else {
-                    mysqli_query($connection, "ROLLBACK");
-                }
+            if ($addNewEnquiry) {
+                mysqli_query($connection, "COMMIT");
+            } else {
+                mysqli_query($connection, "ROLLBACK");
+            }
 
-                $email_body = "
+            $email_body = "
     <h2>{$subject}</h2>
     <table>
         <tr>
@@ -262,27 +261,24 @@ if ($mobile != '') {
     </table>
     ";
 
-                if (isset($sender)) {
-                    if (!isset($doNotSendEmail)) {
-                        require SEND_EMAIL;
-                        require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
-                    }
+            if (isset($sender)) {
+                if (!isset($doNotSendEmail)) {
+                    require SEND_EMAIL;
+                    require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
                 }
             }
+        }
 
-            if (strpos($redirect_url, '/shipping/') !== false) {
-                $postUrlValue = "&name=" . urlencode($name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
-                header("Location: {$redirect_url}{$postUrlValue}", TRUE, 301);
-            } else {
-
-                if (!isset($redirect_url)) {
-                    $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($enquiryID);
-                }
-
-                header("Location: " . $redirect_url, TRUE, 301);
-            }
+        if (strpos($redirect_url, '/shipping/') !== false) {
+            $postUrlValue = "&name=" . urlencode($name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
+            header("Location: {$redirect_url}{$postUrlValue}", TRUE, 301);
         } else {
-            echo "<h2>Kindly enter valid indian mobile number</h2>";
+
+            if (!isset($redirect_url)) {
+                $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($enquiryID);
+            }
+
+            header("Location: " . $redirect_url, TRUE, 301);
         }
     } else {
         echo "<h2>Enter valid mobile number</h2>";
