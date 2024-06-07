@@ -1377,9 +1377,15 @@ section.form {
   border: none;
   float: left;
 }
-section.form .step-open-box {
+/* section.form .step-open-box {
   float: left;
   width: 100%;
+} */
+
+section.form .step-open-box {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 section.form .form-header {

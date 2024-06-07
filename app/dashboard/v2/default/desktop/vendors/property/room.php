@@ -3,7 +3,7 @@
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
 
-if ($roomsData = mysqli_query($connection, "SELECT category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {
+if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {
 
     if (mysqli_num_rows($roomsData) != 0) {
         $roomsList = array();
@@ -30,7 +30,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_title, category_imag
 
                 for ($i = 0; $i < sizeof($roomsList); $i++) {
                     echo "
-                    <div class='featureList updaterooms' >
+                    <div class='featureList editRoomType' id='" . $roomsList[$i]['category_id'] . "' data_name='" . $roomsList[$i]['category_title'] . "' data_desc='" . $roomsList[$i]['category_description'] . "' >
                         <img src='" . (($roomsList[$i]['category_image'] != '') ?
                         $roomsList[$i]['category_image'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$roomsList[$i]['category_title']}</p>
@@ -40,13 +40,13 @@ if ($roomsData = mysqli_query($connection, "SELECT category_title, category_imag
 
                 ?>
                 <div class="featureList">
-                    <a href="#" class="addNewrooms addNewBtn"><i class="fi fi-rr-add"></i></a>
+                    <a href="#" class="addNewRoomType addNewBtn"><i class="fi fi-rr-add"></i></a>
                 </div>
             </section>
         </div>
     </div>
 
-    <div class="popUp roomsBox">
+    <div class="popUp roomTypeBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
@@ -80,7 +80,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_title, category_imag
         </div>
     </div>
 
-    <div class="popUp editroomsBox">
+    <div class="popUp editRoomTypeBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">

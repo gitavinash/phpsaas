@@ -2,7 +2,7 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_parent_id, amenitie_title, amenitie_description, amenitie_is_deletable FROM " . TABLE_PREFIX . "amenities")) {
+if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_parent_id, amenitie_title, amenitie_description, amenitie_thumbnail, amenitie_is_deletable FROM " . TABLE_PREFIX . "amenities")) {
 
     if (mysqli_num_rows($amenitiesData) != 0) {
         $amenitiesList = array();
@@ -30,8 +30,8 @@ if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_par
                 for ($i = 0; $i < sizeof($amenitiesList); $i++) {
                     echo "
                     <div class='featureList editAmenities' id='{$amenitiesList[$i]['amenitie_id']}' data_name='{$amenitiesList[$i]['amenitie_title']}' data_desc='{$amenitiesList[$i]['amenitie_description']}' >
-                        <img src='" . (($amenitiesList[$i]['amenitie_image'] != '') ?
-                        $amenitiesList[$i]['amenitie_image'] : ADMIN_IMAGES . 'default-picture.png') . "' >
+                        <img src='" . (($amenitiesList[$i]['amenitie_thumbnail'] != '') ?
+                        $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$amenitiesList[$i]['amenitie_title']}</p>
                     </div>
                     ";
