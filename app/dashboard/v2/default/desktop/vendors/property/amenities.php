@@ -67,11 +67,11 @@ $typeDropDown = '<option value="">Select amenities type</option>
                 }
 
                 ?>
-                <div class="featureList">
-                    <a href="#" class="addNewAmenities addNewBtn"><i class="fi fi-rr-add"></i></a>
-                </div>
             </section>
         </div>
+    </div>
+    <div class="shortcut">
+        <a href="#" class="addNewAmenities"><i class="fi fi-rr-plus"></i></a>
     </div>
 
     <div class="popUp amenitiesBox">

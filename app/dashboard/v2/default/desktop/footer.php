@@ -1,17 +1,16 @@
 				</div>
 
 				<footer>
-					<div class="credit">
-						<p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
-								<a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>' target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP)) ?><sup class="trademark">TM</sup></a> | Made
-								with <i class="fi-rr-heart"></i> in
-								India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
-										Technologies</strong></a></p>
-					</div>
+				    <div class="credit">
+				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
+				                <a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
+				                    target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP)) ?><sup
+				                        class="trademark">TM</sup></a> | Made
+				                with <i class="fi-rr-heart"></i> in
+				                India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
+				                        Technologies</strong></a></p>
+				    </div>
 				</footer>
-				<div class="shortcut">
-					<a href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>" target="_blank" title="Support"><i class="fi-rr-headset"></i></a>
-				</div>
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
@@ -26,9 +25,9 @@
 				<?php
 
 				if ($site_access_type == 'agent') { ?>
-					<script>
-						const tempId = '<?php echo base64_encode(USER_ID) ?>';
-					</script>
+				<script>
+const tempId = '<?php echo base64_encode(USER_ID) ?>';
+				</script>
 				<?php
 				}
 

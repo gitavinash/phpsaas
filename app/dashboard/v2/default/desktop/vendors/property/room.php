@@ -39,8 +39,8 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                 }
 
                 ?>
-                <div class="featureList">
-                    <a href="#" class="addNewRoomType addNewBtn"><i class="fi fi-rr-add"></i></a>
+                <div class="shortcut">
+                    <a href="#" class="addNewRoomType"><i class="fi fi-rr-plus"></i></a>
                 </div>
             </section>
         </div>

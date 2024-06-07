@@ -72,6 +72,8 @@ if (isset($daterange)) {
                 </form> -->
             </div>
             <ul>
+                <li><a href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
+                        target="_blank" title="Support"><i class="fi-rr-headset" style="color: #167347;"></i></a></li>
                 <li><a href="#" onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
