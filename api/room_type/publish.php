@@ -9,7 +9,7 @@ if ($name != '') {
 			if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "category(category_title, category_description, category_site_id, category_owner_id, category_type) VALUES('{$name}', '{$description}', '" . SITE_ID . "', '" . USER_ID . "', 'room')")) {
 				$status = 'success';
 				$responseCode = 200;
-				$msg = 'Room type updated successfully';
+				$msg = 'New Room type added successfully';
 			} else {
 				$msg = mysqli_error($connection);
 			}
