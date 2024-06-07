@@ -135,7 +135,7 @@ if (isset($_FILES)) {
 							}
 						} else {
 
-							echo 'Unable to move file';
+							$msg = 'Unable to move file';
 						}
 					}
 				} else {
