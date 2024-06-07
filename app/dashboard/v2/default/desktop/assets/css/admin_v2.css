@@ -2324,7 +2324,7 @@ section.form
   box-sizing: border-box;
   text-align: center;
   width: 150px;
-  height: 120px;
+  height: 140px;
   font-size: 14px;
   letter-spacing: 1px;
   line-height: 18px;
@@ -2334,6 +2334,8 @@ section.form
   background: #ebf5fb;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  word-wrap: break-word;
+  line-height: 18px;
 }
 
 .featureList:first-child {
