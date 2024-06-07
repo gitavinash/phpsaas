@@ -73,19 +73,17 @@ if (sizeof($productCategoryData) != 0) {
                 </div>
             </div>
 
-            <div class="col-md-12">
+            <?php
 
-                <?php
+            if ($productList = mysqli_query($connection, "SELECT link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 20")) {
 
-                if ($productList = mysqli_query($connection, "SELECT link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 20")) {
+                if (mysqli_num_rows($productList) != 0) {
 
-                    if (mysqli_num_rows($productList) != 0) {
+                    while ($productData = mysqli_fetch_assoc($productList)) {
 
-                        while ($productData = mysqli_fetch_assoc($productList)) {
+                        extract($productData);
 
-                            extract($productData);
-
-                            echo "<div class='col-md-4 col-sm-2'>
+                        echo "<div class='col-md-4 col-sm-2'>
 												<a href='{$link_url}'>
 													<div class='col-card-4'>
 														<div class='event-card'>
@@ -96,13 +94,11 @@ if (sizeof($productCategoryData) != 0) {
 													</div>
 												</a>
 											</div>";
-                        }
                     }
                 }
+            }
 
-                ?>
-
-            </div>
+            ?>
 
         </div>
 
