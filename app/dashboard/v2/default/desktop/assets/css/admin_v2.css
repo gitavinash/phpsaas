@@ -1991,10 +1991,10 @@ section.form
   margin-top: 20px !important;
 }
 
-.popUp .contentArea .form-group:last-child {
+/* .popUp .contentArea .form-group:last-child {
   margin-bottom: 0px;
   margin-top: 0px;
-}
+} */
 
 .popUp .actionArea {
   min-height: 500px;

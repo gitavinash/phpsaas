@@ -4,9 +4,8 @@ $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id']))
 
 
 if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {
-
+    $roomsList = array();
     if (mysqli_num_rows($roomsData) != 0) {
-        $roomsList = array();
         while ($data = mysqli_fetch_assoc($roomsData)) {
             $roomsList[] = $data;
         }
@@ -28,14 +27,16 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
             <section>
                 <?php
 
-                for ($i = 0; $i < sizeof($roomsList); $i++) {
-                    echo "
+                if (count($roomsList) > 0) {
+                    for ($i = 0; $i < sizeof($roomsList); $i++) {
+                        echo "
                     <div class='featureList editRoomType' id='" . $roomsList[$i]['category_id'] . "' data_name='" . $roomsList[$i]['category_title'] . "' data_desc='" . $roomsList[$i]['category_description'] . "' >
                         <img src='" . (($roomsList[$i]['category_image'] != '') ?
-                        $roomsList[$i]['category_image'] : ADMIN_IMAGES . 'default-picture.png') . "' >
+                            $roomsList[$i]['category_image'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$roomsList[$i]['category_title']}</p>
                     </div>
                     ";
+                    }
                 }
 
                 ?>
@@ -61,8 +62,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="description" placeholder="Description*"
-                                        class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="description" placeholder="Description*" class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                             </div>
@@ -95,8 +95,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="editDescription"
-                                        placeholder="Description*" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="editDescription" placeholder="Description*" class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                             </div>

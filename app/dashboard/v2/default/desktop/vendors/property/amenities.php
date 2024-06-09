@@ -3,9 +3,8 @@
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
 if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_title, amenitie_description, amenitie_thumbnail, amenitie_is_deletable, amenitie_type FROM " . TABLE_PREFIX . "amenities")) {
-
+    $amenitiesList = array();
     if (mysqli_num_rows($amenitiesData) != 0) {
-        $amenitiesList = array();
         while ($data = mysqli_fetch_assoc($amenitiesData)) {
             $amenitiesList[] = $data;
         }
@@ -55,15 +54,17 @@ $typeDropDown = '<option value="">Select amenities type</option>
             <section>
                 <?php
 
-                for ($i = 0; $i < sizeof($amenitiesList); $i++) {
-                    echo "
-                    <div class='featureList editAmenities' id='{$amenitiesList[$i]['amenitie_id']}' data_name='{$amenitiesList[$i]['amenitie_title']}'data_image='" . (($amenitiesList[$i]['amenitie_thumbnail'] != '') ?
-                        $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$amenitiesList[$i]['amenitie_description']}' data_type='{$amenitiesList[$i]['amenitie_type']}' >
+                if (count($amenitiesList) > 0) {
+                    for ($i = 0; $i < sizeof($amenitiesList); $i++) {
+                        echo "
+                    <div class='featureList editAmenities' id='{$amenitiesList[$i]['amenitie_id']}' data_name='{$amenitiesList[$i]['amenitie_title']}' data_image='" . (($amenitiesList[$i]['amenitie_thumbnail'] != '') ?
+                            $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$amenitiesList[$i]['amenitie_description']}' data_type='{$amenitiesList[$i]['amenitie_type']}' >
                         <img src='" . (($amenitiesList[$i]['amenitie_thumbnail'] != '') ?
-                        $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
+                            $amenitiesList[$i]['amenitie_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$amenitiesList[$i]['amenitie_title']}</p>
                     </div>
                     ";
+                    }
                 }
 
                 ?>

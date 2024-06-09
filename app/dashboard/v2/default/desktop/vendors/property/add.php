@@ -20,7 +20,7 @@
                         </div>
                         <div class="form-group">
                             <textarea name="description" id="description" cols="30" rows="10"></textarea>
-                            <label class="form-lable" id="Label">About property<sup>*</sup></label>
+                            <label class="form-lable" id="Label">About property</label>
                         </div>
                         <div class="form-group">
                             <textarea name="address" id="address" cols="30" rows="10"></textarea>
