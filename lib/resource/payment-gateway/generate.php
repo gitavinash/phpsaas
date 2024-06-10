@@ -50,6 +50,7 @@ if (isset($id)) {
             $paymentAmount = $order_total_price + ((isset($deliveryFees)) ? $deliveryFees : 0);
 
             $paymentAmount = str_replace(",", "", number_format($paymentAmount, 2));
+            $cartProduct = rtrim($cartProduct, ",");
 
             $pgFile = PAYMENT_GATEWAY . PG_NAME . '/' . ((isset($urlStructure[1])) ? $urlStructure[1] : 'generate') . '.php';
 

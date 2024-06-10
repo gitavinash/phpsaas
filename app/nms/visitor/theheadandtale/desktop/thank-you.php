@@ -1,11 +1,11 @@
 <?php
 
-if (!isset($txn_id)) {
+if (!isset($order_id)) {
     echo "Something went wrong";
     exit();
 }
 
-if ($checkTransaction = mysqli_query($connection, "SELECT product_id, product_title, transaction_user_id, transaction_type FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "product ON order_product_id=product_id WHERE transaction_id=" . base64_decode($txn_id) . " AND transaction_status=1 AND transaction_site_id=" . SITE_ID)) {
+if ($checkTransaction = mysqli_query($connection, "SELECT product_id, product_title, transaction_user_id, transaction_type FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "product ON order_product_id=product_id WHERE transaction_order_id=" . base64_decode($order_id) . " AND transaction_status=1 AND transaction_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkTransaction) != 0) {
         extract(mysqli_fetch_assoc($checkTransaction));
 
