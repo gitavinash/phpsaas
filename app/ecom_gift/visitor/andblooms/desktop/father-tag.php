@@ -11,7 +11,7 @@ if (is_array($tagPost)) {
 
 <!-- section global platform start -->
 <section class="featured-banner">
-    <img src="<?php echo USER_IMAGES ?>father-day-banner.jpg" alt="">
+    <img src="<?php echo USER_IMAGES ?>fathers-day-banner.jpg" alt="">
     <div class="container">
         <div class="row">
             <div class="col-12">
