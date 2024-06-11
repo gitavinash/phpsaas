@@ -1,0 +1,35 @@
+.access_group{
+    background: var(--white-color);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.access_group__right{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: end;
+}
+.user_title{
+    width: 100%;
+}
+.access_search{
+    display: flex;
+    gap: 18px;
+    width: 70%;
+}
+.access_search input{
+    border: 1px solid #dedede;
+}
+.access_search input::placeholder{
+    color: var(--grey-fade);
+}
+.access_group__container{
+    margin-top: 0;
+}
+.access_sub__heading{
+    margin-top: 1rem;
+}

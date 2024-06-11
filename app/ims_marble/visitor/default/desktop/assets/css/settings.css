@@ -1,0 +1,77 @@
+.profile_box{
+    background-color: var(--white-color);
+    padding: 23px 23px 300px;
+    border-radius: 8px;
+}
+.profile_box__top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.profile_left{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.profile_left h6{
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--red-color);
+}
+.profile_right{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.edit img{
+    width: 39px;
+}
+.star img{
+    width: 25px;
+}
+.user_img img{
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+.profile_details{
+    margin-top: 12px;
+}
+.profile_details__content{
+    margin-top: 25px;
+}
+.profile_flex{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    font-size: 18px;
+}
+
+/* right card */
+.recent_heading{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.recent_heading h3{
+    color: var(--main-color);
+    font-size: 24px;
+    font-weight: 500;
+}
+.recent_wrapper{
+    margin-top: 30px;
+}
+.recent_wrapper__content{
+    margin-top: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.recent_wrapper__content h6{
+    color: var(--grey-fade);
+    font-size: 18px;
+}
+.recent_wrapper__content p{
+    font-size: 18px;
+    color: var(--grey-color);
+}

@@ -1,0 +1,125 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700;800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Karla", sans-serif;
+}
+:root {
+  --black-color: #000;
+  --white-color: #fafafa;
+  --white-fade: #f8f9fa;
+  --main-color: #00647a;
+  --red-color: #ba3135;
+  --secondory-red: #fd411c;
+  --grey-color: #444444;
+  --grey-fade: #888888;
+  --sky-blue: #edf4fe;
+  --sky-blue-fade: #acb1ce;
+  --blue-color: #2a61ff;
+  --blue-fade: #ecf1ff;
+  --yellow-color: #ffbb36;
+  --yellow-fade: #fff9ef;
+  --green-color: #00a94c;
+  --green-fade: #e9ffe9;
+  --green-shade: #bfdbe1;
+  --border-color: #e5ecf2;
+  --silver-color: #dedede;
+}
+h1,
+h3,
+h6,
+p {
+  margin-bottom: 0 !important;
+}
+a {
+  text-decoration: none !important;
+}
+.global_btn {
+  border: 1px solid var(--main-color);
+  background-color: var(--main-color);
+  color: var(--white-color) !important;
+  font-size: 18px;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 4px;
+}
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 500;
+}
+input,
+textarea {
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  padding: 14px;
+  color: var(--grey-color) !important;
+}
+input:focus,
+textarea:focus {
+  border: 1px solid var(--main-color) !important;
+  outline: none;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--grey-color);
+  font-size: 18px;
+  font-weight: 500;
+}
+.form-select {
+  /* background-image: url('../images/select.png') !important; */
+}
+.green_btn {
+  background: var(--main-color) !important;
+  color: var(--white-color) !important;
+  font-size: 18px !important;
+}
+.cancel_btn {
+  background: #eff0f1 !important;
+  color: var(--black-fade) !important;
+  font-size: 18px !important;
+}
+/* color */
+.red {
+  color: var(--secondory-red);
+}
+.blue {
+  color: var(--blue-color);
+}
+
+/* datepicker css */
+.daterangepicker .calendar-table td {
+  font-size: 16px !important;
+}
+.daterangepicker .ranges li {
+  font-size: 16px !important;
+}
+.daterangepicker .calendar-table th {
+  font-size: 16px !important;
+}
+.daterangepicker .drp-selected {
+  font-size: 16px !important;
+}
+.daterangepicker .drp-buttons .btn {
+  font-size: 16px !important;
+}
+
+.modal.show .modal-dialog {
+  transform: translate(0, 24%) !important;
+}
+
+@media (max-width: 576px) {
+  .global_btn {
+    font-size: 16px;
+  }
+  label {
+    font-size: 16px !important;
+  }
+  input {
+    padding: 8px;
+  }
+}
