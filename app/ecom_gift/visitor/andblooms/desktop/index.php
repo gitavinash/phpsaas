@@ -10,7 +10,7 @@ include_once 'header.php';
             <div class="card-ban">
                 <?php
 
-                if ($desktopSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slide_site_id=" . SITE_ID)) {
+                if ($desktopSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slide_site_id=" . SITE_ID . " ORDER BY slide_update DESC")) {
                     $numberOfSlider = mysqli_num_rows($desktopSlider);
                     if ($numberOfSlider != 0) {
                         while ($desktopSliderData = mysqli_fetch_assoc($desktopSlider)) {
