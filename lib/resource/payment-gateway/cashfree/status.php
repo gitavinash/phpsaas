@@ -2,7 +2,7 @@
 
 if (isset($orderId)) {
 
-    echo $orderId = base64_decode($orderId);
+    $orderId = base64_decode($orderId);
 
     if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_type FROM " . TABLE_PREFIX . "transaction WHERE transaction_order_id={$orderId} AND transaction_site_id=" . SITE_ID)) {
 
@@ -68,11 +68,14 @@ if (isset($orderId)) {
                 if ($updateTransaction && $updateOrderStatus && $updateCartStatus) {
                     mysqli_query($connection, "COMMIT");
                     $orderId = base64_encode($orderId);
-                    header("Location: /thank-you/?order_id={$orderId}", TRUE, 301);
+                    if ($transactionStatus == 1) {
+                        header("Location: /thank-you/?order_id={$orderId}", TRUE, 301);
+                    } else {
+                        header("Location: /error/?order_id={$orderId}", TRUE, 301);
+                    }
                 } else {
                     echo "<h1>Something went wrong while trying to update the payment status into the database</h1>";
                     mysqli_query($connection, "ROLLBACK");
-                    // header("Location: /error/?order_id={$orderId}", TRUE, 301);
                 }
             } else {
                 echo "<h1>Something went wrong while trying to fetch payment status</h1>";
