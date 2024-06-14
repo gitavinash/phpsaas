@@ -7,6 +7,9 @@
         <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
                     class="fi-rr-home"></i> Dashboard</a></li>
 
+        <?php
+
+        if ($site_access_type == 'administrator' || $site_access_type == 'sales_executive') { ?>
         <li class="header-section-name">
             <p>Leads<span>Lead management.</span></p>
         </li>
@@ -46,13 +49,113 @@
             </div>
         </li>
 
+        <li <?php echo ((strpos(ADMIN_BASE_URL, '/sales/') !== false) ? 'class="active"' : '') ?>>
+            <a href="sales/"><i class="fi fi-rr-calculator-bill"></i> Sales</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="sales/list/"><i class="fi-rr-apps-sort"></i> All sales</a></li>
+                    <li><a href="sales/add/"><i class="fi fi-rr-add"></i> Add new sale</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="sales/list/"><i class="fi-rr-apps-sort"></i> All sales</a></li>
+                    <li><a href="sales/add/"><i class="ADMfi-rr-add"></i> Add new sale</a></li>
+                </ul>
+            </div>
+        </li>
+        <?php
+        }
+
+        ?>
+
+        <?php
+
+        if ($site_access_type == 'administrator' || $site_access_type == 'accounts') { ?>
+
         <li class="header-section-name">
             <p>Sales<span>Sales management.</span></p>
         </li>
 
+        <li <?php echo ((strpos(ADMIN_BASE_URL, '/sales_request/') !== false) ? 'class="active"' : '') ?>>
+            <a href="sales_request/"><i class="fi fi-rr-memo-circle-check"></i> Sales requests</a>
+            <div class=" side-menu">
+                <ul>
+                    <li><a href="sales_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+                    <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="sales_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+                    <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li <?php echo ((strpos(ADMIN_BASE_URL, '/return_request/') !== false) ? 'class="active"' : '') ?>>
+            <a href="return_request/"><i class="fi fi-rr-undo"></i> Return requests</a>
+            <div class=" side-menu">
+                <ul>
+                    <li><a href="return_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+                    <li><a href="return_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="return_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+                    <li><a href="return_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <?php
+        }
+
+        ?>
+
+        <?php
+
+        if ($site_access_type == 'administrator' || $site_access_type == 'superwiser') { ?>
         <li class="header-section-name">
             <p>Inventory<span>Inventory management.</span></p>
         </li>
+
+        <li <?php echo ((strpos(ADMIN_BASE_URL, '/book_keeping/') !== false) ? 'class="active"' : '') ?>>
+            <a href="book_keeping/"><i class="fi fi-rr-warehouse-alt"></i> Book keeping</a>
+            <div class=" side-menu">
+                <ul>
+                    <li><a href="book_keeping/list/"><i class="fi-rr-apps-sort"></i> All blocks</a></li>
+                    <li><a href="book_keeping/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="book_keeping/list/"><i class="fi-rr-apps-sort"></i> All blocks</a></li>
+                    <li><a href="book_keeping/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li <?php echo ((strpos(ADMIN_BASE_URL, '/restock/') !== false) ? 'class="active"' : '') ?>>
+            <a href="restock/"><i class="fi fi-rr-undo"></i> Restock</a>
+            <div class=" side-menu">
+                <ul>
+                    <li><a href="restock/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+                    <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="restock/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+                    <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
+                </ul>
+            </div>
+        </li>
+        <?php
+        }
+
+        ?>
 
         <li class="header-section-name">
             <p>Setting<span>Manage application.</span></p>
