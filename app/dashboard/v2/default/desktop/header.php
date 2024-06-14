@@ -97,16 +97,86 @@ if (isset($daterange)) {
 
     <aside>
         <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+        <nav class="side-nav">
+            <ul>
+                <li class="header-section-name">
+                    <p>Dashboard<span>View performance reports.</span></p>
+                </li>
 
-        <?php
-        $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
+                            class="fi-rr-home"></i> Dashboard</a></li>
 
-        if (file_exists($appAsideFile)) {
-            require_once $appAsideFile;
-        } else {
-            require_once $appDashboardDirectory . 'aside/default.php';
-        }
-        ?>
+                <?php
+                $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
+
+                if (file_exists($appAsideFile)) {
+                    require_once $appAsideFile;
+                } else {
+                    require_once $appDashboardDirectory . 'aside/default.php';
+                }
+                ?>
+
+                <li class="header-section-name">
+                    <p>Setting<span>Manage application.</span></p>
+                </li>
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="setting/"><i class="fi-rr-settings"></i> Setting</a>
+                    <div class="side-menu">
+                        <ul>
+                            <?php
+                            if ($site_access_type == 'administrator') { ?>
+
+                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <?php } ?>
+                            <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
+                            <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+
+                            <?php
+
+                            if ($site_access_type == 'administrator') { ?>
+
+                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <?php } ?>
+                            <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
+                            <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <?php
+
+                if ($site_access_type == 'administrator') { ?>
+
+
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="users/"><i class="fi fi-rr-user"></i> Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
+                        </ul>
+                    </div>
+                </li>
+
+                <?php }
+                ?>
+
+                <li class="appVersion">
+                    <p>App version : <?php echo ALEYA_APP_VERSION ?></p>
+                </li>
+            </ul>
+        </nav>
 
     </aside>
 
