@@ -70,7 +70,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accounts') { ?
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/sales_request/') !== false) ? 'class="active"' : '') ?>>
     <a href="sales_request/"><i class="fi fi-rr-memo-circle-check"></i> Sales requests</a>
-    <div class=" side-menu">
+    <div class="side-menu">
         <ul>
             <li><a href="sales_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
             <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
@@ -86,7 +86,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accounts') { ?
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/return_request/') !== false) ? 'class="active"' : '') ?>>
     <a href="return_request/"><i class="fi fi-rr-undo"></i> Return requests</a>
-    <div class=" side-menu">
+    <div class="side-menu">
         <ul>
             <li><a href="return_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
             <li><a href="return_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
@@ -112,25 +112,25 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser') {
     <p>Inventory<span>Inventory management.</span></p>
 </li>
 
-<li <?php echo ((strpos(ADMIN_BASE_URL, '/book_keeping/') !== false) ? 'class="active"' : '') ?>>
-    <a href="book_keeping/"><i class="fi fi-rr-warehouse-alt"></i> Book keeping</a>
-    <div class=" side-menu">
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/inventory/') !== false) ? 'class="active"' : '') ?>>
+    <a href="inventory/"><i class="fi fi-rr-inventory-alt"></i> Inventory</a>
+    <div class="side-menu">
         <ul>
-            <li><a href="book_keeping/list/"><i class="fi-rr-apps-sort"></i> All blocks</a></li>
-            <li><a href="book_keeping/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
+            <li><a href="inventory/list/"><i class="fi-rr-apps-sort"></i> All blocks</a></li>
+            <li><a href="inventory/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="book_keeping/list/"><i class="fi-rr-apps-sort"></i> All blocks</a></li>
-            <li><a href="book_keeping/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
+            <li><a href="inventory/list/"><i class="fi-rr-apps-sort"></i> All blocks</a></li>
+            <li><a href="inventory/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
         </ul>
     </div>
 </li>
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/restock/') !== false) ? 'class="active"' : '') ?>>
     <a href="restock/"><i class="fi fi-rr-undo"></i> Restock</a>
-    <div class=" side-menu">
+    <div class="side-menu">
         <ul>
             <li><a href="restock/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
             <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
@@ -143,6 +143,35 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser') {
         </ul>
     </div>
 </li>
+<?php
+}
+
+?>
+
+<?php
+
+if ($site_access_type == 'administrator') { ?>
+
+<li class="header-section-name">
+    <p>Warehouse<span>Warehouse management.</span></p>
+</li>
+
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/warehouse/') !== false) ? 'class="active"' : '') ?>>
+    <a href="warehouse/"><i class="fi fi-rr-warehouse-alt"></i> Warehouse</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="warehouse/list/"><i class="fi-rr-apps-sort"></i> All warehouses</a></li>
+            <li><a href="warehouse/add/"><i class="fi fi-rr-add"></i> Add new warehouse</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="warehouse/list/"><i class="fi-rr-apps-sort"></i> All warehouses</a></li>
+            <li><a href="warehouse/add/"><i class="fi fi-rr-add"></i> Add new warehouse</a></li>
+        </ul>
+    </div>
+</li>
+
 <?php
 }
 
