@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <!-- navbar end -->
@@ -199,6 +199,9 @@
                     <h3>Website Designing</h3>
                     <p>Crafting captivating websites tailored to your brand. From sleek designs to seamless user
                         experiences, we elevate your online presence. Let us bring your vision to life!</p>
+                    <p><strong>Starting price:</strong> ₹ 14,999/-<br /><a href="https://pay.blumox.com/"> Let's
+                            start</a>
+                    </p>
                 </div>
             </div>
             <div class="service_wrapper__content-box">
@@ -210,6 +213,8 @@
                     <p>We offers expert website development services. We specialize in creating dynamic, responsive
                         sites that engage your audience and drive results. Elevate your online presence with our
                         tailored solutions."</p>
+                    <p><strong>Starting price:</strong> ₹ 24,999/-<br /><a href="https://pay.blumox.com/"> Let's
+                            start</a>
                 </div>
             </div>
             <div class="service_wrapper__content-box">
@@ -220,6 +225,8 @@
                     <h3>Mobile App Development</h3>
                     <p>We specializes in iOS & Android app development. We offer innovative solutions tailored to your
                         needs, ensuring seamless user experiences. Elevate your business with our expertise</p>
+                    <p><strong>Starting price:</strong> ₹ 49,999/-<br /><a href="https://pay.blumox.com/"> Let's
+                            start</a>
                 </div>
             </div>
             <div class="service_wrapper__content-box">
@@ -230,6 +237,9 @@
                     <h3>DevOps Solutions</h3>
                     <p>We offers comprehensive DevOps solutions, streamlining development and operations for seamless
                         integration and delivery. Enhance your agility and efficiency with our expertise.</p>
+                    <p><strong>Starting price:</strong> ₹ 1,499/- ( per hour )<br /><a href="https://pay.blumox.com/">
+                            Let's
+                            start</a>
                 </div>
             </div>
         </div>
@@ -546,6 +556,6 @@
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
