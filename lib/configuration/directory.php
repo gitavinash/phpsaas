@@ -10,7 +10,7 @@ define('RESOURCE', ROOT . '/lib/resource/');
 define('SOCIAL_LOGIN', RESOURCE . 'social-login/');
 define('PAYMENT_GATEWAY', RESOURCE . 'payment-gateway/');
 define('NOTIFICATION', RESOURCE . 'notification/');
-
+define('QR_CODE', RESOURCE . 'qrcode/');
 define('CONTLO', RESOURCE . 'contlo/');
 define('CONTLO_API_URL', 'https://api.contlo.com/v1/track');
 

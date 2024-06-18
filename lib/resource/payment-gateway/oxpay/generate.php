@@ -58,6 +58,18 @@
         text-align: center;
         font-size: 48px
     }
+
+    .qrCode {
+        text-align: center;
+    }
+
+    .qrCode img {
+        width: 300px;
+    }
+
+    img.apps {
+        padding: 10px 0px;
+    }
     </style>
 </head>
 
@@ -80,6 +92,36 @@
             </div>
         </div>
         <div class="card" style="width: 100%;">
+            <?php
+
+            $defaultUPIAppURL = "upi://pay?pa=" . PG_UPI_ADDRESS . "&pn=." . urlencode(SITE_NAME) . "&tr={$order_id}&cu=INR&mc=0000&am={ $order_total_price}&url=" . SITE_URL . "'/payment/status/' ?>";
+
+
+            if (strtolower(SITE_VERSION) == "desktop") {
+
+            // Generate QR Code
+
+            require_once QR_CODE . 'qrlib.php';
+            $uploadPath = ROOT . '/upload/qrcode/';
+            if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+            }
+
+            $qrCodeFile = $uploadPath . strtolower(PG_UPI_ADDRESS) . '.png';
+            if (!file_exists($qrCodeFile)) {
+            QRcode::png($defaultUPIAppURL, $qrCodeFile, 'H', 14, 14);
+            }
+            $publicURL = str_replace(ROOT, '', $qrCodeFile);
+            ?>
+
+            <div class='qrCode'>
+                <img src='<?php echo $publicURL ?>'>
+                <p>Sacn using any UPI QR App</p>
+                <p><img src="/lib/resource/payment-gateway/oxpay/upi_apps.webp" class="apps"></p>
+            </div>
+
+            <?php
+            } else { ?>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="padding:0px"><a
                         href="phonepe://pay?pa=<?php echo PG_UPI_ADDRESS ?>&pn=<?php echo urlencode(SITE_NAME) ?>&tr=<?php echo $order_id ?>&cu=INR&mc=0000&am=<?php echo $order_total_price ?>&url=<?php echo SITE_URL . '/payment/status/' ?>"
@@ -97,12 +139,15 @@
                         class="btn" style="float: left; width: 100%; text-align: left; padding: 15px 20px">
                         <p><img src="<?php echo IMG_LIBRARY ?>/payment/google-pay.png" class="pg_logo" alt=""> G Pay</p>
                     </a></li>
-                <li class="list-group-item" style="padding:0px"><a
-                        href="upi://pay?pa=<?php echo PG_UPI_ADDRESS ?>&pn=<?php echo urlencode(SITE_NAME) ?>&tr=<?php echo $order_id ?>&cu=INR&mc=0000&am=<?php echo $order_total_price ?>&url=<?php echo SITE_URL . '/payment/status/' ?>"
-                        class="btn" style="float: left; width: 100%; text-align: left; padding: 15px 20px">
+                <li class="list-group-item" style="padding:0px"><a href="<?php echo $defaultUPIAppURL ?>" class="btn"
+                        style="float: left; width: 100%; text-align: left; padding: 15px 20px">
                         <p><img src="<?php echo IMG_LIBRARY ?>/payment/upi.png" class="pg_logo" alt=""> Bhim UPI</p>
                     </a></li>
             </ul>
+            <?php
+            }
+
+            ?>
         </div>
     </div>
 </body>

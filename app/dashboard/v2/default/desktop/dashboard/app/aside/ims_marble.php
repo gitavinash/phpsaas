@@ -153,7 +153,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser') {
 if ($site_access_type == 'administrator') { ?>
 
 <li class="header-section-name">
-    <p>Warehouse<span>Warehouse management.</span></p>
+    <p>Business Hub<span>Control Your Business</span></p>
 </li>
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/warehouse/') !== false) ? 'class="active"' : '') ?>>
@@ -168,6 +168,22 @@ if ($site_access_type == 'administrator') { ?>
         <ul>
             <li><a href="warehouse/list/"><i class="fi-rr-apps-sort"></i> All warehouses</a></li>
             <li><a href="warehouse/add/"><i class="fi fi-rr-add"></i> Add new warehouse</a></li>
+        </ul>
+    </div>
+</li>
+
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/company/') !== false) ? 'class="active"' : '') ?>>
+    <a href="company/"><i class="fi fi-rr-building"></i> Company</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="company/list/"><i class="fi-rr-apps-sort"></i> All companies</a></li>
+            <li><a href="company/add/"><i class="fi fi-rr-add"></i> Add new company</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="company/list/"><i class="fi-rr-apps-sort"></i> All companies</a></li>
+            <li><a href="company/add/"><i class="fi fi-rr-add"></i> Add new company</a></li>
         </ul>
     </div>
 </li>
