@@ -1,8 +1,8 @@
 <?php
 
-	$totalPrice=0;
+$totalPrice = 0;
 
-	include_once 'header.php';
+include_once 'header.php';
 
 ?>
 
@@ -22,14 +22,14 @@
                     <h3 class="heading-2">Express Delivery Products</h3>
 
                     <?php
-								
-								while($cartData=mysqli_fetch_assoc($checkCart)) {
 
-									extract($cartData);
+                    while ($cartData = mysqli_fetch_assoc($checkCart)) {
 
-									$totalPrice=$totalPrice+$cart_price;
+                        extract($cartData);
 
-									?>
+                        $totalPrice = $totalPrice + $cart_price;
+
+                    ?>
 
                     <div class="ad-card">
                         <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
@@ -47,9 +47,9 @@
 
                     <?php
 
-								}
+                    }
 
-							?>
+                    ?>
 
                 </div>
 
@@ -106,23 +106,20 @@
                                                     style="margin-bottom: 15px">
                                                     <option selected>Choose State</option>
                                                     <?php
-															
-															if($checkState=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."state WHERE state_country_id='101'")) {
 
-																if(mysqli_num_rows($checkState)!=0) {
+                                                    if ($checkState = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id='101'")) {
 
-																	while($stateData=mysqli_fetch_assoc($checkState)) {
+                                                        if (mysqli_num_rows($checkState) != 0) {
 
-																		extract($stateData);
-																		echo "<option value='{$state_id}'>{$state_name}</option>";
+                                                            while ($stateData = mysqli_fetch_assoc($checkState)) {
 
-																	}
+                                                                extract($stateData);
+                                                                echo "<option value='{$state_id}'>{$state_name}</option>";
+                                                            }
+                                                        }
+                                                    }
 
-																}
-
-															}
-
-															?>
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-3">
@@ -147,7 +144,7 @@
                     <h5 style="margin-bottom: 10px">₹ <?php echo $totalPrice ?></h5>
                     <a href="#" id="placeOrder" class="btn-bloom purchase-btn">Place Order</a>
                     <a href="#" id="continueShipping" style="display: none" class="btn-bloom purchase-btn">Proceed to
-                        payment</a>
+                        checkout </a>
                 </div>
 
                 <div class="site-feature">
@@ -163,6 +160,6 @@
 
 <?php
 
-	include_once 'footer.php';
+include_once 'footer.php';
 
 ?>

@@ -83,6 +83,31 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/order/') ? 'class="active"' : '') ?>>
+                    <a href="order/?type=list&status=all"><i class="fas fa-funnel-dollar"></i> Manage order</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
+                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
+                            </li>
+                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                                    Order</a></li>
+                            <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
+                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
+                            </li>
+                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                                    Order</a></li>
+                            <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/page/') ? 'class="active"' : '') ?>>
                     <a href="page/?type=list&status=all"><i class="fas fa-file"></i> Page</a>
                     <div class="side-menu">

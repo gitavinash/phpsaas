@@ -48,7 +48,7 @@ function generate($connection, $data)
 
                     extract(mysqli_fetch_assoc($checkCart));
 
-                    if ($paymentMode == 'cash') {
+                    if ($paymentMode == 'cashOnDelivery') {
 
                         $deliveryCharges = 50;
                     } else {
@@ -85,7 +85,7 @@ function generate($connection, $data)
                                     $msg = 'Redirect to payment mode';
                                     $transaction_id = base64_encode(mysqli_insert_id($connection));
 
-                                    if ($paymentMode == 'cash') {
+                                    if ($paymentMode == 'cashOnDelivery') {
 
                                         /** Send SMS */
                                         require_once APP_SMS_TEMPLATE . 'order/cod.php';

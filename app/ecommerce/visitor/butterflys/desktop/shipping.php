@@ -105,6 +105,31 @@ include_once 'header.php';
                                 </div>
                             </div>
 
+
+                            <div class="ad-card">
+                                <div class="paymnet-section">
+                                    <h3 class="heading-2">Payment option</h3>
+                                    <!-- Payment Gateway or Shipping Confirmation -->
+
+                                    <div class="form-row">
+                                        <table class="table ship-table">
+
+                                            <tbody>
+                                                <tr>
+                                                    <div class="input-group">
+                                                        <div id="radioBtn" class="btn-group">
+                                                            <a class="btn btn-primary btn-sm active" data-toggle="happy" data-title="onlinePayment">Online Payment</a>
+                                                            <a class="btn btn-primary btn-sm notActive" data-toggle="happy" data-title="cashOnDelivery">Cash on Delivery</a>
+                                                        </div>
+                                                        <input type="hidden" name="happy" id="paymentMethod">
+                                                    </div>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
                     <?php
                         } else {
 
@@ -141,13 +166,6 @@ include_once 'header.php';
                         <input type="hidden" name="paymentMode" value="online">
                         <a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Proceed to payment</a>
                     </form>
-                </div>
-
-                <div class="site-feature">
-                    <ul>
-                        <li><i class="fa fa-inr" aria-hidden="true"></i> No Hidden Charges</li>
-                        <li><i class="fa fa-shield" aria-hidden="true"></i> 100% Secure payments</li>
-                    </ul>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 $(document).ready(function () {
   /** SweetAlert Pop Up Box */
-
+  var paymentMethod = "onlinePayment";
   function popUpMessage(msgPostion, msgTxt, msgType) {
     if (msgType == 200) {
       msgType = "success";
@@ -335,6 +335,7 @@ $(document).ready(function () {
 
     var formData = $(".shipping-box").serializeArray();
     formData.push({ name: "coupon", value: couponCode });
+    formData.push({ name: "paymentMode", value: paymentMethod });
     formData.push({ name: "type", value: "order" });
     formData.push({ name: "action", value: "generate" });
 
@@ -355,5 +356,21 @@ $(document).ready(function () {
         $("#continueToPayment").show();
       },
     });
+  });
+
+  $("#radioBtn a").on("click", function () {
+    var sel = $(this).data("title");
+    var tog = $(this).data("toggle");
+    $("#" + tog).prop("value", sel);
+
+    paymentMethod = sel;
+
+    $('a[data-toggle="' + tog + '"]')
+      .not('[data-title="' + sel + '"]')
+      .removeClass("active")
+      .addClass("notActive");
+    $('a[data-toggle="' + tog + '"][data-title="' + sel + '"]')
+      .removeClass("notActive")
+      .addClass("active");
   });
 });

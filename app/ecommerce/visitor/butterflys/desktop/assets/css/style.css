@@ -4486,3 +4486,25 @@ form.franchise textarea {
   background: #fff;
   /* height: 100vh; */
 }
+
+.btn-group {
+  width: 100%;
+}
+
+.btn-group .active {
+  border-color: #179100 !important;
+  background: #179100 !important;
+  padding: 10px 0px;
+  box-sizing: border-box;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.btn-group .notActive {
+  border-color: #efeeee !important;
+  background: #efeeee !important;
+  padding: 10px 0px;
+  box-sizing: border-box;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
