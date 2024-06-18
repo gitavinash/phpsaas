@@ -10,7 +10,15 @@
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <style>
     body {
-        padding: 10% 0%;
+        <?php if(strtolower(SITE_VERSION)=='desktop') {
+            echo "padding: 5% 0%;";
+        }
+
+        else {
+            echo "padding: 10% 0%;";
+        }
+
+        ?>
     }
 
     p {
