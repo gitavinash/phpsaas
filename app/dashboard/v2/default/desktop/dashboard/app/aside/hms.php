@@ -1,6 +1,3 @@
-<li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fi-rr-home"></i>
-        Dashboard</a></li>
-
 <li class="header-section-name">
     <p>Properties<span>Manage properties.</span></p>
 </li>
