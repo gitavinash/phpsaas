@@ -3,8 +3,10 @@
 if (isset($orderId)) {
 
     $orderId = base64_decode($orderId);
+    $orderIdObject = explode("_", $orderId);
+    $dbOrderId = $orderIdObject[0];
 
-    if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_type FROM " . TABLE_PREFIX . "transaction WHERE transaction_order_id={$orderId} AND transaction_site_id=" . SITE_ID)) {
+    if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_type FROM " . TABLE_PREFIX . "transaction WHERE transaction_order_id={$dbOrderId} AND transaction_site_id=" . SITE_ID)) {
 
         if (mysqli_num_rows($checkTransaction) != 0) {
 
@@ -59,19 +61,19 @@ if (isset($orderId)) {
 
                 mysqli_query($connection, "START TRANSACTION");
 
-                $updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status={$transactionStatus} WHERE transaction_order_id={$orderId} AND transaction_site_id=" . SITE_ID);
+                $updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status={$transactionStatus} WHERE transaction_order_id={$dbOrderId} AND transaction_site_id=" . SITE_ID);
 
-                $updateOrderStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id={$orderId}");
+                $updateOrderStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id={$dbOrderId}");
 
                 $updateCartStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_session_id='" . SESSION_ID . "'");
 
                 if ($updateTransaction && $updateOrderStatus && $updateCartStatus) {
                     mysqli_query($connection, "COMMIT");
-                    $orderId = base64_encode($orderId);
+                    $orderIdEncoded = base64_encode($dbOrderId);
                     if ($transactionStatus == 1) {
-                        header("Location: /thank-you/?order_id={$orderId}", TRUE, 301);
+                        header("Location: /thank-you/?order_id={$orderIdEncoded}", TRUE, 301);
                     } else {
-                        header("Location: /error/?order_id={$orderId}", TRUE, 301);
+                        header("Location: /payment-failed/?order_id={$orderIdEncoded}", TRUE, 301);
                     }
                 } else {
                     echo "<h1>Something went wrong while trying to update the payment status into the database</h1>";

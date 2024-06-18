@@ -25,13 +25,13 @@
 
     $data = [
         "customer_details" => [
-            "customer_id" => $userId,
-            "customer_email" => $profile_email,
-            "customer_phone" => $profile_mobile,
-            "customer_name" => $profile_display_name
+            "customer_id" => strval($userId),
+            "customer_email" => strval($profile_email),
+            "customer_phone" => strval((($profile_mobile == "") ? time() : $profile_mobile)),
+            "customer_name" => strval($profile_display_name)
         ],
         "order_id" => $order_id . '_' . time(),
-        "order_amount" => $paymentAmount,
+        "order_amount" => strval($paymentAmount),
         "order_currency" => "INR",
         "order_note" => $cartProduct,
         "order_meta" => array(
