@@ -1575,6 +1575,11 @@ $("#addCompany").click(function (e) {
       },
       error: function (errorResponse) {
         console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
       },
     });
   }
@@ -1652,6 +1657,186 @@ $("#updateCompany").click(function (e) {
       },
       error: function (errorResponse) {
         console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  }
+});
+
+// Add new warehouse
+
+$("#addWarehouse").click(function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  var address = $("#address").val();
+  var state = $("#state").val();
+  var city = $("#city").val();
+  var pinCode = $("#pinCode").val();
+  var email = $("#email").val();
+  var mobile = $("#mobile").val();
+  var companyId = $("#companyId").val();
+
+  if (state == "select") {
+    state = "";
+  }
+
+  if (city == "select") {
+    city = "";
+  }
+
+  if (companyId == "select") {
+    companyId = "";
+  }
+
+  submitRequest = false;
+  msg = "Required input is missing";
+
+  if (name != "") {
+    if (address != "") {
+      if (state != "") {
+        if (city != "") {
+          if (pinCode != "") {
+            if (email != "") {
+              if (mobile != "") {
+                if (companyId != "") {
+                  submitRequest = true;
+                } else {
+                  msg = "Kindly select company";
+                }
+              } else {
+                msg = "Kindly enter warehouse mobile";
+              }
+            } else {
+              msg = "Kindly enter warehouse email";
+            }
+          } else {
+            msg = "Kindly enter warehouse address pin code";
+          }
+        } else {
+          msg = "Kindly enter warehouse address city";
+        }
+      } else {
+        msg = "Kindly select state of warehouse address";
+      }
+    } else {
+      msg = "Kindly enter warehouse address";
+    }
+  } else {
+    msg = "Kindly enter warehouse name";
+  }
+
+  if (!submitRequest) {
+    popUpMessage("center", msg, "warning");
+  } else {
+    var formData = $("#addNewWarehouseForm").serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/api/warehouse/create/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            const warehouseId = btoa(successResponse.warehouseId);
+            window.location.href = `/dashboard/warehouse/update/?id=${warehouseId}`;
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  }
+});
+
+// Update warehouse
+
+$("#updateWarehouse").click(function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  var address = $("#address").val();
+  var state = $("#state").val();
+  var city = $("#city").val();
+  var pinCode = $("#pinCode").val();
+  var email = $("#email").val();
+  var mobile = $("#mobile").val();
+
+  if (state == "select") {
+    state = "";
+  }
+
+  if (city == "select") {
+    city = "";
+  }
+
+  submitRequest = false;
+  msg = "Required input is missing";
+
+  if (name != "") {
+    if (address != "") {
+      if (state != "") {
+        if (city != "") {
+          if (pinCode != "") {
+            if (email != "") {
+              if (mobile != "") {
+                submitRequest = true;
+              } else {
+                msg = "Kindly enter warehouse mobile";
+              }
+            } else {
+              msg = "Kindly enter warehouse email";
+            }
+          } else {
+            msg = "Kindly enter warehouse address pin code";
+          }
+        } else {
+          msg = "Kindly enter warehouse address city";
+        }
+      } else {
+        msg = "Kindly select state of warehouse address";
+      }
+    } else {
+      msg = "Kindly enter warehouse address";
+    }
+  } else {
+    msg = "Kindly enter warehouse name";
+  }
+
+  if (!submitRequest) {
+    popUpMessage("center", msg, "warning");
+  } else {
+    var formData = $("#updateWarehouseForm").serialize();
+    $.ajax({
+      type: "POST",
+      url: "/api/warehouse/update/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            window.location.href = `/dashboard/warehouse/list/`;
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
       },
     });
   }
