@@ -24,6 +24,45 @@ $(window).on("load", function () {
   hidePageLoader();
 });
 
+$(".deleteButton").on("click", function (event) {
+  event.preventDefault();
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.value) {
+      var requestType = $(this).attr("data-type");
+      var requestId = $(this).attr("data-id");
+      $.ajax({
+        type: "GET",
+        url: `/api/${requestType}/delete/?id=` + btoa(requestId),
+        dataType: "json",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          if (response.status == "success") {
+            setTimeout(function () {
+              window.location.href = `/dashboard/${requestType}/list/`;
+            }, 1500);
+          }
+        },
+        error: function (response) {
+          console.log(`Error : `, response);
+          popUpMessage(
+            "center",
+            response.responseJSON.msg,
+            response.responseJSON.status
+          );
+        },
+      });
+    }
+  });
+});
+
 // function showNotification() {
 //   if (!("Notification" in window)) {
 //     alert("This browser does not support desktop notification");

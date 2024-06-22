@@ -57,7 +57,7 @@ ol {
   border: #01647b !important;
 }
 
-.bgred {
+.bgRed {
   background: #761b1b !important;
 }
 
@@ -2420,4 +2420,9 @@ section.form
   padding: 0;
   text-align: center;
   cursor: pointer;
+}
+
+a.tableActionIconBtn {
+  float: left;
+  margin-right: 10px;
 }
