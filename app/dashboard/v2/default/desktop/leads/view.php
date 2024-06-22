@@ -31,10 +31,12 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <div class="widget no-padding box-1">
                     <div class="leadProfileCard">
                         <div class="img">
-                            <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($enquiry_first_name[0]) != '') ? $enquiry_first_name[0] : 'unknown')) ?>.png" alt="" srcset="">
+                            <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($enquiry_first_name[0]) != '') ? $enquiry_first_name[0] : 'unknown')) ?>.png"
+                                alt="" srcset="">
                         </div>
                         <div class="info">
-                            <h2 class="heading" <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
+                            <h2 class="heading"
+                                <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
                                 <?php echo $enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : '')) ?>
                             </h2>
                             <p><span><strong>Last Update:
@@ -60,8 +62,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <?php
 
                         if ($enquiry_status != 5) { ?>
-                            <a href="#" id="leadEditBtn" class="btn right-btn highlight"><i class="fi-rr-edit"></i> Edit
-                                lead</a>
+                        <a href="#" id="leadEditBtn" class="btn right-btn highlight"><i class="fi-rr-edit"></i> Edit
+                            lead</a>
                         <?php
 
                         }
@@ -220,51 +222,51 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <div class="widget no-padding box-1" id="noteDetailsBox">
                     <div class="leadInfo">
                         <div class="historyBox">
-                            <ol class="timeline">
-                                <?php
+                            <?php
 
-                                if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' ORDER BY enquiry_notes_update DESC")) {
-                                    if (mysqli_num_rows($leadHistory) != 0) {
-                                        while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
-                                            extract($leadHistoryData);
-                                            $commentBox = '';
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' ORDER BY enquiry_notes_update DESC")) {
+                                if (mysqli_num_rows($leadHistory) != 0) {
+                                    echo "<ol class='timeline'>";
+                                    while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                        extract($leadHistoryData);
+                                        $commentBox = '';
 
-                                            switch (strtolower($enquiry_notes_meta_type)) {
-                                                case "assign":
-                                                    $icon = 'link';
-                                                    $msg = str_replace('Lead assign', '<a href="#">Lead assign</a>', $enquiry_notes_meta_value);
-                                                    break;
+                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                            case "assign":
+                                                $icon = 'link';
+                                                $msg = str_replace('Lead assign', '<a href="#">Lead assign</a>', $enquiry_notes_meta_value);
+                                                break;
 
-                                                case "payment":
-                                                    $icon = 'indian-rupee-sign';
-                                                    $msg = '<a href="#">Payment</a>' . $profile_display_name;
-                                                    break;
+                                            case "payment":
+                                                $icon = 'indian-rupee-sign';
+                                                $msg = '<a href="#">Payment</a>' . $profile_display_name;
+                                                break;
 
-                                                case "generate":
-                                                    $icon = 'plus';
-                                                    $msg = '<a href="#">Added </a>by ' . $profile_display_name;
-                                                    break;
+                                            case "generate":
+                                                $icon = 'plus';
+                                                $msg = '<a href="#">Added </a>by ' . $profile_display_name;
+                                                break;
 
-                                                case "update":
-                                                    $icon = 'refresh';
-                                                    $msg = '<a href="#">Lead update </a>by ' . $profile_display_name;
-                                                    break;
+                                            case "update":
+                                                $icon = 'refresh';
+                                                $msg = '<a href="#">Lead update </a>by ' . $profile_display_name;
+                                                break;
 
-                                                case "duplicate":
-                                                    $icon = 'refresh';
-                                                    $msg = '<a href="#">Lead mark Duplicate </a> updated by ' . $profile_display_name;
-                                                    break;
+                                            case "duplicate":
+                                                $icon = 'refresh';
+                                                $msg = '<a href="#">Lead mark Duplicate </a> updated by ' . $profile_display_name;
+                                                break;
 
-                                                default:
-                                                    $icon = 'comment-alt';
-                                                    $msg = "<a href='#'>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
-                                                    if ($enquiry_notes_meta_value != '') {
-                                                        $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
-                                                    }
-                                                    break;
-                                            }
+                                            default:
+                                                $icon = 'comment-alt';
+                                                $msg = "<a href='#'>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                                }
+                                                break;
+                                        }
 
-                                            echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
+                                        echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
                                                     <span class='timeline-item-icon | faded-icon'>
                                                         <i class='fi-rr-{$icon}'></i>
                                                     </span>
@@ -274,14 +276,14 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
-                                        }
                                     }
-                                } else {
-                                    echo "Something went wrong";
+                                    echo "</ol>";
                                 }
+                            } else {
+                                echo "Something went wrong";
+                            }
 
-                                ?>
-                            </ol>
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -297,24 +299,29 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                             <form action="#" id="updateLeadForm" autocomplete="off">
                                 <tr>
                                     <td class="box-3"><strong>First name<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="first_name" id="firstName" value="<?php echo $enquiry_first_name ?>" required></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="first_name"
+                                            id="firstName" value="<?php echo $enquiry_first_name ?>" required></td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Middle name</strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="middle_name" id="middleName" value="<?php echo $enquiry_middle_name ?>"></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="middle_name"
+                                            id="middleName" value="<?php echo $enquiry_middle_name ?>"></td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Last name</strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="last_name" id="lastName" value="<?php echo $enquiry_last_name ?>"></td>
+                                    <td class="box-7"><input type="text" class="form-control" name="last_name"
+                                            id="lastName" value="<?php echo $enquiry_last_name ?>"></td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Email</strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="email" id="email" value="<?php echo $enquiry_email ?>">
+                                    <td class="box-7"><input type="text" class="form-control" name="email" id="email"
+                                            value="<?php echo $enquiry_email ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Mobile<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="mobile" id="mobile" value="<?php echo $enquiry_mobile ?>" readonly>
+                                    <td class="box-7"><input type="text" class="form-control" name="mobile" id="mobile"
+                                            value="<?php echo $enquiry_mobile ?>" readonly>
                                     </td>
                                 </tr>
                                 <tr>
@@ -322,97 +329,141 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <td class="box-7">
                                         <select class="selectJS form-control" name="package" id="select">
                                             <option value="">Select destination</option>
-                                            <option value="Andaman and Nicobar Islands" <?php echo (($enquiry_subject == 'Andaman and Nicobar Islands') ? 'selected' : '') ?>>
+                                            <option value="Andaman and Nicobar Islands"
+                                                <?php echo (($enquiry_subject == 'Andaman and Nicobar Islands') ? 'selected' : '') ?>>
                                                 Andaman and Nicobar Islands
                                             </option>
-                                            <option value="Andhra Pradesh" <?php echo (($enquiry_subject == 'Andhra Pradesh') ? 'selected' : '') ?>>
+                                            <option value="Andhra Pradesh"
+                                                <?php echo (($enquiry_subject == 'Andhra Pradesh') ? 'selected' : '') ?>>
                                                 Andhra Pradesh
                                             </option>
-                                            <option value="Arunachal Pradesh" <?php echo (($enquiry_subject == 'Arunachal Pradesh') ? 'selected' : '') ?>>
+                                            <option value="Arunachal Pradesh"
+                                                <?php echo (($enquiry_subject == 'Arunachal Pradesh') ? 'selected' : '') ?>>
                                                 Arunachal Pradesh
                                             </option>
-                                            <option value="Assam" <?php echo (($enquiry_subject == 'Assam') ? 'selected' : '') ?>>Assam
+                                            <option value="Assam"
+                                                <?php echo (($enquiry_subject == 'Assam') ? 'selected' : '') ?>>Assam
                                             </option>
-                                            <option value="Bihar" <?php echo (($enquiry_subject == 'Bihar') ? 'selected' : '') ?>>Bihar
+                                            <option value="Bihar"
+                                                <?php echo (($enquiry_subject == 'Bihar') ? 'selected' : '') ?>>Bihar
                                             </option>
-                                            <option value="Chandigarh" <?php echo (($enquiry_subject == 'Chandigarh') ? 'selected' : '') ?>>
+                                            <option value="Chandigarh"
+                                                <?php echo (($enquiry_subject == 'Chandigarh') ? 'selected' : '') ?>>
                                                 Chandigarh
                                             </option>
-                                            <option value="Chhattisgarh" <?php echo (($enquiry_subject == 'Chhattisgarh') ? 'selected' : '') ?>>
+                                            <option value="Chhattisgarh"
+                                                <?php echo (($enquiry_subject == 'Chhattisgarh') ? 'selected' : '') ?>>
                                                 Chhattisgarh
                                             </option>
-                                            <option value="Dadra and Nagar Haveli and Daman & Diu" <?php echo (($enquiry_subject == 'Dadra and Nagar Haveli and Daman & Diu') ? 'selected' : '') ?>>
+                                            <option value="Dadra and Nagar Haveli and Daman & Diu"
+                                                <?php echo (($enquiry_subject == 'Dadra and Nagar Haveli and Daman & Diu') ? 'selected' : '') ?>>
                                                 Dadra and Nagar Haveli and Daman & Diu
                                             </option>
-                                            <option value="Delhi" <?php echo (($enquiry_subject == 'Delhi') ? 'selected' : '') ?>>
+                                            <option value="Delhi"
+                                                <?php echo (($enquiry_subject == 'Delhi') ? 'selected' : '') ?>>
                                                 Delhi
                                             </option>
-                                            <option value="Goa" <?php echo (($enquiry_subject == 'Goa') ? 'selected' : '') ?>>Goa
+                                            <option value="Goa"
+                                                <?php echo (($enquiry_subject == 'Goa') ? 'selected' : '') ?>>Goa
                                             </option>
-                                            <option value="Gujarat" <?php echo (($enquiry_subject == 'Gujarat') ? 'selected' : '') ?>>Gujarat
+                                            <option value="Gujarat"
+                                                <?php echo (($enquiry_subject == 'Gujarat') ? 'selected' : '') ?>>
+                                                Gujarat
                                             </option>
-                                            <option value="Haryana" <?php echo (($enquiry_subject == 'Haryana') ? 'selected' : '') ?>>Haryana
+                                            <option value="Haryana"
+                                                <?php echo (($enquiry_subject == 'Haryana') ? 'selected' : '') ?>>
+                                                Haryana
                                             </option>
-                                            <option value="Himachal Pradesh" <?php echo (($enquiry_subject == 'Himachal Pradesh') ? 'selected' : '') ?>>
+                                            <option value="Himachal Pradesh"
+                                                <?php echo (($enquiry_subject == 'Himachal Pradesh') ? 'selected' : '') ?>>
                                                 Himachal Pradesh
                                             </option>
-                                            <option value="Jammu & Kashmir" <?php echo (($enquiry_subject == 'Jammu & Kashmir') ? 'selected' : '') ?>>
+                                            <option value="Jammu & Kashmir"
+                                                <?php echo (($enquiry_subject == 'Jammu & Kashmir') ? 'selected' : '') ?>>
                                                 Jammu & Kashmir
                                             </option>
-                                            <option value="Jharkhand" <?php echo (($enquiry_subject == 'Jharkhand') ? 'selected' : '') ?>>
+                                            <option value="Jharkhand"
+                                                <?php echo (($enquiry_subject == 'Jharkhand') ? 'selected' : '') ?>>
                                                 Jharkhand
                                             </option>
-                                            <option value="Karnataka" <?php echo (($enquiry_subject == 'Karnataka') ? 'selected' : '') ?>>
+                                            <option value="Karnataka"
+                                                <?php echo (($enquiry_subject == 'Karnataka') ? 'selected' : '') ?>>
                                                 Karnataka
                                             </option>
-                                            <option value="Kerala" <?php echo (($enquiry_subject == 'Kerala') ? 'selected' : '') ?>>Kerala
+                                            <option value="Kerala"
+                                                <?php echo (($enquiry_subject == 'Kerala') ? 'selected' : '') ?>>Kerala
                                             </option>
-                                            <option value="Ladakh" <?php echo (($enquiry_subject == 'Ladakh') ? 'selected' : '') ?>>Ladakh
+                                            <option value="Ladakh"
+                                                <?php echo (($enquiry_subject == 'Ladakh') ? 'selected' : '') ?>>Ladakh
                                             </option>
-                                            <option value="Lakshadweep" <?php echo (($enquiry_subject == 'Lakshadweep') ? 'selected' : '') ?>>
+                                            <option value="Lakshadweep"
+                                                <?php echo (($enquiry_subject == 'Lakshadweep') ? 'selected' : '') ?>>
                                                 Lakshadweep
                                             </option>
-                                            <option value="Madhya Pradesh" <?php echo (($enquiry_subject == 'Madhya Pradesh') ? 'selected' : '') ?>>
+                                            <option value="Madhya Pradesh"
+                                                <?php echo (($enquiry_subject == 'Madhya Pradesh') ? 'selected' : '') ?>>
                                                 Madhya Pradesh
                                             </option>
-                                            <option value="Maharashtra" <?php echo (($enquiry_subject == 'Maharashtra') ? 'selected' : '') ?>>
+                                            <option value="Maharashtra"
+                                                <?php echo (($enquiry_subject == 'Maharashtra') ? 'selected' : '') ?>>
                                                 Maharashtra
                                             </option>
-                                            <option value="Manipur" <?php echo (($enquiry_subject == 'Manipur') ? 'selected' : '') ?>>Manipur
+                                            <option value="Manipur"
+                                                <?php echo (($enquiry_subject == 'Manipur') ? 'selected' : '') ?>>
+                                                Manipur
                                             </option>
-                                            <option value="Meghalaya" <?php echo (($enquiry_subject == 'Meghalaya') ? 'selected' : '') ?>>
+                                            <option value="Meghalaya"
+                                                <?php echo (($enquiry_subject == 'Meghalaya') ? 'selected' : '') ?>>
                                                 Meghalaya
                                             </option>
-                                            <option value="Mizoram" <?php echo (($enquiry_subject == 'Mizoram') ? 'selected' : '') ?>>Mizoram
+                                            <option value="Mizoram"
+                                                <?php echo (($enquiry_subject == 'Mizoram') ? 'selected' : '') ?>>
+                                                Mizoram
                                             </option>
-                                            <option value="Nagaland" <?php echo (($enquiry_subject == 'Nagaland') ? 'selected' : '') ?>>Nagaland
+                                            <option value="Nagaland"
+                                                <?php echo (($enquiry_subject == 'Nagaland') ? 'selected' : '') ?>>
+                                                Nagaland
                                             </option>
-                                            <option value="Odisha" <?php echo (($enquiry_subject == 'Odisha') ? 'selected' : '') ?>>Odisha
+                                            <option value="Odisha"
+                                                <?php echo (($enquiry_subject == 'Odisha') ? 'selected' : '') ?>>Odisha
                                             </option>
-                                            <option value="Puducherry" <?php echo (($enquiry_subject == 'Puducherry') ? 'selected' : '') ?>>
+                                            <option value="Puducherry"
+                                                <?php echo (($enquiry_subject == 'Puducherry') ? 'selected' : '') ?>>
                                                 Puducherry
                                             </option>
-                                            <option value="Punjab" <?php echo (($enquiry_subject == 'Punjab') ? 'selected' : '') ?>>Punjab
+                                            <option value="Punjab"
+                                                <?php echo (($enquiry_subject == 'Punjab') ? 'selected' : '') ?>>Punjab
                                             </option>
-                                            <option value="Rajasthan" <?php echo (($enquiry_subject == 'Rajasthan') ? 'selected' : '') ?>>
+                                            <option value="Rajasthan"
+                                                <?php echo (($enquiry_subject == 'Rajasthan') ? 'selected' : '') ?>>
                                                 Rajasthan
                                             </option>
-                                            <option value="Sikkim" <?php echo (($enquiry_subject == 'Sikkim') ? 'selected' : '') ?>>Sikkim
+                                            <option value="Sikkim"
+                                                <?php echo (($enquiry_subject == 'Sikkim') ? 'selected' : '') ?>>Sikkim
                                             </option>
-                                            <option value="Tamil Nadu" <?php echo (($enquiry_subject == 'Tamil Nadu') ? 'selected' : '') ?>>Tamil
+                                            <option value="Tamil Nadu"
+                                                <?php echo (($enquiry_subject == 'Tamil Nadu') ? 'selected' : '') ?>>
+                                                Tamil
                                                 Nadu
                                             </option>
-                                            <option value="Telangana" <?php echo (($enquiry_subject == 'Telangana') ? 'selected' : '') ?>>
+                                            <option value="Telangana"
+                                                <?php echo (($enquiry_subject == 'Telangana') ? 'selected' : '') ?>>
                                                 Telangana
                                             </option>
-                                            <option value="Tripura" <?php echo (($enquiry_subject == 'Tripura') ? 'selected' : '') ?>>Tripura
+                                            <option value="Tripura"
+                                                <?php echo (($enquiry_subject == 'Tripura') ? 'selected' : '') ?>>
+                                                Tripura
                                             </option>
-                                            <option value="Uttarakhand" <?php echo (($enquiry_subject == 'Uttarakhand') ? 'selected' : '') ?>>
+                                            <option value="Uttarakhand"
+                                                <?php echo (($enquiry_subject == 'Uttarakhand') ? 'selected' : '') ?>>
                                                 Uttarakhand</option>
-                                            <option value="Uttar Pradesh" <?php echo (($enquiry_subject == 'Uttar Pradesh') ? 'selected' : '') ?>>
+                                            <option value="Uttar Pradesh"
+                                                <?php echo (($enquiry_subject == 'Uttar Pradesh') ? 'selected' : '') ?>>
                                                 Uttar Pradesh
                                             </option>
-                                            <option value="West Bengal" <?php echo (($enquiry_subject == 'West Bengal') ? 'selected' : '') ?>>West
+                                            <option value="West Bengal"
+                                                <?php echo (($enquiry_subject == 'West Bengal') ? 'selected' : '') ?>>
+                                                West
                                                 Bengal
                                             </option>
                                         </select>
@@ -420,52 +471,66 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Date of travel<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="datepickerForFutureDate" name="date_of_travel" id="date_of_travel" value="<?php echo date('d-m-Y', strtotime($date_of_travel)) ?>" required>
+                                    <td class="box-7"><input type="text" class="datepickerForFutureDate"
+                                            name="date_of_travel" id="date_of_travel"
+                                            value="<?php echo date('d-m-Y', strtotime($date_of_travel)) ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Travel duration<span class="secondLine">( in Nights
                                                 )</span><sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="number_of_days" id="number_of_days" placeholder="3" value="<?php echo $number_of_days ?>" required>
+                                    <td class="box-7"><input type="text" class="form-control" name="number_of_days"
+                                            id="number_of_days" placeholder="3" value="<?php echo $number_of_days ?>"
+                                            required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Number of adults<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="number_of_adults" id="number_of_adults" placeholder="0" value="<?php echo $number_of_adults ?>" required>
+                                    <td class="box-7"><input type="text" class="form-control" name="number_of_adults"
+                                            id="number_of_adults" placeholder="0"
+                                            value="<?php echo $number_of_adults ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Number of children<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="number_of_childrens" id="number_of_childrens" placeholder="0" value="<?php echo $number_of_childrens ?>" required>
+                                    <td class="box-7"><input type="text" class="form-control" name="number_of_childrens"
+                                            id="number_of_childrens" placeholder="0"
+                                            value="<?php echo $number_of_childrens ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Number of infants<span class="secondLine">( Below 5
                                                 years)</span><sup>*</sup></strong>
                                     </td>
-                                    <td class="box-7"><input type="text" class="form-control" name="number_of_infants" id="number_of_infants" placeholder="0" value="<?php echo $number_of_infants ?>" required>
+                                    <td class="box-7"><input type="text" class="form-control" name="number_of_infants"
+                                            id="number_of_infants" placeholder="0"
+                                            value="<?php echo $number_of_infants ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Current location<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="current_location" id="current_location" value="<?php echo $current_location ?>" required>
+                                    <td class="box-7"><input type="text" class="form-control" name="current_location"
+                                            id="current_location" value="<?php echo $current_location ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Pickup location<sup>*</sup></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="pickup_location" id="pickup_location" value="<?php echo $pickup_location ?>" required>
+                                    <td class="box-7"><input type="text" class="form-control" name="pickup_location"
+                                            id="pickup_location" value="<?php echo $pickup_location ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Drop location<span class="secondLine">( ignore if same
                                                 )</span></strong></td>
-                                    <td class="box-7"><input type="text" class="form-control" name="drop_location" id="drop_location" value="<?php echo $drop_location ?>">
+                                    <td class="box-7"><input type="text" class="form-control" name="drop_location"
+                                            id="drop_location" value="<?php echo $drop_location ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="box-3"><strong>Any requirements</strong></td>
                                     <td class="box-7">
-                                        <textarea name="requirements" class="form-control" id="requirements"><?php echo (($requirements == '') ? $enquiry_message : $requirements) ?></textarea>
+                                        <textarea name="requirements" class="form-control"
+                                            id="requirements"><?php echo (($requirements == '') ? $enquiry_message : $requirements) ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -473,7 +538,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     </td>
                                     <td class="box-7">
                                         <input type="hidden" name="leadId" value="<?php echo $enquiry_id ?>">
-                                        <input type="submit" id="updateEnquiry" class="btn btn-green" value="Update lead">
+                                        <input type="submit" id="updateEnquiry" class="btn btn-green"
+                                            value="Update lead">
                                     </td>
                                 </tr>
                             </form>
@@ -491,28 +557,28 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                 if ($enquiry_status != 5) {
                     if ($enquiry_status != 4) { ?>
-                        <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
-                        <?php
+                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+                <?php
 
                         if (SITE_ID == 57) { ?>
-                            <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                                links</a>
-                            <a href="" class="btn btn-green" id="updatePaymentBtn"><i class="fi-rr-notes"></i> Update payment
-                                records</a>
-                            <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
-                            <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
-                        <?php
+                <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
+                    links</a>
+                <a href="" class="btn btn-green" id="updatePaymentBtn"><i class="fi-rr-notes"></i> Update payment
+                    records</a>
+                <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
+                <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
+                <?php
                         }
 
                         ?>
-                        <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
+                <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
 
-                    <?php
+                <?php
                     } else { ?>
 
-                        <form method="POST" class="">
-                            <!-- Design a form to assign lead to intern -->
-                        </form>
+                <form method="POST" class="">
+                    <!-- Design a form to assign lead to intern -->
+                </form>
 
                 <?php
                     }
@@ -546,7 +612,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*" class="form-control" required></textarea>
+                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
+                                        class="form-control" required></textarea>
                                     <label class="form-lable" id="noteMsgLabel">Message</label>
                                 </div>
                             </div>
@@ -578,7 +645,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <div class="box-1">
                                             <div class="form-group">
                                                 <div class="input-box">
-                                                    <input type="radio" class="paymentLink" id="fullPaymentBtn" name="paymentLink" value="yes" />
+                                                    <input type="radio" class="paymentLink" id="fullPaymentBtn"
+                                                        name="paymentLink" value="yes" />
                                                     <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
                                                         Full
                                                         Payment</label>
@@ -588,7 +656,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <div class="box-1">
                                             <div class="form-group">
                                                 <div class="input-box">
-                                                    <input type="radio" class="paymentLink" id="minPaymentLink" name="paymentLink" value="yes" checked />
+                                                    <input type="radio" class="paymentLink" id="minPaymentLink"
+                                                        name="paymentLink" value="yes" checked />
                                                     <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
                                                         Minimum payment</label>
                                                 </div>
@@ -597,7 +666,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <div class="box-1">
                                             <div class="form-group">
                                                 <div class="input-box">
-                                                    <input type="radio" class="paymentLink" id="customPaymentLink" name="paymentLink" value="0" />
+                                                    <input type="radio" class="paymentLink" id="customPaymentLink"
+                                                        name="paymentLink" value="0" />
                                                     <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
                                                         Custom
                                                         amount</label>
@@ -643,7 +713,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                             </div>
                                             <div class="form-group">
                                                 <p>Payment method <sup>*</sup></p>
-                                                <select class="selectJS form-control" id="paymentRecordTitle" name="title">
+                                                <select class="selectJS form-control" id="paymentRecordTitle"
+                                                    name="title">
                                                     <option value=""></option>
                                                     <option value="upi">UPI</option>
                                                     <option value="net_banking">Net banking</option>
@@ -654,7 +725,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <textarea type="text" name="paymentRecordMsg" id="noteMsg" placeholder="Payment details*" class="form-control" required></textarea>
+                                                <textarea type="text" name="paymentRecordMsg" id="noteMsg"
+                                                    placeholder="Payment details*" class="form-control"
+                                                    required></textarea>
                                                 <label class="form-lable" id="paymentRecordMsgLabel">Payment
                                                     details</label>
                                             </div>
@@ -697,11 +770,13 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="datepickerForFutureDateWithTime" name="followupTime" id="followUpTime">
+                                    <input type="text" class="datepickerForFutureDateWithTime" name="followupTime"
+                                        id="followUpTime">
                                     <label class="form-lable">Follow up time</label>
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="comment" id="comment" placeholder="Add your comment"></textarea>
+                                    <textarea type="text" name="comment" id="comment"
+                                        placeholder="Add your comment"></textarea>
                                     <label class="form-lable" id="commentLable">Any comment</label>
                                 </div>
                             </div>
