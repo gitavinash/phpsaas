@@ -51,7 +51,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'sales_executiv
     <div class="bottom-menu">
         <ul>
             <li><a href="sales/list/"><i class="fi-rr-apps-sort"></i> All sales</a></li>
-            <li><a href="sales/add/"><i class="ADMfi-rr-add"></i> Add new sale</a></li>
+            <li><a href="sales/add/"><i class="fi-rr-add"></i> Add new sale</a></li>
         </ul>
     </div>
 </li>

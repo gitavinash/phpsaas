@@ -36,7 +36,9 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li>
                     <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
+                        <div class="profile-img"><img
+                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
+                                alt=""></div>
                     </a>
                     <ul>
                         <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
@@ -51,7 +53,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <aside>
         <nav class="side-nav">
             <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
+                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/lead/') ? 'class="active"' : '') ?>>
                     <a href="lead/?type=list&status=all"><i class="fas fa-plus"></i> Manage Leads</a>
@@ -64,7 +67,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
-                            <li><a href="lead/"><i class="fas fa-bullhorn"></i> Add new lead</a>
+                            <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
                         </ul>
                     </div>
                 </li>
