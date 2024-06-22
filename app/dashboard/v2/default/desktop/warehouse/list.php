@@ -26,18 +26,18 @@
                 </thead>
                 <?php
 
-                if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE warehouse_site_id=" . SITE_ID . " ORDER BY warehouse_update DESC")) {
+                if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_site_id=" . SITE_ID . " ORDER BY warehouse_updated DESC")) {
                     echo "<tbody>";
                     if (mysqli_num_rows($warehouseList) > 0) {
                         while ($warehouseData = mysqli_fetch_assoc($warehouseList)) {
                             extract($warehouseData);
                             echo "<tr>
                                 <td>{$warehouse_title}</td>
+                                <td>{$company_title}</td>
                                 <td>{$address_area}, {$city_name} - {$address_pin_code}</td>
-                                <td>" . ucwords(str_replace('_', ' ', $warehouse_type)) . "</td>
                                 <td>{$city_name}</td>
                                 <td>
-                                <a href='/dashboard/warehouse/update/?id=" . base64_encode($warehouse_id) . "' class='tableActionIconBtn'><i class='fi fi-rr-edit bgred'></i></a>
+                                <a href='/dashboard/warehouse/update/?id=" . base64_encode($warehouse_id) . "' class='tableActionIconBtn'><i class='fi fi-rr-edit bgLightGreen'></i></a>
                                 </td>
                             </tr>";
                         }

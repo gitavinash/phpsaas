@@ -1780,6 +1780,10 @@ $("#updateWarehouse").click(function (e) {
     city = "";
   }
 
+  if (companyId == "select") {
+    companyId = "";
+  }
+
   submitRequest = false;
   msg = "Required input is missing";
 
@@ -1790,7 +1794,11 @@ $("#updateWarehouse").click(function (e) {
           if (pinCode != "") {
             if (email != "") {
               if (mobile != "") {
-                submitRequest = true;
+                if (companyId != "") {
+                  submitRequest = true;
+                } else {
+                  msg = "Kindly select company";
+                }
               } else {
                 msg = "Kindly enter warehouse mobile";
               }

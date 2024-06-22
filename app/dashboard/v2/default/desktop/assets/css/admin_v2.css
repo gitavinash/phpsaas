@@ -61,6 +61,11 @@ ol {
   background: #761b1b !important;
 }
 
+.bgLightGreen {
+  background: #e7f5e5 !important;
+  color: #464646 !important;
+}
+
 .btn-red {
   background: #761b1b !important;
   color: #fff !important;
@@ -1394,7 +1399,7 @@ section.form {
 
 section.form .step-open-box {
   width: 100%;
-  max-width: 700px;
+  max-width: 750px;
   margin: 0 auto;
 }
 

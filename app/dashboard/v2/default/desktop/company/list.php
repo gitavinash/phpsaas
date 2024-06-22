@@ -37,7 +37,7 @@
                                 <td>" . ucwords(str_replace('_', ' ', $company_type)) . "</td>
                                 <td>{$city_name}</td>
                                 <td>
-                                <a href='/dashboard/company/update/?id=" . base64_encode($company_id) . "' class='tableActionIconBtn'><i class='fi fi-rr-edit bgred'></i></a>
+                                <a href='/dashboard/company/update/?id=" . base64_encode($company_id) . "' class='tableActionIconBtn'><i class='fi fi-rr-edit bgLightGreen'></i></a>
                                 </td>
                             </tr>";
                         }

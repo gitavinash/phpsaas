@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     mysqli_query($connection, "COMMIT");
                 } else {
                     $status = 'error';
-                    $msg = 'Something went wrong while trying to create new company';
+                    $msg = 'Something went wrong while trying to updating company';
                     mysqli_query($connection, "ROLLBACK");
                 }
             } else {

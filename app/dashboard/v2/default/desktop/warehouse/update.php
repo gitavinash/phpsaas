@@ -38,8 +38,29 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="">
                         </div>
                         <div class="form-group">
+                            <p>Warehouse company</p>
+                            <select class="selectJS form-control" name="companyId" id="companyId">
+                                <option value="select">Select company</option>
+                                <?php
+
+                                if ($compnayList = mysqli_query($connection, "SELECT company_id, company_code, company_title, city_name, state_name FROM " . TABLE_PREFIX . "company INNER JOIN " . TABLE_PREFIX . "address ON company_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id WHERE company_status=1 AND company_site_id=" . SITE_ID)) {
+                                    if (mysqli_num_rows($compnayList) > 0) {
+                                        while ($row = mysqli_fetch_array($compnayList)) {
+                                            echo "<option value='{$row['company_id']}'" . (($warehouse_company_id == $row['company_id']) ? 'selected' : '') . ">{$row['company_title']}</option>";
+                                        }
+                                    }
+                                }
+
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <input id="name" name="name" value="<?php echo $warehouse_title ?>" type="text" />
                             <label class="form-lable" id="Label">Warehouse name<sup>*</sup></label>
+                        </div>
+                        <div class="form-group">
+                            <input id="warehouseCode" name="warehouseCode" value="<?php echo $warehouse_code ?>" type="text" />
+                            <label class="form-lable" id="Label">Warehouse Code or ID</label>
                         </div>
                         <div class="form-group">
                             <textarea name="description" id="description" cols="30" rows="10"><?php echo $warehouse_description ?></textarea>
@@ -96,41 +117,8 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="warehouseRegistrationNumber" value="<?php echo $warehouse_cin ?>" name="cin" type="text" />
-                            <label class="form-lable" id="Label">Registration no. ( CIN )</label>
-                        </div>
-                        <div class="form-group">
                             <input id="gstNumber" name="gst" value="<?php echo $warehouse_gst ?>" type="text" />
                             <label class="form-lable" id="Label">GST Number</label>
-                        </div>
-                        <div class="form-group">
-                            <input id="apnNumber" name="pan" value="<?php echo $warehouse_pan ?>" type="text" />
-                            <label class="form-lable" id="Label">PAN Number</label>
-                        </div>
-                        <div class="form-group">
-                            <input id="warehouseCode" name="warehouseCode" value="<?php echo $warehouse_code ?>" type="text" />
-                            <label class="form-lable" id="Label">Warehouse Code or ID</label>
-                        </div>
-                        <div class="form-group">
-                            <p>Warehouse type</p>
-                            <select class="selectJS form-control" name="warehouseType" id="warehouseType">
-                                <option value="select">Select registration type</option>
-                                <option value="private" <?php echo (($warehouse_type == 'private') ? 'selected' : '') ?>>
-                                    Private Limited Warehouse</option>
-                                <option value="public" <?php echo (($warehouse_type == 'public') ? 'selected' : '') ?>>
-                                    Public Limited Warehouse</option>
-                                <option value="partnerships" <?php echo (($warehouse_type == 'partnerships') ? 'selected' : '') ?>>Partnerships
-                                </option>
-                                <option value="llp" <?php echo (($warehouse_type == 'llp') ? 'selected' : '') ?>>LLP
-                                    Registration</option>
-                                <option value="opc" <?php echo (($warehouse_type == 'opc') ? 'selected' : '') ?>>One
-                                    Person
-                                    Warehouse ( OPC )</option>
-                                <option value="proprietorship" <?php echo (($warehouse_type == 'proprietorship') ? 'selected' : '') ?>>Sole
-                                    Proprietorship</option>
-                                <option value="section8" <?php echo (($warehouse_type == 'section8') ? 'selected' : '') ?>>
-                                    Section 8 Warehouse</option>
-                            </select>
                         </div>
                         <div class="box-1">
                             <div class="form-group">

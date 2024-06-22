@@ -7,36 +7,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = 'warning';
     $msg = '';
     $country = ((isset($country)) ? $country : '101');
-    $companyType = ((isset($companyType)) ? (($companyType != 'select') ? $companyType : '') : '');
+    $warehouseType = ((isset($warehouseType)) ? (($warehouseType != 'select') ? $warehouseType : '') : '');
 
     if ($name == '') {
-        $msg = 'Kindly enter company name';
+        $msg = 'Kindly enter warehouse name';
     }
 
     if ($address == '') {
-        $msg = 'Kindly enter company address';
+        $msg = 'Kindly enter warehouse address';
     }
 
     if ($city == '') {
-        $msg = 'Kindly enter company city';
+        $msg = 'Kindly enter warehouse city';
     }
 
     if ($state == '') {
-        $msg = 'Kindly select company state';
+        $msg = 'Kindly select warehouse state';
     }
 
     if ($pinCode == '') {
-        $msg = 'Kindly enter company pin code';
+        $msg = 'Kindly enter warehouse pin code';
     }
 
     if ($email == '') {
-        $msg = 'Kindly enter company email';
+        $msg = 'Kindly enter warehouse email';
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $msg = 'Kindly enter valid email address';
     }
 
     if ($mobile == '') {
-        $msg = 'Kindly enter company mobile';
+        $msg = 'Kindly enter warehouse mobile';
     } else if (!preg_match("/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/", $mobile)) {
         $msg = "Kindly enter a valid mobile number";
     }
@@ -45,25 +45,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         mysqli_query($connection, "START TRANSACTION");
 
-        if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_id='{$companyId}'")) {
-            if (mysqli_num_rows($checkCompany) > 0) {
-                $addAddress = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "address(address_site_id, address_user_id, address_name, address_area, address_city_id, address_state_id, address_country_id, address_pin_code, address_type, address_status) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$address}', '{$city}', '{$state}', '{$country}', '{$pinCode}', 'work', 1)");
+        if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_id='{$warehouseId}'")) {
+            if (mysqli_num_rows($checkWarehouse) > 0) {
+                $addAddress = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "address(address_site_id, address_user_id, address_name, address_area, address_city_id, address_state_id, address_country_id, address_pin_code, address_type, address_status) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$address}', '{$city}', '{$state}', '{$country}', '{$pinCode}', 'warehouse', 1)");
                 $addressId = mysqli_insert_id($connection);
 
-                $updateCompany = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "company SET company_code='{$companyCode}', company_address_id='{$addressId}', company_title='{$name}', company_description='{$description}', company_gst='{$gst}', company_pan='{$pan}', company_cin='{$cin}', company_email='{$email}', company_mobile='{$mobile}', company_type='{$companyType}' WHERE company_id='{$companyId}'");
+                $updateWarehouse = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "warehouse SET warehouse_code='{$warehouseCode}', warehouse_address_id='{$addressId}', warehouse_company_id='{$companyId}', warehouse_title='{$name}', warehouse_description='{$description}', warehouse_gst='{$gst}', warehouse_email='{$email}', warehouse_mobile='{$mobile}' WHERE warehouse_id='{$warehouseId}'");
 
-                if ($addAddress && $updateCompany) {
+                if ($addAddress && $updateWarehouse) {
                     $status = 'success';
                     $httpStatus = 204;
-                    $msg = 'Company details updated successfully';
+                    $msg = 'Warehouse details updated successfully';
                     mysqli_query($connection, "COMMIT");
                 } else {
                     $status = 'error';
-                    $msg = 'Something went wrong while trying to create new company';
+                    $msg = 'Something went wrong while trying to updating warehouse';
                     mysqli_query($connection, "ROLLBACK");
                 }
             } else {
-                $msg = "Invalid company request found to update";
+                $msg = "Invalid warehouse request found to update";
             }
         } else {
             $msg = "Something went wrong while executing the query";
