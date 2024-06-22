@@ -35,7 +35,7 @@
                             <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="email" name="email" type="text" />
+                            <input id="email" name="email" type="email" />
                             <label class="form-lable" id="Label">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -49,8 +49,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addTransporter"
-                                    value="Add new transporter">
+                                <input type="submit" class="btn btn-green" id="addTransporter" value="Add new transporter">
                             </div>
                         </div>
                     </div>

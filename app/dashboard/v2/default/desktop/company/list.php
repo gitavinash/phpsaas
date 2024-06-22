@@ -1,7 +1,7 @@
-<h2 class="heading">Properties list<span>All propertys list will be displayed her</span>
+<h2 class="heading">Companies list<span>All Companies list will be displayed her</span>
 </h2>
 <div class="shortcut">
-    <a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-plus"></i></a>
+    <a href="/dashboard/company/add/"><i class="fi fi-rr-plus"></i></a>
 </div>
 <div class="main-box">
     <section>
@@ -9,7 +9,7 @@
             <div class="form-group">
                 <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
                 <select id="hostingStatus">
-                    <option value="">Property Status</option>
+                    <option value="">Company Status</option>
                 </select>
             </div>
         </div>
@@ -18,27 +18,26 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
                         <th>Address</th>
-                        <th>Property type</th>
+                        <th>Company type</th>
+                        <th>City</th>
                         <th></th>
                     </tr>
                 </thead>
                 <?php
 
-                if ($propertyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property WHERE property_site_id=" . SITE_ID)) {
+                if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company INNER JOIN " . TABLE_PREFIX . "address ON company_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE company_site_id=" . SITE_ID . " ORDER BY company_update DESC")) {
                     echo "<tbody>";
-                    if (mysqli_num_rows($propertyList) > 0) {
-                        while ($propertyData = mysqli_fetch_assoc($propertyList)) {
-                            extract($propertyData);
+                    if (mysqli_num_rows($companyList) > 0) {
+                        while ($companyData = mysqli_fetch_assoc($companyList)) {
+                            extract($companyData);
                             echo "<tr>
-                                <td>{$property_title}</td>
-                                <td>{$property_email}</td>
-                                <td>{$property_mobile}</td>
-                                <td>{$property_address} {$property_city}  {$property_pincode}</td>
-                                <td>" . ucwords(str_replace('_', ' ', $property_type)) . "</td>
+                                <td>{$company_title}</td>
+                                <td>{$address_area}, {$city_name} - {$address_pin_code}</td>
+                                <td>" . ucwords(str_replace('_', ' ', $company_type)) . "</td>
+                                <td>{$city_name}</td>
                                 <td>
+                                <a href='/dashboard/company/update/?id=" . base64_encode($company_id) . "' class='tableActionIconBtn'><i class='fi fi-rr-edit bgred'></i></a>
                                 </td>
                             </tr>";
                         }

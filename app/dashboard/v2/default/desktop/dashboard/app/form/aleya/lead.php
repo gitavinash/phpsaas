@@ -17,7 +17,7 @@
             <label class="form-lable" id="Label">Last name</label>
         </div>
         <div class="form-group">
-            <input id="email" name="email" type="text" />
+            <input id="email" name="email" type="email" />
             <label class="form-lable" id="Label">Email</label>
         </div>
         <div class="form-group">

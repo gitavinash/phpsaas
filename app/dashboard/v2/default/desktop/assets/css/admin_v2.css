@@ -2402,3 +2402,17 @@ section.form
     padding-top: 25px;
   }
 }
+
+.tableActionIconBtn i {
+  line-height: 36px;
+  color: #ffffff;
+  float: left;
+  width: 30px;
+  height: 30px;
+  border-radius: 32px;
+  font-size: 19px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+}

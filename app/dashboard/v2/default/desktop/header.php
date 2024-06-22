@@ -1,45 +1,5 @@
 <?php
 
-$stateDropDownList = '
-<option value="Andaman and Nicobar Island">Andaman and Nicobar Island</option>
-                                <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                <option value="Assam">Assam</option>
-                                <option value="Bihar">Bihar</option>
-                                <option value="Chandigarh">Chandigarh</option>
-                                <option value="Chhattisgarh">Chhattisgarh</option>
-                                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and
-                                    Daman and Diu</option>
-                                <option value="Delhi" selected>Delhi</option>
-                                <option value="Goa">Goa</option>
-                                <option value="Gujarat">Gujarat</option>
-                                <option value="Haryana">Haryana</option>
-                                <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                <option value="Jharkhand">Jharkhand</option>
-                                <option value="Karnataka">Karnataka</option>
-                                <option value="Kerala">Kerala</option>
-                                <option value="Ladakh">Ladakh</option>
-                                <option value="Lakshadweep">Lakshadweep</option>
-                                <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                <option value="Maharashtra">Maharashtra</option>
-                                <option value="Manipur">Manipur</option>
-                                <option value="Meghalaya">Meghalaya</option>
-                                <option value="Mizoram">Mizoram</option>
-                                <option value="Nagaland">Nagaland</option>
-                                <option value="Odisha">Odisha</option>
-                                <option value="Puducherry">Puducherry</option>
-                                <option value="Punjab">Punjab</option>
-                                <option value="Rajasthan">Rajasthan</option>
-                                <option value="Sikkim">Sikkim</option>
-                                <option value="Tamil Nadu">Tamil Nadu</option>
-                                <option value="Telangana">Telangana</option>
-                                <option value="Tripura">Tripura</option>
-                                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                <option value="Uttarakhand">Uttarakhand</option>
-                                <option value="West Bengal">West Bengal</option>
-';
-
 $appDashboardDirectory = ADMIN_PATH . 'dashboard/app/';
 
 $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
@@ -77,19 +37,18 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
-        media="screen">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap" media="screen">
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "lrfkm51aya");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "lrfkm51aya");
     </script>
 </head>
 
@@ -100,8 +59,7 @@ if (isset($daterange)) {
     </div> -->
     <!-- Show this section when page is loading -->
     <div class="pageLoader">
-        <img src="<?php echo ((SITE_APP_IMAGE != '') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg') ?>"
-            alt="Aleya logo">
+        <img src="<?php echo ((SITE_APP_IMAGE != '') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg') ?>" alt="Aleya logo">
     </div>
     <header>
         <div class="right-side">
@@ -114,14 +72,11 @@ if (isset($daterange)) {
                 </form> -->
             </div>
             <ul>
-                <li><a href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
-                        target="_blank" title="Support"><i class="fi-rr-headset" style="color: #167347;"></i></a></li>
+                <li><a href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>" target="_blank" title="Support"><i class="fi-rr-headset" style="color: #167347;"></i></a></li>
                 <li><a href="#" onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
-                                alt=""></div>
+                        <div class="profile-img"><img src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>" alt=""></div>
                     </a>
                     <ul>
                         <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
@@ -143,8 +98,7 @@ if (isset($daterange)) {
                     <p>Dashboard<span>View performance reports.</span></p>
                 </li>
 
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
-                            class="fi-rr-home"></i> Dashboard</a></li>
+                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fi-rr-home"></i> Dashboard</a></li>
 
                 <?php
                 $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
@@ -167,7 +121,7 @@ if (isset($daterange)) {
                             <?php
                             if ($site_access_type == 'administrator') { ?>
 
-                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                                <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
@@ -180,7 +134,7 @@ if (isset($daterange)) {
 
                             if ($site_access_type == 'administrator') { ?>
 
-                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                                <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
@@ -193,21 +147,21 @@ if (isset($daterange)) {
                 if ($site_access_type == 'administrator') { ?>
 
 
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="users/"><i class="fi fi-rr-user"></i> Users</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                            <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
-                        </ul>
-                    </div>
-                </li>
+                    <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/') !== false) ? 'class="active"' : '') ?>>
+                        <a href="users/"><i class="fi fi-rr-user"></i> Users</a>
+                        <div class="side-menu">
+                            <ul>
+                                <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                                <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-menu">
+                            <ul>
+                                <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                                <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
+                            </ul>
+                        </div>
+                    </li>
 
                 <?php }
                 ?>
@@ -228,10 +182,10 @@ if (isset($daterange)) {
 
             if (ADMIN_BASE_URL != '/') { ?>
 
-            <div class="i-m-here-pagination">
-                <ul>
-                    <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
-                    <?php
+                <div class="i-m-here-pagination">
+                    <ul>
+                        <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
+                        <?php
 
                         $paginationURL = '';
 
@@ -242,8 +196,8 @@ if (isset($daterange)) {
                         }
 
                         ?>
-                </ul>
-            </div>
+                    </ul>
+                </div>
 
             <?php
             }

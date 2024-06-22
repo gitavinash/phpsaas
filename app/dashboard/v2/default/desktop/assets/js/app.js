@@ -1284,6 +1284,31 @@ $("#updateProperty").click(function (e) {
   e.preventDefault();
 });
 
+var stateDropDown = document.getElementById("stateDropDown");
+
+if ($("#stateDropDown")) {
+  $("#state").on("change", function (e) {
+    e.preventDefault();
+    var stateId = $("#state").val();
+    $.ajax({
+      type: "GET",
+      url: "/api/city/?state_id=" + stateId,
+      dataType: "json",
+      success: function (response) {
+        $("#cityBox").show();
+        $("#city").empty();
+        $("#city").append(new Option("Select city", "select"));
+        response.cityData.forEach(function (city) {
+          $("#city").append(new Option(city.name, city.id));
+        });
+      },
+      error: function (response) {
+        console.log(`Error : `, response);
+      },
+    });
+  });
+}
+
 // #########################################################
 // Vehicle
 // #########################################################
@@ -1474,4 +1499,160 @@ $("#addTransporter").click(function (e) {
     popUpMessage("center", "Enter transporter name", "warning");
   }
   $("#addTransporter").show();
+});
+
+// Add new company
+
+$("#addCompany").click(function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  var address = $("#address").val();
+  var state = $("#state").val();
+  var city = $("#city").val();
+  var pinCode = $("#pinCode").val();
+  var email = $("#email").val();
+  var mobile = $("#mobile").val();
+
+  if (state == "select") {
+    state = "";
+  }
+
+  if (city == "select") {
+    city = "";
+  }
+
+  submitRequest = false;
+  msg = "Required input is missing";
+
+  if (name != "") {
+    if (address != "") {
+      if (state != "") {
+        if (city != "") {
+          if (pinCode != "") {
+            if (email != "") {
+              if (mobile != "") {
+                submitRequest = true;
+              } else {
+                msg = "Kindly enter company mobile";
+              }
+            } else {
+              msg = "Kindly enter company email";
+            }
+          } else {
+            msg = "Kindly enter company address pin code";
+          }
+        } else {
+          msg = "Kindly enter company address city";
+        }
+      } else {
+        msg = "Kindly select state of company address";
+      }
+    } else {
+      msg = "Kindly enter company address";
+    }
+  } else {
+    msg = "Kindly enter company name";
+  }
+
+  if (!submitRequest) {
+    popUpMessage("center", msg, "warning");
+  } else {
+    var formData = $("#addNewCompanyForm").serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/api/company/create/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            const companyId = btoa(successResponse.companyId);
+            window.location.href = `/dashboard/company/update/?id=${companyId}`;
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+      },
+    });
+  }
+});
+
+// Update company
+
+$("#updateCompany").click(function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  var address = $("#address").val();
+  var state = $("#state").val();
+  var city = $("#city").val();
+  var pinCode = $("#pinCode").val();
+  var email = $("#email").val();
+  var mobile = $("#mobile").val();
+
+  if (state == "select") {
+    state = "";
+  }
+
+  if (city == "select") {
+    city = "";
+  }
+
+  submitRequest = false;
+  msg = "Required input is missing";
+
+  if (name != "") {
+    if (address != "") {
+      if (state != "") {
+        if (city != "") {
+          if (pinCode != "") {
+            if (email != "") {
+              if (mobile != "") {
+                submitRequest = true;
+              } else {
+                msg = "Kindly enter company mobile";
+              }
+            } else {
+              msg = "Kindly enter company email";
+            }
+          } else {
+            msg = "Kindly enter company address pin code";
+          }
+        } else {
+          msg = "Kindly enter company address city";
+        }
+      } else {
+        msg = "Kindly select state of company address";
+      }
+    } else {
+      msg = "Kindly enter company address";
+    }
+  } else {
+    msg = "Kindly enter company name";
+  }
+
+  if (!submitRequest) {
+    popUpMessage("center", msg, "warning");
+  } else {
+    var formData = $("#updateCompanyForm").serialize();
+    $.ajax({
+      type: "POST",
+      url: "/api/company/update/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            window.location.href = `/dashboard/company/list/`;
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+      },
+    });
+  }
 });
