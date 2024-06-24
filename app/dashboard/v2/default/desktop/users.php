@@ -1,7 +1,7 @@
 <h2 class="heading"><?php echo ucwords($postType) ?> <span>Single line intro about this section</span></h2>
 <div class="main-menu-list">
     <div class="widget box-2-5">
-        <a href="users/list/">
+        <a href="user/list/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-apps-sort"></i>
@@ -14,7 +14,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="users/add/">
+        <a href="user/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-user-add"></i>

@@ -147,18 +147,18 @@ if (isset($daterange)) {
                 if ($site_access_type == 'administrator') { ?>
 
 
-                    <li <?php echo ((strpos(ADMIN_BASE_URL, '/users/') !== false) ? 'class="active"' : '') ?>>
-                        <a href="users/"><i class="fi fi-rr-user"></i> Users</a>
+                    <li <?php echo ((strpos(ADMIN_BASE_URL, '/user/') !== false) ? 'class="active"' : '') ?>>
+                        <a href="user/"><i class="fi fi-rr-user"></i> Users</a>
                         <div class="side-menu">
                             <ul>
-                                <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
+                                <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                                <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
                             </ul>
                         </div>
                         <div class="bottom-menu">
                             <ul>
-                                <li><a href="users/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="users/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
+                                <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                                <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
                             </ul>
                         </div>
                     </li>

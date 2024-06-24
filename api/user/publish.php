@@ -7,8 +7,8 @@ function publish($connection, $data)
 
     extract($data);
 
-    $msg='';
-    $status='warning';
+    $msg = '';
+    $status = 'warning';
 
     if ($email == '') {
 
@@ -42,9 +42,9 @@ function publish($connection, $data)
 
     // User registraion process
 
-    if($msg=='') {
+    if ($msg == '') {
 
-        if ($checkEmail = mysqli_query($connection, "SELECT user_email FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}'")) {
+        if ($checkEmail = mysqli_query($connection, "SELECT user_email, user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}'")) {
 
             if (mysqli_num_rows($checkEmail) == 0) {
 
@@ -80,7 +80,23 @@ function publish($connection, $data)
                         $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', 1, NOW(), '" . IP . "')");
                         $userID = mysqli_insert_id($connection);
 
-                        $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(" . SITE_ID . ", '{$userID}', '{$userRole}', 1)");
+                        $site_access_meta = '';
+
+                        // For Intenary management
+
+                        if (isset($company)) {
+                            if (!isset($warehouse)) {
+                                $warehouse = 'all';
+                            } else {
+                                $warehouse = (($warehouse != '') ? $warehouse : 'all');
+                            }
+                            $site_access_meta = json_encode(array(
+                                'company' => $company,
+                                'warehouse' => $warehouse
+                            ), TRUE);
+                        }
+
+                        $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES(" . SITE_ID . ", '{$userID}', '{$userRole}', 1, '{$site_access_meta}')");
 
                         $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$mobile}', '{$profile_display_name}', '{$email}')");
 
@@ -103,18 +119,48 @@ function publish($connection, $data)
                 }
             } else {
 
-                $status = 'warning';
-                $msg = 'This email is already in use.';
+                extract(mysqli_fetch_assoc($checkEmail));
+
+                if ($checkAccess = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site_access WHERE site_access_user_id='{$user_id}' AND site_access_type='{$userRole}' AND site_access_site_id=" . SITE_ID)) {
+                    if (mysqli_num_rows($checkAccess) == 0) {
+                        if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_user_id, site_access_site_id,site_access_type, site_access_status) VALUES('{$user_id}', " . SITE_ID . ", '{$userRole}', 1)")) {
+                            $status = 'error';
+                            $msg = 'Something went wrong while trying to user access';
+                        } else {
+                            $userID = $user_id;
+                            $status = 'success';
+                            $msg = 'You are successfully registered';
+                        }
+                    } else {
+                        extract(mysqli_fetch_assoc($checkAccess));
+                        if ($site_access_status == 2) {
+                            if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_access SET site_access_status=1 WHERE site_access_user_id='{$user_id}' AND site_access_type='{$userRole}' AND site_access_site_id=" . SITE_ID)) {
+                                $status = 'error';
+                                $msg = 'Something went wrong while trying to user access';
+                            } else {
+                                $userID = $user_id;
+                                $status = 'success';
+                                $msg = 'You are successfully registered';
+                            }
+                        } else {
+                            $status = 'warning';
+                            $msg = 'This email is already in use.';
+                        }
+                    }
+                } else {
+                    $status = 'error';
+                    $msg = mysqli_error($connection);
+                }
             }
         }
     }
 
-    $msg=urlencode($msg);
+    $msg = urlencode($msg);
 
     if ($status === 'success') {
-        header("Location: /dashboard/users/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+        header("Location: /dashboard/user/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
     } else {
-        header("Location: /dashboard/users/add/?responseMsg={$msg}&status={$status}", TRUE, 301);
+        header("Location: /dashboard/user/add/?responseMsg={$msg}&status={$status}", TRUE, 301);
     }
 
     exit();

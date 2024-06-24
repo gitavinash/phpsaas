@@ -5,10 +5,10 @@ function update($connection, $data)
 {
 
     extract($data);
-    $user_id=base64_decode($user_id);
-    
-    $msg='';
-    $status='warning';
+    $user_id = base64_decode($user_id);
+
+    $msg = '';
+    $status = 'warning';
 
     if ($first_name == '') {
 
@@ -19,7 +19,7 @@ function update($connection, $data)
 
         $msg = 'Please enter a mobile number';
     }
-    
+
     if ($userRole == '') {
 
         $msg = 'Please select user role';
@@ -27,7 +27,7 @@ function update($connection, $data)
 
     // User registraion process
 
-    if($msg=='') {
+    if ($msg == '') {
 
         if ($verifyUser = mysqli_query($connection, "SELECT user_email FROM " . TABLE_PREFIX . "user WHERE user_id='{$user_id}' AND user_email='{$email}' AND user_mobile='{$mobile}'")) {
 
@@ -35,22 +35,37 @@ function update($connection, $data)
 
                 mysqli_query($connection, "START TRANSACTION");
 
-                $displayName=$first_name.' '.$last_name;
+                $displayName = $first_name . ' ' . $last_name;
 
-                $updateProfileQuery=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$displayName}' WHERE profile_user_id='{$user_id}'");
+                $updateProfileQuery = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile SET profile_first_name='{$first_name}', profile_last_name='{$last_name}', profile_display_name='{$displayName}' WHERE profile_user_id='{$user_id}'");
 
-                $updateUserAccessQuery=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."site_access SET site_access_type='{$userRole}' WHERE site_access_user_id='{$user_id}' AND site_access_site_id=".SITE_ID);
+                $site_access_meta = '';
 
-                if($updateProfileQuery && $updateUserAccessQuery) {
-                    $status='success';
-                    $msg='User update successfully';
+                // For Intenary management
+
+                if (isset($company)) {
+                    if (!isset($warehouse)) {
+                        $warehouse = 'all';
+                    } else {
+                        $warehouse = (($warehouse != '') ? $warehouse : 'all');
+                    }
+                    $site_access_meta = json_encode(array(
+                        'company' => $company,
+                        'warehouse' => $warehouse
+                    ), TRUE);
+                }
+
+                $updateUserAccessQuery = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_access SET site_access_type='{$userRole}', site_access_meta='{$site_access_meta}' WHERE site_access_user_id='{$user_id}' AND site_access_site_id=" . SITE_ID);
+
+                if ($updateProfileQuery && $updateUserAccessQuery) {
+                    $status = 'success';
+                    $msg = 'User update successfully';
                     mysqli_query($connection, "COMMIT");
                 } else {
-                    $status='error';
-                    $msg='Something went wrong while updating the user';
+                    $status = 'error';
+                    $msg = 'Something went wrong while updating the user';
                     mysqli_query($connection, "ROLLBACK");
                 }
-                
             } else {
 
                 $status = 'error';
@@ -59,8 +74,8 @@ function update($connection, $data)
         }
     }
 
-    $msg=urlencode($msg);
-    header("Location: /dashboard/users/edit/?id=" . base64_encode($user_id) . "&responseMsg={$msg}&status={$status}", TRUE, 301);
+    $msg = urlencode($msg);
+    header("Location: /dashboard/user/edit/?id=" . base64_encode($user_id) . "&responseMsg={$msg}&status={$status}", TRUE, 301);
 
     exit();
 }
