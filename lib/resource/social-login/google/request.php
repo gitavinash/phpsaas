@@ -65,7 +65,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
             // Check user is exist in database
 
-            if ($checkSiteAccess = mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_email='{$_SESSION['google_email']}' LIMIT 1")) {
+            if ($checkSiteAccess = mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_meta, site_access_status FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_email='{$_SESSION['google_email']}' LIMIT 1")) {
                 if (mysqli_num_rows($checkSiteAccess) == 0) {
                     // Check user site access
                     if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user WHERE user_email='{$_SESSION['google_email']}'")) {
@@ -112,6 +112,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                 setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_image', base64_encode($_SESSION['google_picture']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_data', base64_encode($saltKey), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                                setcookie('user_meta', '', time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_type', base64_encode('subscriber'), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
 
@@ -144,6 +145,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                         setcookie('user_email', base64_encode($email), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                        setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
 
