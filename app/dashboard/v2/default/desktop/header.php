@@ -1,8 +1,13 @@
 <?php
 
 $appDashboardDirectory = ADMIN_PATH . 'dashboard/app/';
-
 $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
+$siteAccessMeta = '';
+if (isset($_COOKIE['user_meta'])) {
+    if ($_COOKIE['user_meta'] != '') {
+        $siteAccessMeta = (json_decode(base64_decode($_COOKIE['user_meta']), TRUE));
+    }
+}
 
 if (isset($daterange)) {
     $dates = explode(" - ", $daterange);

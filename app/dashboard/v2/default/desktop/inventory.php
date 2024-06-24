@@ -2,7 +2,7 @@
         section</span></h2>
 <div class="main-menu-list">
     <div class="widget box-2-5">
-        <a href="book_keeping/list/">
+        <a href="inventory/list/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-apps-sort"></i>
@@ -15,7 +15,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="book_keeping/add/">
+        <a href="inventory/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-add"></i>
