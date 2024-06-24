@@ -48,7 +48,7 @@
                                 class='tableActionIconBtn'><i class="fi fi-rr-edit bgLightGreen"></i></a>
                             <?php
 
-                                        if ($site_access_type != 'administrator' && USER_ID != $user_id) { ?>
+                                        if ($site_access_type != 'administrator' || USER_ID != $user_id) { ?>
                             <a href='#' data-type='user' data-id='<?php echo $user_id ?>'
                                 class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>
                             <?php
