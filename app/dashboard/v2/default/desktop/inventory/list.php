@@ -14,40 +14,31 @@
             </div>
         </div>
         <div class="list-box">
-            <table class="showTableList">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Company</th>
-                        <th>Address</th>
-                        <th>City</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <?php
+            <?php
 
-                if ($inventoryList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "inventory INNER JOIN " . TABLE_PREFIX . "address ON inventory_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "company ON inventory_company_id=company_id WHERE inventory_site_id=" . SITE_ID . " AND inventory_status=1 ORDER BY inventory_updated DESC")) {
-                    echo "<tbody>";
-                    if (mysqli_num_rows($inventoryList) > 0) {
-                        while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
-                            extract($inventoryData);
-                            echo "<tr>
-                                <td>{$inventory_title}</td>
-                                <td>{$company_title}</td>
-                                <td>{$address_area}, {$city_name} - {$address_pin_code}</td>
-                                <td>{$city_name}</td>
-                                <td>
-                                <a href='/dashboard/inventory/update/?id=" . base64_encode($inventory_id) . "' class='tableActionIconBtn'><i class='fi fi-rr-edit bgLightGreen'></i></a>
-                                <a href='#' data-type='inventory' data-id='{$inventory_id}' class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>
-                                </td>
-                            </tr>";
-                        }
-                    }
-                    echo "</tbody>";
-                }
+            $leadFormPath = $dashboardDirectory . '/dashboard/app/list/' . SITE_APP;
+            $leadForm = $leadFormPath . '/list-inventory.php';
+            if (file_exists($leadForm)) {
+                require_once $leadForm;
+            } else { ?>
+                <table class="showTableList">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Table informartion is missing</td>
+                        </tr>
+                    </thead>
+                </table>
+            <?php
+            }
 
-                ?>
-            </table>
+            ?>
         </div>
     </section>
 </div>

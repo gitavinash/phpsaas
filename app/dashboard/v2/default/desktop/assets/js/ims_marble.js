@@ -1,3 +1,10 @@
+var storedData = localStorage.getItem("damageData");
+var formData = storedData ? JSON.parse(storedData) : {};
+
+// Function to update localStorage
+function updateLocalStorage() {
+  localStorage.setItem("damageData", JSON.stringify(formData));
+}
 // User
 
 var companyDropDown = document.getElementById("companyDropDown");
@@ -192,3 +199,205 @@ $("#updateSupplier").click(function (e) {
     });
   }
 });
+
+// Add new block
+
+// Add new supplier
+
+$("#addBlock").click(function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  var warehouseId = $("#warehouseId").val();
+  var itemCode = $("#itemCode").val();
+  var totalItem = $("#totalItem").val();
+  var thickness = $("#thickness").val();
+  var supplier = $("#supplier").val();
+
+  if (warehouseId == "select") {
+    warehouseId = "";
+  }
+
+  if (supplier == "select") {
+    supplier = "";
+  }
+
+  submitRequest = false;
+  msg = "Required input is missing";
+
+  if (name != "") {
+    if (warehouseId != "") {
+      if (itemCode != "") {
+        if (totalItem != "") {
+          if (thickness != "") {
+            if (supplier != "") {
+              submitRequest = true;
+            } else {
+              msg = "Kindly select block supplier";
+            }
+          } else {
+            msg = "Kindly enter block item thickness";
+          }
+        } else {
+          msg = "Kindly enter the total number of items";
+        }
+      } else {
+        msg = "Kinldy enter item code of block";
+      }
+    } else {
+      msg = "Kindly select block warehouse";
+    }
+  } else {
+    msg = "Kindly enter block name";
+  }
+
+  if (!submitRequest) {
+    popUpMessage("center", msg, "warning");
+  } else {
+    var formData = new FormData(document.getElementById("addNewInventoryForm"));
+
+    $.ajax({
+      type: "POST",
+      url: "/api/block/publish/",
+      dataType: "JSON",
+      data: formData,
+      processData: false,
+      contentType: false,
+      encrypt: "multipart/form-data",
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            const blockId = btoa(successResponse.id);
+            window.location.href = `/dashboard/inventory/update/?id=${blockId}`;
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  }
+});
+
+// Update block
+
+// Add new supplier
+
+$("#updateBlock").click(function (e) {
+  e.preventDefault();
+  var name = $("#name").val();
+  var warehouseId = $("#warehouseId").val();
+  var itemCode = $("#itemCode").val();
+  var totalItem = $("#totalItem").val();
+  var thickness = $("#thickness").val();
+  var supplier = $("#supplier").val();
+
+  if (warehouseId == "select") {
+    warehouseId = "";
+  }
+
+  if (supplier == "select") {
+    supplier = "";
+  }
+
+  submitRequest = false;
+  msg = "Required input is missing";
+
+  if (name != "") {
+    if (warehouseId != "") {
+      if (itemCode != "") {
+        if (totalItem != "") {
+          if (thickness != "") {
+            if (supplier != "") {
+              submitRequest = true;
+            } else {
+              msg = "Kindly select block supplier";
+            }
+          } else {
+            msg = "Kindly enter block item thickness";
+          }
+        } else {
+          msg = "Kindly enter the total number of items";
+        }
+      } else {
+        msg = "Kinldy enter item code of block";
+      }
+    } else {
+      msg = "Kindly select block warehouse";
+    }
+  } else {
+    msg = "Kindly enter block name";
+  }
+
+  if (!submitRequest) {
+    popUpMessage("center", msg, "warning");
+  } else {
+    var formData = new FormData(document.getElementById("updateInventoryForm"));
+
+    $.ajax({
+      type: "POST",
+      url: "/api/block/update/",
+      dataType: "JSON",
+      data: formData,
+      processData: false,
+      contentType: false,
+      encrypt: "multipart/form-data",
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            const blockId = btoa(successResponse.id);
+            window.location.href = `/dashboard/inventory/update/?id=${blockId}`;
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  }
+});
+
+// Manage damage box
+
+var manageDamageBtn = document.getElementsByClassName("manageDamage");
+
+if (manageDamageBtn) {
+  $(".manageDamage").click(function (e) {
+    e.preventDefault();
+    $(".cloneDamageForm").empty();
+    $(".manageDamageBox").show();
+  });
+}
+
+var addNewDamageBtn = document.getElementById("addNewDamage");
+
+if (addNewDamageBtn) {
+  $("#addNewDamage").on("click", function (e) {
+    e.preventDefault();
+
+    var $originalForm = $("#damageForm").clone(true);
+
+    var id = Object.keys(formData).length + 1;
+    $originalForm.attr("id", "damageForm_" + id);
+    $(".cloneDamageForm").append($originalForm);
+
+    formData["damageForm_" + id] = {
+      width: $originalForm.find(".width").val(),
+      height: $originalForm.find(".height").val(),
+      comment: $originalForm.find(".comment").val(),
+    };
+
+    updateLocalStorage();
+  });
+}

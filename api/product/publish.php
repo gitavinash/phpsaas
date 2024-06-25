@@ -1,5 +1,4 @@
 <?php
-
 function publish($connection, $data)
 {
 

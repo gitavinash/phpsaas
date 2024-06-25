@@ -6,7 +6,7 @@
             <li class="step-box active" id="step_1"><span>1</span>Inventory details</li>
         </ul>
         <div class="steps-box">
-            <form action="#" id="addNewInventoryForm" method="POST">
+            <form action="#" id="addNewInventoryForm" method="POST" enctype="multipart/form-data">
                 <section class="form">
 
                     <?php

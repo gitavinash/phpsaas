@@ -12,6 +12,28 @@ if (typeof tempId !== "undefined") {
   dateRangeParams += "&userId=" + tempId;
 }
 
+/** gallery */
+
+var addGallery = document.getElementsByClassName("addGallery");
+var updateGallery = document.getElementsByClassName("updateGallery");
+
+if (addGallery) {
+  $(".addGallery").imageUploader({
+    imagesInputName: "gallery",
+    maxFiles: 10,
+  });
+}
+
+if (updateGallery) {
+  $(".updateGallery").imageUploader({
+    preloaded: oldGalleryImages,
+    imagesInputName: "gallery",
+    preloadedInputName: "oldGallery",
+    maxSize: 2 * 1024 * 1024,
+    maxFiles: 10,
+  });
+}
+
 function showPageLoader() {
   $(".pageLoader").fadeIn();
 }
@@ -45,9 +67,19 @@ $(".deleteButton").on("click", function (event) {
         success: function (response) {
           popUpMessage("center", response.msg, response.status);
           if (response.status == "success") {
+            let parts = requestType.split("/");
+            let lastPart = parts[parts.length - 1];
+            switch (lastPart) {
+              case "block":
+                lastPart = "inventory";
+                break;
+            }
             setTimeout(function () {
-              window.location.href = `/dashboard/${requestType}/list/`;
+              window.location.href = `/dashboard/${lastPart}/list/`;
             }, 1500);
+            // setTimeout(function () {
+            //   window.location.href = `/dashboard/${requestType}/list/`;
+            // }, 1500);
           }
         },
         error: function (response) {
@@ -592,6 +624,7 @@ if ($("#totalOrderAmount").length) {
 if ($(".showTableList").length) {
   $(".showTableList").DataTable({
     pageLength: 50,
+    responsive: true,
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
       { width: "20%", targets: 1 },

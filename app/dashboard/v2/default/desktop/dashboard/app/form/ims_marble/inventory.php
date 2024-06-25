@@ -5,13 +5,23 @@
     </div>
     <?php
 
-    if ($siteAccessMeta['warehouse'] == 'all') { ?>
+    if (isset($siteAccessMeta['warehouse'])) {
+        if ($siteAccessMeta['warehouse'] == 'all') {
+            $showWarehouse = 'all';
+        } else {
+            $showWarehouse = $siteAccessMeta['warehouse'];
+        }
+    } else {
+        $showWarehouse = 'all';
+    }
 
-    <div class="form-group">
-        <p>Warehouse </p>
-        <select class="selectJS form-control" name="warehouseId" id="warehouseId">
-            <option value="select">Select warehouse</option>
-            <?php
+    if ($showWarehouse == "all") {
+    ?>
+
+        <div class="form-group">
+            <select class="selectJS form-control" name="warehouseId" id="warehouseId">
+                <option value="select">Select warehouse</option>
+                <?php
 
                 if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($warehouseList) > 0) {
@@ -22,12 +32,13 @@
                 }
 
                 ?>
-        </select>
-    </div>
+            </select>
+            <label class="form-lable" id="Label">Warehouse<sup>*</sup></label>
+        </div>
 
     <?php
     } else {
-        echo "<input type='hidden' name='warehouseId' value='{$siteAccessMeta['warehouse']}' id='warehouseId'>";
+        echo "<input type='hidden' name='warehouseId' value='{$showWarehouse}' id='warehouseId'>";
     }
 
     ?>
@@ -36,54 +47,91 @@
         <label class="form-lable" id="Label">Block name<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <input id="blockCode" name="blockCode" type="text" />
-        <label class="form-lable" id="Label">Block Code or ID</label>
-    </div>
-    <div class="form-group">
         <textarea name="description" id="description" cols="30" rows="10"></textarea>
         <label class="form-lable" id="Label">About block</label>
     </div>
     <div class="form-group">
-        <input id="address" name="address" type="text" />
-        <label class="form-lable" id="Label">Address<sup>*</sup></label>
+        <input id="itemCode" name="itemCode" type="text" />
+        <label class="form-lable" id="Label">Block code or Item code<sup>*</sup></label>
     </div>
-    <div class="form-group" id="stateDropDown">
-        <p>State<sup>*</sup></p>
-        <select class="selectJS form-control" name="state" id="state">
-            <option value="select">Select state</option>
+    <div class="form-group">
+        <input id="totalItem" name="totalItem" type="number" />
+        <label class="form-lable" id="Label">Total item in Block<sup>*</sup></label>
+    </div>
+    <div class="full-width">
+        <div class="col-8">
+            <div class="form-group">
+                <input id="thickness" name="thickness" type="number" />
+                <label class="form-lable" id="Label">Thickness<sup>*</sup></label>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <!-- <p>Size<sup>*</sup></p> -->
+                <select class="selectJS form-control" name="thicknessSize" id="thicknessSize">
+                    <option value="mm">Millimeter</option>
+                    <option value="cm">Centimeter</option>
+                    <option value="in">Inches</option>
+                </select>
+                <label class="form-lable" id="Label">Size<sup>*</sup></label>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="full-width">
+        <div class="form-header" style="margin-bottom: 20px">
+            <h2>Enter block item details<di2>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input id="thickness" name="thickness" type="text" />
+                <label class="form-lable" id="Label">Width<sup>*</sup></label>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input id="thickness" name="thickness" type="text" />
+                <label class="form-lable" id="Label">Height<sup>*</sup></label>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input id="thickness" name="thickness" type="text" />
+                <label class="form-lable" id="Label">Total item qty.<sup>*</sup></label>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input id="thickness" name="thickness" type="text" />
+                <label class="form-lable" id="Label">Thickness<sup>*</sup></label>
+            </div>
+        </div>
+    </div> -->
+    <div class="form-group">
+        <select class="selectJS form-control" name="supplier" id="supplier">
+            <option value="select">Select supplier</option>
             <?php
 
-            if ($stateList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id=101 AND state_status=1")) {
-                if (mysqli_num_rows($stateList) > 0) {
-                    while ($state = mysqli_fetch_assoc($stateList)) {
-                        echo "<option value='{$state['state_id']}' >{$state['state_name']}</option>";
+            if ($supplierList = mysqli_query($connection, "SELECT supplier_id, supplier_code, supplier_title, city_name, state_name FROM " . TABLE_PREFIX . "supplier INNER JOIN " . TABLE_PREFIX . "address ON supplier_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id WHERE supplier_status=1 AND supplier_site_id=" . SITE_ID)) {
+                if (mysqli_num_rows($supplierList) > 0) {
+                    while ($row = mysqli_fetch_array($supplierList)) {
+                        echo "<option value='{$row['supplier_id']}'>{$row['supplier_title']}</option>";
                     }
                 }
             }
 
             ?>
         </select>
-    </div>
-    <div class="form-group" id="cityBox" style="display: none">
-        <p>City<sup>*</sup></p>
-        <select class="selectJS form-control" name="city" id="city">
-        </select>
+        <label class="form-lable" id="Label">Supplier<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <input id="pinCode" name="pinCode" type="number" />
-        <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
+        <input id="totalItem" name="featureImage" type="file" accept="image/x-png, image/gif, image/jpeg" />
+        <label class="form-lable" id="Label">Block feature image</label>
     </div>
     <div class="form-group">
-        <input id="email" name="email" type="email" />
-        <label class="form-lable" id="Label">Email<sup>*</sup></label>
-    </div>
-    <div class="form-group">
-        <input id="mobile" name="mobile" type="number" />
-        <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
-    </div>
-    <div class="form-group">
-        <input id="gst" name="gst" type="text" />
-        <label class="form-lable" id="Label">GST Number</label>
+        <div class="input-field">
+            <div class="addGallery" style="padding-top: .5rem;"></div>
+            <label class="form-lable" id="Label">Block image gallery</label>
+        </div>
     </div>
     <div class="box-1">
         <div class="form-group">
