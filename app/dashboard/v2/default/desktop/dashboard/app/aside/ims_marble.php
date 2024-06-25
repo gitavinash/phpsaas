@@ -72,13 +72,13 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accounts') { ?
     <a href="sales_request/"><i class="fi fi-rr-memo-circle-check"></i> Sales requests</a>
     <div class="side-menu">
         <ul>
-            <li><a href="sales_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+            <li><a href="sales_request/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
             <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="sales_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+            <li><a href="sales_request/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
             <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
@@ -132,13 +132,13 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser') {
     <a href="restock/"><i class="fi fi-rr-undo"></i> Restock</a>
     <div class="side-menu">
         <ul>
-            <li><a href="restock/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+            <li><a href="restock/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
             <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="restock/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
+            <li><a href="restock/list/"><i class="fi fl-rr-apps-sort"></i> All requests</a></li>
             <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
@@ -154,6 +154,22 @@ if ($site_access_type == 'administrator') { ?>
 
 <li class="header-section-name">
     <p>Business Hub<span>Control Your Business</span></p>
+</li>
+
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/company/') !== false) ? 'class="active"' : '') ?>>
+    <a href="company/"><i class="fi fi-rr-building"></i> Company</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="company/list/"><i class="fi-rr-apps-sort"></i> All companies</a></li>
+            <li><a href="company/add/"><i class="fi fi-rr-add"></i> Add new company</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="company/list/"><i class="fi-rr-apps-sort"></i> All companies</a></li>
+            <li><a href="company/add/"><i class="fi fi-rr-add"></i> Add new company</a></li>
+        </ul>
+    </div>
 </li>
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/warehouse/') !== false) ? 'class="active"' : '') ?>>
@@ -172,18 +188,18 @@ if ($site_access_type == 'administrator') { ?>
     </div>
 </li>
 
-<li <?php echo ((strpos(ADMIN_BASE_URL, '/company/') !== false) ? 'class="active"' : '') ?>>
-    <a href="company/"><i class="fi fi-rr-building"></i> Company</a>
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/supplier/') !== false) ? 'class="active"' : '') ?>>
+    <a href="supplier/"><i class="fi fi-rr-shipping-fast"></i> Supplier</a>
     <div class="side-menu">
         <ul>
-            <li><a href="company/list/"><i class="fi-rr-apps-sort"></i> All companies</a></li>
-            <li><a href="company/add/"><i class="fi fi-rr-add"></i> Add new company</a></li>
+            <li><a href="supplier/list/"><i class="fi-rr-apps-sort"></i> All suppliers</a></li>
+            <li><a href="supplier/add/"><i class="fi fi-rr-add"></i> Add new supplier</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="company/list/"><i class="fi-rr-apps-sort"></i> All companies</a></li>
-            <li><a href="company/add/"><i class="fi fi-rr-add"></i> Add new company</a></li>
+            <li><a href="supplier/list/"><i class="fi-rr-apps-sort"></i> All suppliers</a></li>
+            <li><a href="supplier/add/"><i class="fi fi-rr-add"></i> Add new supplier</a></li>
         </ul>
     </div>
 </li>
