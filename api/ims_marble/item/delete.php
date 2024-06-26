@@ -15,15 +15,17 @@ if (isset($id)) {
 
 if (isset($deleteData)) {
     mysqli_query($connection, "START TRANSACTION");
-    if ($checkData = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_id={$blockId} and block_status=1 AND block_site_id=" . SITE_ID)) {
+    if ($checkData = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_id={$blockId} AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkData) == 1) {
 
-            $deleteDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status=2 WHERE block_id={$blockId} AND block_site_id=" . SITE_ID);
+            extract(mysqli_fetch_assoc($checkData));
 
-            $deleteBlockItemDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=2 WHERE block_item_parent_id={$blockId} AND block_item_site_id=" . SITE_ID);
+            $deleteDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=3 WHERE block_item_id={$blockId} AND block_item_site_id=" . SITE_ID);
+
+            $deleteBlockItemDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_total_item=block_total_item-1 WHERE block_id={$block_item_parent_id} AND block_site_id=" . SITE_ID);
 
             if ($deleteDataFromDatabase && $deleteBlockItemDataFromDatabase) {
-                $msg = "Block deleted successfully";
+                $msg = "Block item deleted successfully";
                 $httpStatus = 202;
                 $status = 'success';
                 mysqli_query($connection, "COMMIT");

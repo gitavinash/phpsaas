@@ -48,6 +48,7 @@ $(window).on("load", function () {
 
 $(".deleteButton").on("click", function (event) {
   event.preventDefault();
+  var disableRedirect = false;
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -74,12 +75,21 @@ $(".deleteButton").on("click", function (event) {
                 lastPart = "inventory";
                 break;
             }
+            switch (lastPart) {
+              case "block":
+                lastPart = "inventory";
+                break;
+              case "item":
+                disableRedirect = true;
+                break;
+            }
             setTimeout(function () {
-              window.location.href = `/dashboard/${lastPart}/list/`;
+              if (disableRedirect) {
+                window.location.href = `/dashboard/${lastPart}/list/`;
+              } else {
+                location.reload();
+              }
             }, 1500);
-            // setTimeout(function () {
-            //   window.location.href = `/dashboard/${requestType}/list/`;
-            // }, 1500);
           }
         },
         error: function (response) {

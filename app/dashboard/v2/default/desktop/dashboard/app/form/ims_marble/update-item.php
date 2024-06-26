@@ -30,15 +30,15 @@ if (isset($validId)) { ?>
     <div class="fullScreenPopUpBox">
         <div class="widget box-7">
             <div class="contentArea">
-                <form method="POST" action="#">
+                <form action="#">
                     <section class="form">
                         <div class="step-open-box step_1_box full-width">
                             <div class="form-header">
-                                <h4 class="heading">Conclusion & Summary</h4>
-                                <div class="full-width" id="damageForm">
+                                <h4 class="heading">Damage area</h4>
+                                <div class="full-width popUpUpdateDamageForm" id="damageForm">
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <input id="damageAreaWidth" class="width" name="damageAreaWidth" value=""
+                                            <input id="damageAreaWidth" class="width" name="damageAreaWidth[]" value=""
                                                 type="number" />
                                             <label class="form-lable" id="Label">Width ( in Centimeters
                                                 )<sup>*</sup></label>
@@ -46,19 +46,19 @@ if (isset($validId)) { ?>
                                     </div>
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <input id="damageAreaHeight" class="height" name="damageAreaHeight" value=""
-                                                type="number" />
+                                            <input id="damageAreaHeight" class="height" name="damageAreaHeight[]"
+                                                value="" type="number" />
                                             <label class="form-lable" id="Label">Height ( in Centimeters
                                                 )<sup>*</sup></label>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    <!-- <div class="col-3">
                                         <div class="form-group">
-                                            <input id="damageAreaComment" class="comment" name="damageAreaComment"
-                                                value="" type="text" />
                                             <label class="form-lable" id="Label">Comment</label>
+                                            <input id="damageAreaComment" class="comment" name="damageAreaComment"
+                                                value="" type="number" />
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="cloneDamageForm"></div>
                             </div>
@@ -68,10 +68,10 @@ if (isset($validId)) { ?>
         </div>
         <div class="widget box-3">
             <div class="actionArea">
-                <button href="#" class="btn popUpBtn" id="addNewDamage"><i class="fi-rr-add"></i> Add new
-                    damage</button>
-                <button href="#" class="btn popUpBtn" id="updateDamage"><i class="fi-rr-check"></i> Update
-                    damage</button>
+                <span href="#" class="btn popUpBtn" id="addNewDamage"><i class="fi-rr-add"></i> Add new
+                    damage</span>
+                <span class="btn popUpBtn" id="updateDamage"><i class="fi-rr-check"></i> Update
+                    damage</span>
                 <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                     Cancel</span>
             </div>
@@ -90,30 +90,33 @@ if (isset($validId)) { ?>
 
     <?php
 
-        if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status!=2 AND block_item_site_id=" . SITE_ID)) {
+        $blockItemIndex = '';
+
+        if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
             if (mysqli_num_rows($checkItems) > 0) {
                 while ($blockItem = mysqli_fetch_assoc($checkItems)) {
                     extract($blockItem);
+                    $blockItemIndex .= $block_item_id.',';
                     echo "<script>
                         localStorage.setItem('blockItem_{$block_item_id}', '{$block_item_damage_area}');
                     </script>";
                     echo "<div class='full-width'>
             <div class='col-3'>
                 <div class='form-group'>
-                    <input id='thickness' name='thickness' value='{$block_item_width}' type='number' />
+                    <input name='width[{$block_item_id}]' value='{$block_item_width}' type='number' />
     <label class='form-lable' id='Label'>Width ( in Feets )<sup>*</sup></label>
 </div>
 </div>
 <div class='col-3'>
     <div class='form-group'>
-        <input id='thickness' name='thickness' value='{$block_item_height}' type='number' />
+        <input name='height[{$block_item_id}]' value='{$block_item_height}' type='number' />
     <label class='form-lable' id='Label'>Height ( in Feets )<sup>*</sup></label>
 </div>
 </div>
 <div class='col-4'>
     <div class='actionBtn'>
         <a href='#' class='bgYellow manageDamage' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
-        <a href='#' class='bgRed deleteBtn' data-type='ims_marble/item/' data-id='{$block_item_id}' data-redirect='false'><i
+        <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-redirect='false'><i
                 class='fi fi-rr-trash'></i></a>
     </div>
 </div>
@@ -127,7 +130,8 @@ if (isset($validId)) { ?>
     <div class="box-1">
         <div class="form-group">
             <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
-            <input type="submit" class="btn btn-green" id="updateBlock" value="Manage block items">
+            <input type="hidden" name="blockItemIndex" value="<?php echo rtrim($blockItemIndex, ',') ?>">
+            <input type="submit" class="btn btn-green" id="updateBlockItem" value="Manage block items">
         </div>
     </div>
 </div>

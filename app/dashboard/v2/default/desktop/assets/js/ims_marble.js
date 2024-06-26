@@ -1,10 +1,5 @@
-var storedData = localStorage.getItem("damageData");
-var formData = storedData ? JSON.parse(storedData) : {};
-
-// Function to update localStorage
-function updateLocalStorage() {
-  localStorage.setItem("damageData", JSON.stringify(formData));
-}
+var activeDamageBoxId = 0;
+let count = 1;
 // User
 
 var companyDropDown = document.getElementById("companyDropDown");
@@ -368,6 +363,35 @@ $("#updateBlock").click(function (e) {
   }
 });
 
+$("#updateBlockItem").click(function (e) {
+  e.preventDefault();
+
+  var formData = $("#updateInventoryForm").serialize();
+
+  $.ajax({
+    type: "POST",
+    url: "/api/item/publish/",
+    dataType: "JSON",
+    data: formData,
+    success: function (successResponse) {
+      popUpMessage("center", successResponse.msg, successResponse.status);
+      if (successResponse.status == "success") {
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      }
+    },
+    error: function (errorResponse) {
+      console.log(`Error:`, errorResponse);
+      popUpMessage(
+        "center",
+        errorResponse.responseJSON.msg,
+        errorResponse.responseJSON.status
+      );
+    },
+  });
+});
+
 // Manage damage box
 
 var manageDamageBtn = document.getElementsByClassName("manageDamage");
@@ -375,6 +399,7 @@ var manageDamageBtn = document.getElementsByClassName("manageDamage");
 if (manageDamageBtn) {
   $(".manageDamage").click(function (e) {
     e.preventDefault();
+    activeDamageBoxId = $(this).attr("data-id");
     $(".cloneDamageForm").empty();
     $(".manageDamageBox").show();
   });
@@ -387,17 +412,62 @@ if (addNewDamageBtn) {
     e.preventDefault();
 
     var $originalForm = $("#damageForm").clone(true);
-
-    var id = Object.keys(formData).length + 1;
-    $originalForm.attr("id", "damageForm_" + id);
+    $originalForm.find("input").each(function () {
+      $(this).val("");
+    });
+    $originalForm.attr("id", "damageForm_" + count);
+    count++;
     $(".cloneDamageForm").append($originalForm);
+  });
+}
 
-    formData["damageForm_" + id] = {
-      width: $originalForm.find(".width").val(),
-      height: $originalForm.find(".height").val(),
-      comment: $originalForm.find(".comment").val(),
-    };
+var updateDamageBtn = document.getElementById("updateDamage");
 
-    updateLocalStorage();
+if (updateDamageBtn) {
+  $("#updateDamage").on("click", function (e) {
+    console.log(`activeDamageBoxId`, activeDamageBoxId);
+    e.preventDefault();
+    // Collect data from all forms
+    var allFormData = [];
+
+    $(".popUpUpdateDamageForm").each(function () {
+      var formData = {};
+      $(this)
+        .find("input")
+        .each(function () {
+          formData[$(this).attr("name")] = $(this).val();
+        });
+      allFormData.push(formData);
+    });
+
+    allFormData = JSON.stringify(allFormData);
+
+    $.ajax({
+      type: "POST",
+      url: "/api/item/update/",
+      dataType: "JSON",
+      data: {
+        id: btoa(activeDamageBoxId),
+        damageArea: allFormData,
+      },
+      success: function (successResponse) {
+        console.log(`successResponse`, successResponse);
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          localStorage.setItem("blockItem_" + activeDamageBoxId, allFormData);
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
   });
 }
