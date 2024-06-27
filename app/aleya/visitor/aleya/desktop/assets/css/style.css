@@ -451,9 +451,23 @@ textarea::placeholder {
   border-radius: 30px;
   transform: translateY(-24rem);
 }
+.manage_wrapper_new {
+  padding: 100px;
+  border-radius: 30px;
+  transform: translateY(-24rem);
+}
 .manage_flex {
   display: flex !important;
 }
+.pageContent {
+  padding: 50px 0px;
+}
+.pageContent p {
+  font-size: 16px;
+  line-height: 32px;
+  padding: 10px 0px;
+}
+
 .manage_content h6 {
   font-size: 18px;
   color: var(--white-color);

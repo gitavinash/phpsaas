@@ -107,7 +107,7 @@ if (isset($showPage)) { ?>
         </div>
         <div class="dataRow">
             <div class="title">
-                <p><strong>Block name</strong></p>
+                <p><strong>Name</strong></p>
             </div>
             <div class="Description">
                 <p><?php echo $block_title ?></p>

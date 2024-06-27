@@ -129,7 +129,7 @@ function update($connection, $data)
                     ),
                     'why_choose_us' => array(
                         'image' => ((isset($whyChooseUs)) ? $whyChooseUs : $pageSection['why_choose_us']['image']),
-                        'header' => ((isset($whyChooseTitle)) ? $whyChooseTitle : $whyChooseTitle),
+                        'header' => ((isset($whyChooseTitle)) ? $whyChooseTitle : ''),
                         'description' => ((isset($whyChooseDescription)) ? $whyChooseDescription : ''),
                         'steps' => array(
                             array(
