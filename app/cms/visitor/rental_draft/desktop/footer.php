@@ -6,6 +6,7 @@
         </a></p>
     </footer>
     <?php require_once NOTIFICATION . 'index.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="<?php echo USER_JS ?>app.min.js"></script>
     </body>
