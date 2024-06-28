@@ -2,56 +2,37 @@
 <html lang="en">
 
 <head>
-    <base href="<?php echo SITE_URL ?>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITE_NAME ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <?php require_once DEFAULT_META ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
-    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
-    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
 </head>
 
 <body>
     <header>
-        <div class="sticky-bar">
-            <section>
-                <div class="left-box">
-                    <p>Welcome to <?php echo SITE_NAME ?></p>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="logo dir-left">
+                        <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>">
+                    </div>
                 </div>
-                <div class="right-box">
-                    <ul>
-                        <li><a href="">Sign In</a></li>
-                        <li><a href="">Sign Up</a></li>
-                    </ul>
+                <div class="col">
+                    <div class="dir-right">
+                        <div class="btn btn-success callUsBtn">
+                            <a href="tel:+91-9013622555"><i class="fi fi-rr-phone-call"></i> +91-9013622555</a>
+                        </div>
+                    </div>
                 </div>
-            </section>
-        </div>
-        <div class="main-header">
-            <section>
-                <div class="logo">
-                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" alt=""></a>
-                </div>
-                <div class="search-box">
-                    <form action="/search/">
-                        <input type="text" name="q" class="form-control inside-shadow search-bar" placeholder="Search for astrology services...">
-                    </form>
-                </div>
-            </section>
-            <div class="main-menu">
-                <section>
-                    <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="/pooja/">Pooja</a></li>
-                        <li><a href="">Horoscope</a></li>
-                        <li><a href="">Astrology</a></li>
-                        <li><a href="">Astrologer</a></li>
-                        <li><a href="">Online Pandit</a></li>
-                        <li><a href="">Blogs</a></li>
-                        <li><a href="">Contact Us</a></li>
-                    </ul>
-                </section>
             </div>
         </div>
     </header>

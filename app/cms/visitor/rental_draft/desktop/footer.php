@@ -7,18 +7,9 @@
             </div>
         </section>
     </footer>
-    <script src="js/jquery.js" ></script>
-    <script src="plugins/slick/slick.min.js" ></script>
-    <script type="text/javascript" >
-        $(document).ready(function(e) {
-            $('.homepage-slider').slick({
-                autoplay: true,
-                autoplaySpeed: 3000,
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1
-            });
-        });
-    </script>
-</body>
-</html>
+    <?php require_once NOTIFICATION . 'index.php'; ?>
+    <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <script src="<?php echo USER_JS ?>app.min.js"></script>
+    </body>
+
+    </html>
