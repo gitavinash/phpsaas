@@ -168,3 +168,101 @@ p {
 .startNowFormBox .formFooter p a {
   text-decoration: underline;
 }
+
+.howItWorks {
+  width: 100%;
+}
+.howItWorks h2 {
+  padding: 4rem 0rem;
+}
+.feature-card {
+  float: left;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 7px;
+}
+.feature-card h3 {
+  float: left;
+  width: 100%;
+  height: 70px;
+}
+.feature-card img {
+  float: left;
+  width: 100%;
+  border-radius: 7px;
+  margin-bottom: 1rem;
+}
+
+.faqSection {
+  width: 100%;
+  padding: 3rem;
+}
+
+p.credit {
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem;
+}
+.copyright p.credit a {
+  color: inherit;
+}
+
+@media screen and (max-width: 990px) {
+  .callUsBtn {
+    padding: 1.5rem;
+  }
+  .intro {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  .intro h1 {
+    padding-top: 1rem;
+  }
+  .featureIcon {
+    margin: 2rem 0px;
+  }
+  .startNowFormBox {
+    width: 100%;
+    margin: 0;
+    border: 1px solid #e9ecef;
+  }
+  .startNowFormBox .formBody {
+    padding: 1rem;
+  }
+  .startNowFormBox .formBody h2 {
+    font-size: 2rem;
+  }
+  .startNowFormBox p strong {
+    font-size: 1.8rem;
+  }
+  .startNowFormBox p {
+    font-size: 0.8rem;
+  }
+  .howItWorks {
+    width: 100%;
+    margin-top: 20rem;
+  }
+  .howItWorks h2 {
+    padding: 5rem 0rem 1rem 0rem;
+  }
+  .feature-card {
+    margin-bottom: 2rem;
+  }
+  .feature-card h3 {
+    height: auto;
+  }
+  .feature-card img {
+    float: left;
+    width: 100%;
+    border-radius: 7px;
+    margin-bottom: 1rem;
+  }
+  .feature-card a {
+    margin-top: 1rem;
+  }
+  .faqSection {
+    padding: 1rem;
+  }
+}
