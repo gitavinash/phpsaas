@@ -50,7 +50,7 @@ $(document).ready(function () {
     if (requestIsValid) {
       var formData = $("#getStartedForm").serialize();
       $.ajax({
-        type: "GET",
+        type: "POST",
         url: `/api/rent_agreement/generate/`,
         dataType: "json",
         data: formData,
