@@ -1,6 +1,6 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     require_once LOGIN_CHECK;
 
     $httpStatus = 500;
@@ -9,6 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($name == '') {
         $msg = 'Kindly enter your full name';
+    } else {
+        $name = explode(' ', $name);
+        $first_name = $name[0];
+        unset($name[0]);
+        $last_name = implode(' ', $name);
     }
 
     if ($email == '') {
@@ -22,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else if (!preg_match("/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/", $mobile)) {
         $msg = "Kindly enter a valid mobile number";
     }
+
+    $messageDB = '';
+    $subject = 'New request for Rent Agreement';
 
     if ($msg == "") {
 
@@ -65,11 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $enquiryID = mysqli_insert_id($connection);
 
-        if ($addNewEnquiry) {
-            mysqli_query($connection, "COMMIT");
-        } else {
-            mysqli_query($connection, "ROLLBACK");
-        }
 
         $email_body = "
     <h2>{$subject}</h2>
@@ -86,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <td>Mobile: </td>
             <td>{$mobile}</td>
         </tr>
-        {$messageForm}
     </table>
     ";
 
@@ -96,12 +98,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
             }
         }
+
+        if ($addNewEnquiry) {
+            $httpStatus = 201;
+            $status = 'success';
+            $msg = 'Process to next step';
+            mysqli_query($connection, "COMMIT");
+        } else {
+            $msg = 'Something went wrong while trying to store information';
+            mysqli_query($connection, "ROLLBACK");
+        }
     }
 
     $result = array(
         'status' => ((isset($status)) ? $status : 'error'),
         'msg' => ((isset($msg)) ? $msg : 'Invalid response'),
-        'enquiryId' => ((isset($supplierId)) ? $supplierId : ''),
+        'enquiryId' => ((isset($enquiryID)) ? $enquiryID : ''),
     );
 
     http_response_code($httpStatus);

@@ -23,6 +23,7 @@ $(document).ready(function () {
 
   $("#getStarted").click(function (e) {
     e.preventDefault();
+    $("#getStarted").hide();
     var name = $("#name").val();
     var email = $("#email").val();
     var mobile = $("#mobile").val();
@@ -54,12 +55,13 @@ $(document).ready(function () {
         dataType: "json",
         data: formData,
         success: function (response) {
-          popUpMessage("center", response.msg, response.status);
           if (response.status == "success") {
-            setTimeout(function () {
-              window.location.href =
-                `/generate-rent-agreement/?request_id=` + btoa(enquiryId);
-            }, 1500);
+            window.location.href =
+              `/generate-rent-agreement/?request_id=` +
+              btoa(response.enquiryId);
+          } else {
+            popUpMessage("center", response.msg, response.status);
+            $("#getStarted").show();
           }
         },
         error: function (response) {
@@ -69,10 +71,12 @@ $(document).ready(function () {
             response.responseJSON.msg,
             response.responseJSON.status
           );
+          $("#getStarted").show();
         },
       });
     } else {
       popUpMessage("center", msg, "warning");
+      $("#getStarted").show();
     }
   });
 });

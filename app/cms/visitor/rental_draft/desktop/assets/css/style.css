@@ -216,6 +216,7 @@ p.credit {
   .intro {
     padding: 1rem;
     margin-top: 1rem;
+    min-height: 900px;
   }
   .intro h1 {
     padding-top: 1rem;
@@ -242,7 +243,6 @@ p.credit {
   }
   .howItWorks {
     width: 100%;
-    margin-top: 20rem;
   }
   .howItWorks h2 {
     padding: 5rem 0rem 1rem 0rem;
