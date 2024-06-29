@@ -38,13 +38,19 @@ require_once 'header.php';
                                 <h2>Start your rental agreement</h2>
                                 <p>Fill out the form below</p>
                                 <form id="getStartedForm">
-                                    <label for="name" class="form-label">Full name<sup>*</sup></label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Avinash kumar" required>
-                                    <label for="mobile" class="form-label">Contact number<sup>*</sup></label>
-                                    <input type="number" name="mobile" class="form-control" id="mobile" placeholder="9990026008" required>
-                                    <label for="email" class="form-label">Email address</label>
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com">
-                                    <input type="submit" id="getStarted" class="btn btn-success w-100" value="Get Started">
+                                    <!-- <label for="name" class="form-label">Full name<sup>*</sup></label> -->
+                                    <input type="text" name="name" class="form-control" id="name"
+                                        placeholder="Full name" required>
+                                    <!-- <label for="mobile" class="form-label">Contact number<sup>*</sup></label> -->
+                                    <input type="number" name="mobile" class="form-control" id="mobile"
+                                        placeholder="Mobile number" required>
+                                    <!-- <label for="email" class="form-label">Email address</label> -->
+                                    <input type="email" name="email" class="form-control" id="email"
+                                        placeholder="Email address">
+                                    <!-- <label for="email" class="form-label">State</label> -->
+                                    <input type="text" name="state" class="form-control" id="state" placeholder="State">
+                                    <input type="submit" id="getStarted" class="btn btn-success w-100"
+                                        value="Get Started">
                                 </form>
                             </div>
                             <div class="formFooter">
@@ -78,9 +84,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                                <div class="mt-auto">
-                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                                </div>
+                            <div class="mt-auto">
+                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                            </div>
                             <?php
                             }
 
@@ -97,9 +103,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                                <div class="mt-auto">
-                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                                </div>
+                            <div class="mt-auto">
+                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                            </div>
                             <?php
                             }
 
@@ -109,16 +115,17 @@ require_once 'header.php';
                     <div class="col-12 col-md-3">
                         <div class="feature-card d-flex flex-column">
                             <div>
-                                <img src="<?php echo USER_IMAGES ?>secur_digital_signatures.jpg" alt="Secure Digital Signatures">
+                                <img src="<?php echo USER_IMAGES ?>secur_digital_signatures.jpg"
+                                    alt="Secure Digital Signatures">
                                 <h3>Secure Digital Signatures</h3>
                                 <p>Sign your agreement securely online.</p>
                             </div>
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                                <div class="mt-auto">
-                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                                </div>
+                            <div class="mt-auto">
+                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                            </div>
                             <?php
                             }
 
@@ -135,9 +142,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                                <div class="mt-auto">
-                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                                </div>
+                            <div class="mt-auto">
+                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                            </div>
                             <?php
                             }
 
@@ -160,11 +167,13 @@ require_once 'header.php';
                 <div class="accordion" id="faqAccordion">
                     <div class="accordion-item">
                         <h3 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 What is a rent agreement?
                             </button>
                         </h3>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
                                 A rent agreement is a legally binding document that outlines the terms and conditions of
                                 a rental arrangement between a landlord and a tenant.
@@ -173,11 +182,13 @@ require_once 'header.php';
                     </div>
                     <div class="accordion-item">
                         <h3 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 How can I create a rent agreement online?
                             </button>
                         </h3>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                            data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
                                 Creating a rent agreement online is simple. Just fill out our form with the necessary
                                 details, and our system will generate a legally compliant agreement for you to sign
@@ -187,11 +198,13 @@ require_once 'header.php';
                     </div>
                     <div class="accordion-item">
                         <h3 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                 Are digital signatures legally valid?
                             </button>
                         </h3>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                            data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
                                 Yes, digital signatures are legally valid in most jurisdictions. They are recognized as
                                 a secure and efficient way to sign documents online.
@@ -200,11 +213,13 @@ require_once 'header.php';
                     </div>
                     <div class="accordion-item">
                         <h3 class="accordion-header" id="headingFour">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                 How do I know my information is secure?
                             </button>
                         </h3>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                            data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
                                 We use advanced encryption and security protocols to ensure that your information is
                                 protected at all times. Your privacy and security are our top priorities.
@@ -213,11 +228,13 @@ require_once 'header.php';
                     </div>
                     <div class="accordion-item">
                         <h3 class="accordion-header" id="headingFive">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                                 What are the costs involved?
                             </button>
                         </h3>
-                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                            data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
                                 Our pricing plans are designed to be affordable and flexible. You can choose a plan that
                                 fits your needs and budget. Visit our pricing page for more details.

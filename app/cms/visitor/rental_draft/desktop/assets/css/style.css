@@ -223,17 +223,17 @@ aside {
   padding: 0rem 5%;
 }
 
-main {
+.mainBox {
   width: 100%;
   height: 100vh;
   background: #ff904d;
   padding: 0rem 5%;
   box-sizing: border-box;
 }
-main h1 {
+.mainBox h1 {
   color: #fff;
 }
-main p {
+.mainBox p {
   color: #ebf5fb;
 }
 

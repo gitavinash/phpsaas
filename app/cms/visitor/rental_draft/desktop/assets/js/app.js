@@ -27,13 +27,18 @@ $(document).ready(function () {
     var name = $("#name").val();
     var email = $("#email").val();
     var mobile = $("#mobile").val();
+    var state = $("#state").val();
 
     if (name != "") {
       if (email != "") {
         if (mobile != "") {
           var mobile = removeLeadingZero(mobile);
           if (validateMobileNumber(mobile)) {
-            var requestIsValid = true;
+            if (state != "") {
+              var requestIsValid = true;
+            } else {
+              msg = "Kindly enter your state name";
+            }
           } else {
             msg = "Kindly enter valid mobile number";
           }
@@ -48,7 +53,9 @@ $(document).ready(function () {
     }
 
     if (requestIsValid) {
-      var formData = $("#getStartedForm").serialize();
+      var formData = $("#getStartedForm").serializeArray();
+      formData.push({ name: "type", value: "rent_agreement" });
+      formData.push({ name: "action", value: "generate" });
       $.ajax({
         type: "POST",
         url: `/api/rent_agreement/generate/`,
@@ -60,8 +67,8 @@ $(document).ready(function () {
               `/generate-agreement/?request_id=` + btoa(response.enquiryId);
           } else {
             popUpMessage("center", response.msg, response.status);
-            $("#getStarted").show();
           }
+          $("#getStarted").show();
         },
         error: function (response) {
           console.log(`Error : `, response);

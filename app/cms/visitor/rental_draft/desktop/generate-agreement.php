@@ -1,3 +1,16 @@
+<?php
+
+if (isset($request_id)) {
+    if ($request_id != '') {
+        $validId = true;
+    }
+}
+
+if (!isset($validId)) {
+    header("Location: /", TRUE, 301);
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,48 +69,51 @@
                 </aside>
             </div>
             <div class="col-12 col-md-8 d-none d-sm-block">
-                <main class="d-flex align-items-center">
-                    <div class="w-100">
-                        <h1 class="w-100">Rent Agreement</h1>
-                        <p class="w-100">Your rent agreement is just a few clicks away. After providing the following
-                            information...</p>
-                        <div class="row">
-                            <div class="col">
-                                <div class="featureIcon dir-left">
-                                    <img src="<?php echo USER_IMAGES ?>info-active.png" id="infoImg" alt="">
-                                    <p>Basic info</p>
+                <main>
+                    <div class="mainBox d-flex align-items-center">
+                        <div class="w-100">
+                            <h1 class="w-100">Rent Agreement</h1>
+                            <p class="w-100">Your rent agreement is just a few clicks away. After providing the
+                                following
+                                information...</p>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>info-active.png" id="infoImg" alt="">
+                                        <p>Basic info</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="featureIcon dir-left">
-                                    <img src="<?php echo USER_IMAGES ?>landlord.png" id="landlordImg" alt="">
-                                    <p>Lnadlord</p>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>landlord.png" id="landlordImg" alt="">
+                                        <p>Lnadlord</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="featureIcon dir-left">
-                                    <img src="<?php echo USER_IMAGES ?>tenate.png" id="tenateImg" alt="">
-                                    <p>Tenate</p>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>tenate.png" id="tenateImg" alt="">
+                                        <p>Tenate</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="featureIcon dir-left">
-                                    <img src="<?php echo USER_IMAGES ?>house.png" id="houseImg" alt="">
-                                    <p>Property</p>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>house.png" id="houseImg" alt="">
+                                        <p>Property</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="featureIcon dir-left">
-                                    <img src="<?php echo USER_IMAGES ?>contract.png" id="contractImg" alt="">
-                                    <p>Contract</p>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>contract.png" id="contractImg" alt="">
+                                        <p>Contract</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- <div class="col">
+                                <!-- <div class="col">
                                 <div class="featureIcon dir-left">
                                     <img src="<?php echo USER_IMAGES ?>secure.png" alt="">
                                     <p>Secure</p>
                                 </div>
                             </div> -->
+                            </div>
                         </div>
                     </div>
                 </main>

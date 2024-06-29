@@ -1,7 +1,11 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    require_once LOGIN_CHECK;
+require_once LOGIN_CHECK;
+
+function generate($connection, $data)
+{
+
+    extract($data);
 
     $httpStatus = 500;
     $status = 'warning';
@@ -16,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $last_name = implode(' ', $name);
     }
 
+    if ($state == '') {
+        $state = 'Kindly enter your state';
+    }
+
     if ($email == '') {
         $msg = 'Kindly enter your email';
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -28,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $msg = "Kindly enter a valid mobile number";
     }
 
-    $messageDB = '';
+    $messageDB = $state;
     $subject = 'New request for Rent Agreement';
 
     if ($msg == "") {
