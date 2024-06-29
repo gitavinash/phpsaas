@@ -1,7 +1,5 @@
 <?php
 
-require_once LOGIN_CHECK;
-
 function generate($connection, $data)
 {
 
