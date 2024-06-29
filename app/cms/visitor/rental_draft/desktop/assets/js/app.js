@@ -78,4 +78,43 @@ $(document).ready(function () {
       $("#getStarted").show();
     }
   });
+
+  function updateFormValues(btnName, nextBox) {
+    $("#infoBox").hide();
+    $("#landlordBox").hide();
+    $("#tenateBox").hide();
+    $("#houseBox").hide();
+    $("#contractBox").hide();
+    var imgValue = $(`#${btnName}Img`).attr("src");
+    // if (btnName == "landlord") {
+    //   var defaultImgValue = $(`#infoImg`).attr("src");
+    //   var defaultImgValue = defaultImgValue.replace(".png", "-active.png");
+    //   $(`#infoImg`).attr("src", defaultImgValue);
+    // }
+    if (imgValue != undefined) {
+      var updateImgValue = imgValue.replace(".png", "-active.png");
+      $(`#${btnName}Img`).attr("src", updateImgValue);
+    }
+    $(`#${btnName}Box`).show();
+  }
+
+  $("#landlord").click(function (e) {
+    e.preventDefault();
+    updateFormValues("landlord", "tenate");
+  });
+
+  $("#tenate").click(function (e) {
+    e.preventDefault();
+    updateFormValues("tenate", "house");
+  });
+
+  $("#house").click(function (e) {
+    e.preventDefault();
+    updateFormValues("house", "contract");
+  });
+
+  $("#contract").click(function (e) {
+    e.preventDefault();
+    updateFormValues("contract", "");
+  });
 });

@@ -205,8 +205,40 @@ p.credit {
   text-align: center;
   padding: 2rem;
 }
+
+p.creditOnForm {
+  font-size: 1rem;
+  text-align: center;
+  padding-bottom: 1rem;
+}
 .copyright p.credit a {
   color: inherit;
+}
+
+aside {
+  width: 100%;
+  height: 100vh;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-right: 1px solid var(--bg-color);
+  padding: 0rem 5%;
+}
+
+main {
+  width: 100%;
+  height: 100vh;
+  background: #ff904d;
+  padding: 0rem 5%;
+  box-sizing: border-box;
+}
+main h1 {
+  color: #fff;
+}
+main p {
+  color: #ebf5fb;
+}
+
+aside .logo {
+  margin-top: 2%;
 }
 
 @media screen and (max-width: 990px) {
