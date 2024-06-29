@@ -57,8 +57,7 @@ $(document).ready(function () {
         success: function (response) {
           if (response.status == "success") {
             window.location.href =
-              `/generate-rent-agreement/?request_id=` +
-              btoa(response.enquiryId);
+              `/generate-agreement/?request_id=` + btoa(response.enquiryId);
           } else {
             popUpMessage("center", response.msg, response.status);
             $("#getStarted").show();
