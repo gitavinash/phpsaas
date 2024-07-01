@@ -124,4 +124,9 @@ $(document).ready(function () {
     e.preventDefault();
     updateFormValues("contract", "");
   });
+  $(".datepicker").datepicker({
+    format: "mm/dd/yyyy",
+    todayHighlight: true,
+    autoclose: true,
+  });
 });

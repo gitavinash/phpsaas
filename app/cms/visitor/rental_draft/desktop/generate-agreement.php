@@ -27,6 +27,8 @@ if (!isset($validId)) {
     <link rel='stylesheet'
         href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+        rel="stylesheet">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
 </head>
 
@@ -40,21 +42,115 @@ if (!isset($validId)) {
                     </div>
                     <div class="w-100 d-flex justify-content-center align-items-center flex-grow-1">
                         <form action="" class="w-100" id="agreementForm">
-                            <div id="infoBox">
-                                <button id="landlord" class="btn btn-success w-100">Next, add landlord details</button>
-                            </div>
-                            <div id="landlordBox" style="display:none">
+                            <!-- <div id="infoBox">
+                            </div> -->
+                            <div id="landlordBox">
+                                <h2>Landlord details</h2>
+                                <div class="landloadForm">
+                                    <input type="text" class="form-control" id="name" placeholder="Full Name*">
+                                    <input type="text" class="form-control" id="fatherName"
+                                        placeholder="Father/Mother Name*">
+                                    <input type="number" class="form-control" id="phone" placeholder="Phone Number*">
+                                    <textarea name="landlordAddress" class="form-control" id="landlordAddress"
+                                        placeholder="Permanent Address"></textarea>
+                                    <input type="email" class="form-control" id="email" placeholder="Email id*">
+                                    <input type="text" class="form-control" id="panCard" placeholder="PAN Card">
+                                </div>
+                                <div class="landloadCloneForm"></div>
                                 <button id="tenate" class="btn btn-success w-100">Next, add tenate
                                     details</button>
                             </div>
                             <div id="tenateBox" style="display:none">
+                                <h2>Tenate details</h2>
+                                <div class="tenateForm">
+                                    <input type="text" class="form-control" id="name" placeholder="Full Name*">
+                                    <input type="text" class="form-control" id="fatherName"
+                                        placeholder="Father/Mother Name*">
+                                    <input type="number" class="form-control" id="phone" placeholder="Phone Number*">
+                                    <textarea name="tenateAddress" class="form-control" id="tenateAddress"
+                                        placeholder="Permanent Address"></textarea>
+                                    <input type="email" class="form-control" id="email" placeholder="Email id*">
+                                    <input type="text" class="form-control" id="panCard" placeholder="PAN Card">
+                                </div>
+                                <div class="tenateCloneForm"></div>
                                 <button id="house" class="btn btn-success w-100">Next, add property
                                     details</button>
                             </div>
                             <div id="houseBox" style="display:none">
-                                <button id="" class="btn btn-success w-100">Next, add contract details</button>
+                                <h2>Property details</h2>
+                                <select name="floor" class="form-control" id="floor">
+                                    <option value="#">Floor No.*</option>
+                                    <option value="G">G</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="21+">21+</option>
+                                </select>
+                                <select name="Choose BHK" class="form-control" id="bhk">
+                                    <option value="#">Choose BHK*</option>
+                                    <option value="1 RK">1 RK</option>
+                                    <option value="1 BHK">1 BHK</option>
+                                    <option value="1.5 BHK">1.5 BHK</option>
+                                    <option value="2 BHK">2 BHK</option>
+                                    <option value="2.5 BHK">2.5 BHK</option>
+                                    <option value="3 BHK">3 BHK</option>
+                                    <option value="3.5 BHK">3.5 BHK</option>
+                                    <option value="4 BHK">4 BHK</option>
+                                </select>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="propertyAddressCheck"
+                                        id="propertyAddressCheck" checked>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Same as landlord address
+                                    </label>
+                                </div>
+                                <textarea name="propertyAddress" class="form-control" id="propertyAddress"
+                                    placeholder="Property Address*" disabled></textarea>
+                                <button id="contract" class="btn btn-success w-100">Next, add contract details</button>
                             </div>
-                            <div id="contractBox" style="display:none">
+                            <div id="contractBox" style="display: none;">
+                                <h2>Contract details</h2>
+                                <input type="text" name="agreementStartDate" id="agreementStartDate"
+                                    class="form-control datepicker" placeholder="Agreement start date*">
+                                <input type="number" id="rentAmount" name="rentAmount" class="form-control"
+                                    placeholder="Monthly rent*">
+                                <input type="number" name="paymentDate" id="paymentDate" class="form-control"
+                                    placeholder="Rent payment date*">
+                                <input type="number" name="securityAmount" id="securityAmount" class="form-control"
+                                    placeholder="Security Amount*">
+                                <select name="noticePeriod" class="form-control" id="noticePeriod">
+                                    <option value="#">Notice period*</option>
+                                    <option value="1 month">1 Month</option>
+                                    <option value="2 month">2 Month</option>
+                                    <option value="3 month">3 Month</option>
+                                </select>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="rentIncrease"
+                                        id="rentIncrease" checked>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Increase rent after 11 Months
+                                    </label>
+                                </div>
+                                <textarea name="comment" id="comment" class="form-control"
+                                    placeholder="Any other clauses?"></textarea>
                                 <button id="contract" class="btn btn-success w-100">Submit & Continue</button>
                             </div>
                         </form>
@@ -85,7 +181,7 @@ if (!isset($validId)) {
                                 </div>
                                 <div class="col">
                                     <div class="featureIcon dir-left">
-                                        <img src="<?php echo USER_IMAGES ?>landlord.png" id="landlordImg" alt="">
+                                        <img src="<?php echo USER_IMAGES ?>landlord-active.png" id="landlordImg" alt="">
                                         <p>Lnadlord</p>
                                     </div>
                                 </div>
@@ -123,6 +219,8 @@ if (!isset($validId)) {
     <?php require_once NOTIFICATION . 'index.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
+    </script>
     <script src="<?php echo USER_JS ?>app.min.js"></script>
 </body>
 
