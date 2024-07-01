@@ -310,4 +310,7 @@ aside form h2 {
   .faqSection {
     padding: 1rem;
   }
+  p.creditOnForm {
+    padding-bottom: 3%;
+  }
 }
