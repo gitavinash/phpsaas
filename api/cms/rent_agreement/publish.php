@@ -57,6 +57,10 @@ function publish($connection, $data)
     }
 
     if ($requestIsValid) {
+
+        unset($_REQUEST['type']);
+        unset($_REQUEST['request_id']);
+        unset($_REQUEST['action']);
         if (sizeof($_REQUEST) != 0) {
             foreach ($_REQUEST as $key => $value) {
                 $enquiryMeta[$key] = $value;
