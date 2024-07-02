@@ -39,6 +39,56 @@ if (!isset($validId)) {
 <body>
     <div class="container-fullwidth">
         <div class="row g-0">
+            <div class="col-12 col-md-8 d-none d-sm-block">
+                <main>
+                    <div class="mainBox d-flex align-items-center">
+                        <div class="w-100">
+                            <h1 class="w-100">Rent Agreement</h1>
+                            <p class="w-100">Your rent agreement is just a few clicks away. After providing the
+                                following
+                                information...</p>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>info-active.png" id="infoImg" alt="">
+                                        <p>Basic info</p>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>landlord-active.png" id="landlordImg" alt="">
+                                        <p>Lnadlord</p>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>tenate.png" id="tenateImg" alt="">
+                                        <p>Tenate</p>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>house.png" id="houseImg" alt="">
+                                        <p>Property</p>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="featureIcon dir-left">
+                                        <img src="<?php echo USER_IMAGES ?>contract.png" id="contractImg" alt="">
+                                        <p>Contract</p>
+                                    </div>
+                                </div>
+                                <!-- <div class="col">
+                                <div class="featureIcon dir-left">
+                                    <img src="<?php echo USER_IMAGES ?>secure.png" alt="">
+                                    <p>Secure</p>
+                                </div>
+                            </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
             <div class="col-12 col-md-4">
                 <aside class="d-flex flex-column justify-content-center align-items-center vh-100">
                     <div class="logo mb-5 text-center">
@@ -176,56 +226,6 @@ if (!isset($validId)) {
                         </a></p>
                     </footer>
                 </aside>
-            </div>
-            <div class="col-12 col-md-8 d-none d-sm-block">
-                <main>
-                    <div class="mainBox d-flex align-items-center">
-                        <div class="w-100">
-                            <h1 class="w-100">Rent Agreement</h1>
-                            <p class="w-100">Your rent agreement is just a few clicks away. After providing the
-                                following
-                                information...</p>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="featureIcon dir-left">
-                                        <img src="<?php echo USER_IMAGES ?>info-active.png" id="infoImg" alt="">
-                                        <p>Basic info</p>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="featureIcon dir-left">
-                                        <img src="<?php echo USER_IMAGES ?>landlord-active.png" id="landlordImg" alt="">
-                                        <p>Lnadlord</p>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="featureIcon dir-left">
-                                        <img src="<?php echo USER_IMAGES ?>tenate.png" id="tenateImg" alt="">
-                                        <p>Tenate</p>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="featureIcon dir-left">
-                                        <img src="<?php echo USER_IMAGES ?>house.png" id="houseImg" alt="">
-                                        <p>Property</p>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="featureIcon dir-left">
-                                        <img src="<?php echo USER_IMAGES ?>contract.png" id="contractImg" alt="">
-                                        <p>Contract</p>
-                                    </div>
-                                </div>
-                                <!-- <div class="col">
-                                <div class="featureIcon dir-left">
-                                    <img src="<?php echo USER_IMAGES ?>secure.png" alt="">
-                                    <p>Secure</p>
-                                </div>
-                            </div> -->
-                            </div>
-                        </div>
-                    </div>
-                </main>
             </div>
         </div>
     </div>

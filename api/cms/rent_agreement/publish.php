@@ -68,7 +68,7 @@ function publish($connection, $data)
         }
         $messageDB = json_encode($enquiryMeta, TRUE);
 
-        if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_message='{$messageDB}' WHERE enquiry_id='" . base64_decode($request_id) . "' AND enquiry_site_id=" . SITE_ID)) {
+        if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_message='{$messageDB}' WHERE enquiry_id='" . base64_decode($request_id) . "' AND enquiry_status=2 AND enquiry_site_id=" . SITE_ID)) {
             $status = 'success';
             $httpStatus = 201;
             $msg = 'Procces to next step';
