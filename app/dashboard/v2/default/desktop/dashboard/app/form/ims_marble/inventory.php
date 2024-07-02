@@ -18,10 +18,10 @@
     if ($showWarehouse == "all") {
     ?>
 
-        <div class="form-group">
-            <select class="selectJS form-control" name="warehouseId" id="warehouseId">
-                <option value="select">Select warehouse</option>
-                <?php
+    <div class="form-group">
+        <select class="selectJS form-control" name="warehouseId" id="warehouseId">
+            <option value="select">Select warehouse</option>
+            <?php
 
                 if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($warehouseList) > 0) {
@@ -32,9 +32,9 @@
                 }
 
                 ?>
-            </select>
-            <label class="form-lable" id="Label">Warehouse<sup>*</sup></label>
-        </div>
+        </select>
+        <label class="form-lable" id="Label">Warehouse<sup>*</sup></label>
+    </div>
 
     <?php
     } else {
@@ -76,6 +76,17 @@
                 <label class="form-lable" id="Label">Size<sup>*</sup></label>
             </div>
         </div>
+    </div>
+    <div class="form-group">
+        <!-- <p>BloxSize<sup>*</sup></p> -->
+        <select class="selectJS form-control" name="blockSize" id="blockSize">
+            <option value="mm">Millimeter</option>
+            <option value="cm">Centimeter</option>
+            <option value="in">Inches</option>
+            <option value="ft" selected>Feet</option>
+            <option value="mt">Meter</option>
+        </select>
+        <label class="form-lable" id="Label">Block Size calculation<sup>*</sup></label>
     </div>
     <!-- <div class="full-width">
         <div class="form-header" style="margin-bottom: 20px">

@@ -225,7 +225,11 @@ $("#addBlock").click(function (e) {
         if (totalItem != "") {
           if (thickness != "") {
             if (supplier != "") {
-              submitRequest = true;
+              if (blockSize != "") {
+                submitRequest = true;
+              } else {
+                msg = "Kindly select block size calculation";
+              }
             } else {
               msg = "Kindly select block supplier";
             }

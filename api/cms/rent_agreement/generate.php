@@ -79,32 +79,6 @@ function generate($connection, $data)
 
         $enquiryID = mysqli_insert_id($connection);
 
-
-        $email_body = "
-    <h2>{$subject}</h2>
-    <table>
-        <tr>
-            <td>Name: </td>
-            <td>{$first_name} {$last_name}</td>
-        </tr>
-        <tr>
-            <td>Email: </td>
-            <td>{$email}</td>
-        </tr>
-        <tr>
-            <td>Mobile: </td>
-            <td>{$mobile}</td>
-        </tr>
-    </table>
-    ";
-
-        if (isset($sender)) {
-            if (!isset($doNotSendEmail)) {
-                require SEND_EMAIL;
-                require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
-            }
-        }
-
         if ($addNewEnquiry) {
             $httpStatus = 201;
             $status = 'success';

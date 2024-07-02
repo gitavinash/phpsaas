@@ -46,31 +46,39 @@ if (!isset($validId)) {
                             </div> -->
                             <div id="landlordBox">
                                 <h2>Landlord details</h2>
-                                <div class="landloadForm">
-                                    <input type="text" class="form-control" id="name" placeholder="Full Name*">
-                                    <input type="text" class="form-control" id="fatherName"
-                                        placeholder="Father/Mother Name*">
-                                    <input type="number" class="form-control" id="phone" placeholder="Phone Number*">
-                                    <textarea name="landlordAddress" class="form-control" id="landlordAddress"
-                                        placeholder="Permanent Address"></textarea>
-                                    <input type="email" class="form-control" id="email" placeholder="Email id*">
-                                    <input type="text" class="form-control" id="panCard" placeholder="PAN Card">
+                                <div class="landlordForm">
+                                    <input type="text" class="form-control" name="landlord_name" id="landlordName"
+                                        placeholder="Full Name*">
+                                    <input type="text" class="form-control" name="landloard_father_name"
+                                        id="landlordFatherName" placeholder="Father/Mother Name*">
+                                    <input type="number" class="form-control" name="landloard_mobile" id="landlordPhone"
+                                        placeholder="Phone Number*">
+                                    <textarea name="landlord_address" class="form-control" id="landlordAddress"
+                                        placeholder="Permanent Address*"></textarea>
+                                    <input type="email" class="form-control" name="landlord_email" id="landlordEmail"
+                                        placeholder="Email id*">
+                                    <input type="text" class="form-control" name="landlord_pan_card"
+                                        id="landlordPanCard" placeholder="PAN Card">
                                 </div>
-                                <div class="landloadCloneForm"></div>
+                                <div class="landlordCloneForm"></div>
                                 <button id="tenate" class="btn btn-success w-100">Next, add tenate
                                     details</button>
                             </div>
                             <div id="tenateBox" style="display:none">
                                 <h2>Tenate details</h2>
                                 <div class="tenateForm">
-                                    <input type="text" class="form-control" id="name" placeholder="Full Name*">
-                                    <input type="text" class="form-control" id="fatherName"
-                                        placeholder="Father/Mother Name*">
-                                    <input type="number" class="form-control" id="phone" placeholder="Phone Number*">
-                                    <textarea name="tenateAddress" class="form-control" id="tenateAddress"
-                                        placeholder="Permanent Address"></textarea>
-                                    <input type="email" class="form-control" id="email" placeholder="Email id*">
-                                    <input type="text" class="form-control" id="panCard" placeholder="PAN Card">
+                                    <input type="text" class="form-control" name="tenate_name" id="tenateName"
+                                        placeholder="Full Name*">
+                                    <input type="text" class="form-control" name="tenate_father_name"
+                                        id="tenateFatherName" placeholder="Father/Mother Name*">
+                                    <input type="number" class="form-control" name="tenate_mobile" id="tenatePhone"
+                                        placeholder="Phone Number*">
+                                    <textarea name="tenate_address" class="form-control" id="tenateAddress"
+                                        placeholder="Permanent Address*"></textarea>
+                                    <input type="email" class="form-control" name="tenate_email" id="tenateEmail"
+                                        placeholder="Email id*">
+                                    <input type="text" class="form-control" name="tenate_pan_card" id="tenatePanCard"
+                                        placeholder="PAN Card">
                                 </div>
                                 <div class="tenateCloneForm"></div>
                                 <button id="house" class="btn btn-success w-100">Next, add property
@@ -78,7 +86,7 @@ if (!isset($validId)) {
                             </div>
                             <div id="houseBox" style="display:none">
                                 <h2>Property details</h2>
-                                <select name="floor" class="form-control" id="floor">
+                                <select name="property_floor" class="form-control" id="propertyFloor">
                                     <option value="#">Floor No.*</option>
                                     <option value="G">G</option>
                                     <option value="1">1</option>
@@ -104,7 +112,7 @@ if (!isset($validId)) {
                                     <option value="21">21</option>
                                     <option value="21+">21+</option>
                                 </select>
-                                <select name="Choose BHK" class="form-control" id="bhk">
+                                <select name="property_bhk" class="form-control" id="propertyBHK">
                                     <option value="#">Choose BHK*</option>
                                     <option value="1 RK">1 RK</option>
                                     <option value="1 BHK">1 BHK</option>
@@ -116,34 +124,33 @@ if (!isset($validId)) {
                                     <option value="4 BHK">4 BHK</option>
                                 </select>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="propertyAddressCheck"
-                                        id="propertyAddressCheck" checked>
+                                    <input class="form-check-input" type="checkbox" id="propertyAddressCheck" checked>
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Same as landlord address
                                     </label>
                                 </div>
-                                <textarea name="propertyAddress" class="form-control" id="propertyAddress"
-                                    placeholder="Property Address*" disabled></textarea>
+                                <textarea name="property_address" class="form-control" id="propertyAddress"
+                                    placeholder="Property Address*"></textarea>
                                 <button id="contract" class="btn btn-success w-100">Next, add contract details</button>
                             </div>
                             <div id="contractBox" style="display: none;">
                                 <h2>Contract details</h2>
-                                <input type="text" name="agreementStartDate" id="agreementStartDate"
+                                <input type="text" name="agreement_start_date" id="agreementStartDate"
                                     class="form-control datepicker" placeholder="Agreement start date*">
-                                <input type="number" id="rentAmount" name="rentAmount" class="form-control"
+                                <input type="number" id="rentAmount" name="rent_amount" class="form-control"
                                     placeholder="Monthly rent*">
-                                <input type="number" name="paymentDate" id="paymentDate" class="form-control"
+                                <input type="number" name="payment_sate" id="paymentDate" class="form-control"
                                     placeholder="Rent payment date*">
-                                <input type="number" name="securityAmount" id="securityAmount" class="form-control"
+                                <input type="number" name="security_amount" id="securityAmount" class="form-control"
                                     placeholder="Security Amount*">
-                                <select name="noticePeriod" class="form-control" id="noticePeriod">
+                                <select name="notice_period" class="form-control" id="noticePeriod">
                                     <option value="#">Notice period*</option>
                                     <option value="1 month">1 Month</option>
                                     <option value="2 month">2 Month</option>
                                     <option value="3 month">3 Month</option>
                                 </select>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="rentIncrease"
+                                    <input class="form-check-input" type="checkbox" name="rent_increase"
                                         id="rentIncrease" checked>
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Increase rent after 11 Months
@@ -151,7 +158,9 @@ if (!isset($validId)) {
                                 </div>
                                 <textarea name="comment" id="comment" class="form-control"
                                     placeholder="Any other clauses?"></textarea>
-                                <button id="contract" class="btn btn-success w-100">Submit & Continue</button>
+                                <input type="hidden" name="request_id" valid="<?php echo $request_id ?>">
+                                <button id="submitAgreementForm" class="btn btn-success w-100">Submit &
+                                    Continue</button>
                             </div>
                         </form>
                     </div>
