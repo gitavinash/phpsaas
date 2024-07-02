@@ -304,6 +304,8 @@ $(document).ready(function () {
     }
 
     var formData = $("#agreementForm").serializeArray();
+    formData.push({ name: "type", value: "rent_agreement" });
+    formData.push({ name: "action", value: "publish" });
 
     if (nextStep) {
       $.ajax({
@@ -312,9 +314,10 @@ $(document).ready(function () {
         dataType: "json",
         data: formData,
         success: function (response) {
+          console.log(`success`, response);
           if (response.status == "success") {
             window.location.href =
-              `/review-agreement/?request_id=` + btoa(response.enquiryId);
+              `/review-agreement/?request_id=` + response.enquiryId;
           } else {
             popUpMessage("center", response.msg, response.status);
           }

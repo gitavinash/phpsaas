@@ -2,7 +2,11 @@
 
 if (isset($request_id)) {
     if ($request_id != '') {
-        $validId = true;
+        if ($checkRequest = mysqli_query($connection, "SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id='" . base64_decode($request_id) . "' AND enquiry_site_id=" . SITE_ID)) {
+            if (mysqli_num_rows($checkRequest) != 0) {
+                $validId = true;
+            }
+        }
     }
 }
 
@@ -49,9 +53,9 @@ if (!isset($validId)) {
                                 <div class="landlordForm">
                                     <input type="text" class="form-control" name="landlord_name" id="landlordName"
                                         placeholder="Full Name*">
-                                    <input type="text" class="form-control" name="landloard_father_name"
+                                    <input type="text" class="form-control" name="landlord_father_name"
                                         id="landlordFatherName" placeholder="Father/Mother Name*">
-                                    <input type="number" class="form-control" name="landloard_mobile" id="landlordPhone"
+                                    <input type="number" class="form-control" name="landlord_mobile" id="landlordPhone"
                                         placeholder="Phone Number*">
                                     <textarea name="landlord_address" class="form-control" id="landlordAddress"
                                         placeholder="Permanent Address*"></textarea>
@@ -139,7 +143,7 @@ if (!isset($validId)) {
                                     class="form-control datepicker" placeholder="Agreement start date*">
                                 <input type="number" id="rentAmount" name="rent_amount" class="form-control"
                                     placeholder="Monthly rent*">
-                                <input type="number" name="payment_sate" id="paymentDate" class="form-control"
+                                <input type="number" name="payment_date" id="paymentDate" class="form-control"
                                     placeholder="Rent payment date*">
                                 <input type="number" name="security_amount" id="securityAmount" class="form-control"
                                     placeholder="Security Amount*">
@@ -158,7 +162,7 @@ if (!isset($validId)) {
                                 </div>
                                 <textarea name="comment" id="comment" class="form-control"
                                     placeholder="Any other clauses?"></textarea>
-                                <input type="hidden" name="request_id" valid="<?php echo $request_id ?>">
+                                <input type="hidden" name="request_id" value="<?php echo $request_id ?>">
                                 <button id="submitAgreementForm" class="btn btn-success w-100">Submit &
                                     Continue</button>
                             </div>
