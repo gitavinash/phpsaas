@@ -254,6 +254,22 @@ aside form h2 {
   height: 40px;
 }
 
+footer {
+  background: #01647b;
+  color: #fff;
+}
+
+footer ul {
+  list-style: none;
+  padding: 5% 0% 0% 0%;
+  display: flex;
+  justify-content: center; /* Center the list items */
+}
+footer li {
+  display: inline;
+  margin: 0 10px; /* Adjust margin as needed */
+}
+
 @media screen and (max-width: 990px) {
   .callUsBtn {
     padding: 1.5rem;
