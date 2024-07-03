@@ -274,7 +274,10 @@ footer li {
   background: none !important;
 }
 
-.pageDescription p {
+.pageDescription p,
+li,
+span,
+i {
   font-size: 1rem !important;
   line-height: 1.7rem !important;
   background: none !important;
