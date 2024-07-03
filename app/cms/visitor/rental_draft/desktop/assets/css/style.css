@@ -275,9 +275,13 @@ footer li {
 }
 
 .pageDescription p {
-  font-size: 1rem;
-  line-height: 1.5rem;
+  font-size: 1rem !important;
+  line-height: 1.7rem !important;
   background: none !important;
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 @media screen and (max-width: 990px) {
