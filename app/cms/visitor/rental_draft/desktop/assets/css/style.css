@@ -270,6 +270,16 @@ footer li {
   margin: 0 10px; /* Adjust margin as needed */
 }
 
+.pageDescription {
+  background: none !important;
+}
+
+.pageDescription p {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  background: none !important;
+}
+
 @media screen and (max-width: 990px) {
   .callUsBtn {
     padding: 1.5rem;
