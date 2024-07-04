@@ -35,9 +35,15 @@ $newsContent =  substr($newsContent, 0, 525);
                 </div>
                 <div class="social_link">
                     <p>Share the story on</p>
-                    <a href="http://twitter.com/share?text=<?php echo urlencode($news_title) ?>&url=<?php echo SITE_URL . $link_url ?>" target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" class="share-icon" alt=""></a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL . $link_url ?>&title=<?php echo urlencode($news_title) ?>" target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" class="share-icon" alt=""></a>
-                    <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url ?>" target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/whatsapp.png" class="share-icon" alt=""></a>
+                    <a href="http://twitter.com/share?text=<?php echo urlencode($news_title) ?>&url=<?php echo SITE_URL . $link_url ?>"
+                        target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" class="share-icon"
+                            alt=""></a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL . $link_url ?>&title=<?php echo urlencode($news_title) ?>"
+                        target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" class="share-icon"
+                            alt=""></a>
+                    <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url ?>"
+                        target="_blank"><img src="<?php echo USER_IMAGES ?>social_media/whatsapp.png" class="share-icon"
+                            alt=""></a>
                 </div>
 
             </div>
@@ -77,27 +83,27 @@ $newsContent =  substr($newsContent, 0, 525);
                 if ($showSubscriptionSection == true) { ?>
 
 
-                    <section class="subscribe_wrapper">
-                        <div class="container">
-                            <div class="subscribe_wrapper__heading">
-                                <h6><a href="/subscribe/">Subscribe to read the full story</a></h6>
-                                <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
-                                <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
-                            </div>
+                <section class="subscribe_wrapper">
+                    <div class="container">
+                        <div class="subscribe_wrapper__heading">
+                            <h6><a href="/subscribe/">Subscribe to read the full story</a></h6>
+                            <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
+                            <p>Access premium journalism by selecting a <a href="#"> Subscription Plan</a></p>
+                        </div>
 
-                            <div class="subscription_card">
-                                <?php
+                        <div class="subscription_card">
+                            <?php
 
                                 if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
                                     if (mysqli_num_rows($subsriptionPlan) != 0) {
                                         while ($subsriptionPlanData = mysqli_fetch_assoc($subsriptionPlan)) {
                                             extract($subsriptionPlanData); ?>
 
-                                            <div class="subscription_card__box">
-                                                <p><?php echo $product_title ?></p>
-                                                <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
-                                                <div class="continue">
-                                                    <?php
+                            <div class="subscription_card__box">
+                                <p><?php echo $product_title ?></p>
+                                <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
+                                <div class="continue">
+                                    <?php
 
                                                     if (isset($_COOKIE['user_data'])) {
                                                         echo "
@@ -111,18 +117,18 @@ $newsContent =  substr($newsContent, 0, 525);
                                                     }
 
                                                     ?>
-                                                </div>
-                                            </div>
+                                </div>
+                            </div>
 
-                                <?php
+                            <?php
                                         }
                                     }
                                 }
 
                                 ?>
-                            </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
                 <?php
                 }
@@ -133,13 +139,14 @@ $newsContent =  substr($newsContent, 0, 525);
             </div>
             <?php
 
-            if (isset($_COOKIE['user_data'])) { ?>
-                <div class="user_content">
-                    <p>The author is Founder and Editor of The Head and Tale. She can be reached at
-                        <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a><br />
-                        Tweets <a href='https://twitter.com/artijourno' target="_blank" style="font-style: italic">@artijourno</a>
-                    </p>
-                </div>
+            if (isset($_COOKIE['user_data']) && $profile_email == 'arti.singh@theheadandtale.com') { ?>
+            <div class="user_content">
+                <p>The author is Founder and Editor of The Head and Tale. She can be reached at
+                    <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a><br />
+                    Tweets <a href='https://twitter.com/artijourno' target="_blank"
+                        style="font-style: italic">@artijourno</a>
+                </p>
+            </div>
             <?php
             }
 

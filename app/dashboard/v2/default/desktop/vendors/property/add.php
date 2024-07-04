@@ -6,7 +6,7 @@
             <li class="step-box active" id="step_1"><span>1</span>Property details</li>
         </ul>
         <div class="steps-box">
-            <form action="#" method="POST">
+            <form action="#" id="addPropertyForm" method="POST">
                 <section class="form">
 
                     <div class="step-open-box step_1_box">
@@ -68,6 +68,17 @@
                         <div class="form-group">
                             <input id="mapUrl" name="mapUrl" type="text" />
                             <label class="form-lable" id="Label">Google map url</label>
+                        </div>
+                        <div class="form-group">
+                            <input id="totalItem" name="featureImage" type="file"
+                                accept="image/x-png, image/gif, image/jpeg" />
+                            <label class="form-lable" id="Label">Feature image</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-field">
+                                <div class="addGallery" style="padding-top: .5rem;"></div>
+                                <label class="form-lable" id="Label">Gallery</label>
+                            </div>
                         </div>
                         <div class="box-1">
                             <div class="form-group">
