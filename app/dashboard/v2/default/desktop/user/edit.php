@@ -68,21 +68,25 @@ window.location.href = 'dashboard/user/?type=list&status=all';
                                 ?>
                             </select>
                         </div>
+                        <?php
+
+                        if (SITE_APP == 'ims_marble') { ?>
+
                         <div class="form-group" id="companyDropDown">
                             <p>Company<sup>*</sup></p>
                             <select class="selectJS form-control" name="company" id="company">
                                 <option value="">Select company</option>
                                 <?php
 
-                                if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_status=1 AND company_address_id!=0 AND company_site_id=" . SITE_ID)) {
-                                    if (mysqli_num_rows($companyList) > 0) {
-                                        while ($company = mysqli_fetch_assoc($companyList)) {
-                                            echo "<option value='{$company['company_id']}' " . (($company['company_id'] == $siteAccessMeta['company']) ? 'selected' : '') . " >{$company['company_title']}</option>";
+                                    if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_status=1 AND company_address_id!=0 AND company_site_id=" . SITE_ID)) {
+                                        if (mysqli_num_rows($companyList) > 0) {
+                                            while ($company = mysqli_fetch_assoc($companyList)) {
+                                                echo "<option value='{$company['company_id']}' " . (($company['company_id'] == $siteAccessMeta['company']) ? 'selected' : '') . " >{$company['company_title']}</option>";
+                                            }
                                         }
                                     }
-                                }
 
-                                ?>
+                                    ?>
                             </select>
                         </div>
                         <div class="form-group" id="warehouseBox">
@@ -90,17 +94,21 @@ window.location.href = 'dashboard/user/?type=list&status=all';
                             <select class="selectJS form-control" name="warehouse" id="warehouse">
                                 <option value="">Select warehouse</option>
                                 <?php
-                                if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND warehouse_company_id={$siteAccessMeta['company']} AND warehouse_site_id=" . SITE_ID)) {
-                                    if (mysqli_num_rows($warehouseList) > 0) {
-                                        while ($warehouse = mysqli_fetch_assoc($warehouseList)) {
-                                            echo "<option value='{$warehouse['warehouse_id']}' " . (($warehouse['warehouse_id'] == $siteAccessMeta['warehouse']) ? 'selected' : '') . " >{$warehouse['warehouse_title']}</option>";
+                                    if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND warehouse_company_id={$siteAccessMeta['company']} AND warehouse_site_id=" . SITE_ID)) {
+                                        if (mysqli_num_rows($warehouseList) > 0) {
+                                            while ($warehouse = mysqli_fetch_assoc($warehouseList)) {
+                                                echo "<option value='{$warehouse['warehouse_id']}' " . (($warehouse['warehouse_id'] == $siteAccessMeta['warehouse']) ? 'selected' : '') . " >{$warehouse['warehouse_title']}</option>";
+                                            }
                                         }
                                     }
-                                }
 
-                                ?>
+                                    ?>
                             </select>
                         </div>
+                        <?php
+                        }
+
+                        ?>
                         <div class="form-group">
                             <input type="hidden" name="user_id" value="<?php echo base64_encode($user_id) ?>">
                             <input type="hidden" name="type" value="user">

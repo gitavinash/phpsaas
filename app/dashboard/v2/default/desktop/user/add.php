@@ -58,21 +58,24 @@
                                 ?>
                             </select>
                         </div>
+                        <?php
+
+                        if (SITE_APP == 'ims_marble') { ?>
                         <div class="form-group" id="companyDropDown">
                             <p>Company<sup>*</sup></p>
                             <select class="selectJS form-control" name="company" id="company">
                                 <option value="">Select company</option>
                                 <?php
 
-                                if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_status=1 AND company_address_id!=0 AND company_site_id=" . SITE_ID)) {
-                                    if (mysqli_num_rows($companyList) > 0) {
-                                        while ($company = mysqli_fetch_assoc($companyList)) {
-                                            echo "<option value='{$company['company_id']}' >{$company['company_title']}</option>";
+                                    if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_status=1 AND company_address_id!=0 AND company_site_id=" . SITE_ID)) {
+                                        if (mysqli_num_rows($companyList) > 0) {
+                                            while ($company = mysqli_fetch_assoc($companyList)) {
+                                                echo "<option value='{$company['company_id']}' >{$company['company_title']}</option>";
+                                            }
                                         }
                                     }
-                                }
 
-                                ?>
+                                    ?>
                             </select>
                         </div>
                         <div class="form-group" id="warehouseBox" style="display: none">
@@ -80,6 +83,10 @@
                             <select class="selectJS form-control" name="warehouse" id="warehouse">
                             </select>
                         </div>
+                        <?php
+                        }
+
+                        ?>
                         <div class="form-group">
                             <input type="hidden" name="type" value="user">
                             <input type="hidden" name="action" value="publish">
