@@ -28,28 +28,42 @@
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_email, user_status, site_access_type, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_site_id=" . SITE_ID)) {
+        $applyUserFilter = '';
+        if (SITE_ID == 49) {
+            $applyUserFilter = "site_access_type!='subscriber' AND ";
+        }
+
+        if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_email, user_status, site_access_type, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE {$applyUserFilter} site_access_site_id=" . SITE_ID)) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-                    <tr>
-                        <td>
-                            <p><?php echo $user_username; ?></p>
-                            <!-- <p><a
+        <tr>
+            <td>
+                <!-- <p><?php echo $user_username; ?></p> -->
+                <p><a
                         href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><?php echo $user_username; ?></a>
-                </p> -->
-                            <!-- <div class="hover">
+                </p>
+                <div class="hover">
                     <a href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><i
                             class="fas fa-pencil-alt"></i> Edit</a>
+                    <?php
+
+                                if ($site_access_type != 'administrator') { ?>
+
                     <a href="#" id="<?php echo base64_encode($user_id) ?>_post" class="deleteBtn"><i
                             class="fas fa-trash"></i> Delete</a>
-                </div> -->
-                        </td>
-                        <td><?php echo $profile_display_name; ?></td>
-                        <td><?php echo $user_email; ?></td>
-                        <td><?php echo $site_access_type; ?></td>
-                        <td></td>
-                    </tr>
+                    <?php
+                                }
+
+                                ?>
+                </div>
+
+            </td>
+            <td><?php echo $profile_display_name; ?></td>
+            <td><?php echo $user_email; ?></td>
+            <td><?php echo $site_access_type; ?></td>
+            <td></td>
+        </tr>
         <?php
                 }
             }

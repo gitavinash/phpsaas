@@ -74,6 +74,8 @@ if (!isset($_COOKIE['user_data'])) {
 						}
 					}
 
+					define('SITE_DASHBOARD_VERSION', $site_dashboard_version);
+
 					/** Redirect to complete profile page */
 
 					if ($site_dashboard_version == 1) {

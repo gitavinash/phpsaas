@@ -46,7 +46,7 @@ $(window).on("load", function () {
   hidePageLoader();
 });
 
-$(".deleteButton").on("click", function (event) {
+$(document).on("click", ".deleteButton", function (event) {
   event.preventDefault();
   var disableRedirect = false;
   Swal.fire({
@@ -1298,21 +1298,28 @@ $("#addProperty").click(function (e) {
           if (email != "") {
             if (mobile != "") {
               if (category != "") {
+                var formData = new FormData(
+                  document.getElementById("addPropertyForm")
+                );
                 $.ajax({
                   type: "POST",
                   url: "/api/property/publish/",
                   dataType: "json",
-                  data: {
-                    name,
-                    description,
-                    address,
-                    city,
-                    pinCode,
-                    email,
-                    mobile,
-                    category,
-                    googleMapUrl,
-                  },
+                  // data: {
+                  //   name,
+                  //   description,
+                  //   address,
+                  //   city,
+                  //   pinCode,
+                  //   email,
+                  //   mobile,
+                  //   category,
+                  //   googleMapUrl,
+                  // },
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  encrypt: "multipart/form-data",
                   success: function (response) {
                     popUpMessage("center", response.msg, response.status);
                     setTimeout(function () {

@@ -1,5 +1,75 @@
 var activeDamageBoxId = 0;
 let count = 1;
+
+$(document).on("click", ".deleteButton", function (event) {
+  event.preventDefault();
+  var disableRedirect = false;
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.value) {
+      var requestType = $(this).attr("data-type");
+      var requestId = $(this).attr("data-id");
+      if (typeof $(this).attr("data-action") !== "undefined") {
+        var urlPostFix =
+          btoa(requestId) +
+          "&deteteType=" +
+          $(this).attr("data-action") +
+          "&damageIndex=" +
+          ($(this).attr("data-damage-id") - 1);
+      } else {
+        var urlPostFix = btoa(requestId);
+      }
+      $.ajax({
+        type: "GET",
+        url: `/api/${requestType}/delete/?id=` + urlPostFix,
+        dataType: "json",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          if (response.status == "success") {
+            let parts = requestType.split("/");
+            let lastPart = parts[parts.length - 1];
+            switch (lastPart) {
+              case "block":
+                lastPart = "inventory";
+                break;
+            }
+            switch (lastPart) {
+              case "block":
+                lastPart = "inventory";
+                break;
+              case "item":
+                disableRedirect = true;
+                break;
+            }
+            setTimeout(function () {
+              if (disableRedirect) {
+                window.location.href = `/dashboard/${lastPart}/list/`;
+              } else {
+                location.reload();
+              }
+            }, 1500);
+          }
+        },
+        error: function (response) {
+          console.log(`Error : `, response);
+          popUpMessage(
+            "center",
+            response.responseJSON.msg,
+            response.responseJSON.status
+          );
+        },
+      });
+    }
+  });
+});
+
 // User
 
 var companyDropDown = document.getElementById("companyDropDown");
@@ -370,30 +440,56 @@ $("#updateBlock").click(function (e) {
 $("#updateBlockItem").click(function (e) {
   e.preventDefault();
 
-  var formData = $("#updateInventoryForm").serialize();
+  var allFilled = true;
 
-  $.ajax({
-    type: "POST",
-    url: "/api/item/publish/",
-    dataType: "JSON",
-    data: formData,
-    success: function (successResponse) {
-      popUpMessage("center", successResponse.msg, successResponse.status);
-      if (successResponse.status == "success") {
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
-      }
-    },
-    error: function (errorResponse) {
-      console.log(`Error:`, errorResponse);
-      popUpMessage(
-        "center",
-        errorResponse.responseJSON.msg,
-        errorResponse.responseJSON.status
-      );
-    },
+  $(".heightValues").each(function () {
+    if ($(this).val() === "") {
+      allFilled = false;
+      return false; // Breaks the .each() loop
+    }
   });
+
+  if (allFilled) {
+    var allFilled = true;
+
+    $(".widthValues").each(function () {
+      if ($(this).val() === "") {
+        allFilled = false;
+        return false; // Breaks the .each() loop
+      }
+    });
+  } else {
+    popUpMessage("center", "Kinldy fill all missing items height", "warning");
+  }
+
+  if (allFilled) {
+    var formData = $("#updateInventoryForm").serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/api/item/publish/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  } else {
+    popUpMessage("center", "Kinldy fill all missing items width", "warning");
+  }
 });
 
 // Manage damage box
@@ -405,6 +501,45 @@ if (manageDamageBtn) {
     e.preventDefault();
     activeDamageBoxId = $(this).attr("data-id");
     $(".cloneDamageForm").empty();
+    console.log(`activeDamageBoxId:`, activeDamageBoxId);
+    var localValues = localStorage.getItem(`blockItem_${activeDamageBoxId}`);
+    if (localValues != "") {
+      $(".popUpUpdateDamageFormInputs").empty();
+      localValues = JSON.parse(localValues);
+      if (Array.isArray(localValues)) {
+        var i = 1;
+        localValues.forEach(function (value) {
+          if (value["damageAreaWidth[]"] != "") {
+            var formHtml = `
+            <div class="full-width popUpUpdateDamageForm" id="damageForm_${i}">
+                <div class="col-3">
+                    <div class="form-group">
+                        <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth[]" value="${value["damageAreaWidth[]"]}" type="number" />
+                        <label class="form-lable" for="damageAreaWidth_${i}">Width (in Centimeters)<sup>*</sup></label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input id="damageAreaHeight_${i}" class="height" name="damageAreaHeight[]" value="${value["damageAreaHeight[]"]}" type="number" />
+                        <label class="form-lable" for="damageAreaHeight_${i}">Height (in Centimeters)<sup>*</sup></label>
+                    </div>
+                </div>
+                <div class='col-4'>
+                    <div class="form-group">
+                      <div class='actionBtn'>
+                          <span class='bgRed deleteButton' data-type='ims_marble/item/' data-action='damage' data-damage-id='${i}' data-id='${activeDamageBoxId}' data-redirect='false'><i
+                                  class='fi fi-rr-trash'></i></span>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        `;
+            $(".popUpUpdateDamageFormInputs").append(formHtml);
+          }
+          i++;
+        });
+      }
+    }
     $(".manageDamageBox").show();
   });
 }
@@ -429,7 +564,6 @@ var updateDamageBtn = document.getElementById("updateDamage");
 
 if (updateDamageBtn) {
   $("#updateDamage").on("click", function (e) {
-    console.log(`activeDamageBoxId`, activeDamageBoxId);
     e.preventDefault();
     // Collect data from all forms
     var allFormData = [];

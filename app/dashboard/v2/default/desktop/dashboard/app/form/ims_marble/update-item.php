@@ -23,7 +23,29 @@ if ($checkInventory = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix
     }
 }
 
-if (isset($validId)) { ?>
+if (isset($validId)) {
+
+    $blockSizeCalculation = '';
+
+    switch ($block_size_dimension) {
+        case 'mm':
+            $blockSizeCalculation = 'Millimeter';
+            break;
+        case 'cm':
+            $blockSizeCalculation = 'Centimeter';
+            break;
+        case 'in':
+            $blockSizeCalculation = 'Inches';
+            break;
+        case 'mt':
+            $blockSizeCalculation = 'Meter';
+            break;
+        default:
+            $blockSizeCalculation = 'Feet';
+            break;
+    }
+
+?>
 
 
 <div class="popUp manageDamageBox">
@@ -34,7 +56,11 @@ if (isset($validId)) { ?>
                     <section class="form">
                         <div class="step-open-box step_1_box full-width">
                             <div class="form-header">
-                                <h4 class="heading">Damage area</h4>
+                                <h4 class="heading">Damage area in<br />
+                                    <!-- <h4 class="heading">Damage area in ( <?php echo $blockSizeCalculation ?> )<br /><br /> -->
+                                </h4>
+                                <div class="full-width popUpUpdateDamageFormInputs" id="damageFormPrevious">
+                                </div>
                                 <div class="full-width popUpUpdateDamageForm" id="damageForm">
                                     <div class="col-3">
                                         <div class="form-group">
@@ -96,20 +122,20 @@ if (isset($validId)) { ?>
             if (mysqli_num_rows($checkItems) > 0) {
                 while ($blockItem = mysqli_fetch_assoc($checkItems)) {
                     extract($blockItem);
-                    $blockItemIndex .= $block_item_id.',';
+                    $blockItemIndex .= $block_item_id . ',';
                     echo "<script>
                         localStorage.setItem('blockItem_{$block_item_id}', '{$block_item_damage_area}');
                     </script>";
                     echo "<div class='full-width'>
             <div class='col-3'>
                 <div class='form-group'>
-                    <input name='width[{$block_item_id}]' value='{$block_item_width}' type='number' />
+                    <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' />
     <label class='form-lable' id='Label'>Width ( in Feets )<sup>*</sup></label>
 </div>
 </div>
 <div class='col-3'>
     <div class='form-group'>
-        <input name='height[{$block_item_id}]' value='{$block_item_height}' type='number' />
+        <input name='height[{$block_item_id}]' class='heightValues' value='{$block_item_height}' type='number' />
     <label class='form-lable' id='Label'>Height ( in Feets )<sup>*</sup></label>
 </div>
 </div>

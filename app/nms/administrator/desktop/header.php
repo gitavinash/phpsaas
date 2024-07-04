@@ -69,6 +69,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="page/?type=list&status=all"><i class="fas fa-list"></i> All Pages</a></li>
                             <li><a href="page/?type=add&editor=true"><i class="fas fa-plus"></i>Add New Page</a></li>
+                            eg
                         </ul>
                     </div>
                 </li>
@@ -155,6 +156,31 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
+                <?php
+
+                if ($site_access_type == 'administrator') { ?>
+
+                <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
+                    <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <?php
+                }
+
+                ?>
             </ul>
         </nav>
     </aside>

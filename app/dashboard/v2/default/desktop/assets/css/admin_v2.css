@@ -2512,3 +2512,19 @@ a.tableActionIconBtn {
 .actionBtn a i {
   font-size: 24px;
 }
+.actionBtn span {
+  float: left;
+  width: 41%;
+  padding: 13px 10px;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 3px;
+  color: #fefefe;
+  border-radius: 4px;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.actionBtn span i {
+  font-size: 24px;
+}

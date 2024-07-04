@@ -5,7 +5,7 @@ function update($connection, $data)
 {
 
     extract($data);
-    $user_id = base64_decode($user_id);
+    $user_id = base64_decode($id);
 
     $msg = '';
     $status = 'warning';
@@ -75,7 +75,12 @@ function update($connection, $data)
     }
 
     $msg = urlencode($msg);
-    header("Location: /dashboard/user/edit/?id=" . base64_encode($user_id) . "&responseMsg={$msg}&status={$status}", TRUE, 301);
+
+    if (SITE_DASHBOARD_VERSION == 1) {
+        header("Location: /dashboard/user/?type=edit&id=" . base64_encode($user_id) . "&responseMsg={$msg}", TRUE, 301);
+    } else {
+        header("Location: /dashboard/user/edit/?id=" . base64_encode($user_id) . "&responseMsg={$msg}&status={$status}", TRUE, 301);
+    }
 
     exit();
 }

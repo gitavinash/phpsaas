@@ -17,10 +17,19 @@
 			<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 
 			<?php
-		
-			if(isset($_GET['type'])) {
 
-				if($_GET['type']=='edit' || $_GET['type']=='add') { ?>
+			if (isset($_GET['responseMsg'])) { ?>
+
+			<script type='text/javascript'>
+alert("<?php echo $_GET['responseMsg'] ?>");
+			</script>
+
+			<?php
+			}
+
+			if (isset($_GET['type'])) {
+
+				if ($_GET['type'] == 'edit' || $_GET['type'] == 'add') { ?>
 			<script type='text/javascript'>
 $(window).bind('beforeunload', function() {
     return "Leaving this page will reset the wizard";
@@ -28,13 +37,12 @@ $(window).bind('beforeunload', function() {
 			</script>
 			<?php
 				}
-
 			}
 
 
-			if(isset($_GET['type'])) {
+			if (isset($_GET['type'])) {
 
-				if($_GET['type']=='list') { ?>
+				if ($_GET['type'] == 'list') { ?>
 
 			<script type='text/javascript'>
 $(document).ready(function() {
@@ -66,12 +74,11 @@ $(document).ready(function() {
 });
 			</script>
 			<?php
-	
-				}
 
+				}
 			}
 
-		?>
+			?>
 
 			</body>
 

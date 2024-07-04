@@ -65,6 +65,8 @@ window.location.href = 'dashboard/user/?type=list&status=all';
                 <div class="form-group">
                     <input type="hidden" name="type" value="user">
                     <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="mobile" value="<?php echo $user_mobile ?>">
+                    <input type="hidden" name="email" value="<?php echo $user_email ?>">
                     <input type="submit" class="btn btn-green" value="Update user">
                 </div>
             </form>

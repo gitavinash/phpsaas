@@ -157,11 +157,18 @@ function publish($connection, $data)
 
     $msg = urlencode($msg);
 
-    if ($status === 'success') {
-        header("Location: /dashboard/user/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+    if (SITE_DASHBOARD_VERSION == 1) {
+        if ($status == 'success') {
+            header("Location: /dashboard/user/?type=edit&editor=true&id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+        } else {
+            header("Location: /dashboard/user/?type=add&responseMsg={$msg}&status={$status}", TRUE, 301);
+        }
     } else {
-        header("Location: /dashboard/user/add/?responseMsg={$msg}&status={$status}", TRUE, 301);
+        if ($status === 'success') {
+            header("Location: /dashboard/user/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+        } else {
+            header("Location: /dashboard/user/add/?responseMsg={$msg}&status={$status}", TRUE, 301);
+        }
     }
-
     exit();
 }

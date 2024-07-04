@@ -15,27 +15,38 @@ if (isset($id)) {
 
 if (isset($deleteData)) {
     mysqli_query($connection, "START TRANSACTION");
-    if ($checkData = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_id={$blockId} AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
-        if (mysqli_num_rows($checkData) == 1) {
+    if (isset($deteteType)) {
 
-            extract(mysqli_fetch_assoc($checkData));
+        // Delete damage area
 
-            $deleteDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=3 WHERE block_item_id={$blockId} AND block_item_site_id=" . SITE_ID);
 
-            $deleteBlockItemDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_total_item=block_total_item-1 WHERE block_id={$block_item_parent_id} AND block_site_id=" . SITE_ID);
 
-            if ($deleteDataFromDatabase && $deleteBlockItemDataFromDatabase) {
-                $msg = "Block item deleted successfully";
-                $httpStatus = 202;
-                $status = 'success';
-                mysqli_query($connection, "COMMIT");
+        exit();
+    } else {
+        // Default data will detele
+
+        if ($checkData = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_id={$blockId} AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
+            if (mysqli_num_rows($checkData) == 1) {
+
+                extract(mysqli_fetch_assoc($checkData));
+
+                $deleteDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=3 WHERE block_item_id={$blockId} AND block_item_site_id=" . SITE_ID);
+
+                $deleteBlockItemDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_total_item=block_total_item-1 WHERE block_id={$block_item_parent_id} AND block_site_id=" . SITE_ID);
+
+                if ($deleteDataFromDatabase && $deleteBlockItemDataFromDatabase) {
+                    $msg = "Block item deleted successfully";
+                    $httpStatus = 202;
+                    $status = 'success';
+                    mysqli_query($connection, "COMMIT");
+                } else {
+                    $status = 'error';
+                    $msg = "Something went wrong while deleting block";
+                    mysqli_query($connection, "ROLLBACK");
+                }
             } else {
-                $status = 'error';
-                $msg = "Something went wrong while deleting block";
-                mysqli_query($connection, "ROLLBACK");
+                $msg = 'Invalid block id';
             }
-        } else {
-            $msg = 'Invalid block id';
         }
     }
 }
