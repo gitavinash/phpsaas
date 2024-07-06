@@ -16,13 +16,14 @@ $(document).on("click", ".deleteButton", function (event) {
     if (result.value) {
       var requestType = $(this).attr("data-type");
       var requestId = $(this).attr("data-id");
+      var damageBoxId = $(this).attr("data-damage-id");
       if (typeof $(this).attr("data-action") !== "undefined") {
         var urlPostFix =
           btoa(requestId) +
           "&deteteType=" +
           $(this).attr("data-action") +
           "&damageIndex=" +
-          ($(this).attr("data-damage-id") - 1);
+          (damageBoxId - 1);
       } else {
         var urlPostFix = btoa(requestId);
       }
@@ -52,7 +53,12 @@ $(document).on("click", ".deleteButton", function (event) {
               if (disableRedirect) {
                 window.location.href = `/dashboard/${lastPart}/list/`;
               } else {
-                location.reload();
+                var pageReload = $(this).attr("data-reload");
+                if (pageReload) {
+                  location.reload();
+                } else {
+                  $(`.formBox_${damageBoxId}`).hide();
+                }
               }
             }, 1500);
           }
@@ -501,7 +507,6 @@ if (manageDamageBtn) {
     e.preventDefault();
     activeDamageBoxId = $(this).attr("data-id");
     $(".cloneDamageForm").empty();
-    console.log(`activeDamageBoxId:`, activeDamageBoxId);
     var localValues = localStorage.getItem(`blockItem_${activeDamageBoxId}`);
     if (localValues != "") {
       $(".popUpUpdateDamageFormInputs").empty();
@@ -511,7 +516,7 @@ if (manageDamageBtn) {
         localValues.forEach(function (value) {
           if (value["damageAreaWidth[]"] != "") {
             var formHtml = `
-            <div class="full-width popUpUpdateDamageForm" id="damageForm_${i}">
+            <div class="full-width popUpUpdateDamageForm formBox_${i}" id="damageForm_${i}">
                 <div class="col-3">
                     <div class="form-group">
                         <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth[]" value="${value["damageAreaWidth[]"]}" type="number" />
@@ -527,7 +532,7 @@ if (manageDamageBtn) {
                 <div class='col-4'>
                     <div class="form-group">
                       <div class='actionBtn'>
-                          <span class='bgRed deleteButton' data-type='ims_marble/item/' data-action='damage' data-damage-id='${i}' data-id='${activeDamageBoxId}' data-redirect='false'><i
+                          <span class='bgRed deleteButton' data-type='ims_marble/item/' data-action='damage' data-damage-id='${i}' data-id='${activeDamageBoxId}' data-reload='false' data-redirect='false'><i
                                   class='fi fi-rr-trash'></i></span>
                       </div>
                     </div>
@@ -589,7 +594,6 @@ if (updateDamageBtn) {
         damageArea: allFormData,
       },
       success: function (successResponse) {
-        console.log(`successResponse`, successResponse);
         popUpMessage("center", successResponse.msg, successResponse.status);
         if (successResponse.status == "success") {
           localStorage.setItem("blockItem_" + activeDamageBoxId, allFormData);
