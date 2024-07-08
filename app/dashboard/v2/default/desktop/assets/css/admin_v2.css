@@ -169,6 +169,11 @@ input:read-only {
   cursor: default;
 }
 
+select.form-control {
+  height: 50px;
+  font-size: 1rem;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -2514,7 +2519,7 @@ a.tableActionIconBtn {
 }
 .actionBtn span {
   float: left;
-  width: 41%;
+  width: 100%;
   padding: 13px 10px;
   box-sizing: border-box;
   text-align: center;

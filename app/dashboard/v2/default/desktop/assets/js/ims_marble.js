@@ -4,6 +4,7 @@ let count = 1;
 $(document).on("click", ".deleteButton", function (event) {
   event.preventDefault();
   var disableRedirect = false;
+  var pageReload = true;
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -53,10 +54,13 @@ $(document).on("click", ".deleteButton", function (event) {
               if (disableRedirect) {
                 window.location.href = `/dashboard/${lastPart}/list/`;
               } else {
-                var pageReload = $(this).attr("data-reload");
+                pageReload = $(this).attr("data-reload");
+                console.log(`pageReload`, pageReload);
                 if (pageReload) {
+                  console.log(`I'm inside pageReload`);
                   location.reload();
                 } else {
+                  console.log(`I'm outside pageReload`);
                   $(`.formBox_${damageBoxId}`).hide();
                 }
               }
@@ -445,7 +449,7 @@ $("#updateBlock").click(function (e) {
 
 $("#updateBlockItem").click(function (e) {
   e.preventDefault();
-
+  $("#updateBlockItem").hide();
   var allFilled = true;
 
   $(".heightValues").each(function () {
@@ -466,6 +470,7 @@ $("#updateBlockItem").click(function (e) {
     });
   } else {
     popUpMessage("center", "Kinldy fill all missing items height", "warning");
+    $("#updateBlockItem").show();
   }
 
   if (allFilled) {
@@ -483,8 +488,10 @@ $("#updateBlockItem").click(function (e) {
             location.reload();
           }, 1500);
         }
+        $("#updateBlockItem").show();
       },
       error: function (errorResponse) {
+        $("#updateBlockItem").show();
         console.log(`Error:`, errorResponse);
         popUpMessage(
           "center",
@@ -495,6 +502,7 @@ $("#updateBlockItem").click(function (e) {
     });
   } else {
     popUpMessage("center", "Kinldy fill all missing items width", "warning");
+    $("#updateBlockItem").show();
   }
 });
 
@@ -507,29 +515,54 @@ if (manageDamageBtn) {
     e.preventDefault();
     activeDamageBoxId = $(this).attr("data-id");
     $(".cloneDamageForm").empty();
+    $("#damageFormPrevious").empty();
+    $(".popUpUpdateDamageFormInputs").empty();
     var localValues = localStorage.getItem(`blockItem_${activeDamageBoxId}`);
     if (localValues != "") {
-      $(".popUpUpdateDamageFormInputs").empty();
       localValues = JSON.parse(localValues);
       if (Array.isArray(localValues)) {
         var i = 1;
         localValues.forEach(function (value) {
-          if (value["damageAreaWidth[]"] != "") {
+          if (value["damageAreaWidth"] != "") {
             var formHtml = `
             <div class="full-width popUpUpdateDamageForm formBox_${i}" id="damageForm_${i}">
-                <div class="col-3">
+                <div class="col-2">
                     <div class="form-group">
-                        <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth[]" value="${value["damageAreaWidth[]"]}" type="number" />
-                        <label class="form-lable" for="damageAreaWidth_${i}">Width (in Centimeters)<sup>*</sup></label>
+                        <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth" value="${value["damageAreaWidth"]}" type="number" />
+                        <label class="form-lable" for="damageAreaWidth_${i}">Width</label>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                name="damageAreaWidthThicknessDimension">
+                                                <option value="mm">Millimeter</option>
+                                                <option value="cm" selected>Centimeter</option>
+                                                <option value="in">Inches</option>
+                                                <option value="ft">Feet</option>
+                                            </select>
+                                            <label class="form-lable" id="Label">Size<sup>*</sup></label>
+                                        </div>
+                                    </div>
+                <div class="col-2">
                     <div class="form-group">
-                        <input id="damageAreaHeight_${i}" class="height" name="damageAreaHeight[]" value="${value["damageAreaHeight[]"]}" type="number" />
-                        <label class="form-lable" for="damageAreaHeight_${i}">Height (in Centimeters)<sup>*</sup></label>
+                        <input id="damageAreaHeight_${i}" class="height" name="damageAreaHeight" value="${value["damageAreaHeight"]}" type="number" />
+                        <label class="form-lable" for="damageAreaHeight_${i}">Height</label>
                     </div>
                 </div>
-                <div class='col-4'>
+                <div class="col-2">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                name="damageAreaHeightThicknessDimension">
+                                                <option value="mm">Millimeter</option>
+                                                <option value="cm" selected>Centimeter</option>
+                                                <option value="in">Inches</option>
+                                                <option value="ft">Feet</option>
+                                            </select>
+                                            <label class="form-lable" id="Label">Size<sup>*</sup></label>
+                                        </div>
+                                    </div>
+                <div class='col-2'>
                     <div class="form-group">
                       <div class='actionBtn'>
                           <span class='bgRed deleteButton' data-type='ims_marble/item/' data-action='damage' data-damage-id='${i}' data-id='${activeDamageBoxId}' data-reload='false' data-redirect='false'><i
@@ -576,13 +609,14 @@ if (updateDamageBtn) {
     $(".popUpUpdateDamageForm").each(function () {
       var formData = {};
       $(this)
-        .find("input")
+        .find("input, select")
         .each(function () {
           formData[$(this).attr("name")] = $(this).val();
         });
-      allFormData.push(formData);
+      if (formData.damageAreaWidth != "" || formData.damageAreaHeight != "") {
+        allFormData.push(formData);
+      }
     });
-
     allFormData = JSON.stringify(allFormData);
 
     $.ajax({

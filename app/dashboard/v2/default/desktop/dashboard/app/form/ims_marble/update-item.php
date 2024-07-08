@@ -62,20 +62,44 @@ if (isset($validId)) {
                                 <div class="full-width popUpUpdateDamageFormInputs" id="damageFormPrevious">
                                 </div>
                                 <div class="full-width popUpUpdateDamageForm" id="damageForm">
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <div class="form-group">
-                                            <input id="damageAreaWidth" class="width" name="damageAreaWidth[]" value=""
+                                            <input id="damageAreaWidth" class="width" name="damageAreaWidth" value=""
                                                 type="number" />
-                                            <label class="form-lable" id="Label">Width ( in Centimeters
-                                                )<sup>*</sup></label>
+                                            <!-- <label class="form-lable" id="Label">Width ( in Centimeters
+                                                )<sup>*</sup></label> -->
+                                            <label class="form-lable" id="Label">Width</label>
                                         </div>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <div class="form-group">
-                                            <input id="damageAreaHeight" class="height" name="damageAreaHeight[]"
-                                                value="" type="number" />
-                                            <label class="form-lable" id="Label">Height ( in Centimeters
-                                                )<sup>*</sup></label>
+                                            <select class="form-control" name="damageAreaWidthThicknessDimension">
+                                                <option value="mm">Millimeter</option>
+                                                <option value="cm" selected>Centimeter</option>
+                                                <option value="in">Inches</option>
+                                                <option value="ft">Feet</option>
+                                            </select>
+                                            <label class="form-lable" id="Label">Size<sup>*</sup></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <input id="damageAreaHeight" class="height" name="damageAreaHeight" value=""
+                                                type="number" />
+                                            <!-- <label class="form-lable" id="Label">Height ( in Centimeters
+                                                )<sup>*</sup></label> -->
+                                            <label class="form-lable" id="Label">Height</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <select class="form-control" name="damageAreaHeightThicknessDimension">
+                                                <option value="mm">Millimeter</option>
+                                                <option value="cm" selected>Centimeter</option>
+                                                <option value="in">Inches</option>
+                                                <option value="ft">Feet</option>
+                                            </select>
+                                            <label class="form-lable" id="Label">Size<sup>*</sup></label>
                                         </div>
                                     </div>
                                     <!-- <div class="col-3">

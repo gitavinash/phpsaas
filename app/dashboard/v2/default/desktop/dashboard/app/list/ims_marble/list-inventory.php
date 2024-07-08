@@ -27,14 +27,35 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
         if (mysqli_num_rows($inventoryList) > 0) {
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
                 extract($inventoryData);
+
+                $blockSizeCalculation = '';
+
+                switch ($block_size_dimension) {
+                    case 'mm':
+                        $blockSizeCalculation = 'Millimeter';
+                        break;
+                    case 'cm':
+                        $blockSizeCalculation = 'Centimeter';
+                        break;
+                    case 'in':
+                        $blockSizeCalculation = 'Inches';
+                        break;
+                    case 'mt':
+                        $blockSizeCalculation = 'Meter';
+                        break;
+                    default:
+                        $blockSizeCalculation = 'Feet';
+                        break;
+                }
+
                 echo "<tr>
                                 <td>{$block_title}</td>
                                 <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
                                 <td>{$supplier_title}</td>
                                 <td>{$block_total_item}</td>
-                                <td>" . (($block_gross_size == '') ? '0 ft' : $block_gross_size) . "</td>
-                                <td>" . (($block_damage_size == '') ? '0 ft' : $block_damage_size) . "</td>
-                                <td>" . (($block_net_size == '') ? '0 ft' : $block_net_size) . "</td>
+                                <td>" . (($block_gross_size == '') ? '0 '  : $block_gross_size) . ' ' . $blockSizeCalculation . "</td>
+                                <td>" . (($block_damage_size == '') ? '0 '  : $block_damage_size) . ' ' . $blockSizeCalculation . "</td>
+                                <td>" . (($block_net_size == '') ? '0 '  : $block_net_size) . ' ' . $blockSizeCalculation . "</td>
                                 <td>
                                 <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block'><i class='fi fi-rr-edit bgLightGreen'></i></a>
                                 <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code'><i class='fi fi-rr-qr-scan bgLightGreen'></i></a>
