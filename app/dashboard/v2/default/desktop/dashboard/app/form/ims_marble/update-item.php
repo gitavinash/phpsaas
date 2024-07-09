@@ -181,7 +181,7 @@ if (isset($validId)) {
         <div class="form-group">
             <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
             <input type="hidden" name="blockItemIndex" value="<?php echo rtrim($blockItemIndex, ',') ?>">
-            <input type="submit" class="btn btn-green" id="updateBlockItem" value="Manage block items">
+            <input type="submit" class="btn btn-green" id="updateBlockItem" value="Update block items">
         </div>
     </div>
 </div>

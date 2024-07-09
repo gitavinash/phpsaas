@@ -6,6 +6,27 @@ $httpStatus = 500;
 $status = 'warning';
 $msg = 'Invalid request';
 
+
+function convertToFeet($size, $type)
+{
+    switch ($type) {
+        case 'mm':
+            $updateSize = $size * 0.00328084;
+            break;
+        case 'cm':
+            $updateSize = $size * 0.0328084;
+            break;
+        case 'in':
+            $updateSize = $size * 0.0833333;
+            break;
+        default:
+            $updateSize = $size;
+            break;
+    }
+
+    return $updateSize;
+}
+
 if (isset($id)) {
     if ($id != '') {
         if (isset($damageArea)) {
@@ -27,12 +48,20 @@ if (isset($id)) {
 
 if (isset($validRequest)) {
 
+    print_r($damageArea);
+    exit();
+
+    mysqli_query($connection, "START TRANSACTION");
+
     // Check block code
 
     $checkBlockItem = mysqli_query($connection, "SELECT block_item_parent_id FROM {$tableNamePrefix}block_item WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
     if (mysqli_num_rows($checkBlockItem) != 0) {
 
-        if (mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_area='{$damageArea}', block_item_status=1 WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
+        $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_area='{$damageArea}', block_item_status=1 WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
+
+
+        if ($updateBlockItem) {
             $httpStatus = 204;
             $status = 'success';
             $msg = 'Damage area update successfully.';

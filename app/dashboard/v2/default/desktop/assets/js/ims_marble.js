@@ -4,7 +4,6 @@ let count = 1;
 $(document).on("click", ".deleteButton", function (event) {
   event.preventDefault();
   var disableRedirect = false;
-  var pageReload = true;
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -54,13 +53,10 @@ $(document).on("click", ".deleteButton", function (event) {
               if (disableRedirect) {
                 window.location.href = `/dashboard/${lastPart}/list/`;
               } else {
-                pageReload = $(this).attr("data-reload");
-                console.log(`pageReload`, pageReload);
-                if (pageReload) {
-                  console.log(`I'm inside pageReload`);
+                var pageReload = $(this).attr("data-reload");
+                if (typeof pageReload === undefined) {
                   location.reload();
                 } else {
-                  console.log(`I'm outside pageReload`);
                   $(`.formBox_${damageBoxId}`).hide();
                 }
               }
@@ -281,6 +277,7 @@ $("#updateSupplier").click(function (e) {
 
 $("#addBlock").click(function (e) {
   e.preventDefault();
+  $("#addBlock").hide();
   var name = $("#name").val();
   var warehouseId = $("#warehouseId").val();
   var itemCode = $("#itemCode").val();
@@ -331,6 +328,7 @@ $("#addBlock").click(function (e) {
 
   if (!submitRequest) {
     popUpMessage("center", msg, "warning");
+    $("#addBlock").show();
   } else {
     var formData = new FormData(document.getElementById("addNewInventoryForm"));
 
@@ -347,7 +345,8 @@ $("#addBlock").click(function (e) {
         if (successResponse.status == "success") {
           setTimeout(function () {
             const blockId = btoa(successResponse.id);
-            window.location.href = `/dashboard/inventory/update/?id=${blockId}`;
+            // window.location.href = `/dashboard/inventory/update/?id=${blockId}`;
+            window.location.href = `dashboard/inventory/update/?updateType=item&id=${blockId}`;
           }, 1500);
         }
       },
@@ -358,6 +357,7 @@ $("#addBlock").click(function (e) {
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
+        $("#addBlock").show();
       },
     });
   }
@@ -369,6 +369,7 @@ $("#addBlock").click(function (e) {
 
 $("#updateBlock").click(function (e) {
   e.preventDefault();
+  $("#updateBlock").hide();
   var name = $("#name").val();
   var warehouseId = $("#warehouseId").val();
   var itemCode = $("#itemCode").val();
@@ -415,6 +416,7 @@ $("#updateBlock").click(function (e) {
 
   if (!submitRequest) {
     popUpMessage("center", msg, "warning");
+    $("#updateBlock").show();
   } else {
     var formData = new FormData(document.getElementById("updateInventoryForm"));
 
@@ -442,6 +444,7 @@ $("#updateBlock").click(function (e) {
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
+        $("#updateBlock").show();
       },
     });
   }
@@ -524,7 +527,8 @@ if (manageDamageBtn) {
         var i = 1;
         localValues.forEach(function (value) {
           if (value["damageAreaWidth"] != "") {
-            var formHtml = `
+            var formHtml =
+              `
             <div class="full-width popUpUpdateDamageForm formBox_${i}" id="damageForm_${i}">
                 <div class="col-2">
                     <div class="form-group">
@@ -536,10 +540,26 @@ if (manageDamageBtn) {
                                         <div class="form-group">
                                             <select class="form-control"
                                                 name="damageAreaWidthThicknessDimension">
-                                                <option value="mm">Millimeter</option>
-                                                <option value="cm" selected>Centimeter</option>
-                                                <option value="in">Inches</option>
-                                                <option value="ft">Feet</option>
+                                                <option value="mm" ` +
+              (value["damageAreaWidthThicknessDimension"] == "mm"
+                ? "selected"
+                : "") +
+              `>Millimeter</option>
+                                                <option value="cm" ` +
+              (value["damageAreaWidthThicknessDimension"] == "cm"
+                ? "selected"
+                : "") +
+              `>Centimeter</option>
+                                                <option value="in" ` +
+              (value["damageAreaWidthThicknessDimension"] == "in"
+                ? "selected"
+                : "") +
+              `>Inches</option>
+                                                <option value="ft" ` +
+              (value["damageAreaWidthThicknessDimension"] == "ft"
+                ? "selected"
+                : "") +
+              `>Feet</option>
                                             </select>
                                             <label class="form-lable" id="Label">Size<sup>*</sup></label>
                                         </div>
@@ -553,11 +573,26 @@ if (manageDamageBtn) {
                 <div class="col-2">
                                         <div class="form-group">
                                             <select class="form-control"
-                                                name="damageAreaHeightThicknessDimension">
-                                                <option value="mm">Millimeter</option>
-                                                <option value="cm" selected>Centimeter</option>
-                                                <option value="in">Inches</option>
-                                                <option value="ft">Feet</option>
+                                                name="damageAreaHeightThicknessDimension"><option value="mm" ` +
+              (value["damageAreaHeightThicknessDimension"] == "mm"
+                ? "selected"
+                : "") +
+              `>Millimeter</option>
+                                                <option value="cm" ` +
+              (value["damageAreaHeightThicknessDimension"] == "cm"
+                ? "selected"
+                : "") +
+              `>Centimeter</option>
+                                                <option value="in" ` +
+              (value["damageAreaHeightThicknessDimension"] == "in"
+                ? "selected"
+                : "") +
+              `>Inches</option>
+                                                <option value="ft" ` +
+              (value["damageAreaHeightThicknessDimension"] == "ft"
+                ? "selected"
+                : "") +
+              `>Feet</option>
                                             </select>
                                             <label class="form-lable" id="Label">Size<sup>*</sup></label>
                                         </div>
@@ -603,6 +638,7 @@ var updateDamageBtn = document.getElementById("updateDamage");
 if (updateDamageBtn) {
   $("#updateDamage").on("click", function (e) {
     e.preventDefault();
+    $("#updateDamage").hide();
     // Collect data from all forms
     var allFormData = [];
 
@@ -643,6 +679,7 @@ if (updateDamageBtn) {
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
+        $("#updateDamage").show();
       },
     });
   });

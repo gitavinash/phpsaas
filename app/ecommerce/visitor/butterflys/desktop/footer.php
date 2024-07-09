@@ -30,14 +30,14 @@
                             <li><a href="/cancellation-refund/">Cancellation & Refund</a></li>
                             <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
                             <li><a href="/privacy-policy/">Privacy policy</a></li>
-                            <li><a href="/about-us/">Contact Us</a></li>
+                            <li><a href="/contact-us/">Contact Us</a></li>
                         </ul>
                         <ul class="dn-l">
                             <li><a href="/about-us/">About Us</a></li>
                             <li><a href="/cancellation-refund/">Cancellation & Refund</a></li>
                             <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
                             <li><a href="/privacy-policy/">Privacy policy</a></li>
-                            <li><a href="/about-us/">Contact Us</a></li>
+                            <li><a href="/contact-us/">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -71,11 +71,11 @@
             </div>
         </div>
     </div>
-    <div class="whatsapp">
+    <!-- <div class="whatsapp">
         <a
             href="https://wa.me/919910744119?text=<?php echo ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello') ?>"><img
                 src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
-    </div>
+    </div> -->
 </footer>
 
 <!-- sections end -->
