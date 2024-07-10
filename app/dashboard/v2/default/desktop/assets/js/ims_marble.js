@@ -517,6 +517,13 @@ if (manageDamageBtn) {
   $(".manageDamage").click(function (e) {
     e.preventDefault();
     activeDamageBoxId = $(this).attr("data-id");
+
+    $(".popUpUpdateDamageForm")
+      .find("input")
+      .each(function () {
+        $(this).val("");
+      });
+
     $(".cloneDamageForm").empty();
     $("#damageFormPrevious").empty();
     $(".popUpUpdateDamageFormInputs").empty();
@@ -664,6 +671,7 @@ if (updateDamageBtn) {
         damageArea: allFormData,
       },
       success: function (successResponse) {
+        $("#updateDamage").show();
         popUpMessage("center", successResponse.msg, successResponse.status);
         if (successResponse.status == "success") {
           localStorage.setItem("blockItem_" + activeDamageBoxId, allFormData);
@@ -673,13 +681,13 @@ if (updateDamageBtn) {
         }
       },
       error: function (errorResponse) {
+        $("#updateDamage").show();
         console.log(`Error:`, errorResponse);
         popUpMessage(
           "center",
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
-        $("#updateDamage").show();
       },
     });
   });
