@@ -1,6 +1,25 @@
 var activeDamageBoxId = 0;
 let count = 1;
 
+function convertAreatoFeet(size, type) {
+  switch (type) {
+    case "mm":
+      updateSize = size * 0.00328084;
+      break;
+    case "cm":
+      updateSize = size * 0.0328084;
+      break;
+    case "in":
+      updateSize = size * 0.0833333;
+      break;
+    default:
+      updateSize = size;
+      break;
+  }
+  return updateSize;
+  // return parseFloat(updateSize.toFixed(2));
+}
+
 $(document).on("click", ".deleteButton", function (event) {
   event.preventDefault();
   var disableRedirect = false;
@@ -645,6 +664,9 @@ var updateDamageBtn = document.getElementById("updateDamage");
 if (updateDamageBtn) {
   $("#updateDamage").on("click", function (e) {
     e.preventDefault();
+    var widthSizes;
+    var heightSizes;
+    var totalSizes = [];
     $("#updateDamage").hide();
     // Collect data from all forms
     var allFormData = [];
@@ -656,11 +678,33 @@ if (updateDamageBtn) {
         .each(function () {
           formData[$(this).attr("name")] = $(this).val();
         });
+
+      widthSizes = "";
+      heightSizes = "";
       if (formData.damageAreaWidth != "" || formData.damageAreaHeight != "") {
+        widthSizes = convertAreatoFeet(
+          formData.damageAreaWidth,
+          formData.damageAreaWidthThicknessDimension
+        );
+        heightSizes = convertAreatoFeet(
+          formData.damageAreaHeight,
+          formData.damageAreaHeightThicknessDimension
+        );
+
+        console.log(
+          `Calculate: ${widthSizes} * ${heightSizes} = `,
+          widthSizes * heightSizes
+        );
+        totalSizes.push(widthSizes * heightSizes);
         allFormData.push(formData);
       }
     });
     allFormData = JSON.stringify(allFormData);
+
+    totalSizes = totalSizes.reduce(
+      (total, width) => total + parseFloat(width),
+      0
+    );
 
     $.ajax({
       type: "POST",
@@ -668,6 +712,8 @@ if (updateDamageBtn) {
       dataType: "JSON",
       data: {
         id: btoa(activeDamageBoxId),
+        damageAreaSize: totalSizes,
+        damageAreaSizeType: "ft",
         damageArea: allFormData,
       },
       success: function (successResponse) {
