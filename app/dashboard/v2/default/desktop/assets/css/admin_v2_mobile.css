@@ -70,4 +70,10 @@
   .widget {
     padding: 1%;
   }
+  .i-m-here-pagination {
+    display: none;
+  }
+  main .container .heading {
+    margin-top: 0px;
+  }
 }
