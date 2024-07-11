@@ -22,7 +22,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
         $userFilter = '';
     }
 
-    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id INNER JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_status=1 {$userFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_update DESC")) {
+    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_status=1 {$userFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_update DESC")) {
         echo "<tbody>";
         if (mysqli_num_rows($inventoryList) > 0) {
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
@@ -61,7 +61,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                                 <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code'><i class='fi fi-rr-qr-scan bgLightGreen'></i></a>
                                 <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item'><i class='fi fi-rr-menu-burger bgLightGreen'></i></a>
                                 <a href='/dashboard/print/?type=block&id=" . base64_encode($block_gross_size) . "' title='Print block' class='tableActionIconBtn' target='_blank'><i class='fi fi-rr-print bgLightGreen'></i></a>
-                                <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>
+                                <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                 </td>
                             </tr>";
             }

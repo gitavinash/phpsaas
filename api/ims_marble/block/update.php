@@ -13,11 +13,7 @@ if ($name != '') {
                 if ($oldTotalItem <= $totalItem) {
                     if ($thickness != '') {
                         if ($thicknessSize != '') {
-                            if ($supplier != '') {
-                                $validRequest = true;
-                            } else {
-                                $msg = 'Kindly select block supplier';
-                            }
+                            $validRequest = true;
                         } else {
                             $msg = 'Kindly selext block item thickness size';
                         }

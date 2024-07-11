@@ -131,7 +131,7 @@ if (isset($validId)) {
 
 <div class="step-open-box step_1_box">
     <div class="form-header">
-        <h1>Manage block items</h1>
+        <h1>Manage block Slabs</h1>
         <img src="<?php echo IMG_LIBRARY ?>storyset/manage.png" alt="Add new Hosting tld">
     </div>
 </div>
@@ -166,7 +166,7 @@ if (isset($validId)) {
 <div class='col-4'>
     <div class='actionBtn'>
         <a href='#' class='bgYellow manageDamage' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
-        <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-redirect='false'><i
+        <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i
                 class='fi fi-rr-trash'></i></a>
     </div>
 </div>
@@ -181,7 +181,7 @@ if (isset($validId)) {
         <div class="form-group">
             <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
             <input type="hidden" name="blockItemIndex" value="<?php echo rtrim($blockItemIndex, ',') ?>">
-            <input type="submit" class="btn btn-green" id="updateBlockItem" value="Update block items">
+            <input type="submit" class="btn btn-green" id="updateBlockItem" value="Update block Slabs">
         </div>
     </div>
 </div>

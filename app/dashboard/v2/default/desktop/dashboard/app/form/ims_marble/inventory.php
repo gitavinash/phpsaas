@@ -56,7 +56,7 @@
     </div>
     <div class="form-group">
         <input id="totalItem" name="totalItem" type="number" />
-        <label class="form-lable" id="Label">Total item in Block<sup>*</sup></label>
+        <label class="form-lable" id="Label">Total slabs in Block<sup>*</sup></label>
     </div>
     <div class="full-width">
         <div class="col-8">
@@ -132,7 +132,7 @@
 
             ?>
         </select>
-        <label class="form-lable" id="Label">Supplier<sup>*</sup></label>
+        <label class="form-lable" id="Label">Supplier</label>
     </div>
     <div class="form-group">
         <input id="totalItem" name="featureImage" type="file" accept="image/x-png, image/gif, image/jpeg" />

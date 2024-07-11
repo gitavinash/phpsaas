@@ -61,8 +61,8 @@ if (isset($validRequest)) {
             $netSize = $block_gross_size - $damageAreaSize;
         }
 
-        $netSize = number_format((float)$netSize, 4, '.', '');
-        $damageAreaSize = number_format((float)$damageAreaSize, 4, '.', '');
+        $netSize = number_format((float)$netSize, 2, '.', '');
+        $damageAreaSize = number_format((float)$damageAreaSize, 2, '.', '');
 
         $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_area='{$damageArea}', block_item_status=1 WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
 

@@ -46,6 +46,8 @@ $(document).on("click", ".deleteButton", function (event) {
       } else {
         var urlPostFix = btoa(requestId);
       }
+      var pageReload = $(this).attr("data-reload");
+      var pageRedirect = $(this).attr("data-redirect");
       $.ajax({
         type: "GET",
         url: `/api/${requestType}/delete/?id=` + urlPostFix,
@@ -72,8 +74,7 @@ $(document).on("click", ".deleteButton", function (event) {
               if (disableRedirect) {
                 window.location.href = `/dashboard/${lastPart}/list/`;
               } else {
-                var pageReload = $(this).attr("data-reload");
-                if (typeof pageReload === undefined) {
+                if (pageReload == "true") {
                   location.reload();
                 } else {
                   $(`.formBox_${damageBoxId}`).hide();
@@ -320,14 +321,10 @@ $("#addBlock").click(function (e) {
       if (itemCode != "") {
         if (totalItem != "") {
           if (thickness != "") {
-            if (supplier != "") {
-              if (blockSize != "") {
-                submitRequest = true;
-              } else {
-                msg = "Kindly select block size calculation";
-              }
+            if (blockSize != "") {
+              submitRequest = true;
             } else {
-              msg = "Kindly select block supplier";
+              msg = "Kindly select block size calculation";
             }
           } else {
             msg = "Kindly enter block item thickness";

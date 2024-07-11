@@ -46,6 +46,7 @@ if (isset($validRequest)) {
             }
 
             $totalArea = array_sum($singleItemArea);
+            $totalArea = number_format((float)$totalArea, 2, '.', '');
 
             $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size='{$totalArea}' WHERE block_id='{$blockId}'AND block_site_id=" . SITE_ID;
 

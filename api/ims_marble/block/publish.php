@@ -12,14 +12,10 @@ if ($name != '') {
             if ($totalItem != '') {
                 if ($thickness != '') {
                     if ($thicknessSize != '') {
-                        if ($supplier != '') {
-                            if ($blockSize != '') {
-                                $validRequest = true;
-                            } else {
-                                $msg = 'Kindly select block size calculation';
-                            }
+                        if ($blockSize != '') {
+                            $validRequest = true;
                         } else {
-                            $msg = 'Kindly select block supplier';
+                            $msg = 'Kindly select block size calculation';
                         }
                     } else {
                         $msg = 'Kindly selext block item thickness size';
