@@ -62,7 +62,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'sales_executiv
 
 <?php
 
-if ($site_access_type == 'administrator' || $site_access_type == 'accounts') { ?>
+if ($site_access_type == 'administrator' || $site_access_type == 'accounts' || $site_access_type == 'both') { ?>
 
 <li class="header-section-name">
     <p>Sales<span>Sales management.</span></p>
@@ -107,7 +107,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accounts') { ?
 
 <?php
 
-if ($site_access_type == 'administrator' || $site_access_type == 'superwiser') { ?>
+if ($site_access_type == 'administrator' || $site_access_type == 'superwiser' || $site_access_type == 'both') { ?>
 <li class="header-section-name">
     <p>Inventory<span>Inventory management.</span></p>
 </li>

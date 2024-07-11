@@ -45,6 +45,11 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>image-uploader/css/image-uploader.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
+    <?php
+    if (SITE_VERSION == 'mobile') {
+        echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_v2_mobile.min.css'>";
+    }
+    ?>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
         media="screen">
     <script type="text/javascript">
@@ -83,9 +88,11 @@ if (isset($daterange)) {
                 </form> -->
             </div>
             <ul>
-                <li><a href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
+                <li <?php echo ((SITE_VERSION == 'mobile') ? "style='display:none'" : '') ?>><a
+                        href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
                         target="_blank" title="Support"><i class="fi-rr-headset" style="color: #167347;"></i></a></li>
-                <li><a href="#" onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
+                <li <?php echo ((SITE_VERSION == 'mobile') ? "style='display:none'" : '') ?>><a href="#"
+                        onclick="showNotification()"><i class="fi-rr-bell"></i></a></li>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
