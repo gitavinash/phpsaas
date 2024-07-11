@@ -35,7 +35,10 @@
     display: none;
   }
   main .container {
-    padding-top: 15%;
+    padding: 15% 2% 15% 2%;
+  }
+  .dashboard-datepicker label {
+    padding: 0px;
   }
   .box-mb-1 {
     width: 100% !important;
@@ -63,5 +66,8 @@
   }
   .box-mb-9 {
     width: 90% !important;
+  }
+  .widget {
+    padding: 1%;
   }
 }

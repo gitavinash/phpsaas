@@ -20,7 +20,7 @@
 <div class="widget box-2 box-mb-5">
     <?php
 
-    require_once ADMIN_PATH . 'dashboard/widgets/enquiry.php';
+    require_once ADMIN_PATH . 'dashboard/widgets/confirmed-enquiry.php';
 
     ?>
 </div>
