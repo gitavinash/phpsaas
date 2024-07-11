@@ -447,6 +447,7 @@ function dashboardWidgetWithChart(objectID, data) {
 }
 
 function dashboardWidgetWithoutChart(objectID, data) {
+  console.log(`data:`, data);
   increaseCountingNumberAnimation(
     `${objectID}Value`,
     data.totalLeads - 10,
@@ -727,6 +728,8 @@ if ($(".steps-tab").length) {
     $(".step-box").removeClass("active");
     showCurrentBox = currentElementID + "_box";
     showCurrentLable = currentElementID;
+    // console.log(`showCurrentBox: `, showCurrentBox);
+    // console.log(`showCurrentLable: `, showCurrentLable);
     $(".step-open-box").hide();
     $("#" + showCurrentLable).addClass("active");
     $("." + showCurrentBox).show();

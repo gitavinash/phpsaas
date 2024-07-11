@@ -1349,11 +1349,7 @@ table.dataTable thead th {
   float: left;
   min-width: 250px;
   max-width: 350px;
-}
-
-.steps-tab .step-box {
   font-weight: 400;
-  float: left;
   padding: 5px 10px;
   font-size: 16px;
   letter-spacing: 1px;
@@ -1361,7 +1357,29 @@ table.dataTable thead th {
   cursor: pointer;
 }
 
-.steps-tab .step-box span {
+/* .steps-tab .step-box {
+  font-weight: 400;
+  float: left;
+  padding: 5px 10px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 25px;
+  cursor: pointer;
+} */
+
+/* .steps-tab .step-box span {
+  float: left;
+  margin-right: 5px;
+  border-radius: 100%;
+  background: #9a9a9a;
+  color: #e8e8e8;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  box-sizing: border-box;
+} */
+
+.steps-tab li span {
   float: left;
   margin-right: 5px;
   border-radius: 100%;

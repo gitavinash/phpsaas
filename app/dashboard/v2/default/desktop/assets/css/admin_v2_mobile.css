@@ -33,4 +33,34 @@
   .search-box {
     display: none;
   }
+  main .container {
+    padding-top: 15%;
+  }
+  .box-mb-1 {
+    width: 100% !important;
+  }
+  .box-mb-2 {
+    width: 20% !important;
+  }
+  .box-mb-3 {
+    width: 30% !important;
+  }
+  .box-mb-4 {
+    width: 40% !important;
+  }
+  .box-mb-5 {
+    width: 50% !important;
+  }
+  .box-mb-6 {
+    width: 60% !important;
+  }
+  .box-mb-7 {
+    width: 70% !important;
+  }
+  .box-mb-8 {
+    width: 80% !important;
+  }
+  .box-mb-9 {
+    width: 90% !important;
+  }
 }
