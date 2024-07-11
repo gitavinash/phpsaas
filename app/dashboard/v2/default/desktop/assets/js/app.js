@@ -635,7 +635,10 @@ if ($("#totalOrderAmount").length) {
 if ($(".showTableList").length) {
   $(".showTableList").DataTable({
     pageLength: 50,
+    fixedHeader: true,
     responsive: true,
+    searching: false,
+    lengthChange: false,
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
       { width: "20%", targets: 1 },

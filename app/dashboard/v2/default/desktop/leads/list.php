@@ -47,7 +47,7 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
         <a href="/dashboard/leads/add/"><i class="fi fi-rr-plus"></i></a>
     </div>
     <section>
-        <div class="filters">
+        <!-- <div class="filters">
             <div class="form-group">
                 <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
                 <select id="hostingStatus">
@@ -64,9 +64,9 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                 <label>Date</label>
                 <input type="text" class="dateRangePicker" placeholder="Select date range">
             </div>
-        </div>
+        </div> -->
         <div class="list-box">
-            <table class="showTableList">
+            <table class="showTableList nowrap">
                 <thead>
                     <tr>
                         <th>Name</th>
