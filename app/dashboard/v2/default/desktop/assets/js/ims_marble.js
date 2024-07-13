@@ -409,11 +409,7 @@ $("#updateBlock").click(function (e) {
       if (itemCode != "") {
         if (totalItem != "") {
           if (thickness != "") {
-            if (supplier != "") {
-              submitRequest = true;
-            } else {
-              msg = "Kindly select block supplier";
-            }
+            submitRequest = true;
           } else {
             msg = "Kindly enter block item thickness";
           }

@@ -151,7 +151,7 @@ if (isset($validId)) { ?>
 
                 ?>
         </select>
-        <label class="form-lable" id="Label">Supplier<sup>*</sup></label>
+        <label class="form-lable" id="Label">Supplier</label>
     </div>
     <div class="form-group">
         <input id="totalItem" name="featureImage" type="file" accept="image/x-png, image/gif, image/jpeg" />

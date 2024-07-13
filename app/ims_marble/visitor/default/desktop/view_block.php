@@ -94,6 +94,40 @@ if (isset($showPage)) { ?>
         padding: 10px;
         box-sizing: border-box;
     }
+
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .thumbnail {
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        cursor: pointer;
+    }
+
+    #full-screen-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    #full-screen-image {
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    .hidden {
+        display: none;
+    }
     </style>
 </head>
 
@@ -115,7 +149,7 @@ if (isset($showPage)) { ?>
         </div>
         <div class="dataRow">
             <div class="title">
-                <p><strong>Block code</strong></p>
+                <p><strong>Code</strong></p>
             </div>
             <div class="Description">
                 <p><?php echo $block_code ?></p>
@@ -123,7 +157,7 @@ if (isset($showPage)) { ?>
         </div>
         <div class="dataRow">
             <div class="title">
-                <p><strong>About block</strong></p>
+                <p><strong>Block</strong></p>
             </div>
             <div class="Description">
                 <p><?php echo $block_description ?></p>
@@ -131,18 +165,10 @@ if (isset($showPage)) { ?>
         </div>
         <div class="dataRow">
             <div class="title">
-                <p><strong>Block total items</strong></p>
+                <p><strong>Total items</strong></p>
             </div>
             <div class="Description">
                 <p><?php echo (($block_total_item == '') ? 0 : $block_total_item) ?> Pcs</p>
-            </div>
-        </div>
-        <div class="dataRow">
-            <div class="title">
-                <p><strong>Block last updated on</strong></p>
-            </div>
-            <div class="Description">
-                <p><?php echo date('l, d, M Y, H:i:s', strtotime($block_update)) ?></p>
             </div>
         </div>
     </div>
@@ -153,13 +179,32 @@ if (isset($showPage)) { ?>
         <div class="heading">
             <h1>Block gallery</h1>
         </div>
-        <?php
-            $block_gallery = json_decode($block_gallery, true);
-            for ($i = 0; $i < sizeof($block_gallery); $i++) {
-                echo "<img src='{$block_gallery[$i]['path']}' class='preview' >";
-            }
-            ?>
+        <div class="gallery">
+            <?php
+                $block_gallery = json_decode($block_gallery, true);
+                for ($i = 0; $i < sizeof($block_gallery); $i++) {
+                    echo "<img src='{$block_gallery[$i]['path']}' class='preview thumbnail' >";
+                }
+                ?>
+        </div>
     </div>
+    <div class="dataBox" id="blockInventory">
+        <div class="heading">
+            <a href="/view_inventory/?id=<?php echo $id ?>" taget="_blank">Download Slabs size</a>
+        </div>
+    </div>
+    <?php require_once NOTIFICATION . 'index.php'; ?>
+    <script>
+    $('.thumbnail').click(function() {
+        var src = $(this).attr('src');
+        $('#full-screen-image').attr('src', src);
+        $('#full-screen-container').removeClass('hidden');
+    });
+
+    $('#full-screen-container').click(function() {
+        $(this).addClass('hidden');
+    });
+    </script>
 </body>
 
 </html>
