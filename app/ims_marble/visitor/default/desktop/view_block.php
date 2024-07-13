@@ -155,14 +155,21 @@ if (isset($showPage)) { ?>
                 <p><?php echo $block_code ?></p>
             </div>
         </div>
+        <?php
+
+            if ($block_description != '') { ?>
         <div class="dataRow">
             <div class="title">
-                <p><strong>Block</strong></p>
+                <p><strong>Intro</strong></p>
             </div>
             <div class="Description">
                 <p><?php echo $block_description ?></p>
             </div>
         </div>
+        <?php
+            }
+
+            ?>
         <div class="dataRow">
             <div class="title">
                 <p><strong>Total items</strong></p>
