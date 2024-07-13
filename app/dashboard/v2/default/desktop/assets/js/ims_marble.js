@@ -663,6 +663,7 @@ if (updateDamageBtn) {
     e.preventDefault();
     var widthSizes;
     var heightSizes;
+    var totatDamageCount = 0;
     var totalSizes = [];
     $("#updateDamage").hide();
     // Collect data from all forms
@@ -694,6 +695,7 @@ if (updateDamageBtn) {
         );
         totalSizes.push(widthSizes * heightSizes);
         allFormData.push(formData);
+        totatDamageCount++;
       }
     });
     allFormData = JSON.stringify(allFormData);
@@ -712,6 +714,7 @@ if (updateDamageBtn) {
         damageAreaSize: totalSizes,
         damageAreaSizeType: "ft",
         damageArea: allFormData,
+        totatDamageCount: totatDamageCount,
       },
       success: function (successResponse) {
         $("#updateDamage").show();

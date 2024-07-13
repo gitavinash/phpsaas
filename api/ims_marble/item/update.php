@@ -12,8 +12,12 @@ if (isset($id)) {
             if ($damageArea != '') {
                 if ($damageAreaSize != '') {
                     if ($damageAreaSizeType != '') {
-                        $validRequest = true;
-                        $blockItemId = base64_decode($id);
+                        if ($totatDamageCount != '') {
+                            $validRequest = true;
+                            $blockItemId = base64_decode($id);
+                        } else {
+                            $msg = 'Total Damage count parameter is missing';
+                        }
                     } else {
                         $msg = 'Damage area size type parameter is missing';
                     }
@@ -64,7 +68,7 @@ if (isset($validRequest)) {
         $netSize = number_format((float)$netSize, 2, '.', '');
         $damageAreaSize = number_format((float)$damageAreaSize, 2, '.', '');
 
-        $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_area='{$damageArea}', block_item_status=1 WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
+        $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_area='{$damageArea}', block_item_status=1, block_item_damage_count={$totatDamageCount} WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
 
         $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_net_size='{$netSize}', block_damage_size='{$damageAreaSize}' WHERE block_id='{$block_item_parent_id}' AND block_site_id=" . SITE_ID);
 

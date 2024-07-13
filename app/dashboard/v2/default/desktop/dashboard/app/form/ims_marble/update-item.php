@@ -137,46 +137,59 @@ if (isset($validId)) {
 </div>
 
 <div class="step-open-box step_1_box full-width">
+    <table>
+        <?php
 
-    <?php
+            $blockItemIndex = '';
 
-        $blockItemIndex = '';
-
-        if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
-            if (mysqli_num_rows($checkItems) > 0) {
-                while ($blockItem = mysqli_fetch_assoc($checkItems)) {
-                    extract($blockItem);
-                    $blockItemIndex .= $block_item_id . ',';
-                    echo "<script>
+            if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
+                if (mysqli_num_rows($checkItems) > 0) {
+                    $i = 1;
+                    while ($blockItem = mysqli_fetch_assoc($checkItems)) {
+                        extract($blockItem);
+                        $blockItemIndex .= $block_item_id . ',';
+                        echo "<script>
                         localStorage.setItem('blockItem_{$block_item_id}', '{$block_item_damage_area}');
                     </script>";
-                    echo "<div class='full-width'>
-            <div class='col-3'>
-                <div class='form-group'>
-                    <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' />
-    <label class='form-lable' id='Label'>Width ( in Feets )<sup>*</sup></label>
-</div>
-</div>
-<div class='col-3'>
-    <div class='form-group'>
-        <input name='height[{$block_item_id}]' class='heightValues' value='{$block_item_height}' type='number' />
-    <label class='form-lable' id='Label'>Height ( in Feets )<sup>*</sup></label>
-</div>
-</div>
-<div class='col-4'>
-    <div class='actionBtn'>
-        <a href='#' class='bgYellow manageDamage' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
-        <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i
-                class='fi fi-rr-trash'></i></a>
-    </div>
-</div>
-</div>";
+                        echo "
+                        <tr>
+                            <td>
+                                <div class='form-group' >
+                                    {$i}
+                                </div>
+                            </td>
+                            <td>
+                                <div class='form-group'>
+                                    <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' />
+                                    <label class='form-lable' id='Label'>Width ( in Feets )<sup>*</sup></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class='form-group'>
+                                    <input name='height[{$block_item_id}]' class='heightValues' value='{$block_item_height}' type='number' />
+                                    <label class='form-lable' id='Label'>Height ( in Feets )<sup>*</sup></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class='form-group'>
+                                    " . (($block_item_damage_count != '') ?  $block_item_damage_count . ' Damages' : '') . "
+                                </div>
+                            </td>
+                            <td>
+                                <div class='actionBtn form-group'>
+                                    <a href='#' class='bgYellow manageDamage' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
+                                    <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    ";
+                        $i++;
+                    }
                 }
             }
-        }
 
-        ?>
-
+            ?>
+    </table>
     <div class="box-1">
         <div class="form-group">
             <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
