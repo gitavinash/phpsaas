@@ -68,7 +68,7 @@ if (isset($validId)) {
                                                 type="number" />
                                             <!-- <label class="form-lable" id="Label">Width ( in Centimeters
                                                 )<sup>*</sup></label> -->
-                                            <label class="form-lable" id="Label">Width</label>
+                                            <label class="form-lable" id="Label">Length</label>
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -161,13 +161,13 @@ if (isset($validId)) {
                             <td>
                                 <div class='form-group'>
                                     <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' />
-                                    <label class='form-lable' id='Label'>Width ( in Feets )<sup>*</sup></label>
+                                    <label class='form-lable' id='Label'>Length ( in {$blockSizeCalculation} )<sup>*</sup></label>
                                 </div>
                             </td>
                             <td>
                                 <div class='form-group'>
                                     <input name='height[{$block_item_id}]' class='heightValues' value='{$block_item_height}' type='number' />
-                                    <label class='form-lable' id='Label'>Height ( in Feets )<sup>*</sup></label>
+                                    <label class='form-lable' id='Label'>Height ( in {$blockSizeCalculation} )<sup>*</sup></label>
                                 </div>
                             </td>
                             <td>

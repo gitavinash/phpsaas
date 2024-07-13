@@ -7,77 +7,77 @@
     <title>Block slab measurment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
 
-    img {
-        max-height: 100px;
-    }
+        img {
+            max-height: 100px;
+        }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        float: left;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            float: left;
+        }
 
-    th,
-    td {
-        border: 1px solid #000;
-        text-align: center;
-        padding: 8px;
-        width: 20%;
-        /* Each column will take up equal space */
-    }
+        th,
+        td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+            width: 20%;
+            /* Each column will take up equal space */
+        }
 
-    th {
-        background-color: #f2f2f2;
-    }
+        th {
+            background-color: #f2f2f2;
+        }
 
-    tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
-    tbody tr:hover {
-        background-color: #f1f1f1;
-    }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
 
-    a {
-        background-color: #4CAF50;
-        /* Green background */
-        border: none;
-        /* Remove borders */
-        color: white;
-        /* White text */
-        padding: 15px 32px;
-        /* Some padding */
-        text-align: center;
-        /* Center the text */
-        text-decoration: none;
-        /* Remove underline */
-        display: inline-block;
-        /* Get it to line up */
-        font-size: 16px;
-        /* Increase font size */
-        margin: 4px 2px;
-        /* Add some margin */
-        cursor: pointer;
-        /* Add a pointer cursor on hover */
-        border-radius: 12px;
-        /* Rounded corners */
-        transition: background-color 0.3s, transform 0.3s;
-        width: 100%;
-        box-sizing: border-box;
-        position: fixed;
-        bottom: 1rem;
-    }
+        a {
+            background-color: #4CAF50;
+            /* Green background */
+            border: none;
+            /* Remove borders */
+            color: white;
+            /* White text */
+            padding: 15px 32px;
+            /* Some padding */
+            text-align: center;
+            /* Center the text */
+            text-decoration: none;
+            /* Remove underline */
+            display: inline-block;
+            /* Get it to line up */
+            font-size: 16px;
+            /* Increase font size */
+            margin: 4px 2px;
+            /* Add some margin */
+            cursor: pointer;
+            /* Add a pointer cursor on hover */
+            border-radius: 12px;
+            /* Rounded corners */
+            transition: background-color 0.3s, transform 0.3s;
+            width: 96%;
+            box-sizing: border-box;
+            position: fixed;
+            bottom: 1rem;
+        }
     </style>
 </head>
 
@@ -97,33 +97,34 @@
                     if ($i == 1) {
                         echo "<table>";
                         echo "<tr>
-                        <td colspan=4><img src='" . SITE_LOGO . "'></td>
+                        <td colspan=5><img src='" . SITE_LOGO . "'></td>
                         </tr>";
                         echo "<tr>
-                        <td colspan=4><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
+                        <td colspan=5><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
                         </tr>";
                         echo "<tr>
                         <th>S no.</th>
                         <th>Width</th>
                         <th>Height</th>
                         <th>Thickness</th>
+                        <th>Total</th>
                     </tr>";
                     }
-                    switch ($block_item_dimenstion_type) {
+                    switch ($block_item_dimension_type) {
                         case 'mm':
-                            $block_item_dimenstion_type = 'Millimeter';
+                            $block_item_dimension_type = 'Millimeter';
                             break;
                         case 'cm':
-                            $block_item_dimenstion_type = 'Centimeter';
+                            $block_item_dimension_type = 'Centimeter';
                             break;
                         case 'in':
-                            $block_item_dimenstion_type = 'Inches';
+                            $block_item_dimension_type = 'Inches';
                             break;
                         case 'mt':
-                            $block_item_dimenstion_type = 'Meter';
+                            $block_item_dimension_type = 'Meter';
                             break;
                         default:
-                            $block_item_dimenstion_type = 'Feet';
+                            $block_item_dimension_type = 'Feet';
                             break;
                     }
                     switch ($block_thickness_dimension) {
@@ -146,9 +147,10 @@
                     echo "
                     <tr>
                     <td>{$i}</td>
-                    <td>{$block_item_width} {$block_item_dimenstion_type}</td>
-                    <td>{$block_item_height} {$block_item_dimenstion_type}</td>
+                    <td>{$block_item_width} {$block_item_dimension_type}</td>
+                    <td>{$block_item_height} {$block_item_dimension_type}</td>
                     <td>{$block_thickness_size} {$block_thickness_dimension}</td>
+                    <td>" . $block_item_width * $block_item_height . " {$block_item_dimension_type}</td>
                     </tr>
                 ";
                     $i++;
@@ -164,10 +166,10 @@
     }
     ?>
     <script>
-    document.getElementById('download').addEventListener('click', function() {
-        const element = document.getElementById('content');
-        html2pdf().from(element).save();
-    });
+        document.getElementById('download').addEventListener('click', function() {
+            const element = document.getElementById('content');
+            html2pdf().from(element).save();
+        });
     </script>
 </body>
 

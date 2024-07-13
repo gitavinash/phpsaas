@@ -70,7 +70,7 @@ if (isset($validRequest)) {
 
         if ($totalItem != $oldTotalItem) {
 
-            $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimenstion_type, block_item_status, block_item_created) VALUES";
+            $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_status, block_item_created) VALUES";
 
             $insertNewRecordsNumber = $totalItem - $oldTotalItem;
 

@@ -90,7 +90,7 @@ if (isset($validRequest)) {
             $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_qr='{$publicQRCodeURL}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
         }
 
-        $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimenstion_type, block_item_status, block_item_created) VALUES";
+        $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_status, block_item_created) VALUES";
 
 
         for ($i = 0; $i < $totalItem; $i++) {

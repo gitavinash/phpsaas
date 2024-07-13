@@ -552,7 +552,7 @@ if (manageDamageBtn) {
                 <div class="col-2">
                     <div class="form-group">
                         <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth" value="${value["damageAreaWidth"]}" type="number" />
-                        <label class="form-lable" for="damageAreaWidth_${i}">Width</label>
+                        <label class="form-lable" for="damageAreaWidth_${i}">Length</label>
                     </div>
                 </div>
                 <div class="col-2">
