@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Block slab measurment</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <style>
     body {
         font-family: Arial, sans-serif;
@@ -24,6 +25,7 @@
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
+        float: left;
     }
 
     th,
@@ -45,6 +47,36 @@
 
     tbody tr:hover {
         background-color: #f1f1f1;
+    }
+
+    a {
+        background-color: #4CAF50;
+        /* Green background */
+        border: none;
+        /* Remove borders */
+        color: white;
+        /* White text */
+        padding: 15px 32px;
+        /* Some padding */
+        text-align: center;
+        /* Center the text */
+        text-decoration: none;
+        /* Remove underline */
+        display: inline-block;
+        /* Get it to line up */
+        font-size: 16px;
+        /* Increase font size */
+        margin: 4px 2px;
+        /* Add some margin */
+        cursor: pointer;
+        /* Add a pointer cursor on hover */
+        border-radius: 12px;
+        /* Rounded corners */
+        transition: background-color 0.3s, transform 0.3s;
+        width: 100%;
+        box-sizing: border-box;
+        position: fixed;
+        bottom: 1rem;
     }
     </style>
 </head>
@@ -124,12 +156,19 @@
                 if ($i == 1) {
                     echo "</table>";
                 }
+                echo "<a id='download'>Download measurements as PDF</a>";
             }
         }
     } else {
         echo "Missing required details";
     }
     ?>
+    <script>
+    document.getElementById('download').addEventListener('click', function() {
+        const element = document.getElementById('content');
+        html2pdf().from(element).save();
+    });
+    </script>
 </body>
 
 </html>
