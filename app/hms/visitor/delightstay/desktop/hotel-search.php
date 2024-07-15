@@ -13,7 +13,7 @@ if (isset($date)) {
     $endDate = date('d-m-Y', strtotime('+1 Day'));
 }
 
-if (!$checkProperty = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property WHERE property_city LIKE '%{$location}%' AND property_status=1 AND property_site_id IN (" . SITE_ID . ", 55)")) {
+if (!$checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_city LIKE '%{$location}%' AND property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55)")) {
     echo "Something went wrong";
     exit();
 }
@@ -288,27 +288,30 @@ require_once 'header.php';
                                 while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
                                     extract($hotelDetails); ?>
                             <div class="col-md-4 col-12">
-                                <div class="listing_card">
-                                    <div class="listing_card__img">
-                                        <img src="assest/img/card2.png" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="listing_details">
-                                        <div class="listing_top">
-                                            <h3>Tambon Hua Hin, Thailand</h3>
-                                            <!-- <p>1.0k <span> rating</span></p> -->
+                                <a href="<?php echo $link_url ?>" target="_blank" title="<?php echo $property_title ?>">
+                                    <div class="listing_card">
+                                        <div class="listing_card__img">
+                                            <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : USER_IMAGES . '/image-not-found.png') ?>"
+                                                class="img-fluid" alt="<?php echo $property_title ?>">
                                         </div>
-                                        <div class="listing_star">
-                                            <div class="listing_star__left">
-                                                <h3>4 <span>-star hotel</span></h3>
-                                                <h6><img src="assest/img/map.png" class="img-fluid" alt="">karol
-                                                    bagh
-                                                </h6>
+                                        <div class="listing_details">
+                                            <div class="listing_top">
+                                                <h3><?php echo $property_title ?></h3>
+                                                <!-- <p>1.0k <span> rating</span></p> -->
                                             </div>
-                                            <!-- <div class="rating_number">
+                                            <div class="listing_star">
+                                                <div class="listing_star__left">
+                                                    <h3><?php echo $property_type ?></h3>
+                                                    <h6><img src="<?php echo USER_IMAGES ?>/map.png" class="img-fluid"
+                                                            alt="">karol
+                                                        bagh
+                                                    </h6>
+                                                </div>
+                                                <!-- <div class="rating_number">
                                                 <p>7.7</p>
                                             </div> -->
-                                        </div>
-                                        <!-- <div class="listing_star">
+                                            </div>
+                                            <!-- <div class="listing_star">
                                             <div class="listing_star__left">
                                                 <h6><img src="assest/img/pool.png" class="img-fluid" alt="">swimming
                                                     pool</h6>
@@ -319,27 +322,30 @@ require_once 'header.php';
                                                 <a href="#">+ more</a>
                                             </div>
                                         </div> -->
-                                        <div class="price">
-                                            <h3>₹ 2,178 <span>/night</span></h3>
-                                            <del>₹ 3,545</del>
+                                            <div class="price">
+                                                <h3>₹ 2,178 <span>/night</span></h3>
+                                                <del>₹ 3,545</del>
+                                            </div>
+                                            <div class="book_now">
+                                                <a href="<?php echo $link_url ?>" target="_blank"
+                                                    title="<?php echo $property_title ?>" class="global_btn">Book
+                                                    Now</a>
+                                            </div>
                                         </div>
-                                        <div class="book_now">
-                                            <a href="hoteldetails.html" class="global_btn">Book Now</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
-                            <?php
+                        </div>
+                        <?php
                                 }
                             } else {
                                 echo "<div class='not-found'><h3>No property found</h3></div>";
                             }
 
-                            ?>
-                        </div>
+                ?>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <section class="subscribe_wrapper">

@@ -1330,12 +1330,13 @@ $("#addProperty").click(function (e) {
                     popUpMessage("center", response.msg, response.status);
                     setTimeout(function () {
                       window.location.href =
-                        "/dashboard/vendors/property/update/?id" +
+                        "/dashboard/vendors/property/update/?id=" +
                         btoa(response.propertyId);
                     }, 1500);
                     $("#addProperty").show();
                   },
                   error: function (response) {
+                    console.log(`Error`, response);
                     popUpMessage(
                       "center",
                       response.responseJSON.msg,
@@ -1372,7 +1373,7 @@ $("#addProperty").click(function (e) {
   } else {
     popUpMessage("center", "Enter property name", "warning");
   }
-  $("#addProperty").hide();
+  $("#addProperty").show();
 });
 
 $("#updateProperty").click(function (e) {

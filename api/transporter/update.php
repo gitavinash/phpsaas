@@ -21,19 +21,19 @@ if ($name != '') {
                 if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "amenities SET amenitie_thumbnail='{$icon}', amenitie_title='{$name}', amenitie_description='{$description}', amenitie_type='{$category}' WHERE amenitie_id='{$id}'")) {
                     $responseCode = 200;
                     $status = 'success';
-                    $msg = 'Amenities update successfully';
+                    $msg = 'Transport update successfully';
                 } else {
                     $msg = 'Something went wrong while updating amenities';
                 }
             } else {
-                $msg = 'Invalid amenities details found';
+                $msg = 'Invalid transport details found';
             }
         }
     } else {
-        $msg = 'Kindly select amenities type';
+        $msg = 'Kindly select transport type';
     }
 } else {
-    $msg = 'Amenities name cannot be blank';
+    $msg = 'Transport name cannot be blank';
 }
 
 http_response_code($responseCode);

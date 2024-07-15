@@ -1,16 +1,14 @@
-<?php
-
-require_once 'header.php';
-
-?>
+<?php require_once 'header.php'; ?>
 <main>
     <section class="hero_img horizontal_padding ">
         <div class="container">
             <div class="row text-white ">
                 <h1 class="font_size_70 font_family_chonburi text-center mt-5 text-capitalize">Perfect getaway
                     awaits at MGI Hotels.</h1>
-                <p class="text-center font_size_18 text-capitalize py-3">Find bliss in every stay. From cozy corners to
-                    lavish suites, MGI Hotels ensures your comfort.<br />Book now for an unforgettable experience.</p>
+                <p class="text-center font_size_18 text-capitalize py-3">Find bliss in every stay. From cozy corners
+                    to
+                    lavish suites, MGI Hotels ensures your comfort.<br />Book now for an unforgettable experience.
+                </p>
             </div>
             <form action="/redirect/" class="searchEngine" method="get">
                 <?php
@@ -179,106 +177,51 @@ require_once 'header.php';
                 </div>
             </div>
             <div class="row offer_slider overflow-hidden">
+
+                <?php
+                if ($checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
+                    if (mysqli_num_rows($checkProperty) != 0) {
+                        while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
+                            extract($hotelDetails); ?>
+
+
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="card_manage mt-5 ">
-                        <img src="<?php echo USER_IMAGES ?>card_img1.png" alt="" class="img-fluid ">
-                        <p class="font_size_18 pt-3">Tambon Hua Hin, Thailand</p>
-                        <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
+                        <a href="<?php echo $link_url ?>" title="<?php echo $property_title ?>">
+                            <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : USER_IMAGES . '/image-not-found.png') ?>"
+                                alt="" class="img-fluid ">
+                            <p class="font_size_18 pt-3"><?php echo $property_title . ', ' . ucwords($property_city) ?>
+                            </p>
+                            <!-- <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
                             15–20 Jan
-                        </p>
-                        <div class="d-flex align-items-center justify-content-between py-2">
-                            <h4 class="font_size_22 ">₹30,425 <span class="font_size_18 opacity-50">night</span>
-                            </h4>
-                            <div>
+                        </p> -->
+                            <div class="d-flex align-items-center justify-content-between py-2">
+                                <h4 class="font_size_22 ">₹ 30,425 <span class="font_size_18 opacity-50">per
+                                        night</span>
+                                </h4>
+                                <!-- <div>
                                 <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
+                            </div> -->
                             </div>
-                        </div>
+                        </a>
                         <div class="button d-flex align-items-center justify-content-between py-2">
-                            <a href="" class="btn_book font_size_18 orange ">BOOK NOW</a>
-                            <i class='bx bx-right-arrow-alt d-flex align-items-center justify-content-center'></i>
+                            <a href="<?php echo $link_url ?>" class="btn_book font_size_18 orange ">BOOK NOW</a>
+                            <a href="<?php echo $link_url ?>"><i
+                                    class='bx bx-right-arrow-alt d-flex align-items-center justify-content-center'></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3 ">
-                    <div class="card_manage mt-5">
-                        <img src="<?php echo USER_IMAGES ?>card_img2.png" alt="" class="img-fluid">
-                        <p class="font_size_18 pt-3">Tambon Hua Hin, Thailand</p>
-                        <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
-                            15–20 Jan
-                        </p>
-                        <div class="d-flex align-items-center justify-content-between py-2">
-                            <h4 class="font_size_22 ">₹30,425 <span class="font_size_18 opacity-50">night</span>
-                            </h4>
-                            <div>
-                                <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
-                            </div>
-                        </div>
-                        <div class="button d-flex align-items-center justify-content-between py-2">
-                            <a href="" class="btn_book font_size_18 orange ">BOOK NOW</a>
-                            <i class='bx bx-right-arrow-alt d-flex align-items-center justify-content-center'></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="card_manage mt-5">
-                        <img src="<?php echo USER_IMAGES ?>card_img3.png" alt="" class="img-fluid">
-                        <p class="font_size_18 pt-3">Tambon Hua Hin, Thailand</p>
-                        <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
-                            15–20 Jan
-                        </p>
-                        <div class="d-flex align-items-center justify-content-between py-2">
-                            <h4 class="font_size_22 ">₹30,425 <span class="font_size_18 opacity-50">night</span>
-                            </h4>
-                            <div>
-                                <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
-                            </div>
-                        </div>
-                        <div class="button d-flex align-items-center justify-content-between py-2">
-                            <a href="" class="btn_book font_size_18 orange ">BOOK NOW</a>
-                            <i class='bx bx-right-arrow-alt d-flex align-items-center justify-content-center'></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="card_manage mt-5">
-                        <img src="<?php echo USER_IMAGES ?>card_img4.png" alt="" class="img-fluid">
-                        <p class="font_size_18 pt-3">Tambon Hua Hin, Thailand</p>
-                        <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
-                            15–20 Jan
-                        </p>
-                        <div class="d-flex align-items-center justify-content-between py-2">
-                            <h4 class="font_size_22 ">₹30,425 <span class="font_size_18 opacity-50">night</span>
-                            </h4>
-                            <div>
-                                <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
-                            </div>
-                        </div>
-                        <div class="button d-flex align-items-center justify-content-between py-2">
-                            <a href="" class="btn_book font_size_18 orange ">BOOK NOW</a>
-                            <i class='bx bx-right-arrow-alt d-flex align-items-center justify-content-center'></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="card_manage mt-5">
-                        <img src="<?php echo USER_IMAGES ?>card_img3.png" alt="" class="img-fluid">
-                        <p class="font_size_18 pt-3">Tambon Hua Hin, Thailand</p>
-                        <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
-                            15–20 Jan
-                        </p>
-                        <div class="d-flex align-items-center justify-content-between py-2">
-                            <h4 class="font_size_22 ">₹30,425 <span class="font_size_18 opacity-50">night</span>
-                            </h4>
-                            <div>
-                                <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
-                            </div>
-                        </div>
-                        <div class="button d-flex align-items-center justify-content-between py-2">
-                            <a href="" class="btn_book font_size_18 orange ">BOOK NOW</a>
-                            <i class='bx bx-right-arrow-alt d-flex align-items-center justify-content-center'></i>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                        }
+                    }
+                } else {
+                    echo "Something went wrong";
+                    exit();
+                }
+
+                ?>
+
+                n
             </div>
         </div>
 
@@ -408,7 +351,8 @@ require_once 'header.php';
                             <div class="slider mx-5 mx-md-2 mx-lg-2 ">
                                 <p class="review">MGI Hotels exceeded all my expectations. The room was spacious,
                                     elegantly
-                                    furnished, and offered breathtaking views. The attention to detail and personalized
+                                    furnished, and offered breathtaking views. The attention to detail and
+                                    personalized
                                     service made me feel like a VIP throughout my stay. Highly recommend!</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div>
@@ -430,8 +374,10 @@ require_once 'header.php';
                             <div class="slider mx-5 mx-md-2 mx-lg-2  ">
                                 <p class="review">My stay at MGI Hotels was truly exceptional. From the moment I
                                     arrived, I was
-                                    greeted with warmth and hospitality. The room was impeccably clean, the amenities
-                                    were top-notch, and the staff went above and beyond to ensure my comfort. I can't
+                                    greeted with warmth and hospitality. The room was impeccably clean, the
+                                    amenities
+                                    were top-notch, and the staff went above and beyond to ensure my comfort. I
+                                    can't
                                     wait to return!
                                 </p>
                                 <div class="d-flex align-items-center justify-content-between">

@@ -16,6 +16,12 @@ if ($name != '') {
             $icon = '';
         }
 
+        if (isset($_FILES['gallery'])) {
+            require_once MODULES . 'galleryUploader.php';
+        } else {
+            $gallery = '';
+        }
+
         if ($checkAmenities = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "amenities WHERE amenitie_id='{$id}'")) {
             if (mysqli_num_rows($checkAmenities) != 0) {
                 if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "amenities SET amenitie_thumbnail='{$icon}', amenitie_title='{$name}', amenitie_description='{$description}', amenitie_type='{$category}' WHERE amenitie_id='{$id}'")) {
