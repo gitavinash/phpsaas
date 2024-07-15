@@ -4,7 +4,7 @@ $link_type = ((isset($link_type)) ? $link_type : 'homepage');
 
 switch ($link_type) {
     case 'hotel_search':
-        $pageTitle = 'Best luxury and affordable hotels in ' . ucwords($location) . ' | ' . SITE_NAME;
+        $pageTitle = 'Best luxury and affordable hotels in ' . ucwords(str_replace('-', ' ', $location)) . ' | ' . SITE_NAME;
         break;
     default:
         $pageTitle = ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'} . ' | ' . SITE_NAME) : SITE_DESC . ' | ' . SITE_NAME);
