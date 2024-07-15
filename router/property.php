@@ -12,7 +12,7 @@ switch ($link_status) {
 
         /** Fetch data from database table  */
 
-        if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_status=1 AND link_type='property' AND property_id='{$link_relation_id}' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
+        if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE property_status=1 AND link_type='property' AND property_id='{$link_relation_id}' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
 
             if (mysqli_num_rows($propertyData) != 0) {
 
