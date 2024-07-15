@@ -262,7 +262,6 @@ del {
   font-size: 30px;
   color: var(--white-color);
   text-transform: capitalize;
-  font-family: "Prata", serif;
 }
 .subscribe_wrapper__left p {
   margin-top: 30px;

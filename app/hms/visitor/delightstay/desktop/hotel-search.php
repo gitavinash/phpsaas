@@ -13,7 +13,7 @@ if (isset($date)) {
     $endDate = date('d-m-Y', strtotime('+1 Day'));
 }
 
-if (!$checkProperty = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property WHERE property_city LIKE '%{$location}%' AND property_status=1 AND property_site_id=" . SITE_ID)) {
+if (!$checkProperty = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property WHERE property_city LIKE '%{$location}%' AND property_status=1 AND property_site_id IN (" . SITE_ID . ", 55)")) {
     echo "Something went wrong";
     exit();
 }
@@ -29,7 +29,6 @@ require_once 'header.php';
                 <?php
 
                 if (SITE_VERSION == 'desktop') { ?>
-
 
                 <div class="row where_section p-0 py-2 d-flex align-items-center text-black mt-3 ">
                     <div class="col-6 col-md-3 ps-5">
