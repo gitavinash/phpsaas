@@ -460,3 +460,38 @@ h2 span {
     display: block;
   }
 }
+
+.radio-group {
+  display: flex;
+  gap: 10px; /* Adjusted for equal spacing */
+  width: 100%;
+  max-width: 600px; /* Optional: Set a max-width for better control */
+}
+
+.radio-group input[type="radio"] {
+  display: none;
+}
+
+.radio-group label {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px 0; /* Adjusted for vertical padding */
+  border-radius: 7px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  text-align: center; /* Center text within the label */
+}
+
+.radio-group input[type="radio"]:checked + label {
+  background-color: #48c9b0;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.radio-group label:hover {
+  background-color: #e6e6e6;
+}

@@ -154,6 +154,8 @@ if (isset($bcc)) {
     $bccAddress = base64_decode($bcc);
 }
 
+unset($_REQUEST['request_id']);
+
 if (sizeof($_REQUEST) != 0) {
 
     foreach ($_REQUEST as $key => $value) {

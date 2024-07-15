@@ -1,4 +1,9 @@
 $(document).ready(function () {
+  function getQueryParam(name) {
+    var urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
+
   // Landlord
 
   var landlordName = "";
@@ -95,7 +100,10 @@ $(document).ready(function () {
         success: function (response) {
           if (response.status == "success") {
             window.location.href =
-              `/generate-agreement/?request_id=` + btoa(response.enquiryId);
+              `/generate-agreement/?request_id=` +
+              btoa(response.enquiryId) +
+              "&state=" +
+              state.toLowerCase();
           } else {
             popUpMessage("center", response.msg, response.status);
           }
@@ -276,6 +284,7 @@ $(document).ready(function () {
     paymentDate = $("#paymentDate").val();
     securityAmount = $("#securityAmount").val();
     noticePeriod = $("#noticePeriod").val();
+    state = $("#state").val();
 
     if (agreementStartDate != "") {
       if (rentAmount != "") {
@@ -317,7 +326,10 @@ $(document).ready(function () {
           console.log(`success`, response);
           if (response.status == "success") {
             window.location.href =
-              `/review-agreement/?request_id=` + response.enquiryId;
+              `/review-agreement/?request_id=` +
+              response.enquiryId +
+              "&state=" +
+              state.toLowerCase();
           } else {
             popUpMessage("center", response.msg, response.status);
           }
@@ -338,19 +350,92 @@ $(document).ready(function () {
     }
   });
 
-  $(".datepicker").datepicker({
-    format: "mm/dd/yyyy",
-    todayHighlight: true,
-    autoclose: true,
-    beforeShowDay: function (date) {
-      // Calculate the date 7 days ago
-      var last7Days = new Date();
-      last7Days.setDate(last7Days.getDate() - 7);
+  if ($(".datepicker").length > 0) {
+    $(".datepicker").datepicker({
+      format: "mm/dd/yyyy",
+      todayHighlight: true,
+      autoclose: true,
+      beforeShowDay: function (date) {
+        // Calculate the date 7 days ago
+        var last7Days = new Date();
+        last7Days.setDate(last7Days.getDate() - 7);
 
-      // Disable dates earlier than 7 days ago
-      return date.valueOf() >= last7Days.valueOf()
-        ? { enabled: true }
-        : { enabled: false };
-    },
+        // Disable dates earlier than 7 days ago
+        return date.valueOf() >= last7Days.valueOf()
+          ? { enabled: true }
+          : { enabled: false };
+      },
+    });
+  }
+
+  if ($("#totalAmount").length > 0) {
+    var totalValue = $("#totalAmount").text();
+  }
+
+  function totalStampValue() {
+    var stampValue = $("#stampValue").text();
+    var serviceCharges = $("#serviceCharges").text();
+    var notaryService = $("#notaryService").text();
+    var deliveryService = $("#deliveryServices").text();
+
+    stampValue = stampValue.replace("₹ ", "");
+    serviceCharges = serviceCharges.replace("₹ ", "");
+    notaryService = notaryService.replace("₹ ", "");
+    deliveryService = deliveryService.replace("₹ ", "");
+
+    updatedTotalValue =
+      parseInt(stampValue) +
+      parseInt(serviceCharges) +
+      parseInt(notaryService) +
+      parseInt(deliveryService);
+
+    console.log(`Total value: `, updatedTotalValue);
+
+    $("#totalAmount").html("₹ " + updatedTotalValue);
+  }
+
+  $('input[type="radio"][name="stampValue"]').change(function () {
+    var notaryServiceCharge;
+    var notaryStampValue = $(
+      'input[type="radio"][name="stampValue"]:checked'
+    ).val();
+    var stateValue = getQueryParam("state");
+
+    if (stateValue.toLowerCase() == "rajasthan") {
+      if (notaryStampValue == 100) {
+        notaryServiceCharge = 299;
+      } else {
+        notaryServiceCharge = 399;
+      }
+    } else {
+      notaryServiceCharge = 249;
+    }
+    $("#stampValue").html("₹ " + notaryStampValue);
+    $("#serviceCharges").html("₹ " + notaryServiceCharge);
+    totalStampValue();
+  });
+
+  $('input[type="radio"][name="notaryService"]').change(function () {
+    var notaryStamp = $(
+      'input[type="radio"][name="notaryService"]:checked'
+    ).val();
+    if (notaryStamp == "true") {
+      $("#notaryService").html("₹ " + 150);
+    } else {
+      $("#notaryService").html("₹ " + 0);
+    }
+    totalStampValue();
+  });
+
+  $('input[type="radio"][name="deliveryServices"]').change(function () {
+    var deliveryServices = $(
+      'input[type="radio"][name="deliveryServices"]:checked'
+    ).val();
+    if (deliveryServices == "true") {
+      $("#deliveryServices").html("₹ " + 250);
+    } else {
+      $("#deliveryServices").html("₹ " + 0);
+    }
+    totalStampValue();
   });
 });

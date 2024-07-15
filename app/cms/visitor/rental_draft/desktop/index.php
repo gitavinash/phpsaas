@@ -48,7 +48,28 @@ require_once 'header.php';
                                     <input type="email" name="email" class="form-control" id="email"
                                         placeholder="Email address">
                                     <!-- <label for="email" class="form-label">State</label> -->
-                                    <input type="text" name="state" class="form-control" id="state" placeholder="State">
+                                    <!-- <input type="text" name="state" class="form-control" id="state" placeholder="State"> -->
+                                    <select name="state" class="form-control" id="state">
+                                        <?php
+
+                                        if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
+
+                                            if (mysqli_num_rows($stateDetails) != 0) {
+
+                                                echo "<option value='' >Select state</option>";
+
+                                                while ($stateData = mysqli_fetch_assoc($stateDetails)) {
+
+                                                    echo "<option value='{$stateData['state_name']}' " . (($stateData['state_name'] == $state_id) ? 'selected' : '') . " >{$stateData['state_name']}</option>";
+                                                }
+                                            } else {
+
+                                                echo "<option value=''>No city found</option>";
+                                            }
+                                        }
+
+                                        ?>
+                                    </select>
                                     <input type="submit" id="getStarted" class="btn btn-success w-100"
                                         value="Get Started">
                                 </form>

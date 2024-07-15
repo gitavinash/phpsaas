@@ -212,6 +212,7 @@ if (!isset($validId)) {
                                 </div>
                                 <textarea name="comment" id="comment" class="form-control"
                                     placeholder="Any other clauses?"></textarea>
+                                <input type="hidden" name="state" id="state" value="<?php echo $state ?>">
                                 <input type="hidden" name="request_id" value="<?php echo $request_id ?>">
                                 <button id="submitAgreementForm" class="btn btn-success w-100">Submit &
                                     Continue</button>
