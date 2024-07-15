@@ -68,15 +68,8 @@
                             </span>
                         </div>
                         <p class="width_co">
-                            Mohit Aggarwal Red Book Expert
-                            H 52
-                            DAKSHINPURI
-                            DR AMBEDKAR NAGAR
-                            SEC 5 New Delhi 110062
-
-                            Land mark
-                            Pani ki tanki
-                            Ajay Dutt MLA Office
+                            A-62,Freedom fighter enclav,e<br />
+                            Neb sarai Hill top apartment,<br /> New Delhi - 110068
                         </p>
                     </a>
                     <a href="#" class="contact_icon_container mt-3">

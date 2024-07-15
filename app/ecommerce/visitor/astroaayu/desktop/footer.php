@@ -32,15 +32,8 @@
             <div>
                 <p>Astroaayu Pvt. Ltd.</p>
                 <a href="https://goo.gl/maps/RLKBsXvwD2YsLsdc8" class="aa" target="_blank">
-                    Mohit Aggarwal Red Book Expert
-                    H 52
-                    DAKSHINPURI
-                    DR AMBEDKAR NAGAR
-                    SEC 5 New Delhi 110062
-
-                    Land mark
-                    Pani ki tanki
-                    Ajay Dutt MLA Office
+                    A-62,Freedom fighter enclav,e<br />
+                    Neb sarai Hill top apartment,<br /> New Delhi - 110068
                 </a>
                 <div class="mt-2 mt-sm-3 footer_btn_b">
                     <a class="footer_btn" href="/contact/">Ask Your Question</a>
