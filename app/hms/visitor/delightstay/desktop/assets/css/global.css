@@ -491,3 +491,13 @@ select::-ms-expand {
 .visible {
   display: block;
 }
+
+.searchEngine input,
+select,
+option {
+  border: none;
+  font-size: 1.2rem !important;
+  font-weight: 600;
+  padding: 0.6rem 0rem;
+  font-family: "Poppins", sans-serif;
+}

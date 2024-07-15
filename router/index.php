@@ -79,6 +79,10 @@ if (strpos(BASE_URL, '//') !== FALSE) {
 
 $url = BASE_URL;
 
+// Internal app theme router
+
+$themeRouterFile = USER_PATH . 'router.php';
+
 switch ($urlStructure[0]) {
 
 	case '':

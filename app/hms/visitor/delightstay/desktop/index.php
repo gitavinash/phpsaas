@@ -7,35 +7,29 @@ require_once 'header.php';
     <section class="hero_img horizontal_padding ">
         <div class="container">
             <div class="row text-white ">
-                <h1 class="font_size_70 font_family_chonburi text-center mt-5 pt-5 text-capitalize">Perfect getaway
+                <h1 class="font_size_70 font_family_chonburi text-center mt-5 text-capitalize">Perfect getaway
                     awaits at MGI Hotels.</h1>
                 <p class="text-center font_size_18 text-capitalize py-3">Find bliss in every stay. From cozy corners to
                     lavish suites, MGI Hotels ensures your comfort.<br />Book now for an unforgettable experience.</p>
             </div>
-            <div class="radio d-flex align-items-center mt-5 pt-5">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" checked name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1" style="color: #fff">
-                        India
-                    </label>
-                </div>
-            </div>
-            <form action="/action_page.php" method="get">
+            <form action="/redirect/" class="searchEngine" method="get">
+                <?php
+
+                if (SITE_VERSION == 'desktop') { ?>
+
+
                 <div class="row where_section p-0 py-2 d-flex align-items-center text-black mt-3 ">
-                    <div class="col-6 col-md-3  col-lg-3 col-xl-3 col-xxl-4  ps-5">
+                    <div class="col-6 col-md-3 ps-5">
                         <label for="">Where</label>
-                        <input type="text" class="form-control " id="datepicker" placeholder="Search destinations">
+                        <input type="text" class="form-control" name="location" id="datepicker"
+                            placeholder="Search destinations" required>
                     </div>
-                    <div class="col-6 col-md-3 col-lg-2 col-xl-2 col-xxl-2 border_left px-5 ">
-                        <label for="">Check In</label>
-                        <input type="text" name="birthday" value="" class="form-control" placeholder="Add date">
+                    <div class="col-6 col-md-4 border_left px-5 ">
+                        <label for="">Check-In & Check-out</label>
+                        <input type="text" name="date" value="" class="form-control datepicker"
+                            placeholder="Check-in date">
                     </div>
-                    <div class="col-6 col-md-3  col-lg-2 col-xl-2 col-xxl-2 border_left px-5">
-                        <label for="">Check In</label>
-                        <input type="text" name="birthday" class="form-control" id="floatingInput"
-                            placeholder="Add date">
-                    </div>
-                    <div class="col-6 col-md-3  col-lg-4 col-xl-4 col-xxl-3 border_left px-5">
+                    <div class="col-6 col-md-2 border_left px-5">
                         <label for="">No. of guests</label>
                         <select class="form-control" name="guests" id="">
                             <option value="1">1 person</option>
@@ -43,44 +37,68 @@ require_once 'header.php';
                             <option value="3">3 persons</option>
                         </select>
                     </div>
+                    <div class="col-6 col-md-2 border_left px-5">
+                        <label for="">No. of rooms</label>
+                        <select class="form-control" name="room" id="">
+                            <option value="1">1 room</option>
+                            <option value="2">2 rooms</option>
+                            <option value="3">3 rooms</option>
+                        </select>
+                    </div>
                     <div class="col-1 ps-2 ps-md-2 ps-lg-0 ps-xl-3 ps-xxl-4 ">
-                        <div class="search_border bg_orange d-flex justify-content-center align-items-center    ">
-                            <i class="bx bx-search"></i>
-                        </div>
+                        <button class="search_border bg_orange d-flex justify-content-center align-items-center"><i
+                                class="bx bx-search"></i></button>
                     </div>
                 </div>
+
+                <?php
+                }
+
+                if (SITE_VERSION == 'mobile') { ?>
+
                 <div class="row where_section_mobile m-auto py-4 mt-5">
                     <div class="col-12">
                         <label for="">Where</label>
-                        <input type="text" class="form-control py-3 " id="datepicker" placeholder="Search destinations">
+                        <input type="text" class="form-control py-3 " id="datepicker" placeholder="Search destinations"
+                            required>
                     </div>
                     <div class="col-12 py-2">
-                        <label for="">Check In</label>
-                        <input type="text" name="birthday" value="" class="form-control py-3" placeholder="Add date">
-                    </div>
-                    <div class="col-12 py-2">
-                        <label for="">Check In</label>
-                        <input type="text" name="birthday" value="" class="form-control py-3" placeholder="Add date">
+                        <label for="">Check-In & Check-out</label>
+                        <input type="text" name="birthday" value="" class="form-control datepicker py-3" placeholder="">
                     </div>
                     <div class="col-12 py-4">
+                        <label for="">No. of guests</label>
                         <select class="form-control" name="guests" id="">
                             <option value="1">1 person</option>
                             <option value="2">2 persons</option>
                             <option value="3">3 persons</option>
                         </select>
                     </div>
+                    <div class="col-12 py-4">
+                        <label for="">No. of rooms</label>
+                        <select class="form-control" name="room" id="">
+                            <option value="1">1 room</option>
+                            <option value="2">2 rooms</option>
+                            <option value="3">3 rooms</option>
+                        </select>
+                    </div>
                     <div class="search_btn bg_orange  py-3  text-center mt-4 ">
-                        <a href="" class="font_size_20 text-white">
-                            Search
-                        </a>
+                        <!-- <a href="" class="font_size_20 text-white">Search</a> -->
+                        <button class="font_size_20 text-white"><i class="bx bx-search"></i></button>
+                        <!-- <input type="submit" class="font_size_20 text-white" value="Search"> -->
                     </div>
                 </div>
+                <?php
+                }
+
+                ?>
+
             </form>
         </div>
         </div>
     </section>
 
-    <section class="body_background_color vertical_padding horizontal_padding">
+    <section class="bodyy_background_color vertical_padding horizontal_padding">
         <div class="container">
             <div class="row py-5 py-md-5 py-lg-3  ">
                 <div class="col-12 col-md-12 col-lg-3 d-flex align-items-center justify-content-center">

@@ -11,6 +11,23 @@
   background-size: cover;
 }
 
+.hero_img h1 {
+  padding-top: 100px;
+}
+
+.hero_img form {
+  padding-top: 30px;
+}
+
+.search_page_form {
+  background: url("../images/hero_img.png");
+  width: 100%;
+  padding: 3rem 0rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
 .radio {
   gap: 20px;
 }
@@ -34,11 +51,6 @@
 .search_border i {
   font-size: 32px;
   color: #fff;
-}
-
-.where_section input {
-  border: none;
-  padding: 0 !important;
 }
 
 .border_left {
