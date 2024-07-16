@@ -24,7 +24,10 @@ if (addGallery) {
   });
 }
 
+console.log(`oldGalleryImages 1: `, oldGalleryImages);
+
 if (updateGallery) {
+  console.log(`oldGalleryImages 2: `, oldGalleryImages);
   $(".updateGallery").imageUploader({
     preloaded: oldGalleryImages,
     imagesInputName: "gallery",
@@ -1311,17 +1314,6 @@ $("#addProperty").click(function (e) {
                   type: "POST",
                   url: "/api/property/publish/",
                   dataType: "json",
-                  // data: {
-                  //   name,
-                  //   description,
-                  //   address,
-                  //   city,
-                  //   pinCode,
-                  //   email,
-                  //   mobile,
-                  //   category,
-                  //   googleMapUrl,
-                  // },
                   data: formData,
                   processData: false,
                   contentType: false,
@@ -1342,6 +1334,7 @@ $("#addProperty").click(function (e) {
                       response.responseJSON.msg,
                       response.responseJSON.status
                     );
+                    $("#addProperty").show();
                   },
                 });
               } else {
@@ -1350,6 +1343,7 @@ $("#addProperty").click(function (e) {
                   "Please select property type",
                   "warning"
                 );
+                $("#addProperty").show();
               }
             } else {
               popUpMessage(
@@ -1357,27 +1351,116 @@ $("#addProperty").click(function (e) {
                 "Enter property contact number",
                 "warning"
               );
+              $("#addProperty").show();
             }
           } else {
             popUpMessage("center", "Enter property email address", "warning");
+            $("#addProperty").show();
           }
         } else {
           popUpMessage("center", "Enter property city pin code", "warning");
+          $("#addProperty").show();
         }
       } else {
         popUpMessage("center", "Enter property city name", "warning");
+        $("#addProperty").show();
       }
     } else {
       popUpMessage("center", "Enter property address", "warning");
+      $("#addProperty").show();
     }
   } else {
     popUpMessage("center", "Enter property name", "warning");
+    $("#addProperty").show();
   }
-  $("#addProperty").show();
 });
 
 $("#updateProperty").click(function (e) {
   e.preventDefault();
+  $("#updateProperty").hide();
+  const name = $("#name").val();
+  const description = $("#description").val();
+  const address = $("#address").val();
+  const city = $("#city").val();
+  const pinCode = $("#pinCode").val();
+  const email = $("#email").val();
+  const mobile = $("#mobile").val();
+  const category = $("#type").val();
+  const googleMapUrl = $("#mapUrl").val();
+
+  if (name != "") {
+    if (address != "") {
+      if (city != "") {
+        if (pinCode != "") {
+          if (email != "") {
+            if (mobile != "") {
+              if (category != "") {
+                var formData = new FormData(
+                  document.getElementById("updatePropertyForm")
+                );
+                $.ajax({
+                  type: "POST",
+                  url: "/api/property/update/",
+                  dataType: "json",
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  encrypt: "multipart/form-data",
+                  success: function (response) {
+                    popUpMessage("center", response.msg, response.status);
+                    setTimeout(function () {
+                      window.location.href =
+                        "/dashboard/vendors/property/update/?id=" +
+                        btoa(response.propertyId);
+                    }, 1500);
+                    $("#updateProperty").show();
+                  },
+                  error: function (response) {
+                    console.log(`Error`, response);
+                    popUpMessage(
+                      "center",
+                      response.responseJSON.msg,
+                      response.responseJSON.status
+                    );
+                    $("#updateProperty").show();
+                  },
+                });
+              } else {
+                popUpMessage(
+                  "center",
+                  "Please select property type",
+                  "warning"
+                );
+                $("#updateProperty").show();
+              }
+            } else {
+              popUpMessage(
+                "center",
+                "Enter property contact number",
+                "warning"
+              );
+              $("#updateProperty").show();
+            }
+          } else {
+            popUpMessage("center", "Enter property email address", "warning");
+            $("#updateProperty").show();
+          }
+        } else {
+          popUpMessage("center", "Enter property city pin code", "warning");
+          $("#updateProperty").show();
+        }
+      } else {
+        popUpMessage("center", "Enter property city name", "warning");
+        $("#updateProperty").show();
+      }
+    } else {
+      popUpMessage("center", "Enter property address", "warning");
+      $("#updateProperty").show();
+    }
+  } else {
+    popUpMessage("center", "Enter property name", "warning");
+    $("#updateProperty").show();
+  }
 });
 
 var stateDropDown = document.getElementById("stateDropDown");

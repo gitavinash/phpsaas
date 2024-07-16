@@ -301,7 +301,7 @@ require_once 'header.php';
                                             </div>
                                             <div class="listing_star">
                                                 <div class="listing_star__left">
-                                                    <h3><?php echo $property_type ?></h3>
+                                                    <h3><?php echo str_replace('_', ' ', $property_type) ?></h3>
                                                     <h6><img src="<?php echo USER_IMAGES ?>/map.png" class="img-fluid"
                                                             alt="">karol
                                                         bagh

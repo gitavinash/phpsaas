@@ -55,7 +55,7 @@ if ($name != '') {
 
             /* Insert data into link table */
 
-            $addNewPage = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "property(property_site_id, property_thumbnail, property_gallery, property_title, property_email, property_mobile, property_description, property_address, property_city, property_pincode, property_map_url, property_type, property_created_by, property_status) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$name}', '{$email}', '{$mobile}', '{$description}', '{$address}', '{$city}', '{$pinCode}', '{$mapUrl}', '{$type}', " . USER_ID . ", 1)");
+            $addNewPage = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "property(property_site_id, property_thumbnail, property_gallery, property_title, property_email, property_mobile, property_description, property_address, property_city, property_pincode, property_map_url, property_type, property_support_email, property_support_mobile, property_created_by, property_status) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$name}', '{$email}', '{$mobile}', '{$description}', '{$address}', '{$city}', '{$pinCode}', '{$mapUrl}', '{$type}', '{$supportEmail}', '{$supportMobile}', " . USER_ID . ", 1)");
             $propertyId = mysqli_insert_id($connection);
 
             $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$propertyId}', '{$link_status}', 'property', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");

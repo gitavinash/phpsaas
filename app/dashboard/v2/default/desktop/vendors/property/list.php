@@ -39,6 +39,10 @@
                                 <td>{$property_address} {$property_city}  {$property_pincode}</td>
                                 <td>" . ucwords(str_replace('_', ' ', $property_type)) . "</td>
                                 <td>
+
+                                <a href='/dashboard/vendors/property/update/?id=" . base64_encode($property_id) . "' class='tableActionIconBtn' title='Edit property'><i class='fi fi-rr-edit bgLightGreen'></i></a>
+                                <a href='/dashboard/vendors/property/update/?updateType=rooms&id=" . base64_encode($property_id) . "' class='tableActionIconBtn' title='Update property item'><i class='fi fi-rr-bed-empty bgLightGreen'></i></a>
+                                <a href='#' data-type='property' data-id='{$property_id}' title='Delete property' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                 </td>
                             </tr>";
                         }
