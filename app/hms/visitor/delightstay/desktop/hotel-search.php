@@ -291,7 +291,7 @@ require_once 'header.php';
                                 <a href="<?php echo $link_url ?>" target="_blank" title="<?php echo $property_title ?>">
                                     <div class="listing_card">
                                         <div class="listing_card__img">
-                                            <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : USER_IMAGES . '/image-not-found.png') ?>"
+                                            <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : '/upload/others/image-not-found.png') ?>"
                                                 class="img-fluid" alt="<?php echo $property_title ?>">
                                         </div>
                                         <div class="listing_details">

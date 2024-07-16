@@ -188,7 +188,7 @@
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="card_manage mt-5 ">
                         <a href="<?php echo $link_url ?>" title="<?php echo $property_title ?>">
-                            <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : USER_IMAGES . '/image-not-found.png') ?>"
+                            <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : '/upload/others/image-not-found.png') ?>"
                                 alt="" class="img-fluid ">
                             <p class="font_size_18 pt-3"><?php echo $property_title . ', ' . ucwords($property_city) ?>
                             </p>

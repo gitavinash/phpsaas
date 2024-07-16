@@ -233,6 +233,11 @@ canvas {
   color: #fdca2c !important;
 }
 
+.row {
+  float: left;
+  width: 100%;
+}
+
 .box-1 {
   float: left;
   width: 100%;
@@ -267,6 +272,10 @@ canvas {
   float: left;
   width: 33.33%;
   box-sizing: border-box;
+}
+
+.box-3-2 .form-group input {
+  width: 95% !important;
 }
 
 .box-7 {
@@ -1491,6 +1500,19 @@ section.form .form-header h2 {
   line-height: 150px;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #01647b;
+}
+
+hr {
+  border: 0.7px solid #03637b;
+}
+
 section.form .form-header img {
   float: right;
   height: 150px;
@@ -2052,6 +2074,7 @@ section.form
   box-sizing: border-box;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+  overflow-y: scroll;
 }
 
 .popUp .contentArea form {
@@ -2061,7 +2084,7 @@ section.form
 .popUp .contentArea .heading {
   float: left;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 0%;
   font-size: 24px;
   padding: 0;
 }
@@ -2145,6 +2168,7 @@ section.form
 
 .fullScreenPopUpBox .contentArea {
   height: 100vh;
+  overflow-y: scroll;
 }
 
 .fullScreenPopUpBox .actionArea {
@@ -2533,4 +2557,65 @@ table tr {
 table td {
   padding: 0;
   margin: 0 auto;
+}
+
+.roomBox {
+  float: left;
+  width: 100%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+.roomBox .featureImage {
+  float: left;
+  width: 100%;
+}
+.roomBox .featureImage img {
+  float: left;
+  width: 100%;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+.roomBox .details {
+  float: left;
+  width: 100%;
+  padding: 5% 2%;
+  box-sizing: border-box;
+}
+.roomBox .details p {
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.7rem;
+}
+.roomBox .details p span {
+  font-weight: 300;
+  float: right;
+}
+
+.roomBox .btnGroup {
+  float: left;
+  width: 100%;
+}
+
+.roomBox .btnGroup a {
+  float: left;
+  width: 90%;
+  padding: 7% 5%;
+  box-sizing: border-box;
+  font-size: 1rem;
+  text-align: center;
+  margin: 0% 5% 5% 5%;
+  border: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 7px;
+  background: #167a92;
+  color: #fff;
+}
+
+.table-condensed tr {
+  height: 40px !important;
+}
+
+.table-condensed td {
+  width: 40px !important;
 }
