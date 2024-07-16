@@ -1,4 +1,4 @@
-<h2 class="heading"><?php echo 'Add New property' ?><span></span>
+<h2 class="heading"><?php echo 'Update property' ?><span></span>
 </h2>
 <div class="main-box">
     <?php

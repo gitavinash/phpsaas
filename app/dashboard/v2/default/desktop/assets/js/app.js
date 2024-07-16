@@ -1322,7 +1322,7 @@ $("#addProperty").click(function (e) {
                     popUpMessage("center", response.msg, response.status);
                     setTimeout(function () {
                       window.location.href =
-                        "/dashboard/vendors/property/update/?id=" +
+                        "/dashboard/vendors/property/update/?updateType=rooms&id=" +
                         btoa(response.propertyId);
                     }, 1500);
                     $("#addProperty").show();
