@@ -461,8 +461,72 @@ $("#addTransporter").click(function (e) {
   $("#addTransporter").show();
 });
 
-$("#addNewRoom").click(function (e) {
+$("#openRoomPopUP").click(function (e) {
   e.preventDefault();
   $(".addNewRoomBox").show();
-  // $(".shortcut").hide();
+});
+
+$("#addNewRoom").click(function (e) {
+  e.preventDefault();
+  $("#addNewRoom").hide();
+  var fields = [
+    { id: "#roomType", name: "room type" },
+    { id: "#priceMRP", name: "EP MRP price" },
+    { id: "#priceB2C", name: "EP B2C price" },
+    { id: "#priceB2B", name: "EP B2B price" },
+    { id: "#priceCP", name: "CP MRP price" },
+    { id: "#priceCPB2C", name: "CP B2C price" },
+    { id: "#priceCPB2B", name: "CP B2B price" },
+    { id: "#priceMAP", name: "MAP MRP price" },
+    { id: "#priceMAPB2C", name: "MAP B2C price" },
+    { id: "#priceMAPB2B", name: "MAP B2B price" },
+    { id: "#priceAP", name: "AP MRP price" },
+    { id: "#priceAPB2C", name: "AP B2C price" },
+    { id: "#priceAPB2B", name: "AP B2B price" },
+  ];
+
+  var submitForm = true;
+  var msg = "Kindly enter all required fields";
+
+  for (var i = 0; i < fields.length; i++) {
+    if ($(fields[i].id).val() === "") {
+      msg = "Kindly enter " + fields[i].name;
+      submitForm = false;
+      break;
+    }
+  }
+
+  if (submitForm) {
+    var formData = new FormData(document.getElementById("addNewRoomForm"));
+    $.ajax({
+      type: "POST",
+      url: "/api/room/publish/",
+      dataType: "json",
+      data: formData,
+      processData: false,
+      contentType: false,
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          window.location.href =
+            "/dashboard/vendors/property/update/?updateType=rooms&id=" +
+            response.propertyId;
+        }, 1500);
+        $("#addNewRoom").show();
+      },
+      error: function (response) {
+        console.log(`Error`, response);
+        $("#addNewRoom").show();
+        popUpMessage(
+          "center",
+          response.responseJSON.msg,
+          response.responseJSON.status
+        );
+      },
+    });
+  } else {
+    popUpMessage("center", msg, "warning");
+    $("#addNewRoom").show();
+  }
 });

@@ -13,7 +13,7 @@ if (isset($date)) {
     $endDate = date('d-m-Y', strtotime('+1 Day'));
 }
 
-if (!$checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_city LIKE '%{$location}%' AND property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55)")) {
+if (!$checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, property_starting_mrp, property_starting_price, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_city LIKE '%{$location}%' AND property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55)")) {
     echo "Something went wrong";
     exit();
 }
@@ -323,8 +323,8 @@ require_once 'header.php';
                                             </div>
                                         </div> -->
                                             <div class="price">
-                                                <h3>₹ 2,178 <span>/night</span></h3>
-                                                <del>₹ 3,545</del>
+                                                <h3>₹ <?php echo $property_starting_price ?> <span>/night</span></h3>
+                                                <del>₹ <?php echo $property_starting_mrp ?></del>
                                             </div>
                                             <div class="book_now">
                                                 <a href="<?php echo $link_url ?>" target="_blank"

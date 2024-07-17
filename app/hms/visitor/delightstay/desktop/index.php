@@ -179,7 +179,7 @@
             <div class="row offer_slider overflow-hidden">
 
                 <?php
-                if ($checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
+                if ($checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, property_starting_mrp, property_starting_price, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
                     if (mysqli_num_rows($checkProperty) != 0) {
                         while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
                             extract($hotelDetails); ?>
@@ -196,7 +196,8 @@
                             15–20 Jan
                         </p> -->
                             <div class="d-flex align-items-center justify-content-between py-2">
-                                <h4 class="font_size_22 ">₹ 30,425 <span class="font_size_18 opacity-50">per
+                                <h4 class="font_size_22 ">₹ <?php echo $property_starting_price ?> <span
+                                        class="font_size_18 opacity-50">per
                                         night</span>
                                 </h4>
                                 <!-- <div>

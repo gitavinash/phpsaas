@@ -24,10 +24,7 @@ if (addGallery) {
   });
 }
 
-console.log(`oldGalleryImages 1: `, oldGalleryImages);
-
 if (updateGallery) {
-  console.log(`oldGalleryImages 2: `, oldGalleryImages);
   $(".updateGallery").imageUploader({
     preloaded: oldGalleryImages,
     imagesInputName: "gallery",
