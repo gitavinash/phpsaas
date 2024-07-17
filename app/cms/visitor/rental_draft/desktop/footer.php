@@ -4,6 +4,7 @@
             <li><a href="/terms-and-conditions/">Terms and Conditions</a></li>
             <li><a href="/privacy-policy/">Privacy Policy</a></li>
             <li><a href="/refund-policy/">Refund policy</a></li>
+            <li><a href="/shipping-policy/">Shipping policy</a></li>
             <li><a href="/contact-us/">Contact Us</a></li>
         </ul>
         <p class="credit">&copy; <?php echo date('Y') . ' ' . SITE_NAME ?> <a href="https://cartt.in" target="_blank"
