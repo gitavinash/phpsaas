@@ -48,7 +48,7 @@ foreach ($requiredFields as $field => $errorMsg) {
 // Check numeric fields
 if (empty($msg)) {
     foreach ($numericFields as $field => $errorMsg) {
-        if (!is_numeric($$field)) {
+        if (!is_numeric(str_replace(' ', '', $$field))) {
             $msg = $errorMsg;
             break;
         }
