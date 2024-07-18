@@ -68,25 +68,13 @@ $(document).on("click", ".deleteButton", function (event) {
         success: function (response) {
           popUpMessage("center", response.msg, response.status);
           if (response.status == "success") {
-            let parts = requestType.split("/");
-            let lastPart = parts[parts.length - 1];
-            switch (lastPart) {
-              case "block":
-                lastPart = "inventory";
-                break;
-            }
-            switch (lastPart) {
-              case "block":
-                lastPart = "inventory";
-                break;
-              case "item":
-                disableRedirect = true;
-                break;
-            }
             setTimeout(function () {
+              console.log(`disableRedirect`, disableRedirect);
               if (disableRedirect) {
+                console.log(`i m here`);
                 window.location.href = `/dashboard/${lastPart}/list/`;
               } else {
+                console.log(`i m here 2`);
                 location.reload();
               }
             }, 1500);

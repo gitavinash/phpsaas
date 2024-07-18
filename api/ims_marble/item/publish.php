@@ -21,8 +21,9 @@ if (isset($validRequest)) {
 
     mysqli_query($connection, "START TRANSACTION");
 
-    if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+    if ($checkBlock = mysqli_query($connection, "SELECT block_product_type FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) != 0) {
+            extract(mysqli_fetch_assoc($checkBlock));
             $blockItemIndex = explode(",", $blockItemIndex);
 
             $widthQuery = '';
@@ -46,6 +47,88 @@ if (isset($validRequest)) {
             }
 
             $totalArea = array_sum($singleItemArea);
+
+            $measurementData = constant(strtoupper('measurement_' . $block_product_type));
+            extract(json_decode($measurementData, TRUE));
+
+            switch ([$measurementType, $calculationType]) {
+
+                    // Centimeter
+
+                case ['cm', 'sq. mm.']:
+                    $totalArea = $totalArea * 100;
+                    break;
+                case ['cm', 'sq. in.']:
+                    $totalArea = $totalArea * 0.15500031;
+                    break;
+                case ['cm', 'sq. ft.']:
+                    $totalArea = $totalArea * 0.001076391;
+                    break;
+                case ['cm', 'sq. mt.']:
+                    $totalArea = $totalArea * 0.0001;
+                    break;
+
+                    // Millimeter
+
+                case ['mm', 'sq. cm.']:
+                    $totalArea = $totalArea * 0.01;
+                    break;
+                case ['mm', 'sq. in.']:
+                    $totalArea = $totalArea * 0.0015500031;
+                    break;
+                case ['mm', 'sq. ft.']:
+                    $totalArea = $totalArea * 0.00001076391;
+                    break;
+                case ['mm', 'sq. mt.']:
+                    $totalArea = $totalArea * 0.000001;
+                    break;
+
+                    // Inches
+
+                case ['in', 'sq. cm.']:
+                    $totalArea = $totalArea * 6.4516;
+                    break;
+                case ['in', 'sq. mm.']:
+                    $totalArea = $totalArea * 645.16;
+                    break;
+                case ['in', 'sq. ft.']:
+                    $totalArea = $totalArea * 0.00694444;
+                    break;
+                case ['in', 'sq. mt.']:
+                    $totalArea = $totalArea * 0.00064516;
+                    break;
+
+                    // Feet
+
+                case ['ft', 'sq. cm.']:
+                    $totalArea = $totalArea * 929.0304;
+                    break;
+                case ['ft', 'sq. mm.']:
+                    $totalArea = $totalArea * 92903.04;
+                    break;
+                case ['ft', 'sq. in.']:
+                    $totalArea = $totalArea * 144;
+                    break;
+                case ['ft', 'sq. mt.']:
+                    $totalArea = $totalArea * 0.09290304;
+                    break;
+
+                    // Meter
+
+                case ['mt', 'sq. cm.']:
+                    $totalArea = $totalArea * 10000;
+                    break;
+                case ['mt', 'sq. mm.']:
+                    $totalArea = $totalArea * 1000000;
+                    break;
+                case ['mt', 'sq. in.']:
+                    $totalArea = $totalArea * 1550.0031;
+                    break;
+                case ['mt', 'sq. ft.']:
+                    $totalArea = $totalArea * 10.7639;
+                    break;
+            }
+
             $totalArea = number_format((float)$totalArea, 2, '.', '');
 
             $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size='{$totalArea}' WHERE block_id='{$blockId}'AND block_site_id=" . SITE_ID;

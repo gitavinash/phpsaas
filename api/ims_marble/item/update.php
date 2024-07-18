@@ -43,27 +43,93 @@ if (isset($validRequest)) {
 
     // Check block code
 
-    $checkBlockItem = mysqli_query($connection, "SELECT block_item_parent_id, block_gross_size, block_size_dimension FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
+    $checkBlockItem = mysqli_query($connection, "SELECT block_item_parent_id, block_gross_size, block_size_dimension,block_product_type FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
     if (mysqli_num_rows($checkBlockItem) != 0) {
 
         extract(mysqli_fetch_assoc($checkBlockItem));
 
-        if ($block_size_dimension != 'ft') {
-            switch ($block_size_dimension) {
-                case "mm":
-                    $damageAreaSize = $damageAreaSize * 0.00328084;
-                    break;
-                case "cm":
-                    $damageAreaSize = $damageAreaSize * 0.0328084;
-                    break;
-                case "in":
-                    $damageAreaSize = $damageAreaSize * 0.0833333;
-                    break;
-            }
-            $netSize = $block_gross_size - $damageAreaSize;
-        } else {
-            $netSize = $block_gross_size - $damageAreaSize;
+        $measurementData = constant(strtoupper('measurement_' . $block_product_type));
+        extract(json_decode($measurementData, TRUE));
+
+        switch ([$measurementType, $calculationType]) {
+
+                // Centimeter
+
+            case ['cm', 'sq. mm.']:
+                $damageAreaSize = $damageAreaSize * 100;
+                break;
+            case ['cm', 'sq. in.']:
+                $damageAreaSize = $damageAreaSize * 0.15500031;
+                break;
+            case ['cm', 'sq. cm.']:
+                $damageAreaSize = $damageAreaSize * 30.48;
+                break;
+            case ['cm', 'sq. mt.']:
+                $damageAreaSize = $damageAreaSize * 0.0001;
+                break;
+
+                // Millimeter
+
+            case ['mm', 'sq. cm.']:
+                $damageAreaSize = $damageAreaSize * 0.01;
+                break;
+            case ['mm', 'sq. in.']:
+                $damageAreaSize = $damageAreaSize * 0.0015500031;
+                break;
+            case ['mm', 'sq. mm.']:
+                $damageAreaSize = $damageAreaSize * 304.8;
+                break;
+            case ['mm', 'sq. mt.']:
+                $damageAreaSize = $damageAreaSize * 0.000001;
+                break;
+
+                // Inches
+
+            case ['in', 'sq. cm.']:
+                $damageAreaSize = $damageAreaSize * 6.4516;
+                break;
+            case ['in', 'sq. mm.']:
+                $damageAreaSize = $damageAreaSize * 645.16;
+                break;
+            case ['in', 'sq. in.']:
+                $damageAreaSize = $damageAreaSize * 12;
+                break;
+            case ['in', 'sq. mt.']:
+                $damageAreaSize = $damageAreaSize * 0.00064516;
+                break;
+
+                // Feet
+
+            case ['ft', 'sq. cm.']:
+                $damageAreaSize = $damageAreaSize * 30.48;
+                break;
+            case ['ft', 'sq. mm.']:
+                $damageAreaSize = $damageAreaSize * 304.8;
+                break;
+            case ['ft', 'sq. in.']:
+                $damageAreaSize = $damageAreaSize * 12;
+                break;
+            case ['ft', 'sq. mt.']:
+                $damageAreaSize = $damageAreaSize * 30.48;
+                break;
+
+                // Meter
+
+            case ['mt', 'sq. cm.']:
+                $damageAreaSize = $damageAreaSize * 10000;
+                break;
+            case ['mt', 'sq. mm.']:
+                $damageAreaSize = $damageAreaSize * 1000000;
+                break;
+            case ['mt', 'sq. in.']:
+                $damageAreaSize = $damageAreaSize * 1550.0031;
+                break;
+            case ['mt', 'sq. mt.']:
+                $damageAreaSize = $damageAreaSize * 30.48;
+                break;
         }
+
+        $netSize = $block_gross_size - $damageAreaSize;
 
         $netSize = number_format((float)$netSize, 2, '.', '');
         $damageAreaSize = number_format((float)$damageAreaSize, 2, '.', '');

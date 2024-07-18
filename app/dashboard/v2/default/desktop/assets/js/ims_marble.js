@@ -2,6 +2,7 @@ var activeDamageBoxId = 0;
 let count = 1;
 
 function convertAreatoFeet(size, type) {
+  console.log(`Type: `, type);
   switch (type) {
     case "mm":
       updateSize = size * 0.00328084;
@@ -257,11 +258,7 @@ $(document).on("click", ".deleteButton", function (event) {
               if (disableRedirect) {
                 window.location.href = `/dashboard/${lastPart}/list/`;
               } else {
-                if (pageReload == "true") {
-                  location.reload();
-                } else {
-                  $(`.formBox_${damageBoxId}`).hide();
-                }
+                location.reload();
               }
             }, 1500);
           }
@@ -717,7 +714,7 @@ if (manageDamageBtn) {
   $(".manageDamage").click(function (e) {
     e.preventDefault();
     activeDamageBoxId = $(this).attr("data-id");
-
+    $("#blockItemId").text(activeDamageBoxId);
     $(".popUpUpdateDamageForm")
       .find("input")
       .each(function () {
@@ -877,6 +874,7 @@ if (updateDamageBtn) {
           `Calculate: ${widthSizes} * ${heightSizes} = `,
           widthSizes * heightSizes
         );
+
         totalSizes.push(widthSizes * heightSizes);
         allFormData.push(formData);
         totatDamageCount++;

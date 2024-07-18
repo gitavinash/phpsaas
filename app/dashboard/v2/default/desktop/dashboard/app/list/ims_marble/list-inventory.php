@@ -31,20 +31,20 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 $blockSizeCalculation = '';
 
                 switch ($block_size_dimension) {
-                    case 'mm':
-                        $blockSizeCalculation = 'Millimeter';
+                    case 'sq. mm.':
+                        $blockSizeCalculation = 'Square Millimeter';
                         break;
-                    case 'cm':
-                        $blockSizeCalculation = 'Centimeter';
+                    case 'sq. cm.':
+                        $blockSizeCalculation = 'Square Centimeter';
                         break;
-                    case 'in':
-                        $blockSizeCalculation = 'Inches';
+                    case 'sq. in.':
+                        $blockSizeCalculation = 'Square Inches';
                         break;
-                    case 'mt':
-                        $blockSizeCalculation = 'Meter';
+                    case 'sq. mt.':
+                        $blockSizeCalculation = 'Square Meter';
                         break;
                     default:
-                        $blockSizeCalculation = 'Feet';
+                        $blockSizeCalculation = 'Square Feet';
                         break;
                 }
 
