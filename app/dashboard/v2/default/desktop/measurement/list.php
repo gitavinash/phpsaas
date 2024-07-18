@@ -20,7 +20,7 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Measurement</th>
-                        <th>Calvulation</th>
+                        <th>Calculation</th>
                         <th></th>
                     </tr>
                 </thead>

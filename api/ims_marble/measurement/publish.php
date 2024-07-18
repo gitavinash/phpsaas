@@ -7,7 +7,7 @@ $status = 'warning';
 $requiredFields = [
     'productType' => 'Product type is required',
     'measurementType' => 'Measurement type is required',
-    'calculationType' => 'Calvulation type is required',
+    'calculationType' => 'Calculation type is required',
 ];
 
 // Check required fields

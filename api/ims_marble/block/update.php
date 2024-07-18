@@ -41,64 +41,78 @@ if ($name != '') {
 }
 
 if (isset($validRequest)) {
-    require_once MODULES . 'imageUploader.php';
+    if ($checkBlock = mysqli_query($connection, "SELECT block_product_type FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+        if (mysqli_num_rows($checkBlock) != 0) {
+            extract(mysqli_fetch_assoc($checkBlock));
+            require_once MODULES . 'imageUploader.php';
 
-    if (!isset($image['featureImage'])) {
-        $featureImage = $oldFeatureImage;
-    }
-    if (isset($_FILES['gallery'])) {
-        require_once MODULES . 'galleryUploader.php';
-    } else {
-        $gallery = $oldGalleryImages;
-    }
-
-    // Check block code
-
-    if ($itemCode != $oldItemCode) {
-        $checkItemCode = mysqli_query($connection, "SELECT block_code FROM {$tableNamePrefix}block WHERE block_code='{$itemCode}' AND block_status=1 AND block_site_id=" . SITE_ID);
-        if (mysqli_num_rows($checkItemCode) == 0) {
-            $validBlockCode = true;
-        } else {
-            $httpStatus = 409;
-            $msg = 'Block code is already exist in records';
-        }
-    } else {
-        $validBlockCode = true;
-    }
-
-    if (isset($validBlockCode)) {
-
-        mysqli_query($connection, "START TRANSACTION");
-
-        $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_warehouse_id='{$warehouseId}', block_supplier_id='{$supplier}', block_title='{$name}', block_description='{$description}', block_feature_image='{$featureImage}', block_gallery='{$gallery}', block_code='{$itemCode}', block_thickness_size='{$thickness}', block_thickness_dimension='{$thicknessSize}', block_size_dimension='{$productType}', block_total_item='{$totalItem}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
-
-        if ($totalItem != $oldTotalItem) {
-
-            $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_status, block_item_created) VALUES";
-
-            $insertNewRecordsNumber = $totalItem - $oldTotalItem;
-
-            for ($i = 0; $i < $insertNewRecordsNumber; $i++) {
-                $insertItemQuery .= "({$blockId}, " . SITE_ID . ", " . USER_ID . ", 'ft', 0, now()),";
+            if (!isset($image['featureImage'])) {
+                $featureImage = $oldFeatureImage;
+            }
+            if (isset($_FILES['gallery'])) {
+                require_once MODULES . 'galleryUploader.php';
+            } else {
+                $gallery = $oldGalleryImages;
             }
 
-            $insertItemQuery = rtrim($insertItemQuery, ",");
+            // Check block code
 
-            $updateBlockItem = mysqli_query($connection, $insertItemQuery);
-        } else {
-            $updateBlockItem = true;
-        }
+            if ($itemCode != $oldItemCode) {
+                $checkItemCode = mysqli_query($connection, "SELECT block_product_type FROM {$tableNamePrefix}block WHERE block_code='{$itemCode}' AND block_status=1 AND block_site_id=" . SITE_ID);
+                if (mysqli_num_rows($checkItemCode) == 0) {
+                    $validBlockCode = true;
+                } else {
+                    $httpStatus = 409;
+                    $msg = 'Block code is already exist in records';
+                }
+            } else {
+                $validBlockCode = true;
+            }
 
-        if ($updateBlock && $updateBlockItem) {
-            $httpStatus = 201;
-            $status = 'success';
-            $msg = 'Block update successfully';
-            $productId = $blockId;
-            mysqli_query($connection, 'COMMIT');
+            if (isset($validBlockCode)) {
+
+                mysqli_query($connection, "START TRANSACTION");
+
+                $dimensions = constant(strtoupper('measurement_' . $productType));
+                extract(json_decode($dimensions, TRUE));
+
+                $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_warehouse_id='{$warehouseId}', block_supplier_id='{$supplier}', block_title='{$name}', block_description='{$description}', block_feature_image='{$featureImage}', block_gallery='{$gallery}', block_code='{$itemCode}', block_thickness_size='{$thickness}', block_thickness_dimension='{$thicknessSize}', block_product_type='{$productType}', block_size_dimension='{$calculationType}', block_total_item='{$totalItem}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
+
+                if ($totalItem != $oldTotalItem) {
+
+                    $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_status, block_item_created) VALUES";
+
+                    $insertNewRecordsNumber = $totalItem - $oldTotalItem;
+
+                    for ($i = 0; $i < $insertNewRecordsNumber; $i++) {
+                        $insertItemQuery .= "({$blockId}, " . SITE_ID . ", " . USER_ID . ", '{$measurementType}', 0, now()),";
+                    }
+
+                    $insertItemQuery = rtrim($insertItemQuery, ",");
+
+                    $updateBlockItem = mysqli_query($connection, $insertItemQuery);
+                } else {
+                    if ($block_product_type != $productType) {
+                        $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_dimension_type='{$measurementType}' WHERE block_item_parent_id='{$blockId}' AND block_item_site_id=" . SITE_ID);
+                    } else {
+                        $updateBlockItem = true;
+                    }
+                }
+
+                if ($updateBlock && $updateBlockItem) {
+                    $httpStatus = 201;
+                    $status = 'success';
+                    $msg = 'Block update successfully';
+                    $productId = $blockId;
+                    mysqli_query($connection, 'COMMIT');
+                } else {
+                    $status = 'error';
+                    $msg = ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : 'Something went wrong while trying to update block');
+                    mysqli_query($connection, 'ROLLBACK');
+                }
+            }
         } else {
-            $status = 'error';
-            $msg = 'Something went wrong while trying to update block';
-            mysqli_query($connection, 'ROLLBACK');
+            $msg = 'Invalid block request received';
         }
     }
 }

@@ -504,14 +504,10 @@ $("#addBlock").click(function (e) {
       if (itemCode != "") {
         if (totalItem != "") {
           if (thickness != "") {
-            if (blockSize != "") {
-              if (productType != "") {
-                submitRequest = true;
-              } else {
-                msg = "Kindly select product type";
-              }
+            if (productType != "") {
+              submitRequest = true;
             } else {
-              msg = "Kindly select block size calculation";
+              msg = "Kindly select product type";
             }
           } else {
             msg = "Kindly enter block item thickness";
@@ -632,6 +628,7 @@ $("#updateBlock").click(function (e) {
       contentType: false,
       encrypt: "multipart/form-data",
       success: function (successResponse) {
+        $("#updateBlock").show();
         popUpMessage("center", successResponse.msg, successResponse.status);
         if (successResponse.status == "success") {
           setTimeout(function () {
@@ -641,13 +638,13 @@ $("#updateBlock").click(function (e) {
         }
       },
       error: function (errorResponse) {
+        $("#updateBlock").show();
         console.log(`Error:`, errorResponse);
         popUpMessage(
           "center",
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
-        $("#updateBlock").show();
       },
     });
   }
