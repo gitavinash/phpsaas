@@ -110,7 +110,7 @@ if (isset($validId)) { ?>
     <div class="form-group">
         <select class="selectJS form-control" name="productType" id="productType">
             <?php
-                if ($measurementList = mysqli_query($connection, "SELECT site_configuration_key FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID)) {
+                if ($measurementList = mysqli_query($connection, "SELECT site_configuration_key FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID . " ORDER BY site_configuration_key ASC")) {
                     if (mysqli_num_rows($measurementList) != 0) {
                         while ($data = mysqli_fetch_assoc($measurementList)) {
                             $measurementName = ucwords(str_replace('measurement_', '', $data['site_configuration_key']));
