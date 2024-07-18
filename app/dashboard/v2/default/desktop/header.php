@@ -34,7 +34,7 @@ if (isset($daterange)) {
     }
     ?>
     <link rel="icon" href="<?php echo SITE_ICON ?>">
-    <title><?php echo $dashboardPageTitle . ' | ' . SITE_NAME; ?></title>
+    <title><?php echo str_replace('_', ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
     <!-- <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css"> -->
     <link rel='stylesheet'
         href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>

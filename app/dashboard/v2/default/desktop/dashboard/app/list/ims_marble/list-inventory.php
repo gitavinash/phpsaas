@@ -16,7 +16,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
     </thead>
     <?php
 
-    if ($site_access_type == 'administrator') {
+    if ($site_access_type != 'administrator') {
         $userFilter = 'AND block_user_id="' . USER_ID . '"';
     } else {
         $userFilter = '';

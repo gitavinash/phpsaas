@@ -486,7 +486,7 @@ $("#addBlock").click(function (e) {
   var itemCode = $("#itemCode").val();
   var totalItem = $("#totalItem").val();
   var thickness = $("#thickness").val();
-  var supplier = $("#supplier").val();
+  var productType = $("#productType").val();
 
   if (warehouseId == "select") {
     warehouseId = "";
@@ -505,7 +505,11 @@ $("#addBlock").click(function (e) {
         if (totalItem != "") {
           if (thickness != "") {
             if (blockSize != "") {
-              submitRequest = true;
+              if (productType != "") {
+                submitRequest = true;
+              } else {
+                msg = "Kindly select product type";
+              }
             } else {
               msg = "Kindly select block size calculation";
             }
@@ -574,7 +578,7 @@ $("#updateBlock").click(function (e) {
   var itemCode = $("#itemCode").val();
   var totalItem = $("#totalItem").val();
   var thickness = $("#thickness").val();
-  var supplier = $("#supplier").val();
+  var productType = $("#supplier").val();
 
   if (warehouseId == "select") {
     warehouseId = "";
@@ -592,7 +596,11 @@ $("#updateBlock").click(function (e) {
       if (itemCode != "") {
         if (totalItem != "") {
           if (thickness != "") {
-            submitRequest = true;
+            if (productType != "") {
+              submitRequest = true;
+            } else {
+              msg = "Kindly select product type";
+            }
           } else {
             msg = "Kindly enter block item thickness";
           }
@@ -917,3 +925,116 @@ if (updateDamageBtn) {
     });
   });
 }
+
+$("#addMeasurement").click(function (e) {
+  e.preventDefault();
+  $("#addMeasurement").hide();
+  var productType = $("#productType").val();
+  var measurementType = $("#measurementType").val();
+  var calculationType = $("#calculationType").val();
+  var submitRequest = false;
+
+  if (productType != "") {
+    if (measurementType != "") {
+      if (calculationType != "") {
+        submitRequest = true;
+      } else {
+        msg = "Select calculation type";
+      }
+    } else {
+      msg = "Select measurement type";
+    }
+  } else {
+    msg = "Enter name of product type";
+  }
+
+  if (submitRequest) {
+    var formData = $("#addNewMeasurementForm").serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/api/measurement/publish/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        console.log(`successResponse`, successResponse);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            const configurationId = btoa(successResponse.configurationId);
+            window.location.href = `/dashboard/measurement/update/?id=${configurationId}`;
+          }, 1500);
+        }
+        $("#addMeasurement").show();
+      },
+      error: function (errorResponse) {
+        $("#addMeasurement").show();
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  } else {
+    popUpMessage("center", msg, "warning");
+    $("#addMeasurement").show();
+  }
+});
+
+$("#updateMeasurement").click(function (e) {
+  e.preventDefault();
+  $("#updateMeasurement").hide();
+  var productType = $("#productType").val();
+  var measurementType = $("#measurementType").val();
+  var calculationType = $("#calculationType").val();
+  var submitRequest = false;
+
+  if (productType != "") {
+    if (measurementType != "") {
+      if (calculationType != "") {
+        submitRequest = true;
+      } else {
+        msg = "Select calculation type";
+      }
+    } else {
+      msg = "Select measurement type";
+    }
+  } else {
+    msg = "Enter name of product type";
+  }
+
+  if (submitRequest) {
+    var formData = $("#updateMeasurementForm").serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/api/measurement/update/",
+      dataType: "JSON",
+      data: formData,
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        console.log(`successResponse`, successResponse);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            window.location.href = `/dashboard/measurement/update/?id=${successResponse.configurationId}`;
+          }, 1500);
+        }
+        $("#updateMeasurement").show();
+      },
+      error: function (errorResponse) {
+        $("#updateMeasurement").show();
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  } else {
+    popUpMessage("center", msg, "warning");
+    $("#updateMeasurement").show();
+  }
+});

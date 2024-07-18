@@ -204,6 +204,22 @@ if ($site_access_type == 'administrator') { ?>
     </div>
 </li>
 
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/measurement/') !== false) ? 'class="active"' : '') ?>>
+    <a href="measurement/"><i class="fi fi-rr-measuring-tape"></i> Measurement</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="measurement/list/"><i class="fi-rr-apps-sort"></i> All measurements</a></li>
+            <li><a href="measurement/add/"><i class="fi fi-rr-add"></i> Add new measurement</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="measurement/list/"><i class="fi-rr-apps-sort"></i> All measurements</a></li>
+            <li><a href="measurement/add/"><i class="fi fi-rr-add"></i> Add new measurement</a></li>
+        </ul>
+    </div>
+</li>
+
 <?php
 }
 

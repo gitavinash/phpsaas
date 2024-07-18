@@ -13,7 +13,11 @@ if ($name != '') {
                 if ($oldTotalItem <= $totalItem) {
                     if ($thickness != '') {
                         if ($thicknessSize != '') {
-                            $validRequest = true;
+                            if ($productType != '') {
+                                $validRequest = true;
+                            } else {
+                                $msg = "kindly select product type";
+                            }
                         } else {
                             $msg = 'Kindly selext block item thickness size';
                         }
@@ -66,7 +70,7 @@ if (isset($validRequest)) {
 
         mysqli_query($connection, "START TRANSACTION");
 
-        $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_warehouse_id='{$warehouseId}', block_supplier_id='{$supplier}', block_title='{$name}', block_description='{$description}', block_feature_image='{$featureImage}', block_gallery='{$gallery}', block_code='{$itemCode}', block_thickness_size='{$thickness}', block_thickness_dimension='{$thicknessSize}', block_total_item='{$totalItem}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
+        $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_warehouse_id='{$warehouseId}', block_supplier_id='{$supplier}', block_title='{$name}', block_description='{$description}', block_feature_image='{$featureImage}', block_gallery='{$gallery}', block_code='{$itemCode}', block_thickness_size='{$thickness}', block_thickness_dimension='{$thicknessSize}', block_size_dimension='{$productType}', block_total_item='{$totalItem}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
 
         if ($totalItem != $oldTotalItem) {
 

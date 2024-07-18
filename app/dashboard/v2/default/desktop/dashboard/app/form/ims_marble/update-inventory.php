@@ -107,35 +107,24 @@ if (isset($validId)) { ?>
             </div>
         </div>
     </div>
-    <!-- <div class="full-width">
-        <div class="form-header" style="margin-bottom: 20px">
-            <h2>Enter block item details<di2>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <input id="thickness" name="thickness" type="text" />
-                <label class="form-lable" id="Label">Width<sup>*</sup></label>
-            </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <input id="thickness" name="thickness" type="text" />
-                <label class="form-lable" id="Label">Height<sup>*</sup></label>
-            </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <input id="thickness" name="thickness" type="text" />
-                <label class="form-lable" id="Label">Total item qty.<sup>*</sup></label>
-            </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <input id="thickness" name="thickness" type="text" />
-                <label class="form-lable" id="Label">Thickness<sup>*</sup></label>
-            </div>
-        </div>
-    </div> -->
+    <div class="form-group">
+        <select class="selectJS form-control" name="productType" id="productType">
+            <?php
+                if ($measurementList = mysqli_query($connection, "SELECT site_configuration_key FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID)) {
+                    if (mysqli_num_rows($measurementList) != 0) {
+                        while ($data = mysqli_fetch_assoc($measurementList)) {
+                            $measurementName = ucwords(str_replace('measurement_', '', $data['site_configuration_key']));
+                            echo "<option value='" . strtolower($measurementName) . "' " . (($block_size_dimension == strtolower($measurementName)) ? 'selected' : '') . " >{$measurementName}</option>";
+                        }
+                    } else {
+                        echo "<option>No product type measurement found</option>";
+                    }
+                }
+
+                ?>
+        </select>
+        <label class="form-lable" id="Label">Product type<sup>*</sup></label>
+    </div>
     <div class="form-group">
         <select class="selectJS form-control" name="supplier" id="supplier">
             <option value="select">Select supplier</option>
