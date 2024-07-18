@@ -7,77 +7,77 @@
     <title>Block slab measurment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
 
-        img {
-            max-height: 100px;
-        }
+    img {
+        max-height: 100px;
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            float: left;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        float: left;
+    }
 
-        th,
-        td {
-            border: 1px solid #000;
-            text-align: center;
-            padding: 8px;
-            width: 20%;
-            /* Each column will take up equal space */
-        }
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 8px;
+        width: auto;
+        /* Each column will take up equal space */
+    }
 
-        th {
-            background-color: #f2f2f2;
-        }
+    th {
+        background-color: #f2f2f2;
+    }
 
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-        tbody tr:hover {
-            background-color: #f1f1f1;
-        }
+    tbody tr:hover {
+        background-color: #f1f1f1;
+    }
 
-        a {
-            background-color: #4CAF50;
-            /* Green background */
-            border: none;
-            /* Remove borders */
-            color: white;
-            /* White text */
-            padding: 15px 32px;
-            /* Some padding */
-            text-align: center;
-            /* Center the text */
-            text-decoration: none;
-            /* Remove underline */
-            display: inline-block;
-            /* Get it to line up */
-            font-size: 16px;
-            /* Increase font size */
-            margin: 4px 2px;
-            /* Add some margin */
-            cursor: pointer;
-            /* Add a pointer cursor on hover */
-            border-radius: 12px;
-            /* Rounded corners */
-            transition: background-color 0.3s, transform 0.3s;
-            width: 96%;
-            box-sizing: border-box;
-            position: fixed;
-            bottom: 1rem;
-        }
+    a {
+        background-color: #4CAF50;
+        /* Green background */
+        border: none;
+        /* Remove borders */
+        color: white;
+        /* White text */
+        padding: 15px 32px;
+        /* Some padding */
+        text-align: center;
+        /* Center the text */
+        text-decoration: none;
+        /* Remove underline */
+        display: inline-block;
+        /* Get it to line up */
+        font-size: 16px;
+        /* Increase font size */
+        margin: 4px 2px;
+        /* Add some margin */
+        cursor: pointer;
+        /* Add a pointer cursor on hover */
+        border-radius: 12px;
+        /* Rounded corners */
+        transition: background-color 0.3s, transform 0.3s;
+        width: 96%;
+        box-sizing: border-box;
+        position: fixed;
+        bottom: 1rem;
+    }
     </style>
 </head>
 
@@ -95,62 +95,86 @@
                 while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
                     extract($slabSize);
                     if ($i == 1) {
+                        switch ($block_item_dimension_type) {
+                            case 'mm':
+                                $block_item_dimension_type = 'Millimeter';
+                                break;
+                            case 'cm':
+                                $block_item_dimension_type = 'Centimeter';
+                                break;
+                            case 'in':
+                                $block_item_dimension_type = 'Inches';
+                                break;
+                            case 'mt':
+                                $block_item_dimension_type = 'Meter';
+                                break;
+                            default:
+                                $block_item_dimension_type = 'Feet';
+                                break;
+                        }
+                        switch ($block_thickness_dimension) {
+                            case 'mm':
+                                $block_thickness_dimension = 'Millimeter';
+                                break;
+                            case 'cm':
+                                $block_thickness_dimension = 'Centimeter';
+                                break;
+                            case 'in':
+                                $block_thickness_dimension = 'Inches';
+                                break;
+                            case 'mt':
+                                $block_thickness_dimension = 'Meter';
+                                break;
+                            default:
+                                $block_thickness_dimension = 'Feet';
+                                break;
+                        }
+
+
+                        $measurementData = constant(strtoupper('measurement_' . $block_product_type));
+                        extract(json_decode($measurementData, TRUE));
+
+                        switch ($measurementType) {
+                            case 'sq. mm.':
+                                $measurementType = 'Square Millimeter';
+                                break;
+                            case 'sq. cm.':
+                                $measurementType = 'Square Centimeter';
+                                break;
+                            case 'sq. in.':
+                                $measurementType = 'Square Inches';
+                                break;
+                            case 'sq. mt.':
+                                $measurementType = 'Square Meter';
+                                break;
+                            default:
+                                $measurementType = 'Square Feet';
+                                break;
+                        }
                         echo "<table>";
                         echo "<tr>
-                        <td colspan=5><img src='" . SITE_LOGO . "'></td>
+                        <td colspan=6><img src='" . SITE_LOGO . "'></td>
                         </tr>";
                         echo "<tr>
-                        <td colspan=5><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
+                        <td colspan=6><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
                         </tr>";
                         echo "<tr>
                         <th>S no.</th>
-                        <th>Width</th>
-                        <th>Height</th>
-                        <th>Thickness</th>
-                        <th>Total</th>
+                        <th>Width ( {$block_item_dimension_type} )</th>
+                        <th>Height ( {$block_item_dimension_type} )</th>
+                        <th>Thickness ( {$block_thickness_dimension} )</th>
+                        <th>Gross Size ( $measurementType )</th>
+                        <th>Net Size ( $measurementType )</th>
                     </tr>";
-                    }
-                    switch ($block_item_dimension_type) {
-                        case 'mm':
-                            $block_item_dimension_type = 'Millimeter';
-                            break;
-                        case 'cm':
-                            $block_item_dimension_type = 'Centimeter';
-                            break;
-                        case 'in':
-                            $block_item_dimension_type = 'Inches';
-                            break;
-                        case 'mt':
-                            $block_item_dimension_type = 'Meter';
-                            break;
-                        default:
-                            $block_item_dimension_type = 'Feet';
-                            break;
-                    }
-                    switch ($block_thickness_dimension) {
-                        case 'mm':
-                            $block_thickness_dimension = 'Millimeter';
-                            break;
-                        case 'cm':
-                            $block_thickness_dimension = 'Centimeter';
-                            break;
-                        case 'in':
-                            $block_thickness_dimension = 'Inches';
-                            break;
-                        case 'mt':
-                            $block_thickness_dimension = 'Meter';
-                            break;
-                        default:
-                            $block_thickness_dimension = 'Feet';
-                            break;
                     }
                     echo "
                     <tr>
                     <td>{$i}</td>
-                    <td>{$block_item_width} {$block_item_dimension_type}</td>
-                    <td>{$block_item_height} {$block_item_dimension_type}</td>
-                    <td>{$block_thickness_size} {$block_thickness_dimension}</td>
-                    <td>" . $block_item_width * $block_item_height . " {$block_item_dimension_type}</td>
+                    <td>{$block_item_width}</td>
+                    <td>{$block_item_height}</td>
+                    <td>{$block_thickness_size}</td>
+                    <td>{$block_gross_size}</td>
+                    <td>{$block_net_size}</td>
                     </tr>
                 ";
                     $i++;
@@ -166,10 +190,10 @@
     }
     ?>
     <script>
-        document.getElementById('download').addEventListener('click', function() {
-            const element = document.getElementById('content');
-            html2pdf().from(element).save();
-        });
+    document.getElementById('download').addEventListener('click', function() {
+        const element = document.getElementById('content');
+        html2pdf().from(element).save();
+    });
     </script>
 </body>
 
