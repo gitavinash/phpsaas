@@ -153,32 +153,39 @@
                         }
                         echo "<table>";
                         echo "<tr>
-                        <td colspan=6><img src='" . SITE_LOGO . "'></td>
+                        <td colspan=4><img src='" . SITE_LOGO . "'></td>
                         </tr>";
                         echo "<tr>
-                        <td colspan=6><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
+                        <td colspan=4><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
                         </tr>";
                         echo "<tr>
                         <th>S no.</th>
                         <th>Width ( {$block_item_dimension_type} )</th>
                         <th>Height ( {$block_item_dimension_type} )</th>
                         <th>Thickness ( {$block_thickness_dimension} )</th>
-                        <th>Gross Size ( $measurementType )</th>
-                        <th>Net Size ( $measurementType )</th>
                     </tr>";
                     }
                     echo "
                     <tr>
-                    <td>{$i}</td>
-                    <td>{$block_item_width}</td>
-                    <td>{$block_item_height}</td>
-                    <td>{$block_thickness_size}</td>
-                    <td>{$block_gross_size}</td>
-                    <td>{$block_net_size}</td>
+                        <td>{$i}</td>
+                        <td>{$block_item_width}</td>
+                        <td>{$block_item_height}</td>
+                        <td>{$block_thickness_size}</td>
                     </tr>
                 ";
                     $i++;
                 }
+
+                echo "
+                    <tr>
+                        <td colspan='2' >Gross Size ( $measurementType )</td>
+                        <td colspan='2'>{$block_gross_size}</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2' >Gross Size ( $measurementType )</td>
+                        <td colspan='2'>{$block_net_size}</td>
+                    </tr>
+                    ";
                 if ($i == 1) {
                     echo "</table>";
                 }
