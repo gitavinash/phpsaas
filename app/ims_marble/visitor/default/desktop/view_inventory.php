@@ -160,9 +160,9 @@
                         </tr>";
                         echo "<tr>
                         <th>S no.</th>
-                        <th>Width ( {$block_item_dimension_type} )</th>
-                        <th>Height ( {$block_item_dimension_type} )</th>
-                        <th>Thickness ( {$block_thickness_dimension} )</th>
+                        <th>Width<br />( {$block_item_dimension_type} )</th>
+                        <th>Height<br />( {$block_item_dimension_type} )</th>
+                        <th>Thickness<br />( {$block_thickness_dimension} )</th>
                     </tr>";
                     }
                     echo "
