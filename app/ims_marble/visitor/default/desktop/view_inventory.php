@@ -10,6 +10,7 @@
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
+        font-size: 0.8rem;
     }
 
     img {
@@ -17,6 +18,7 @@
     }
 
     h1 {
+        font-size: 1.5rem !important;
         text-align: center;
         margin-bottom: 20px;
     }
@@ -95,83 +97,115 @@
                 while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
                     extract($slabSize);
                     if ($i == 1) {
-                        // switch ($block_item_dimension_type) {
-                        //     case 'mm':
-                        //         $block_item_dimension_type = 'Millimeter';
-                        //         break;
-                        //     case 'cm':
-                        //         $block_item_dimension_type = 'Centimeter';
-                        //         break;
-                        //     case 'in':
-                        //         $block_item_dimension_type = 'Inches';
-                        //         break;
-                        //     case 'mt':
-                        //         $block_item_dimension_type = 'Meter';
-                        //         break;
-                        //     default:
-                        //         $block_item_dimension_type = 'Feet';
-                        //         break;
-                        // }
-                        // switch ($block_thickness_dimension) {
-                        //     case 'mm':
-                        //         $block_thickness_dimension = 'Millimeter';
-                        //         break;
-                        //     case 'cm':
-                        //         $block_thickness_dimension = 'Centimeter';
-                        //         break;
-                        //     case 'in':
-                        //         $block_thickness_dimension = 'Inches';
-                        //         break;
-                        //     case 'mt':
-                        //         $block_thickness_dimension = 'Meter';
-                        //         break;
-                        //     default:
-                        //         $block_thickness_dimension = 'Feet';
-                        //         break;
-                        // }
-
 
                         $measurementData = constant(strtoupper('measurement_' . $block_product_type));
                         extract(json_decode($measurementData, TRUE));
 
-                        // switch ($measurementType) {
-                        //     case 'sq. mm.':
-                        //         $measurementType = 'Square Millimeter';
-                        //         break;
-                        //     case 'sq. cm.':
-                        //         $measurementType = 'Square Centimeter';
-                        //         break;
-                        //     case 'sq. in.':
-                        //         $measurementType = 'Square Inches';
-                        //         break;
-                        //     case 'sq. mt.':
-                        //         $measurementType = 'Square Meter';
-                        //         break;
-                        //     default:
-                        //         $measurementType = 'Square Feet';
-                        //         break;
-                        // }
                         echo "<table>";
                         echo "<tr>
-                        <td colspan=4><img src='" . SITE_LOGO . "'></td>
+                        <td colspan=5><img src='" . SITE_LOGO . "'></td>
                         </tr>";
                         echo "<tr>
-                        <td colspan=4><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
+                        <td colspan=5><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
                         </tr>";
                         echo "<tr>
                         <th>S no.</th>
                         <th>Width<br />({$block_item_dimension_type})</th>
                         <th>Height<br />({$block_item_dimension_type})</th>
                         <th>Thickness<br />({$block_thickness_dimension})</th>
-                        <th>Slab net size</th>
+                        <th>Net size<br/>({$calculationType})</th>
                     </tr>";
                     }
+
+                    $totalArea = $block_item_width * $block_item_height;
+
+                    switch ([$measurementType, $calculationType]) {
+
+                            // Centimeter
+
+                        case ['cm', 'sq. mm.']:
+                            $totalArea = $totalArea * 100;
+                            break;
+                        case ['cm', 'sq. in.']:
+                            $totalArea = $totalArea * 0.15500031;
+                            break;
+                        case ['cm', 'sq. ft.']:
+                            $totalArea = $totalArea * 0.001076391;
+                            break;
+                        case ['cm', 'sq. mt.']:
+                            $totalArea = $totalArea * 0.0001;
+                            break;
+
+                            // Millimeter
+
+                        case ['mm', 'sq. cm.']:
+                            $totalArea = $totalArea * 0.01;
+                            break;
+                        case ['mm', 'sq. in.']:
+                            $totalArea = $totalArea * 0.0015500031;
+                            break;
+                        case ['mm', 'sq. ft.']:
+                            $totalArea = $totalArea * 0.00001076391;
+                            break;
+                        case ['mm', 'sq. mt.']:
+                            $totalArea = $totalArea * 0.000001;
+                            break;
+
+                            // Inches
+
+                        case ['in', 'sq. cm.']:
+                            $totalArea = $totalArea * 6.4516;
+                            break;
+                        case ['in', 'sq. mm.']:
+                            $totalArea = $totalArea * 645.16;
+                            break;
+                        case ['in', 'sq. ft.']:
+                            $totalArea = $totalArea * 0.00694444;
+                            break;
+                        case ['in', 'sq. mt.']:
+                            $totalArea = $totalArea * 0.00064516;
+                            break;
+
+                            // Feet
+
+                        case ['ft', 'sq. cm.']:
+                            $totalArea = $totalArea * 929.0304;
+                            break;
+                        case ['ft', 'sq. mm.']:
+                            $totalArea = $totalArea * 92903.04;
+                            break;
+                        case ['ft', 'sq. in.']:
+                            $totalArea = $totalArea * 144;
+                            break;
+                        case ['ft', 'sq. mt.']:
+                            $totalArea = $totalArea * 0.09290304;
+                            break;
+
+                            // Meter
+
+                        case ['mt', 'sq. cm.']:
+                            $totalArea = $totalArea * 10000;
+                            break;
+                        case ['mt', 'sq. mm.']:
+                            $totalArea = $totalArea * 1000000;
+                            break;
+                        case ['mt', 'sq. in.']:
+                            $totalArea = $totalArea * 1550.0031;
+                            break;
+                        case ['mt', 'sq. ft.']:
+                            $totalArea = $totalArea * 10.7639;
+                            break;
+                    }
+
+                    $totalArea = number_format((float)$totalArea, 2, '.', '');
+
                     echo "
                     <tr>
                         <td>{$i}</td>
                         <td>{$block_item_width}</td>
                         <td>{$block_item_height}</td>
                         <td>{$block_thickness_size}</td>
+                        <td>{$totalArea}</td>
                     </tr>
                 ";
                     $i++;
@@ -179,12 +213,12 @@
 
                 echo "
                     <tr>
-                        <td colspan='3' ><strong>Gross Size ( $measurementType )</strong></td>
-                        <td colspan='1'>{$block_gross_size}</td>
+                        <td colspan='3' ><strong>Block Gross Size ( $calculationType )</strong></td>
+                        <td colspan='2'>{$block_gross_size}</td>
                     </tr>
                     <tr>
-                        <td colspan='3' ><strong>Net Size ( $measurementType )</strong></td>
-                        <td colspan='1'>{$block_net_size}</td>
+                        <td colspan='3' ><strong>Block Net Size ( $calculationType )</strong></td>
+                        <td colspan='2'>{$block_net_size}</td>
                     </tr>
                     ";
                 if ($i == 1) {
