@@ -178,11 +178,11 @@
 
                 echo "
                     <tr>
-                        <td colspan='3' >Gross Size ( $measurementType )</td>
+                        <td colspan='3' ><strong>Gross Size ( $measurementType )</strong></td>
                         <td colspan='1'>{$block_gross_size}</td>
                     </tr>
                     <tr>
-                        <td colspan='3' >Gross Size ( $measurementType )</td>
+                        <td colspan='3' ><strong>Net Size ( $measurementType )</strong></td>
                         <td colspan='1'>{$block_net_size}</td>
                     </tr>
                     ";
