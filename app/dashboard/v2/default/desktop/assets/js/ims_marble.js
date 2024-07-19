@@ -1,6 +1,8 @@
 var activeDamageBoxId = 0;
 let count = 1;
 
+var oldJsonObject = "";
+
 function convertAreatoFeet(size, type) {
   console.log(`Type: `, type);
   switch (type) {
@@ -725,6 +727,7 @@ if (manageDamageBtn) {
     $("#damageFormPrevious").empty();
     $(".popUpUpdateDamageFormInputs").empty();
     var localValues = localStorage.getItem(`blockItem_${activeDamageBoxId}`);
+    oldJsonObject = localValues;
     if (localValues != "") {
       localValues = JSON.parse(localValues);
       if (Array.isArray(localValues)) {
@@ -882,6 +885,12 @@ if (updateDamageBtn) {
     });
     allFormData = JSON.stringify(allFormData);
 
+    if (allFormData == oldJsonObject) {
+      var sameJson = true;
+    } else {
+      var sameJson = false;
+    }
+
     totalSizes = totalSizes.reduce(
       (total, width) => total + parseFloat(width),
       0
@@ -897,6 +906,7 @@ if (updateDamageBtn) {
         damageAreaSizeType: "ft",
         damageArea: allFormData,
         totatDamageCount: totatDamageCount,
+        sameJson,
       },
       success: function (successResponse) {
         $("#updateDamage").show();
