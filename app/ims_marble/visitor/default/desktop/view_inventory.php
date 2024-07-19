@@ -75,7 +75,7 @@
         border-radius: 12px;
         /* Rounded corners */
         transition: background-color 0.3s, transform 0.3s;
-        width: 96%;
+        width: 90%;
         box-sizing: border-box;
         position: fixed;
         bottom: 1rem;
