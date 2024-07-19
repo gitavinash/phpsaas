@@ -178,12 +178,12 @@
 
                 echo "
                     <tr>
-                        <td colspan='2' >Gross Size ( $measurementType )</td>
-                        <td colspan='2'>{$block_gross_size}</td>
+                        <td colspan='3' >Gross Size ( $measurementType )</td>
+                        <td colspan='1'>{$block_gross_size}</td>
                     </tr>
                     <tr>
-                        <td colspan='2' >Gross Size ( $measurementType )</td>
-                        <td colspan='2'>{$block_net_size}</td>
+                        <td colspan='3' >Gross Size ( $measurementType )</td>
+                        <td colspan='1'>{$block_net_size}</td>
                     </tr>
                     ";
                 if ($i == 1) {
