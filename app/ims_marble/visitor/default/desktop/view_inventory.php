@@ -95,62 +95,62 @@
                 while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
                     extract($slabSize);
                     if ($i == 1) {
-                        switch ($block_item_dimension_type) {
-                            case 'mm':
-                                $block_item_dimension_type = 'Millimeter';
-                                break;
-                            case 'cm':
-                                $block_item_dimension_type = 'Centimeter';
-                                break;
-                            case 'in':
-                                $block_item_dimension_type = 'Inches';
-                                break;
-                            case 'mt':
-                                $block_item_dimension_type = 'Meter';
-                                break;
-                            default:
-                                $block_item_dimension_type = 'Feet';
-                                break;
-                        }
-                        switch ($block_thickness_dimension) {
-                            case 'mm':
-                                $block_thickness_dimension = 'Millimeter';
-                                break;
-                            case 'cm':
-                                $block_thickness_dimension = 'Centimeter';
-                                break;
-                            case 'in':
-                                $block_thickness_dimension = 'Inches';
-                                break;
-                            case 'mt':
-                                $block_thickness_dimension = 'Meter';
-                                break;
-                            default:
-                                $block_thickness_dimension = 'Feet';
-                                break;
-                        }
+                        // switch ($block_item_dimension_type) {
+                        //     case 'mm':
+                        //         $block_item_dimension_type = 'Millimeter';
+                        //         break;
+                        //     case 'cm':
+                        //         $block_item_dimension_type = 'Centimeter';
+                        //         break;
+                        //     case 'in':
+                        //         $block_item_dimension_type = 'Inches';
+                        //         break;
+                        //     case 'mt':
+                        //         $block_item_dimension_type = 'Meter';
+                        //         break;
+                        //     default:
+                        //         $block_item_dimension_type = 'Feet';
+                        //         break;
+                        // }
+                        // switch ($block_thickness_dimension) {
+                        //     case 'mm':
+                        //         $block_thickness_dimension = 'Millimeter';
+                        //         break;
+                        //     case 'cm':
+                        //         $block_thickness_dimension = 'Centimeter';
+                        //         break;
+                        //     case 'in':
+                        //         $block_thickness_dimension = 'Inches';
+                        //         break;
+                        //     case 'mt':
+                        //         $block_thickness_dimension = 'Meter';
+                        //         break;
+                        //     default:
+                        //         $block_thickness_dimension = 'Feet';
+                        //         break;
+                        // }
 
 
                         $measurementData = constant(strtoupper('measurement_' . $block_product_type));
                         extract(json_decode($measurementData, TRUE));
 
-                        switch ($measurementType) {
-                            case 'sq. mm.':
-                                $measurementType = 'Square Millimeter';
-                                break;
-                            case 'sq. cm.':
-                                $measurementType = 'Square Centimeter';
-                                break;
-                            case 'sq. in.':
-                                $measurementType = 'Square Inches';
-                                break;
-                            case 'sq. mt.':
-                                $measurementType = 'Square Meter';
-                                break;
-                            default:
-                                $measurementType = 'Square Feet';
-                                break;
-                        }
+                        // switch ($measurementType) {
+                        //     case 'sq. mm.':
+                        //         $measurementType = 'Square Millimeter';
+                        //         break;
+                        //     case 'sq. cm.':
+                        //         $measurementType = 'Square Centimeter';
+                        //         break;
+                        //     case 'sq. in.':
+                        //         $measurementType = 'Square Inches';
+                        //         break;
+                        //     case 'sq. mt.':
+                        //         $measurementType = 'Square Meter';
+                        //         break;
+                        //     default:
+                        //         $measurementType = 'Square Feet';
+                        //         break;
+                        // }
                         echo "<table>";
                         echo "<tr>
                         <td colspan=4><img src='" . SITE_LOGO . "'></td>
