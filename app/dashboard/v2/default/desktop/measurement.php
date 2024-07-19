@@ -17,7 +17,7 @@
         <a href="measurement/add/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
-                    <i class="fi-rr-measurement-add"></i>
+                    <i class="fi-rr-add"></i>
                 </div>
                 <div class="about-feature">
                     <h3>Add new measurement</h3>
