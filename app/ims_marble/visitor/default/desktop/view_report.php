@@ -58,32 +58,18 @@ require_once LOGIN_CHECK;
 
     a {
         background-color: #4CAF50;
-        /* Green background */
-        border: none;
-        /* Remove borders */
-        color: white;
-        /* White text */
-        padding: 15px 32px;
-        /* Some padding */
-        text-align: center;
-        /* Center the text */
-        text-decoration: none;
-        /* Remove underline */
-        display: inline-block;
-        /* Get it to line up */
-        font-size: 16px;
-        /* Increase font size */
-        margin: 4px 2px;
-        /* Add some margin */
         cursor: pointer;
-        /* Add a pointer cursor on hover */
-        border-radius: 12px;
-        /* Rounded corners */
         transition: background-color 0.3s, transform 0.3s;
-        width: 90%;
+        float: left;
+        width: 100%;
+        text-align: center;
+        padding: 1rem 1rem;
         box-sizing: border-box;
-        position: fixed;
-        bottom: 1rem;
+        border-radius: 7px;
+        border: none;
+        font-size: 1rem;
+        color: #fff;
+        letter-spacing: 1px;
     }
     </style>
 </head>
@@ -96,7 +82,7 @@ require_once LOGIN_CHECK;
 
     if (isset($id)) {
         $blockId = base64_decode($id);
-        if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status=1 AND block_item_site_id=" . SITE_ID)) {
+        if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status=1 AND block_item_site_id=" . SITE_ID . " ORDER BY block_item_id ASC")) {
             if (mysqli_num_rows($checkBlock) > 0) {
                 $i = 1;
                 while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
@@ -108,18 +94,26 @@ require_once LOGIN_CHECK;
 
                         echo "<table>";
                         echo "<tr>
-                        <td colspan=5><img src='" . SITE_LOGO . "'></td>
+                        <td colspan=100><img src='" . SITE_LOGO . "'></td>
                         </tr>";
                         echo "<tr>
-                        <td colspan=5><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
+                        <td colspan=100><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
                         </tr>";
-                        echo "<tr>
-                        <th>S no.</th>
-                        <th>Width<br />({$block_item_dimension_type})</th>
-                        <th>Height<br />({$block_item_dimension_type})</th>
-                        <th>Thickness<br />({$block_thickness_dimension})</th>
-                        <th>Net size<br/>({$calculationType})</th>
-                    </tr>";
+                        echo "
+                        <tr>
+                            <th rowspan=2>S no.</th>
+                            <th rowspan=2>Width<br />({$block_item_dimension_type})</th>
+                            <th rowspan=2>Height<br />({$block_item_dimension_type})</th>
+                            <th rowspan=2>Thickness<br />({$block_thickness_dimension})</th>
+                            <th rowspan=2>Net size<br/>({$calculationType})</th>
+                            <th colspan=100>Damage Area</th>
+                        </tr>
+                        <tr>
+                            <th>Width<br />({$block_item_dimension_type})</th>
+                            <th>Height<br />({$block_item_dimension_type})</th>
+                            <th colspan=100>Net size<br/>({$calculationType})</th>
+                        </tr>
+                    ";
                     }
 
                     $totalArea = $block_item_width * $block_item_height;
@@ -211,25 +205,43 @@ require_once LOGIN_CHECK;
                         <td>{$block_item_height}</td>
                         <td>{$block_thickness_size}</td>
                         <td>{$totalArea}</td>
-                    </tr>
-                ";
+                    ";
+
+                    if ($block_item_damage_area != '') {
+                        $damageItems = json_decode($block_item_damage_area, TRUE);
+                        for ($j = 0; $j < sizeof($damageItems); $j++) {
+                            extract($damageItems[0]);
+                            echo "<td>{$damageAreaWidth}</td>";
+                            echo "<td>{$damageAreaHeight}</td>";
+                        }
+                    }
+                    echo "</tr>";
                     $i++;
                 }
 
                 echo "
                     <tr>
-                        <td colspan='3' ><strong>Block Gross Size ( $calculationType )</strong></td>
-                        <td colspan='2'>{$block_gross_size}</td>
+                        <td colspan='3' style='text-align:right' ><strong>Block Gross Size ( $calculationType )</strong></td>
+                        <td colspan='2' style='text-align:left' >{$block_gross_size}</td>
+                        <td colspan=100 ></td>
                     </tr>
                     <tr>
-                        <td colspan='3' ><strong>Block Net Size ( $calculationType )</strong></td>
-                        <td colspan='2'>{$block_net_size}</td>
+                        <td colspan='3' style='text-align:right' ><strong>Block Damage Size ( $calculationType )</strong></td>
+                        <td colspan='2' style='text-align:left' >{$block_damage_size}</td>
+                        <td colspan=100 ></td>
+                    </tr>
+                    <tr>
+                        <td colspan='3' style='text-align:right' ><strong>Block Net Size ( $calculationType )</strong></td>
+                        <td colspan='2' style='text-align:left' >{$block_net_size}</td>
+                        <td colspan=100 ></td>
                     </tr>
                     ";
+
                 if ($i == 1) {
-                    echo "</table>";
+                    echo "
+                    </table>
+                    ";
                 }
-                echo "<a id='download'>Download measurements as PDF</a>";
             }
         }
     } else {

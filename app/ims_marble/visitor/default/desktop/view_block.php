@@ -48,9 +48,27 @@ if (isset($showPage)) { ?>
         color: #333;
     }
 
+    p {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0 auto;
+    }
+
+    p strong {
+        font-size: 0.8rem;
+        padding: 0;
+        margin: 0 auto;
+    }
+
     strong {
         font-weight: 600;
         color: dimgray;
+    }
+
+    .description {
+        float: left;
+        margin-top: 5px;
+        margin-bottom: 1rem;
     }
 
     .companyLogo img {
@@ -143,7 +161,7 @@ if (isset($showPage)) { ?>
             <div class="title">
                 <p><strong>Name</strong></p>
             </div>
-            <div class="Description">
+            <div class="description">
                 <p><?php echo $block_title ?></p>
             </div>
         </div>
@@ -151,7 +169,7 @@ if (isset($showPage)) { ?>
             <div class="title">
                 <p><strong>Code</strong></p>
             </div>
-            <div class="Description">
+            <div class="description">
                 <p><?php echo $block_code ?></p>
             </div>
         </div>
@@ -162,7 +180,7 @@ if (isset($showPage)) { ?>
             <div class="title">
                 <p><strong>Intro</strong></p>
             </div>
-            <div class="Description">
+            <div class="description">
                 <p><?php echo $block_description ?></p>
             </div>
         </div>
@@ -174,10 +192,60 @@ if (isset($showPage)) { ?>
             <div class="title">
                 <p><strong>Total items</strong></p>
             </div>
-            <div class="Description">
+            <div class="description">
                 <p><?php echo (($block_total_item == '') ? 0 : $block_total_item) ?> Pcs</p>
             </div>
         </div>
+        <div class="dataRow">
+            <div class="title">
+                <p><strong>Gross size</strong></p>
+            </div>
+            <div class="description">
+                <p><?php echo $block_gross_size . ' ' . $block_size_dimension ?></p>
+            </div>
+        </div>
+        <div class="dataRow">
+            <div class="title">
+                <p><strong>Net size</strong></p>
+            </div>
+            <div class="description">
+                <p><?php echo $block_net_size . ' ' . $block_size_dimension ?></p>
+            </div>
+        </div>
+        <div class="dataRow">
+            <div class="title">
+                <p><strong>Thickness</strong></p>
+            </div>
+            <div class="description">
+                <p><?php echo $block_thickness_size . ' ' . $block_thickness_dimension; ?>
+                </p>
+            </div>
+        </div>
+        <?php
+
+            if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status=1 AND block_item_site_id=" . SITE_ID . " ORDER BY block_item_id ASC LIMIT 0,1 ")) {
+                if (mysqli_num_rows($checkBlock) != 0) {
+                    while ($blockItemData = mysqli_fetch_assoc($checkBlock)) {
+                        extract($blockItemData);
+            ?>
+
+        <div class="dataRow">
+            <div class="title">
+                <p><strong>Slab Dimension</strong></p>
+            </div>
+            <div class="description">
+                <p><?php echo $block_item_width . " {$block_item_dimension_type} x " . $block_item_height . " {$block_item_dimension_type}" ?>
+                </p>
+            </div>
+        </div>
+        <?php
+                    }
+                }
+            } else {
+                echo mysqli_error($connection);
+            }
+
+            ?>
     </div>
     <div class="dataBox" id="blockGallery">
 
@@ -188,9 +256,13 @@ if (isset($showPage)) { ?>
         </div>
         <div class="gallery">
             <?php
-                $block_gallery = json_decode($block_gallery, true);
-                for ($i = 0; $i < sizeof($block_gallery); $i++) {
-                    echo "<img src='{$block_gallery[$i]['path']}' class='preview thumbnail' >";
+                if ($block_gallery != '') {
+                    $block_gallery = json_decode($block_gallery, true);
+                    for ($i = 0; $i < sizeof($block_gallery); $i++) {
+                        echo "<img src='{$block_gallery[$i]['path']}' class='preview thumbnail' >";
+                    }
+                } else {
+                    echo "<p>No image found</p>";
                 }
                 ?>
         </div>

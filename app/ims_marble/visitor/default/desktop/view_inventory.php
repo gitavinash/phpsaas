@@ -53,32 +53,18 @@
 
     a {
         background-color: #4CAF50;
-        /* Green background */
-        border: none;
-        /* Remove borders */
-        color: white;
-        /* White text */
-        padding: 15px 32px;
-        /* Some padding */
-        text-align: center;
-        /* Center the text */
-        text-decoration: none;
-        /* Remove underline */
-        display: inline-block;
-        /* Get it to line up */
-        font-size: 16px;
-        /* Increase font size */
-        margin: 4px 2px;
-        /* Add some margin */
         cursor: pointer;
-        /* Add a pointer cursor on hover */
-        border-radius: 12px;
-        /* Rounded corners */
         transition: background-color 0.3s, transform 0.3s;
-        width: 90%;
+        float: left;
+        width: 100%;
+        text-align: center;
+        padding: 1rem 1rem;
         box-sizing: border-box;
-        position: fixed;
-        bottom: 1rem;
+        border-radius: 7px;
+        border: none;
+        font-size: 1rem;
+        color: #fff;
+        letter-spacing: 1px;
     }
     </style>
 </head>
@@ -220,11 +206,15 @@
                         <td colspan='3' ><strong>Block Net Size ( $calculationType )</strong></td>
                         <td colspan='2'>{$block_net_size}</td>
                     </tr>
+                    <tr>
+                        <td colspan=100>
+                            <a id='download'>Download measurements as PDF</a>
+                        </td>
+                    </tr>
                     ";
                 if ($i == 1) {
                     echo "</table>";
                 }
-                echo "<a id='download'>Download measurements as PDF</a>";
             }
         }
     } else {
