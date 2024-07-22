@@ -459,25 +459,30 @@ $(document).ready(function () {
     formData.push({ name: "action", value: "generate" });
     formData.push({ name: "order", value: $("#orderId").val() });
     formData.push({ name: "paymentMode", value: $("#paymentMode").val() });
-    formData.push({ name: "amount", value: totalOrdervalue });
+    formData.push({ name: "amount", value: totalAmount });
     formData.push({ name: "currency", value: "INR" });
 
-    $.ajax({
-      type: "POST",
-      dataType: "json",
-      data: formData,
-      success: function (data) {
-        if (data.status == "success") {
-          window.location.href = data.url;
-        } else {
-          console.log(`Success : `, data);
+    if (totalAmount != 0) {
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: formData,
+        success: function (data) {
+          if (data.status == "success") {
+            window.location.href = data.url;
+          } else {
+            console.log(`Success : `, data);
+            $("#processToPaymentCustom").show();
+          }
+        },
+        error: function (data) {
+          console.log(`error : `, data);
           $("#processToPaymentCustom").show();
-        }
-      },
-      error: function (data) {
-        console.log(`error : `, data);
-        $("#processToPaymentCustom").show();
-      },
-    });
+        },
+      });
+    } else {
+      alert("Stamp amount is wrong");
+      $("#processToPaymentCustom").show();
+    }
   });
 });
