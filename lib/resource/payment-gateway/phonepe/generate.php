@@ -1,13 +1,13 @@
 <?php
 
 if (DEVELOPMENT_MODE == true) {
-    $phonePeEndPoint = 'https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay';
+    $phonePeEndPoint = 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 } else {
     $phonePeEndPoint = 'https://api.phonepe.com/apis/hermes/pg/v1/pay';
 }
 
-$redirectUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id).'&redirectTo='.$redirect;
-$callbackUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id).'&redirectTo='.$redirect;
+$redirectUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id) . '&redirectTo=' . $redirect;
+$callbackUrl = SITE_URL . '/payment/status/?transactionId=' . base64_encode($order_id) . '&redirectTo=' . $redirect;
 
 $requestBody = json_encode(array(
     'merchantId' => PG_MERCHANT_ID,
@@ -61,8 +61,12 @@ if ($response['code'] == 'PAYMENT_INITIATED') {
     $clientRedirectUrl = $response['data']['instrumentResponse']['redirectInfo']['url'];
     header("Location: " . $clientRedirectUrl, TRUE, 301);
 } else {
-    echo "Something went wrong while redirection to payment gateway.";
     if (DEVELOPMENT_MODE == true) {
+        echo "Encode request body : " . $encodeRequestBody . '<br />';
+        echo "xVerify request body : " . $xVerify;
+        print_r($response);
+    } else {
+        echo "Something went wrong while redirection to payment gateway.";
         echo "Encode request body : " . $encodeRequestBody . '<br />';
         echo "xVerify request body : " . $xVerify;
         print_r($response);
