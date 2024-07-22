@@ -11,17 +11,22 @@ if (isset($id)) {
     switch ($orderType) {
 
         case 'link':
-            $query = $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND order_cart_session_id=cart_session_id AND cart_status=0";
+            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND order_cart_session_id=cart_session_id AND cart_status=0 ORDER BY cart_updated DESC LIMIT 0,1";
             $cartProduct = 'Payment link';
             break;
 
+        case 'enquiry':
+            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND order_cart_session_id=cart_session_id AND cart_status=0 ORDER BY cart_updated DESC LIMIT 0,1";
+            $cartProduct = '';
+            break;
+
         case 'booking':
-            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id";
+            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id ORDER BY cart_updated DESC LIMIT 0,1";
             $cartProduct = 'Online booking';
             break;
 
         default:
-            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id";
+            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id ORDER BY cart_updated DESC LIMIT 0,1";
             break;
     }
 
@@ -45,6 +50,8 @@ if (isset($id)) {
 
                     extract($orderMetas);
                 }
+            } else {
+                $msg = "Something went wrong while updating the order status";
             }
 
             $paymentAmount = $order_total_price + ((isset($deliveryFees)) ? $deliveryFees : 0);
@@ -66,10 +73,12 @@ if (isset($id)) {
             $msg = 'Invalid Transactional ID';
         }
     } else {
-
         $msg = 'Something is wrong while fetching order details';
     }
 } else {
 
     $msg = 'No transaction id found';
 }
+
+echo $msg;
+exit();

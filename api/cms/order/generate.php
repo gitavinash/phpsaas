@@ -11,6 +11,8 @@ function generate($connection, $data)
     if ($amount != 0) {
         mysqli_query($connection, "START TRANSACTION");
 
+        $productType = ((isset($productType)) ? $productType : 'enquiry');
+
         // Validate request id
 
         $checkRequest = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id='{$enquiryId}' AND enquiry_status=0 AND enquiry_site_id=" . SITE_ID);
@@ -71,22 +73,28 @@ function generate($connection, $data)
 
             // Create new order
 
-            $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_total_price, order_status, order_generate) VALUES(" . SITE_ID . ", '{$userId}', '" . SESSION_ID . "', '{$amount}', 0, NOW())");
+            $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_product_id, order_product_type, order_total_price, order_status, order_generate) VALUES(" . SITE_ID . ", '{$userId}', '" . SESSION_ID . "', '{$enquiryId}', '{$productType}', '{$amount}', 0, NOW())");
             $orderId = mysqli_insert_id($connection);
 
-            $createNewCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$orderId}', 'link', '1', '{$amount}', 0, NOW())");
+            $createNewCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$userId}', '{$orderId}', '{$productType}', '1', '{$amount}', 0, NOW())");
 
-            $initiateTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_gateway, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(" . SITE_ID . ", '{$userId}', '{$orderId}', 'online', '" . PG_NAME . "', '{$currency}', '{$amount}', 'link', 0)");
+            $initiateTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_gateway, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(" . SITE_ID . ", '{$userId}', '{$orderId}', 'online', '" . PG_NAME . "', '{$currency}', '{$amount}', '{$productType}', 0)");
             $transaction_id = base64_encode(mysqli_insert_id($connection));
 
             $redirectUrl = ((isset($redirectUrl)) ? $redirectUrl : SITE_DOMAIN . '/thank-you/');
 
             if ($addNewOrder && $createNewCart && $initiateTransaction) {
-                mysqli_query($connection, "COMMIT");
-                $redirectUrl = SITE_URL . '/payment/generate/?id=' . $transaction_id . '&pg_type=link&orderType=link&redirect=' . $redirectUrl;
-                $responseCode = 201;
-                $status = 'success';
-                $msg = 'Redirect to payment gateway';
+                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_status=6 WHERE enquiry_id='{$enquiryId}' AND enquiry_status=0 AND enquiry_site_id=" . SITE_ID)) {
+                    mysqli_query($connection, "COMMIT");
+                    $redirectUrl = SITE_URL . '/payment/generate/?id=' . $transaction_id . '&pg_type=enquiry&orderType=' . $productType . '&redirect=' . $redirectUrl;
+                    $responseCode = 201;
+                    $status = 'success';
+                    $msg = 'Redirect to payment gateway';
+                } else {
+                    mysqli_query($connection, "ROLLBACK");
+                    $status = 'error';
+                    $msg = ((DEVELOPMENT_MODE == TRUE) ? mysqli_error($connection) : 'Something went wrong while updating order status');
+                }
             } else {
                 mysqli_query($connection, "ROLLBACK");
                 $status = 'error';

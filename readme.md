@@ -39,6 +39,7 @@ Lead status
 3 : follow up
 4 : Failed
 5 : Duplicate
+6 : payment initite
 
 Cart Status
 
