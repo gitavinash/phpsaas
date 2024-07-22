@@ -67,9 +67,6 @@ if ($response['code'] == 'PAYMENT_INITIATED') {
         print_r($response);
     } else {
         echo "Something went wrong while redirection to payment gateway.";
-        echo "Encode request body : " . $encodeRequestBody . '<br />';
-        echo "xVerify request body : " . $xVerify;
-        print_r($response);
     }
 }
 
