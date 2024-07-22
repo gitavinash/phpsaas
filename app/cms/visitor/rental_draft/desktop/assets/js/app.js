@@ -1,4 +1,9 @@
 $(document).ready(function () {
+  var notaryServiceCharge = 0;
+  var serviceCharges = 0;
+  var deliveryCharges = 0;
+  var totalOrdervalue = 0;
+  var updatedTotalValue = 0;
   function getQueryParam(name) {
     var urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);
@@ -374,7 +379,7 @@ $(document).ready(function () {
 
   function totalStampValue() {
     var stampValue = $("#stampValue").text();
-    var serviceCharges = $("#serviceCharges").text();
+    serviceCharges = $("#serviceCharges").text();
     var notaryService = $("#notaryService").text();
     var deliveryService = $("#deliveryServices").text();
 
@@ -389,13 +394,12 @@ $(document).ready(function () {
       parseInt(notaryService) +
       parseInt(deliveryService);
 
-    console.log(`Total value: `, updatedTotalValue);
+    totalOrdervalue = updatedTotalValue;
 
     $("#totalAmount").html("₹ " + updatedTotalValue);
   }
 
   $('input[type="radio"][name="stampValue"]').change(function () {
-    var notaryServiceCharge;
     var notaryStampValue = $(
       'input[type="radio"][name="stampValue"]:checked'
     ).val();
@@ -432,10 +436,48 @@ $(document).ready(function () {
       'input[type="radio"][name="deliveryServices"]:checked'
     ).val();
     if (deliveryServices == "true") {
+      deliveryCharges = 250;
       $("#deliveryServices").html("₹ " + 250);
     } else {
       $("#deliveryServices").html("₹ " + 0);
     }
     totalStampValue();
+  });
+
+  $("#processToPaymentCustom").click(function (e) {
+    e.preventDefault();
+    $("#processToPaymentCustom").hide();
+
+    var totalAmount = $("#totalAmount").text();
+    var totalAmount = parseFloat(totalAmount.replace("₹", "").trim());
+
+    var couponCode = $("#couponCode").val();
+
+    var formData = $(".shipping-box").serializeArray();
+    // formData.push({ name: "coupon", value: couponCode });
+    formData.push({ name: "type", value: "order" });
+    formData.push({ name: "action", value: "generate" });
+    formData.push({ name: "order", value: $("#orderId").val() });
+    formData.push({ name: "paymentMode", value: $("#paymentMode").val() });
+    formData.push({ name: "amount", value: totalOrdervalue });
+    formData.push({ name: "currency", value: "INR" });
+
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      data: formData,
+      success: function (data) {
+        if (data.status == "success") {
+          window.location.href = data.url;
+        } else {
+          console.log(`Success : `, data);
+          $("#processToPaymentCustom").show();
+        }
+      },
+      error: function (data) {
+        console.log(`error : `, data);
+        $("#processToPaymentCustom").show();
+      },
+    });
   });
 });

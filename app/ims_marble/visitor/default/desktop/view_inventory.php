@@ -99,7 +99,9 @@
                         <th>Width<br />({$block_item_dimension_type})</th>
                         <th>Height<br />({$block_item_dimension_type})</th>
                         <th>Thickness<br />({$block_thickness_dimension})</th>
-                        <th>Net size<br/>({$calculationType})</th>
+                        <th>Gross qty.<br/>({$calculationType})</th>
+                        <th>Damage qty.<br/>({$calculationType})</th>
+                        <th>Net qty.<br/>({$calculationType})</th>
                     </tr>";
                     }
 

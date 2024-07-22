@@ -66,89 +66,92 @@ if (!isset($validId)) {
                 <!-- <div class="row"> -->
                 <div class="col-7 m-col">
                     <div class="row">
-                        <div class="box white-bg">
-                            <div class="col">
-                                <h2>Order summary</h2>
-                            </div>
-                            <div class="col">
-                                <div class='productBox'>
-                                    <div class='productImage col-2 m-col-2 no-padding'>
-                                        <img src='<?php echo IMG_LIBRARY ?>profile_icon/r.png' alt=''>
-                                    </div>
-                                    <div class='productText col-8 m-col-8'>
-                                        <!-- <div class='row'> -->
-                                        <div class='col-8 m-col-8'>
-                                            <p><strong>Rent agreement</strong></p>
-                                            <p><span><?php echo ucwords($state) ?> rent agreement</span></p>
+                        <form class="shipping-box">
+                            <div class="box white-bg">
+                                <div class="col">
+                                    <h2>Order summary</h2>
+                                </div>
+                                <div class="col">
+                                    <div class='productBox'>
+                                        <div class='productImage col-2 m-col-2 no-padding'>
+                                            <img src='<?php echo IMG_LIBRARY ?>profile_icon/r.png' alt=''>
                                         </div>
-                                        <div class='col-2 m-col-2'>
-                                            <!-- <div class='price float-right'>
+                                        <div class='productText col-8 m-col-8'>
+                                            <!-- <div class='row'> -->
+                                            <div class='col-8 m-col-8'>
+                                                <p><strong>Rent agreement</strong></p>
+                                                <p><span><?php echo ucwords($state) ?> rent agreement</span></p>
+                                            </div>
+                                            <div class='col-2 m-col-2'>
+                                                <!-- <div class='price float-right'>
                                                 <p>{$inventory_currency_symbol} {$inventory_price}</p>
                                             </div> -->
+                                            </div>
+                                            <!-- </div> -->
                                         </div>
-                                        <!-- </div> -->
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="box white-bg">
-                            <div class="col">
-                                <h2>Stamp Value</h2>
-                            </div>
-                            <div class="col">
-                                <div class='productBox'>
-                                    <div class="radio-group">
+                            <div class="box white-bg">
+                                <div class="col">
+                                    <h2>Stamp Value</h2>
+                                </div>
+                                <div class="col">
+                                    <div class='productBox'>
+                                        <div class="radio-group">
 
-                                        <input type="radio" id="notary100" name="stampValue" value="100" checked>
-                                        <label for="notary100">₹ 100</label>
+                                            <input type="radio" id="notary100" name="stampValue" value="100" checked>
+                                            <label for="notary100">₹ 100</label>
 
-                                        <input type="radio" id="notary500" name="stampValue" value="500">
-                                        <label for="notary500">₹ 500</label>
+                                            <input type="radio" id="notary500" name="stampValue" value="500">
+                                            <label for="notary500">₹ 500</label>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="box white-bg">
-                            <div class="col">
-                                <h2>Notary service</h2>
-                            </div>
-                            <div class="col">
-                                <div class='productBox'>
-                                    <div class="radio-group">
+                            <div class="box white-bg">
+                                <div class="col">
+                                    <h2>Notary service</h2>
+                                </div>
+                                <div class="col">
+                                    <div class='productBox'>
+                                        <div class="radio-group">
 
-                                        <input type="radio" id="notaryYes" name="notaryService" value="true" checked>
-                                        <label for="notaryYes">Yes</label>
+                                            <input type="radio" id="notaryYes" name="notaryService" value="true"
+                                                checked>
+                                            <label for="notaryYes">Yes</label>
 
-                                        <input type="radio" id="notaryNo" name="notaryService" value="false">
-                                        <label for="notaryNo">No</label>
+                                            <input type="radio" id="notaryNo" name="notaryService" value="false">
+                                            <label for="notaryNo">No</label>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="box white-bg">
-                            <div class="col">
-                                <h2>Next day delivery</h2>
-                            </div>
-                            <div class="col">
-                                <div class='productBox'>
-                                    <div class="radio-group">
+                            <div class="box white-bg">
+                                <div class="col">
+                                    <h2>Next day delivery</h2>
+                                </div>
+                                <div class="col">
+                                    <div class='productBox'>
+                                        <div class="radio-group">
 
-                                        <input type="radio" id="deliveryYes" name="deliveryServices" value="true">
-                                        <label for="deliveryYes">Yes</label>
+                                            <input type="radio" id="deliveryYes" name="deliveryServices" value="true">
+                                            <label for="deliveryYes">Yes</label>
 
-                                        <input type="radio" id="deliveryNo" name="deliveryServices" value="false"
-                                            checked>
-                                        <label for="deliveryNo">No</label>
+                                            <input type="radio" id="deliveryNo" name="deliveryServices" value="false"
+                                                checked>
+                                            <label for="deliveryNo">No</label>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class=" col-3 m-col float-right">
@@ -177,9 +180,11 @@ if (!isset($validId)) {
                         <div class="totalBox">
                             <p><strong>Total</strong><span id="totalAmount">₹ <?php echo $totalPrice ?></span></p>
                         </div>
-                        <input type="hidden" name="order" id="orderId" value=" <?php echo $orderId ?>">
+                        <input type="hidden" name="productType" value="service">
+                        <input type="hidden" name="productTypeId" value="148">
+                        <input type="hidden" name="order" id="orderId" value="<?php echo $request_id ?>">
                         <input type="hidden" name="paymentMode" id="paymentMode" value="online">
-                        <a href="#" id="processToPayment" class="button">Proceed to payment</a>
+                        <a href="#" id="processToPaymentCustom" class="button">Proceed to payment</a>
                     </div>
                 </div>
                 <!-- </div> -->

@@ -198,15 +198,7 @@ if (isset($showPage)) { ?>
         </div>
         <div class="dataRow">
             <div class="title">
-                <p><strong>Gross size</strong></p>
-            </div>
-            <div class="description">
-                <p><?php echo $block_gross_size . ' ' . $block_size_dimension ?></p>
-            </div>
-        </div>
-        <div class="dataRow">
-            <div class="title">
-                <p><strong>Net size</strong></p>
+                <p><strong>Net qty.</strong></p>
             </div>
             <div class="description">
                 <p><?php echo $block_net_size . ' ' . $block_size_dimension ?></p>
@@ -268,7 +260,7 @@ if (isset($showPage)) { ?>
         </div>
     </div>
     <div class="dataBox" id="blockInventory">
-        <div class="heading">
+        <div class="heading">w
             <a href="/view_inventory/?id=<?php echo $id ?>" taget="_blank">Download Slabs size</a>
         </div>
     </div>
