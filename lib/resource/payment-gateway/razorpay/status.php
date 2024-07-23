@@ -1,54 +1,45 @@
 <?php
 
-    require_once 'razorpay.php';
-    use Razorpay\Api\Api;
+require_once 'razorpay.php';
 
-    $api = new Api(PG_KEY_ID, PG_KEY_SECRET);
+use Razorpay\Api\Api;
 
-    if(isset($pay_id)) {
+$api = new Api(PG_KEY_ID, PG_KEY_SECRET);
 
-        $transactionID=base64_decode($txn_id);
-        $orderID=base64_decode($id);
-        $paymentID=base64_decode($pay_id);
+if (isset($pay_id)) {
 
-        /** Check order id is valid or not */
+    $transactionID = base64_decode($txn_id);
+    $orderID = base64_decode($id);
+    $paymentID = base64_decode($pay_id);
 
-        if($checkTransaction=mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_cart_id, transaction_type FROM ".TABLE_PREFIX."transaction WHERE transaction_reference_id='{$transactionID}' AND transaction_site_id=".SITE_ID)) {
+    /** Check order id is valid or not */
 
-            if(mysqli_num_rows($checkTransaction)!=0) {
+    if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transaction_order_id, transaction_cart_id, transaction_type FROM " . TABLE_PREFIX . "transaction WHERE transaction_reference_id='{$transactionID}' AND transaction_site_id=" . SITE_ID)) {
 
-                extract(mysqli_fetch_assoc($checkTransaction));
+        if (mysqli_num_rows($checkTransaction) != 0) {
 
-                $transactionStatus=$api->payment->fetch($paymentID);
+            extract(mysqli_fetch_assoc($checkTransaction));
 
-                /** Update transaction details into transaction table */
+            $transactionStatus = $api->payment->fetch($paymentID);
 
-                if($updateTransaction=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."transaction SET transaction_payment_id='{$paymentID}', transaction_payment_mode='".strtolower($transactionStatus['method'])."', transaction_status=1 WHERE transaction_reference_id='{$transactionID}'")) {
+            /** Update transaction details into transaction table */
 
-                    $transaction_id=base64_encode($transaction_id);
-                    
-                    require_once PAYMENT_GATEWAY.'success.php';
+            if ($updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_payment_id='{$paymentID}', transaction_payment_mode='" . strtolower($transactionStatus['method']) . "', transaction_status=1 WHERE transaction_reference_id='{$transactionID}'")) {
 
-                } else {
+                $transaction_id = base64_encode($transaction_id);
 
-                    echo mysqli_error($connection);
-
-                }
-
+                require_once PAYMENT_GATEWAY . 'success.php';
             } else {
 
-                echo 'Invalid transaction id found';
-
+                echo mysqli_error($connection);
             }
+        } else {
 
+            echo 'Invalid razorpay transaction id found';
         }
-
-
-    } else {
-
-        header("Location: /payment-failed/?id={$id}", TRUE, 301);
-        exit();
-
     }
+} else {
 
-?>
+    header("Location: /payment-failed/?id={$id}", TRUE, 301);
+    exit();
+}

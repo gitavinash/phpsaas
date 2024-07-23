@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             }
         } else {
 
-            echo 'Invalid transaction id found';
+            echo 'Invalid sabpaisa transaction id found';
         }
     } else {
 

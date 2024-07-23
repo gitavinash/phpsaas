@@ -70,7 +70,7 @@ if ($checkTransaction = mysqli_query($connection, "SELECT transaction_id, transa
         }
     } else {
 
-        echo 'Invalid transaction id found';
+        echo 'Invalid phone pe transaction id found';
     }
 } else {
 

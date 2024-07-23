@@ -10,8 +10,6 @@ function generate($connection, $data)
 
     if ($amount != 0) {
 
-        $amount = 1;
-
         mysqli_query($connection, "START TRANSACTION");
 
         $productType = ((isset($productType)) ? $productType : 'enquiry');

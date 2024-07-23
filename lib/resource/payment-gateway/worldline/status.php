@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             }
         } else {
 
-            echo 'Invalid transaction id found';
+            echo 'Invalid worldline transaction id found';
         }
     } else {
 
