@@ -61,6 +61,31 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
                 }
                 break;
 
+            case 'enquiry':
+
+                // default thank you page process
+
+                // Update order table
+
+                $updateOrderStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id='{$order_id}'");
+
+                // Update cart table
+
+                $updateCartStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_id='{$transaction_cart_id}'");
+
+                if ($updateOrderStatus && $updateCartStatus) {
+
+                    mysqli_query($connection, "COMMIT");
+
+                    header("Location: /thank-you/?id={$id}&redirectUrl={$redirectTo}", TRUE, 301);
+                    exit();
+                } else {
+
+                    echo "Something went wrong";
+                    mysqli_query($connection, "ROLLBACK");
+                }
+                break;
+
             case 'booking':
 
                 // Booking thank you page process
