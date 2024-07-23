@@ -18,8 +18,6 @@ if (isset($id)) {
 
             if ($updateTransaction) {
 
-                mysqli_query($connection, "COMMIT");
-
                 if ($transaction_method == 'online') {
 
                     $updateOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status=1 WHERE order_id='{$order_id}'");
@@ -40,24 +38,40 @@ if (isset($id)) {
                 /** Update cart table */
 
                 if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_session_id='" . SESSION_ID . "'")) { ?>
-
-<section class='continue-shopping'>
-    <h1>Error<span>Something is wrong while updating cart.</span></h1>
-    <a href="/" class="btn btn-success">Continue Shopping</a>
-</section>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <section class='continue-shopping'>
+                <h1>Error<span>Something is wrong while updating cart.</span></h1>
+                <a href="/review-agreement/?request_id=<?php echo base64_encode($order_product_id) ?>&state=delhi"
+                    class="btn btn-success">Retry payment</a>
+            </section>
+        </div>
+    </div>
+</div>
 
 <?php
 
                     echo mysqli_error($connection);
                 } else {
 
-                ?>
+                    mysqli_query($connection, "COMMIT");
 
-<section class='continue-shopping'>
-    <h1>Thank You<span>Your order number <strong>OD<?php echo $order_id; ?></strong> is successfully received. You may
-            get a confirmation call in a while.</span></h1>
-    <a href="/" class="btn btn-success">Continue Shopping</a>
-</section>
+                ?>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <section class='continue-shopping'>
+                <h1>Thank You<span>Your order number <strong>OD<?php echo $order_id; ?></strong> is
+                        successfully
+                        received. You may
+                        get a confirmation call in a while.</span></h1>
+                <a href="/view_agreement/?id=<?php echo $id ?>" target="_blank" class="btn btn-success">Download
+                    Agreement</a>
+            </section>
+        </div>
+    </div>
+</div>
 <?php
 
                 }
@@ -66,11 +80,17 @@ if (isset($id)) {
                 mysqli_query($connection, "ROLLBACK");
             }
         } else { ?>
-
-<section class='continue-shopping'>
-    <h1>Error<span>Something is wrong while generate a order request.</span></h1>
-    <a href="/" class="btn btn-success">Continue Shopping</a>
-</section>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <section class='continue-shopping'>
+                <h1>Error<span>Something is wrong while generate a order request.</span></h1>
+                <a href="/review-agreement/?request_id=<?php echo base64_encode($order_product_id) ?>&state=delhi"
+                    class="btn btn-success">Retry payment</a>
+            </section>
+        </div>
+    </div>
+</div>
 
 <?php
         }
@@ -82,11 +102,17 @@ if (isset($id)) {
 }
 
 if (isset($form_type)) { ?>
-
-<section class='continue-shopping'>
-    <h1>Thanks for contacting us.<span>We'll get back to you as soon as possible.</span></h1>
-    <a href="/" class="btn btn-success">Continue</a>
-</section>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <section class='continue-shopping'>
+                <h1>Thanks for contacting us.<span>We'll get back to you as soon as
+                        possible.</span></h1>
+                <a href="/" class="btn btn-success">Continue</a>
+            </section>
+        </div>
+    </div>
+</div>
 
 <?php
 }

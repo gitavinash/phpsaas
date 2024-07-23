@@ -349,3 +349,21 @@ i {
     padding-bottom: 3%;
   }
 }
+
+.continue-shopping {
+  text-align: center;
+  float: left;
+  width: 100%;
+  padding: 15% 0%;
+}
+.continue-shopping h1 {
+  text-align: center;
+  float: left;
+  width: 100%;
+}
+.continue-shopping h1 span {
+  text-align: center;
+  float: left;
+  width: 100%;
+  padding: 2% 0%;
+}
