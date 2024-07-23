@@ -27,9 +27,6 @@ if (isset($id)) {
 
                 $updateEnquiry = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_status=1 WHERE enquiry_id='{$order_product_id}' AND enquiry_site_id=" . SITE_ID);
 
-                echo "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_status=1 WHERE enquiry_id='{$order_product_id}' AND enquiry_site_id=" . SITE_ID;
-                exit();
-
                 if ($productDetails = mysqli_query($connection, "SELECT GROUP_CONCAT(product_title) as productName, GROUP_CONCAT(product_image) as productImage FROM isw_product WHERE product_type='product' AND {$order_product_id}")) {
 
                     $productName = '';
