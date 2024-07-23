@@ -9,6 +9,9 @@ function generate($connection, $data)
     $enquiryId = base64_decode($request_id);
 
     if ($amount != 0) {
+
+        $amount = 1;
+
         mysqli_query($connection, "START TRANSACTION");
 
         $productType = ((isset($productType)) ? $productType : 'enquiry');
@@ -81,7 +84,7 @@ function generate($connection, $data)
             $initiateTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_gateway, transaction_currency, transaction_amount, transaction_type, transaction_status) VALUES(" . SITE_ID . ", '{$userId}', '{$orderId}', 'online', '" . PG_NAME . "', '{$currency}', '{$amount}', '{$productType}', 0)");
             $transaction_id = base64_encode(mysqli_insert_id($connection));
 
-            $redirectUrl = ((isset($redirectUrl)) ? $redirectUrl : SITE_DOMAIN . '/thank-you/');
+            $redirectUrl = ((isset($redirectUrl)) ? $redirectUrl : SITE_URL . '/thank-you/');
 
             if ($addNewOrder && $createNewCart && $initiateTransaction) {
                 if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_status=6 WHERE enquiry_id='{$enquiryId}' AND enquiry_status=0 AND enquiry_site_id=" . SITE_ID)) {
