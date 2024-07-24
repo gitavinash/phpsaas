@@ -200,8 +200,8 @@ if (!isset($validId)) {
                                 <select name="notice_period" class="form-control" id="noticePeriod">
                                     <option value="#">Notice period*</option>
                                     <option value="1 month">1 Month</option>
-                                    <option value="2 month">2 Month</option>
-                                    <option value="3 month">3 Month</option>
+                                    <option value="2 months">2 Months</option>
+                                    <option value="3 months">3 Months</option>
                                 </select>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="rent_increase"

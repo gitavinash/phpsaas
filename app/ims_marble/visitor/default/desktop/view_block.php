@@ -78,8 +78,8 @@ if (isset($showPage)) { ?>
 
     h1 {
         font-size: 2rem;
-        color: #CA5F37;
-        border-bottom: 1px solid #CA5F37;
+        color: <?php echo SITE_THEME_COLOUR ?>;
+        border-bottom: 1px solid <?php echo SITE_THEME_COLOUR ?>;
     }
 
     .dataBox {
@@ -89,14 +89,14 @@ if (isset($showPage)) { ?>
         padding: 0px 10px;
         box-sizing: border-box;
         border-radius: 4px;
-        border: 1px solid #CA5F37;
+        border: 1px solid <?php echo SITE_THEME_COLOUR ?>;
     }
 
     .dataRow {
         float: left;
         width: 100%;
         text-align: left;
-        border-bottom: 1px solid #CA5F37;
+        border-bottom: 1px solid <?php echo SITE_THEME_COLOUR ?>;
         margin-bottom: 10px;
     }
 

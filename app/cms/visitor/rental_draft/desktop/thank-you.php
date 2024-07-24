@@ -67,7 +67,7 @@ if (isset($id)) {
                         received. You may
                         get a confirmation call in a while.</span></h1>
                 <a href="/view_agreement/?id=<?php echo $id ?>" target="_blank" class="btn btn-success">Download
-                    Agreement</a>
+                    Draft Agreement</a>
             </section>
         </div>
     </div>
