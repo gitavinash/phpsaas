@@ -8,8 +8,8 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             <th>Warehouse</th>
             <th>Supplier</th>
             <th>Total items</th>
-            <th>Gross size</th>
-            <th>Damage size</th>
+            <th>Gross qty.</th>
+            <th>Less qty.</th>
             <th>Net Size</th>
             <th></th>
         </tr>

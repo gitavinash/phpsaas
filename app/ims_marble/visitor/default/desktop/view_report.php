@@ -12,65 +12,65 @@ require_once LOGIN_CHECK;
     <title>Block slab measurment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        font-size: 0.8rem;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            font-size: 0.8rem;
+        }
 
-    img {
-        max-height: 100px;
-    }
+        img {
+            max-height: 100px;
+        }
 
-    h1 {
-        font-size: 1.5rem !important;
-        text-align: center;
-        margin-bottom: 20px;
-    }
+        h1 {
+            font-size: 1.5rem !important;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        float: left;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            float: left;
+        }
 
-    th,
-    td {
-        border: 1px solid #000;
-        text-align: center;
-        padding: 8px;
-        width: auto;
-        /* Each column will take up equal space */
-    }
+        th,
+        td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+            width: auto;
+            /* Each column will take up equal space */
+        }
 
-    th {
-        background-color: #f2f2f2;
-    }
+        th {
+            background-color: #f2f2f2;
+        }
 
-    tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
-    tbody tr:hover {
-        background-color: #f1f1f1;
-    }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
 
-    a {
-        background-color: #4CAF50;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
-        float: left;
-        width: 100%;
-        text-align: center;
-        padding: 1rem 1rem;
-        box-sizing: border-box;
-        border-radius: 7px;
-        border: none;
-        font-size: 1rem;
-        color: #fff;
-        letter-spacing: 1px;
-    }
+        a {
+            background-color: #4CAF50;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            float: left;
+            width: 100%;
+            text-align: center;
+            padding: 1rem 1rem;
+            box-sizing: border-box;
+            border-radius: 7px;
+            border: none;
+            font-size: 1rem;
+            color: #fff;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 
@@ -105,13 +105,13 @@ require_once LOGIN_CHECK;
                             <th rowspan=2>Width<br />({$block_item_dimension_type})</th>
                             <th rowspan=2>Height<br />({$block_item_dimension_type})</th>
                             <th rowspan=2>Thickness<br />({$block_thickness_dimension})</th>
-                            <th rowspan=2>Net size<br/>({$calculationType})</th>
+                            <th rowspan=2>Net qty.<br/>({$calculationType})</th>
                             <th colspan=100>Damage Area</th>
                         </tr>
                         <tr>
                             <th>Width<br />({$block_item_dimension_type})</th>
                             <th>Height<br />({$block_item_dimension_type})</th>
-                            <th colspan=100>Net size<br/>({$calculationType})</th>
+                            <th colspan=100>Net qty.<br/>({$calculationType})</th>
                         </tr>
                     ";
                     }
@@ -249,10 +249,10 @@ require_once LOGIN_CHECK;
     }
     ?>
     <script>
-    document.getElementById('download').addEventListener('click', function() {
-        const element = document.getElementById('content');
-        html2pdf().from(element).save();
-    });
+        document.getElementById('download').addEventListener('click', function() {
+            const element = document.getElementById('content');
+            html2pdf().from(element).save();
+        });
     </script>
 </body>
 
