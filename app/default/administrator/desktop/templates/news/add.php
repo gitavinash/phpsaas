@@ -137,6 +137,12 @@
                     <input type="radio" name="paid" value="0" checked> Free
                 </div>
             </div>
+            <h2>News price</h2>
+            <div class="action-box inside-shadow">
+                <div class="form-group">
+                    <input type="number" name="amount" class='form-control inside-shadow' placeholder="99" />
+                </div>
+            </div>
             <h2>Tags</h2>
             <div class=" action-box inside-shadow">
                 <div class="form-group">

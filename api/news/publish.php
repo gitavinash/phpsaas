@@ -53,7 +53,7 @@ function publish($connection, $data)
 
                         $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? USER_ID : $authorId) : USER_ID);
 
-                        $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_status, news_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '1', 'news')");
+                        $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '1', 'news')");
                         $postID = mysqli_insert_id($connection);
 
                         $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'news', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");

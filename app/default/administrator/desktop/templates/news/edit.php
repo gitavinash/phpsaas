@@ -180,6 +180,13 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                     <input type="radio" name="paid" value="0" <?php echo (($news_paid == 0) ? 'checked' : '') ?>> Free
                 </div>
             </div>
+            <h2>News price</h2>
+            <div class="action-box inside-shadow">
+                <div class="form-group">
+                    <input type="number" name="amount" class='form-control inside-shadow'
+                        value="<?php echo $news_price ?>" />
+                </div>
+            </div>
             <h2>Tags</h2>
             <?php
             $tagpostID = (($news_parent_id == 0) ? $news_id : $news_parent_id);

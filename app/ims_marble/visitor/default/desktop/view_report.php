@@ -11,66 +11,98 @@ require_once LOGIN_CHECK;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Block slab measurment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+    window.addEventListener('load', function() {
+        window.print();
+    });
+    </script>
     <style>
+    @page {
+        size: landscape;
+        margin: 1in;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        font-size: 0.8rem;
+    }
+
+    img {
+        max-height: 100px;
+    }
+
+    h1 {
+        font-size: 1.5rem !important;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        float: left;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 8px;
+        width: auto;
+        /* Each column will take up equal space */
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a {
+        background-color: #4CAF50;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        float: left;
+        width: 100%;
+        text-align: center;
+        padding: 1rem 1rem;
+        box-sizing: border-box;
+        border-radius: 7px;
+        border: none;
+        font-size: 1rem;
+        color: #fff;
+        letter-spacing: 1px;
+    }
+
+    @media print {
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            font-size: 0.8rem;
+            margin: 0;
         }
 
-        img {
-            max-height: 100px;
+        .content {
+            page-break-after: always;
         }
 
-        h1 {
-            font-size: 1.5rem !important;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            float: left;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            text-align: center;
-            padding: 8px;
-            width: auto;
-            /* Each column will take up equal space */
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        a {
-            background-color: #4CAF50;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            float: left;
+        .footer {
+            position: fixed;
+            bottom: 0;
             width: 100%;
             text-align: center;
-            padding: 1rem 1rem;
-            box-sizing: border-box;
-            border-radius: 7px;
-            border: none;
-            font-size: 1rem;
-            color: #fff;
-            letter-spacing: 1px;
+            font-size: 12px;
         }
+
+        .footer::after {
+            content: "Developed by Blumox Technologies";
+        }
+    }
     </style>
 </head>
 
@@ -249,10 +281,10 @@ require_once LOGIN_CHECK;
     }
     ?>
     <script>
-        document.getElementById('download').addEventListener('click', function() {
-            const element = document.getElementById('content');
-            html2pdf().from(element).save();
-        });
+    document.getElementById('download').addEventListener('click', function() {
+        const element = document.getElementById('content');
+        html2pdf().from(element).save();
+    });
     </script>
 </body>
 

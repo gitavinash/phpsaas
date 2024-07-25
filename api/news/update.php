@@ -89,7 +89,7 @@ function update($connection, $data)
 
                     $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? USER_ID : $authorId) : USER_ID);
 
-                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_status='1', news_paid='{$paid}'  WHERE news_id='{$id}'");
+                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='1', news_paid='{$paid}'  WHERE news_id='{$id}'");
 
                     /** Update meta table */
 

@@ -260,9 +260,12 @@ if (isset($showPage)) { ?>
         </div>
     </div>
     <div class="dataBox" id="blockInventory">
-        <div class="heading">w
+        <div class="heading">
             <a href="/view_inventory/?id=<?php echo $id ?>" taget="_blank">Download Slabs size</a>
         </div>
+    </div>
+    <div class="credit">
+        <p>Design &amp; Developed by <a href="https://blumox.com">Blumox Technologies</a></p>
     </div>
     <?php require_once NOTIFICATION . 'index.php'; ?>
     <script>
