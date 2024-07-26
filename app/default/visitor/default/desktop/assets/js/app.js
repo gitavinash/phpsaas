@@ -4,12 +4,21 @@ $(document).ready(function () {
     $("#processToPayment").hide();
 
     var couponCode = $("#couponCode").val();
-
+    var orderType = "default";
+    if ($("#orderType").length != 0) {
+      orderType = $("#orderType").val();
+    }
+    var appType = "default";
+    if ($("#app").length != 0) {
+      appType = $("#app").val();
+    }
     var formData = $(".shipping-box").serializeArray();
     // formData.push({ name: "coupon", value: couponCode });
     formData.push({ name: "type", value: "order" });
     formData.push({ name: "action", value: "generate" });
     formData.push({ name: "order", value: $("#orderId").val() });
+    formData.push({ name: "app", value: appType });
+    formData.push({ name: "pgRequestType", value: orderType });
     formData.push({ name: "paymentMode", value: $("#paymentMode").val() });
 
     $.ajax({

@@ -43,15 +43,15 @@ if (isset($_COOKIE['user_data'])) {
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <?php
 
-    if (BASE_URL == '/thank-you/') {
+    // if (BASE_URL == '/thank-you/') {
 
-        /** Send Email */
+    //     /** Send Email */
 
-        $email = PROFILE_EMAIL;
-        require_once APP_EMAIL_TEMPLATE . 'newSubscription.php';
+    //     $email = PROFILE_EMAIL;
+    //     require_once APP_EMAIL_TEMPLATE . 'newSubscription.php';
 
-        echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
-    }
+    //     echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
+    // }
 
     ?>
     <!-- Google tag (gtag.js) -->

@@ -64,6 +64,7 @@ if (isset($id)) {
             if (file_exists($pgFile)) {
 
                 require_once $pgFile;
+                exit();
             } else {
 
                 require_once SYSTEM_THEME . 'payment-gateway-file-missing.php';

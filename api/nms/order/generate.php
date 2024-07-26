@@ -10,7 +10,7 @@ function generate($connection, $data)
 
     /** Get Product from cart */
 
-    if ($checkOrderStatus = mysqli_query($connection, "SELECT order_id, order_user_id, order_product_id, order_product_type, order_product_qty, order_delivery_charges, profile_first_name, profile_email, profile_mobile as mobile FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "profile ON order_user_id=profile_user_id WHERE order_id='{$order}' AND order_status=0 AND order_site_id=".SITE_ID)) {
+    if ($checkOrderStatus = mysqli_query($connection, "SELECT order_id, order_user_id, order_product_id, order_product_type, order_product_qty, order_delivery_charges, profile_first_name, profile_email, profile_mobile as mobile FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "profile ON order_user_id=profile_user_id WHERE order_id='{$order}' AND order_status=0 AND order_site_id=" . SITE_ID)) {
 
         if (mysqli_num_rows($checkOrderStatus) != 0) {
 
@@ -32,7 +32,7 @@ function generate($connection, $data)
 
             /** Fetch product details  */
 
-            if ($productDetails = mysqli_query($connection, "SELECT GROUP_CONCAT({$order_product_type}_title) as product_title, GROUP_CONCAT({$order_product_type}_image) as productImage FROM ".TABLE_PREFIX."_$order_product_type WHERE {$order_product_type}_type'='{$orderType}' AND {$productID}")) {
+            if ($productDetails = mysqli_query($connection, "SELECT GROUP_CONCAT({$order_product_type}_title) as product_title, GROUP_CONCAT({$order_product_type}_image) as productImage FROM " . TABLE_PREFIX . "_$order_product_type WHERE {$order_product_type}_type'='{$orderType}' AND {$productID}")) {
 
                 $product_title = '';
 
@@ -44,11 +44,11 @@ function generate($connection, $data)
 
             $enableLimit = '';
 
-            if(SITE_ID==49){
+            if (SITE_ID == 49) {
                 $enableLimit == "LIMIT 0, 1";
             }
 
-            if ($checkCart = mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=" . SITE_ID." ORDER BY cart_updated DESC {$enableLimit}")) {
+            if ($checkCart = mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=" . SITE_ID . " ORDER BY cart_updated DESC {$enableLimit}")) {
 
                 if (mysqli_num_rows($checkCart) != 0) {
 
@@ -94,7 +94,9 @@ function generate($connection, $data)
                                         $url = '/thank-you/?id=' . $transaction_id;
                                     } else {
 
-                                        $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order';
+                                        $siteApp = ((isset($app)) ? $app : 'default');
+                                        $pgRequestType = ((isset($pgRequestType)) ? $pgRequestType : 'default');
+                                        $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order&app=' . str_replace(' ', '', $siteApp) . '&pgRequestType=' . str_replace(' ', '', $pgRequestType);
                                     }
                                 }
                             }

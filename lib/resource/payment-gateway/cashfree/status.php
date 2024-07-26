@@ -68,12 +68,16 @@ if (isset($orderId)) {
                 $updateCartStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_session_id='" . SESSION_ID . "'");
 
                 if ($updateTransaction && $updateOrderStatus && $updateCartStatus) {
+
+                    $siteApp = ((isset($app)) ? $app : 'default');
+                    $orderType = ((isset($orderType)) ? $orderType : 'default');
+
                     mysqli_query($connection, "COMMIT");
                     $orderIdEncoded = base64_encode($dbOrderId);
                     if ($transactionStatus == 1) {
-                        header("Location: /thank-you/?order_id={$orderIdEncoded}", TRUE, 301);
+                        header("Location: /thank-you/?order_id={$orderIdEncoded}&app={$siteApp}&orderType={$orderType}", TRUE, 301);
                     } else {
-                        header("Location: /payment-failed/?order_id={$orderIdEncoded}", TRUE, 301);
+                        header("Location: /payment-failed/?order_id={$orderIdEncoded}&app={$siteApp}&orderType={$orderType}", TRUE, 301);
                     }
                 } else {
                     echo "<h1>Something went wrong while trying to update the payment status into the database</h1>";

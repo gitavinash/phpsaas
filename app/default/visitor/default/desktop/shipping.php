@@ -11,11 +11,23 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
     if (mysqli_num_rows($checkDetails) != 0) {
         extract(mysqli_fetch_assoc($checkDetails));
 
-        $cartQuery = "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "{$cart_relation_type} ON cart_relation_id= {$cart_relation_type}_id INNER JOIN " . TABLE_PREFIX . "inventory ON {$cart_relation_type}_id =inventory_relation_id WHERE cart_relation_type='{$cart_relation_type}' AND cart_session_id='{$order_cart_session_id}' AND inventory_type='{$cart_relation_type}' AND cart_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
+        switch ($cart_relation_type) {
+            case 'news':
+                $cartQuery = "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "{$cart_relation_type} ON cart_relation_id= {$cart_relation_type}_id WHERE cart_relation_type='{$cart_relation_type}' AND cart_session_id='{$order_cart_session_id}' AND cart_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
+                break;
+            default:
+                $cartQuery = "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "{$cart_relation_type} ON cart_relation_id= {$cart_relation_type}_id INNER JOIN " . TABLE_PREFIX . "inventory ON {$cart_relation_type}_id =inventory_relation_id WHERE cart_relation_type='{$cart_relation_type}' AND cart_session_id='{$order_cart_session_id}' AND inventory_type='{$cart_relation_type}' AND cart_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
+                break;
+        }
 
         if ($cartInfo = mysqli_query($connection, $cartQuery)) {
             if (mysqli_num_rows($cartInfo) == 0) {
                 echo "Empty cart";
+                exit();
+            } else {
+                $inventory_currency_symbol = ((isset($inventory_currency_symbol)) ? $inventory_currency_symbol : '₹');
+                $inventory_price = ((isset($inventory_price)) ? $inventory_price : $order_total_price);
+                $inventory_tax_status = ((isset($inventory_tax_status)) ? $inventory_tax_status : 0);
             }
         } else {
             echo "Something went wrong while trying to fetch cart data";
@@ -36,7 +48,6 @@ require_once 'header.php';
             <?php
 
             $checkAppFile = DEFAULT_USER_PATH . ltrim(BASE_URL, '/') . SITE_APP . '.php';
-
             if (file_exists($checkAppFile)) {
                 require_once $checkAppFile;
             } else {
@@ -76,6 +87,9 @@ require_once 'header.php';
                     </p>
                 </div>
                 <input type="hidden" name="order" id="orderId" value=" <?php echo $orderId ?>">
+                <input type="hidden" name="app" id="app" value=" <?php echo SITE_APP ?>">
+                <input type="hidden" name="orderType" id="orderType"
+                    value=" <?php echo ((isset($order)) ? $order : 'default') ?>">
                 <input type="hidden" name="paymentMode" id="paymentMode" value="online">
                 <a href="#" id="processToPayment" class="button">Proceed to payment</a>
             </div>

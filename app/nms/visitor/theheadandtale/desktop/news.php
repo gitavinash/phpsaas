@@ -125,7 +125,30 @@ $newsContent =  substr($newsContent, 0, 525);
                                     }
                                 }
 
+                                if ($news_price != 0) { ?>
+                            <div class="subscription_card__box">
+                                <p>Unlock Article<span>( One time payment )</span></p>
+                                <h6><?php echo $inventory_currency_symbol ?> <?php echo $news_price ?></h6>
+                                <div class="continue">
+                                    <?php
+
+                                            if (isset($_COOKIE['user_data'])) {
+                                                echo "
+                                                                <form action='/purchase/?order=news' method='post' >
+                                                                    <input type='hidden' name='id' value='{$news_id}'>
+                                                                    <input type='submit' class='button' value='Unlock now'>
+                                                                </form>
+                                                            ";
+                                            }
+
+                                            ?>
+                                </div>
+                            </div>
+                            <?php
+                                }
+
                                 ?>
+
                         </div>
                     </div>
                 </section>
