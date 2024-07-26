@@ -24,15 +24,19 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
 
         if (strpos(strtolower($product_title), "month") !== false) {
             $subscriptionDuration = 'month';
+            $updateTimeStamp = "subscription_expiry = DATE_ADD(subscription_expiry, 1 MONTH)";
         } else {
             $subscriptionDuration = 'year';
+            $updateTimeStamp = "subscription_expiry = DATE_ADD(subscription_expiry, 1 YEAR)";
         }
 
 
-        if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status) VALUES('" . SITE_ID . "', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', 1)")) {
-            if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_relation_id={$product_id}, subscription_mode='{$subscriptionDuration}', subscription_time=NOW() WHERE subscription_user_id='{$transaction_user_id}' AND subscription_site_id=" . SITE_ID)) {
-                echo mysqli_fetch_assoc($connection);
-                echo "Something went wrong while updating the subscription plan";
+        if ($orderType != 'news') {
+            if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_time, subscription_status) VALUES('" . SITE_ID . "', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', NOW(), 1)")) {
+                if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_relation_id={$product_id}, subscription_mode='{$subscriptionDuration}', {$updateTimeStamp} WHERE subscription_user_id='{$transaction_user_id}' AND subscription_site_id=" . SITE_ID)) {
+                    echo mysqli_fetch_assoc($connection);
+                    echo "Something went wrong while updating the subscription plan";
+                }
             }
         }
     } else {

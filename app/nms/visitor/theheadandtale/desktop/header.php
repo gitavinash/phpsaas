@@ -4,10 +4,11 @@ $activeSubscription = false;
 if (isset($_COOKIE['user_data'])) {
     $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_site_id=" . SITE_ID)) {
+    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time, subscription_expiry FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkUser) != 0) {
             extract(mysqli_fetch_assoc($checkUser));
             if ($subscription_status == 1) {
+
                 $activeSubscription = true;
 
                 // Fetch subscription details
@@ -43,15 +44,15 @@ if (isset($_COOKIE['user_data'])) {
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <?php
 
-    // if (BASE_URL == '/thank-you/') {
+    if (BASE_URL == '/thank-you/') {
 
-    //     /** Send Email */
+        /** Send Email */
 
-    //     $email = PROFILE_EMAIL;
-    //     require_once APP_EMAIL_TEMPLATE . 'newSubscription.php';
+        $email = PROFILE_EMAIL;
+        require_once APP_EMAIL_TEMPLATE . 'newSubscription.php';
 
-    //     echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
-    // }
+        echo "<meta http-equiv='refresh' content='10; URL=/manage-subscription/'>";
+    }
 
     ?>
     <!-- Google tag (gtag.js) -->
