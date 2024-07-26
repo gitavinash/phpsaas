@@ -60,7 +60,16 @@ $newsContent =  substr($newsContent, 0, 525);
                         $showFullNews = true;
                     } else {
                         if ($news_paid == 1) {
-                            $showSubscriptionSection = true;
+
+                            // Check news is paid?
+
+                            if ($checkPurchase = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order WHERE order_product_id={$link_relation_id} AND order_status=1 AND order_user_id=" . USER_ID . " AND order_site_id=" . SITE_ID)) {
+                                if (mysqli_num_rows($checkPurchase) != 0) {
+                                    $showFullNews = true;
+                                } else {
+                                    $showSubscriptionSection = true;
+                                }
+                            }
                         } else {
                             $showFullNews = true;
                         }
