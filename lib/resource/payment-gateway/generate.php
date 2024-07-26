@@ -30,6 +30,7 @@ if (isset($id)) {
             break;
     }
 
+
     if ($checkStatus = mysqli_query($connection, $query)) {
 
         if (mysqli_num_rows($checkStatus) != 0) {

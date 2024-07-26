@@ -84,7 +84,9 @@ if ($checkData = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}bloc
 
                 $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_net_size=block_net_size+$recoverDamageArea, block_damage_size=block_damage_size-$recoverDamageArea WHERE block_id={$block_item_parent_id} AND block_site_id=" . SITE_ID);
 
-                if ($deleteDataFromDatabase && $updateBlock) {
+                $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_size=block_item_damage_size-$recoverDamageArea WHERE block_item_id={$blockId} AND block_item_site_id=" . SITE_ID);
+
+                if ($deleteDataFromDatabase && $updateBlock && $updateBlockItem) {
                     $msg = "Damage area removed successfully";
                     $httpStatus = 202;
                     $status = 'success';

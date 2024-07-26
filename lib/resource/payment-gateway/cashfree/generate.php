@@ -70,8 +70,6 @@
 
     $response = json_decode($response, true);
 
-    // print_r($response);
-
     if (isset($response["order_status"])) {
         if ($response['order_status'] == 'ACTIVE') {
 

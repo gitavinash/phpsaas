@@ -135,11 +135,13 @@ if (isset($validRequest)) {
 
         if ($sameJson == 'false') {
             $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_net_size=block_net_size-{$damageAreaSize}, block_damage_size=block_damage_size+{$damageAreaSize} WHERE block_id='{$block_item_parent_id}' AND block_site_id=" . SITE_ID);
+            $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_size=block_item_damage_size+{$damageAreaSize} WHERE block_item_id='{$blockItemId}' AND block_item_site_id=" . SITE_ID);
         } else {
             $updateBlock = true;
+            $updateBlockItem = true;
         }
 
-        if ($updateBlockItem && $updateBlock) {
+        if ($updateBlockItem && $updateBlock && $updateBlockItem) {
             mysqli_query($connection, "COMMIT");
             $httpStatus = 204;
             $status = 'success';
