@@ -93,18 +93,19 @@ if (isset($validRequest)) {
             $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_qr='{$publicQRCodeURL}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
         }
 
-        $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_status, block_item_created) VALUES";
+        // $insertItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_status, block_item_created) VALUES";
 
 
-        for ($i = 0; $i < $totalItem; $i++) {
-            $insertItemQuery .= "({$blockId}, " . SITE_ID . ", " . USER_ID . ", '{$measurementType}', 0, now()),";
-        }
+        // for ($i = 0; $i < $totalItem; $i++) {
+        //     $insertItemQuery .= "({$blockId}, " . SITE_ID . ", " . USER_ID . ", '{$measurementType}', 0, now()),";
+        // }
 
-        $insertItemQuery = rtrim($insertItemQuery, ",");
+        // $insertItemQuery = rtrim($insertItemQuery, ",");
 
-        $insertBlockItem = mysqli_query($connection, $insertItemQuery);
+        // $insertBlockItem = mysqli_query($connection, $insertItemQuery);
 
-        if ($insertBlock && $updateBlock && $insertBlockItem) {
+        // if ($insertBlock && $updateBlock && $insertBlockItem) {
+        if ($insertBlock && $updateBlock) {
             $httpStatus = 201;
             $status = 'success';
             $msg = 'New block created successfully';

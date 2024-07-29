@@ -133,7 +133,7 @@ if (isset($validRequest)) {
 
             $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size='{$totalArea}' WHERE block_id='{$blockId}'AND block_site_id=" . SITE_ID;
 
-            $updateBlockNetSizeQuery = "UPDATE {$tableNamePrefix}block SET block_net_size='{$totalArea}' WHERE block_net_size=0 AND block_id='{$blockId}'AND block_site_id=" . SITE_ID;
+            $updateBlockNetSizeQuery = "UPDATE {$tableNamePrefix}block SET block_net_size='{$totalArea}' WHERE block_id='{$blockId}'AND block_site_id=" . SITE_ID;
 
             $updateItemQuery = "
                 UPDATE {$tableNamePrefix}block_item

@@ -1043,3 +1043,136 @@ $("#updateMeasurement").click(function (e) {
     $("#updateMeasurement").show();
   }
 });
+
+$(document).ready(function () {
+  $("#cloneSlabForm").click(function (e) {
+    e.preventDefault();
+
+    // Function to validate if all inputs have numerical values
+    function allInputsHaveValues() {
+      var isValid = true;
+      $(".generateBlockRow").each(function () {
+        $(this)
+          .find("input")
+          .each(function () {
+            if (!$.isNumeric($(this).val()) || $(this).val().trim() === "") {
+              isValid = false;
+              return false; // Break out of the each loop
+            }
+          });
+        if (!isValid) {
+          return false; // Break out of the each loop
+        }
+      });
+      return isValid;
+    }
+
+    // Check if all inputs have numerical values
+    if (!allInputsHaveValues()) {
+      popUpMessage("center", "Please fill in all required fields", "warning");
+      return; // Exit the function if validation fails
+    }
+
+    // Clone the .generateBlockRow div
+    var $clone = $(".generateBlockRow").first().clone();
+
+    // Clear the input values in the cloned div
+    $clone.find("input").val("");
+
+    // Remove the clone button from the cloned div
+    $clone.find("#cloneSlabForm").parent().remove();
+
+    // Append the cloned div to #generateBlockRowBox
+    $("#generateBlockRowBox").append($clone);
+
+    // Show the clone button in the last form
+    $(".generateBlockRow").last().find("#cloneSlabForm").show();
+  });
+
+  $("#createBlockItem").click(function (e) {
+    e.preventDefault();
+    $("#createBlockItem").hide();
+
+    function allInputsHaveValues() {
+      var isValid = true;
+      $(".generateBlockRow").each(function () {
+        $(this)
+          .find("input")
+          .each(function () {
+            if (!$.isNumeric($(this).val()) || $(this).val().trim() === "") {
+              isValid = false;
+              return false; // Break out of the each loop
+            }
+          });
+        if (!isValid) {
+          return false; // Break out of the each loop
+        }
+      });
+      return isValid;
+    }
+
+    // Check if all inputs have numerical values
+    if (!allInputsHaveValues()) {
+      popUpMessage("center", "Please fill in all required fields", "warning");
+      $("#createBlockItem").show();
+      return; // Exit the function if validation fails
+    }
+    // Gather data from the form
+    var data = [];
+    var totalSlabsSum = 0;
+    $("#generateBlockRowBox .generateBlockRow").each(function () {
+      var row = {
+        slabLenght: $(this).find('input[name="slabLenght"]').val(),
+        slabHeight: $(this).find('input[name="slabHeight"]').val(),
+        totalSlab: $(this).find('input[name="totalSlab"]').val(),
+      };
+      data.push(row);
+      var totalSlabValue = parseFloat(row.totalSlab);
+      if (!isNaN(totalSlabValue)) {
+        totalSlabsSum += totalSlabValue;
+      }
+    });
+
+    var totalSlabs = $("#blockTotalCount").val();
+
+    var payload = {
+      blockId: btoa($("#blockId").val()),
+      totalSlabs,
+      slabsData: data,
+    };
+
+    if (totalSlabsSum == totalSlabs) {
+      $.ajax({
+        url: "/api/item/generate/",
+        method: "POST",
+        data: JSON.stringify(payload),
+        contentType: "application/json",
+        success: function (successResponse) {
+          popUpMessage("center", successResponse.msg, successResponse.status);
+          $("#createBlockItem").show();
+          if (successResponse.status == "success") {
+            setTimeout(function () {
+              location.reload();
+            }, 1500);
+          }
+        },
+        error: function (errorResponse) {
+          console.log(`Error:`, errorResponse);
+          $("#createBlockItem").show();
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+        },
+      });
+    } else {
+      popUpMessage(
+        "center",
+        `Total number of slab must be ${totalSlabs}`,
+        "warning"
+      );
+      $("#createBlockItem").show();
+    }
+  });
+});

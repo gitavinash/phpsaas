@@ -435,7 +435,6 @@ function dashboardWidgetWithChart(objectID, data) {
 }
 
 function dashboardWidgetWithoutChart(objectID, data) {
-  console.log(`data:`, data);
   increaseCountingNumberAnimation(
     `${objectID}Value`,
     data.totalLeads - 10,
