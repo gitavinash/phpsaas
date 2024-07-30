@@ -13,9 +13,10 @@ require_once 'header.php';
                         <h1 style="padding:0">Contact Us</h1>
                         <div class="row">
                             <div class="col-12">
-                                <p><strong>Address:</strong><br />2, G-127, Gali no 4, Ashok Vihar Phase 3 Extention,
-                                    Gurugram, Gurugram, Haryana, 122015</p>
-                                <p><strong>Contact no.:</strong><br />+91-9013622555</p>
+                                <p><strong>Address:</strong><br />Azad Bhawan - G-127, Gali no 4, Ashok Vihar Phase 3
+                                    Extention,Behind Ekta Group ,Palam Vihar Gurugram Road, Haryana, 122001</p>
+                                <p><strong>Contact no.:</strong><br /><a href="tel:+91-9013622555">+91-9013622555</a>,
+                                    <a href="tel:+91-8950622555">+91-8950622555</a></p>
                                 <p><strong>Email:</strong><br />support@rentaldraft.com, info@rentaldraft.com</p>
                             </div>
                         </div>
