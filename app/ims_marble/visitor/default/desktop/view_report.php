@@ -11,11 +11,11 @@ require_once LOGIN_CHECK;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Block slab measurment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <script>
+    <!-- <script>
     window.addEventListener('load', function() {
         window.print();
     });
-    </script>
+    </script> -->
     <style>
     @page {
         size: landscape;
@@ -123,7 +123,7 @@ require_once LOGIN_CHECK;
 
                         $measurementData = constant(strtoupper('measurement_' . $block_product_type));
                         extract(json_decode($measurementData, TRUE));
-
+                        $slabDamageCount[] = $block_item_damage_size;
                         echo "<table>";
                         echo "<tr>
                         <td colspan=100><img src='" . SITE_LOGO . "'></td>
@@ -136,14 +136,28 @@ require_once LOGIN_CHECK;
                             <th rowspan=2>S no.</th>
                             <th rowspan=2>Width<br />({$block_item_dimension_type})</th>
                             <th rowspan=2>Height<br />({$block_item_dimension_type})</th>
-                            <th rowspan=2>Thickness<br />({$block_thickness_dimension})</th>
                             <th rowspan=2>Net qty.<br/>({$calculationType})</th>
                             <th colspan=100>Damage Area</th>
                         </tr>
                         <tr>
                             <th>Width<br />({$block_item_dimension_type})</th>
                             <th>Height<br />({$block_item_dimension_type})</th>
-                            <th colspan=100>Net qty.<br/>({$calculationType})</th>
+                            <th>Net qty.<br/>({$calculationType})</th>
+                            <th>Width<br />({$block_item_dimension_type})</th>
+                            <th>Height<br />({$block_item_dimension_type})</th>
+                            <th>Net qty.<br/>({$calculationType})</th>
+                            <th>Width<br />({$block_item_dimension_type})</th>
+                            <th>Height<br />({$block_item_dimension_type})</th>
+                            <th>Net qty.<br/>({$calculationType})</th>
+                            <th>Width<br />({$block_item_dimension_type})</th>
+                            <th>Height<br />({$block_item_dimension_type})</th>
+                            <th>Net qty.<br/>({$calculationType})</th>
+                            <th>Width<br />({$block_item_dimension_type})</th>
+                            <th>Height<br />({$block_item_dimension_type})</th>
+                            <th>Net qty.<br/>({$calculationType})</th>
+                            <th>Width<br />({$block_item_dimension_type})</th>
+                            <th>Height<br />({$block_item_dimension_type})</th>
+                            <th>Net qty.<br/>({$calculationType})</th>
                         </tr>
                     ";
                     }
@@ -235,17 +249,114 @@ require_once LOGIN_CHECK;
                         <td>{$i}</td>
                         <td>{$block_item_width}</td>
                         <td>{$block_item_height}</td>
-                        <td>{$block_thickness_size}</td>
-                        <td>{$totalArea}</td>
+                        <td><strong>{$totalArea}</strong></td>
                     ";
 
                     if ($block_item_damage_area != '') {
                         $damageItems = json_decode($block_item_damage_area, TRUE);
-                        for ($j = 0; $j < sizeof($damageItems); $j++) {
-                            extract($damageItems[0]);
-                            echo "<td>{$damageAreaWidth}</td>";
-                            echo "<td>{$damageAreaHeight}</td>";
+                        for ($j = 0; $j <= 5; $j++) {
+                            if (isset($damageItems[$j])) {
+                                extract($damageItems[$j]);
+
+                                $damageItemTotal = $damageAreaWidth * $damageAreaHeight;
+
+                                switch ([$measurementType, $calculationType]) {
+
+                                        // Centimeter
+
+                                    case ['cm', 'sq. mm.']:
+                                        $damageItemTotal = $damageItemTotal * 100;
+                                        break;
+                                    case ['cm', 'sq. in.']:
+                                        $damageItemTotal = $damageItemTotal * 0.15500031;
+                                        break;
+                                    case ['cm', 'sq. ft.']:
+                                        $damageItemTotal = $damageItemTotal * 0.001076391;
+                                        break;
+                                    case ['cm', 'sq. mt.']:
+                                        $damageItemTotal = $damageItemTotal * 0.0001;
+                                        break;
+
+                                        // Millimeter
+
+                                    case ['mm', 'sq. cm.']:
+                                        $damageItemTotal = $damageItemTotal * 0.01;
+                                        break;
+                                    case ['mm', 'sq. in.']:
+                                        $damageItemTotal = $damageItemTotal * 0.0015500031;
+                                        break;
+                                    case ['mm', 'sq. ft.']:
+                                        $damageItemTotal = $damageItemTotal * 0.00001076391;
+                                        break;
+                                    case ['mm', 'sq. mt.']:
+                                        $damageItemTotal = $damageItemTotal * 0.000001;
+                                        break;
+
+                                        // Inches
+
+                                    case ['in', 'sq. cm.']:
+                                        $damageItemTotal = $damageItemTotal * 6.4516;
+                                        break;
+                                    case ['in', 'sq. mm.']:
+                                        $damageItemTotal = $damageItemTotal * 645.16;
+                                        break;
+                                    case ['in', 'sq. ft.']:
+                                        $damageItemTotal = $damageItemTotal * 0.00694444;
+                                        break;
+                                    case ['in', 'sq. mt.']:
+                                        $damageItemTotal = $damageItemTotal * 0.00064516;
+                                        break;
+
+                                        // Feet
+
+                                    case ['ft', 'sq. cm.']:
+                                        $damageItemTotal = $damageItemTotal * 929.0304;
+                                        break;
+                                    case ['ft', 'sq. mm.']:
+                                        $damageItemTotal = $damageItemTotal * 92903.04;
+                                        break;
+                                    case ['ft', 'sq. in.']:
+                                        $damageItemTotal = $damageItemTotal * 144;
+                                        break;
+                                    case ['ft', 'sq. mt.']:
+                                        $damageItemTotal = $damageItemTotal * 0.09290304;
+                                        break;
+
+                                        // Meter
+
+                                    case ['mt', 'sq. cm.']:
+                                        $damageItemTotal = $damageItemTotal * 10000;
+                                        break;
+                                    case ['mt', 'sq. mm.']:
+                                        $damageItemTotal = $damageItemTotal * 1000000;
+                                        break;
+                                    case ['mt', 'sq. in.']:
+                                        $damageItemTotal = $damageItemTotal * 1550.0031;
+                                        break;
+                                    case ['mt', 'sq. ft.']:
+                                        $damageItemTotal = $damageItemTotal * 10.7639;
+                                        break;
+                                }
+
+                                $damageItemTotal = number_format((float)$damageItemTotal, 2, '.', '');
+                                echo "<td>{$damageAreaWidth}</td>";
+                                echo "<td>{$damageAreaHeight}</td>";
+                                echo "<td><strong>{$damageItemTotal}</strong></td>";
+                            } else {
+                                echo "<td>0</td>";
+                                echo "<td>0</td>";
+                                echo "<td><strong>0</strong></td>";
+                            }
                         }
+                    } else {
+                        echo "
+                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            ";
                     }
                     echo "</tr>";
                     $i++;
@@ -253,18 +364,35 @@ require_once LOGIN_CHECK;
 
                 echo "
                     <tr>
-                        <td colspan='3' style='text-align:right' ><strong>Block Gross Size ( $calculationType )</strong></td>
-                        <td colspan='2' style='text-align:left' >{$block_gross_size}</td>
+                        <td colspan='3' style='text-align:right' ><strong>Gross Qty. ( $calculationType )</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>{$block_gross_size}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>" . ((isset($slabDamageCount[0])) ? $slabDamageCount[0] : 0) . "</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>" . ((isset($slabDamageCount[1])) ? $slabDamageCount[1] : 0) . "</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>" . ((isset($slabDamageCount[2])) ? $slabDamageCount[2] : 0) . "</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>" . ((isset($slabDamageCount[3])) ? $slabDamageCount[3] : 0) . "</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>" . ((isset($slabDamageCount[4])) ? $slabDamageCount[4] : 0) . "</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>" . ((isset($slabDamageCount[5])) ? $slabDamageCount[5] : 0) . "</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan='3' style='text-align:right' ><strong>Damage Qty. ( $calculationType )</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>{$block_damage_size}</strong></td>
                         <td colspan=100 ></td>
                     </tr>
                     <tr>
-                        <td colspan='3' style='text-align:right' ><strong>Block Damage Size ( $calculationType )</strong></td>
-                        <td colspan='2' style='text-align:left' >{$block_damage_size}</td>
-                        <td colspan=100 ></td>
-                    </tr>
-                    <tr>
-                        <td colspan='3' style='text-align:right' ><strong>Block Net Size ( $calculationType )</strong></td>
-                        <td colspan='2' style='text-align:left' >{$block_net_size}</td>
+                        <td colspan='3' style='text-align:right' ><strong>Net Qty. ( $calculationType )</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>{$block_net_size}</strong></td>
                         <td colspan=100 ></td>
                     </tr>
                     ";

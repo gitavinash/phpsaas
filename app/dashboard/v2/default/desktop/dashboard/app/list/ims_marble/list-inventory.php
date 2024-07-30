@@ -4,10 +4,10 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 <table class="showTableList">
     <thead>
         <tr>
-            <th>Block name</th>
+            <th>Name</th>
             <th>Warehouse</th>
-            <th>Supplier</th>
-            <th>Total items</th>
+            <th>Type</th>
+            <th>Total slabs</th>
             <th>Gross qty.</th>
             <th>Less qty.</th>
             <th>Net Size</th>
@@ -31,7 +31,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 echo "<tr>
                                 <td>{$block_title}</td>
                                 <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
-                                <td>{$supplier_title}</td>
+                                <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
                                 <td>" . (($block_gross_size == '') ? '0 '  : $block_gross_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . (($block_damage_size == '') ? '0 '  : $block_damage_size) . ' ' . $block_size_dimension . "</td>
