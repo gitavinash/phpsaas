@@ -23,7 +23,7 @@ if (isset($showPage)) { ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Label</title>
+    <title>Print label | <?php echo SITE_NAME ?></title>
     <style>
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
