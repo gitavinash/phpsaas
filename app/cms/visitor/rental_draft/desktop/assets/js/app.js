@@ -405,6 +405,12 @@ $(document).ready(function () {
     ).val();
     var stateValue = getQueryParam("state");
 
+    if (notaryStampValue === "other") {
+      $("#otherValueWrapper").show();
+    } else {
+      $("#otherValueWrapper").hide();
+    }
+
     if (stateValue.toLowerCase() == "rajasthan") {
       if (notaryStampValue == 100) {
         notaryServiceCharge = 299;
@@ -414,10 +420,41 @@ $(document).ready(function () {
     } else {
       notaryServiceCharge = 249;
     }
-    $("#stampValue").html("₹ " + notaryStampValue);
+    if (notaryStampValue != "other") {
+      $("#stampValue").html("₹ " + notaryStampValue);
+    }
     $("#serviceCharges").html("₹ " + notaryServiceCharge);
     totalStampValue();
   });
+
+  // Optional: Update the stamp value when 'Other' input changes
+  if ($("#otherValue").length) {
+    $("#otherValue").on("input", function () {
+      var stateValue = getQueryParam("state");
+      var otherNotaryStampValue = $(this).val();
+      if (otherNotaryStampValue != "other") {
+        if (stateValue.toLowerCase() == "rajasthan") {
+          if (otherNotaryStampValue < 999) {
+            notaryServiceCharge = 299;
+          } else if (otherNotaryStampValue < 50001) {
+            notaryServiceCharge = 399;
+          } else {
+            notaryServiceCharge = 499;
+          }
+        } else {
+          if (otherNotaryStampValue < 999) {
+            notaryServiceCharge = 299;
+          } else if (otherNotaryStampValue < 50001) {
+            notaryServiceCharge = 399;
+          } else {
+            notaryServiceCharge = 499;
+          }
+        }
+        $("#stampValue").html("₹ " + otherNotaryStampValue);
+        totalStampValue();
+      }
+    });
+  }
 
   $('input[type="radio"][name="notaryService"]').change(function () {
     var notaryStamp = $(

@@ -81,6 +81,8 @@ if (!isset($validId)) {
                                             <div class='col-8 m-col-8'>
                                                 <p><strong>Rent agreement</strong></p>
                                                 <p><span><?php echo ucwords($state) ?> rent agreement</span></p>
+                                                <p><span><strong>Click here to download draft of rent
+                                                            agreement</strong></a></span></p>
                                             </div>
                                             <div class='col-2 m-col-2'>
                                                 <!-- <div class='price float-right'>
@@ -107,8 +109,14 @@ if (!isset($validId)) {
                                             <input type="radio" id="notary500" name="stampValue" value="500">
                                             <label for="notary500">₹ 500</label>
 
-                                            <input type="radio" id="notary500" name="stampValue" value="500">
-                                            <label for="notary500">₹ 1000</label>
+                                            <input type="radio" id="notaryOther" name="stampValue" value="other">
+                                            <label for="notaryOther">Other</label>
+
+                                            <!-- Input field for 'Other' value -->
+                                            <div id="otherValueWrapper" style="display:none;">
+                                                <input type="number" class="form-control" id="otherValue"
+                                                    placeholder="Enter amount">
+                                            </div>
 
                                         </div>
                                     </div>
@@ -188,6 +196,8 @@ if (!isset($validId)) {
                         <input type="hidden" name="order" id="orderId" value="<?php echo $request_id ?>">
                         <input type="hidden" name="paymentMode" id="paymentMode" value="online">
                         <a href="#" id="processToPaymentCustom" class="button">Proceed to payment</a>
+                        <a href="/view-agreement/?id=<?php echo $request_id ?>&state=<?php echo $state ?>"
+                            target="_blank" class="button blue-bg">Download draft</a>
                     </div>
                 </div>
                 <!-- </div> -->

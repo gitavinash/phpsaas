@@ -2,7 +2,7 @@
 
 $orderId = base64_decode($id);
 
-if ($verifyData = mysqli_query($connection, "SELECT order_status, enquiry_status, enquiry_message FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "enquiry ON order_product_id=enquiry_id WHERE order_id='{$orderId}' AND order_status=1 AND enquiry_status=1")) {
+if ($verifyData = mysqli_query($connection, "SELECT order_status, enquiry_status, enquiry_message FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "enquiry ON order_product_id=enquiry_id WHERE order_id='{$orderId}' AND enquiry_status=1 AND order_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($verifyData) != 0) {
         extract(mysqli_fetch_assoc($verifyData));
         extract(json_decode($enquiry_message, TRUE));
@@ -175,10 +175,14 @@ if (isset($showAgreement)) { ?>
 </head>
 
 <body>
+    <?php
+
+        if ($order_status != 1) { ?>
     <div class="watermark">
         <span><?php echo SITE_URL ?></span>
     </div>
     <?php
+        }
 
         $day = date('j', strtotime($agreement_start_date));
         $month = date('F', strtotime($agreement_start_date));
@@ -304,4 +308,8 @@ if (isset($showAgreement)) { ?>
 
 </html>
 <?php
+} else {
+    http_response_code(403);
+    echo "No access found";
+    exit();
 }
