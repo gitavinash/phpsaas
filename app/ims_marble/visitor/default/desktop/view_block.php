@@ -8,13 +8,6 @@ if (isset($id)) {
     if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) > 0) {
             extract(mysqli_fetch_assoc($checkBlock));
-
-            // $supplierAddress = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "supplier INNER JOIN " . TABLE_PREFIX . "address ON supplier_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id WHERE supplier_id={$block_supplier_id}");
-
-            // if (mysqli_num_rows($supplierAddress) > 0) {
-            //     print_r(mysqli_fetch_assoc($supplierAddress));
-            // }
-
             $showPage = true;
         }
     }
