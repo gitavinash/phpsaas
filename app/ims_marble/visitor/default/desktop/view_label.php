@@ -58,8 +58,8 @@ if (isset($showPage)) { ?>
     }
 
     .logo {
-        width: 80px;
-        height: auto;
+        width: auto;
+        max-height: 80px;
     }
 
     .qr-code {
