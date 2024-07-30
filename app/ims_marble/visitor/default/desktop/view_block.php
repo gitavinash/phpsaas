@@ -37,6 +37,11 @@ if (isset($showPage)) { ?>
         background-color: #f4f4f4;
     }
 
+    a {
+        text-decoration: none;
+        color: <?php echo SITE_THEME_COLOUR ?>;
+    }
+
     .container {
         max-width: 100%;
         min-height: 100vh;
@@ -84,7 +89,7 @@ if (isset($showPage)) { ?>
     .inventory-info h2 {
         font-size: 24px;
         margin-bottom: 10px;
-        color: #333;
+        color: <?php echo SITE_THEME_COLOUR ?>;
     }
 
     .inventory-info p {
@@ -173,6 +178,21 @@ if (isset($showPage)) { ?>
         background-color: <?php echo SITE_THEME_COLOUR ?>;
     }
 
+    p.credit strong {
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 24px;
+    }
+
+    p.credit {
+        font-size: 14px;
+        font-weight: 700;
+        float: left;
+        width: 100%;
+        text-align: center;
+        padding: 5rem 0rem 0rem 0rem;
+    }
+
     /* Responsive Styles */
     @media (max-width: 768px) {
         .gallery img {
@@ -235,6 +255,8 @@ if (isset($showPage)) { ?>
             <p><strong>Description:</strong> <?php echo $block_description ?></p>
         </div>
         <a href="/view_inventory/?id=<?php echo $id ?>" class="download-btn">Download Now</a>
+        <p class="credit"><strong>Design &amp; Developed by</strong><a href="https://blumox.com"
+                title="ERP for Marble Warehouse"><br />Blumox Technologies</a></p>
     </div>
 
     <!-- Fullscreen Image Viewer -->
