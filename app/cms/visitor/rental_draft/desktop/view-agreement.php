@@ -2,7 +2,7 @@
 
 $orderId = base64_decode($id);
 
-if ($verifyData = mysqli_query($connection, "SELECT order_status, enquiry_status, enquiry_message FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "enquiry ON order_product_id=enquiry_id WHERE order_id='{$orderId}' AND enquiry_status=1 AND order_site_id=" . SITE_ID)) {
+if ($verifyData = mysqli_query($connection, "SELECT enquiry_status, enquiry_message FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id='{$orderId}' AND enquiry_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($verifyData) != 0) {
         extract(mysqli_fetch_assoc($verifyData));
         extract(json_decode($enquiry_message, TRUE));
@@ -177,7 +177,7 @@ if (isset($showAgreement)) { ?>
 <body>
     <?php
 
-        if ($order_status != 1) { ?>
+        if ($enquiry_status != 10) { ?>
     <div class="watermark">
         <span><?php echo SITE_URL ?></span>
     </div>
