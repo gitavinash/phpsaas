@@ -81,8 +81,6 @@ if (!isset($validId)) {
                                             <div class='col-8 m-col-8'>
                                                 <p><strong>Rent agreement</strong></p>
                                                 <p><span><?php echo ucwords($state) ?> rent agreement</span></p>
-                                                <p><span><strong>Click here to download draft of rent
-                                                            agreement</strong></a></span></p>
                                             </div>
                                             <div class='col-2 m-col-2'>
                                                 <!-- <div class='price float-right'>
