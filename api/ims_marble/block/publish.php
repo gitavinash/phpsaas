@@ -51,7 +51,7 @@ if (isset($validRequest)) {
     // Check block code
 
     if ($itemCode != '') {
-        $checkItemCode = mysqli_query($connection, "SELECT block_code FROM {$tableNamePrefix}block WHERE block_code='{$itemCode}' AND block_status=1 AND block_site_id=" . SITE_ID);
+        $checkItemCode = mysqli_query($connection, "SELECT block_code FROM {$tableNamePrefix}block WHERE block_code='{$itemCode}' AND block_warehouse_id='{$warehouseId}' AND block_status=1 AND block_site_id=" . SITE_ID);
         if (mysqli_num_rows($checkItemCode) == 0) {
             $validBlockCode = true;
         } else {
