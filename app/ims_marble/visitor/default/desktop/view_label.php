@@ -29,10 +29,10 @@ if (isset($showPage)) { ?>
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        /* display: flex; */
+        /* justify-content: center;
+        align-items: center; */
+        /* height: 100vh; */
         background-color: #eaeaea;
     }
 
@@ -41,13 +41,13 @@ if (isset($showPage)) { ?>
         padding: 30px;
         background-color: #fff;
         border: 1px solid #ddd;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        /* border-radius: 15px; */
+        /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); */
         transition: all 0.3s ease-in-out;
     }
 
     .label-box:hover {
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); */
     }
 
     .label-header {
@@ -164,6 +164,8 @@ if (isset($showPage)) { ?>
             <h2>Block Information</h2>
             <p><strong>Name:</strong> <?php echo $block_title ?></p>
             <p><strong>ID:</strong> <?php echo $block_code ?></p>
+            <p><strong>Slabs:</strong> <?php echo $block_total_item ?></p>
+            <p><strong>Thickness:</strong> <?php echo $block_thickness_size . ' ' . $block_thickness_dimension ?></p>
         </div>
     </div>
 </body>
