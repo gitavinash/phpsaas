@@ -715,7 +715,7 @@ var manageDamageBtn = document.getElementsByClassName("manageDamage");
 if (manageDamageBtn) {
   $(".manageDamage").click(function (e) {
     e.preventDefault();
-    activeDamageBoxId = $(this).attr("data-id");
+    activeDamageBoxId = $(this).attr("data-index");
     $("#blockItemId").text(activeDamageBoxId);
     $(".popUpUpdateDamageForm")
       .find("input")

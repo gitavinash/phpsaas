@@ -183,7 +183,7 @@ if (isset($validId)) {
                             </td>
                             <td>
                                 <div class='actionBtn form-group' style='display:" . (($block_item_status == 2) ? 'none' : 'block') . "' >
-                                    <a href='#' class='bgYellow manageDamage' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
+                                    <a href='#' class='bgYellow manageDamage' data-index='{$i}' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
                                     <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i></a>
                                 </div>
                             </td>

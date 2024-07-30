@@ -107,6 +107,9 @@ if (!isset($validId)) {
                                             <input type="radio" id="notary500" name="stampValue" value="500">
                                             <label for="notary500">₹ 500</label>
 
+                                            <input type="radio" id="notary500" name="stampValue" value="500">
+                                            <label for="notary500">₹ 1000</label>
+
                                         </div>
                                     </div>
                                 </div>
