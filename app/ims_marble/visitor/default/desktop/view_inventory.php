@@ -4,12 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block slab measurment</title>
+    <title>Block slab measurment | <?php echo SITE_NAME ?></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
     <style>
     body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        font-family: "Rubik", sans-serif;
+        margin: 0;
+        padding: 0;
         font-size: 0.8rem;
     }
 
@@ -52,19 +57,18 @@
     }
 
     a {
-        background-color: #4CAF50;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
-        float: left;
+        display: block;
         width: 100%;
-        text-align: center;
-        padding: 1rem 1rem;
-        box-sizing: border-box;
-        border-radius: 7px;
-        border: none;
-        font-size: 1rem;
+        padding: 10px 20px;
+        font-size: 16px;
         color: #fff;
-        letter-spacing: 1px;
+        background-color: <?php echo SITE_THEME_COLOUR ?>;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        box-sizing: border-box;
+        cursor: pointer;
     }
     </style>
 </head>
@@ -89,10 +93,10 @@
 
                         echo "<table>";
                         echo "<tr>
-                        <td colspan=5><img src='" . SITE_LOGO . "'></td>
+                        <td colspan=100><img src='" . SITE_LOGO . "'></td>
                         </tr>";
                         echo "<tr>
-                        <td colspan=5><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
+                        <td colspan=100><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
                         </tr>";
                         echo "<tr>
                         <th>S no.</th>
@@ -106,7 +110,6 @@
                     }
 
                     $totalArea = $block_item_width * $block_item_height;
-
                     switch ([$measurementType, $calculationType]) {
 
                             // Centimeter
@@ -186,6 +189,8 @@
                     }
 
                     $totalArea = number_format((float)$totalArea, 2, '.', '');
+                    $netArea = number_format((float)$totalArea -
+                        $block_item_damage_size, 2, '.', '');
 
                     echo "
                     <tr>
@@ -194,6 +199,8 @@
                         <td>{$block_item_height}</td>
                         <td>{$block_thickness_size}</td>
                         <td>{$totalArea}</td>
+                        <td>{$block_item_damage_size}</td>
+                        <td>{$netArea}</td>
                     </tr>
                 ";
                     $i++;
@@ -203,14 +210,16 @@
                     <tr>
                         <td colspan='3' ><strong>Block Gross Size ( $calculationType )</strong></td>
                         <td colspan='2'>{$block_gross_size}</td>
+                        <td colspan='100'></td>
                     </tr>
                     <tr>
                         <td colspan='3' ><strong>Block Net Size ( $calculationType )</strong></td>
                         <td colspan='2'>{$block_net_size}</td>
+                        <td colspan='100'></td>
                     </tr>
                     <tr>
                         <td colspan=100>
-                            <a id='download'>Download measurements as PDF</a>
+                            <a id='download'>Download PDF</a>
                         </td>
                     </tr>
                     ";
@@ -223,12 +232,6 @@
         echo "Missing required details";
     }
     ?>
-    <script>
-    document.getElementById('download').addEventListener('click', function() {
-        const element = document.getElementById('content');
-        html2pdf().from(element).save();
-    });
-    </script>
 </body>
 
 </html>

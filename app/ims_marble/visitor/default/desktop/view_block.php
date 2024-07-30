@@ -117,6 +117,7 @@ if (isset($showPage)) { ?>
         text-decoration: none;
         transition: background-color 0.3s ease;
         box-sizing: border-box;
+        cursor: pointer;
     }
 
     .download-btn:hover {
@@ -254,7 +255,7 @@ if (isset($showPage)) { ?>
                 ?>
             <p><strong>Description:</strong> <?php echo $block_description ?></p>
         </div>
-        <a href="/view_inventory/?id=<?php echo $id ?>" class="download-btn">Download Now</a>
+        <a href="/view_inventory/?id=<?php echo $id ?>" class="download-btn">Show Inventory</a>
         <p class="credit"><strong>Design &amp; Developed by</strong><a href="https://blumox.com"
                 title="ERP for Marble Warehouse"><br />Blumox Technologies</a></p>
     </div>
