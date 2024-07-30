@@ -29,7 +29,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 extract($inventoryData);
 
                 echo "<tr>
-                                <td>{$block_title}</td>
+                                <td>" . (($block_code != '') ? $block_code . ' - ' : '') . "{$block_title}</td>
                                 <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
                                 <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
