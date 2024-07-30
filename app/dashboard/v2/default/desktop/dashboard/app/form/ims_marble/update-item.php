@@ -147,14 +147,14 @@ if (isset($validId)) {
 
 <div class="step-open-box step_1_box">
     <div class="form-header">
-        <h1><?php echo (($block_gross_size == '') ? 'Generate block slabs' : 'Manage block Slabs') ?></h1>
+        <h1><?php echo (($block_gross_size == 0) ? 'Generate block slabs' : 'Manage block Slabs') ?></h1>
         <img src="<?php echo IMG_LIBRARY ?>storyset/manage.png" alt="Add new Hosting tld">
     </div>
 </div>
 
 <?php
 
-    if ($block_gross_size != '') { ?>
+    if ($block_gross_size != 0) { ?>
 <!-- Show all slabs list -->
 <div class="step-open-box step_1_box full-width">
     <table>
