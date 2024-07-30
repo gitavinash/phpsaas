@@ -4,7 +4,6 @@ let count = 1;
 var oldJsonObject = "";
 
 function convertAreatoFeet(size, type) {
-  console.log(`Type: `, type);
   switch (type) {
     case "mm":
       updateSize = size * 0.00328084;
@@ -715,8 +714,8 @@ var manageDamageBtn = document.getElementsByClassName("manageDamage");
 if (manageDamageBtn) {
   $(".manageDamage").click(function (e) {
     e.preventDefault();
-    activeDamageBoxId = $(this).attr("data-index");
-    $("#blockItemId").text(activeDamageBoxId);
+    activeDamageBoxId = $(this).attr("data-id");
+    $("#blockItemId").text($(this).attr("data-index"));
     $(".popUpUpdateDamageForm")
       .find("input")
       .each(function () {
@@ -871,11 +870,6 @@ if (updateDamageBtn) {
         heightSizes = convertAreatoFeet(
           formData.damageAreaHeight,
           formData.damageAreaHeightThicknessDimension
-        );
-
-        console.log(
-          `Calculate: ${widthSizes} * ${heightSizes} = `,
-          widthSizes * heightSizes
         );
 
         totalSizes.push(widthSizes * heightSizes);
