@@ -22,6 +22,23 @@ if ($checkInventory = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix
         extract(mysqli_fetch_assoc($checkInventory));
         $measurementData = constant(strtoupper('measurement_' . $block_product_type));
         extract(json_decode($measurementData, TRUE));
+        switch ($measurementType) {
+            case 'mm':
+                $measurementType = 'Millimeter';
+                break;
+            case 'cm':
+                $measurementType = 'Centimeter';
+                break;
+            case 'in':
+                $measurementType = 'Inches';
+                break;
+            case 'mt':
+                $measurementType = 'Meter';
+                break;
+            default:
+                $measurementType = 'Feet';
+                break;
+        }
     }
 }
 
@@ -54,11 +71,20 @@ if (isset($validId)) {
                                     </div>
                                     <div class="col-2">
                                         <div class="form-group">
-                                            <select class="form-control" name="damageAreaWidthThicknessDimension">
-                                                <option value="mm">Millimeter</option>
-                                                <option value="cm" selected>Centimeter</option>
-                                                <option value="in">Inches</option>
-                                                <option value="ft">Feet</option>
+                                            <select class="form-control" name="damageAreaWidthThicknessDimension"
+                                                disabled>
+                                                <option value="mm"
+                                                    <?php echo ((strtolower($measurementType) == 'millimeter') ? 'selected' : '') ?>>
+                                                    Millimeter</option>
+                                                <option value="cm"
+                                                    <?php echo ((strtolower($measurementType) == 'centimeter') ? 'selected' : '') ?>>
+                                                    Centimeter</option>
+                                                <option value="in"
+                                                    <?php echo ((strtolower($measurementType) == 'inches') ? 'selected' : '') ?>>
+                                                    Inches</option>
+                                                <option value="ft"
+                                                    <?php echo ((strtolower($measurementType) == 'feet') ? 'selected' : '') ?>>
+                                                    Feet</option>
                                             </select>
                                             <label class="form-lable" id="Label">Size<sup>*</sup></label>
                                         </div>
@@ -74,11 +100,20 @@ if (isset($validId)) {
                                     </div>
                                     <div class="col-2">
                                         <div class="form-group">
-                                            <select class="form-control" name="damageAreaHeightThicknessDimension">
-                                                <option value="mm">Millimeter</option>
-                                                <option value="cm" selected>Centimeter</option>
-                                                <option value="in">Inches</option>
-                                                <option value="ft">Feet</option>
+                                            <select class="form-control" name="damageAreaHeightThicknessDimension"
+                                                disabled>
+                                                <option value="mm"
+                                                    <?php echo ((strtolower($measurementType) == 'millimeter') ? 'selected' : '') ?>>
+                                                    Millimeter</option>
+                                                <option value="cm"
+                                                    <?php echo ((strtolower($measurementType) == 'centimeter') ? 'selected' : '') ?>>
+                                                    Centimeter</option>
+                                                <option value="in"
+                                                    <?php echo ((strtolower($measurementType) == 'inches') ? 'selected' : '') ?>>
+                                                    Inches</option>
+                                                <option value="ft"
+                                                    <?php echo ((strtolower($measurementType) == 'feet') ? 'selected' : '') ?>>
+                                                    Feet</option>
                                             </select>
                                             <label class="form-lable" id="Label">Size<sup>*</sup></label>
                                         </div>
@@ -133,6 +168,7 @@ if (isset($validId)) {
                         while ($blockItem = mysqli_fetch_assoc($checkItems)) {
                             extract($blockItem);
                             if ($i == 1) {
+                                echo "<script>var measurementType='" . strtolower($measurementType) . "'</script>";
                                 $blockSizeCalculation = '';
 
                                 switch ($block_item_dimension_type) {
@@ -205,27 +241,7 @@ if (isset($validId)) {
     </div>
 </div>
 <?php
-    } else {
-
-        switch ($measurementType) {
-            case 'mm':
-                $measurementType = 'Millimeter';
-                break;
-            case 'cm':
-                $measurementType = 'Centimeter';
-                break;
-            case 'in':
-                $measurementType = 'Inches';
-                break;
-            case 'mt':
-                $measurementType = 'Meter';
-                break;
-            default:
-                $measurementType = 'Feet';
-                break;
-        }
-
-    ?>
+    } else { ?>
 <!-- Show only clone option -->
 <div class="step-open-box step_1_box full-width">
     <div class="box-1">

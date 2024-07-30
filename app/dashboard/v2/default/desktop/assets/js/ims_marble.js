@@ -745,26 +745,18 @@ if (manageDamageBtn) {
                 <div class="col-2">
                                         <div class="form-group">
                                             <select class="form-control"
-                                                name="damageAreaWidthThicknessDimension">
+                                                name="damageAreaWidthThicknessDimension" disabled>
                                                 <option value="mm" ` +
-              (value["damageAreaWidthThicknessDimension"] == "mm"
-                ? "selected"
-                : "") +
+              (measurementType == "millimeter" ? "selected" : "") +
               `>Millimeter</option>
                                                 <option value="cm" ` +
-              (value["damageAreaWidthThicknessDimension"] == "cm"
-                ? "selected"
-                : "") +
+              (measurementType == "centimeter" ? "selected" : "") +
               `>Centimeter</option>
                                                 <option value="in" ` +
-              (value["damageAreaWidthThicknessDimension"] == "in"
-                ? "selected"
-                : "") +
+              (measurementType == "inches" ? "selected" : "") +
               `>Inches</option>
                                                 <option value="ft" ` +
-              (value["damageAreaWidthThicknessDimension"] == "ft"
-                ? "selected"
-                : "") +
+              (measurementType == "feet" ? "selected" : "") +
               `>Feet</option>
                                             </select>
                                             <label class="form-lable" id="Label">Size<sup>*</sup></label>
@@ -779,25 +771,17 @@ if (manageDamageBtn) {
                 <div class="col-2">
                                         <div class="form-group">
                                             <select class="form-control"
-                                                name="damageAreaHeightThicknessDimension"><option value="mm" ` +
-              (value["damageAreaHeightThicknessDimension"] == "mm"
-                ? "selected"
-                : "") +
+                                                name="damageAreaHeightThicknessDimension" disabled><option value="mm" ` +
+              (measurementType == "millimeter" ? "selected" : "") +
               `>Millimeter</option>
                                                 <option value="cm" ` +
-              (value["damageAreaHeightThicknessDimension"] == "cm"
-                ? "selected"
-                : "") +
+              (measurementType == "centimeter" ? "selected" : "") +
               `>Centimeter</option>
                                                 <option value="in" ` +
-              (value["damageAreaHeightThicknessDimension"] == "in"
-                ? "selected"
-                : "") +
+              (measurementType == "inches" ? "selected" : "") +
               `>Inches</option>
                                                 <option value="ft" ` +
-              (value["damageAreaHeightThicknessDimension"] == "ft"
-                ? "selected"
-                : "") +
+              (measurementType == "feet" ? "selected" : "") +
               `>Feet</option>
                                             </select>
                                             <label class="form-lable" id="Label">Size<sup>*</sup></label>
