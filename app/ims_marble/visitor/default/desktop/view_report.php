@@ -11,11 +11,11 @@ require_once LOGIN_CHECK;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Block slab measurment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <!-- <script>
+    <script>
     window.addEventListener('load', function() {
         window.print();
     });
-    </script> -->
+    </script>
     <style>
     @page {
         size: landscape;
@@ -350,12 +350,12 @@ require_once LOGIN_CHECK;
                         }
                     } else {
                         echo "
-                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
-                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
-                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
-                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
-                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
-                            <td>0</td>0<td>0</td><td><strong>0</strong></td>
+                            <td>0</td><td></td><td><strong>0</strong></td>
+                            <td>0</td><td></td><td><strong>0</strong></td>
+                            <td>0</td><td></td><td><strong>0</strong></td>
+                            <td>0</td><td></td><td><strong>0</strong></td>
+                            <td>0</td><td></td><td><strong>0</strong></td>
+                            <td>0</td><td></td><td><strong>0</strong></td>
                             ";
                     }
                     echo "</tr>";
