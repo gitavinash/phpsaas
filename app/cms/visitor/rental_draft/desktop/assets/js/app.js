@@ -3,6 +3,7 @@ $(document).ready(function () {
   var serviceCharges = 0;
   var deliveryCharges = 0;
   var totalOrdervalue = 0;
+  var notaryStampValue = 0;
   var updatedTotalValue = 0;
   function getQueryParam(name) {
     var urlParams = new URLSearchParams(window.location.search);
@@ -400,7 +401,7 @@ $(document).ready(function () {
   }
 
   $('input[type="radio"][name="stampValue"]').change(function () {
-    var notaryStampValue = $(
+    notaryStampValue = $(
       'input[type="radio"][name="stampValue"]:checked'
     ).val();
     var stateValue = getQueryParam("state");
@@ -450,9 +451,15 @@ $(document).ready(function () {
             notaryServiceCharge = (otherNotaryStampValue * 20) / 100;
           }
         }
+        notaryStampValue = otherNotaryStampValue;
         $("#stampValue").html("₹ " + otherNotaryStampValue);
         if (notaryServiceCharge > 299) {
           $("#serviceCharges").html("₹ " + notaryServiceCharge);
+        }
+        if (notaryStampValue < 1000) {
+          $("#notaryService").html("₹ " + 149);
+        } else {
+          $("#notaryService").html("₹ " + 299);
         }
         totalStampValue();
       }
@@ -464,7 +471,11 @@ $(document).ready(function () {
       'input[type="radio"][name="notaryService"]:checked'
     ).val();
     if (notaryStamp == "true") {
-      $("#notaryService").html("₹ " + 299);
+      if (notaryStampValue < 1000) {
+        $("#notaryService").html("₹ " + 149);
+      } else {
+        $("#notaryService").html("₹ " + 299);
+      }
     } else {
       $("#notaryService").html("₹ " + 0);
     }
