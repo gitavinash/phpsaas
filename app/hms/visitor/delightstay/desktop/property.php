@@ -18,7 +18,7 @@ require_once 'header.php';
                                             <h3><?php echo $property_title ?></h3>
                                         </div>
                                         <div class="listing_star__left details_left__star">
-                                            <h3>4 <span>-star hotel</span></h3>
+                                            <h3><?php echo str_replace('_', ' ', $property_type) ?></h3>
                                             <h6><img src="<?php echo USER_IMAGES ?>map.png" class="img-fluid"
                                                     alt=""><?php echo $property_city ?>
                                             </h6>
@@ -60,8 +60,9 @@ require_once 'header.php';
                                             </div>
                                             <div class="hotel_book__now">
                                                 <div class="hotel_price">
-                                                    <h3>₹3,919 <span>+ ₹495 tax / night</span></h3>
-                                                    <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
+                                                    <h3>₹ <?php echo $property_starting_price ?> <span> / night</span>
+                                                    </h3>
+                                                    <!-- <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p> -->
                                                 </div>
                                                 <div class="book_now hotel_book">
                                                     <button class="global_btn">book this now</button>
@@ -73,12 +74,13 @@ require_once 'header.php';
                                 <div class="col-xl-6">
                                     <div class="details_right">
                                         <div class="hotel_img">
-                                            <img src="<?php echo USER_IMAGES ?>card1.png" class="img-fluid" alt="">
+                                            <img src="<?php echo $property_thumbnail ?>" class="img-fluid" alt="">
                                         </div>
                                         <div class="hotel_details">
                                             <div class="hotel_price">
-                                                <h3>₹3,919 <span>+ ₹495 tax / night</span></h3>
-                                                <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
+                                                <h3>₹ <?php echo $property_starting_price ?> <span> / night</span>
+                                                </h3>
+                                                <!-- <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p> -->
                                             </div>
                                             <div class="book_now hotel_book">
                                                 <button class="global_btn" data-bs-toggle="modal"
@@ -121,7 +123,7 @@ require_once 'header.php';
                             </div>
                             <div class="map_wrapper">
                                 <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14009.166186427328!2d77.0802252160038!3d28.621022960733747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d04ba6b064d0f%3A0xf609cdf712fe603e!2sJanakpuri%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1707471444282!5m2!1sen!2sin"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.2856003976253!2d77.05484342557082!3d28.5611853757037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1afff8b85f3d%3A0xaf3fcdee5955fc4!2sHimalayan%20Residency%2C%20Sector%2022%20Dwarka%2C%20Dwarka%2C%20Delhi%2C%20110077!5e0!3m2!1sen!2sin!4v1722405101723!5m2!1sen!2sin"
                                     width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                                     referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
@@ -131,14 +133,21 @@ require_once 'header.php';
                                 <h3>Rooms</h3>
                             </div>
                             <div class="rooms_container">
+                                <?php
+
+                                if ($checkRooms = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='{$property_id}' AND room_status=1 AND room_site_id=" . SITE_ID)) {
+                                    if (mysqli_num_rows($checkRooms) != 0) {
+                                        while ($roomData = mysqli_fetch_assoc($checkRooms)) {
+                                            extract($roomData); ?>
                                 <div class="room_box">
                                     <div class="room_box__left">
                                         <div class="room_img">
-                                            <img src="<?php echo USER_IMAGES ?>card2.png" class="img-fluid" alt="">
+                                            <img src="<?php echo (($room_feature_image != '') ? $room_feature_image : '/upload/others/image-not-found.png') ?>"
+                                                class="img-fluid" alt="">
                                         </div>
                                         <div class="room_details">
-                                            <h3>Deluxe room</h3>
-                                            <h6>144.0 sq.ft</h6>
+                                            <h3><?php echo ucwords(str_replace('_', ' ', $room_type)) ?></h3>
+                                            <!-- <h6>144.0 sq.ft</h6> -->
                                             <div class="room_details__facelities">
                                                 <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
                                                         alt="">bathroom
@@ -158,60 +167,12 @@ require_once 'header.php';
                                         </div>
                                     </div>
                                 </div>
-                                <div class="room_box">
-                                    <div class="room_box__left">
-                                        <div class="room_img">
-                                            <img src="<?php echo USER_IMAGES ?>card1.png" class="img-fluid" alt="">
-                                        </div>
-                                        <div class="room_details">
-                                            <h3>Deluxe room</h3>
-                                            <h6>144.0 sq.ft</h6>
-                                            <div class="room_details__facelities">
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="room_box__right">
-                                        <div class="room_book">
-                                            <a href="#" class="global_btn">book now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="room_box">
-                                    <div class="room_box__left">
-                                        <div class="room_img">
-                                            <img src="<?php echo USER_IMAGES ?>card_img1.png" class="img-fluid" alt="">
-                                        </div>
-                                        <div class="room_details">
-                                            <h3>Deluxe room</h3>
-                                            <h6>144.0 sq.ft</h6>
-                                            <div class="room_details__facelities">
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="room_box__right">
-                                        <div class="room_book">
-                                            <a href="#" class="global_btn">book now</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php
+                                        }
+                                    }
+                                }
+
+                                ?>
                             </div>
                         </div>
                     </div>
