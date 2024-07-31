@@ -443,14 +443,17 @@ $(document).ready(function () {
           }
         } else {
           if (otherNotaryStampValue < 999) {
-            notaryServiceCharge = 299;
+            notaryServiceCharge = 249;
           } else if (otherNotaryStampValue < 50001) {
-            notaryServiceCharge = 399;
+            notaryServiceCharge = (otherNotaryStampValue * 25) / 100;
           } else {
-            notaryServiceCharge = 499;
+            notaryServiceCharge = (otherNotaryStampValue * 20) / 100;
           }
         }
         $("#stampValue").html("₹ " + otherNotaryStampValue);
+        if (notaryServiceCharge > 299) {
+          $("#serviceCharges").html("₹ " + notaryServiceCharge);
+        }
         totalStampValue();
       }
     });
@@ -461,7 +464,7 @@ $(document).ready(function () {
       'input[type="radio"][name="notaryService"]:checked'
     ).val();
     if (notaryStamp == "true") {
-      $("#notaryService").html("₹ " + 150);
+      $("#notaryService").html("₹ " + 299);
     } else {
       $("#notaryService").html("₹ " + 0);
     }

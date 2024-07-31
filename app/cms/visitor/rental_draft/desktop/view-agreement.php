@@ -23,7 +23,8 @@ if (isset($showAgreement)) { ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent agreement between <?php echo ucwords($landlord_name) ?> and <?php echo ucwords($tenate_name) ?></title>
+    <title>Rent agreement between <?php echo ucwords($landlord_name) ?> and <?php echo ucwords($tenate_name) ?> |
+        <?php echo SITE_NAME ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link

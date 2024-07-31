@@ -12,12 +12,12 @@ if (isset($request_id)) {
                     case 'rajasthan':
                         $stampValue = 100;
                         $serviceCharges = 299;
-                        $notaryService = 150;
+                        $notaryService = 299;
                         break;
                     default:
                         $stampValue = 100;
                         $serviceCharges = 249;
-                        $notaryService = 150;
+                        $notaryService = 299;
                         break;
                 }
             }
