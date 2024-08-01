@@ -408,6 +408,7 @@ $(document).ready(function () {
 
     if (notaryStampValue === "other") {
       $("#otherValueWrapper").show();
+      $("#otherValue").val("");
     } else {
       $("#otherValueWrapper").hide();
     }
@@ -422,6 +423,11 @@ $(document).ready(function () {
       notaryServiceCharge = 249;
     }
     if (notaryStampValue != "other") {
+      if (notaryStampValue < 1000) {
+        $("#notaryService").html("₹ " + 149);
+      } else {
+        $("#notaryService").html("₹ " + 299);
+      }
       $("#stampValue").html("₹ " + notaryStampValue);
     }
     $("#serviceCharges").html("₹ " + notaryServiceCharge);
