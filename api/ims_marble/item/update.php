@@ -43,7 +43,7 @@ if (isset($validRequest)) {
 
     // Check block code
 
-    $checkBlockItem = mysqli_query($connection, "SELECT block_item_parent_id, block_gross_size, block_size_dimension,block_product_type, block_item_damage_area FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
+    $checkBlockItem = mysqli_query($connection, "SELECT block_item_parent_id, block_gross_size, block_size_dimension,block_product_type, block_item_damage_area, block_item_damage_size FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
     if (mysqli_num_rows($checkBlockItem) != 0) {
 
         extract(mysqli_fetch_assoc($checkBlockItem));
@@ -129,7 +129,7 @@ if (isset($validRequest)) {
                 break;
         }
 
-        $damageAreaSize = number_format((float)$damageAreaSize, 2, '.', '');
+        $damageAreaSize = number_format((float)$damageAreaSize, 2, '.', '') - $block_item_damage_size;
 
         $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_area='{$damageArea}', block_item_status=1, block_item_damage_count={$totatDamageCount} WHERE block_item_id='{$blockItemId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID);
 

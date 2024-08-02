@@ -9,13 +9,13 @@ require_once LOGIN_CHECK;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block slab measurment</title>
+    <title>Block slab measurment report | <?php echo SITE_NAME ?></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <script>
+    <!-- <script>
     window.addEventListener('load', function() {
         window.print();
     });
-    </script>
+    </script> -->
     <style>
     @page {
         size: landscape;
@@ -24,7 +24,8 @@ require_once LOGIN_CHECK;
 
     body {
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 0;
+        padding: 0;
         font-size: 0.8rem;
     }
 
@@ -116,14 +117,14 @@ require_once LOGIN_CHECK;
         $blockId = base64_decode($id);
         if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status=1 AND block_item_site_id=" . SITE_ID . " ORDER BY block_item_id ASC")) {
             if (mysqli_num_rows($checkBlock) > 0) {
-                $i = 1;
+                $i = 0;
+                $slabDamageCount = array();
                 while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
                     extract($slabSize);
-                    if ($i == 1) {
+                    if ($i == 0) {
 
                         $measurementData = constant(strtoupper('measurement_' . $block_product_type));
                         extract(json_decode($measurementData, TRUE));
-                        $slabDamageCount[] = $block_item_damage_size;
                         echo "<table>";
                         echo "<tr>
                         <td colspan=100><img src='" . SITE_LOGO . "'></td>
@@ -254,7 +255,8 @@ require_once LOGIN_CHECK;
 
                     if ($block_item_damage_area != '') {
                         $damageItems = json_decode($block_item_damage_area, TRUE);
-                        for ($j = 0; $j <= 5; $j++) {
+                        $slabTotalDamage = 0;
+                        for ($j = 0; $j < 6; $j++) {
                             if (isset($damageItems[$j])) {
                                 extract($damageItems[$j]);
 
@@ -338,28 +340,38 @@ require_once LOGIN_CHECK;
                                         break;
                                 }
 
-                                $damageItemTotal = number_format((float)$damageItemTotal, 2, '.', '');
                                 echo "<td>{$damageAreaWidth}</td>";
                                 echo "<td>{$damageAreaHeight}</td>";
-                                echo "<td><strong>{$damageItemTotal}</strong></td>";
+                                echo "<td><strong>{$block_item_damage_size}</strong></td>";
+
+                                $slabDamageCount[$i][$j] = $block_item_damage_size;
                             } else {
+                                $slabDamageCount[$i][$j] = 0;
                                 echo "<td>0</td>";
                                 echo "<td>0</td>";
-                                echo "<td><strong>0</strong></td>";
+                                echo "<td>0</td>";
                             }
                         }
                     } else {
                         echo "
-                            <td>0</td><td></td><td><strong>0</strong></td>
-                            <td>0</td><td></td><td><strong>0</strong></td>
-                            <td>0</td><td></td><td><strong>0</strong></td>
-                            <td>0</td><td></td><td><strong>0</strong></td>
-                            <td>0</td><td></td><td><strong>0</strong></td>
-                            <td>0</td><td></td><td><strong>0</strong></td>
+                            <td>0</td><td>0</td><td><strong>0</strong></td>
+                            <td>0</td><td>0</td><td><strong>0</strong></td>
+                            <td>0</td><td>0</td><td><strong>0</strong></td>
+                            <td>0</td><td>0</td><td><strong>0</strong></td>
+                            <td>0</td><td>0</td><td><strong>0</strong></td>
+                            <td>0</td><td>0</td><td><strong>0</strong></td>
                             ";
                     }
                     echo "</tr>";
                     $i++;
+                }
+
+                $numCols = ((isset($slabDamageCount[0])) ? count($slabDamageCount[0]) : 0);
+                $damageSumArray = array_fill(0, $numCols, 0);
+                foreach ($slabDamageCount as $row) {
+                    foreach ($row as $index => $value) {
+                        $damageSumArray[$index] += $value;
+                    }
                 }
 
                 echo "
@@ -368,22 +380,22 @@ require_once LOGIN_CHECK;
                         <td colspan='1' style='text-align:right' ><strong>{$block_gross_size}</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[0])) ? $slabDamageCount[0] : 0) . "</strong></td>
+                        <td><strong>" . ((isset($damageSumArray[0])) ? $damageSumArray[0] : 0) . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[1])) ? $slabDamageCount[1] : 0) . "</strong></td>
+                        <td><strong>" . ((isset($damageSumArray[1])) ? $damageSumArray[1] : 0) . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[2])) ? $slabDamageCount[2] : 0) . "</strong></td>
+                        <td><strong>" . ((isset($damageSumArray[2])) ? $damageSumArray[2] : 0) . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[3])) ? $slabDamageCount[3] : 0) . "</strong></td>
+                        <td><strong>" . ((isset($slabDamageCount[3])) ? $damageSumArray[3] : 0) . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[4])) ? $slabDamageCount[4] : 0) . "</strong></td>
+                        <td><strong>" . ((isset($damageSumArray[4])) ? $damageSumArray[4] : 0) . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[5])) ? $slabDamageCount[5] : 0) . "</strong></td>
+                        <td><strong>" . ((isset($damageSumArray[5])) ? $damageSumArray[5] : 0) . "</strong></td>
                     </tr>
                     <tr>
                         <td colspan='3' style='text-align:right' ><strong>Damage Qty. ( $calculationType )</strong></td>
@@ -417,3 +429,6 @@ require_once LOGIN_CHECK;
 </body>
 
 </html>
+<?php
+exit();
+?>
