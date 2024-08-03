@@ -128,7 +128,8 @@ require_once 'header.php';
                                     </div>
                                     <div class="listing_details">
                                         <div class="listing_top">
-                                            <h3><?php echo $property_title . ', ' . ucwords($property_city) ?></h3>
+                                            <h3 class="hotelTitle">
+                                                <?php echo $property_title . ', ' . ucwords($property_city) ?></h3>
                                             <!-- <p>1.0k <span> rating</span></p> -->
                                         </div>
                                         <div class="listing_star">
