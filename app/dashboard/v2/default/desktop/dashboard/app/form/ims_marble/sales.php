@@ -1,6 +1,7 @@
 <ul class="steps-tab">
     <li class="step-box active" id="step_1"><span>1</span>Customer details</li>
-    <li class="step-box" id="step_2"><span>2</span>Sales details</li>
+    <li class="step-box" id="step_2"><span>2</span>Inventory details</li>
+    <li class="step-box" id="step_3"><span>3</span>Conformation</li>
 </ul>
 <div class="steps-box">
     <form action="#" id="addNewInventoryForm" method="POST" enctype="multipart/form-data">
@@ -30,7 +31,7 @@
                 <div class="box-1">
                     <div class="form-group">
                         <!-- <input type="submit" cla¯ss="btn btn-green step-box" id="step_2" value="N new sale"> -->
-                        <a class="btn btn-green step-box" id="step_2">Next, add Inventory <i
+                        <a class="btn btn-green step-box" style="float: right;" id="step_2">Next, add Inventory <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>
@@ -73,7 +74,21 @@
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" style="float: right;" id="step_2">Next, add sales <i
+                        <a class="btn btn-green step-box" style="float: right;" id="step_3">Next, add sales <i
+                                class="fi fi-rr-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="step-open-box step_3_box" style="display: none;">
+                <div class="form-header">
+                    <h1>Confirm sales details</h1>
+                    <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
+                </div>
+                <div class="productBoxClone">
+                </div>
+                <div class="box-1">
+                    <div class="form-group">
+                        <a class="btn btn-green step-box" style="float: right;" id="step_2">Submit request <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>

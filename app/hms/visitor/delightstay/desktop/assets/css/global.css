@@ -490,3 +490,11 @@ option {
   font-weight: 600;
   padding: 0.6rem 0rem;
 }
+
+img.destinationFeatureImage {
+  border-radius: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 150px;
+  height: 150px;
+}

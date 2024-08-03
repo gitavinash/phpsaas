@@ -60,8 +60,7 @@ require_once 'header.php';
                                             </div>
                                             <div class="hotel_book__now">
                                                 <div class="hotel_price">
-                                                    <h3>₹ <?php echo $property_starting_price ?> <span> / night</span>
-                                                    </h3>
+                                                    <!-- <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3> -->
                                                     <!-- <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p> -->
                                                 </div>
                                                 <div class="book_now hotel_book">
@@ -78,8 +77,7 @@ require_once 'header.php';
                                         </div>
                                         <div class="hotel_details">
                                             <div class="hotel_price">
-                                                <h3>₹ <?php echo $property_starting_price ?> <span> / night</span>
-                                                </h3>
+                                                <!-- <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3> -->
                                                 <!-- <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p> -->
                                             </div>
                                             <div class="book_now hotel_book">

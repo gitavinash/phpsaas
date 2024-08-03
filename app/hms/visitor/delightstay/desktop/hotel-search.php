@@ -1,6 +1,6 @@
 <?php
 
-$location = $urlStructure[0];
+$location = str_replace('-', ' ', $urlStructure[0]);
 $room = ((isset($room)) ? $room : 1);
 $guests = ((isset($guests)) ? $guests : 1);
 
@@ -321,10 +321,10 @@ require_once 'header.php';
                                                 <a href="#">+ more</a>
                                             </div>
                                         </div> -->
-                                            <div class="price">
+                                            <!-- <div class="price">
                                                 <h3>₹ <?php echo $property_starting_price ?> <span>/night</span></h3>
                                                 <del>₹ <?php echo $property_starting_mrp ?></del>
-                                            </div>
+                                            </div> -->
                                             <div class="book_now">
                                                 <a href="<?php echo $link_url ?>" target="_blank"
                                                     title="<?php echo $property_title ?>" class="global_btn">Book

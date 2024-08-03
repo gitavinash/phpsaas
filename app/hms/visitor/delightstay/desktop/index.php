@@ -123,42 +123,66 @@
                 <div class="row gx-0 justify-content-md-between p-0 explore">
                     <div class="col-6 col-md-3 flex-column flex-md-column flex-lg-row d-lg-flex justify-content-around">
                         <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img1.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Jim Corbett</p>
+                            <a href="/manali/hotel-in-manali/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/manali.webp"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Manali</p>
+                            </a>
                         </div>
                         <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img7.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Nainital</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3 flex-column flex-md-column flex-lg-row d-lg-flex justify-content-around">
-                        <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img3.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Agra</p>
-                        </div>
-                        <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img2.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Delhi</p>
+                            <a href="/shimla/hotel-in-shimla/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/shimla.jpeg"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Shimla</p>
+                            </a>
                         </div>
                     </div>
                     <div class="col-6 col-md-3 flex-column flex-md-column flex-lg-row d-lg-flex justify-content-around">
                         <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img6.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Jaipur</p>
+                            <a href="/jim-corbett/hotel-in-jim-corbett/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/jim-corbett.jpg"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Jim Corbett</p>
+                            </a>
                         </div>
                         <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img4.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Amritsar</p>
+                            <a href="/mussoorie/hotel-in-mussoorie/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/mussoorie.jpeg"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Mussoorie</p>
+                            </a>
                         </div>
                     </div>
                     <div class="col-6 col-md-3 flex-column flex-md-column flex-lg-row d-lg-flex justify-content-around">
                         <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img4.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Rishikesh</p>
+                            <a href="/goa/hotel-in-goa/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/goa.jpeg"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Goa</p>
+                            </a>
                         </div>
                         <div class="d-flex flex-column align-items-center">
-                            <img src="<?php echo USER_IMAGES ?>icon/explore_img4.svg" alt="" class="img-fluid  pt-5">
-                            <p class="font_size_18 py-3 text-center">Haridwar</p>
+                            <a href="/kashmir/hotel-in-kashmir/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/kashmir.png"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Kashmir</p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 flex-column flex-md-column flex-lg-row d-lg-flex justify-content-around">
+                        <div class="d-flex flex-column align-items-center">
+                            <a href="/jaipur/hotel-in-jaipur/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/jaipur.jpg"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Jaipur</p>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column align-items-center">
+                            <a href="/leh/hotel-in-leh/">
+                                <img src="<?php echo USER_IMAGES ?>icon/destinations/leh.jpeg"
+                                    class="destinationFeatureImage" alt="" class="img-fluid pt-5">
+                                <p class="font_size_18 py-3 text-center">Leh</p>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -172,7 +196,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <h2 class="font_size_35">Offers</h2>
                 <div class="d-flex align-items-center arrow font_size_18">
-                    <a href="">View all</a>
+                    <a href="/our-hotels/">View all</a>
                     <i class='bx bx-right-arrow-alt'></i>
                 </div>
             </div>
@@ -196,10 +220,8 @@
                             15–20 Jan
                         </p> -->
                             <div class="d-flex align-items-center justify-content-between py-2">
-                                <h4 class="font_size_22 ">₹ <?php echo $property_starting_price ?> <span
-                                        class="font_size_18 opacity-50">per
-                                        night</span>
-                                </h4>
+                                <!-- <h4 class="font_size_22 ">₹ <?php echo $property_starting_price ?> <span
+                                        class="font_size_18 opacity-50">per night</span></h4> -->
                                 <!-- <div>
                                 <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
                             </div> -->

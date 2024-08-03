@@ -13,28 +13,28 @@
                     <h5 class="orange">TOURS</h5>
                     <ul class="jimcorbett pt-4 opacity-50">
                         <li>
+                            <a href="/manali/hotel-in-manali/">Manali</a>
+                        </li>
+                        <li>
+                            <a href="/shimla/hotel-in-shimla/">Shimla</a>
+                        </li>
+                        <li>
                             <a href="/jim-corbett/hotel-in-jim-corbett/">Jim Corbett</a>
                         </li>
                         <li>
-                            <a href="/delhi/hotel-in-delhi/">Delhi</a>
+                            <a href="/mussoorie/hotel-in-mussoorie/">Mussoorie</a>
                         </li>
                         <li>
-                            <a href="/agra/hotel-in-agra/">Agra</a>
+                            <a href="/goa/hotel-in-goa/">Goa</a>
                         </li>
                         <li>
-                            <a href="/amritsar/hotel-in-amritsar/">Amritsar</a>
-                        </li>
-                        <li>
-                            <a href="/haridwar/hotel-in-haridwar/">Haridwar</a>
+                            <a href="/kashmir/hotel-in-kashmir/">Kashmir</a>
                         </li>
                         <li>
                             <a href="/jaipur/hotel-in-jaipur/">Jaipur</a>
                         </li>
                         <li>
-                            <a href="/nainital/hotel-in-nainital/">Nainital</a>
-                        </li>
-                        <li>
-                            <a href="/naukuchiatal/hotel-in-naukuchiatal/">Naukuchiatal</a>
+                            <a href="/leh/hotel-in-leh/">Leh</a>
                         </li>
                     </ul>
                 </div>
