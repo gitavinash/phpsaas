@@ -174,10 +174,11 @@
 .listing_card__img {
   width: 100%;
   height: 306px;
+  overflow: hidden;
 }
 .listing_card__img img {
   width: 100%;
-  height: 306px;
+  /* height: 306px; */
   object-fit: cover;
   border-radius: 5px;
 }
