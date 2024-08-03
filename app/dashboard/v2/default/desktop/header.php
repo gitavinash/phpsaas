@@ -2,6 +2,7 @@
 
 $appDashboardDirectory = ADMIN_PATH . 'dashboard/app/';
 $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
+$tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 $siteAccessMeta = '';
 if (isset($_COOKIE['user_meta'])) {
     if ($_COOKIE['user_meta'] != '') {
