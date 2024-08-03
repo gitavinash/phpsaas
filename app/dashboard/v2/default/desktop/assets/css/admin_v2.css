@@ -978,6 +978,7 @@ main .container .heading span {
   padding: 10px 0px 0px 0px;
   /* background: #333; */
   border-radius: 7px;
+  min-height: 80vh;
 }
 
 .widget-setting-info {
