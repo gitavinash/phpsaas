@@ -214,7 +214,8 @@
                         <a href="<?php echo $link_url ?>" title="<?php echo $property_title ?>">
                             <img src="<?php echo (($property_thumbnail != '') ? $property_thumbnail : '/upload/others/image-not-found.png') ?>"
                                 alt="" class="img-fluid ">
-                            <p class="font_size_18 pt-3"><?php echo $property_title . ', ' . ucwords($property_city) ?>
+                            <p class="font_size_18 pt-3 hotelTitle">
+                                <?php echo $property_title . ', ' . ucwords($property_city) ?>
                             </p>
                             <!-- <p class="font_size_18 opacity-50 py-2">2,953 kilometres away <br>
                             15–20 Jan

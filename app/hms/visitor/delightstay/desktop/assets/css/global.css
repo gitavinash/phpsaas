@@ -498,3 +498,7 @@ img.destinationFeatureImage {
   width: 150px;
   height: 150px;
 }
+
+.hotelTitle {
+  min-height: 70px;
+}
