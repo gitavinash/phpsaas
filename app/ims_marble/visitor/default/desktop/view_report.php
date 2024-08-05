@@ -247,7 +247,7 @@ require_once LOGIN_CHECK;
 
                     echo "
                     <tr>
-                        <td>{$i}</td>
+                        <td>" . ($i + 1) . "</td>
                         <td>{$block_item_width}</td>
                         <td>{$block_item_height}</td>
                         <td><strong>{$totalArea}</strong></td>
