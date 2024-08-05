@@ -13,6 +13,7 @@
             <li><a href="vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage room
                     types</a>
             </li>
+            <li><a href="vendors/property/upload/"><i class="fi fi-rr-file-upload"></i> Upload properties</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
@@ -24,6 +25,7 @@
             <li><a href="vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage room
                     types</a>
             </li>
+            <li><a href="vendors/property/upload/"><i class="fi fi-rr-file-upload"></i> Upload properties</a></li>
         </ul>
     </div>
 </li>

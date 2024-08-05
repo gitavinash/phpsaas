@@ -49,4 +49,16 @@
             </div>
         </a>
     </div>
+    <div class="widget box-2-5">
+        <a href="vendors/property/upload/">
+            <div class="widget-setting-info">
+                <div class="feature-icon">
+                    <i class="fi-rr-file-upload"></i>
+                </div>
+                <div class="about-feature">
+                    <h3>Upload properties</h3>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>

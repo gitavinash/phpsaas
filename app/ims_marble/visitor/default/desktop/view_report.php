@@ -340,11 +340,13 @@ require_once LOGIN_CHECK;
                                         break;
                                 }
 
+                                $damageItemTotal = number_format((float)$damageItemTotal, 2, '.', '');
+
                                 echo "<td>{$damageAreaWidth}</td>";
                                 echo "<td>{$damageAreaHeight}</td>";
-                                echo "<td><strong>{$block_item_damage_size}</strong></td>";
+                                echo "<td><strong>" . $damageItemTotal . "</strong></td>";
 
-                                $slabDamageCount[$i][$j] = $block_item_damage_size;
+                                $slabDamageCount[$i][$j] = $damageItemTotal;
                             } else {
                                 $slabDamageCount[$i][$j] = 0;
                                 echo "<td>0</td>";
