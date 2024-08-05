@@ -28,7 +28,7 @@ if (isset($daterange)) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
     if ($postType == '') {
         echo "<meta http-equiv='refresh' content='300'>";

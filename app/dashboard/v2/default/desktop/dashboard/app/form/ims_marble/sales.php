@@ -1,12 +1,12 @@
 <ul class="steps-tab">
-    <li class="step-box active" id="step_1"><span>1</span>Customer details</li>
-    <li class="step-box" id="step_2"><span>2</span>Inventory details</li>
-    <li class="step-box" id="step_3"><span>3</span>Conformation</li>
+    <li class="step-box active" id="salesStep_1"><span>1</span>Customer details</li>
+    <li class="step-box" id="salesStep_2"><span>2</span>Inventory details</li>
+    <li class="step-box" id="salesStep_3"><span>3</span>Confirmation</li>
 </ul>
 <div class="steps-box">
-    <form action="#" id="addNewInventoryForm" method="POST" enctype="multipart/form-data">
+    <form action="#" id="addNewSales" method="POST" enctype="multipart/form-data">
         <section class="form">
-            <div class="step-open-box step_1_box">
+            <div class="step-open-box salesStep_1_box" style="display: none;">
                 <div class="form-header">
                     <h1>Enter customer details</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
@@ -30,35 +30,32 @@
                 </div>
                 <div class="box-1">
                     <div class="form-group">
-                        <!-- <input type="submit" cla¯ss="btn btn-green step-box" id="step_2" value="N new sale"> -->
-                        <a class="btn btn-green step-box" style="float: right;" id="step_2">Next, add Inventory <i
+                        <!-- <input type="submit" cla¯ss="btn btn-green step-box" id="salesStep_2" value="N new sale"> -->
+                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_2">Next, add Inventory <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="step-open-box step_2_box" style="display: none;">
+            <div class="step-open-box salesStep_2_box" style="display: block;">
                 <div class="form-header">
                     <h1>Enter product details</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                 </div>
 
                 <div class="productBox">
+                    <h1>Select block<sup>*</sup></h1>
                     <div class="form-group">
-                        <select class="selectJS form-control" name="block" id="block">
-                            <option value="select">Select block</option>
-                            <?php
+                        <?php
 
-                            if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 AND block_site_id=" . SITE_ID)) {
-                                if (mysqli_num_rows($blockList) > 0) {
-                                    while ($block = mysqli_fetch_assoc($blockList)) {
-                                        echo "<option value='{$block['block_id']}' >{$block['block_title']}</option>";
-                                    }
+                        if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 AND block_site_id=" . SITE_ID)) {
+                            if (mysqli_num_rows($blockList) > 0) {
+                                while ($block = mysqli_fetch_assoc($blockList)) {
+                                    echo "<span class='openBlockSlab blockIcon' data-id={$block['block_id']} >{$block['block_title']}</span>";
                                 }
                             }
+                        }
 
-                            ?>
-                        </select>
-                        <label class="form-lable">Select block<sup>*</sup></label>
+                        ?>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Block slabs</label>
@@ -68,18 +65,18 @@
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" id="step_1"><i class="fi fi-rr-arrow-left"></i> Back,
+                        <a class="btn btn-green step-box" id="salesStep_1"><i class="fi fi-rr-arrow-left"></i> Back,
                             edit customer</a>
                     </div>
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" style="float: right;" id="step_3">Next, add sales <i
+                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_3">Next, add sales <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="step-open-box step_3_box" style="display: none;">
+            <div class="step-open-box salesStep_3_box" style="display: none;">
                 <div class="form-header">
                     <h1>Confirm sales details</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
@@ -88,11 +85,32 @@
                 </div>
                 <div class="box-1">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" style="float: right;" id="step_2">Submit request <i
+                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_2">Submit request <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
         </section>
     </form>
+</div>
+
+
+<div class="popUp blockSlabBox" style="display: none;">
+    <div class="fullScreenPopUpBox">
+        <div class="widget box-1">
+            <div class="contentArea">
+                <form action="#">
+                    <section class="form">
+                    </section>
+                </form>
+                <div class="widget box-1">
+                    <div class="bottomMenu">
+                        <span href="#" class="btn popUpBtn btn-red" id="addNewDamage" onclick="closePopup(this)"><i
+                                class=" fi-rr-cross"></i> Cancel</span>
+                        <span class="btn popUpBtn btn-green "><i class="fi-rr-check"></i> Add Slabs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

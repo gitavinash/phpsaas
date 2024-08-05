@@ -23,6 +23,10 @@ if (ACTIVE_URL == '/homepage/') {
 	exit();
 }
 
+// Site APP table name
+
+$tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
+
 /** Convert all request method type parameter into strings */
 
 if (sizeof($_REQUEST) != 0) {

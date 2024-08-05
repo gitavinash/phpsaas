@@ -36,7 +36,6 @@ const tempId = '<?php echo base64_encode(USER_ID) ?>';
 				?>
 				<script src="<?php echo ADMIN_JS ?>app.min.js"></script>
 				<script src="<?php echo ADMIN_JS . SITE_APP ?>.min.js"></script>
-				<?php require_once NOTIFICATION . 'index.php'; ?>
 				</body>
 
 				</html>

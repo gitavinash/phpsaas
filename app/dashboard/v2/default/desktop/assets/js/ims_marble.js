@@ -1153,4 +1153,27 @@ $(document).ready(function () {
       $("#createBlockItem").show();
     }
   });
+
+  $(".openBlockSlab").click(function (e) {
+    e.preventDefault();
+    var blockId = $(this).attr("data-id");
+
+    $.ajax({
+      type: "GET",
+      url: `/api/block/items/?blockId=` + blockId,
+      dataType: "json",
+      success: function (response) {
+        // popUpMessage("center", response.msg, response.status);
+        $(".blockSlabBox").show();
+      },
+      error: function (response) {
+        console.log(`Error : `, response);
+        popUpMessage(
+          "center",
+          response.responseJSON.msg,
+          response.responseJSON.status
+        );
+      },
+    });
+  });
 });

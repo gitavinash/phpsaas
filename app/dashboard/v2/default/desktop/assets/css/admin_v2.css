@@ -82,6 +82,12 @@ ol {
   border: #a9a9a9 !important;
 }
 
+.btn-light-green {
+  background: #e7f5e5 !important;
+  color: #464646 !important;
+  border: #e7f5e5 !important;
+}
+
 #url {
   text-transform: lowercase;
 }
@@ -2629,4 +2635,37 @@ table td {
   padding: 0% 3%;
   box-sizing: border-box;
   margin-bottom: 10%;
+}
+
+.blockIcon {
+  float: left;
+  margin: 15px 0px;
+  padding: 15px 20px;
+  background: #77b5c5;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.blockIcon:hover {
+  background: #01647b;
+}
+
+.bottomMenu {
+  position: absolute;
+  bottom: 1rem;
+  height: auto !important;
+  min-height: auto !important;
+  float: left;
+  width: 95%;
+  border-radius: 10px;
+  padding: 3% 5% !important;
+}
+.bottomMenu span {
+  float: left;
+  width: 42%;
+  margin: 0rem 2rem 0rem 0rem !important;
+  min-height: 2rem;
+  line-height: 2rem;
+  text-align: center;
 }
