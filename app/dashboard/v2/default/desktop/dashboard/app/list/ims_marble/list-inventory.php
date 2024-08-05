@@ -28,6 +28,10 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
                 extract($inventoryData);
 
+                $block_gross_size = str_replace(',', '', number_format($block_gross_size, 2));
+                $block_damage_size = str_replace(',', '', number_format($block_damage_size, 2));
+                $block_net_size = str_replace(',', '', number_format($block_net_size, 2));
+
                 echo "<tr>
                                 <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong> - ' : '') . "{$block_title}</td>
                                 <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
