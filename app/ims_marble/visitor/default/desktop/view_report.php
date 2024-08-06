@@ -340,11 +340,11 @@ require_once LOGIN_CHECK;
                                         break;
                                 }
 
-                                $damageItemTotal = number_format((float)$damageItemTotal, 2, '.', '');
+                                // $damageItemTotal = 
 
                                 echo "<td>{$damageAreaWidth}</td>";
                                 echo "<td>{$damageAreaHeight}</td>";
-                                echo "<td><strong>" . $damageItemTotal . "</strong></td>";
+                                echo "<td><strong>" . number_format((float)$damageItemTotal, 2, '.', '') . "</strong></td>";
 
                                 $slabDamageCount[$i][$j] = $damageItemTotal;
                             } else {
@@ -382,22 +382,22 @@ require_once LOGIN_CHECK;
                         <td colspan='1' style='text-align:right' ><strong>{$block_gross_size}</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($damageSumArray[0])) ? $damageSumArray[0] : 0) . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($damageSumArray[0])) ? $damageSumArray[0] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($damageSumArray[1])) ? $damageSumArray[1] : 0) . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($damageSumArray[1])) ? $damageSumArray[1] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($damageSumArray[2])) ? $damageSumArray[2] : 0) . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($damageSumArray[2])) ? $damageSumArray[2] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($slabDamageCount[3])) ? $damageSumArray[3] : 0) . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($slabDamageCount[3])) ? $damageSumArray[3] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($damageSumArray[4])) ? $damageSumArray[4] : 0) . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($damageSumArray[4])) ? $damageSumArray[4] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . ((isset($damageSumArray[5])) ? $damageSumArray[5] : 0) . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($damageSumArray[5])) ? $damageSumArray[5] : 0), 2, '.', '') . "</strong></td>
                     </tr>
                     <tr>
                         <td colspan='3' style='text-align:right' ><strong>Damage Qty. ( $calculationType )</strong></td>
