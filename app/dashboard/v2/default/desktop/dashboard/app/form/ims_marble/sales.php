@@ -50,15 +50,12 @@
                         if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 AND block_site_id=" . SITE_ID)) {
                             if (mysqli_num_rows($blockList) > 0) {
                                 while ($block = mysqli_fetch_assoc($blockList)) {
-                                    echo "<span class='openBlockSlab blockIcon' data-id={$block['block_id']} >{$block['block_title']}</span>";
+                                    echo "<span class='openBlockSlab blockIcon' data-id={$block['block_id']} >{$block['block_id']} - {$block['block_title']}</span>";
                                 }
                             }
                         }
 
                         ?>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Block slabs</label>
                     </div>
                 </div>
                 <div class="productBoxClone">

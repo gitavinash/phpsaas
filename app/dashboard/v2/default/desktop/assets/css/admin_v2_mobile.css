@@ -79,4 +79,7 @@
   table {
     width: 100% !important;
   }
+  .bottomMenu span {
+    width: 37%;
+  }
 }

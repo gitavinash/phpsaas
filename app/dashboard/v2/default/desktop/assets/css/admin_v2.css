@@ -2639,7 +2639,7 @@ table td {
 
 .blockIcon {
   float: left;
-  margin: 15px 0px;
+  margin: 15px 10px 15px 0px;
   padding: 15px 20px;
   background: #77b5c5;
   border-radius: 10px;
@@ -2668,4 +2668,10 @@ table td {
   min-height: 2rem;
   line-height: 2rem;
   text-align: center;
+}
+
+.blockSlabBox .fullScreenPopUpBox {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
 }
