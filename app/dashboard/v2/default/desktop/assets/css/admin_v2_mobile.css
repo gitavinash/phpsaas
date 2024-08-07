@@ -101,6 +101,11 @@
     width: 100%;
     box-sizing: border-box;
   }
+  .slabsList {
+    max-height: 80dvh;
+    margin-top: 1rem;
+    padding-bottom: 2rem;
+  }
   .slabsList input[type="checkbox"] {
     height: 30px;
   }
