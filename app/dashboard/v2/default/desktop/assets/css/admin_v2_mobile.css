@@ -15,6 +15,18 @@
   main {
     padding: 0;
   }
+  .steps-tab li {
+    min-width: 10px;
+    word-wrap: break-word;
+  }
+  section.form .form-header {
+    margin-bottom: 1rem;
+  }
+  section.form .form-header img {
+    max-width: 100px;
+    height: auto;
+    padding-top: 2rem;
+  }
   .right-side ul {
     float: right;
     /* max-width: 280px; */
@@ -23,8 +35,8 @@
     top: 3px;
   }
   section.form .form-header h1 {
-    font-size: 36px;
-    width: 60%;
+    font-size: 24px;
+    width: 65%;
     line-height: 48px;
     padding-top: 25px;
   }
@@ -80,6 +92,18 @@
     width: 100% !important;
   }
   .bottomMenu span {
-    width: 37%;
+    width: 35%;
+  }
+  .blockIcon {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .slabsList input[type="checkbox"] {
+    height: 30px;
+  }
+  .slabsList .input-box label {
+    font-size: 1rem;
+    padding: 5px 5px 0px 5px;
+    box-sizing: border-box;
   }
 }

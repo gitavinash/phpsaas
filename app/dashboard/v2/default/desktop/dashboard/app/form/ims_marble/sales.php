@@ -62,14 +62,22 @@
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" id="salesStep_1"><i class="fi fi-rr-arrow-left"></i> Back,
-                            edit customer</a>
+                        <a class="btn btn-green step-box" id="salesStep_1"><i class="fi fi-rr-arrow-left"></i> Back</a>
                     </div>
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_3">Next, add sales <i
-                                class="fi fi-rr-arrow-right"></i></a>
+                        <?php
+
+                        if (SITE_VERSION == 'desktop') {
+                            echo '<a class="btn btn-green step-box" style="float: right;" id="salesStep_3">Next, add sales <i
+                                class="fi fi-rr-arrow-right"></i></a>';
+                        } else {
+                            echo '<a class="btn btn-green step-box" style="float: right;" id="salesStep_3">Next <i
+                                class="fi fi-rr-arrow-right"></i></a>';
+                        }
+
+                        ?>
                     </div>
                 </div>
             </div>
