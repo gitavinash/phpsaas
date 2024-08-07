@@ -2663,15 +2663,64 @@ table td {
 }
 .bottomMenu span {
   float: left;
-  width: 42%;
-  margin: 0rem 2rem 0rem 0rem !important;
+  width: 44%;
+  margin: 0px 1rem 0px 1rem !important;
   min-height: 2rem;
   line-height: 2rem;
   text-align: center;
+}
+.bottomMenu span i {
+  float: none !important;
 }
 
 .blockSlabBox .fullScreenPopUpBox {
   position: absolute;
   overflow: hidden;
   width: 100%;
+}
+
+.slabsList {
+  float: left;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #fbfbfc;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.slabsList .input-box {
+  float: left;
+  width: 100%;
+  text-align: center;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 10px 0px;
+  box-sizing: border-box;
+}
+.slabsList .input-box:hover {
+  background: #efefef;
+  border: #efefef;
+  cursor: pointer;
+}
+
+.slabsList input[type="checkbox"]:hover {
+  box-shadow: none;
+}
+
+.slabsList input[type="checkbox"]:checked {
+  box-shadow: none;
+  background: #efefef;
+  border: #efefef;
+}
+
+.slabsList .input-box label {
+  font-size: 1.2rem;
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding-top: 5px;
+  box-sizing: border-box;
 }

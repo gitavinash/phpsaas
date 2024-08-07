@@ -50,7 +50,7 @@
                         if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 AND block_site_id=" . SITE_ID)) {
                             if (mysqli_num_rows($blockList) > 0) {
                                 while ($block = mysqli_fetch_assoc($blockList)) {
-                                    echo "<span class='openBlockSlab blockIcon' data-id={$block['block_id']} >{$block['block_id']} - {$block['block_title']}</span>";
+                                    echo "<span class='openBlockSlab blockIcon' data-id={$block['block_id']} data-title='{$block['block_code']} - {$block['block_title']}' >{$block['block_code']} - {$block['block_title']}</span>";
                                 }
                             }
                         }
@@ -96,18 +96,22 @@
     <div class="fullScreenPopUpBox">
         <div class="widget box-1">
             <div class="contentArea">
-                <form action="#">
-                    <section class="form">
-                    </section>
-                </form>
-                <div class="widget box-1">
-                    <div class="bottomMenu">
-                        <span href="#" class="btn popUpBtn btn-red" id="addNewDamage" onclick="closePopup(this)"><i
-                                class=" fi-rr-cross"></i> Cancel</span>
-                        <span class="btn popUpBtn btn-green "><i class="fi-rr-check"></i> Add Slabs</span>
+                <h4 class="heading"><?php echo $enquiry_subject ?> Select slabs form <strong id="blockTitle"></strong>
+                    </span></h2>
+                    <div class="slabsList">
+                        <!-- <section> -->
+                        <!-- <form action=""> -->
+                        <div class='form-group-box slabsListOptions'>
+                        </div>
+                        <!-- </form>
+                        </section> -->
                     </div>
-                </div>
             </div>
+        </div>
+        <div class="bottomMenu">
+            <span href="#" class="btn popUpBtn btn-red" id="addNewDamage" onclick="closePopup(this)"><i
+                    class=" fi-rr-cross"></i> Cancel</span>
+            <span class="btn popUpBtn btn-green "><i class="fi-rr-check"></i> Add Slabs</span>
         </div>
     </div>
 </div>

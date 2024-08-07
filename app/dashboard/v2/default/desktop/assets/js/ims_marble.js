@@ -1157,14 +1157,34 @@ $(document).ready(function () {
   $(".openBlockSlab").click(function (e) {
     e.preventDefault();
     var blockId = $(this).attr("data-id");
+    var blockTitle = $(this).attr("data-title");
 
     $.ajax({
       type: "GET",
       url: `/api/block/items/?blockId=` + blockId,
       dataType: "json",
       success: function (response) {
+        let itemsContainer = $(".slabsListOptions");
+        itemsContainer.empty();
+        var i = 1;
+        $.each(response.items, function (index, item) {
+          let checkboxLabel = `
+            <div class='box-3-2 left p-right-10'>
+                                <div class='form-group'>
+                                    <div class='input-box'>
+                                        <input type='checkbox' name='slabs' value='${item.block_item_id}' />
+                                        <label class='radio-button'>${item.block_item_width} ${item.block_item_dimension_type} x ${item.block_item_height} ${item.block_item_dimension_type}</label>
+                                    </div>
+                                </div>
+                            </div>
+          `;
+          itemsContainer.append(checkboxLabel);
+          i++;
+        });
         // popUpMessage("center", response.msg, response.status);
+        $("#blockTitle").html(blockTitle);
         $(".blockSlabBox").show();
+        console.log(response.items);
       },
       error: function (response) {
         console.log(`Error : `, response);
