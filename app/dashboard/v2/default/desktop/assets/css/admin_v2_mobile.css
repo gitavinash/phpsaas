@@ -34,6 +34,9 @@
     right: 0;
     top: 3px;
   }
+  .popUp .contentArea .heading {
+    margin-top: 1rem;
+  }
   section.form .form-header h1 {
     font-size: 24px;
     width: 65%;
