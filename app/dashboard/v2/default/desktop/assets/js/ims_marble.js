@@ -1,5 +1,6 @@
 var activeDamageBoxId = 0;
 let count = 1;
+var activeBlockId = 0;
 
 var oldJsonObject = "";
 
@@ -1157,6 +1158,7 @@ $(document).ready(function () {
   $(".openBlockSlab").click(function (e) {
     e.preventDefault();
     var blockId = $(this).attr("data-id");
+    activeBlockId = blockId;
     var blockTitle = $(this).attr("data-title");
 
     $.ajax({
@@ -1184,7 +1186,6 @@ $(document).ready(function () {
         // popUpMessage("center", response.msg, response.status);
         $("#blockTitle").html(blockTitle);
         $(".blockSlabBox").show();
-        console.log(response.items);
       },
       error: function (response) {
         console.log(`Error : `, response);
@@ -1195,5 +1196,19 @@ $(document).ready(function () {
         );
       },
     });
+  });
+
+  // Add slabs btn action
+
+  $(".saveSlabs").click(function (e) {
+    e.preventDefault();
+    let checkedValues = [];
+    $("input[name='slabs']:checked").each(function () {
+      checkedValues.push($(this).val());
+    });
+    $(`#block_${activeBlockId}`).text(checkedValues.length);
+    $(`#block_${activeBlockId}`).closest("p").addClass("activeBlockIcon");
+    localStorage.setItem(`salesBlocks_${activeBlockId}`, checkedValues);
+    $(".blockSlabBox").hide();
   });
 });

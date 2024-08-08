@@ -6,7 +6,7 @@
 <div class="steps-box">
     <form action="#" id="addNewSales" method="POST" enctype="multipart/form-data">
         <section class="form">
-            <div class="step-open-box salesStep_1_box" style="display: none;">
+            <div class="step-open-box salesStep_1_box">
                 <div class="form-header">
                     <h1>Enter customer details</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
@@ -36,21 +36,21 @@
                     </div>
                 </div>
             </div>
-            <div class="step-open-box salesStep_2_box" style="display: block;">
+            <div class="step-open-box salesStep_2_box" style="display: none;">
                 <div class="form-header">
-                    <h1>Enter product details</h1>
+                    <h1>Select block</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                 </div>
 
                 <div class="productBox">
-                    <h1>Select block<sup>*</sup></h1>
+                    <!-- <h1>Select block<sup>*</sup></h1> -->
                     <div class="form-group">
                         <?php
 
                         if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 AND block_site_id=" . SITE_ID)) {
                             if (mysqli_num_rows($blockList) > 0) {
                                 while ($block = mysqli_fetch_assoc($blockList)) {
-                                    echo "<span class='openBlockSlab blockIcon' data-id={$block['block_id']} data-title='{$block['block_code']} - {$block['block_title']}' >{$block['block_code']} - {$block['block_title']}</span>";
+                                    echo "<p class='openBlockSlab blockIcon' data-id={$block['block_id']} data-title='{$block['block_code']} - {$block['block_title']}' >{$block['block_code']} - {$block['block_title']} <span id='block_{$block['block_id']}' >0</span</p>";
                                 }
                             }
                         }
@@ -83,14 +83,19 @@
             </div>
             <div class="step-open-box salesStep_3_box" style="display: none;">
                 <div class="form-header">
-                    <h1>Confirm sales details</h1>
+                    <h1>Confirm details</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                 </div>
                 <div class="productBoxClone">
                 </div>
-                <div class="box-1">
+                <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_2">Submit request <i
+                        <a class="btn btn-green step-box" id="salesStep_2"><i class="fi fi-rr-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+                <div class="box-5">
+                    <div class="form-group">
+                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_3">Submit request <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>
@@ -119,7 +124,7 @@
         <div class="bottomMenu">
             <span href="#" class="btn popUpBtn btn-red" id="addNewDamage" onclick="closePopup(this)"><i
                     class=" fi-rr-cross"></i> Cancel</span>
-            <span class="btn popUpBtn btn-green "><i class="fi-rr-check"></i> Add Slabs</span>
+            <span class="btn popUpBtn btn-green saveSlabs"><i class="fi-rr-check"></i> Add Slabs</span>
         </div>
     </div>
 </div>

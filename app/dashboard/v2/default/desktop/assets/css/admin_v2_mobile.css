@@ -97,8 +97,8 @@
   .bottomMenu span {
     width: 35%;
   }
-  .blockIcon {
-    width: 100%;
+  p.blockIcon {
+    width: 100% !important;
     box-sizing: border-box;
   }
   .slabsList {
