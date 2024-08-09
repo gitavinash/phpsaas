@@ -87,6 +87,12 @@
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                 </div>
                 <div class="productBoxClone">
+                    <table>
+                        <tr>
+                            <td>Customer Name:</td>
+                            <td id="customerName"></td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="box-5">
                     <div class="form-group">

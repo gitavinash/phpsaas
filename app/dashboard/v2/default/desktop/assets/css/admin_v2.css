@@ -2655,6 +2655,7 @@ p.blockIcon:hover {
 
 .activeBlockIcon {
   background: #01647b !important;
+  font-weight: 700;
 }
 
 p.blockIcon span {

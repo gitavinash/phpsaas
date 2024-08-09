@@ -1,8 +1,102 @@
 var activeDamageBoxId = 0;
 let count = 1;
 var activeBlockId = 0;
-
+var selectedBlocksLenght = 0;
 var oldJsonObject = "";
+
+var customerName = "";
+var customerMobile = "";
+var customerEmail = "";
+var customerAddress = "";
+
+function deleteSalesBlocks(prefix) {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith(prefix)) {
+      localStorage.removeItem(key);
+      i--;
+    }
+  }
+}
+
+// Usage
+deleteSalesBlocks("salesBlocks_");
+
+function getSalesBlocks(prefixValue) {
+  const dataList = {};
+  selectedBlocksLenght = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith(prefixValue)) {
+      dataList[key] = localStorage.getItem(key);
+      selectedBlocksLenght++;
+    }
+  }
+
+  return dataList;
+}
+
+$(document).ready(function () {
+  // Main Box tabs
+
+  if ($(".steps-tab").length) {
+    $(".step-box").click(function (e) {
+      e.preventDefault();
+      currentElementID = $(this).attr("id");
+      $(".step-box").removeClass("active");
+      showCurrentBox = currentElementID + "_box";
+      showCurrentLable = currentElementID;
+      $(".step-open-box").hide();
+      $("#" + showCurrentLable).addClass("active");
+      if (currentElementID == "salesStep_2") {
+        customerName = $("#name").val();
+        customerMobile = $("#mobile").val();
+        customerAddress = $("#address").val();
+        if (customerName.trim() === "") {
+          // Stop further processing
+          showCurrentBox = "salesStep_1_box";
+          popUpMessage("center", "Customer name is required.", "warning");
+        } else if (customerMobile.trim() === "") {
+          // Stop further processing
+          showCurrentBox = "salesStep_1_box";
+          popUpMessage(
+            "center",
+            "Customer mobile number is required.",
+            "warning"
+          );
+        } else if (customerAddress.trim() === "") {
+          // Stop further processing
+          showCurrentBox = "salesStep_1_box";
+          popUpMessage("center", "Customer address is required.", "warning");
+        }
+      }
+      if (currentElementID == "salesStep_3") {
+        // Sales confirmation data
+
+        console.log(`customerName`, customerName);
+
+        $("#customerName").text(customerName);
+
+        // Usage
+        const salesBlocksData = getSalesBlocks("salesBlocks_");
+
+        if (selectedBlocksLenght != 0) {
+          console.log(`salesBlocksData:`, salesBlocksData);
+        } else {
+          popUpMessage(
+            "center",
+            "Select mimumum 1 block to continue",
+            "warning"
+          );
+          showCurrentBox = "salesStep_2_box";
+        }
+      }
+
+      $("." + showCurrentBox).show();
+      hidePageLoader();
+    });
+  }
+});
 
 function convertAreatoFeet(size, type) {
   switch (type) {
@@ -1174,8 +1268,8 @@ $(document).ready(function () {
             <div class='box-3-2 left p-right-10'>
                                 <div class='form-group'>
                                     <div class='input-box'>
-                                        <input type='checkbox' name='slabs' value='${item.block_item_id}' />
-                                        <label class='radio-button'>${item.block_item_width} ${item.block_item_dimension_type} x ${item.block_item_height} ${item.block_item_dimension_type}</label>
+                                        <input type='checkbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
+                                        <label class='radio-button'>${item.block_item_width} ${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
                                     </div>
                                 </div>
                             </div>
