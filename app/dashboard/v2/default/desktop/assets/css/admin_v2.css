@@ -2775,3 +2775,19 @@ th {
   vertical-align: top;
   height: auto !important;
 }
+
+.userInfo {
+  float: left;
+  width: 100%;
+}
+
+.userInfo p {
+  float: left;
+  width: 100%;
+  line-height: 38px;
+}
+
+.userInfo p strong {
+  min-width: 100px;
+  float: left;
+}

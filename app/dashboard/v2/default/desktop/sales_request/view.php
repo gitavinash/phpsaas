@@ -41,164 +41,46 @@ window.location.href = '/dashboard/sales_request/list/';
             <section>
                 <div class="widget no-padding box-5">
                     <div class="btn-group leadActions">
-                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-file-circle-info"></i>
+                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-review"></i>
                             Customer details</a>
+                    </div>
+                    <div class="userInfo">
+                        <p><strong>Name</strong><?php echo $sales_name ?></p>
+                        <p><strong>Email</strong><?php echo $sales_email ?></p>
+                        <p><strong>Mobile</strong><?php echo $sales_mobile ?></p>
+                        <p><strong>Address</strong><?php echo $sales_address ?></p>
                     </div>
                 </div>
                 <div class="widget no-padding box-5">
                     <div class="btn-group leadActions">
-                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-file-circle-info"></i>
+                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-id-card-clip-alt"></i>
                             Agent details</a>
                     </div>
-                </div>
-                <div class="widget no-padding box-1" id="leadDetailsBox">
-                    <div class="leadInfo">
-                        <table>
-                            <?php
-
-                            if ($enquiry_first_name != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>First name</strong></td>
-                                <td class='box-7'>{$enquiry_first_name}</td>
-                            </tr>";
-                            }
-
-                            if ($enquiry_middle_name != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Middle name</strong></td>
-                                <td class='box-7'>{$enquiry_middle_name}</td>
-                            </tr>";
-                            }
-
-                            if ($enquiry_last_name != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Last name</strong></td>
-                                <td class='box-7'>{$enquiry_last_name}</td>
-                            </tr>";
-                            }
-
-                            if ($enquiry_email != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Email</strong></td>
-                                <td class='box-7'>{$enquiry_email}</td>
-                            </tr>";
-                            }
-
-                            if ($enquiry_mobile != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Mobile</strong></td>
-                                <td class='box-7'>{$enquiry_mobile}</td>
-                            </tr>";
-                            }
-
-                            if ($enquiry_subject != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Tour package</strong></td>
-                                <td class='box-7'>{$enquiry_subject}</td>
-                            </tr>";
-                            }
-
-                            if ($date_of_travel != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Date of travel</strong></td>
-                                <td class='box-7'>{$date_of_travel}</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_days != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of days</strong></td>
-                                <td class='box-7'>{$number_of_days} Nights</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_adults != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of adults</strong></td>
-                                <td class='box-7'>{$number_of_adults}</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_childrens != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of childrens</strong></td>
-                                <td class='box-7'>{$number_of_childrens}</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_infants != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of infants</strong></td>
-                                <td class='box-7'>{$number_of_infants}</td>
-                            </tr>";
-                            }
-
-                            if ($current_location != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Current location</strong></td>
-                                <td class='box-7'>{$current_location}</td>
-                            </tr>";
-                            }
-
-                            if ($pickup_location != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Pickup location</strong></td>
-                                <td class='box-7'>{$pickup_location}</td>
-                            </tr>";
-                            }
-
-                            if ($drop_location != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Drop location</strong></td>
-                                <td class='box-7'>{$drop_location}</td>
-                            </tr>";
-                            }
-
-                            if ($requirements != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Requirements</strong></td>
-                                <td class='box-7'>{$requirements}</td>
-                            </tr>";
-                            } else {
-
-                                $enquiryMessage = json_decode($enquiry_message, TRUE);
-
-                                if (is_array($enquiryMessage)) {
-                                    foreach ($enquiryMessage as $key => $value) {
-                                        echo "<tr>
-                                        <td class='box-3'><strong>" . str_replace('_', ' ', ucwords($key)) . "</strong></td>
-                                        <td class='box-7'>{$value}</td>
-                                    </tr>";
-                                    }
-                                }
-                            }
-
-                            if ($site_access_type != 'agent') {
-                                if ($enquiry_source != '') {
-                                    echo "<tr>
-                                    <td class='box-3'><strong>Enquiry source</strong></td>
-                                    <td class='box-7'>{$enquiry_source}</td>
-                                </tr>";
-                                }
-
-                                if ($enquiry_medium != '') {
-                                    echo "<tr>
-                                    <td class='box-3'><strong>Enquiry medium</strong></td>
-                                    <td class='box-7'>{$enquiry_medium}</td>
-                                </tr>";
-                                }
-
-                                if ($enquiry_campaign != '') {
-                                    echo "<tr>
-                                    <td class='box-3'><strong>Enquiry campaign</strong></td>
-                                    <td class='box-7'>{$enquiry_campaign}</td>
-                                </tr>";
-                                }
-                            }
-
-                            ?>
-                        </table>
+                    <div class="userInfo">
+                        <p><strong>Name</strong><?php echo $profile_display_name ?></p>
+                        <p><strong>Mobile</strong><?php echo $profile_mobile ?></p>
                     </div>
+                </div>
+                <div class="widget no-padding box-1">
+                    <div class="btn-group leadActions">
+                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-to-do"></i>
+                            Inventory details</a>
+                    </div>
+                    <table>
+                        <?php
+                        $blockData = json_decode($sales_data, TRUE);
+                        for ($i = 0; $i < sizeof($blockData); $i++) {
+                            echo "<tr>";
+                            foreach ($blockData[$i] as $value) {
+                                print_r($value);
+                            }
+                            print_r($blockData[$i]);
+                            // $slabsDetails = explode(",", $blockData);
+                            // print_r($slabsDetails);
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table>
                 </div>
             </section>
         </div>
@@ -207,6 +89,8 @@ window.location.href = '/dashboard/sales_request/list/';
     <div class="widget no-padding box-2-5" id="fixedDiv">
         <div class="main-box">
             <section class="leadQuickLinks">
+                <a href="" class="btn btn-green" id="approveSalesRequest"><i class="fi-rr-check"></i> Approve
+                    request</a>
                 <a href='#' data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
                     class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
                     data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete

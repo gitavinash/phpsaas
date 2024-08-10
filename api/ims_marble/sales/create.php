@@ -79,9 +79,7 @@ if ($validRequest) {
             $insertProfile = true;
         }
 
-        $encodedInventory = json_encode($inventory, TRUE);
-
-        $insertSales = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}sales(sales_site_id, sales_agent_id, sales_user_id, sales_name, sales_email, sales_mobile, sales_address, sales_data, sales_status, sales_created) VALUES(" . SITE_ID . ", " . USER_ID . ", {$userID}, '{$name}', '{$email}', '{$mobile}', '{$address}', '{$encodedInventory}', 0, NOW())");
+        $insertSales = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}sales(sales_site_id, sales_agent_id, sales_user_id, sales_name, sales_email, sales_mobile, sales_address, sales_data, sales_status, sales_created) VALUES(" . SITE_ID . ", " . USER_ID . ", {$userID}, '{$name}', '{$email}', '{$mobile}', '{$address}', '{$inventory}', 0, NOW())");
         $salesId = mysqli_insert_id($connection);
 
         if ($insertUser && $insertProfile && $insertSales) {
