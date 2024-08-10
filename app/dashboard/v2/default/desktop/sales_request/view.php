@@ -39,29 +39,6 @@ window.location.href = '/dashboard/sales_request/list/';
     <div class="widget box-7-5 no-padding">
         <div class="main-box">
             <section>
-                <div class="widget no-padding box-1">
-                    <div class="leadProfileCard">
-                        <div class="img">
-                            <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($enquiry_first_name[0]) != '') ? $enquiry_first_name[0] : 'unknown')) ?>.png"
-                                alt="" srcset="">
-                        </div>
-                        <div class="info">
-                            <h2 class="heading"
-                                <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
-                                <?php echo $enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : '')) ?>
-                            </h2>
-                            <p><span><strong>Last Update:
-                                    </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span></p>
-                        </div>
-                        <div class="verifications">
-
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="main-box">
-            <section>
                 <div class="widget no-padding box-5">
                     <div class="btn-group leadActions">
                         <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-file-circle-info"></i>
