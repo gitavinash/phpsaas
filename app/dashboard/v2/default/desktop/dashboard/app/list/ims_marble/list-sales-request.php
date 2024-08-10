@@ -4,6 +4,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 <table class="showTableList">
     <thead>
         <tr>
+            <th>Request no.</th>
             <th>Name</th>
             <th>Mobile</th>
             <th>Agent Name</th>
@@ -21,6 +22,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 extract($salesData);
                 echo "
                 <tr>
+                    <td>{$sales_id}</td>
                     <td>{$sales_name}</td>
                     <td>{$sales_mobile}</td>
                     <td>{$profile_display_name}</td>

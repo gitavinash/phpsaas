@@ -5,14 +5,6 @@
 </div>
 <div class="main-box">
     <section>
-        <div class="filters">
-            <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value="">Sales Status</option>
-                </select>
-            </div>
-        </div>
         <div class="list-box">
             <?php
 

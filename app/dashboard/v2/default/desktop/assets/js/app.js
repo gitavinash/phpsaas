@@ -626,23 +626,26 @@ if ($(".showTableList").length) {
     responsive: true,
     searching: false,
     lengthChange: false,
-    scrollX: true,
+    scrollX: true, // Enable horizontal scrolling
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
       { width: "20%", targets: 1 },
       {
-        targets: "_all", // The second column (index 1)
+        targets: "_all", // Apply to all columns
         createdCell: function (td, cellData, rowData, row, col) {
           $(td).css({
             "max-width": "150px", // Set the maximum width (adjust as needed)
             "white-space": "normal", // Allow text wrapping
             "word-wrap": "break-word", // Ensure words break if necessary
-          }); // Set the maximum width (adjust as needed)
+          });
         },
       },
     ],
-    fixedColumns: true,
-    order: [[4, "desc"]],
+    fixedColumns: {
+      leftColumns: 1, // Freeze the first column
+      rightColumns: 1, // Freeze the last column
+    },
+    order: [[4, "desc"]], // Order by the fifth column
   });
 }
 

@@ -4,7 +4,6 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 <table class="showTableList">
     <thead>
         <tr>
-            <th>Request no.</th>
             <th>Name</th>
             <th>Email</th>
             <th>Mobile</th>

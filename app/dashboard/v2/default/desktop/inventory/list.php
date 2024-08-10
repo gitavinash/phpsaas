@@ -5,14 +5,6 @@
 </div>
 <div class="main-box">
     <section>
-        <div class="filters">
-            <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value="">Inventory Status</option>
-                </select>
-            </div>
-        </div>
         <div class="list-box">
             <?php
 
@@ -21,20 +13,20 @@
             if (file_exists($leadForm)) {
                 require_once $leadForm;
             } else { ?>
-                <table class="showTableList">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <td colspan="5">Table informartion is missing</td>
-                        </tr>
-                    </thead>
-                </table>
+            <table class="showTableList">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Table informartion is missing</td>
+                    </tr>
+                </thead>
+            </table>
             <?php
             }
 
