@@ -626,6 +626,7 @@ if ($(".showTableList").length) {
     responsive: true,
     searching: false,
     lengthChange: false,
+    scrollX: true,
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
       { width: "20%", targets: 1 },

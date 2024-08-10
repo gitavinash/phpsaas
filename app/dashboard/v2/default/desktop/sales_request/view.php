@@ -91,6 +91,7 @@ window.location.href = '/dashboard/sales_request/list/';
             <section class="leadQuickLinks">
                 <a href="" class="btn btn-green" id="approveSalesRequest"><i class="fi-rr-check"></i> Approve
                     request</a>
+                <a href="" class="btn btn-green" id="approveSalesRequest"><i class="fi-rr-print"></i> Print</a>
                 <a href='#' data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
                     class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
                     data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete

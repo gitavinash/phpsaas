@@ -8,6 +8,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             <th>Warehouse</th>
             <th>Type</th>
             <th>Total slabs</th>
+            <th>Avl. slabs</th>
             <th>Gross qty.</th>
             <th>Less qty.</th>
             <th>Net Size</th>
@@ -37,6 +38,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                                 <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
                                 <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
+                                <td>{$block_available}</td>
                                 <td>" . (($block_gross_size == '') ? '0 '  : $block_gross_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . (($block_damage_size == '') ? '0 '  : $block_damage_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . (($block_net_size == '') ? '0 '  : $block_net_size) . ' ' . $block_size_dimension . "</td>
