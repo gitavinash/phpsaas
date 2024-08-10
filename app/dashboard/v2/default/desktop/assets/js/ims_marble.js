@@ -1,6 +1,7 @@
 var activeDamageBoxId = 0;
 let count = 1;
 var activeBlockId = 0;
+var activeBlockTitle = 0;
 var selectedBlocksLenght = 0;
 var oldJsonObject = "";
 
@@ -50,6 +51,7 @@ $(document).ready(function () {
       $("#" + showCurrentLable).addClass("active");
       if (currentElementID == "salesStep_2") {
         customerName = $("#name").val();
+        customerEmail = $("#email").val();
         customerMobile = $("#mobile").val();
         customerAddress = $("#address").val();
         if (customerName.trim() === "") {
@@ -72,16 +74,63 @@ $(document).ready(function () {
       }
       if (currentElementID == "salesStep_3") {
         // Sales confirmation data
-
-        console.log(`customerName`, customerName);
-
         $("#customerName").text(customerName);
+        $("#customerEmail").text(customerEmail);
+        $("#customerMobile").text(customerMobile);
+        $("#customerAddress").text(customerAddress);
 
         // Usage
         const salesBlocksData = getSalesBlocks("salesBlocks_");
 
         if (selectedBlocksLenght != 0) {
-          console.log(`salesBlocksData:`, salesBlocksData);
+          let itemsContainer = $(".inventoryData");
+
+          itemsContainer.empty();
+
+          itemsContainer.append(
+            `<tr>
+                            <th colspan="2" class="heading">Inventory details</th>
+                        </tr>`
+          );
+
+          $.each(salesBlocksData, function (key, value) {
+            // Split the key by underscore and get the last part
+            let keyParts = key.split("_");
+            let lastKeyIndex = keyParts[keyParts.length - 1];
+
+            // Split the value by comma and process it to get unique values with counts
+            let valueArray = value.split(",").map((val) => {
+              let valParts = val.split("_");
+              return valParts[valParts.length - 1].trim();
+            });
+
+            // Create an object to store unique values and their counts
+            let valueCounts = {};
+            valueArray.forEach((val) => {
+              valueCounts[val] = (valueCounts[val] || 0) + 1;
+            });
+
+            // Format the unique values with their counts
+            let uniqueValues = Object.entries(valueCounts)
+              .map(([val, count]) => {
+                return count > 1 ? `${val} (x${count})` : `${val} (x1)`;
+              })
+              .join("<br>"); // For line breaks
+
+            // Get the total count of all values
+            let totalCount = valueArray.length;
+
+            // Create the table rows
+            let inventoryData = `
+        <tr>
+            <th>${lastKeyIndex} (x${totalCount})</th>
+        </tr>
+        <tr>
+            <td>${uniqueValues}<br></td>
+        </tr>
+    `;
+            itemsContainer.append(inventoryData);
+          });
         } else {
           popUpMessage(
             "center",
@@ -326,8 +375,10 @@ $(document).on("click", ".deleteButton", function (event) {
       } else {
         var urlPostFix = btoa(requestId);
       }
-      var pageReload = $(this).attr("data-reload");
-      var pageRedirect = $(this).attr("data-redirect");
+      var pageReload = $(this).attr("data-reload") || false;
+      var pageRedirect = $(this).attr("data-redirect") || false;
+      var redirectTo =
+        $(this).attr("data-url") || `/dashboard/${lastPart}/list/`;
       $.ajax({
         type: "GET",
         url: `/api/${requestType}/delete/?id=` + urlPostFix,
@@ -352,9 +403,13 @@ $(document).on("click", ".deleteButton", function (event) {
             }
             setTimeout(function () {
               if (disableRedirect) {
-                window.location.href = `/dashboard/${lastPart}/list/`;
+                window.location.href = redirectTo;
               } else {
-                location.reload();
+                if (pageRedirect) {
+                  window.location.href = redirectTo;
+                } else {
+                  location.reload();
+                }
               }
             }, 1500);
           }
@@ -1253,7 +1308,7 @@ $(document).ready(function () {
     e.preventDefault();
     var blockId = $(this).attr("data-id");
     activeBlockId = blockId;
-    var blockTitle = $(this).attr("data-title");
+    activeBlockTitle = $(this).attr("data-title");
 
     $.ajax({
       type: "GET",
@@ -1269,7 +1324,7 @@ $(document).ready(function () {
                                 <div class='form-group'>
                                     <div class='input-box'>
                                         <input type='checkbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
-                                        <label class='radio-button'>${item.block_item_width} ${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
+                                        <label class='radio-button'>${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
                                     </div>
                                 </div>
                             </div>
@@ -1302,7 +1357,48 @@ $(document).ready(function () {
     });
     $(`#block_${activeBlockId}`).text(checkedValues.length);
     $(`#block_${activeBlockId}`).closest("p").addClass("activeBlockIcon");
-    localStorage.setItem(`salesBlocks_${activeBlockId}`, checkedValues);
+    localStorage.setItem(
+      `salesBlocks_${activeBlockId}_${activeBlockTitle}`,
+      checkedValues
+    );
     $(".blockSlabBox").hide();
+  });
+
+  $("#salesRequest").click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "/api/sales/create/",
+      dataType: "JSON",
+      contentType: "application/json",
+      processData: false,
+      contentType: false,
+      data: JSON.stringify({
+        name: customerName,
+        email: customerEmail,
+        mobile: customerMobile,
+        address: customerAddress,
+        inventory: JSON.stringify(getSalesBlocks("salesBlocks_")),
+      }),
+      success: function (successResponse) {
+        console.log(`successResponse`, successResponse);
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            window.location.href =
+              `/dashboard/sales_request/view/?id=` +
+              btoa(successResponse.salesId);
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
   });
 });

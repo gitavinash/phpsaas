@@ -58,8 +58,6 @@
                         ?>
                     </div>
                 </div>
-                <div class="productBoxClone">
-                </div>
                 <div class="box-5">
                     <div class="form-group">
                         <a class="btn btn-green step-box" id="salesStep_1"><i class="fi fi-rr-arrow-left"></i> Back</a>
@@ -87,11 +85,29 @@
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                 </div>
                 <div class="productBoxClone">
-                    <table>
+                    <table class="salesInfo">
                         <tr>
-                            <td>Customer Name:</td>
+                            <th colspan="2" class="heading">Customer details</th>
+                        </tr>
+                        <tr>
+                            <th>Name:</th>
                             <td id="customerName"></td>
                         </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td id="customerEmail"></td>
+                        </tr>
+                        <tr>
+                            <th>Mobile:</th>
+                            <td id="customerMobile"></td>
+                        </tr>
+                        <tr>
+                            <th>Address:</th>
+                            <td id="customerAddress"></td>
+                        </tr>
+                    </table>
+                    <table class="salesInfo inventoryData">
+
                     </table>
                 </div>
                 <div class="box-5">
@@ -101,7 +117,7 @@
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green step-box" style="float: right;" id="salesStep_3">Submit request <i
+                        <a class="btn btn-green" style="float: right;" id="salesRequest">Submit request <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>

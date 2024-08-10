@@ -1,4 +1,4 @@
-<h2 class="heading">Companies list<span>All Companies list will be displayed her</span>
+<h2 class="heading">Companies list<span>All Companies list will be displayed here</span>
 </h2>
 <div class="shortcut">
     <a href="/dashboard/supplier/add/"><i class="fi fi-rr-plus"></i></a>

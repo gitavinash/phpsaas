@@ -1,4 +1,4 @@
-<h2 class="heading">Properties list<span>All propertys list will be displayed her</span>
+<h2 class="heading">Properties list<span>All propertys list will be displayed here</span>
 </h2>
 <div class="shortcut">
     <a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-plus"></i></a>
