@@ -230,41 +230,10 @@ window.location.href = '/dashboard/sales_request/list/';
     <div class="widget no-padding box-2-5" id="fixedDiv">
         <div class="main-box">
             <section class="leadQuickLinks">
-                <?php
-
-                if ($enquiry_status != 5) {
-                    if ($enquiry_status != 4) { ?>
-                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
-                <?php
-
-                        if (SITE_ID == 57) { ?>
-                <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                    links</a>
-                <a href="" class="btn btn-green" id="updatePaymentBtn"><i class="fi-rr-notes"></i> Update payment
-                    records</a>
-                <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
-                <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
-                <?php
-                        }
-
-                        ?>
                 <a href='#' data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
                     class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
                     data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
                     request</a>
-
-                <?php
-                    } else { ?>
-
-                <form method="POST" class="">
-                    <!-- Design a form to assign lead to intern -->
-                </form>
-
-                <?php
-                    }
-                }
-
-                ?>
             </section>
         </div>
     </div>
