@@ -54,7 +54,7 @@ window.location.href = '/dashboard/sales_request/list/';
                 <div class="widget no-padding box-5">
                     <div class="btn-group leadActions">
                         <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-id-card-clip-alt"></i>
-                            Agent details</a>
+                            Salesman details</a>
                     </div>
                     <div class="userInfo">
                         <p><strong>Name</strong><?php echo $profile_display_name ?></p>
