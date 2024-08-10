@@ -6,7 +6,6 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
         <tr>
             <th>Name</th>
             <th>Mobile</th>
-            <th>Address</th>
             <th>Agent Name</th>
             <th>Agent Mobile</th>
             <th>Sales date</th>
@@ -32,7 +31,6 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                     <td>{$sales_mobile}</td>
                     <td>{$profile_display_name}</td>
                     <td>{$profile_mobile}</td>
-                    <td>{$sales_address}</td>
                     <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>
                         <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>
