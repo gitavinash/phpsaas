@@ -542,8 +542,11 @@ aside .logo {
 }
 
 aside .logo img {
-  height: 60px;
-  /* filter: brightness(0) invert(1); */
+  max-height: 60px;
+  max-width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  padding: 10px;
 }
 
 nav {

@@ -78,12 +78,24 @@ if (isset($daterange)) {
     </div> -->
     <!-- Show this section when page is loading -->
     <div class="pageLoader">
+        <?php
+
+        if (SITE_ID == 50) { ?>
+        <img src="/app/hms/visitor/mgihotels/desktop/assets/images/logo.png" alt="<?php echo ucwords(SITE_APP) ?> logo">
+        <?php
+        } else { ?>
         <img src="<?php echo ((SITE_APP_IMAGE != '') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg') ?>"
-            alt="Aleya logo">
+            alt="<?php echo ucwords(SITE_APP) ?> logo">
+        <?php
+        }
+
+        ?>
     </div>
     <header>
         <div class="right-side">
-            <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+            <div class="mobileLogo"><a href="/dashboard/"><img
+                        src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : SITE_LOGO) ?>"
+                        alt=""></a></div>
             <div class="search-box">
                 <!-- <form action="#">
                     <div class="form-group">
@@ -116,7 +128,9 @@ if (isset($daterange)) {
     </header>
 
     <aside>
-        <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
+        <div class="logo"><a href="/dashboard/"><img
+                    src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : SITE_LOGO) ?>"
+                    alt=""></a></div>
         <nav class="side-nav">
             <ul>
                 <li class="header-section-name">

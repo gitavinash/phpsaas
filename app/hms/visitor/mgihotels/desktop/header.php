@@ -47,7 +47,7 @@
                 <nav class="navbar navbar-expand-lg ">
                     <div class="container-fluid">
                         <a class="navbar-brand main_logo" href="/">
-                            <img src="<?php echo USER_IMAGES ?>mgi_logo.jpeg" alt="" class="img-fluid">
+                            <img src="<?php echo USER_IMAGES ?>logo.png" alt="" class="img-fluid">
                         </a>
                         <button class="menu header_menu">
                             <i class='bx bx-menu'></i>
@@ -80,7 +80,7 @@
         <div class="menu_container">
             <div class="menu_container__box">
                 <div class="menu_logo">
-                    <a href="/"><img src="<?php echo USER_IMAGES ?>mgi_logo.jpeg" class="img-fluid" alt=""></a>
+                    <a href="/"><img src="<?php echo USER_IMAGES ?>logo.png" class="img-fluid" alt=""></a>
                     <div class="cut">
                         <i class='bx bx-x'></i>
                     </div>
