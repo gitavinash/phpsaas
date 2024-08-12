@@ -16,7 +16,7 @@ WHERE link_type = 'news'
 AND link_status = 200 
 AND link_site_id = " . SITE_ID . " 
 ORDER BY link_is_featured DESC, link_published DESC
-LIMIT 0, 10")) {
+LIMIT 0, 20")) {
 
                 if (mysqli_num_rows($newsArticles) != 0) {
 
