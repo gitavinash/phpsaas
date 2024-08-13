@@ -57,6 +57,8 @@ require_once 'header.php';
                 </div>
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="register">
+                <input type="hidden" name="reg_type"
+                    value="<?php echo ((isset($registration_type)) ? $registration_type : 'subscriber') ?>">
                 <input type="hidden" name="redirectUrl"
                     value="<?php echo ((isset($redirect_url)) ? $redirect_url : '') ?>">
                 <button type="submit" id="registerBtn" class="button theme-button">Register</button>
