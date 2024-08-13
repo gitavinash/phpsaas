@@ -40,6 +40,7 @@ function register($connection, $data)
 
 
                     $siteURL = $username . '.' . SITE_DOMAIN;
+                    $userType = ((isset($reg_type)) ? $reg_type : 'subscriber');
 
                     mysqli_query($connection, "START TRANSACTION");
 
@@ -53,7 +54,7 @@ function register($connection, $data)
 
                     $insertSiteApp = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_installation(site_installation_site_id, site_installation_parent_site_id, site_installation_user_id, site_installation_package_id, site_installation_status, site_installation_expiry_date) VALUES('{$siteID}', '{$siteID}', '{$userID}', 1, 1, '{$expiryDate}')");
 
-                    $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', 'administrator', 1)");
+                    $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', '{$userType}', 1)");
 
                     $insertSiteSetting = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_setting(site_setting_site_id, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height, site_mainfest_json, site_robots_txt) VALUES('{$siteID}', 10, 10, 10, 60, 223, 96, '" . json_encode(DEFAULT_MAINFEST_JSON, TRUE) . "', '" . DEFAULT_ROBOTS_TXT . "')");
 
@@ -72,7 +73,11 @@ function register($connection, $data)
                         $status = 'success';
                         $msg = 'You are successfully registered';
 
-                        $url = '/website-setup/?setup_id=' . base64_encode($email);
+                        if (isset($redirectUrl)) {
+                            $url = $redirectUrl . '?setup_id=' . base64_encode($email);
+                        } else {
+                            $url = '/website-setup/?setup_id=' . base64_encode($email);
+                        }
                     } else {
 
                         $status = 'error';

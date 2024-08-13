@@ -32,25 +32,33 @@ require_once 'header.php';
             </div>
             <form id="register" autocomplete="off">
                 <div class="form-group">
-                    <input type="text" name="first_name" id="first_name" placeholder="First name*" class="form-control" autofocus required />
+                    <input type="text" name="first_name" id="first_name" placeholder="First name*" class="form-control"
+                        autofocus required />
                 </div>
                 <div class="form-group">
-                    <input type="text" name="last_name" id="last_name" placeholder="Last name*" class="form-control" required />
+                    <input type="text" name="last_name" id="last_name" placeholder="Last name*" class="form-control"
+                        required />
                 </div>
                 <div class="form-group">
-                    <input type="number" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control" required />
+                    <input type="number" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control"
+                        required />
                 </div>
                 <div class="form-group">
-                    <input type="email" class="form-control" id="email" placeholder="Email address*" name="email" required />
+                    <input type="email" class="form-control" id="email" placeholder="Email address*" name="email"
+                        required />
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" id="password" placeholder="Password*" name="password" required />
+                    <input type="password" class="form-control" id="password" placeholder="Password*" name="password"
+                        required />
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password*" name="confirm_password" required />
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password*"
+                        name="confirm_password" required />
                 </div>
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="register">
+                <input type="hidden" name="redirectUrl"
+                    value="<?php echo ((isset($redirect_url)) ? $redirect_url : '') ?>">
                 <button type="submit" id="registerBtn" class="button theme-button">Register</button>
                 <div class="form-group">
                     <p>Already have an Account? <a href="/login/">Log in</a></p>

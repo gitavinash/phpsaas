@@ -37,6 +37,7 @@
                     <a href="" class="ps-2">reservations@mgihotels.com</a>
                 </div>
                 <div class="font_size_18">
+                    <a href="/register/?redirect_url=">Agent Registration</a> |
                     <a href="/login/">Member login</a>
                 </div>
             </div>
