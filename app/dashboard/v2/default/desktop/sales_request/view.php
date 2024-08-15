@@ -41,7 +41,7 @@ window.location.href = '/dashboard/sales_request/list/';
             <section>
                 <div class="widget no-padding box-5">
                     <div class="btn-group leadActions">
-                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-review"></i>
+                        <a id="laadDetailsBtn" class="btn btn-green"><i class="fi-rr-review"></i>
                             Customer details</a>
                     </div>
                     <div class="userInfo">
@@ -53,7 +53,7 @@ window.location.href = '/dashboard/sales_request/list/';
                 </div>
                 <div class="widget no-padding box-5">
                     <div class="btn-group leadActions">
-                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-id-card-clip-alt"></i>
+                        <a id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-id-card-clip-alt"></i>
                             Salesman details</a>
                     </div>
                     <div class="userInfo">
@@ -63,22 +63,50 @@ window.location.href = '/dashboard/sales_request/list/';
                 </div>
                 <div class="widget no-padding box-1">
                     <div class="btn-group leadActions">
-                        <a href="#" id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-to-do"></i>
+                        <a id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-to-do"></i>
                             Inventory details</a>
                     </div>
                     <table>
                         <?php
                         $blockData = json_decode($sales_data, TRUE);
-                        for ($i = 0; $i < sizeof($blockData); $i++) {
-                            echo "<tr>";
-                            foreach ($blockData[$i] as $value) {
-                                print_r($value);
+
+                        foreach ($blockData as $key => $value) {
+                            $keyArray = (explode('_', str_replace('salesBlocks_', '', $key)));
+                            $productName = $keyArray[1];
+                            echo "
+                                <tr>
+                                <td colspan=100 >{$productName}</td>
+                                ";
+                            // Step 1: Explode the string by commas to get individual objects
+                            $objects = explode(",", $value);
+
+                            // Step 2: Extract the values and count occurrences
+                            $valuesCount = [];
+
+                            foreach ($objects as $object) {
+                                // Explode each object by underscore and take the second part (the actual value)
+                                list($number, $value) = explode("_", $object);
+
+                                // Count occurrences of each value
+                                if (isset($valuesCount[$value])) {
+                                    $valuesCount[$value]++;
+                                } else {
+                                    $valuesCount[$value] = 1;
+                                }
                             }
-                            print_r($blockData[$i]);
-                            // $slabsDetails = explode(",", $blockData);
-                            // print_r($slabsDetails);
-                            echo "</tr>";
+
+                            // Step 3: Display the values and their counts in an HTML table
+                            echo "<table border='1'>";
+                            echo "<tr><th>Value</th><th>Count</th></tr>";
+
+                            foreach ($valuesCount as $value => $count) {
+                                echo "<tr><td>{$value}</td><td>{$count}</td></tr>";
+                            }
+                            echo "
+                                </tr>
+                            ";
                         }
+
                         ?>
                     </table>
                 </div>

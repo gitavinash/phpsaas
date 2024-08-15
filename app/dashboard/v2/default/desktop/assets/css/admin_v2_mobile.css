@@ -64,6 +64,9 @@
   .box-mb-3 {
     width: 30% !important;
   }
+  .box-mb-3-3 {
+    width: 33.33% !important;
+  }
   .box-mb-4 {
     width: 40% !important;
   }
@@ -113,5 +116,11 @@
     font-size: 1rem;
     padding: 5px 5px 0px 5px;
     box-sizing: border-box;
+  }
+  .checkbox-wrapper-16 .checkbox-tile {
+    width: 4.5rem;
+    min-height: 4.5rem;
+    font-size: 0.8rem;
+    padding-top: 1rem;
   }
 }

@@ -1304,71 +1304,6 @@ $(document).ready(function () {
     }
   });
 
-  // $(".openBlockSlab").click(function (e) {
-  //   e.preventDefault();
-  //   var blockId = $(this).attr("data-id");
-  //   activeBlockId = blockId;
-  //   activeBlockTitle = $(this).attr("data-title");
-
-  //   $.ajax({
-  //     type: "GET",
-  //     url: `/api/block/items/?blockId=` + blockId,
-  //     dataType: "json",
-  //     success: function (response) {
-  //       let itemsContainer = $(".slabsListOptions");
-  //       itemsContainer.empty();
-
-  //       // Add "Select All" checkbox
-  //       let selectAllCheckbox = `
-  //       <div class='box-3-2 left p-right-10'>
-  //         <div class='form-group'>
-  //           <div class='input-box'>
-  //             <input type='checkbox' id='selectAllSlabs' />
-  //             <label class='radio-button'>Select All</label>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     `;
-  //       itemsContainer.append(selectAllCheckbox);
-
-  //       var i = 1;
-  //       $.each(response.items, function (index, item) {
-  //         let checkboxLabel = `
-  //           <div class='box-3-2 left p-right-10'>
-  //                               <div class='form-group'>
-  //                                   <div class='input-box'>
-  //                                       <input type='checkbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
-  //                                       <label class='radio-button'>${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
-  //                                   </div>
-  //                               </div>
-  //                           </div>
-  //         `;
-  //         itemsContainer.append(checkboxLabel);
-  //         i++;
-  //       });
-  //       console.log(`blockTitle`, activeBlockTitle);
-
-  //       // popUpMessage("center", response.msg, response.status);
-  //       $("#blockTitle").html(activeBlockTitle);
-  //       $(".blockSlabBox").show();
-  //     },
-  //     error: function (response) {
-  //       console.log(`Error : `, response);
-  //       popUpMessage(
-  //         "center",
-  //         response.responseJSON.msg,
-  //         response.responseJSON.status
-  //       );
-  //     },
-  //   });
-  // });
-
-  // // Handle "Select All" functionality
-  // $(document).on("change", "#selectAllSlabs", function () {
-  //   var isChecked = $(this).is(":checked");
-  //   $(".slabCheckbox").prop("checked", isChecked);
-  // });
-
   $(".openBlockSlab").click(function (e) {
     e.preventDefault();
     var blockId = $(this).attr("data-id");
@@ -1384,28 +1319,48 @@ $(document).ready(function () {
         itemsContainer.empty();
 
         // Add "Select All" checkbox
+        //   let selectAllCheckbox = `
+        //   <div class='box-3-2 left p-right-10'>
+        //     <div class='form-group'>
+        //       <div class='input-box'>
+        //         <input type='checkbox' />
+        //         <label class='radio-button'>Select All</label>
+        //       </div>
+        //     </div>
+        //   </div>
+        // `;
+
         let selectAllCheckbox = `
-        <div class='box-3-2 left p-right-10'>
-          <div class='form-group'>
-            <div class='input-box'>
-              <input type='checkbox' id='selectAllSlabs' />
-              <label class='radio-button'>Select All</label>
+        <div class='show-5-box box-mb-3-3'>
+          <div class='checkbox-wrapper-16'>
+              <label class='checkbox-wrapper'>
+                <input type='checkbox' class='checkbox-input selectAllSlabs' />
+                <span class='checkbox-tile'>
+                  <span class='checkbox-label'>
+                    Select All
+                  </span>
+                </span>
+              </label>
+              </div>
             </div>
-          </div>
-        </div>
-      `;
+        `;
+
         itemsContainer.append(selectAllCheckbox);
 
         // Add individual item checkboxes
         $.each(response.items, function (index, item) {
           let checkboxLabel = `
-          <div class='box-3-2 left p-right-10'>
-            <div class='form-group'>
-              <div class='input-box'>
-                <input type='checkbox' name='slabs' class='slabCheckbox' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
-                <label class='radio-button'>${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
+            <div class='show-5-box box-mb-3-3'>
+              <div class='checkbox-wrapper-16'>
+                <label class='checkbox-wrapper'>
+                  <input type='checkbox' class='checkbox-input' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
+                  <span class='checkbox-tile'>
+                    <span class='checkbox-label'>
+                      ${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}
+                    </span>
+                  </span>
+                </label>
               </div>
-            </div>
           </div>
         `;
           itemsContainer.append(checkboxLabel);
@@ -1426,7 +1381,7 @@ $(document).ready(function () {
   });
 
   // Handle "Select All" functionality
-  $(document).on("change", "#selectAllSlabs", function () {
+  $(document).on("change", ".selectAllSlabs", function () {
     var isChecked = $(this).is(":checked");
     $(".slabCheckbox").prop("checked", isChecked);
   });
