@@ -1304,6 +1304,71 @@ $(document).ready(function () {
     }
   });
 
+  // $(".openBlockSlab").click(function (e) {
+  //   e.preventDefault();
+  //   var blockId = $(this).attr("data-id");
+  //   activeBlockId = blockId;
+  //   activeBlockTitle = $(this).attr("data-title");
+
+  //   $.ajax({
+  //     type: "GET",
+  //     url: `/api/block/items/?blockId=` + blockId,
+  //     dataType: "json",
+  //     success: function (response) {
+  //       let itemsContainer = $(".slabsListOptions");
+  //       itemsContainer.empty();
+
+  //       // Add "Select All" checkbox
+  //       let selectAllCheckbox = `
+  //       <div class='box-3-2 left p-right-10'>
+  //         <div class='form-group'>
+  //           <div class='input-box'>
+  //             <input type='checkbox' id='selectAllSlabs' />
+  //             <label class='radio-button'>Select All</label>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     `;
+  //       itemsContainer.append(selectAllCheckbox);
+
+  //       var i = 1;
+  //       $.each(response.items, function (index, item) {
+  //         let checkboxLabel = `
+  //           <div class='box-3-2 left p-right-10'>
+  //                               <div class='form-group'>
+  //                                   <div class='input-box'>
+  //                                       <input type='checkbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
+  //                                       <label class='radio-button'>${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
+  //                                   </div>
+  //                               </div>
+  //                           </div>
+  //         `;
+  //         itemsContainer.append(checkboxLabel);
+  //         i++;
+  //       });
+  //       console.log(`blockTitle`, activeBlockTitle);
+
+  //       // popUpMessage("center", response.msg, response.status);
+  //       $("#blockTitle").html(activeBlockTitle);
+  //       $(".blockSlabBox").show();
+  //     },
+  //     error: function (response) {
+  //       console.log(`Error : `, response);
+  //       popUpMessage(
+  //         "center",
+  //         response.responseJSON.msg,
+  //         response.responseJSON.status
+  //       );
+  //     },
+  //   });
+  // });
+
+  // // Handle "Select All" functionality
+  // $(document).on("change", "#selectAllSlabs", function () {
+  //   var isChecked = $(this).is(":checked");
+  //   $(".slabCheckbox").prop("checked", isChecked);
+  // });
+
   $(".openBlockSlab").click(function (e) {
     e.preventDefault();
     var blockId = $(this).attr("data-id");
@@ -1317,27 +1382,40 @@ $(document).ready(function () {
       success: function (response) {
         let itemsContainer = $(".slabsListOptions");
         itemsContainer.empty();
-        var i = 1;
+
+        // Add "Select All" checkbox
+        let selectAllCheckbox = `
+        <div class='box-3-2 left p-right-10'>
+          <div class='form-group'>
+            <div class='input-box'>
+              <input type='checkbox' id='selectAllSlabs' />
+              <label class='radio-button'>Select All</label>
+            </div>
+          </div>
+        </div>
+      `;
+        itemsContainer.append(selectAllCheckbox);
+
+        // Add individual item checkboxes
         $.each(response.items, function (index, item) {
           let checkboxLabel = `
-            <div class='box-3-2 left p-right-10'>
-                                <div class='form-group'>
-                                    <div class='input-box'>
-                                        <input type='checkbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
-                                        <label class='radio-button'>${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
-                                    </div>
-                                </div>
-                            </div>
-          `;
+          <div class='box-3-2 left p-right-10'>
+            <div class='form-group'>
+              <div class='input-box'>
+                <input type='checkbox' name='slabs' class='slabCheckbox' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
+                <label class='radio-button'>${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}</label>
+              </div>
+            </div>
+          </div>
+        `;
           itemsContainer.append(checkboxLabel);
-          i++;
         });
-        // popUpMessage("center", response.msg, response.status);
-        $("#blockTitle").html(blockTitle);
+
+        $("#blockTitle").html(activeBlockTitle);
         $(".blockSlabBox").show();
       },
       error: function (response) {
-        console.log(`Error : `, response);
+        console.log(`Error: `, response);
         popUpMessage(
           "center",
           response.responseJSON.msg,
@@ -1345,6 +1423,12 @@ $(document).ready(function () {
         );
       },
     });
+  });
+
+  // Handle "Select All" functionality
+  $(document).on("change", "#selectAllSlabs", function () {
+    var isChecked = $(this).is(":checked");
+    $(".slabCheckbox").prop("checked", isChecked);
   });
 
   // Add slabs btn action

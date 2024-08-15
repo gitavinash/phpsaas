@@ -131,12 +131,20 @@
     <div class="fullScreenPopUpBox">
         <div class="widget box-1">
             <div class="contentArea">
-                <h4 class="heading"><?php echo $enquiry_subject ?> Select slabs form <strong id="blockTitle"></strong>
+                <h4 class="heading">Select slabs form <strong id="blockTitle"></strong>
                     </span></h2>
                     <div class="slabsList">
                         <!-- <section> -->
                         <!-- <form action=""> -->
                         <div class='form-group-box slabsListOptions'>
+                            <div class='box-3-2 left p-right-10'>
+                                <div class='form-group'>
+                                    <div class='input-box'>
+                                        <input type='checkbox' id='selectAllSlabs' />
+                                        <label class='radio-button'>Select All</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- </form>
                         </section> -->
