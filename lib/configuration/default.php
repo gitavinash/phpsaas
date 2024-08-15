@@ -65,6 +65,7 @@ define('PREVIOUS_PAGE', PAGE_NO);
 
 /** Image Compression or Other Image Related Configuration */
 
+define('PDF_FILE', 'application/pdf');
 define('PNG_IMAGE', 'image/png');
 define('JPEG_IMAGE', 'image/jpeg');
 define('JPG_IMAGE', 'image/jpg');

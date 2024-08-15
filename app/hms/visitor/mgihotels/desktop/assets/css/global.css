@@ -509,6 +509,8 @@ img.destinationFeatureImage {
 }
 .onboarding h2 {
   margin-bottom: 50px !important;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 .onboarding form {
@@ -525,7 +527,16 @@ img.destinationFeatureImage {
   color: #fff;
 }
 
-.form-select {
-  border: 1px solid #333 !important;
+.form-select,
+.form-select:hover,
+.form-select:focus {
+  border: 1px solid #dee2e6 !important;
   padding: 5px !important;
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-primary {
+  background: #3c3f95;
+  border: #3c3f95;
 }

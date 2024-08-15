@@ -89,9 +89,8 @@
                 <div class="menu_wrapper">
                     <a href="/">Home</a>
                     <a href="/about-us/">About us</a>
-                    <a href="/hotel_list/">Our hotel</a>
-                    <a href="/promotions/">Promotions</a>
-
+                    <a href="/our-hotels/">Our hotel</a>
+                    <a href="/register/?redirect_url=/kyc/&registration_type=travel_agent">Agent Registration</a>
                 </div>
                 <div class="contact_us">
                     <a href="/contact-us/" class="global_btn">contact us</a>
