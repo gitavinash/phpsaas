@@ -32,8 +32,11 @@ body {
 }
 
 .pageLoader img {
-  height: 120px;
+  /* max-height: 120px; */
   animation: fadeInOut 4s ease-in-out infinite;
+  width: 80%;
+  max-width: 600px;
+  height: auto;
 }
 
 @keyframes fadeInOut {
@@ -2902,4 +2905,18 @@ th {
   color: #707070;
   transition: 0.375s ease;
   text-align: center;
+}
+
+h4.twoLineHeading {
+  font-weight: 400;
+  color: #333 !important;
+  font-size: 1rem !important;
+  line-height: 18px;
+}
+
+h4.twoLineHeading span {
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  color: #01647b !important;
+  padding: 10px 0px;
 }

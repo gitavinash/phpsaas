@@ -131,7 +131,7 @@
     <div class="fullScreenPopUpBox">
         <div class="widget box-1">
             <div class="contentArea">
-                <h4 class="heading">Select slabs form <strong id="blockTitle"></strong>
+                <h4 class="heading twoLineHeading">Select slabs form <span id="blockTitle"></span>
                     </span></h2>
                     <div class="slabsList">
                         <!-- <section> -->

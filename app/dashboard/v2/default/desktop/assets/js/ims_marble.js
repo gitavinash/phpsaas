@@ -1353,7 +1353,7 @@ $(document).ready(function () {
             <div class='show-5-box box-mb-3-3'>
               <div class='checkbox-wrapper-16'>
                 <label class='checkbox-wrapper'>
-                  <input type='checkbox' class='checkbox-input' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
+                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
                   <span class='checkbox-tile'>
                     <span class='checkbox-label'>
                       ${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}
