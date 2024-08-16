@@ -66,22 +66,31 @@ window.location.href = '/dashboard/sales_request/list/';
                         <a id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-to-do"></i>
                             Inventory details</a>
                     </div>
-                    <table>
+                    <table class='stockInfo'>
+                        <tr class="rowBox">
+                            <th class="cell-content">S No.</th>
+                            <th class="cell-content">Block name</th>
+                            <th class="cell-content">Slabs ( Size and Pcs )</th>
+                            <th class="cell-content">Total Pcs.</th>
+                        </tr>
                         <?php
                         $blockData = json_decode($sales_data, TRUE);
-
+                        $i = 0;
+                        $totalBlockSlabs = 0;
                         foreach ($blockData as $key => $value) {
                             $keyArray = (explode('_', str_replace('salesBlocks_', '', $key)));
                             $productName = $keyArray[1];
                             echo "
-                                <tr>
-                                <td colspan=100 >{$productName}</td>
+                                <tr class='rowBox'>
+                                <td class='rowSno cell-content stockInfoTitle'>" . ++$i . "</td>
+                                <td class='rowTitle cell-content stockInfoTitle' >{$productName}</td>
                                 ";
                             // Step 1: Explode the string by commas to get individual objects
                             $objects = explode(",", $value);
 
                             // Step 2: Extract the values and count occurrences
                             $valuesCount = [];
+                            $totalSlabs = 0;
 
                             foreach ($objects as $object) {
                                 // Explode each object by underscore and take the second part (the actual value)
@@ -93,20 +102,25 @@ window.location.href = '/dashboard/sales_request/list/';
                                 } else {
                                     $valuesCount[$value] = 1;
                                 }
+                                $totalBlockSlabs++;
+                                $totalSlabs++;
                             }
-
-                            // Step 3: Display the values and their counts in an HTML table
-                            echo "<table border='1'>";
-                            echo "<tr><th>Value</th><th>Count</th></tr>";
-
+                            echo "<td class='slabsDetails'>";
                             foreach ($valuesCount as $value => $count) {
-                                echo "<tr><td>{$value}</td><td>{$count}</td></tr>";
+                                echo "<p class='stockInfoList'>{$value}<span>{$count}</span></p>";
                             }
                             echo "
+                                </td>
+                                <td class='totalSlabs' >{$totalSlabs}</td>
                                 </tr>
                             ";
                         }
-
+                        echo "<tr class='rowBox'>
+                                <td></td>
+                                <td></td>
+                                <td class='totalSlabs'>Total slabs</td>
+                                <td class='totalSlabs'>{$totalBlockSlabs}</td>
+                            </tr>";
                         ?>
                     </table>
                 </div>
