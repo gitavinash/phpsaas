@@ -27,7 +27,6 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 extract($salesData);
                 echo "
                 <tr>
-                    <td>{$sales_id}</td>
                     <td>{$sales_name}</td>
                     <td>{$sales_email}</td>
                     <td>{$sales_mobile}</td>

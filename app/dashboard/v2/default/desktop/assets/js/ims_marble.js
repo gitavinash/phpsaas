@@ -88,47 +88,47 @@ $(document).ready(function () {
           itemsContainer.empty();
 
           itemsContainer.append(
-            `<tr>
-                            <th colspan="2" class="heading">Inventory details</th>
-                        </tr>`
+            `<div>
+                            <h2 class="heading">Inventory details</h2>
+                        </div>`
           );
 
           $.each(salesBlocksData, function (key, value) {
             // Split the key by underscore and get the last part
-            let keyParts = key.split("_");
-            let lastKeyIndex = keyParts[keyParts.length - 1];
+            let blockTitle = key.split("_");
+            let blockTitleName = blockTitle[2];
 
-            // Split the value by comma and process it to get unique values with counts
-            let valueArray = value.split(",").map((val) => {
-              let valParts = val.split("_");
-              return valParts[valParts.length - 1].trim();
+            let slabsArray = value.split(",");
+            let slabCounts = {};
+            let totalCount = 0;
+
+            // Loop through each slab entry
+            slabsArray.forEach((slab) => {
+              // Split the slab entry by underscore to extract details
+              let slabParts = slab.split("_");
+
+              // The second part of the split is the slabDimension (e.g., '150in x 110in')
+              let slabDimension = slabParts[1];
+
+              // Increment the count for this slabDimension in the slabCounts object
+              slabCounts[slabDimension] = (slabCounts[slabDimension] || 0) + 1;
+              totalCount++;
             });
 
-            // Create an object to store unique values and their counts
-            let valueCounts = {};
-            valueArray.forEach((val) => {
-              valueCounts[val] = (valueCounts[val] || 0) + 1;
-            });
-
-            // Format the unique values with their counts
-            let uniqueValues = Object.entries(valueCounts)
-              .map(([val, count]) => {
-                return count > 1 ? `${val} (x${count})` : `${val} (x1)`;
+            // Now format the result to display each unique slab size with its count
+            let uniqueValues = Object.entries(slabCounts)
+              .map(([dimension, count]) => {
+                return `<p class='stockInfoList' >${dimension} <span>(x${count})</span></p>`;
               })
-              .join("<br>"); // For line breaks
+              .join("");
 
-            // Get the total count of all values
-            let totalCount = valueArray.length;
-
-            // Create the table rows
+            // Create the table rows with the block title and inventory data
             let inventoryData = `
-        <tr>
-            <th>${lastKeyIndex} (x${totalCount})</th>
-        </tr>
-        <tr>
-            <td>${uniqueValues}<br></td>
-        </tr>
-    `;
+              <div ><strong class='stockInfoList'>${blockTitleName} <span>(x${totalCount})</span></strong></div>
+              <div class='border'>${uniqueValues}</div>
+            `;
+
+            // Append the generated HTML to the container
             itemsContainer.append(inventoryData);
           });
         } else {
@@ -1318,18 +1318,6 @@ $(document).ready(function () {
         let itemsContainer = $(".slabsListOptions");
         itemsContainer.empty();
 
-        // Add "Select All" checkbox
-        //   let selectAllCheckbox = `
-        //   <div class='box-3-2 left p-right-10'>
-        //     <div class='form-group'>
-        //       <div class='input-box'>
-        //         <input type='checkbox' />
-        //         <label class='radio-button'>Select All</label>
-        //       </div>
-        //     </div>
-        //   </div>
-        // `;
-
         let selectAllCheckbox = `
         <div class='show-5-box box-mb-3-3'>
           <div class='checkbox-wrapper-16'>
@@ -1349,14 +1337,15 @@ $(document).ready(function () {
 
         // Add individual item checkboxes
         $.each(response.items, function (index, item) {
+          let slabNetSize = item.slab_total_area - item.slab_damage_area;
           let checkboxLabel = `
             <div class='show-5-box box-mb-3-3'>
               <div class='checkbox-wrapper-16'>
                 <label class='checkbox-wrapper'>
-                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='${item.block_item_id}_${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}' />
+                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='${item.slab_id}_${item.slab_dimension}_${item.slab_total_area}_${item.slab_damage_area}_${slabNetSize}_${item.slab_dimension_type}' />
                   <span class='checkbox-tile'>
                     <span class='checkbox-label'>
-                      ${item.block_item_width}${item.block_item_dimension_type} x ${item.block_item_height}${item.block_item_dimension_type}
+                      ${item.slab_dimension}
                     </span>
                   </span>
                 </label>

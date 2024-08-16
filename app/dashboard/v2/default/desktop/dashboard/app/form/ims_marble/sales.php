@@ -106,9 +106,9 @@
                             <td id="customerAddress"></td>
                         </tr>
                     </table>
-                    <table class="salesInfo inventoryData">
+                    <div class="salesInfo inventoryData">
 
-                    </table>
+                    </div>
                 </div>
                 <div class="box-5">
                     <div class="form-group">
@@ -117,7 +117,7 @@
                 </div>
                 <div class="box-5">
                     <div class="form-group">
-                        <a class="btn btn-green" style="float: right;" id="salesRequest">Submit request <i
+                        <a class="btn btn-green" style="float: right;" id="salesRequest">Submit <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>
                 </div>

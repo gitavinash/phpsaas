@@ -2763,12 +2763,6 @@ table.salesInfo {
   margin-bottom: 50px;
 }
 
-table.salesInfo tr {
-  float: left;
-  width: 100%;
-  height: auto !important;
-}
-
 th.heading {
   font-size: 24px;
   float: left;
@@ -2778,6 +2772,65 @@ th.heading {
   box-sizing: border-box;
   padding: 0 !important;
   border-bottom: 2px solid #03637b;
+}
+
+table.salesInfo tr {
+  float: left;
+  width: 100%;
+  height: auto !important;
+}
+
+.salesInfo {
+  float: left;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+.salesInfo h2 {
+  float: left;
+  width: 100%;
+  height: auto !important;
+}
+
+.salesInfo p {
+  float: left;
+  width: 100%;
+  height: auto !important;
+}
+
+.salesInfo strong {
+  float: left;
+  width: 100%;
+  border: 1px solid #01647b;
+  padding: 5px !important;
+  box-sizing: border-box;
+  background: #01647b;
+  color: #fff;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.salesInfo .heading {
+  font-size: 24px;
+  float: left;
+  width: 100%;
+  text-align: left;
+  line-height: 38px;
+  box-sizing: border-box;
+  padding: 0 !important;
+  border-bottom: 2px solid #03637b;
+  margin-bottom: 10px;
+}
+
+.salesInfo .border {
+  float: left;
+  width: 100%;
+  padding: 5px !important;
+  box-sizing: border-box;
+  border: 1px solid #707070;
+  margin-bottom: 10px;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 table.salesInfo td,
@@ -2962,7 +3015,8 @@ table.stockInfo th {
   padding: 8px; /* Optional: Add some padding inside header cells */
 }
 
-p.stockInfoList {
+p.stockInfoList,
+strong.stockInfoList {
   display: flex;
   justify-content: space-between; /* Distributes the items between left and right */
   align-items: center; /* Vertically aligns the items */
