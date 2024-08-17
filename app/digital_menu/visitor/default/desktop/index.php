@@ -8,9 +8,20 @@
 </head>
 
 <body>
+    <?php
+
+    if (SITE_ID == 79) { ?>
+    <img src="<?php echo USER_IMAGES ?>vicky-1.png" style="width: 100%;" />
+    <img src="<?php echo USER_IMAGES ?>vicky-2.png" style="width: 100%;" />
+    <?php
+    } else { ?>
     <img src="<?php echo USER_IMAGES ?>menu_1.jpeg" style="width: 100%;" />
     <img src="<?php echo USER_IMAGES ?>menu_2.jpeg" style="width: 100%;" />
     <img src="<?php echo USER_IMAGES ?>menu_3.jpeg" style="width: 100%;" />
+    <?php
+    }
+
+    ?>
     <?php require_once NOTIFICATION . 'index.php'; ?>
 </body>
 
