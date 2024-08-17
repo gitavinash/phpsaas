@@ -1,16 +1,17 @@
 <?php
 
-	include_once 'header.php';
+include_once 'header.php';
 
-	$subject='Welcome on Board';
+$subject = 'Welcome to ' . SITE_NAME;
 
-	$email_body = "
+$email_body = "
 		
 		<table style='font-weight: normal;border-collapse: collapse;border: 0;margin: 0;padding: 0;font-family: Arial, sans-serif; width: 100%' >
 			<tr>
 				<td style='text-align: center'>
 					<h1 style='color: {$themeColor}'>{$subject}</h1>
-					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque accumsan tempor laoreet. Quisque hendrerit nulla vitae purus commodo porta. Mauris eget eleifend nulla, sed pellentesque ante. Donec nec ipsum justo. Sed condimentum scelerisque mi eu rhoncus. Integer pellentesque ex ligula, at aliquam odio porttitor nec. Nam efficitur gravida magna, id sollicitudin lectus tristique a. Nunc sollicitudin purus commodo, pellentesque felis ac, ultricies massa. Pellentesque placerat condimentum venenatis. Pellentesque mollis turpis a porta vestibulum. Nam sed rhoncus est. Suspendisse eget tincidunt ipsum.</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Dear {$profile_display_name}</p>
+					<p style='float:left; width: 100%; text-align: justify; font-size: 14px; line-height: 26px'>Welcome to " . SITE_NAME . "! We're excited to have you with us.</p>
 				</td>
 			</tr>
 			<tr>
@@ -38,6 +39,4 @@
     
 	";
 
-	include_once 'footer.php';
-
-?>
+include_once 'footer.php';
