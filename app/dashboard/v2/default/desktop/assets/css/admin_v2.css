@@ -35,7 +35,7 @@ body {
   /* max-height: 120px; */
   animation: fadeInOut 4s ease-in-out infinite;
   width: 80%;
-  max-width: 600px;
+  max-width: 400px;
   height: auto;
 }
 

@@ -1,5 +1,4 @@
 <?php
-
 $statusCondition = '';
 if (isset($leadStatus)) {
     $statusCondition = "e.enquiry_status={$leadStatus} AND ";
