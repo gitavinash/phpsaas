@@ -76,7 +76,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                                 $encodedMessage = urlencode($message);
 
                                 // Generate the WhatsApp link
-                                $whatsappLink = "https://wa.me/{$user_mobile}?text=$encodedMessage";
+                                $whatsappLink = "https://wa.me/91{$user_mobile}?text=$encodedMessage";
 
                                 ?>
                             <a href="<?php echo $whatsappLink ?>" target="_blank"
