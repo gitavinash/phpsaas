@@ -1,99 +1,84 @@
 <?php
 
-    /** User email verification */
+/** User email verification */
 
-    function email($connection, $data) {
+function email($connection, $data)
+{
 
-        extract($data);
-        global $table_prefix;
+    extract($data);
+    global $table_prefix;
 
-        $email=base64_decode($email); // decode email variable
+    $email = base64_decode($email); // decode email variable
 
-        if($selectUser=mysqli_query($connection, "SELECT user_id, user_status FROM ".TABLE_PREFIX."user WHERE user_email='{$email}' AND user_salt_key='{$user_id}'")) {
-            if(mysqli_num_rows($selectUser)!=0) {
+    if ($selectUser = mysqli_query($connection, "SELECT user_id, user_status FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' AND user_salt_key='{$user_id}'")) {
+        if (mysqli_num_rows($selectUser) != 0) {
 
-                extract(mysqli_fetch_assoc($selectUser));
+            extract(mysqli_fetch_assoc($selectUser));
 
-                if($user_status==0) {
+            if ($user_status == 0) {
 
-                    if(mysqli_query($connection, "UPDATE ".TABLE_PREFIX."user SET user_status=1, user_act_time=NOW() WHERE user_id='{$user_id}'")) {
+                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_status=1, user_act_time=NOW() WHERE user_id='{$user_id}'")) {
 
-                        $message='Thank you for verifying your email';
+                    $message = 'Thank you for verifying your email';
+                    if (file_exists(USER_PATH . 'email.php')) {
 
+                        require_once USER_PATH . 'email.php';
                     } else {
 
-                        $message='Something went wrong while verification';
-
+                        require_once DEFAULT_VISITOR_PATH . 'email.php';
                     }
-
                 } else {
 
-                    $message='Email is already verified';
-
+                    $message = 'Something went wrong while verification';
                 }
-
             } else {
 
-                $message='<h1>Invalid request</h1>';
+                $message = 'Email is already verified';
             }
-
-            if(file_exists(USER_PATH.'email.php')) {
-
-                require_once USER_PATH.'email.php';
-
-            } else {
-                
-                require_once SYSTEM_PATH.'email.php';
-
-            }
-
         } else {
 
-            $message='something went wrong';
-
+            $message = '<h1>Invalid request</h1>';
         }
+    } else {
 
+        $message = 'something went wrong';
     }
 
-    /** Reset Password */
+    echo $message;
+}
 
-    function password($connection, $data) {
+/** Reset Password */
 
-        extract($data);
-        global $table_prefix;
+function password($connection, $data)
+{
 
-        $email=base64_decode($email);
+    extract($data);
+    global $table_prefix;
 
-        if($checkUser=mysqli_query($connection, "SELECT user_id FROM ".TABLE_PREFIX."user WHERE user_salt_key='{$transaction}' AND user_email='{$email}'")) {
+    $email = base64_decode($email);
 
-            if(mysqli_num_rows($checkUser)!=0) {
+    if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$transaction}' AND user_email='{$email}'")) {
 
-                if(file_exists(USER_PATH.'update-password.php')) {
+        if (mysqli_num_rows($checkUser) != 0) {
 
-                    require_once USER_PATH.'update-password.php';
-    
-                } else {
-                    
-                    require_once SYSTEM_PATH.'update-password.php';
-    
-                }
+            if (file_exists(USER_PATH . 'update-password.php')) {
 
+                require_once USER_PATH . 'update-password.php';
             } else {
 
-                $message='Something is wrong';
-
-                if(file_exists(USER_PATH.'verify.php')) {
-
-                    require_once USER_PATH.'verify.php';
-    
-                } else {
-                    
-                    require_once SYSTEM_PATH.'verify.php';
-    
-                }
-
+                require_once SYSTEM_PATH . 'update-password.php';
             }
+        } else {
 
+            $message = 'Something is wrong';
+
+            if (file_exists(USER_PATH . 'verify.php')) {
+
+                require_once USER_PATH . 'verify.php';
+            } else {
+
+                require_once SYSTEM_PATH . 'verify.php';
+            }
         }
-
     }
+}
