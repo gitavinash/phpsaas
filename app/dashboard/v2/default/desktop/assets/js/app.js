@@ -1385,9 +1385,8 @@ $(document).ready(function (e) {
       type: "GET",
       url: `/api/auth/request-kyc/?id=` + requestId,
       dataType: "json",
-      success: function (response) {
-        console.log(`Success : `, response);
-        popUpMessage("center", response.msg, response.status);
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
       },
       error: function (response) {
         console.log(`Error : `, response);
