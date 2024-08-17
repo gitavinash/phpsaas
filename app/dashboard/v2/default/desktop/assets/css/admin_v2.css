@@ -3050,3 +3050,8 @@ table.stockInfo th:last-child {
 tr.rowBox {
   height: auto;
 }
+
+.dataTables_filter {
+  position: relative;
+  margin-top: 20px;
+}

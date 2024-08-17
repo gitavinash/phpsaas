@@ -631,7 +631,7 @@ $(document).ready(function (e) {
       pageLength: 50,
       fixedHeader: true,
       responsive: true,
-      searching: false,
+      searching: true,
       lengthChange: false,
       autoWidth: false,
       scrollX: true, // Enable horizontal scrolling
