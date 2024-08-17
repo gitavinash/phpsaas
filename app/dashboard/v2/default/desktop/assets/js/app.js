@@ -626,6 +626,7 @@ if ($(".showTableList").length) {
     responsive: true,
     searching: false,
     lengthChange: false,
+    autoWidth: false,
     scrollX: true, // Enable horizontal scrolling
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)

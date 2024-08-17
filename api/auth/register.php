@@ -49,14 +49,24 @@ function register($connection, $data)
                     $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', NOW(), '" . IP . "')");
                     $userID = mysqli_insert_id($connection);
 
-                    $insertSite = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site(site_owner_id, site_url, site_status) VALUES('{$userID}', '{$siteURL}', 0)");
-                    $siteID = mysqli_insert_id($connection);
+                    if (isset($userType)) {
 
-                    $insertSiteApp = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_installation(site_installation_site_id, site_installation_parent_site_id, site_installation_user_id, site_installation_package_id, site_installation_status, site_installation_expiry_date) VALUES('{$siteID}', '{$siteID}', '{$userID}', 1, 1, '{$expiryDate}')");
+                        $insertSite = true;
+                        $insertSiteApp = true;
+                        $insertSiteSetting = true;
 
-                    $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', '{$userType}', 1)");
+                        $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(" . SITE_ID . ", '{$userID}', '{$userType}', 1)");
+                    } else {
 
-                    $insertSiteSetting = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_setting(site_setting_site_id, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height, site_mainfest_json, site_robots_txt) VALUES('{$siteID}', 10, 10, 10, 60, 223, 96, '" . json_encode(DEFAULT_MAINFEST_JSON, TRUE) . "', '" . DEFAULT_ROBOTS_TXT . "')");
+                        $insertSite = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site(site_owner_id, site_url, site_status) VALUES('{$userID}', '{$siteURL}', 0)");
+                        $siteID = mysqli_insert_id($connection);
+
+                        $insertSiteApp = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_installation(site_installation_site_id, site_installation_parent_site_id, site_installation_user_id, site_installation_package_id, site_installation_status, site_installation_expiry_date) VALUES('{$siteID}', '{$siteID}', '{$userID}', 1, 1, '{$expiryDate}')");
+
+                        $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', '{$userType}', 1)");
+
+                        $insertSiteSetting = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_setting(site_setting_site_id, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height, site_mainfest_json, site_robots_txt) VALUES('{$siteID}', 10, 10, 10, 60, 223, 96, '" . json_encode(DEFAULT_MAINFEST_JSON, TRUE) . "', '" . DEFAULT_ROBOTS_TXT . "')");
+                    }
 
                     $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$mobile}', '{$profile_display_name}', '{$email}')");
 
