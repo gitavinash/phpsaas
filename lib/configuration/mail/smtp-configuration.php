@@ -15,13 +15,13 @@ if (EMAIL_SMTP_DEFAULT == 0) {
 
 } else {
 
-    define('SMTP_HOST', 'smtp.zeptomail.in'); // host address of email server like :- mail.isw.one
+    define('SMTP_HOST', 'smtp-relay.brevo.com'); // host address of email server like :- mail.isw.one
     define('SMTP_SSL', 'true'); // is email server is using ssl if yes then change to true
     define('SMTP_PORT', '587'); // PORT id of their email server like :- 587, 465
-    define('SMTP_USERNAME', 'emailapikey'); // email user like :- contact@isw.one
-    define('SMTP_PASSWORD', 'PHtE6r0JE7y5jjYqpBMFtP6+EsSlM4x4+OhnKwNH4otGCv9SHE0HqtgsxDblo08vV/URRvDNwI1u4+7J5bnTdzztMm5MXmqyqK3sx/VYSPOZsbq6x00Vs10bdkLUV4Xmet9j0yDes9/TNA=='); // password of the email
+    define('SMTP_USERNAME', 'blumoxtechnologies@gmail.com'); // email user like :- contact@isw.one
+    define('SMTP_PASSWORD', 'bgY1MNcrpC6fD9d8'); // password of the email
     define('SMTP_EMAIL', 'donotreply@aleya.in'); // Which email is display to receiver end like :- donotreply@isw.one
     define('SMTP_NAME', SITE_NAME); // Show Name on email :- Blumox Technologies, Avinash Kumar
-    define('REPLY_EMAIL', 'donotreply@blumox.com'); // Reply email where user can send a reply mail like :- contact@isw.one
+    define('REPLY_EMAIL', 'donotreply@aleya.in'); // Reply email where user can send a reply mail like :- contact@isw.one
 
 }
