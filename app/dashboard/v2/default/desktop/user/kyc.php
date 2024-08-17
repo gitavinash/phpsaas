@@ -13,11 +13,11 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
 
 ?>
 
-<h2 class="heading">Update User<span>Update users personal details</span></h2>
+<h2 class="heading">KYC<span>Users KYC details</span></h2>
 <div class="main-box">
     <section>
         <ul class="steps-tab">
-            <li class="step-box active" id="step_1"><span>1</span>Create new user</li>
+            <li class="step-box active" id="step_1"><span>1</span>Check users KYC</li>
         </ul>
         <div class="steps-box">
             <form method="POST" action="#">
@@ -118,8 +118,16 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                     <?php
                     } else { ?>
                     <div class="step-open-box step_1_box">
-                        <div class="form-header">
-                            <h3>KYC documents are not uploaded by user </h3>
+                        <div class="form-header" style="    text-align: center;
+    float: left;
+    width: 100%;
+    line-height: 38px;
+    font-size: 24px;
+    margin: 50px 0px">
+                            <p style="padding: 50px 0px;">KYC documents are not uploaded by user</p>
+                            <a style="float: left; width: 100%; text-align: center" class="btn btn-green"
+                                id="sendKYCRequest" data-id="<?php echo $id ?>">Send KYC
+                                request</a>
                         </div>
                         <?php
                     }
@@ -131,4 +139,4 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
     </form>
 </div>
 </section>
-</div>
+</div>i
