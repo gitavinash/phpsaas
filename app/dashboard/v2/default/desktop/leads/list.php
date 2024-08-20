@@ -69,7 +69,7 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Email</th>
+                        <!-- <th>Email</th> -->
                         <th style="max-width: 200px !important">Mobile</th>
                         <th>Subject</th>
                         <th>Time</th>
@@ -153,7 +153,7 @@ LIMIT
                     ?>
                     <tr>
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_first_name ?></td>
-                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_email; ?></td>
+                        <!-- <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_email; ?></td> -->
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_mobile; ?></td>
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_subject; ?></td>
                         <td style="background: <?php echo $backgroundColor; ?>">
