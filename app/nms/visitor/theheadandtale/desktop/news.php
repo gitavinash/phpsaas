@@ -80,7 +80,10 @@ $newsContent =  substr($newsContent, 0, 525);
 
                 echo "<div class='details_box__content {$news_paid}'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
                 if ($showSignUpSection == true) {
-                    echo "<section class='subscribe_wrapper'>
+                    echo "
+                <div class='transparent-box'>
+                </div>
+                <section class='subscribe_wrapper'>
                         <div class='container'>
                             <div class='subscribe_wrapper__heading'>
                                 <h6><a href='/signup/'>Sign up now to read the full story</a></h6>
