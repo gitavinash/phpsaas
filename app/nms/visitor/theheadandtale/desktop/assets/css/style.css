@@ -374,12 +374,25 @@ section {
   margin-top: 2rem;
 }
 
+.transparent-box {
+  height: 150px; /* Total height of the box */
+  background: rgba(245, 195, 170, 0.1);
+  backdrop-filter: blur(2px); /* Blur effect on the background text */
+  -webkit-backdrop-filter: blur(2px); /* For Safari */
+  margin-top: -130px;
+  border-bottom: 10px solid;
+}
+
 @media (max-width: 992px) {
   .blog_banner__left {
     margin-top: 1rem;
   }
   .container {
     max-width: 100% !important;
+  }
+  .transparent-box {
+    height: 450px;
+    margin-top: -400px;
   }
 }
 @media (max-width: 768px) {

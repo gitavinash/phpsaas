@@ -91,7 +91,8 @@ $newsContent =  substr($newsContent, 0, 525);
                 }
                 if ($showSubscriptionSection == true) { ?>
 
-
+                <div class="transparent-box">
+                </div>
                 <section class="subscribe_wrapper">
                     <div class="container">
                         <div class="subscribe_wrapper__heading">
