@@ -78,9 +78,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     $showSignUpSection = true;
                 }
 
-                $showGradient = ($news_paid || $showSignUpSection) ? 'text-gradient' : '';
-
-                echo "<div class='details_box__content {$news_paid} {$showGradient}'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
+                echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
                 if ($showSignUpSection == true) {
                     echo "
                 <div class='transparent-box'>
