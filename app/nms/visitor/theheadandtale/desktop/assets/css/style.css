@@ -374,13 +374,22 @@ section {
   margin-top: 2rem;
 }
 
+.text-gradient {
+  background: linear-gradient(180deg, #707070, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .transparent-box {
-  height: 150px; /* Total height of the box */
-  background: rgba(245, 195, 170, 0.1);
-  backdrop-filter: blur(2px); /* Blur effect on the background text */
-  -webkit-backdrop-filter: blur(2px); /* For Safari */
-  margin-top: -130px;
-  border-bottom: 10px solid;
+  /* height: 150px;
+  background: rgb(245, 195, 170);
+  background: linear-gradient(
+    180deg,
+    rgba(245, 195, 170, 0.1) 0%,
+    rgba(245, 195, 170, 1) 100%
+  );
+  margin-top: -130px; */
+  border-bottom: 10px solid #f5c3aa;
 }
 
 @media (max-width: 992px) {
@@ -390,10 +399,10 @@ section {
   .container {
     max-width: 100% !important;
   }
-  .transparent-box {
+  /* .transparent-box {
     height: 450px;
     margin-top: -350px;
-  }
+  } */
 }
 @media (max-width: 768px) {
   .input_btn {

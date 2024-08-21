@@ -66,63 +66,69 @@ window.location.href = '/dashboard/sales_request/list/';
                         <a id="leadDetailsBtn" class="btn btn-green"><i class="fi-rr-to-do"></i>
                             Inventory details</a>
                     </div>
-                    <table class='stockInfo'>
-                        <tr class="rowBox">
-                            <th class="cell-content">S No.</th>
-                            <th class="cell-content">Block name</th>
-                            <th class="cell-content">Slabs ( Size and Pcs )</th>
-                            <th class="cell-content">Total Pcs.</th>
-                        </tr>
+
+                    <div class="full-width">
+                        <div class="">
+                            <div style="float:left; width: 50px;">S No.</div>
+                            <div style="float:left; width: 250px;">Block Name</div>
+                            <div style="float:left; min-width: 500px;">
+                                Slabs Details
+                                <div class="row header-row">
+                                    <div style="float:left;">Size</div>
+                                    <div style="float:left;">Qty</div>
+                                    <div style="float:left;">Gross Qty.</div>
+                                    <div style="float:left;">Damage Qty.</div>
+                                    <div style="float:left;">Net Qty.</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <?php
+
                         $blockData = json_decode($sales_data, TRUE);
                         $i = 0;
                         $totalBlockSlabs = 0;
-                        foreach ($blockData as $key => $value) {
-                            $keyArray = (explode('_', str_replace('salesBlocks_', '', $key)));
-                            $productName = $keyArray[1];
-                            echo "
-                                <tr class='rowBox'>
-                                <td class='rowSno cell-content stockInfoTitle'>" . ++$i . "</td>
-                                <td class='rowTitle cell-content stockInfoTitle' >{$productName}</td>
-                                ";
-                            // Step 1: Explode the string by commas to get individual objects
-                            $objects = explode(",", $value);
 
-                            // Step 2: Extract the values and count occurrences
+                        foreach ($blockData as $key => $value) {
+                            $keyArray = explode('_', str_replace('salesBlocks_', '', $key));
+                            $productName = $keyArray[1];
+
+                            echo "<div class='full-width'>";
+                            echo "<div style='float:left; width: 50px;'>" . ++$i . "</div>";
+                            echo "<div style='float:left; width: 250px;'>{$productName}</div>";
+
+                            // Exploding string and processing data
+                            $objects = explode(",", $value);
                             $valuesCount = [];
-                            $totalSlabs = 0;
 
                             foreach ($objects as $object) {
-                                // Explode each object by underscore and take the second part (the actual value)
-                                list($number, $value) = explode("_", $object);
-
-                                // Count occurrences of each value
-                                if (isset($valuesCount[$value])) {
-                                    $valuesCount[$value]++;
+                                list($number, $slabDimension, $grossSize, $damageSize, $netSize) = explode("_", $object);
+                                if (isset($valuesCount[$slabDimension])) {
+                                    $valuesCount[$slabDimension]++;
                                 } else {
-                                    $valuesCount[$value] = 1;
+                                    $valuesCount[$slabDimension] = 1;
                                 }
                                 $totalBlockSlabs++;
-                                $totalSlabs++;
                             }
-                            echo "<td class='slabsDetails'>";
-                            foreach ($valuesCount as $value => $count) {
-                                echo "<p class='stockInfoList'>{$value}<span>{$count}</span></p>";
+
+                            // Display slab details
+                            echo "<div class='slabs-details' style='float:left; min-width: 500px;' >";
+                            foreach ($valuesCount as $slabDimension => $count) {
+                                echo "<div class='full-width'>";
+                                echo "<div style='float:left;'>{$slabDimension}</div>";
+                                echo "<div style='float:left;'>{$count}</div>";
+                                echo "<div style='float:left;'>{$count}</div>";
+                                echo "<div style='float:left;'>{$count}</div>";
+                                echo "<div style='float:left;'>{$count}</div>";
+                                echo "</div>";
                             }
-                            echo "
-                                </td>
-                                <td class='totalSlabs' >{$totalSlabs}</td>
-                                </tr>
-                            ";
+                            echo "</div>";  // End of slabs-details
+                            echo "</div>";  // End of row
                         }
-                        echo "<tr class='rowBox'>
-                                <td></td>
-                                <td></td>
-                                <td class='totalSlabs'>Total slabs</td>
-                                <td class='totalSlabs'>{$totalBlockSlabs}</td>
-                            </tr>";
+
                         ?>
-                    </table>
+
+                    </div>
                 </div>
             </section>
         </div>

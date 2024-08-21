@@ -3,7 +3,7 @@
 require_once 'header.php';
 
 $newsContent = strip_tags($news_description);
-$newsContent =  substr($newsContent, 0, 525);
+$newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130));
 ?>
 <section class="newsDetails">
     <div class="container container--box">
@@ -78,7 +78,9 @@ $newsContent =  substr($newsContent, 0, 525);
                     $showSignUpSection = true;
                 }
 
-                echo "<div class='details_box__content {$news_paid}'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
+                $showGradient = ($news_paid || $showSignUpSection) ? 'text-gradient' : '';
+
+                echo "<div class='details_box__content {$news_paid} {$showGradient}'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
                 if ($showSignUpSection == true) {
                     echo "
                 <div class='transparent-box'>
