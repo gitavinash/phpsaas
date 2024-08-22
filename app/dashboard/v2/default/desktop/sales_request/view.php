@@ -68,7 +68,7 @@ window.location.href = '/dashboard/sales_request/list/';
                     </div>
 
                     <div class="full-width">
-                        <div class="">
+                        <div class="tableHeader">
                             <div style="float:left; width: 50px;">S No.</div>
                             <div style="float:left; width: 250px;">Block Name</div>
                             <div style="float:left; min-width: 500px;">
@@ -117,9 +117,9 @@ window.location.href = '/dashboard/sales_request/list/';
                                 echo "<div class='full-width'>";
                                 echo "<div style='float:left;'>{$slabDimension}</div>";
                                 echo "<div style='float:left;'>{$count}</div>";
-                                echo "<div style='float:left;'>{$count}</div>";
-                                echo "<div style='float:left;'>{$count}</div>";
-                                echo "<div style='float:left;'>{$count}</div>";
+                                echo "<div style='float:left;'>{$grossSize}</div>";
+                                echo "<div style='float:left;'>{$damageSize}</div>";
+                                echo "<div style='float:left;'>{$netSize}</div>";
                                 echo "</div>";
                             }
                             echo "</div>";  // End of slabs-details

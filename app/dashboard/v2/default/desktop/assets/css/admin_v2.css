@@ -3055,3 +3055,7 @@ tr.rowBox {
   position: relative;
   margin-top: 20px;
 }
+
+.tableHeader {
+  float: left;
+}

@@ -18,10 +18,10 @@
     if ($showWarehouse == "all") {
     ?>
 
-    <div class="form-group">
-        <select class="selectJS form-control" name="warehouseId" id="warehouseId">
-            <option value="select">Select warehouse</option>
-            <?php
+        <div class="form-group">
+            <select class="selectJS form-control" name="warehouseId" id="warehouseId">
+                <option value="select">Select warehouse</option>
+                <?php
 
                 if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($warehouseList) > 0) {
@@ -32,9 +32,9 @@
                 }
 
                 ?>
-        </select>
-        <label class="form-lable" id="Label">Warehouse<sup>*</sup></label>
-    </div>
+            </select>
+            <label class="form-lable" id="Label">Warehouse<sup>*</sup></label>
+        </div>
 
     <?php
     } else {
@@ -79,6 +79,7 @@
     </div>
     <div class="form-group">
         <select class="selectJS form-control" name="productType" id="productType">
+            <option value="select">Select product type</option>
             <?php
             if ($measurementList = mysqli_query($connection, "SELECT site_configuration_key FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID . " ORDER BY site_configuration_key ASC")) {
                 if (mysqli_num_rows($measurementList) != 0) {

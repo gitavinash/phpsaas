@@ -640,6 +640,10 @@ $("#addBlock").click(function (e) {
     warehouseId = "";
   }
 
+  if (productType == "select") {
+    productType = "";
+  }
+
   if (supplier == "select") {
     supplier = "";
   }
@@ -1269,40 +1273,55 @@ $(document).ready(function () {
       slabsData: data,
     };
 
-    if (totalSlabsSum == totalSlabs) {
-      $.ajax({
-        url: "/api/item/generate/",
-        method: "POST",
-        data: JSON.stringify(payload),
-        contentType: "application/json",
-        success: function (successResponse) {
-          popUpMessage("center", successResponse.msg, successResponse.status);
-          $("#createBlockItem").show();
-          if (successResponse.status == "success") {
-            setTimeout(function () {
-              location.reload();
-            }, 1500);
-          }
-        },
-        error: function (errorResponse) {
-          console.log(`Error:`, errorResponse);
-          $("#createBlockItem").show();
-          popUpMessage(
-            "center",
-            errorResponse.responseJSON.msg,
-            errorResponse.responseJSON.status
-          );
-        },
+    if (totalSlabsSum != totalSlabs) {
+      Swal.fire({
+        title: "Save this task?",
+        text: "Would you like to save this task now? You can continue working on it after saving.",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#03637B",
+        cancelButtonColor: "#C60239",
+        confirmButtonText: "Save and Continue",
+      }).then((result) => {
+        if (result.value) {
+          createBlockSlabs(payload);
+        }
+        $("#createBlockItem").show();
       });
     } else {
-      popUpMessage(
-        "center",
-        `Total number of slab must be ${totalSlabs}`,
-        "warning"
-      );
+      createBlockSlabs(payload);
       $("#createBlockItem").show();
     }
   });
+
+  // Send request to server to create block slabs
+
+  function createBlockSlabs(payload) {
+    $.ajax({
+      url: "/api/item/generate/",
+      method: "POST",
+      data: JSON.stringify(payload),
+      contentType: "application/json",
+      success: function (successResponse) {
+        popUpMessage("center", successResponse.msg, successResponse.status);
+        $("#createBlockItem").show();
+        if (successResponse.status == "success") {
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        console.log(`Error:`, errorResponse);
+        $("#createBlockItem").show();
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  }
 
   $(".openBlockSlab").click(function (e) {
     e.preventDefault();

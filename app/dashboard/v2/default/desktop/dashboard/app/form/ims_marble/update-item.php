@@ -16,7 +16,7 @@ window.location.href = '/dashboard/inventory/list/';
 
 $blockId = base64_decode($id);
 
-if ($checkInventory = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUNT(block_item_id) as balanceSlabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status=1 AND block_item_parent_id={$blockId} AND block_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkInventory) > 0) {
         $validId = true;
         extract(mysqli_fetch_assoc($checkInventory));
@@ -147,14 +147,15 @@ if (isset($validId)) {
 
 <div class="step-open-box step_1_box">
     <div class="form-header">
-        <h1><?php echo (($block_gross_size == 0) ? 'Generate block slabs' : 'Manage block Slabs') ?></h1>
+        <h1><?php echo (($block_gross_size == 0) ? 'Add slabs upto ( ' . $balanceSlabs . ' slabs )' : 'Manage block Slabs') ?>
+        </h1>
         <img src="<?php echo IMG_LIBRARY ?>storyset/manage.png" alt="Add new Hosting tld">
     </div>
 </div>
 
 <?php
 
-    if ($block_gross_size != 0) { ?>
+    if ($balanceSlabs == 0) { ?>
 <!-- Show all slabs list -->
 <div class="step-open-box step_1_box full-width">
     <table>
