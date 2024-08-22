@@ -23,7 +23,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
         $userFilter = '';
     }
 
-    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_status=1 {$userFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_title ASC, block_code ASC")) {
+    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_status=1 {$userFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_code ASC, block_title ASC")) {
         echo "<tbody>";
         if (mysqli_num_rows($inventoryList) > 0) {
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
