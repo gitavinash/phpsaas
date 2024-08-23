@@ -5,6 +5,36 @@
             <img src="<?php echo IMG_LIBRARY ?>storyset/hosting.png" alt="Add new Hosting tld">
         </div>
         <div class="form-group">
+            <?php
+
+            if ($loggedIUserMeta['warehouse'] == 'all') { ?>
+                <select class="selectJS form-control" name="warehouse" id="warehouse" required>
+                    <option value="">Select warehouse</option>
+                    <?php
+                    $warehouseFilter = '';
+                    // if ($loggedIUserMeta['warehouse'] != 'all') {
+                    //     $warehouseFilter = "warehouse_id IN ({$loggedIUserMeta['warehouse']}) AND ";
+                    // }
+
+                    if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND {$warehouseFilter} warehouse_site_id=" . SITE_ID)) {
+                        if (mysqli_num_rows($warehouseList) != 0) {
+                            while ($warehouseData = mysqli_fetch_assoc($warehouseList)) {
+                                extract($warehouseData);
+                                echo "<option value='{$warehouse_id}'>{$warehouse_title}</option>";
+                            }
+                        }
+                    }
+                    ?>
+                </select>
+            <?php
+            } else {
+                echo "<input type='hidden' name='warehouse' value='{$loggedIUserMeta['warehouse']}'>";
+            }
+
+            ?>
+            <label for="">Select warehouse</label>
+        </div>
+        <div class="form-group">
             <input id="firstName" name="name" type="text" required />
             <label class="form-lable" id="Label">Full name<sup>*</sup></label>
         </div>

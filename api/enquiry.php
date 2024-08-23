@@ -266,7 +266,9 @@ if ($mobile != '') {
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {
                     require SEND_EMAIL;
-                    require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                    if (file_exists(APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php')) {
+                        require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                    }
                 }
             }
         }

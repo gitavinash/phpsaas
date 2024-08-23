@@ -11,7 +11,37 @@
                     <h1>Enter customer details</h1>
                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                 </div>
+                <div class="form-group">
+                    <?php
 
+                    if ($loggedIUserMeta['warehouse'] == 'all') { ?>
+                        <select class="selectJS form-control" name="warehouse" id="warehouse" required>
+                            <option value="">Select warehouse</option>
+                            <?php
+                            $warehouseFilter = '';
+                            // if ($loggedIUserMeta['warehouse'] != 'all') {
+                            //     $warehouseFilter = "warehouse_id IN ({$loggedIUserMeta['warehouse']}) AND ";
+                            // }
+
+                            if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND {$warehouseFilter} warehouse_site_id=" . SITE_ID)) {
+                                if (mysqli_num_rows($warehouseList) != 0) {
+                                    while ($warehouseData = mysqli_fetch_assoc($warehouseList)) {
+                                        extract($warehouseData);
+                                        echo "<option value='{$warehouse_id}'>{$warehouse_title}</option>";
+                                    }
+                                }
+                            }
+                            ?>
+                        </select>
+                    <?php
+                    } else {
+                        $warehouseFilter = "block_warehouse_id={$$loggedIUserMeta['warehouse']} AND ";
+                        echo "<input type='hidden' name='warehouse' id='warehouse' value='{$loggedIUserMeta['warehouse']}'>";
+                    }
+
+                    ?>
+                    <label for="">Select warehouse</label>
+                </div>
                 <div class="form-group">
                     <input id="name" name="name" type="text" />
                     <label class="form-lable" id="Label">Full name<sup>*</sup></label>
@@ -47,7 +77,7 @@
                     <div class="form-group">
                         <?php
 
-                        if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 AND block_site_id=" . SITE_ID)) {
+                        if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 {$warehouseFilter} AND block_site_id=" . SITE_ID)) {
                             if (mysqli_num_rows($blockList) > 0) {
                                 while ($block = mysqli_fetch_assoc($blockList)) {
                                     echo "<p class='openBlockSlab blockIcon' data-id={$block['block_id']} data-title='{$block['block_code']} - {$block['block_title']}' >{$block['block_code']} - {$block['block_title']} <span id='block_{$block['block_id']}' >0</span</p>";

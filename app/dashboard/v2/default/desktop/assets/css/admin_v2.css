@@ -3059,3 +3059,19 @@ tr.rowBox {
 .tableHeader {
   float: left;
 }
+
+.actionBtn {
+  float: left;
+  width: 100%;
+  font-size: 1rem;
+  text-align: center;
+}
+.actionBtn i {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  padding: 10px;
+  box-sizing: border-box;
+  font-weight: 700;
+}
