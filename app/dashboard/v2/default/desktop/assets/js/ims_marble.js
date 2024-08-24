@@ -24,6 +24,12 @@ function deleteSalesBlocks(prefix) {
 // Usage
 deleteSalesBlocks("salesBlocks_");
 
+function closePopup(btn) {
+  var popupContainer = btn.closest(".popUp");
+  popupContainer.style.display = "none";
+  document.querySelector(".popUp").style.display = "none";
+}
+
 function getSalesBlocks(prefixValue) {
   const dataList = {};
   selectedBlocksLenght = 0;

@@ -19,9 +19,9 @@
                         <option value="">Select warehouse</option>
                         <?php
                             $warehouseFilter = '';
-                            // if ($loggedIUserMeta['warehouse'] != 'all') {
-                            //     $warehouseFilter = "warehouse_id IN ({$loggedIUserMeta['warehouse']}) AND ";
-                            // }
+                            if ($loggedIUserMeta['warehouse'] != 'all') {
+                                $warehouseFilter = "warehouse_id IN ({$loggedIUserMeta['warehouse']}) AND ";
+                            }
 
                             if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND {$warehouseFilter} warehouse_site_id=" . SITE_ID)) {
                                 if (mysqli_num_rows($warehouseList) != 0) {
@@ -36,7 +36,7 @@
                     <label for="">Select warehouse</label>
                     <?php
                     } else {
-                        $warehouseFilter = "block_warehouse_id={$loggedIUserMeta['warehouse']} AND ";
+                        $warehouseFilter = " AND block_warehouse_id={$loggedIUserMeta['warehouse']}";
                         echo "<input type='hidden' name='warehouse' id='warehouse' value='{$loggedIUserMeta['warehouse']}'>";
                     }
 
