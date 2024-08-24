@@ -9,6 +9,7 @@ var customerName = "";
 var customerMobile = "";
 var customerEmail = "";
 var customerAddress = "";
+var salesWarehouse = "";
 
 function deleteSalesBlocks(prefix) {
   for (let i = 0; i < localStorage.length; i++) {
@@ -54,11 +55,13 @@ $(document).ready(function () {
         customerEmail = $("#email").val();
         customerMobile = $("#mobile").val();
         customerAddress = $("#address").val();
+        salesWarehouse = $("#warehouse").val();
         if (customerName.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage("center", "Customer name is required.", "warning");
-        } else if (customerMobile.trim() === "") {
+        }
+        if (customerMobile.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage(
@@ -66,10 +69,16 @@ $(document).ready(function () {
             "Customer mobile number is required.",
             "warning"
           );
-        } else if (customerAddress.trim() === "") {
+        }
+        if (customerAddress.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage("center", "Customer address is required.", "warning");
+        }
+        if (salesWarehouse.trim() === "") {
+          // Stop further processing
+          showCurrentBox = "salesStep_1_box";
+          popUpMessage("center", "Kindly select warehouse.", "warning");
         }
       }
       if (currentElementID == "salesStep_3") {

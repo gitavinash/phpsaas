@@ -15,9 +15,9 @@
                     <?php
 
                     if ($loggedIUserMeta['warehouse'] == 'all') { ?>
-                        <select class="selectJS form-control" name="warehouse" id="warehouse" required>
-                            <option value="">Select warehouse</option>
-                            <?php
+                    <select class="selectJS form-control" name="warehouse" id="warehouse" required>
+                        <option value="">Select warehouse</option>
+                        <?php
                             $warehouseFilter = '';
                             // if ($loggedIUserMeta['warehouse'] != 'all') {
                             //     $warehouseFilter = "warehouse_id IN ({$loggedIUserMeta['warehouse']}) AND ";
@@ -32,15 +32,15 @@
                                 }
                             }
                             ?>
-                        </select>
+                    </select>
+                    <label for="">Select warehouse</label>
                     <?php
                     } else {
-                        $warehouseFilter = "block_warehouse_id={$$loggedIUserMeta['warehouse']} AND ";
+                        $warehouseFilter = "block_warehouse_id={$loggedIUserMeta['warehouse']} AND ";
                         echo "<input type='hidden' name='warehouse' id='warehouse' value='{$loggedIUserMeta['warehouse']}'>";
                     }
 
                     ?>
-                    <label for="">Select warehouse</label>
                 </div>
                 <div class="form-group">
                     <input id="name" name="name" type="text" />
