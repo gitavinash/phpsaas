@@ -9,7 +9,7 @@ var customerName = "";
 var customerMobile = "";
 var customerEmail = "";
 var customerAddress = "";
-var salesWarehouse = "";
+var salesWarehouseId = "";
 
 function deleteSalesBlocks(prefix) {
   for (let i = 0; i < localStorage.length; i++) {
@@ -61,13 +61,12 @@ $(document).ready(function () {
         customerEmail = $("#email").val();
         customerMobile = $("#mobile").val();
         customerAddress = $("#address").val();
-        salesWarehouse = $("#warehouse").val();
+        salesWarehouseId = $("#warehouse").val();
         if (customerName.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage("center", "Customer name is required.", "warning");
-        }
-        if (customerMobile.trim() === "") {
+        } else if (customerMobile.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage(
@@ -75,16 +74,42 @@ $(document).ready(function () {
             "Customer mobile number is required.",
             "warning"
           );
-        }
-        if (customerAddress.trim() === "") {
+        } else if (customerAddress.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage("center", "Customer address is required.", "warning");
-        }
-        if (salesWarehouse.trim() === "") {
+        } else if (salesWarehouseId.trim() === "") {
           // Stop further processing
           showCurrentBox = "salesStep_1_box";
           popUpMessage("center", "Kindly select warehouse.", "warning");
+        }
+
+        if (showCurrentBox == "salesStep_2_box") {
+          if ($.isNumeric(salesWarehouseId)) {
+            $.ajax({
+              type: "GET",
+              url: "/api/report/blocks/?warehouseId=" + salesWarehouseId,
+              dataType: "JSON",
+              success: function (successResponse) {
+                if (successResponse.status == "success") {
+                  successResponse.items.forEach(function (data) {
+                    var blockBtn = `<p class='openBlockSlab blockIcon' data-id='${data.block_id}' data-title='${data.block_code} - ${data.block_title}' >${data.block_code} - ${data.block_title} <span id='block_${data.block_id}' >0</span</p>`;
+                    $("#blockData").append(blockBtn);
+                  });
+                }
+              },
+              error: function (errorResponse) {
+                console.log(`Error:`, errorResponse);
+                popUpMessage(
+                  "center",
+                  errorResponse.responseJSON.msg,
+                  errorResponse.responseJSON.status
+                );
+              },
+            });
+          } else {
+            popUpMessage("center", "Select valid warehouse.", "warning");
+          }
         }
       }
       if (currentElementID == "salesStep_3") {
@@ -1338,7 +1363,7 @@ $(document).ready(function () {
     });
   }
 
-  $(".openBlockSlab").click(function (e) {
+  $(document).on("click", ".openBlockSlab", function (e) {
     e.preventDefault();
     var blockId = $(this).attr("data-id");
     activeBlockId = blockId;
@@ -1440,6 +1465,7 @@ $(document).ready(function () {
         email: customerEmail,
         mobile: customerMobile,
         address: customerAddress,
+        warehouse: salesWarehouseId,
         inventory: JSON.stringify(getSalesBlocks("salesBlocks_")),
       }),
       success: function (successResponse) {

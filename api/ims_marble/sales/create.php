@@ -12,9 +12,14 @@ $validRequest = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($name != '') {
         if ($mobile != '') {
+            $mobile = ltrim($mobile, '0');
             if ($address != '') {
                 if ($inventory != '') {
-                    $validRequest = true;
+                    if ($warehouse != '') {
+                        $validRequest = true;
+                    } else {
+                        $msg = 'Warehouse id is required';
+                    }
                 } else {
                     $msg = 'Inventory cannot be blank';
                 }
@@ -31,27 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if ($validRequest) {
 
-    // $inventoryData = json_decode($inventory, TRUE);
-
     mysqli_query($connection, "START TRANSACTION");
 
-    if ($checkEmail = mysqli_query($connection, "SELECT user_mobile, user_id as userID FROM " . TABLE_PREFIX . "user WHERE user_mobile='{$mobile}'")) {
+    if ($checkEmail = mysqli_query($connection, "SELECT user_mobile, user_id as userID FROM " . TABLE_PREFIX . "user WHERE user_mobile='{$mobile}' OR user_email='{$email}'")) {
 
         if (mysqli_num_rows($checkEmail) == 0) {
-
 
             /** Start the user registration process */
 
             /* Encrypt password with salt key */
 
             $saltKey = hash('sha256', uniqid(mt_rand(), true) . $email . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
-            $enc_password = hash('sha256', $saltKey . $password);
-
-            $profile_display_name = $first_name . ' ' . $last_name;
+            $enc_password = hash('sha256', $saltKey . '12345678');
 
             $full_name = explode(' ', $name);
             $first_name = $full_name[0];
             $last_name = count($full_name) - 1;
+            $profile_display_name = $first_name . ' ' . $last_name;
 
             /** Checking Username is avilable or not */
 
@@ -80,9 +81,9 @@ if ($validRequest) {
         }
 
         $insertSales = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}sales(sales_site_id, sales_agent_id, sales_user_id, sales_warehouse_id, sales_name, sales_email, sales_mobile, sales_address, sales_data, sales_status, sales_created) VALUES(" . SITE_ID . ", " . USER_ID . ", {$userID}, '{$warehouse}', '{$name}', '{$email}', '{$mobile}', '{$address}', '{$inventory}', 0, NOW())");
-        $salesId = mysqli_insert_id($connection);
 
         if ($insertUser && $insertProfile && $insertSales) {
+            $salesId = mysqli_insert_id($connection);
             $httpStatus = 201;
             $status = 'success';
             $msg = 'Sales request sent successfully';

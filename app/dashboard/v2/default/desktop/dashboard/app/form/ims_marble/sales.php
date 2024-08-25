@@ -74,18 +74,7 @@
 
                 <div class="productBox">
                     <!-- <h1>Select block<sup>*</sup></h1> -->
-                    <div class="form-group">
-                        <?php
-
-                        if ($blockList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_status=1 {$warehouseFilter} AND block_site_id=" . SITE_ID)) {
-                            if (mysqli_num_rows($blockList) > 0) {
-                                while ($block = mysqli_fetch_assoc($blockList)) {
-                                    echo "<p class='openBlockSlab blockIcon' data-id={$block['block_id']} data-title='{$block['block_code']} - {$block['block_title']}' >{$block['block_code']} - {$block['block_title']} <span id='block_{$block['block_id']}' >0</span</p>";
-                                }
-                            }
-                        }
-
-                        ?>
+                    <div class="form-group" id="blockData">
                     </div>
                 </div>
                 <div class="box-5">
