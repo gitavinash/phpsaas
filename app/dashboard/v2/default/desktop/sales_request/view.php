@@ -18,7 +18,7 @@ window.location.href = '/dashboard/sales_request/list/';
     }
 }
 
-if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id WHERE sales_status=0 AND sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
+if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_status=0 AND sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
 <script>
 alert('Invalid Sales request id found');
@@ -46,9 +46,10 @@ window.location.href = '/dashboard/sales_request/list/';
                     </div>
                     <div class="userInfo">
                         <p><strong>Name</strong><?php echo $sales_name ?></p>
-                        <p><strong>Email</strong><?php echo $sales_email ?></p>
                         <p><strong>Mobile</strong><?php echo $sales_mobile ?></p>
-                        <p><strong>Address</strong><?php echo $sales_address ?></p>
+                        <p><strong>Email</strong><?php echo $sales_email ?></p>
+                        <p><strong style="width: 100px; height: 50px">Address</strong><?php echo $sales_address ?>
+                        </p>
                     </div>
                 </div>
                 <div class="widget no-padding box-5">
@@ -59,6 +60,10 @@ window.location.href = '/dashboard/sales_request/list/';
                     <div class="userInfo">
                         <p><strong>Name</strong><?php echo $profile_display_name ?></p>
                         <p><strong>Mobile</strong><?php echo $profile_mobile ?></p>
+                        <p><strong>GST Number</strong><?php echo $warehouse_gst ?></p>
+                        <p><strong style="width: 100px; height: 50px">Warehouse
+                            </strong><?php echo ucwords($warehouse_title) . ', ' . $address_area . ', ' . $city_name . ', ' . $state_name ?>
+                        </p>
                     </div>
                 </div>
                 <div class="widget no-padding box-1">
