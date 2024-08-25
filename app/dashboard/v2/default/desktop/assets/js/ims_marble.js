@@ -85,7 +85,6 @@ $(document).ready(function () {
         }
 
         if (showCurrentBox == "salesStep_2_box") {
-          console.log(`salesWarehouseId:`, salesWarehouseId);
           if ($.isNumeric(salesWarehouseId)) {
             $.ajax({
               type: "GET",
@@ -100,7 +99,8 @@ $(document).ready(function () {
                 }
               },
               error: function (errorResponse) {
-                console.log(`Error:`, errorResponse);
+                showCurrentBox = "salesStep_1_box";
+                console.log(`Error warehouse:`, errorResponse);
                 popUpMessage(
                   "center",
                   errorResponse.responseJSON.msg,

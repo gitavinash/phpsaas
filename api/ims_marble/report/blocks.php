@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $msg = "Data fetch successfully";
         } else {
             $httpStatus = 404;
-            $msg = "No record found in this block id";
+            $msg = "No record found";
         }
     }
 }
