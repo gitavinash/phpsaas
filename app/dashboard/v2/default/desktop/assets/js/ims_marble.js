@@ -85,6 +85,7 @@ $(document).ready(function () {
         }
 
         if (showCurrentBox == "salesStep_2_box") {
+          console.log(`salesWarehouseId:`, salesWarehouseId);
           if ($.isNumeric(salesWarehouseId)) {
             $.ajax({
               type: "GET",

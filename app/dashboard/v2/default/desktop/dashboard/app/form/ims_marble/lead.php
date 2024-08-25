@@ -7,13 +7,13 @@
         <div class="form-group">
             <?php
 
-            if ($loggedIUserMeta['warehouse'] == 'all') { ?>
+            if ($loggedInUserMeta['warehouse'] == 'all') { ?>
                 <select class="selectJS form-control" name="warehouse" id="warehouse" required>
                     <option value="">Select warehouse</option>
                     <?php
                     $warehouseFilter = '';
-                    // if ($loggedIUserMeta['warehouse'] != 'all') {
-                    //     $warehouseFilter = "warehouse_id IN ({$loggedIUserMeta['warehouse']}) AND ";
+                    // if ($loggedInUserMeta['warehouse'] != 'all') {
+                    //     $warehouseFilter = "warehouse_id IN ({$loggedInUserMeta['warehouse']}) AND ";
                     // }
 
                     if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND {$warehouseFilter} warehouse_site_id=" . SITE_ID)) {
@@ -28,7 +28,7 @@
                 </select>
             <?php
             } else {
-                echo "<input type='hidden' name='warehouse' value='{$loggedIUserMeta['warehouse']}'>";
+                echo "<input type='hidden' name='warehouse' value='{$loggedInUserMeta['warehouse']}'>";
             }
 
             ?>
