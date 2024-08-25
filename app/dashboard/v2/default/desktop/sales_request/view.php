@@ -68,66 +68,116 @@ window.location.href = '/dashboard/sales_request/list/';
                     </div>
 
                     <div class="full-width">
-                        <div class="tableHeader">
-                            <div style="float:left; width: 50px;">S No.</div>
-                            <div style="float:left; width: 250px;">Block Name</div>
-                            <div style="float:left; min-width: 500px;">
-                                Slabs Details
-                                <div class="row header-row">
-                                    <div style="float:left;">Size</div>
-                                    <div style="float:left;">Qty</div>
-                                    <div style="float:left;">Gross Qty.</div>
-                                    <div style="float:left;">Damage Qty.</div>
-                                    <div style="float:left;">Net Qty.</div>
-                                </div>
-                            </div>
-                        </div>
+                        <table class="stockInfo">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="sno-column">S No.</th>
+                                    <th rowspan="2">Block Name</th>
+                                    <th class="text-center" colspan="100">Slabs Details</th>
+                                </tr>
+                                <tr>
+                                    <th>Size</th>
+                                    <th>Qty</th>
+                                    <th>Gross Qty.</th>
+                                    <th>Damage Qty.</th>
+                                    <th>Net Qty.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
 
-                        <?php
+                                $blockData = json_decode($sales_data, TRUE);
+                                $i = 1;
+                                $totalBlockSlabs = 0;
+                                $totalBlockGrossSize = 0;
+                                $totalBlockDamageSize = 0;
+                                $totalBlockNetSize = 0;
+                                $totalBlockDimensionType = '';
 
-                        $blockData = json_decode($sales_data, TRUE);
-                        $i = 0;
-                        $totalBlockSlabs = 0;
+                                foreach ($blockData as $key => $value) {
+                                    $keyArray = explode('_', str_replace('salesBlocks_', '', $key));
+                                    $productName = $keyArray[1];
 
-                        foreach ($blockData as $key => $value) {
-                            $keyArray = explode('_', str_replace('salesBlocks_', '', $key));
-                            $productName = $keyArray[1];
+                                    // Exploding string and processing data
+                                    $objects = explode(",", $value);
+                                    $valuesCount = [];
+                                    $slabDetails = [];
 
-                            echo "<div class='full-width'>";
-                            echo "<div style='float:left; width: 50px;'>" . ++$i . "</div>";
-                            echo "<div style='float:left; width: 250px;'>{$productName}</div>";
+                                    foreach ($objects as $object) {
+                                        list($number, $slabDimension, $grossSize, $damageSize, $netSize, $dimensionsType) = explode("_", $object);
+                                        if (isset($valuesCount[$slabDimension])) {
+                                            $valuesCount[$slabDimension]['count']++;
+                                            $valuesCount[$slabDimension]['grossSize'] += $grossSize;
+                                            $valuesCount[$slabDimension]['damageSize'] += $damageSize;
+                                            $valuesCount[$slabDimension]['netSize'] += $netSize;
+                                        } else {
+                                            $valuesCount[$slabDimension] = [
+                                                'count' => 1,
+                                                'grossSize' => $grossSize,
+                                                'damageSize' => $damageSize,
+                                                'netSize' => $netSize,
+                                                'dimensionType' => $dimensionsType,
+                                            ];
+                                        }
+                                    }
 
-                            // Exploding string and processing data
-                            $objects = explode(",", $value);
-                            $valuesCount = [];
+                                    $j = 1;
 
-                            foreach ($objects as $object) {
-                                list($number, $slabDimension, $grossSize, $damageSize, $netSize) = explode("_", $object);
-                                if (isset($valuesCount[$slabDimension])) {
-                                    $valuesCount[$slabDimension]++;
-                                } else {
-                                    $valuesCount[$slabDimension] = 1;
+                                    $sizeOfSlabDimension = sizeof($valuesCount);
+
+                                    $totalSlabs = 0;
+                                    $totalSlabsGrossSize = 0;
+                                    $totalSlabsDamageSize = 0;
+                                    $totalSlabsNetSize = 0;
+
+                                    // Display slab details
+                                    foreach ($valuesCount as $slabDimension => $details) {
+                                        echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
+                                        echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
+                                        echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
+                                        echo "<td>{$slabDimension}</td>";
+                                        echo "<td>{$details['count']} " . (($details['count'] == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                        echo "<td>{$details['grossSize']} {$details['dimensionType']}</td>";
+                                        echo "<td>{$details['damageSize']} {$details['dimensionType']}</td>";
+                                        echo "<td>{$details['netSize']} {$details['dimensionType']}</td>";
+                                        echo "</tr>";
+
+                                        $totalSlabs += $details['count'];
+                                        $totalSlabsGrossSize += $details['grossSize'];
+                                        $totalSlabsDamageSize += $details['damageSize'];
+                                        $totalSlabsNetSize += $details['netSize'];
+
+                                        if ($j == $sizeOfSlabDimension) {
+                                            echo "<tr class='ending'>";
+                                            echo "<td class='sno-column' colspan=3><strong>Slab total</strong></td>";
+                                            echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                            echo "<td>{$totalSlabsGrossSize} {$details['dimensionType']}</td>";
+                                            echo "<td>{$totalSlabsDamageSize} {$details['dimensionType']}</td>";
+                                            echo "<td>{$totalSlabsNetSize} {$details['dimensionType']}</td>";
+                                            echo "</tr><tr><td colspan=100></td></tr>";
+                                            $totalBlockSlabs += $totalSlabs;
+                                            $totalBlockGrossSize += $totalSlabsGrossSize;
+                                            $totalBlockDamageSize += $totalSlabsDamageSize;
+                                            $totalBlockNetSize += $totalSlabsNetSize;
+                                            $totalBlockDimensionType = $details['dimensionType'];
+                                        }
+
+                                        $j++;
+                                    }
+                                    if ($i == sizeof($blockData)) {
+                                        echo "<tr><td colspan=100></td></tr><tr>";
+                                        echo "<td colspan=3><strong>Total</strong></td>";
+                                        echo "<td>{$totalBlockSlabs} " . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                        echo "<td>{$totalBlockGrossSize} {$totalBlockDimensionType}</td>";
+                                        echo "<td>{$totalBlockDamageSize} {$totalBlockDimensionType}</td>";
+                                        echo "<td>{$totalBlockNetSize} {$totalBlockDimensionType}</td>";
+                                        echo "</tr>";
+                                    }
+                                    $i++;
                                 }
-                                $totalBlockSlabs++;
-                            }
-
-                            // Display slab details
-                            echo "<div class='slabs-details' style='float:left; min-width: 500px;' >";
-                            foreach ($valuesCount as $slabDimension => $count) {
-                                echo "<div class='full-width'>";
-                                echo "<div style='float:left;'>{$slabDimension}</div>";
-                                echo "<div style='float:left;'>{$count}</div>";
-                                echo "<div style='float:left;'>{$grossSize}</div>";
-                                echo "<div style='float:left;'>{$damageSize}</div>";
-                                echo "<div style='float:left;'>{$netSize}</div>";
-                                echo "</div>";
-                            }
-                            echo "</div>";  // End of slabs-details
-                            echo "</div>";  // End of row
-                        }
-
-                        ?>
-
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>

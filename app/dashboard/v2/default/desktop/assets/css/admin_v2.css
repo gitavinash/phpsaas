@@ -2403,6 +2403,10 @@ section.form
   color: #404040;
 }
 
+.text-center {
+  text-align: center !important;
+}
+
 .appVersion {
   text-align: center;
   padding: 20px 0px;
@@ -2975,76 +2979,10 @@ h4.twoLineHeading span {
   padding: 10px 0px;
 }
 
-table.stockInfo {
-  float: left;
-  width: 100%;
-  table-layout: fixed;
-}
-
-table.stockInfo .rowSno {
-  max-width: 50px;
-}
-table.stockInfo .rowTitle {
-  min-width: 200px;
-}
-
-table.stockInfo .stockInfoTitle {
-  padding: 10px;
-  box-sizing: border-box;
-  font-size: 1rem;
-  font-weight: 700;
-  /* color: #01647b; */
-  word-break: break-all;
-}
-table.stockInfo .stockInfoTitle:nth-child(2) {
-  font-size: 1.2rem;
-}
-
-table.stockInfo {
-  border-collapse: collapse; /* Removes the gap between the borders */
-  width: 100%; /* Optional: Make table full-width */
-}
-
-table.stockInfo td {
-  border: 1px solid #000; /* Adds a border to each <td> */
-  padding: 8px; /* Optional: Add some padding inside cells */
-}
-
-table.stockInfo th {
-  border: 1px solid #000; /* Optional: Add border to <th> elements */
-  padding: 8px; /* Optional: Add some padding inside header cells */
-}
-
-p.stockInfoList,
-strong.stockInfoList {
-  display: flex;
-  justify-content: space-between; /* Distributes the items between left and right */
-  align-items: center; /* Vertically aligns the items */
-  padding: 0;
-  margin: 0;
-  line-height: 32px;
-}
-
 td.totalSlabs {
   font-weight: 700;
   font-size: 1.5rem;
   /* color: #01647b; */
-}
-
-table.stockInfo td:first-child,
-table.stockInfo th:first-child {
-  width: 50px !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-table.stockInfo td:last-child,
-table.stockInfo th:last-child {
-  width: 100px !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 tr.rowBox {
@@ -3074,4 +3012,73 @@ tr.rowBox {
   padding: 10px;
   box-sizing: border-box;
   font-weight: 700;
+}
+
+table.stockInfo {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.stockInfo th,
+table.stockInfo td {
+  padding: 5px 10px; /* Add padding for top and bottom */
+  text-align: left;
+  border: 1px solid #01647b; /* Optional: adds a border to cells */
+}
+table.stockInfo tr {
+  height: auto !important;
+  padding: 5px 0px !important;
+  min-height: 28px;
+  line-height: 28px;
+}
+
+table.stockInfo thead th {
+  font-weight: bold; /* Make thead bold */
+  background-color: #167a92;
+  color: #f5f5f5; /* Optional: adds a background color to headers */
+  letter-spacing: 1px;
+}
+table.stockInfo .sno-column {
+  width: 50px; /* Set S No. column width to 50px */
+}
+
+table.stockInfo td,
+th {
+  min-width: 50px !important;
+}
+
+tr.bold {
+  font-weight: 700;
+}
+
+td.bold {
+  font-weight: 700;
+}
+
+/* tr.starting {
+  background-color: #9facb5;
+  font-weight: 700;
+} */
+
+tr.ending {
+  background-color: #9facb5;
+  font-weight: 700;
+}
+@media screen and (max-width: 600px) {
+  table.stockInfo thead {
+    display: none; /* Hide thead on small screens */
+  }
+
+  table.stockInfo tbody td {
+    display: block;
+    width: 100%;
+    text-align: right;
+  }
+
+  table.stockInfo tbody td:before {
+    content: attr(data-label);
+    float: left;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
 }
