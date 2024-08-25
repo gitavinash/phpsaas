@@ -86,6 +86,7 @@ $(document).ready(function () {
 
         if (showCurrentBox == "salesStep_2_box") {
           if ($.isNumeric(salesWarehouseId)) {
+            $("#blockData").empty();
             $.ajax({
               type: "GET",
               url: "/api/report/blocks/?warehouseId=" + salesWarehouseId,
