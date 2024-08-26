@@ -47,7 +47,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                                 <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code'><i class='fi fi-rr-qr-scan bgLightGreen'></i></a>
                                 <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item'><i class='fi fi-rr-menu-burger bgLightGreen'></i></a>
                                 <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block' class='tableActionIconBtn' target='_blank'><i class='fi fi-rr-inventory-alt bgLightGreen'></i></a>
-                                <a href='/view_label/?id=" . base64_encode($block_id) . "' title='Print block' class='tableActionIconBtn' target='_blank'><i class='fi fi-rr-print bgLightGreen'></i></a>
+                                <a href='/print_label/?id=" . base64_encode($block_id) . "' title='Print block' class='tableActionIconBtn' target='_blank'><i class='fi fi-rr-print bgLightGreen'></i></a>
                                 <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                 </td>
                             </tr>";
