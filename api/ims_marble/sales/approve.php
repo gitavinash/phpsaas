@@ -7,8 +7,6 @@ require_once LOGIN_CHECK;
 $httpStatus = 405;
 $validRequest = false;
 
-exit();
-
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($id != '') {
         $requestId = base64_decode($id);
@@ -65,7 +63,14 @@ if ($validRequest) {
             $updateSalesQuery = "UPDATE {$tableNamePrefix}sales SET sales_status=1 WHERE sales_id='{$requestId}' AND sales_status=0 AND sales_site_id=" . SITE_ID;
             $updateSales = mysqli_query($connection, $updateSalesQuery);
 
-            if ($createTempTable && $updateBlockSlab && $updateBlock && $updateBlockStatus && $dropTempTable && $updateSales) {
+            if ($refType != '') {
+                $updateEnquiryQuery = "UPDATE " . TABLE_PREFIX . "{$refType} SET {$refType}_status=1 WHERE {$refType}_id='{$refId}' AND {$refType}_status=7 AND {$refType}_site_id=" . SITE_ID;
+                $updateEnquiry = mysqli_query($connection, $updateEnquiryQuery);
+            } else {
+                $updateEnquiry = true;
+            }
+
+            if ($createTempTable && $updateBlockSlab && $updateBlock && $updateBlockStatus && $dropTempTable && $updateSales && $updateEnquiry) {
                 $status = 'success';
                 $httpStatus = 201;
                 $msg = 'Sales request is approved';
