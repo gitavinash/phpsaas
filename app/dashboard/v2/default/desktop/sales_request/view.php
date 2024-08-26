@@ -195,7 +195,8 @@ window.location.href = '/dashboard/sales_request/list/';
             if ($sales_status == 0) { ?>
             <section class="leadQuickLinks">
                 <a href="" class="btn btn-green" id="approveSalesRequest"
-                    data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"><i
+                    data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
+                    data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
                         class="fi-rr-check"></i> Approve
                     request</a>
                 <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i

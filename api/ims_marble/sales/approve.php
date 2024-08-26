@@ -7,6 +7,8 @@ require_once LOGIN_CHECK;
 $httpStatus = 405;
 $validRequest = false;
 
+exit();
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($id != '') {
         $requestId = base64_decode($id);

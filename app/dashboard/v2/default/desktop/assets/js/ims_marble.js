@@ -1498,10 +1498,20 @@ $(document).ready(function () {
     e.preventDefault();
     var requestId = $(this).attr("data-id");
     var agentID = $(this).attr("data-agent");
+    var refId = $(this).attr("data-refid");
+    var refType = $(this).attr("data-reftype");
     if (requestId != "") {
       $.ajax({
         type: "GET",
-        url: "/api/sales/approve/?id=" + requestId + "&agent=" + agentID,
+        url:
+          "/api/sales/approve/?id=" +
+          requestId +
+          "&agent=" +
+          agentID +
+          "&refId=" +
+          refId +
+          "&refType=" +
+          refType,
         dataType: "JSON",
         success: function (successResponse) {
           if (successResponse.status == "success") {

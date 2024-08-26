@@ -7,22 +7,27 @@ $customerAddress = '';
 $customerWarehouse = '';
 
 if (isset($ref)) {
-    if ($ref == 'leads') {
+    if ($ref == 'enquiry') {
         $leadId = base64_decode($leadId);
         $enquiryQuery = "SELECT CONCAT(enquiry_first_name, ' ', enquiry_last_name) as customerName, enquiry_mobile as customerMobile, enquiry_email as customerEmailId, enquiry_message FROM " . TABLE_PREFIX . "enquiry LEFT JOIN " . TABLE_PREFIX . "enquiry_profile ON enquiry_profile_ref_id=enquiry_id WHERE enquiry_id='{$leadId}' AND enquiry_site_id=" . SITE_ID . " ORDER BY status DESC LIMIT 0, 1";
-
         if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             if (mysqli_num_rows($checkEnquiry) != 0) {
                 extract(mysqli_fetch_assoc($checkEnquiry));
                 $enquiryMessage = json_decode($enquiry_message, TRUE);
-                $customerWarehouse = $enquiryMessage['warehouse'];
-                $customerAddress = $enquiryMessage['address'];
-            } else {
-                echo "Invalid request";
-                exit();
+                if ($enquiryMessage != '') {
+                    $customerWarehouse = $enquiryMessage['warehouse'];
+                    $customerAddress = $enquiryMessage['address'];
+                }
+                if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_status=7 WHERE enquiry_id='{$leadId}' AND enquiry_site_id=" . SITE_ID)) {
+                    echo mysqli_error($connection);
+                    exit();
+                }
             }
         }
     }
+} else {
+    $ref = '';
+    $leadId = '';
 }
 ?>
 <ul class="steps-tab">
@@ -90,7 +95,7 @@ if (isset($ref)) {
                     <textarea name="address" id="address" cols="30" rows="10"><?php echo $customerAddress ?></textarea>
                     <label class="form-lable" id="Label">Address<sup>*</sup></label>
                     <input type="hidden" name="refId" id="refId" value="<?php echo base64_encode($leadId) ?>">
-                    <input type="hidden" name="refType" id="refType" value="enquiry">
+                    <input type="hidden" name="refType" id="refType" value="<?php echo $ref ?>">
                 </div>
                 <div class="box-1">
                     <div class="form-group">

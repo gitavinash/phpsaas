@@ -40,6 +40,7 @@ Lead status
 4 : Failed
 5 : Duplicate
 6 : payment initite
+7 : Sent for sales request
 
 Cart Status
 

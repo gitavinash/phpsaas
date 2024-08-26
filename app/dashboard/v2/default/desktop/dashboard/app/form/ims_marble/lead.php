@@ -17,10 +17,6 @@
                 <option value="">Select warehouse</option>
                 <?php
                     $warehouseFilter = '';
-                    // if ($loggedInUserMeta['warehouse'] != 'all') {
-                    //     $warehouseFilter = "warehouse_id IN ({$loggedInUserMeta['warehouse']}) AND ";
-                    // }
-
                     if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND {$warehouseFilter} warehouse_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($warehouseList) != 0) {
                             while ($warehouseData = mysqli_fetch_assoc($warehouseList)) {
