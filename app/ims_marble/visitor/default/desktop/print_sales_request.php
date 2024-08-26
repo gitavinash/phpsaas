@@ -21,11 +21,10 @@
     }
 
     .footer {
-        position: fixed;
-        bottom: 0;
         width: 100%;
         text-align: center;
-        font-size: 12px;
+        font-size: 14px;
+        line-height: 32px;
     }
 
     .footer::after {
@@ -80,6 +79,10 @@
         .btn-group {
             display: none;
         }
+
+        .main-box section {
+            border: no-padding;
+        }
     }
     </style>
 </head>
@@ -104,11 +107,11 @@
         }
     }
 
-    if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_status=0 AND sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
+    if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
     <script>
     alert('Invalid Sales request id found');
-    window.location.href = '/dashboard/es_request/list/';
+    window.location.href = '/dashboard/sales_request/list/';
     </script>
     <?php
         } else {
@@ -270,6 +273,7 @@
                     </div>
                 </div>
             </section>
+            <div class="footer"></div>
         </div>
 
     </div>

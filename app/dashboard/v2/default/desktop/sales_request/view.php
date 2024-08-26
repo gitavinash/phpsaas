@@ -191,9 +191,9 @@ window.location.href = '/dashboard/sales_request/list/';
 
     <div class="widget no-padding box-2-5" id="fixedDiv">
         <div class="main-box">
-            <?php
-            if ($sales_status == 0) { ?>
             <section class="leadQuickLinks">
+                <?php
+                if ($sales_status == 0) { ?>
                 <a href="" class="btn btn-green" id="approveSalesRequest"
                     data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
                     data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
@@ -205,10 +205,14 @@ window.location.href = '/dashboard/sales_request/list/';
                     class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
                     data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
                     request</a>
+                <?php
+                } else { ?>
+                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
+                        class="fi-rr-print"></i> Print</a>
+                <?php
+                }
+                ?>
             </section>
-            <?php
-            }
-            ?>
         </div>
     </div>
 </div>

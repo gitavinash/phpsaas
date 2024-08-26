@@ -73,13 +73,11 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accounts' || $
     <div class="side-menu">
         <ul>
             <li><a href="sales_request/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
-            <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="sales_request/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
-            <li><a href="sales_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
 </li>
@@ -89,13 +87,11 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accounts' || $
     <div class="side-menu">
         <ul>
             <li><a href="return_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
-            <li><a href="return_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="return_request/list/"><i class="fi-rr-apps-sort"></i> All requests</a></li>
-            <li><a href="return_request/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
 </li>
@@ -133,13 +129,11 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser' ||
     <div class="side-menu">
         <ul>
             <li><a href="restock/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
-            <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="restock/list/"><i class="fi fi-rr-apps-sort"></i> All requests</a></li>
-            <li><a href="restock/add/"><i class="fi fi-rr-hourglass-end"></i> Pending requests</a></li>
         </ul>
     </div>
 </li>
