@@ -1504,6 +1504,9 @@ $(document).ready(function () {
         success: function (successResponse) {
           if (successResponse.status == "success") {
             popUpMessage("center", successResponse.msg, successResponse.status);
+            setTimeout(function () {
+              window.location.href = `/dashboard/sales_request/list/`;
+            }, 1500);
           }
         },
         error: function (errorResponse) {

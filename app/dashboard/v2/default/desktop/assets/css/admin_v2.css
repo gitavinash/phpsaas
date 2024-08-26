@@ -3064,21 +3064,15 @@ tr.ending {
   background-color: #9facb5;
   font-weight: 700;
 }
-@media screen and (max-width: 600px) {
-  table.stockInfo thead {
-    display: none; /* Hide thead on small screens */
-  }
 
-  table.stockInfo tbody td {
-    display: block;
-    width: 100%;
-    text-align: right;
-  }
+.stockInfoList {
+  float: left;
+  line-height: 28px;
+}
+strong.stockInfoList {
+  line-height: 32px;
+}
 
-  table.stockInfo tbody td:before {
-    content: attr(data-label);
-    float: left;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
+.stockInfoList span {
+  float: right;
 }

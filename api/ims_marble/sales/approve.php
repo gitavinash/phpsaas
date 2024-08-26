@@ -40,33 +40,39 @@ if ($validRequest) {
             $slabsList = implode(',', $slabsId);
 
             mysqli_query($connection, "START TRANSACTION");
-            $createTempTable = `
-                CREATE TEMPORARY TABLE sales_qty_{$requestId} AS
-                SELECT block_item_parent_id, COUNT(qty) AS total_qty
+            $createTempTableQuery = "CREATE TEMPORARY TABLE sales_qty_{$requestId} AS
+                SELECT block_item_parent_id, COUNT(block_item_id) AS total_qty
                 FROM {$tableNamePrefix}block_item
-                WHERE block_item_id IN ({$slabslist}) AND block_item_status=1 AND block_item_site_id=` . SITE_ID . `
-                GROUP BY block_item_parent_id`;
+                WHERE block_item_id IN ({$slabsList}) AND block_item_status=1 AND block_item_site_id=" . SITE_ID . "
+                GROUP BY block_item_parent_id";
+            $createTempTable = mysqli_query($connection, $createTempTableQuery);
 
-            $updateBlockSlab = `
-                UPDATE {$tableNamePrefix}block_item SET block_item_status = '2' WHERE block_item_id IN ({$slabslist}) AND block_item_site_id=` . SITE_ID . `
-            `;
+            $updateBlockSlabQuery = "UPDATE {$tableNamePrefix}block_item SET block_item_status = '2' WHERE block_item_id IN ({$slabsList}) AND block_item_site_id=" . SITE_ID;
+            $updateBlockSlab = mysqli_query($connection, $updateBlockSlabQuery);
 
-            $updateBlock = `
-                UPDATE {$tableNamePrefix}block AS b
-                JOIN sales_qty_{$requestId} AS tq ON b.block_id = tq.block_item_parent_id
-                SET b.block_available = b.block_available - tq.total_qty WHERE block_status=1 AND block_site_id=` . SITE_ID . `
-            `;
+            $updateBlockQuery = "UPDATE {$tableNamePrefix}block AS b JOIN sales_qty_{$requestId} AS tq ON b.block_id = tq.block_item_parent_id SET b.block_available = b.block_available - tq.total_qty WHERE block_status=1 AND block_site_id=" . SITE_ID;
+            $updateBlock = mysqli_query($connection, $updateBlockQuery);
 
-            $updateBlockStatus = `
-                UPDATE {$tableNamePrefix}block
-                SET block_status = '2' WHERE block_available = 0 AND block_status=1 AND block_site_id=` . SITE_ID . `
-            `;
+            $updateBlockStatusQuery = "UPDATE {$tableNamePrefix}block
+                SET block_status = '2' WHERE block_available = 0 AND  block_status=1 AND block_site_id=" . SITE_ID;
+            $updateBlockStatus = mysqli_query($connection, $updateBlockStatusQuery);
 
-            $dropTempTable = `
-                DROP TEMPORARY TABLE temp_qty
-            `;
+            $dropTempTableQuery = "DROP TEMPORARY TABLE sales_qty_{$requestId}";
+            $dropTempTable = mysqli_query($connection, $dropTempTableQuery);
 
-            exit();
+            $updateSalesQuery = "UPDATE {$tableNamePrefix}sales SET sales_status=1 WHERE sales_id='{$requestId}' AND sales_status=0 AND sales_site_id=" . SITE_ID;
+            $updateSales = mysqli_query($connection, $updateSalesQuery);
+
+            if ($createTempTable && $updateBlockSlab && $updateBlock && $updateBlockStatus && $dropTempTable && $updateSales) {
+                $status = 'success';
+                $httpStatus = 201;
+                $msg = 'Sales request is approved';
+                mysqli_query($connection, "COMMIT");
+            } else {
+                $httpStatus = 500;
+                $msg = ((DEVELOPMENT_MODE == TRUE) ? mysqli_error($connection) : 'Something went wrong');
+                mysqli_query($connection, "ROLLBACK");
+            }
         } else {
             $status = 'warning';
             $httpStatus = 204;

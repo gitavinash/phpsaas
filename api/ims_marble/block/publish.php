@@ -68,7 +68,7 @@ if (isset($validRequest)) {
         $dimensions = constant(strtoupper('measurement_' . $productType));
         extract(json_decode($dimensions, TRUE));
 
-        $insertBlock = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}block(block_site_id, block_user_id, block_warehouse_id, block_supplier_id, block_title, block_description, block_feature_image, block_gallery, block_code, block_thickness_size, block_thickness_dimension, block_product_type, block_size_dimension, block_total_item, block_status, block_created) VALUES(" . SITE_ID . ", " . USER_ID . ",  {$warehouseId}, '{$supplier}', '{$name}', '{$description}', '{$featureImage}', '{$gallery}', '{$itemCode}', '{$thickness}', '{$thicknessSize}', '{$productType}', '{$calculationType}', '{$totalItem}', 1, now())");
+        $insertBlock = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}block(block_site_id, block_user_id, block_warehouse_id, block_supplier_id, block_title, block_description, block_feature_image, block_gallery, block_code, block_thickness_size, block_thickness_dimension, block_product_type, block_size_dimension, block_total_item, block_available, block_status, block_created) VALUES(" . SITE_ID . ", " . USER_ID . ",  {$warehouseId}, '{$supplier}', '{$name}', '{$description}', '{$featureImage}', '{$gallery}', '{$itemCode}', '{$thickness}', '{$thicknessSize}', '{$productType}', '{$calculationType}', '{$totalItem}', '{$totalItem}', 1, now())");
         $blockId = mysqli_insert_id($connection);
 
         // Generate QR Code
