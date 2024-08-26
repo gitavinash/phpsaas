@@ -8,6 +8,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             <th>Email</th>
             <th>Mobile</th>
             <th>Address</th>
+            <th>Status</th>
             <th>Sales date</th>
             <th></th>
         </tr>
@@ -20,7 +21,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
         $userFilter = '';
     }
 
-    if ($salesList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales WHERE sales_status!=4 AND {$userFilter} sales_site_id='" . SITE_ID . "' ORDER BY sales_created DESC")) {
+    if ($salesList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales WHERE {$userFilter} sales_site_id='" . SITE_ID . "' ORDER BY sales_created DESC")) {
         echo "<tbody>";
         if (mysqli_num_rows($salesList) > 0) {
             while ($salesData = mysqli_fetch_assoc($salesList)) {
@@ -31,10 +32,26 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                     <td>{$sales_email}</td>
                     <td>{$sales_mobile}</td>
                     <td>{$sales_address}</td>
+                    <td>";
+                switch ($sales_status) {
+                    case 1:
+                        echo "Approved";
+                        break;
+                    case 3:
+                        echo "Delete";
+                        break;
+                    case 4:
+                        echo "Rejected";
+                        break;
+                    default:
+                        echo "Pending";
+                        break;
+                }
+                echo "</td>
                     <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>
-                        <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>
-                        <a href='#' data-type='sales' data-id='{$sales_id}' title='Delete sales' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
+                        <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>" . (($sales_status == 0) ? "
+                        <a href='#' data-type='sales' data-id='{$sales_id}' title='Delete sales' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>" : "") . "
                     </td>
                 </tr>";
             }

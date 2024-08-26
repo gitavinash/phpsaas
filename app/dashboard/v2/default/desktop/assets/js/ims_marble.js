@@ -1468,6 +1468,8 @@ $(document).ready(function () {
         mobile: customerMobile,
         address: customerAddress,
         warehouse: salesWarehouseId,
+        refId: $("#refId").val(),
+        refType: $("#refType").val(),
         inventory: JSON.stringify(getSalesBlocks("salesBlocks_")),
       }),
       success: function (successResponse) {

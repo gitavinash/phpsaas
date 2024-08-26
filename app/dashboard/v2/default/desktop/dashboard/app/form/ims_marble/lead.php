@@ -7,6 +7,11 @@
         <div class="form-group">
             <?php
 
+            if (!isset($loggedInUserMeta['warehouse'])) {
+                $loggedInUserMeta = array();
+                $loggedInUserMeta['warehouse'] = 'all';
+            }
+
             if ($loggedInUserMeta['warehouse'] == 'all') { ?>
             <select class="selectJS form-control" name="warehouse" id="warehouse" required>
                 <option value="">Select warehouse</option>

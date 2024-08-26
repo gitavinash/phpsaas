@@ -1,3 +1,30 @@
+<?php
+
+$customerName = '';
+$customerMobile = '';
+$customerEmailId = '';
+$customerAddress = '';
+$customerWarehouse = '';
+
+if (isset($ref)) {
+    if ($ref == 'leads') {
+        $leadId = base64_decode($leadId);
+        $enquiryQuery = "SELECT CONCAT(enquiry_first_name, ' ', enquiry_last_name) as customerName, enquiry_mobile as customerMobile, enquiry_email as customerEmailId, enquiry_message FROM " . TABLE_PREFIX . "enquiry LEFT JOIN " . TABLE_PREFIX . "enquiry_profile ON enquiry_profile_ref_id=enquiry_id WHERE enquiry_id='{$leadId}' AND enquiry_site_id=" . SITE_ID . " ORDER BY status DESC LIMIT 0, 1";
+
+        if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
+            if (mysqli_num_rows($checkEnquiry) != 0) {
+                extract(mysqli_fetch_assoc($checkEnquiry));
+                $enquiryMessage = json_decode($enquiry_message, TRUE);
+                $customerWarehouse = $enquiryMessage['warehouse'];
+                $customerAddress = $enquiryMessage['address'];
+            } else {
+                echo "Invalid request";
+                exit();
+            }
+        }
+    }
+}
+?>
 <ul class="steps-tab">
     <li class="step-box active" id="salesStep_1"><span>1</span>Customer details</li>
     <li class="step-box" id="salesStep_2"><span>2</span>Inventory details</li>
@@ -32,7 +59,7 @@
                                 if (mysqli_num_rows($warehouseList) != 0) {
                                     while ($warehouseData = mysqli_fetch_assoc($warehouseList)) {
                                         extract($warehouseData);
-                                        echo "<option value='{$warehouse_id}'>{$warehouse_title}</option>";
+                                        echo "<option value='{$warehouse_id}' " . (($warehouse_id == $customerWarehouse) ? 'selected' : '') . " >{$warehouse_title}</option>";
                                     }
                                 }
                             }
@@ -48,20 +75,22 @@
                     ?>
                 </div>
                 <div class="form-group">
-                    <input id="name" name="name" type="text" />
+                    <input id="name" name="name" value="<?php echo $customerName ?>" type="text" />
                     <label class="form-lable" id="Label">Full name<sup>*</sup></label>
                 </div>
                 <div class="form-group">
-                    <input id="mobile" name="mobile" type="number" />
+                    <input id="mobile" name="mobile" value="<?php echo $customerMobile ?>" type="number" />
                     <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
                 </div>
                 <div class="form-group">
-                    <input id="email" name="email" type="email" />
+                    <input id="email" name="email" value="<?php echo $customerEmailId ?>" type="email" />
                     <label class="form-lable" id="Label">Email</label>
                 </div>
                 <div class="form-group">
-                    <textarea name="address" id="address" cols="30" rows="10"></textarea>
+                    <textarea name="address" id="address" cols="30" rows="10"><?php echo $customerAddress ?></textarea>
                     <label class="form-lable" id="Label">Address<sup>*</sup></label>
+                    <input type="hidden" name="refId" id="refId" value="<?php echo base64_encode($leadId) ?>">
+                    <input type="hidden" name="refType" id="refType" value="enquiry">
                 </div>
                 <div class="box-1">
                     <div class="form-group">

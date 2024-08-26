@@ -18,7 +18,7 @@ window.location.href = '/dashboard/sales_request/list/';
     }
 }
 
-if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_status=0 AND sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
+if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
 <script>
 alert('Invalid Sales request id found');
@@ -191,18 +191,23 @@ window.location.href = '/dashboard/sales_request/list/';
 
     <div class="widget no-padding box-2-5" id="fixedDiv">
         <div class="main-box">
+            <?php
+            if ($sales_status == 0) { ?>
             <section class="leadQuickLinks">
                 <a href="" class="btn btn-green" id="approveSalesRequest"
                     data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"><i
                         class="fi-rr-check"></i> Approve
                     request</a>
-                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"
-                    id="approveSalesRequest"><i class="fi-rr-print"></i> Print</a>
+                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
+                        class="fi-rr-print"></i> Print</a>
                 <a href="#" data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
                     class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
                     data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
                     request</a>
             </section>
+            <?php
+            }
+            ?>
         </div>
     </div>
 </div>

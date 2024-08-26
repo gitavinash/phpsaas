@@ -556,7 +556,11 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <?php
 
                 if ($enquiry_status != 5) {
-                    if ($enquiry_status != 4) { ?>
+                    if ($enquiry_status != 4) {
+                        if (SITE_APP_ID == 22) {
+                            echo "<a href='/dashboard/sales/add/?ref=leads&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
+                        }
+                ?>
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <?php
 
