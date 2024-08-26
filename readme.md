@@ -73,3 +73,10 @@ Availablity status type
 1 : Booked or blocked by dynamic range
 2 : Booked or blocked by week ( in Booking table : booking_details = block by week )
 4 : Booked or blocked by month ( in Booking table : booking_details = block by month )
+
+Marble or IMS Inventory
+
+0 : Intial
+1 : live
+2 : Sold
+3 : Return

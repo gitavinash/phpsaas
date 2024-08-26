@@ -15,7 +15,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
     </thead>
     <?php
 
-    if ($salesList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id WHERE sales_status=0 AND sales_site_id='" . SITE_ID . "' ORDER BY sales_updated DESC")) {
+    if ($salesList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id WHERE sales_status=0 AND sales_site_id='" . SITE_ID . "' ORDER BY sales_created DESC")) {
         echo "<tbody>";
         if (mysqli_num_rows($salesList) > 0) {
             while ($salesData = mysqli_fetch_assoc($salesList)) {

@@ -31,6 +31,56 @@
     .footer::after {
         content: "Developed by Blumox Technologies";
     }
+
+    @media print {
+
+        /* Hide non-printable elements */
+        .no-print {
+            display: none;
+        }
+
+        /* Adjust layout for printing */
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 12pt;
+        }
+
+        .footer {
+            position: static;
+            margin-top: 20px;
+        }
+
+        /* Make tables more printable */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .no-padding {
+            padding: 0 !important;
+        }
+
+        .box-1,
+        .box-5 {
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: none;
+        }
+    }
     </style>
 </head>
 

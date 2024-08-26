@@ -192,7 +192,9 @@ window.location.href = '/dashboard/sales_request/list/';
     <div class="widget no-padding box-2-5" id="fixedDiv">
         <div class="main-box">
             <section class="leadQuickLinks">
-                <a href="" class="btn btn-green" id="approveSalesRequest"><i class="fi-rr-check"></i> Approve
+                <a href="" class="btn btn-green" id="approveSalesRequest"
+                    data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"><i
+                        class="fi-rr-check"></i> Approve
                     request</a>
                 <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"
                     id="approveSalesRequest"><i class="fi-rr-print"></i> Print</a>

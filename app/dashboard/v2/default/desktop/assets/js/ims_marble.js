@@ -1491,4 +1491,32 @@ $(document).ready(function () {
       },
     });
   });
+
+  $("#approveSalesRequest").click(function (e) {
+    e.preventDefault();
+    var requestId = $(this).attr("data-id");
+    var agentID = $(this).attr("data-agent");
+    if (requestId != "") {
+      $.ajax({
+        type: "GET",
+        url: "/api/sales/approve/?id=" + requestId + "&agent=" + agentID,
+        dataType: "JSON",
+        success: function (successResponse) {
+          if (successResponse.status == "success") {
+            popUpMessage("center", successResponse.msg, successResponse.status);
+          }
+        },
+        error: function (errorResponse) {
+          console.log(`Error :`, errorResponse);
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+        },
+      });
+    } else {
+      popUpMessage("center", "Invalid sales request id received", "warning");
+    }
+  });
 });

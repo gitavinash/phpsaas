@@ -20,7 +20,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
         $userFilter = '';
     }
 
-    if ($salesList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales WHERE sales_status!=4 AND {$userFilter} sales_site_id='" . SITE_ID . "' ORDER BY sales_updated DESC")) {
+    if ($salesList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales WHERE sales_status!=4 AND {$userFilter} sales_site_id='" . SITE_ID . "' ORDER BY sales_created DESC")) {
         echo "<tbody>";
         if (mysqli_num_rows($salesList) > 0) {
             while ($salesData = mysqli_fetch_assoc($salesList)) {

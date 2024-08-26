@@ -108,6 +108,14 @@ if (isset($showPage)) { ?>
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
+    .credit {
+        position: relative;
+        right: 0;
+        float: right;
+        /* margin: -1rem; */
+        font-size: 0.6rem;
+    }
+
     /* Print styles */
     @media print {
 
@@ -166,6 +174,9 @@ if (isset($showPage)) { ?>
             <p><strong>ID:</strong> <?php echo $block_code ?></p>
             <p><strong>Slabs:</strong> <?php echo $block_total_item ?></p>
             <p><strong>Thickness:</strong> <?php echo $block_thickness_size . ' ' . $block_thickness_dimension ?></p>
+        </div>
+        <div class="credit">
+            <p><strong>Developed by</strong> Blumox Technologies</p>
         </div>
     </div>
 </body>
