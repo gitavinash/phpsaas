@@ -193,7 +193,9 @@ window.location.href = '/dashboard/sales_request/list/';
         <div class="main-box">
             <section class="leadQuickLinks">
                 <?php
-                if ($sales_status == 0) { ?>
+                if ($sales_status == 0) {
+                    
+                    if($site_access_type!='sales_executive') { ?>
                 <a href="" class="btn btn-green" id="approveSalesRequest"
                     data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
                     data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
@@ -201,6 +203,9 @@ window.location.href = '/dashboard/sales_request/list/';
                     request</a>
                 <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
                         class="fi-rr-print"></i> Print</a>
+                    <?php
+                    }
+                    ?>
                 <a href="#" data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
                     class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
                     data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
