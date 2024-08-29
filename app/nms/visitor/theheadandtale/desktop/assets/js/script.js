@@ -118,6 +118,7 @@ $("#forgotPassword").on("click", function (event) {
         $(".afterClick").show();
         $("#statusMsg").text(data.msg);
         popUpMessage("center", data.msg, data.status);
+        $("#forgotPassword").show();
       } else {
         popUpMessage("center", data.msg, data.status);
         $("#forgotPassword").show();

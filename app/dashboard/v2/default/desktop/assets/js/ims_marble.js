@@ -1534,4 +1534,120 @@ $(document).ready(function () {
       popUpMessage("center", "Invalid sales request id received", "warning");
     }
   });
+
+  // Return invenroy slow
+
+  $("#returnToForm2").click(function (e) {
+    e.preventDefault();
+    $(".salesStep_3_box").hide();
+    $("#salesStep_3").removeClass("active");
+    $(".salesStep_2_box").show();
+    $("#salesStep_2").removeClass("active");
+    $("#salesStep_2").addClass("active");
+  });
+
+  $("#returnToForm1").click(function (e) {
+    e.preventDefault();
+    $(".salesStep_2_box").hide();
+    $("#salesStep_2").removeClass("active");
+    $(".salesStep_1_box").show();
+    $("#salesStep_1").removeClass("active");
+    $("#salesStep_1").addClass("active");
+  });
+
+  $("#returnInventory").click(function (e) {
+    e.preventDefault();
+    $(".salesStep_1_box").hide();
+    $("#salesStep_1").removeClass("active");
+    $(".salesStep_3_box").hide();
+    $("#salesStep_3").removeClass("active");
+    $(".salesStep_2_box").show();
+    $("#salesStep_2").addClass("active");
+
+    var salesId = $("#salesId").val();
+    var mobile = $("#mobile").val();
+    var msg = "";
+    var processRequest = false;
+    if (salesId != "") {
+      if (mobile != "") {
+        processRequest = true;
+      } else {
+        msg = "Customer mobile number is required";
+      }
+    } else {
+      msg = "Sales id is required";
+    }
+
+    if (processRequest) {
+      $.ajax({
+        type: "GET",
+        url: "/api/sales/info/?id=" + btoa(salesId) + "&mobile=" + mobile,
+        dataType: "JSON",
+        success: function (successResponse) {
+          if (successResponse.status == "success") {
+            $.each(successResponse.blocks, function (blockKey, blockValues) {
+              $(".slabsListOptions").empty();
+              var blockHeading = $("<h3>").text(blockKey);
+              $(".inventoryList").append(blockHeading);
+              var checkbox = `
+              <div class='show-5-box box-mb-3-3'>
+                  <div class='checkbox-wrapper-16'>
+                    <label class='checkbox-wrapper'>
+                      <input type='checkbox' class='checkbox-input selectAllSlabs' />
+                      <span class='checkbox-tile'>
+                        <span class='checkbox-label'>
+                          Select All
+                        </span>
+                      </span>
+                    </label>
+                    </div>
+                  </div>
+                  `;
+
+              $(".inventoryList").append(checkbox);
+              $.each(blockValues, function (index, value) {
+                let checkboxLabel = `
+            <div class='show-5-box box-mb-3-3'>
+              <div class='checkbox-wrapper-16'>
+                <label class='checkbox-wrapper'>
+                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='' />
+                  <span class='checkbox-tile'>
+                    <span class='checkbox-label'>
+                      ${value}
+                    </span>
+                  </span>
+                </label>
+              </div>
+          </div>
+        `;
+
+                // Append the checkbox and label to the container
+                $(".inventoryList").append(checkboxLabel);
+              });
+            });
+          }
+        },
+        error: function (errorResponse) {
+          console.log(`Error:`, errorResponse);
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+        },
+      });
+    }
+  });
+
+  $("#confirmReturnInventory").click(function (e) {
+    e.preventDefault();
+    console.log(`i m cliced`);
+
+    $(".salesStep_1_box").hide();
+    $("#salesStep_1").removeClass("active");
+    $(".salesStep_2_box").hide();
+    $("#salesStep_2").removeClass("active");
+    $(".salesStep_3_box").show();
+    $("#salesStep_3").addClass("active");
+  });
 });

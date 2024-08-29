@@ -116,6 +116,7 @@ a {
   background: #e7f5e5;
   height: 100%;
   min-height: 550px;
+  min-height: 400px;
 }
 
 .form-heading {

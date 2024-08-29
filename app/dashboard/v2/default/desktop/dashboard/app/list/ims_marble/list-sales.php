@@ -50,8 +50,12 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 echo "</td>
                     <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>
-                        <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>" . (($sales_status == 0) ? "
-                        <a href='#' data-type='sales' data-id='{$sales_id}' title='Delete sales' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>" : "") . "
+                        <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>";
+                echo (($sales_status == 0) ? "
+                        <a href='#' data-type='sales' data-id='{$sales_id}' title='Delete sales' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>" : "");
+                echo (($sales_status == 1) ? "
+                        <a href='/dashboard/sales/return/?id=" . base64_encode($sales_id) . "' data-type='sales' data-id='{$sales_id}' title='Return sale' class='tableActionIconBtn' ><i class='fi fi-rr-restock bgYellow'></i></a>" : "");
+                echo "
                     </td>
                 </tr>";
             }

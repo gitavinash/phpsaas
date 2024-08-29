@@ -20,7 +20,7 @@ if (!defined(EMAIL_ENABLE)) {
 		$mail->SMTPAuth = true;
 
 		if (SMTP_SSL == 'true') {
-			$mail->SMTPSecure = 'tls';
+			$mail->SMTPSecure = ((SMTP_HOST=='smtp.gmail.com') ? 'ssl' : 'tls');
 		}
 
 		$mail->Port = SMTP_PORT;
@@ -48,13 +48,8 @@ if (!defined(EMAIL_ENABLE)) {
 		$mail->Body = $email_body;
 
 		if (DEVELOPMENT_MODE == true) {
-
 			if (!$mail->Send()) {
-
-				echo "Message could not be sent. <p>";
-				echo "Mailer Error: " . $mail->ErrorInfo;
-			} else {
-				echo "Mailer Error: " . $mail->ErrorInfo;
+				$emailIsNotDelivered=$mail->ErrorInfo;
 			}
 		} else {
 

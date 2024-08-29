@@ -17,8 +17,13 @@ function forgotPassword($connection, $data)
 
 			require_once EMAIL_TEMPLATE . 'forgot-password.php';
 
-			$status = 'success';
-			$msg = 'Email has been sent to your register email.';
+			if(isset(($emailIsNotDelivered))) {
+				$status = 'warning'; 
+				$msg = $emailIsNotDelivered;
+			} else {
+				$status = 'success'; 
+				$msg = 'Email has been sent to your register email.';
+			}
 		} else {
 
 			$status = 'warning';
