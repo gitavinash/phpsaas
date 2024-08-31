@@ -557,11 +557,11 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                 if ($enquiry_status != 5) {
                     if ($enquiry_status != 4) {
-                        if (SITE_APP_ID == 22 && $enquiry_status == 2) {
+                        if (SITE_APP_ID == 22 && ($enquiry_status == 2 || $enquiry_status==1)) {
                             echo "<a href='/dashboard/sales/add/?ref=enquiry&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
                         }
                 ?>
-                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups <?php echo $enquiry_status ?> </a>
                 <?php
 
                         if (SITE_ID == 57) { ?>

@@ -3077,3 +3077,9 @@ strong.stockInfoList {
 .stockInfoList span {
   float: right;
 }
+
+.returnBlockList {
+  float: left;
+  width: 100%;
+  min-height: 200px;
+}
