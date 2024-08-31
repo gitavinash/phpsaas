@@ -125,7 +125,7 @@ WHERE
 ORDER BY 
     e.enquiry_time DESC 
 LIMIT 
-    0, 500")) {
+    0, 100")) {
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data);
