@@ -1588,41 +1588,16 @@ $(document).ready(function () {
             $.each(successResponse.blocks, function (blockKey, blockValues) {
               $(".slabsListOptions").empty();
               var blockHeading = $("<h3>").text(blockKey);
-              $(".inventoryList").append(blockHeading);
-              var checkbox = `
-              <div class='show-5-box box-mb-3-3'>
-                  <div class='checkbox-wrapper-16'>
-                    <label class='checkbox-wrapper'>
-                      <input type='checkbox' class='checkbox-input selectAllSlabs' />
-                      <span class='checkbox-tile'>
-                        <span class='checkbox-label'>
-                          Select All
-                        </span>
-                      </span>
-                    </label>
-                    </div>
-                  </div>
-                  `;
+              $(".returnSlabsListOptions").append(blockHeading);
+              console.log(`blockKey`, blockKey);
+              console.log(`blockValues`, blockValues);
 
-              $(".inventoryList").append(checkbox);
               $.each(blockValues, function (index, value) {
-                let checkboxLabel = `
-            <div class='show-5-box box-mb-3-3'>
-              <div class='checkbox-wrapper-16'>
-                <label class='checkbox-wrapper'>
-                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='' />
-                  <span class='checkbox-tile'>
-                    <span class='checkbox-label'>
-                      ${value}
-                    </span>
-                  </span>
-                </label>
-              </div>
-          </div>
-        `;
+                console.log(`checkboxLabel index :`, index);
+                console.log(`checkboxLabel value:`, value);
 
                 // Append the checkbox and label to the container
-                $(".inventoryList").append(checkboxLabel);
+                $(".returnSlabsListOptions").append(checkboxLabel);
               });
             });
           }

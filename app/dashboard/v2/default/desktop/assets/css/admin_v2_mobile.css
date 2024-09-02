@@ -107,7 +107,9 @@
   .slabsList {
     max-height: 80dvh;
     margin-top: 1rem;
+    padding: 0px;
     padding-bottom: 2rem;
+    width: 100%;
   }
   .slabsList input[type="checkbox"] {
     height: 30px;
@@ -122,5 +124,9 @@
     min-height: 4.5rem;
     font-size: 0.8rem;
     padding-top: 1rem;
+  }
+  .bottomMenu {
+    width: 100%;
+    bottom: 2rem;
   }
 }

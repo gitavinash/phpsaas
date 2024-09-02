@@ -2722,6 +2722,7 @@ p.blockIcon span {
   overflow-y: auto;
   background: #fbfbfc;
   height: 100%;
+  width: 100%;
   padding: 1rem;
   box-sizing: border-box;
   border-radius: 10px;

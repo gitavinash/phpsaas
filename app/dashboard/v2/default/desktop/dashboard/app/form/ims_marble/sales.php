@@ -192,8 +192,6 @@ if (isset($ref)) {
                 <h4 class="heading twoLineHeading">Select slabs form <span id="blockTitle"></span>
                     </span></h2>
                     <div class="slabsList">
-                        <!-- <section> -->
-                        <!-- <form action=""> -->
                         <div class='form-group-box slabsListOptions'>
                             <div class='box-3-2 left p-right-10'>
                                 <div class='form-group'>
@@ -204,8 +202,6 @@ if (isset($ref)) {
                                 </div>
                             </div>
                         </div>
-                        <!-- </form>
-                        </section> -->
                     </div>
             </div>
         </div>

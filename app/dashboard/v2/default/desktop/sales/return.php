@@ -78,7 +78,18 @@ window.location.href = '/dashboard/sales/list/';
                                     <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                                 </div>
                                 <div class="form-group">
-                                    <div class="returnBlockList"></div>
+                                    <div class="returnBlockList">
+                                        <div class='form-group-box returnSlabsListOptions'>
+                                            <div class='box-3-2 left p-right-10'>
+                                                <div class='form-group'>
+                                                    <div class='input-box'>
+                                                        <input type='checkbox' id='selectAllSlabs' />
+                                                        <label class='radio-button'>Select All</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
