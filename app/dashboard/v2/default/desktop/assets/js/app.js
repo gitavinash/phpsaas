@@ -624,6 +624,11 @@ $(document).ready(function (e) {
     // );
   }
 
+  // Destroy any existing instance of DataTable
+  // if ($.fn.DataTable.isDataTable(".showTableList")) {
+  //   $(".showTableList").DataTable().clear().destroy();
+  // }
+
   // Order List
 
   if ($(".showTableList").length) {
@@ -634,6 +639,7 @@ $(document).ready(function (e) {
       searching: true,
       lengthChange: false,
       autoWidth: false,
+      ordering: false,
       scrollX: true, // Enable horizontal scrolling
       columnDefs: [
         { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
