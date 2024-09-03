@@ -79,7 +79,7 @@ if (isset($daterange)) {
 
     </div> -->
     <!-- Show this section when page is loading -->
-    <div class="pageLoader">
+    <!-- <div class="pageLoader">
         <?php
 
         if (SITE_ID == 50) { ?>
@@ -92,7 +92,7 @@ if (isset($daterange)) {
         }
 
         ?>
-    </div>
+    </div> -->
     <header>
         <div class="right-side">
             <div class="mobileLogo"><a href="/dashboard/"><img
