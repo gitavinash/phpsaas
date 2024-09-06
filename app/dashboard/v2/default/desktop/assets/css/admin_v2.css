@@ -3084,3 +3084,7 @@ strong.stockInfoList {
   width: 100%;
   min-height: 200px;
 }
+
+.daterangepicker .drp-calendar {
+  max-width: 400px;
+}

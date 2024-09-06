@@ -1,3 +1,39 @@
+function closePopup(btn) {
+  var popupContainer = btn.closest(".popUp");
+  popupContainer.style.display = "none";
+  document.querySelector(".popUp").style.display = "none";
+}
+
+function toggleDisplay(showBox, showEditBtn) {
+  $(".openBtnBox").hide(); // Hide all
+  console.log(`showBox`, showBox);
+  document.querySelector(showBox).style.display = "block";
+  if (showEditBtn) {
+    $("#leadEditBtn").show();
+  } else {
+    $("#leadEditBtn").hide();
+  }
+  hidePageLoader();
+}
+
+function handleButtonClick(activeBtn) {
+  $(".detailsBtn").removeClass("btn-green"); // Assuming the buttons have a common class 'btn'
+  $(activeBtn).addClass("btn-green");
+  hidePageLoader();
+}
+
+function showPageLoader() {
+  $(".pageLoader").fadeIn();
+}
+
+function hidePageLoader() {
+  $(".pageLoader").fadeOut();
+}
+
+$(window).on("load", function () {
+  hidePageLoader();
+});
+
 $(document).ready(function (e) {
   const urlQuery = new URLSearchParams(window.location.search);
   let dateRangeParams = urlQuery.get("daterange");
@@ -34,18 +70,6 @@ $(document).ready(function (e) {
       maxFiles: 10,
     });
   }
-
-  function showPageLoader() {
-    $(".pageLoader").fadeIn();
-  }
-
-  function hidePageLoader() {
-    $(".pageLoader").fadeOut();
-  }
-
-  $(window).on("load", function () {
-    hidePageLoader();
-  });
 
   $(document).on("click", ".deleteButton", function (event) {
     event.preventDefault();
@@ -765,33 +789,10 @@ $(document).ready(function (e) {
 
   // Lead details page
 
-  $("#leadDetailsBtn").click(function (e) {
-    $("#leadDetailsBtn").addClass("btn-green");
-    $("#noteDetailsBtn").removeClass("btn-green");
-    $("#paymentDetailsBtn").removeClass("btn-green");
-    hidePageLoader();
+  $(".detailsBtn").click(function (e) {
     e.preventDefault();
+    handleButtonClick(this);
   });
-  $("#noteDetailsBtn").click(function (e) {
-    $("#noteDetailsBtn").addClass("btn-green");
-    $("#leadDetailsBtn").removeClass("btn-green");
-    $("#paymentDetailsBtn").removeClass("btn-green");
-    hidePageLoader();
-    e.preventDefault();
-  });
-  $("#paymentDetailsBtn").click(function (e) {
-    $("#paymentDetailsBtn").addClass("btn-green");
-    $("#leadDetailsBtn").removeClass("btn-green");
-    $("#noteDetailsBtn").removeClass("btn-green");
-    hidePageLoader();
-    e.preventDefault();
-  });
-
-  function closePopup(btn) {
-    var popupContainer = btn.closest(".popUp");
-    popupContainer.style.display = "none";
-    document.querySelector(".popUp").style.display = "none";
-  }
 
   $("#noteBtn").click(function (e) {
     document.querySelector(".notesBox").style.display = "flex";
@@ -834,44 +835,23 @@ $(document).ready(function (e) {
     hidePageLoader();
     e.preventDefault();
   });
-
   $("#leadDetailsBtn").click(function (e) {
-    document.querySelector("#leadDetailsBox").style.display = "block";
-    document.querySelector("#noteDetailsBox").style.display = "none";
-    document.querySelector("#paymentDetailsBox").style.display = "none";
-    document.querySelector("#leadEditBox").style.display = "none";
-    document.querySelector("#leadEditBtn").style.display = "block";
-    hidePageLoader();
+    toggleDisplay("#leadDetailsBox", true);
     e.preventDefault();
   });
 
   $("#noteDetailsBtn").click(function (e) {
-    document.querySelector("#noteDetailsBox").style.display = "block";
-    document.querySelector("#leadDetailsBox").style.display = "none";
-    document.querySelector("#paymentDetailsBox").style.display = "none";
-    document.querySelector("#leadEditBox").style.display = "none";
-    document.querySelector("#leadEditBtn").style.display = "none";
-    hidePageLoader();
+    toggleDisplay("#noteDetailsBox", false);
     e.preventDefault();
   });
 
   $("#paymentDetailsBtn").click(function (e) {
-    document.querySelector("#paymentDetailsBox").style.display = "block";
-    document.querySelector("#leadDetailsBox").style.display = "none";
-    document.querySelector("#noteDetailsBox").style.display = "none";
-    document.querySelector("#leadEditBox").style.display = "none";
-    document.querySelector("#leadEditBtn").style.display = "none";
-    hidePageLoader();
+    toggleDisplay("#paymentDetailsBox", false);
     e.preventDefault();
   });
 
   $("#leadEditBtn").click(function (e) {
-    hidePageLoader();
-    document.querySelector("#leadEditBox").style.display = "block";
-    document.querySelector("#paymentDetailsBox").style.display = "none";
-    document.querySelector("#leadDetailsBox").style.display = "none";
-    document.querySelector("#noteDetailsBox").style.display = "none";
-    document.querySelector("#leadEditBtn").style.display = "none";
+    toggleDisplay("#leadEditBox", false);
     e.preventDefault();
   });
 
