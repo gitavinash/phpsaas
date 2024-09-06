@@ -407,13 +407,14 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                 if(SITE_APP=='astro_client') {
                     echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
+                    echo "
+                <a href='' class='btn btn-green' id='updatePaymentBtn'><i class='fi-rr-notes'></i> Update payment
+                    records</a>";
                 }
 
                         if (SITE_ID == 57) { ?>
                 <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
                     links</a>
-                <a href="" class="btn btn-green" id="updatePaymentBtn"><i class="fi-rr-notes"></i> Update payment
-                    records</a>
                 <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
                 <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
                 <?php
