@@ -230,7 +230,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' ORDER BY enquiry_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
@@ -298,7 +298,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
@@ -404,6 +404,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 ?>
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <?php
+
+                if(SITE_APP=='astro_client') {
+                    echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
+                }
 
                         if (SITE_ID == 57) { ?>
                 <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
@@ -631,6 +635,40 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             <div class="widget box-3">
                 <div class="actionArea">
                     <span href="#" class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Set reminder</span>
+                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                        Cancel</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="popUp upayBox">
+        <div class="smallPopUpBox">
+            <div class="widget box-7">
+                <div class="contentArea">
+                    <form method="POST" action="#">
+                        <section class="form">
+                            <div class="step-open-box step_1_box">
+                                <div class="form-header">
+                                    <h4 class="heading">Add Upay</h4>
+                                </div>
+                                <div class="form-group">
+                                    <textarea type="text" name="comment" id="comment"
+                                        placeholder="Add your comment"></textarea>
+                                    <label class="form-lable" id="commentLable">Any comment</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" name='upay'>
+                                    <label class="form-lable" id="commentLable">Upload photo</label>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+            <div class="widget box-3">
+                <div class="actionArea">
+                    <span href="#" class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Add Upay</span>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
