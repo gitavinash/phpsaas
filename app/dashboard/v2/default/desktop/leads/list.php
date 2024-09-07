@@ -70,7 +70,8 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                     <tr>
                         <th>Name</th>
                         <!-- <th>Email</th> -->
-                        <th style="max-width: 200px !important">Mobile</th>
+                        <th>Mobile</th>
+                        <?php echo ((SITE_APP=='astro_client') ? '<th>Alternate mobile</th>' : '') ?>
                         <th>Subject</th>
                         <th>Time</th>
                         <?php
@@ -129,7 +130,6 @@ LIMIT
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data);
-
                                 switch ($enquiry_status) {
                                     case 1:
                                         $backgroundColor = '#C7EAE4';
@@ -152,9 +152,17 @@ LIMIT
 
                     ?>
                     <tr>
-                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_first_name ?></td>
+                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo ucwords($enquiry_first_name) ?></td>
                         <!-- <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_email; ?></td> -->
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_mobile; ?></td>
+                        <?php
+                        
+                        if(SITE_APP=='astro_client') { ?>
+                            <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_mobile; ?></td>
+                        <?php
+                        }
+
+                        ?>
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_subject; ?></td>
                         <td style="background: <?php echo $backgroundColor; ?>">
                             <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>

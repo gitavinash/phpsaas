@@ -12,6 +12,7 @@ $enquiryQuery = "SELECT * FROM " . TABLE_PREFIX . "enquiry LEFT JOIN " . TABLE_P
 if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
     if (mysqli_num_rows($checkEnquiry) != 0) {
         extract(mysqli_fetch_assoc($checkEnquiry));
+        extract(json_decode($enquiry_message, TRUE));
     } else {
         echo "Invalid request";
         exit();
@@ -37,10 +38,19 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="info">
                             <h2 class="heading"
                                 <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
-                                <?php echo $enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : '')) ?>
+                                <?php echo ucwords($enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : ''))) ?>
                             </h2>
-                            <p><span><strong>Last Update:
-                                    </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span></p>
+                            <p>
+                                <?php
+                                
+                                if(isset($date_of_birth)) {
+                                    echo "<span><strong>Date of Birth:</strong> ".date('d M Y',strtotime($date_of_birth))."</span>";
+                                }
+
+                                ?>
+                                <span><strong>Last Update:
+                                    </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span>
+                            </p>
                         </div>
                         <div class="verifications">
 
@@ -53,22 +63,22 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             <section>
                 <div class="widget no-padding box-1">
                     <div class="btn-group leadActions">
-                        <a href="#" id="leadDetailsBtn" class="btn detailsBtn btn-green"><i class="fi-rr-file-circle-info"></i>
+                        <a id="leadDetailsBtn" class="btn detailsBtn btn-green"><i class="fi-rr-file-circle-info"></i>
                             Details</a>
-                        <a href="#" id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
+                        <a id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
                             history</a>
                         <?php
                         if(SITE_APP=='astro_client') {
-                            echo "<a href='#' id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
+                            echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
                             history</a>";
                         }
                         ?>
-                        <a href="#" id="paymentDetailsBtn" class="btn detailsBtn"><i class="fi-rr-money-check"></i> Payment
+                        <a id="paymentDetailsBtn" class="btn detailsBtn"><i class="fi-rr-money-check"></i> Payment
                             history</a>
                         <?php
 
                         if ($enquiry_status != 5) { ?>
-                        <a href="#" id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px" ><i class="fi-rr-edit"></i> Edit
+                        <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px" ><i class="fi-rr-edit"></i> Edit
                             lead</a>
                         <?php
 
@@ -240,32 +250,32 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         switch (strtolower($enquiry_notes_meta_type)) {
                                             case "assign":
                                                 $icon = 'link';
-                                                $msg = str_replace('Lead assign', '<a href="#">Lead assign</a>', $enquiry_notes_meta_value);
+                                                $msg = str_replace('Lead assign', '<a>Lead assign</a>', $enquiry_notes_meta_value);
                                                 break;
 
                                             case "payment":
                                                 $icon = 'indian-rupee-sign';
-                                                $msg = '<a href="#">Payment</a>' . $profile_display_name;
+                                                $msg = '<a>Payment</a>' . $profile_display_name;
                                                 break;
 
                                             case "generate":
                                                 $icon = 'plus';
-                                                $msg = '<a href="#">Added </a>by ' . $profile_display_name;
+                                                $msg = '<a>Added </a>by ' . $profile_display_name;
                                                 break;
 
                                             case "update":
                                                 $icon = 'refresh';
-                                                $msg = '<a href="#">Lead update </a>by ' . $profile_display_name;
+                                                $msg = '<a>Lead update </a>by ' . $profile_display_name;
                                                 break;
 
                                             case "duplicate":
                                                 $icon = 'refresh';
-                                                $msg = '<a href="#">Lead mark Duplicate </a> updated by ' . $profile_display_name;
+                                                $msg = '<a>Lead mark Duplicate </a> updated by ' . $profile_display_name;
                                                 break;
 
                                             default:
                                                 $icon = 'comment-alt';
-                                                $msg = "<a href='#'>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
+                                                $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
                                                 if ($enquiry_notes_meta_value != '') {
                                                     $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
                                                 }
@@ -308,32 +318,32 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         switch (strtolower($enquiry_notes_meta_type)) {
                                             case "assign":
                                                 $icon = 'link';
-                                                $msg = str_replace('Lead assign', '<a href="#">Lead assign</a>', $enquiry_notes_meta_value);
+                                                $msg = str_replace('Lead assign', '<a>Lead assign</a>', $enquiry_notes_meta_value);
                                                 break;
 
                                             case "payment":
                                                 $icon = 'indian-rupee-sign';
-                                                $msg = '<a href="#">Payment</a>' . $profile_display_name;
+                                                $msg = '<a>Payment</a>' . $profile_display_name;
                                                 break;
 
                                             case "generate":
                                                 $icon = 'plus';
-                                                $msg = '<a href="#">Added </a>by ' . $profile_display_name;
+                                                $msg = '<a>Added </a>by ' . $profile_display_name;
                                                 break;
 
                                             case "update":
                                                 $icon = 'refresh';
-                                                $msg = '<a href="#">Lead update </a>by ' . $profile_display_name;
+                                                $msg = '<a>Lead update </a>by ' . $profile_display_name;
                                                 break;
 
                                             case "duplicate":
                                                 $icon = 'refresh';
-                                                $msg = '<a href="#">Lead mark Duplicate </a> updated by ' . $profile_display_name;
+                                                $msg = '<a>Lead mark Duplicate </a> updated by ' . $profile_display_name;
                                                 break;
 
                                             default:
                                                 $icon = 'comment-alt';
-                                                $msg = "<a href='#'>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
+                                                $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
                                                 if ($enquiry_notes_meta_value != '') {
                                                     $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
                                                 }
@@ -450,7 +460,6 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <h4 class="heading">Conclusion & Summary</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Title <sup>*</sup></p>
                                     <select class="selectJS form-control" id="notesTitle" name="title">
                                         <option value=""></option>
                                         <option value="Not interested">Not Interested</option>
@@ -460,6 +469,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <option value="Client is not Picking call">Client is not Picking call</option>
                                         <option value="other">Other</option>
                                     </select>
+                                    <label for="">Title <sup>*</sup></label>
                                 </div>
                                 <div class="form-group">
                                     <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
@@ -472,8 +482,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea bgRed">
-                    <a href="#" class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Mark as closed</a>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <a class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Mark as closed</a>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
             </div>
@@ -539,9 +549,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn" id="sendPaymentLink"><i class="fi-rr-paper-plane"></i> Send payment
+                    <a class="btn popUpBtn" id="sendPaymentLink"><i class="fi-rr-paper-plane"></i> Send payment
                         link</a>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
             </div>
@@ -555,17 +565,22 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                     <form method="POST" action="#">
                         <section class="form">
                             <div class="step-open-box step_1_box">
-                                <form method="POST" action="#">
+                                <form method="POST" action="#" id="addPaymentRecordForm" >
                                     <section class="form">
                                         <div class="step-open-box step_1_box">
                                             <div class="form-header">
                                                 <h4 class="heading">Update payment details</h4>
                                             </div>
                                             <div class="form-group">
-                                                <p>Payment method <sup>*</sup></p>
+                                                <input type="number" id="paymentAmount" name="amount" />
+                                                <label class="form-lable" id="paymentAmount">Enter amount<sup>*</sup></label>
+                                            </div>
+                                            <div class="form-group">
+                                                <!-- <p>Payment method <sup>*</sup></p> -->
                                                 <select class="selectJS form-control" id="paymentRecordTitle"
                                                     name="title">
                                                     <option value=""></option>
+                                                    <option value="cash">Cash</option>
                                                     <option value="upi">UPI</option>
                                                     <option value="net_banking">Net banking</option>
                                                     <option value="credit_card">Credit Card</option>
@@ -573,12 +588,21 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     <option value="wallet">Wallet</option>
                                                     <option value="other">Other</option>
                                                 </select>
+                                                <label class="form-lable">Payment method <sup>*</sup></label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="datepicker" placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate" name="paymentDate" />
+                                                <label class="form-lable">Payment Date</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber" name="refNumber" />
+                                                <label class="form-lable">Reference number</label>
                                             </div>
                                             <div class="form-group">
                                                 <textarea type="text" name="paymentRecordMsg" id="noteMsg"
-                                                    placeholder="Payment details*" class="form-control"
+                                                    placeholder="Payment details" class="form-control"
                                                     required></textarea>
-                                                <label class="form-lable" id="paymentRecordMsgLabel">Payment
+                                                <label class="form-lable">Payment
                                                     details</label>
                                             </div>
                                         </div>
@@ -589,9 +613,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn" id="paymentRecordLink"><i class="fi-rr-check"></i> Update
+                    <a class="btn popUpBtn" id="paymentRecordLink"><i class="fi-rr-check"></i> Update
                         records</a>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
             </div>
@@ -609,7 +633,6 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <h4 class="heading">Add Follow-Up Reminder</h4>
                                 </div>
                                 <div class="form-group">
-                                    <p>Reason <sup>*</sup></p>
                                     <select class="selectJS form-control" id="reason" name="reason">
                                         <option value=""></option>
                                         <option value="Busy">Busy</option>
@@ -618,6 +641,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <option value="Interested">Interested</option>
                                         <option value="Other">Other</option>
                                     </select>
+                                    <label>Reason <sup>*</sup></label>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" class="datepickerForFutureDateWithTime" name="followupTime"
@@ -635,33 +659,36 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <span href="#" class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Set reminder</span>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <span class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Set reminder</span>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <?php
+    
+    if(SITE_APP=='astro_client') { ?>
 
     <div class="popUp upayBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
-                    <form method="POST" action="#">
+                    <form method="POST" action="#" id="addUpayForm" >
                         <section class="form">
                             <div class="step-open-box step_1_box">
                                 <div class="form-header">
-                                    <h4 class="heading">Add Upay</h4>
+                                    <h4 class="heading">Add new upay</h4>
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="comment" id="comment"
+                                    <textarea type="text" name="upayText" id="upayComment"
                                         placeholder="Add your comment"></textarea>
                                     <label class="form-lable" id="commentLable">Any comment</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="file" name='upay'>
-                                    <label class="form-lable" id="commentLable">Upload photo</label>
+                                    <input type="file" id="fileUpload" name="upayPhoto" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
+                                    <label class="form-lable" id="upayPhoto">Upload photo</label>
                                 </div>
                             </div>
                     </form>
@@ -669,13 +696,17 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <span href="#" class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Add Upay</span>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
             </div>
         </div>
     </div>
+    <?php
+    }
+
+    ?>
 
     <div class="popUp itineraryBox">
         <div class="fullScreenPopUpBox">
@@ -686,9 +717,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-2">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload itinerary</a>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <a class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
+                    <a class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload itinerary</a>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
             </div>
@@ -704,9 +735,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-2">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send vouchers</a>
-                    <a href="#" class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload vouchers</a>
-                    <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                    <a class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send vouchers</a>
+                    <a class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload vouchers</a>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
             </div>

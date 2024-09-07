@@ -26,3 +26,7 @@
                                             value="<?php echo $enquiry_mobile ?>" readonly>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="box-3"><strong>Date of Birth<sup>*</sup></strong></td>
+                                    <td class="box-7"><input id="dateOfBirth" class="datepicker" name="date_of_birth" value="<?php echo $date_of_birth ?>" type="text" required /></td>
+                                </tr>

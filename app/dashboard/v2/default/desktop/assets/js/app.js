@@ -34,10 +34,11 @@ $(window).on("load", function () {
   hidePageLoader();
 });
 
+const urlQuery = new URLSearchParams(window.location.search);
+let dateRangeParams = urlQuery.get("daterange");
+let leadId = urlQuery.get("id");
+
 $(document).ready(function (e) {
-  const urlQuery = new URLSearchParams(window.location.search);
-  let dateRangeParams = urlQuery.get("daterange");
-  let leadId = urlQuery.get("id");
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
   if (dateRangeParams == null) {
     dateRangeValue = "";
@@ -747,7 +748,7 @@ $(document).ready(function (e) {
 
   if ($(".selectJS").length) {
     $(".selectJS").select2({
-      placeholder: "Select drop down placeholder",
+      placeholder: "Select options",
     });
   }
 

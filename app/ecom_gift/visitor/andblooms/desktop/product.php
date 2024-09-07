@@ -153,52 +153,36 @@ include_once 'header.php';
                     <div class="similar-product">
                         <h2>Product Description</h2>
                         <p><?php echo $product_description ?></p>
-                        <h2>Care & Tips</h2>
+                        
                         <div class="care_n_tips">
                             <?php
-
                             if (isset($care_n_tips)) {
 
                                 if ($care_n_tips != '') {
 
-                                    echo '<ul><li>' . str_replace('<br />', '</li><li>', $care_n_tips) . '</li></ul>';
+                                    echo '<h2>Care & Tips</h2><ul><li>' . str_replace('<br />', '</li><li>', $care_n_tips) . '</li></ul>';
                                 } else {
-
-                            ?>
-
-                            <ul>
-                                <li>Start by removing the bouquet wrapper.</li>
-                                <li>Cut the stems by one or two inches from the bottom to ensure better water
-                                    intake.
-                                </li>
-                                <li>Choose a vase and fill it with water.</li>
-                                <li>Remove the leaves below the water level to prevent bacterial growth.</li>
-                                <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-                                <li>Make sure to place the vase in indirect sunlight.</li>
-                            </ul>
-
-                            <?php
-
+                                    if(strtolower($category_title)!='planters' && strtolower($category_title)!='cake') {
+                                        ?>
+<h2>Care & Tips</h2>
+                                        <ul>
+                                            <li>Start by removing the bouquet wrapper.</li>
+                                            <li>Cut the stems by one or two inches from the bottom to ensure better water
+                                                intake.
+                                            </li>
+                                            <li>Choose a vase and fill it with water.</li>
+                                            <li>Remove the leaves below the water level to prevent bacterial growth.</li>
+                                            <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
+                                            <li>Make sure to place the vase in indirect sunlight.</li>
+                                        </ul>
+            
+                                        <?php
+                                    }
                                 }
-                            } else { ?>
-
-                            <ul>
-                                <li>Start by removing the bouquet wrapper.</li>
-                                <li>Cut the stems by one or two inches from the bottom to ensure better water
-                                    intake.
-                                </li>
-                                <li>Choose a vase and fill it with water.</li>
-                                <li>Remove the leaves below the water level to prevent bacterial growth.</li>
-                                <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-                                <li>Make sure to place the vase in indirect sunlight.</li>
-                            </ul>
-
-                            <?php
                             }
 
                             ?>
                         </div>
-                        <h2>Delivery Information</h2>
                         <div class="care_n_tips">
                             <?php
 
@@ -206,12 +190,13 @@ include_once 'header.php';
 
                                 if ($delivery_information != '') {
 
-                                    echo '<ul><li>' . str_replace('<br />', '</li><li>', $delivery_information) . '</li></ul>';
+                                    echo '<h2>Delivery Information</h2><ul><li>' . str_replace('<br />', '</li><li>', $delivery_information) . '</li></ul>';
                                 } else {
 
-                            ?>
+                                    if(strtolower($category_title)!='planters' && strtolower($category_title)!='cake') {
+                                        ?>
 
-                            <ul>
+<h2>Delivery Information</h2><ul>
                                 <li>The image displayed is indicative. Actual product may vary in design & shape
                                 </li>
                                 <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
@@ -222,27 +207,12 @@ include_once 'header.php';
                                 <li>Occasionally, substitution of flowers is necessary due unavailability issues.
                                 </li>
                             </ul>
-
-                            <?php
+            
+                                        <?php
 
                                 }
-                            } else { ?>
-
-                            <ul>
-                                <li>The image displayed is indicative. Actual product may vary in design & shape
-                                </li>
-                                <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
-                                <li>The chosen delivery time is an estimate.</li>
-                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of
-                                    your
-                                    order once.</li>
-                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.
-                                </li>
-                            </ul>
-
-                            <?php
-                            }
-
+                            }}
+                            
                             ?>
                         </div>
                         <!-- SKU  -->

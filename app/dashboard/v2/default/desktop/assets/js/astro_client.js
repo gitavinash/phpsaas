@@ -10,4 +10,37 @@ $(document).ready(function (e) {
     hidePageLoader();
     e.preventDefault();
   });
+
+  $("#addUpayBtn").click(function (e) {
+    e.preventDefault();
+
+    var data = new FormData(document.getElementById("addUpayForm"));
+    data.append("leadId", leadId);
+
+    console.log(`addUpayForm lead id:`, leadId);
+
+    $.ajax({
+      url: "/api/leads/upay/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#addAmenities").show();
+      },
+    });
+  });
 });
