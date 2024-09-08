@@ -55,7 +55,7 @@ function login($connection, $data)
 				$msg = 'Invalid Password';
 			}
 		} else {
-
+			$status='error';
 			$msg = 'No user found';
 		}
 	} else {
@@ -68,6 +68,8 @@ function login($connection, $data)
 		'msg' => ((isset($msg)) ? $msg : 'Invalid Username'),
 		'url' => ((isset($url)) ? $url : '#')
 	);
+
+	$hardRedirectURL = (($status=='success') ? $hardRedirectURL : '/login/?alertMsg='.urlencode($msg));
 
 	if (isset($hardRedirect)) {
 		header("Location: {$hardRedirectURL}", TRUE, 301);

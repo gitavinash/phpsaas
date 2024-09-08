@@ -76,6 +76,13 @@ if (isset($_COOKIE['user_data'])) {
     </div>
     <?php require_once NOTIFICATION . 'index.php'; ?>
     <script src="<?php echo USER_JS ?>script.min.js"></script>
+    <?php
+    
+    if(isset($alertMsg)) {
+        echo "<script>alert('{$alertMsg}')</script>";
+    }
+
+    ?>
 </body>
 
 </html>
