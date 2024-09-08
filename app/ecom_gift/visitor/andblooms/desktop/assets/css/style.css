@@ -1954,7 +1954,7 @@ h3.remain-days {
 a.cart-ad-btn {
   float: left;
   display: inline-block;
-  background: #199100;
+  background: #045e54;
   color: #fff;
   padding: 10px 30px;
   border-radius: 5px;
@@ -3428,7 +3428,7 @@ a.delet:hover span {
 }
 
 .purchase-btn {
-  background: #199100;
+  background: #045e54;
 }
 
 .conti-shop {
@@ -3847,7 +3847,7 @@ footer {
   }
   a.cart-ad-btn {
     display: inline-block;
-    background: #199100;
+    background: #045e54;
     color: #fff;
     padding: 10px 30px;
     border-radius: 5px;
