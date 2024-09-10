@@ -17,6 +17,10 @@
             <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
         </div>
         <div class="form-group">
+            <input id="mobile" name="altr_mobile" type="number" />
+            <label class="form-lable" id="Label">Alternate Mobile</label>
+        </div>
+        <div class="form-group">
             <input id="dateOfBirth" class="datepicker" name="date_of_birth" type="text" required />
             <label class="form-lable" id="Label">Date of Birth<sup>*</sup></label>
         </div>
