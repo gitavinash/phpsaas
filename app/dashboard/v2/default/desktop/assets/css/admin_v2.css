@@ -2371,6 +2371,16 @@ section.form
   display: block;
 }
 
+.comment p {
+  float: left;
+  width: 100%;
+  line-height: 28px;
+}
+.comment p strong {
+  float: left;
+  width: 25%;
+}
+
 .secondLine {
   float: left;
   font-size: 12px;

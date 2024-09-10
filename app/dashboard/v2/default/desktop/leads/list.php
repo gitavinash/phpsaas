@@ -79,9 +79,11 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                         if ($site_access_type != 'agent') {
                             echo "<th>Source</th><th>Assign to</th>";
                         }
+                        if(SITE_APP!='astro_client') {
+                            echo "<th>Recent note</th>";
+                        }
 
                         ?>
-                        <th>Recent note</th>
                         <th></th>
                     </tr>
                 </thead>

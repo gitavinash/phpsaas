@@ -38,7 +38,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="info">
                             <h2 class="heading"
                                 <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
-                                <?php echo ucwords($enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : ''))) ?>
+                                <?php echo $customerFullName = ucwords($enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : ''))) ?>
                             </h2>
                             <p>
                                 <?php
@@ -240,7 +240,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
@@ -368,7 +368,81 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                     </div>
                 </div>
                 <div class="widget openBtnBox no-padding box-1" id="paymentDetailsBox">
-                    <div class="leadInfo">
+                    <div class="leadInfo"><div class="historyBox">
+                            <?php
+
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
+                                if (mysqli_num_rows($leadHistory) != 0) {
+                                    echo "<ol class='timeline'>";
+                                    while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                        extract($leadHistoryData);
+                                        $commentBox = '';
+
+                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                            case "payment":
+                                                $enquiry_notes_meta_value=json_decode($enquiry_notes_meta_value, TRUE);
+                                                if(is_array($enquiry_notes_meta_value)) {
+                                                    extract($enquiry_notes_meta_value);
+                                                } else {
+                                                    $paymentAmount='';
+                                                    $paymentImages='';
+                                                    $paymentMethod='';
+                                                    $paymentDate='';
+                                                    $paymentReference='';
+                                                    $paymentMsg='';
+                                                    $paymentByCustomer='';
+                                                }
+                                                $icon = 'indian-rupee-sign';
+                                                
+                                                if($paymentByCustomer==true) {
+                                                    $msg = "<a>Payment</a> received by " . $customerFullName;
+                                                } else {
+                                                    $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
+                                                }
+
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'>
+                                                        <p><strong>Amount:</strong> {$paymentAmount}</p>
+                                                        <p><strong>Payment method:</strong> {$paymentMethod}</p>
+                                                        <p><strong>Date:</strong> {$paymentDate}</p>
+                                                        <p><strong>Reference number:</strong> {$paymentReference}</p>
+                                                        <p><strong>Comment:</strong> {$paymentMsg}</p>
+                                                    ";
+                                                    $paymentImages=(json_decode($paymentImages, TRUE));
+                                                    $paymentImages=(json_decode($paymentImages, TRUE));
+                                                    if($paymentImages!='') {
+                                                        $commentBox .="<div class='imagesList' >";
+                                                        $commentBox .= "<a href='{$paymentImages['path']}' target='_blank'><img class='leadInfoImage' src='{$paymentImages['path']}' ></a>";
+                                                        $commentBox .="</div>";
+                                                    }
+                                                    $commentBox .="</div>";
+                                                }
+                                                break;
+                                            default:
+                                                $icon = 'times-hexagon';
+                                                $msg = '';
+                                                break;
+                                        }
+
+                                        echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
+                                                    <span class='timeline-item-icon | faded-icon'>
+                                                        <i class='fi-rr-{$icon}'></i>
+                                                    </span>
+                                                    <div class='timeline-item-description'>
+                                                        <span>{$msg}
+                                                            on <time>" . date('d-m-Y h:i A', strtotime(($enquiry_notes_update))) . "</time></span>
+                                                    </div>
+                                                    {$commentBox}
+                                                </li>";
+                                    }
+                                    echo "</ol>";
+                                }
+                            } else {
+                                echo "Something went wrong";
+                            }
+
+                            ?>
+                        </div>
                     </div>
                 </div>
                 <div class="widget openBtnBox no-padding box-1" id="leadEditBox">
@@ -558,7 +632,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
-                    <form method="POST" action="#">
+                    <form method="POST" action="#" id="updatePaymentForm">
                         <section class="form">
                             <div class="step-open-box step_1_box">
                                 <form method="POST" action="#" id="addPaymentRecordForm" >
@@ -574,7 +648,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                             <div class="form-group">
                                                 <!-- <p>Payment method <sup>*</sup></p> -->
                                                 <select class="selectJS form-control" id="paymentRecordTitle"
-                                                    name="title">
+                                                    name="payment_method">
                                                     <option value=""></option>
                                                     <option value="cash">Cash</option>
                                                     <option value="upi">UPI</option>
@@ -587,15 +661,19 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 <label class="form-lable">Payment method <sup>*</sup></label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" class="datepicker" placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate" name="paymentDate" />
+                                                <input type="text" class="datepicker" placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate" name="payment_date" />
                                                 <label class="form-lable">Payment Date</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber" name="refNumber" />
+                                                <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber" name="reference_number" />
                                                 <label class="form-lable">Reference number</label>
                                             </div>
                                             <div class="form-group">
-                                                <textarea type="text" name="paymentRecordMsg" id="noteMsg"
+                                                <input type="file" id="fileUpload" name="files" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
+                                                <label class="form-lable" id="upayPhoto">Upload photo</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea type="text" name="payment_notes" id="noteMsg"
                                                     placeholder="Payment details" class="form-control"
                                                     required></textarea>
                                                 <label class="form-lable">Payment
@@ -609,7 +687,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a class="btn popUpBtn" id="paymentRecordLink"><i class="fi-rr-check"></i> Update
+                    <a class="btn popUpBtn" id="upatePaymentRecord"><i class="fi-rr-check"></i> Update
                         records</a>
                     <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>

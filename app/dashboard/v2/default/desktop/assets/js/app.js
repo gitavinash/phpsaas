@@ -964,6 +964,39 @@ $(document).ready(function (e) {
     e.preventDefault();
   });
 
+  // Update payment records
+
+  $("#upatePaymentRecord").click(function (e) {
+    e.preventDefault();
+
+    var data = new FormData(document.getElementById("updatePaymentForm"));
+    data.append("leadId", leadId);
+
+    $.ajax({
+      url: "/api/leads/payment_record/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#addAmenities").show();
+      },
+    });
+  });
+
   // Update leads data
 
   $("#updateEnquiry").click(function (e) {

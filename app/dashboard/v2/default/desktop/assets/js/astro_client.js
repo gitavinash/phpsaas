@@ -16,9 +16,6 @@ $(document).ready(function (e) {
 
     var data = new FormData(document.getElementById("addUpayForm"));
     data.append("leadId", leadId);
-
-    console.log(`addUpayForm lead id:`, leadId);
-
     $.ajax({
       url: "/api/leads/upay/",
       type: "POST",

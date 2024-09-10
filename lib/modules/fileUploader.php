@@ -30,8 +30,7 @@ if (isset($_FILES["files"])) {
 				if (!is_dir($uploadPath)) {
 					mkdir($uploadPath, 0755, true);
 				}
-
-
+				
 				/** For non-image files (PDF, DOC, etc.) */
 				$originalUploadDir = $uploadPath;
 				if (!is_dir($originalUploadDir)) mkdir($originalUploadDir, 0755, true);
