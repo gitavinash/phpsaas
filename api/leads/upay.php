@@ -1,12 +1,18 @@
 <?php
 
+    header('Content-Type: application/json');
+    $httpStatus = 405;
+
     require_once LOGIN_CHECK;
 
     $leadId = base64_decode($leadId);
 
-    print_r($_REQUEST);
-    print_r($_FILES);
-    exit();
+    if($_FILES['files']) {
+        require_once MODULES.'fileUploader.php';
+        $upayImages=json_encode($files, TRUE);
+    } else {
+        $upayImages='';
+    }
 
     mysqli_query($connection, 'START TRANSACTION');
 
@@ -16,39 +22,35 @@
 
             if($enquiry_status!=4 || $enquiry_status!=5) {
 
-                if($msg=='') {
-                    $msg=$logginUserName;
-                }
+                $msg=json_encode(
+                    array(
+                        'upayMsg' => $upayText,
+                        'upayImages' => $upayImages
+                    )
+                );
 
-                if($updateNotes=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES('{$leadId}', '".USER_ID."', '{$title}', '{$msg}')")) {
+                $msg=addslashes($msg);
 
-                    $addFollowUp='';
-                    if(isset($followupTime)) {
-                        $enquiryStatus=3;
-                        $addFollowUp=", enquiry_followup='".date('Y-m-d H:i:s', strtotime($followupTime))."' ";
-                    } else {
-                        $enquiryStatus=4;
-                    }
+                if($updateNotes=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES('{$leadId}', '".USER_ID."', 'upay', '{$msg}')")) {
 
-                    if($updateEnquiry=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status={$enquiryStatus} {$addFollowUp} WHERE enquiry_id='{$leadId}' AND enquiry_site_id=".SITE_ID)) {
+                    $enquiryStatus=8;
+
+                    if($updateEnquiry=mysqli_query($connection, "UPDATE ".TABLE_PREFIX."enquiry SET enquiry_status={$enquiryStatus} WHERE enquiry_id='{$leadId}' AND enquiry_site_id=".SITE_ID)) {
                         $status='success';
-                        if(isset($followupTime)) {
-                            $msg='Follow up added successfully';
-                        } else {
-                            $msg='Notes update successfully';
-                        }
+                        $httpStatus=201;
+                        $msg='Upay added successfully';
                         mysqli_query($connection, "COMMIT");
                     } else {
                         echo mysqli_error($connection);
                         $status='error';
-                        $msg='Something went wrong while updating the notes';
+                        $msg='Something went wrong while updating the Upay';
                         mysqli_query($connection, "ROLLBACK");
                     }
 
                 } else {
                     echo mysqli_error($connection);
                     $status='error';
-                    $msg='Something went wrong while updating the notes';
+                    $msg='Something went wrong while updating the Upay';
                     mysqli_query($connection, "ROLLBACK");
                 }
 
@@ -71,5 +73,6 @@
         'msg'=> $msg
     );
 
+    http_response_code($httpStatus);
     echo json_encode($result, TRUE);
     exit();

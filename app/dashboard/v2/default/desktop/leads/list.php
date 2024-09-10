@@ -199,10 +199,14 @@ LIMIT
                         <?php
                                     }
 
+                                    if(SITE_APP!='astro_client') { ?>
+                                        <td style="background: <?php echo $backgroundColor; ?>">
+                                            <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
+                                        </td>
+                                    <?php
+                                    }
+
                                     ?>
-                        <td style="background: <?php echo $backgroundColor; ?>">
-                            <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
-                        </td>
                         </td>
                         <td>
                             <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"

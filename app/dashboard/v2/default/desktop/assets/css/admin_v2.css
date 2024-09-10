@@ -2104,6 +2104,7 @@ section.form
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   overflow-y: scroll;
+  max-height: 600px;
 }
 
 .popUp .contentArea form {
@@ -2337,12 +2338,37 @@ section.form
 }
 
 .comment {
+  float: left;
+  width: 100%;
   margin-top: 12px;
   color: var(--c-grey-500);
   border: 1px solid var(--c-grey-200);
   box-shadow: 0 4px 4px 0 var(--c-grey-100);
   border-radius: 6px;
   padding: 16px;
+}
+
+.comment .imagesList {
+  float: left;
+  width: 100%;
+  padding: 10px 0px 0px 0px;
+  display: flex;
+  justify-content: flex-start; /* Centers the image horizontally */
+  align-items: center; /* Centers the image vertically */
+}
+
+.comment .imagesList a {
+  float: left;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #e8e8e8;
+}
+.comment .imagesList img.leadInfoImage {
+  max-width: 100px; /* Ensures the image doesn't exceed 100px width */
+  max-height: 100px; /* Ensures the image doesn't exceed 100px height */
+  margin: 0 auto; /* Centers the image horizontally inside the container */
+  border-radius: 5px;
+  display: block;
 }
 
 .secondLine {

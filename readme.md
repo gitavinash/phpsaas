@@ -41,6 +41,7 @@ Lead status
 5 : Duplicate
 6 : payment initite
 7 : Sent for sales request
+8 : Upay done
 
 Cart Status
 

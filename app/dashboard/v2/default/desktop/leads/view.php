@@ -303,7 +303,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         </div>
                     </div>
                 </div>
-                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox">
+                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none' >
                     <div class="leadInfo">
                         <div class="historyBox">
                             <?php
@@ -316,37 +316,33 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         $commentBox = '';
 
                                         switch (strtolower($enquiry_notes_meta_type)) {
-                                            case "assign":
-                                                $icon = 'link';
-                                                $msg = str_replace('Lead assign', '<a>Lead assign</a>', $enquiry_notes_meta_value);
-                                                break;
-
-                                            case "payment":
-                                                $icon = 'indian-rupee-sign';
-                                                $msg = '<a>Payment</a>' . $profile_display_name;
-                                                break;
-
-                                            case "generate":
-                                                $icon = 'plus';
-                                                $msg = '<a>Added </a>by ' . $profile_display_name;
-                                                break;
-
-                                            case "update":
-                                                $icon = 'refresh';
-                                                $msg = '<a>Lead update </a>by ' . $profile_display_name;
-                                                break;
-
-                                            case "duplicate":
-                                                $icon = 'refresh';
-                                                $msg = '<a>Lead mark Duplicate </a> updated by ' . $profile_display_name;
-                                                break;
-
-                                            default:
-                                                $icon = 'comment-alt';
-                                                $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
-                                                if ($enquiry_notes_meta_value != '') {
-                                                    $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                            case "upay":
+                                                $enquiry_notes_meta_value=json_decode($enquiry_notes_meta_value, TRUE);
+                                                if(is_array($enquiry_notes_meta_value)) {
+                                                    extract($enquiry_notes_meta_value);
+                                                } else {
+                                                    $upayMsg='';
+                                                    $upayImages='';
                                                 }
+                                                $icon = 'story-book';
+                                                $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'><p>{$upayMsg}</p>";
+                                                    $upayImages=(json_decode($upayImages, TRUE));
+                                                    if(!empty($upayImages)) {
+                                                        $commentBox .="<div class='imagesList' >";
+                                                        $upayImages=json_decode($upayImages, TRUE);
+                                                        for($i=0; $i<sizeof($upayImages); $i++) {
+                                                            $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$upayImages[$i]['path']}' ></a>";
+                                                        }
+                                                        $commentBox .="</div>";
+                                                    }
+                                                    $commentBox .="</div>";
+                                                }
+                                                break;
+                                            default:
+                                                $icon = 'times-hexagon';
+                                                $msg = '';
                                                 break;
                                         }
 
@@ -687,7 +683,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <label class="form-lable" id="commentLable">Any comment</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="file" id="fileUpload" name="upayPhoto" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
+                                    <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
                                     <label class="form-lable" id="upayPhoto">Upload photo</label>
                                 </div>
                             </div>
