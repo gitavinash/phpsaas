@@ -269,8 +269,13 @@ if ($mobile != '') {
                     require SEND_EMAIL;
 
                     if(SITE_APP=='aleya') {
-                        if (file_exists(APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php')) {
-                            require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                        if(isset($email)) {
+                            unset($ccAddress);
+                            unset($bccAddress);
+                            $toAddress=$email;
+                            if (file_exists(APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php')) {
+                                require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                            }
                         }
                     }
                 }
