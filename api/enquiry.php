@@ -265,9 +265,13 @@ if ($mobile != '') {
 
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {
+                    
                     require SEND_EMAIL;
-                    if (file_exists(APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php')) {
-                        require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+
+                    if(SITE_APP=='aleya') {
+                        if (file_exists(APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php')) {
+                            require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                        }
                     }
                 }
             }

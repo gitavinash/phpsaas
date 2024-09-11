@@ -35,14 +35,31 @@ if (!defined(EMAIL_ENABLE)) {
 		$mail->AddAddress($toAddress);
 
 		if (isset($ccAddress)) {
-
-			$mail->AddCC($ccAddress);
+			if (!is_array($ccAddress)) {
+				$ccAddresses = explode(',', $ccAddress);
+			} else {
+				$ccAddresses = $ccAddress;
+			}
+			foreach ($ccAddresses as $cc) {
+				$mail->AddCC(trim($cc));
+			}
 		}
-
 		if (isset($bccAddress)) {
-
-			$mail->AddBCC($bccAddress);
+			if (!is_array($bccAddress)) {
+				$bccAddresses = explode(',', $bccAddress);
+			} else {
+				$bccAddresses = $bccAddress;
+			}
+			foreach ($bccAddresses as $cc) {
+				$mail->AddBCC(trim($cc));
+			}
 		}
+		
+
+		// if (isset($bccAddress)) {
+
+		// 	$mail->AddBCC($bccAddress);
+		// }
 
 		$mail->Subject = $subject;
 		$mail->Body = $email_body;
