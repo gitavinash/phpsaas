@@ -32,7 +32,7 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
             $userList[] = array(
                 'id' => $user_id,
                 'name' => $profile_display_name,
-                'email' => $user_email
+                'email' => $user_email,
             );
         }
     }
@@ -71,120 +71,120 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                         <th>Name</th>
                         <!-- <th>Email</th> -->
                         <th>Mobile</th>
-                        <?php echo ((SITE_APP=='astro_client') ? '<th>Alternate mobile</th>' : '') ?>
+                        <?php echo ((SITE_APP == 'astro_client') ? '<th>Alternate mobile</th>' : '') ?>
                         <th>Subject</th>
                         <th>Time</th>
                         <?php
 
-                        if ($site_access_type != 'agent') {
-                            echo "<th>Source</th><th>Assign to</th>";
-                        }
-                        if(SITE_APP!='astro_client') {
-                            echo "<th>Recent note</th>";
-                        }
+if ($site_access_type != 'agent') {
+    echo "<th>Source</th><th>Assign to</th>";
+}
+if (SITE_APP != 'astro_client') {
+    echo "<th>Recent note</th>";
+}
 
-                        ?>
+?>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
 
-                    if ($dataList = mysqli_query($connection, "SELECT 
-    e.enquiry_id, 
-    e.enquiry_time, 
-    CASE 
+if ($dataList = mysqli_query($connection, "SELECT
+    e.enquiry_id,
+    e.enquiry_time,
+    CASE
         WHEN e.enquiry_agent = 0 THEN NULL
-        ELSE p.profile_display_name 
-    END AS agent_display_name, 
-    e.enquiry_first_name, 
-    e.enquiry_email, 
-    e.enquiry_mobile, 
-    e.enquiry_subject, 
-    e.enquiry_source, 
+        ELSE p.profile_display_name
+    END AS agent_display_name,
+    e.enquiry_first_name,
+    e.enquiry_email,
+    e.enquiry_mobile,
+    e.enquiry_subject,
+    e.enquiry_source,
     e.enquiry_status,
     n.enquiry_notes_meta_type,
     n.enquiry_notes_meta_value
-FROM 
+FROM
     " . TABLE_PREFIX . "enquiry e
-LEFT JOIN 
+LEFT JOIN
     " . TABLE_PREFIX . "profile p ON e.enquiry_agent = p.profile_user_id
 LEFT JOIN
-    (SELECT 
+    (SELECT
          enquiry_notes_ref_id,
          MAX(enquiry_notes_update) AS latest_notes_time
-     FROM 
+     FROM
          " . TABLE_PREFIX . "enquiry_notes
-     GROUP BY 
+     GROUP BY
          enquiry_notes_ref_id) latest_notes ON enquiry_id = latest_notes.enquiry_notes_ref_id
 LEFT JOIN
     " . TABLE_PREFIX . "enquiry_notes n ON enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
-WHERE 
-    {$user_filter} 
-    {$statusCondition} 
-    e.enquiry_site_id = " . SITE_ID . " 
-    AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' 
+WHERE
+    {$user_filter}
+    {$statusCondition}
+    e.enquiry_site_id = " . SITE_ID . "
+    AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}'
     GROUP BY enquiry_id
-ORDER BY 
-    e.enquiry_time DESC 
-LIMIT 
+ORDER BY
+    e.enquiry_time DESC
+LIMIT
     0, 100")) {
-                        if (mysqli_num_rows($dataList) != 0) {
-                            while ($data = mysqli_fetch_assoc($dataList)) {
-                                extract($data);
-                                switch ($enquiry_status) {
-                                    case 1:
-                                        $backgroundColor = '#C7EAE4';
-                                        break;
-                                    case 2:
-                                        $backgroundColor = '#F2F3F4';
-                                        break;
-                                    case 3:
-                                        $backgroundColor = '#FFD699';
-                                        break;
-                                    case 4:
-                                        $backgroundColor = '#FFCCCC';
-                                        break;
-                                    case 5:
-                                        $backgroundColor = '#E6E6FA';
-                                        break;
-                                    default:
-                                        $backgroundColor = '#FFFFFF';
-                                }
+    if (mysqli_num_rows($dataList) != 0) {
+        while ($data = mysqli_fetch_assoc($dataList)) {
+            extract($data);
+            switch ($enquiry_status) {
+                case 1:
+                    $backgroundColor = '#C7EAE4';
+                    break;
+                case 2:
+                    $backgroundColor = '#F2F3F4';
+                    break;
+                case 3:
+                    $backgroundColor = '#FFD699';
+                    break;
+                case 4:
+                    $backgroundColor = '#FFCCCC';
+                    break;
+                case 5:
+                    $backgroundColor = '#E6E6FA';
+                    break;
+                default:
+                    $backgroundColor = '#FFFFFF';
+            }
 
-                    ?>
+            ?>
                     <tr>
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo ucwords($enquiry_first_name) ?></td>
                         <!-- <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_email; ?></td> -->
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_mobile; ?></td>
                         <?php
-                        
-                        if(SITE_APP=='astro_client') { ?>
-                            <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_mobile; ?></td>
-                        <?php
-                        }
 
-                        ?>
+            if (SITE_APP == 'astro_client') {?>
+                            <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_alt_mobile; ?></td>
+                        <?php
+}
+
+            ?>
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_subject; ?></td>
                         <td style="background: <?php echo $backgroundColor; ?>">
                             <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
                         <?php
 
-                                    if ($site_access_type != 'agent') { ?>
+            if ($site_access_type != 'agent') {?>
                         <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_source ?></td>
                         <td style="background: <?php echo $backgroundColor; ?>">
                             <form method="POST">
                                 <?php
-                                                if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
+if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) {?>
                                 <select class="selectJS form-control" name="userId" required>
                                     <option value="">Select user</option>
                                     <?php
 
-                                                        for ($i = 0; $i < sizeof($userList); $i++) {
-                                                            echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
-                                                        }
+                for ($i = 0; $i < sizeof($userList); $i++) {
+                    echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
+                }
 
-                                                        ?>
+                ?>
                                 </select>
                                 <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
                                 <input type="hidden" name="action" value="assign">
@@ -192,23 +192,23 @@ LIMIT
                                 <input type="submit" value="Assign lead to user"
                                     class="btn dataTableSubmitBtn dataTableBtn">
                                 <?php
-                                                } else {
-                                                    echo $agent_display_name;
-                                                }
-                                                ?>
+} else {
+                echo $agent_display_name;
+            }
+                ?>
                             </form>
                         </td>
                         <?php
-                                    }
+}
 
-                                    if(SITE_APP!='astro_client') { ?>
+            if (SITE_APP != 'astro_client') {?>
                                         <td style="background: <?php echo $backgroundColor; ?>">
                                             <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
                                         </td>
                                     <?php
-                                    }
+}
 
-                                    ?>
+            ?>
                         </td>
                         <td>
                             <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
@@ -216,7 +216,7 @@ LIMIT
                                 lead details</a>
                             <?php
 
-                                        if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
+            if ($enquiry_status == 0 && $site_access_type != 'agent') {?>
 
 
                             <a href="#" class="btn dataTableBtn duplicateLead"
@@ -224,17 +224,17 @@ LIMIT
                                 as duplicate lead</a>
 
                             <?php
-                                        }
+}
 
-                                        ?>
+            ?>
                         </td>
                     </tr>
                     <?php
-                            }
-                        }
-                    }
+}
+    }
+}
 
-                    ?>
+?>
                 </tbody>
             </table>
         </div>
