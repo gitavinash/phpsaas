@@ -123,35 +123,35 @@ if (isset($campaign)) {
 
 if (isset($sender)) {
 
-    // Remove enquiry campaign varible from array
-
-    unset($_REQUEST['sender']);
-
     // Admin email id or where email will be send
 
     $toAddress = base64_decode($sender);
+
+    // Remove enquiry campaign varible from array
+
+    unset($_REQUEST['sender']);
 }
 
 if (isset($cc)) {
 
-    // Remove enquiry campaign varible from array
-
-    unset($_REQUEST['cc']);
-
     // Admin email id or where email will be send
 
     $ccAddress = base64_decode($cc);
+
+    // Remove enquiry campaign varible from array
+
+    unset($_REQUEST['cc']);
 }
 
 if (isset($bcc)) {
 
-    // Remove enquiry campaign varible from array
-
-    unset($_REQUEST['bcc']);
-
     // Admin email id or where email will be send
 
     $bccAddress = base64_decode($bcc);
+
+    // Remove enquiry campaign varible from array
+
+    unset($_REQUEST['bcc']);
 }
 
 unset($_REQUEST['request_id']);
