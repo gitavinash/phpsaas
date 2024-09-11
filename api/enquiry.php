@@ -181,7 +181,7 @@ $messageDB = json_encode($enquiryMeta, TRUE);
 if ($mobile != '') {
     if (is_numeric($mobile)) {
 
-        if ($checkUserEnquiry = mysqli_query($connection, "SELECT enquiry_time FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_site_id=" . SITE_ID . " ORDER BY enquiry_time DESC LIMIT 0, 1")) {
+        if ($checkUserEnquiry = mysqli_query($connection, "SELECT enquiry_time FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_first_name='{$first_name}' AND enquiry_site_id=" . SITE_ID . " ORDER BY enquiry_time DESC LIMIT 0, 1")) {
             if (mysqli_num_rows($checkUserEnquiry) != 0) {
                 extract(mysqli_fetch_assoc($checkUserEnquiry));
                 $time_difference = time() - strtotime($enquiry_time);
@@ -225,14 +225,15 @@ if ($mobile != '') {
                 $currentUrl .= '?' . $_SERVER['QUERY_STRING'];
             }
 
+            $alternate_mobile=((isset($alternate_mobile)) ? $alternate_mobile : '');
 
             $trafficMedium = mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : (($trafficSource == 'facebook') ? 'social' : ''))));
             $trafficCampaign = mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '')));
 
             if (SITE_ID == 35) {
-                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
+                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_alt_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$alternate_mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
             } else {
-                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
+                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_alt_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}', '{$email}', '{$mobile}', '{$alternate_mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
                 $leadId = mysqli_insert_id($connection);
             }
 

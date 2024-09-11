@@ -17,7 +17,7 @@
             <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
         </div>
         <div class="form-group">
-            <input id="mobile" name="altr_mobile" type="number" />
+            <input id="mobile" name="alternate_mobile" type="number" />
             <label class="form-lable" id="Label">Alternate Mobile</label>
         </div>
         <div class="form-group">
@@ -33,10 +33,10 @@
                 <select class="selectJS form-control" name="time_of_birth_in_hour" id="timeOfBirthInHour" required>
                     <option value="">Select Time of Birth ( Hour )</option>
                     <?php
-                        for($i=0; $i<=23; $i++) {
-                            echo "<option value='{$i}'>{$i}</option>";
-                        }
-                    ?>
+for ($i = 0; $i <= 23; $i++) {
+    echo "<option value='{$i}'>{$i}</option>";
+}
+?>
                 </select>
                 <label class="form-lable" id="timeOfBirthInHour">Time of Birth ( Hour )<sup>*</sup></label>
             </div>
@@ -46,10 +46,10 @@
                 <select class="selectJS form-control" name="time_of_birth_in_minute" id="timeOfBirthInMinute" required>
                     <option value="">Select Time of Birth ( Minute )</option>
                     <?php
-                        for($i=0; $i<=59; $i++) {
-                            echo "<option value='{$i}'>{$i}</option>";
-                        }
-                    ?>
+for ($i = 0; $i <= 59; $i++) {
+    echo "<option value='{$i}'>{$i}</option>";
+}
+?>
                 </select>
                 <label class="form-lable" id="timeOfBirthInMinute">Time of Birth ( Minute )<sup>*</sup></label>
             </div>
