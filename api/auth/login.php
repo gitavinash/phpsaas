@@ -69,7 +69,7 @@ function login($connection, $data)
 		'url' => ((isset($url)) ? $url : '#')
 	);
 
-	$hardRedirectURL = (($status=='success') ? $hardRedirectURL : '/login/?alertMsg='.urlencode($msg));
+	$hardRedirectURL = (($status=='success') ? $url : '/login/?alertMsg='.urlencode($msg));
 
 	if (isset($hardRedirect)) {
 		header("Location: {$hardRedirectURL}", TRUE, 301);
