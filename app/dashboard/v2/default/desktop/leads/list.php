@@ -100,6 +100,7 @@ if ($dataList = mysqli_query($connection, "SELECT
     e.enquiry_first_name,
     e.enquiry_email,
     e.enquiry_mobile,
+    e.enquiry_alt_mobile,
     e.enquiry_subject,
     e.enquiry_source,
     e.enquiry_status,
