@@ -3179,3 +3179,9 @@ strong.stockInfoList {
   background: #f5f5f5 !important;
   border-color: #464646 !important;
 } */
+
+.ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+  background: #f1f1f1 !important;
+  border-color: #f1f1f1 !important;
+  margin-left: 10px;
+}

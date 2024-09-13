@@ -139,9 +139,9 @@ if ($enquiry_subject != '') {
                             </tr>";
 }
 
-if ($date_of_travel != '1970-01-01') {
+if ($date_of_travel != '1970-01-01' && $date_of_travel != '') {
     echo "<tr>
-                                <td class='box-3'><strong>Date of travel</strong></td>
+                                <td class='box-3'><strong>Date of travel|{$date_of_travel}|</strong></td>
                                 <td class='box-7'>{$date_of_travel}</td>
                             </tr>";
 }
@@ -202,14 +202,16 @@ if ($requirements != '') {
                             </tr>";
 } else {
 
-    $enquiryMessage = json_decode($enquiry_message, true);
+    if ($enquiry_source != 'facebook') {
+        $enquiryMessage = json_decode($enquiry_message, true);
 
-    if (is_array($enquiryMessage)) {
-        foreach ($enquiryMessage as $key => $value) {
-            echo "<tr>
+        if (is_array($enquiryMessage)) {
+            foreach ($enquiryMessage as $key => $value) {
+                echo "<tr>
                                         <td class='box-3'><strong>" . str_replace('_', ' ', ucwords($key)) . "</strong></td>
                                         <td class='box-7'>{$value}</td>
                                     </tr>";
+            }
         }
     }
 }
@@ -333,7 +335,7 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                     $icon = 'story-book';
                     $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
                     if ($enquiry_notes_meta_value != '') {
-                        $commentBox = "<div class='comment'><p>{$upayMsg}</p>";
+                        $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
                         $upayImages = (json_decode($upayImages, true));
                         if (!empty($upayImages)) {
                             $commentBox .= "<div class='imagesList' >";
@@ -771,7 +773,7 @@ if (SITE_APP == 'astro_client') {?>
                                     <h4 class="heading">Add new upay</h4>
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="upayText" id="upayComment"
+                                    <textarea type="text" name="upayText" class="editor upayEditor" id="upayComment"
                                         placeholder="Add your comment"></textarea>
                                     <label class="form-lable" id="commentLable">Any comment</label>
                                 </div>

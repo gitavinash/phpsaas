@@ -6,11 +6,11 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 $siteAccessMeta = '';
 if (isset($_COOKIE['user_meta'])) {
     if ($_COOKIE['user_meta'] != '') {
-        $siteAccessMeta = (json_decode(base64_decode($_COOKIE['user_meta']), TRUE));
+        $siteAccessMeta = (json_decode(base64_decode($_COOKIE['user_meta']), true));
     }
 }
 
-$loggedInUserMeta = (isset($_COOKIE['user_meta']) ? json_decode(base64_decode($_COOKIE['user_meta']), TRUE) : '');
+$loggedInUserMeta = (isset($_COOKIE['user_meta']) ? json_decode(base64_decode($_COOKIE['user_meta']), true) : '');
 
 if (isset($daterange)) {
     $dates = explode(" - ", $daterange);
@@ -32,10 +32,10 @@ if (isset($daterange)) {
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
-    if ($postType == '') {
-        echo "<meta http-equiv='refresh' content='300'>";
-    }
-    ?>
+if ($postType == '') {
+    echo "<meta http-equiv='refresh' content='300'>";
+}
+?>
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title><?php echo str_replace('_', ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
     <!-- <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css"> -->
@@ -50,12 +50,13 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/responsive.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>image-uploader/css/image-uploader.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
     <?php
-    if (SITE_VERSION == 'mobile') {
-        echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_v2_mobile.min.css'>";
-    }
-    ?>
+if (SITE_VERSION == 'mobile') {
+    echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_v2_mobile.min.css'>";
+}
+?>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
         media="screen">
     <script type="text/javascript">
@@ -82,16 +83,16 @@ if (isset($daterange)) {
     <!-- <div class="pageLoader">
         <?php
 
-        if (SITE_ID == 50) { ?>
+if (SITE_ID == 50) {?>
         <img src="/app/hms/visitor/mgihotels/desktop/assets/images/logo.png" alt="<?php echo ucwords(SITE_APP) ?> logo">
         <?php
-        } else { ?>
+} else {?>
         <img src="<?php echo ((SITE_APP_IMAGE != '') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg') ?>"
             alt="<?php echo ucwords(SITE_APP) ?> logo">
         <?php
-        }
+}
 
-        ?>
+?>
     </div> -->
     <header>
         <div class="right-side">
@@ -143,14 +144,14 @@ if (isset($daterange)) {
                             class="fi-rr-home"></i> Dashboard</a></li>
 
                 <?php
-                $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
+$appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
 
-                if (file_exists($appAsideFile)) {
-                    require_once $appAsideFile;
-                } else {
-                    require_once $appDashboardDirectory . 'aside/default.php';
-                }
-                ?>
+if (file_exists($appAsideFile)) {
+    require_once $appAsideFile;
+} else {
+    require_once $appDashboardDirectory . 'aside/default.php';
+}
+?>
 
                 <li class="header-section-name">
                     <p>Setting<span>Manage application.</span></p>
@@ -161,10 +162,10 @@ if (isset($daterange)) {
                     <div class="side-menu">
                         <ul>
                             <?php
-                            if ($site_access_type == 'administrator') { ?>
+if ($site_access_type == 'administrator') {?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
-                            <?php } ?>
+                            <?php }?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
@@ -174,10 +175,10 @@ if (isset($daterange)) {
 
                             <?php
 
-                            if ($site_access_type == 'administrator') { ?>
+if ($site_access_type == 'administrator') {?>
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
-                            <?php } ?>
+                            <?php }?>
                             <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
@@ -186,7 +187,7 @@ if (isset($daterange)) {
 
                 <?php
 
-                if ($site_access_type == 'administrator') { ?>
+if ($site_access_type == 'administrator') {?>
 
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/user/') !== false) ? 'class="active"' : '') ?>>
@@ -206,7 +207,7 @@ if (isset($daterange)) {
                 </li>
 
                 <?php }
-                ?>
+?>
 
                 <li class="appVersion">
                     <p>App version : <?php echo ALEYA_APP_VERSION ?></p>
@@ -222,26 +223,26 @@ if (isset($daterange)) {
 
             <?php
 
-            if (ADMIN_BASE_URL != '/') { ?>
+if (ADMIN_BASE_URL != '/') {?>
 
             <div class="i-m-here-pagination">
                 <ul>
                     <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
                     <?php
 
-                        $paginationURL = '';
+    $paginationURL = '';
 
-                        for ($i = 0; $i < sizeof($urlStructure); $i++) {
+    for ($i = 0; $i < sizeof($urlStructure); $i++) {
 
-                            $paginationURL = $paginationURL . '/' . strtolower($urlStructure[$i]);
-                            echo "<li><a href='{$paginationURL}/'>" . ucwords($urlStructure[$i]) . "</a></li>";
-                        }
+        $paginationURL = $paginationURL . '/' . strtolower($urlStructure[$i]);
+        echo "<li><a href='{$paginationURL}/'>" . ucwords($urlStructure[$i]) . "</a></li>";
+    }
 
-                        ?>
+    ?>
                 </ul>
             </div>
 
             <?php
-            }
+}
 
-            ?>
+?>
