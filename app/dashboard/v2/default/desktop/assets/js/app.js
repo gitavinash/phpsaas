@@ -4,6 +4,20 @@ function closePopup(btn) {
   document.querySelector(".popUp").style.display = "none";
 }
 
+
+  /** SweetAlert Pop Up Box */
+
+  function popUpMessage(msgPostion, msgTxt, msgType) {
+    Swal.fire({
+      position: msgPostion,
+      type: msgType,
+      title: msgTxt,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
+
 function toggleDisplay(showBox, showEditBtn) {
   $(".openBtnBox").hide(); // Hide all
   console.log(`showBox`, showBox);
@@ -144,19 +158,7 @@ $(document).ready(function (e) {
   function isNumeric(input) {
     return /^\d+$/.test(input);
   }
-
-  /** SweetAlert Pop Up Box */
-
-  function popUpMessage(msgPostion, msgTxt, msgType) {
-    Swal.fire({
-      position: msgPostion,
-      type: msgType,
-      title: msgTxt,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
-
+  
   function createPieChart(objectID, chartData) {
     // Extract labels and counts
     const labels = chartData.labels;
