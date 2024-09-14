@@ -667,6 +667,7 @@ if ($enquiry_status != 5) {
                                                 <select class="selectJS form-control" id="paymentRecordTitle"
                                                     name="payment_method">
                                                     <option value=""></option>
+                                                    <?php echo ((SITE_APP == 'astro_client') ? "<option value='free'>Free</option>" : '') ?>
                                                     <option value="cash">Cash</option>
                                                     <option value="upi">UPI</option>
                                                     <option value="net_banking">Net banking</option>
