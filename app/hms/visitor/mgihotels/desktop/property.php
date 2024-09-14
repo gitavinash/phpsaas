@@ -61,7 +61,7 @@ require_once 'header.php';
                                             <div class="hotel_book__now">
                                                 <div class="hotel_price">
                                                     <?php
-if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
                                                     <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
                                                     <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
                                                     <?php
@@ -83,7 +83,7 @@ if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator')
                                         <div class="hotel_details">
                                             <div class="hotel_price">
                                                 <?php
-if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
                                                 <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
                                                 <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
                                                 <?php

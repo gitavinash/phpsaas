@@ -322,7 +322,7 @@ if (mysqli_num_rows($checkProperty) != 0) {
                                             </div>
                                         </div> -->
                                         <?php
-if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
                                             <div class="price">
                                                 <h3>₹ <?php echo $property_starting_price ?> <span>/night</span></h3>
                                                 <del>₹ <?php echo $property_starting_mrp ?></del>

@@ -222,7 +222,7 @@ if ($checkProperty = mysqli_query($connection, "SELECT property_title, property_
                         </p> -->
                             <div class="d-flex align-items-center justify-content-between py-2">
                                 <?php
-if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
                                     <h4 class="font_size_22 ">₹ <?php echo $property_starting_price ?> <span
                                     class="font_size_18 opacity-50">per night</span></h4>
                                 <?php

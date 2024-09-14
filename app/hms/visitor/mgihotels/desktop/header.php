@@ -1,3 +1,7 @@
+<?php
+
+$user_type = ((isset($_COOKIE['user_type'])) ? strtolower(base64_decode($_COOKIE['user_type'])) : '');
+?>
 <!doctype html>
 <html lang="en">
 
@@ -21,7 +25,7 @@
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
-    <?php require_once DEFAULT_META ?>
+    <?php require_once DEFAULT_META?>
 
 </head>
 
@@ -37,8 +41,18 @@
                     <a href="" class="ps-2">reservations@mgihotels.com</a>
                 </div>
                 <div class="font_size_18">
-                    <a href="/register/?redirect_url=/kyc/&registration_type=travel_agent">Agent Registration</a> |
-                    <a href="/login/">Member login</a>
+                    <?php
+
+if ($user_type != '') {?>
+                    <a href="/dashboard/">Manage Account</a>
+    <?php
+} else {?>
+        <a href="/register/?redirect_url=/kyc/&registration_type=travel_agent">Agent Registration</a> |
+        <a href="/login/">Member login</a>
+    <?php
+}
+
+?>
                 </div>
             </div>
         </div>
