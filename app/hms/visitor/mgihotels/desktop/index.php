@@ -1,4 +1,4 @@
-<?php require_once 'header.php'; ?>
+<?php require_once 'header.php';?>
 <main>
     <section class="hero_img horizontal_padding ">
         <div class="container">
@@ -13,7 +13,7 @@
             <form action="/redirect/" class="searchEngine" method="get">
                 <?php
 
-                if (SITE_VERSION == 'desktop') { ?>
+if (SITE_VERSION == 'desktop') {?>
 
 
                 <div class="row where_section p-0 py-2 d-flex align-items-center text-black mt-3 ">
@@ -50,9 +50,9 @@
                 </div>
 
                 <?php
-                }
+}
 
-                if (SITE_VERSION == 'mobile') { ?>
+if (SITE_VERSION == 'mobile') {?>
 
                 <div class="row where_section_mobile m-auto py-4 mt-5">
                     <div class="col-12">
@@ -87,9 +87,9 @@
                     </div>
                 </div>
                 <?php
-                }
+}
 
-                ?>
+?>
 
             </form>
         </div>
@@ -203,10 +203,10 @@
             <div class="row offer_slider overflow-hidden">
 
                 <?php
-                if ($checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, property_starting_mrp, property_starting_price, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
-                    if (mysqli_num_rows($checkProperty) != 0) {
-                        while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
-                            extract($hotelDetails); ?>
+if ($checkProperty = mysqli_query($connection, "SELECT property_title, property_thumbnail, property_type, property_city, property_starting_mrp, property_starting_price, link_url FROM " . TABLE_PREFIX . "property INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=property_id WHERE property_status=1 AND link_type='property' AND property_site_id IN (" . SITE_ID . ", 55) ORDER BY property_time DESC LIMIT 0,10")) {
+    if (mysqli_num_rows($checkProperty) != 0) {
+        while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
+            extract($hotelDetails);?>
 
 
                 <div class="col-12 col-md-6 col-lg-3">
@@ -221,8 +221,13 @@
                             15–20 Jan
                         </p> -->
                             <div class="d-flex align-items-center justify-content-between py-2">
-                                <!-- <h4 class="font_size_22 ">₹ <?php echo $property_starting_price ?> <span
-                                        class="font_size_18 opacity-50">per night</span></h4> -->
+                                <?php
+if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+                                    <h4 class="font_size_22 ">₹ <?php echo $property_starting_price ?> <span
+                                    class="font_size_18 opacity-50">per night</span></h4>
+                                <?php
+}
+            ?>
                                 <!-- <div>
                                 <i class='bx bxs-star font_size_18 orange'></i> <span>4.85</span>
                             </div> -->
@@ -236,14 +241,14 @@
                     </div>
                 </div>
                 <?php
-                        }
-                    }
-                } else {
-                    echo "Something went wrong";
-                    exit();
-                }
+}
+    }
+} else {
+    echo "Something went wrong";
+    exit();
+}
 
-                ?>
+?>
 
                 n
             </div>

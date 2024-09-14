@@ -60,8 +60,13 @@ require_once 'header.php';
                                             </div>
                                             <div class="hotel_book__now">
                                                 <div class="hotel_price">
-                                                    <!-- <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3> -->
-                                                    <!-- <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p> -->
+                                                    <?php
+if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+                                                    <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
+                                                    <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
+                                                    <?php
+}
+?>
                                                 </div>
                                                 <div class="book_now hotel_book">
                                                     <button class="global_btn">book this now</button>
@@ -77,8 +82,13 @@ require_once 'header.php';
                                         </div>
                                         <div class="hotel_details">
                                             <div class="hotel_price">
-                                                <!-- <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3> -->
-                                                <!-- <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p> -->
+                                                <?php
+if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+                                                <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
+                                                <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
+                                                <?php
+}
+?>
                                             </div>
                                             <div class="book_now hotel_book">
                                                 <button class="global_btn" data-bs-toggle="modal"
@@ -133,10 +143,10 @@ require_once 'header.php';
                             <div class="rooms_container">
                                 <?php
 
-                                if ($checkRooms = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='{$property_id}' AND room_status=1 AND room_site_id=" . SITE_ID)) {
-                                    if (mysqli_num_rows($checkRooms) != 0) {
-                                        while ($roomData = mysqli_fetch_assoc($checkRooms)) {
-                                            extract($roomData); ?>
+if ($checkRooms = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='{$property_id}' AND room_status=1 AND room_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($checkRooms) != 0) {
+        while ($roomData = mysqli_fetch_assoc($checkRooms)) {
+            extract($roomData);?>
                                 <div class="room_box">
                                     <div class="room_box__left">
                                         <div class="room_img">
@@ -166,11 +176,11 @@ require_once 'header.php';
                                     </div>
                                 </div>
                                 <?php
-                                        }
-                                    }
-                                }
+}
+    }
+}
 
-                                ?>
+?>
                             </div>
                         </div>
                     </div>

@@ -28,7 +28,7 @@ require_once 'header.php';
             <form action="/redirect/" class="searchEngine" method="get">
                 <?php
 
-                if (SITE_VERSION == 'desktop') { ?>
+if (SITE_VERSION == 'desktop') {?>
 
                 <div class="row where_section p-0 py-2 d-flex align-items-center text-black mt-3 ">
                     <div class="col-6 col-md-3 ps-5">
@@ -64,9 +64,9 @@ require_once 'header.php';
                 </div>
 
                 <?php
-                }
+}
 
-                if (SITE_VERSION == 'mobile') { ?>
+if (SITE_VERSION == 'mobile') {?>
 
                 <div class="row where_section_mobile m-auto py-4 mt-5">
                     <div class="col-12">
@@ -101,9 +101,9 @@ require_once 'header.php';
                     </div>
                 </div>
                 <?php
-                }
+}
 
-                ?>
+?>
 
             </form>
         </div>
@@ -284,9 +284,9 @@ require_once 'header.php';
                         <div class="row">
                             <?php
 
-                            if (mysqli_num_rows($checkProperty) != 0) {
-                                while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
-                                    extract($hotelDetails); ?>
+if (mysqli_num_rows($checkProperty) != 0) {
+    while ($hotelDetails = mysqli_fetch_assoc($checkProperty)) {
+        extract($hotelDetails);?>
                             <div class="col-md-4 col-12">
                                 <a href="<?php echo $link_url ?>" target="_blank" title="<?php echo $property_title ?>">
                                     <div class="listing_card">
@@ -321,10 +321,15 @@ require_once 'header.php';
                                                 <a href="#">+ more</a>
                                             </div>
                                         </div> -->
-                                            <!-- <div class="price">
+                                        <?php
+if ($site_access_type == 'travel_agent' || $site_access_type == 'administrator') {?>
+                                            <div class="price">
                                                 <h3>₹ <?php echo $property_starting_price ?> <span>/night</span></h3>
                                                 <del>₹ <?php echo $property_starting_mrp ?></del>
-                                            </div> -->
+                                            </div>
+                                        <?php
+}
+        ?>
                                             <div class="book_now">
                                                 <a href="<?php echo $link_url ?>" target="_blank"
                                                     title="<?php echo $property_title ?>" class="global_btn">Book
@@ -335,12 +340,12 @@ require_once 'header.php';
                             </div>
                         </div>
                         <?php
-                                }
-                            } else {
-                                echo "<div class='not-found'><h3>No property found</h3></div>";
-                            }
+}
+} else {
+    echo "<div class='not-found'><h3>No property found</h3></div>";
+}
 
-                ?>
+?>
                     </div>
                 </div>
             </div>
