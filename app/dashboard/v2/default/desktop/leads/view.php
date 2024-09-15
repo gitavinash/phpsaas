@@ -341,7 +341,24 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                             $commentBox .= "<div class='imagesList' >";
                             $upayImages = json_decode($upayImages, true);
                             for ($i = 0; $i < sizeof($upayImages); $i++) {
-                                $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$upayImages[$i]['path']}' ></a>";
+                                $fileExtension = strtolower(pathinfo($upayImages[$i]['path'], PATHINFO_EXTENSION));
+                                switch ($fileExtension) {
+                                    case 'pdf':
+                                        $featureThumbnail = "/upload/others/docs/pdf.png";
+                                        break;
+                                    case 'doc':
+                                    case 'docx':
+                                        $featureThumbnail = "/upload/others/docs/doc.png";
+                                        break;
+                                    case 'xls':
+                                    case 'xlsx':
+                                        $featureThumbnail = "/upload/others/docs/xls.png";
+                                        break;
+                                    default:
+                                        $featureThumbnail = $upayImages[$i]['path'] . '_' . $fileExtension;
+                                        break;
+                                }
+                                $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
                             }
                             $commentBox .= "</div>";
                         }
