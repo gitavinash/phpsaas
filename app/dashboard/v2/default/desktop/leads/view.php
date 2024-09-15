@@ -355,7 +355,7 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                                         $featureThumbnail = "/upload/others/docs/xls.png";
                                         break;
                                     default:
-                                        $featureThumbnail = $upayImages[$i]['path'] . '_' . $fileExtension;
+                                        $featureThumbnail = $upayImages[$i]['path'];
                                         break;
                                 }
                                 $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
