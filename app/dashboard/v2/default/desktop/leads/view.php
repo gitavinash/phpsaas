@@ -414,7 +414,7 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                                                         <p><strong>Payment method:</strong> {$paymentMethod}</p>
                                                         <p><strong>Date:</strong> {$paymentDate}</p>
                                                         <p><strong>Reference number:</strong> {$paymentReference}</p>
-                                                        <p><strong>Comment:</strong> {$paymentMsg}</p>
+                                                        <p><strong>Comment:</strong> " . str_replace('\r\n', '<br />', $paymentMsg) . "</p>
                                                     ";
                         $paymentImages = (json_decode($paymentImages, true));
                         $paymentImages = (json_decode($paymentImages, true));
