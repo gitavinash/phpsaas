@@ -36,10 +36,10 @@
         <select class="selectJS form-control" name="time_of_birth_in_hour" id="timeOfBirthInHour" required>
             <option value="">Select Time of Birth ( Hour )</option>
             <?php
-                for($i=0; $i<=23; $i++) {
-                    echo "<option value='{$i}' ".(($time_of_birth_in_hour==$i) ? 'selected' : '')." >{$i}</option>";
-                }
-            ?>
+for ($i = 0; $i <= 23; $i++) {
+    echo "<option value='{$i}' " . (($time_of_birth_in_hour == $i) ? 'selected' : '') . " >{$i}</option>";
+}
+?>
         </select>
     </td>
 </tr>
@@ -47,12 +47,12 @@
     <td class="box-3"><strong>Time of birth in minute<sup>*</sup></strong></td>
     <td class="box-7">
         <select class="selectJS form-control" name="time_of_birth_in_minute" id="timeOfBirthInMinute" required>
-            <option value="">Select Time of Birth ( Hour )</option>
+            <option value="">Select Time of Birth ( Minutes )</option>
             <?php
-                for($i=0; $i<=23; $i++) {
-                    echo "<option value='{$i}' ".(($time_of_birth_in_minute==$i) ? 'selected' : '')." >{$i}</option>";
-                }
-            ?>
+for ($i = 0; $i <= 59; $i++) {
+    echo "<option value='{$i}' " . (($time_of_birth_in_minute == $i) ? 'selected' : '') . " >{$i}</option>";
+}
+?>
         </select>
     </td>
 </tr>
