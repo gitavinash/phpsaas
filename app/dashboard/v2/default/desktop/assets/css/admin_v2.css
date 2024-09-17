@@ -3185,3 +3185,7 @@ strong.stockInfoList {
   border-color: #f1f1f1 !important;
   margin-left: 10px;
 }
+
+.ui-menu .ui-menu-item-wrapper {
+  padding: 10px;
+}

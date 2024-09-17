@@ -14,6 +14,7 @@
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php'?>
+				<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 				<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
 				<script src='<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js' type='text/javascript'></script>
 				<script src='<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.min.js' type='text/javascript'></script>

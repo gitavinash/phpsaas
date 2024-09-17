@@ -25,7 +25,7 @@
             <label class="form-lable" id="Label">Date of Birth<sup>*</sup></label>
         </div>
         <div class="form-group">
-            <input id="placeOfBirth" name="place_of_birth" type="text" required />
+            <input id="placeOfBirth" name="place_of_birth" class="indianCitySuggestion" type="text" required />
             <label class="form-lable" id="Label">Place of Birth<sup>*</sup></label>
         </div>
         <div class="box-5">

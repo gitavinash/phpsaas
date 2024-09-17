@@ -28,7 +28,7 @@
 </tr>
 <tr>
     <td class="box-3"><strong>Place of Birth<sup>*</sup></strong></td>
-    <td class="box-7"><input id="placeOfBirth" name="place_of_birth" value="<?php echo $place_of_birth ?>" type="text" required /></td>
+    <td class="box-7"><input id="placeOfBirth" name="place_of_birth" class="indianCitySuggestion" value="<?php echo $place_of_birth ?>" type="text" required /></td>
 </tr>
 <tr>
     <td class="box-3"><strong>Time of birth in hour<sup>*</sup></strong></td>
