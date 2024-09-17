@@ -17,31 +17,31 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
     </thead>
     <?php
 
-    if ($site_access_type != 'administrator') {
-        $userFilter = 'AND block_user_id="' . USER_ID . '"';
-    } else {
-        $userFilter = '';
-    }
+if ($site_access_type != 'administrator' && $site_access_type != 'both') {
+    $userFilter = 'AND block_user_id="' . USER_ID . '"';
+} else {
+    $userFilter = '';
+}
 
-    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_status=1 {$userFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_code ASC, block_title ASC")) {
-        echo "<tbody>";
-        if (mysqli_num_rows($inventoryList) > 0) {
-            while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
-                extract($inventoryData);
+if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_status=1 {$userFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_code ASC, block_title ASC")) {
+    echo "<tbody>";
+    if (mysqli_num_rows($inventoryList) > 0) {
+        while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
+            extract($inventoryData);
 
-                $block_gross_size = str_replace(',', '', number_format($block_gross_size, 2));
-                $block_damage_size = str_replace(',', '', number_format($block_damage_size, 2));
-                $block_net_size = str_replace(',', '', number_format($block_net_size, 2));
+            $block_gross_size = str_replace(',', '', number_format($block_gross_size, 2));
+            $block_damage_size = str_replace(',', '', number_format($block_damage_size, 2));
+            $block_net_size = str_replace(',', '', number_format($block_net_size, 2));
 
-                echo "<tr>
+            echo "<tr>
                                 <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong> - ' : '') . "{$block_title}</td>
                                 <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
                                 <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
                                 <td>{$block_available}</td>
-                                <td>" . (($block_gross_size == '') ? '0 '  : $block_gross_size) . ' ' . $block_size_dimension . "</td>
-                                <td>" . (($block_damage_size == '') ? '0 '  : $block_damage_size) . ' ' . $block_size_dimension . "</td>
-                                <td>" . (($block_net_size == '') ? '0 '  : $block_net_size) . ' ' . $block_size_dimension . "</td>
+                                <td>" . (($block_gross_size == '') ? '0 ' : $block_gross_size) . ' ' . $block_size_dimension . "</td>
+                                <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $block_size_dimension . "</td>
+                                <td>" . (($block_net_size == '') ? '0 ' : $block_net_size) . ' ' . $block_size_dimension . "</td>
                                 <td>
                                 <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block'><i class='fi fi-rr-edit bgLightGreen'></i></a>
                                 <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code'><i class='fi fi-rr-qr-scan bgLightGreen'></i></a>
@@ -51,10 +51,10 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                                 <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                 </td>
                             </tr>";
-            }
         }
-        echo "</tbody>";
     }
+    echo "</tbody>";
+}
 
-    ?>
+?>
 </table>
