@@ -1,6 +1,6 @@
 <?php
 
-if ($site_access_type == 'administrator') { ?>
+if ($site_access_type == 'administrator') {?>
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/report/') !== false) ? 'class="active"' : '') ?>>
     <a href="report/"><i class="fi fi-rr-chart-histogram"></i> Reports</a>
@@ -75,7 +75,7 @@ if ($site_access_type == 'administrator') { ?>
         </ul>
     </div>
 </li>
-<!-- 
+<!--
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/vendors/dmc/') !== false) ? 'class="active"' : '') ?>>
                     <a href="vendors/dmc/"><i class="fi fi-rr-shop"></i> DMC Vendor</a>
                     <div class="side-menu">
@@ -92,7 +92,7 @@ if ($site_access_type == 'administrator') { ?>
                     </div>
                 </li> -->
 
-<!-- <li class="header-section-name">
+<li class="header-section-name">
             <p>Packages<span>Manage all tour packages.</span></p>
         </li>
 
@@ -124,25 +124,25 @@ if ($site_access_type == 'administrator') { ?>
             <a href="packages/international/"><i class="fi fi-rr-earth-asia"></i> International packages</a>
             <div class="side-menu">
                 <ul>
-                    <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                    <li><a href="packages/international/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
                     </li>
-                    <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                    <li><a href="packages/international/add/"><i class="fi fi-rr-add"></i> Add new package</a>
                     </li>
-                    <li><a href="packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
+                    <li><a href="packages/international/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
                     </li>
                 </ul>
             </div>
             <div class="bottom-menu">
                 <ul>
-                    <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+                    <li><a href="packages/international/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
                     </li>
-                    <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+                    <li><a href="packages/international/add/"><i class="fi fi-rr-add"></i> Add new package</a>
                     </li>
-                    <li><a href="packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
+                    <li><a href="packages/international/location/"><i class="fi fi-rr-marker"></i> Destinations</a>
                     </li>
                 </ul>
             </div>
-        </li> -->
+        </li>
 <?php
 }
 
@@ -151,7 +151,7 @@ if ($site_access_type == 'administrator') { ?>
 
 <?php
 
-if ($site_access_type == 'administrator') { ?>
+if ($site_access_type == 'administrator') {?>
 
 <!-- <li class="header-section-name">
                     <p>Clients<span>Manage clients.</span></p>
@@ -183,7 +183,6 @@ if ($site_access_type == 'administrator') { ?>
 
 <?php
 }
-
 
 ?>
 

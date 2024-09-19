@@ -27,7 +27,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="packages/international/add/">
+        <a href="packages/international/location/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-marker"></i>

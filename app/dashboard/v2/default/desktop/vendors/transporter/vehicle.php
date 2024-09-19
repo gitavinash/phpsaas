@@ -2,7 +2,6 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-
 if ($vehicleData = mysqli_query($connection, "SELECT vehicle_id, vehicle_title, vehicle_description, vehicle_thumbnail, vehicle_is_deletable, vehicle_type FROM " . TABLE_PREFIX . "vehicles")) {
     $vehicleList = array();
     if (mysqli_num_rows($vehicleData) != 0) {
@@ -23,13 +22,13 @@ $typeDropDown = '
 <option value="mpv">MPV</option>
 <option value="suv">SUV</option>
 <option value="bus" selected>Bus</option>
-<option value="Traveller">Traveller</option>
-<option value="Micro">Micro</option>
-<option value="Hatchback">Hatchback</option>
-<option value="Sedan">Sedan</option>
-<option value="Light commercial vehicle">Light Commercial Vehicle</option>
-<option value="Flight">Flight</option>
-<option value="Rail">Rail</option>
+<option value="traveller">Traveller</option>
+<option value="micro">Micro</option>
+<option value="hatchback">Hatchback</option>
+<option value="sedan">Sedan</option>
+<option value="light_commercial_vehicle">Light Commercial Vehicle</option>
+<option value="flight">Flight</option>
+<option value="rail">Rail</option>
 ';
 
 ?>
@@ -41,20 +40,20 @@ $typeDropDown = '
             <section>
                 <?php
 
-                if (count($vehicleList) > 0) {
-                    for ($i = 0; $i < sizeof($vehicleList); $i++) {
-                        echo "
+if (count($vehicleList) > 0) {
+    for ($i = 0; $i < sizeof($vehicleList); $i++) {
+        echo "
                     <div class='featureList editVehicle' id='" . $vehicleList[$i]['vehicle_id'] . "' data_name='" . $vehicleList[$i]['vehicle_title'] . "' data_image='" . (($vehicleList[$i]['vehicle_thumbnail'] != '') ?
-                            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='" . $vehicleList[$i]['vehicle_description'] . "' data_type='" . $vehicleList[$i]['vehicle_type'] . "' >
+            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='" . $vehicleList[$i]['vehicle_description'] . "' data_type='" . $vehicleList[$i]['vehicle_type'] . "' >
                         <img src='" . (($vehicleList[$i]['vehicle_thumbnail'] != '') ?
-                            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
+            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$vehicleList[$i]['vehicle_title']}</p>
                     </div>
                     ";
-                    }
-                }
+    }
+}
 
-                ?>
+?>
                 <div class="shortcut">
                     <a href="#" class="addNewVehicle"><i class="fi fi-rr-plus"></i></a>
                 </div>

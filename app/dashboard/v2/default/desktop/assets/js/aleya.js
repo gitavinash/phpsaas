@@ -47,7 +47,7 @@ $("#addRoomType").on("click", function (e) {
           error.responseJSON.msg,
           error.responseJSON.status
         );
-        $("#updateAmenities").show();
+        $("#updateLocations").show();
       },
     });
   } else {
@@ -81,7 +81,7 @@ $("#updateRoomType").on("click", function (e) {
           error.responseJSON.msg,
           error.responseJSON.status
         );
-        $("#updateAmenities").show();
+        $("#updateLocations").show();
       },
     });
   } else {
@@ -529,4 +529,218 @@ $("#addNewRoom").click(function (e) {
     popUpMessage("center", msg, "warning");
     $("#addNewRoom").show();
   }
+});
+
+$(document).ready(function (e) {
+  // Amenities
+
+  $(".addNewAmenities").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    document.querySelector(".amenitiesBox").style.display = "flex";
+    $(".amenitiesBox").show();
+    $("#type").val("basic_facilities").change();
+  });
+
+  $(".editAmenities").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    updateAmenitiesId = $(this).attr("id");
+    amenitiesName = $(this).attr("data_name");
+    amenitiesDescription = $(this).attr("data_desc");
+    amenitiesIcon = $(this).attr("data_image");
+    amenitiesType = $(this).attr("data_type");
+    $("#updateAmenities").show();
+    $("#editName").val(amenitiesName);
+    $("#editDescription").val(amenitiesDescription);
+    if (amenitiesType != "") {
+      $("#editType").val(amenitiesType).change();
+    } else {
+      $("#editType").val("basic_facilities").change();
+    }
+    $("#amenitiesIcon").attr("src", amenitiesIcon);
+    document.querySelector(".editAmenitiesBox").style.display = "flex";
+    $(".editAmenitiesBox").show();
+  });
+
+  // Amenities
+  $("#addAmenities").on("click", function (e) {
+    e.preventDefault();
+    $("#addAmenities").hide();
+    var title = $("#name").val();
+    if (title != "") {
+      var data = new FormData(document.getElementById("addAmenitiesForm"));
+
+      $.ajax({
+        url: "/api/amenities/publish/",
+        type: "POST",
+        data: data,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        encrypt: "multipart/form-data",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        },
+        error: function (error, response) {
+          popUpMessage(
+            "center",
+            error.responseJSON.msg,
+            error.responseJSON.status
+          );
+          $("#addAmenities").show();
+        },
+      });
+    } else {
+      popUpMessage("center", "Kindly enter amenities name", "warning");
+      $("#addAmenities").show();
+    }
+  });
+
+  $("#updateAmenities").on("click", function (e) {
+    e.preventDefault();
+
+    $("#updateAmenities").hide();
+    var title = $("#editName").val();
+    if (title != "") {
+      var data = new FormData(document.getElementById("updateAmenitiesForm"));
+      data.append("id", updateAmenitiesId);
+
+      $.ajax({
+        url: "/api/amenities/update/",
+        type: "POST",
+        data: data,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        encrypt: "multipart/form-data",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        },
+        error: function (error, response) {
+          popUpMessage(
+            "center",
+            error.responseJSON.msg,
+            error.responseJSON.status
+          );
+          $("#updateAmenities").show();
+        },
+      });
+    } else {
+      popUpMessage("center", "Kindly enter amenities name", "warning");
+      $("#updateAmenities").show();
+    }
+  });
+
+  // Package locations
+
+  $(".addNewLocations").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    document.querySelector(".locationsBox").style.display = "flex";
+    $(".locationsBox").show();
+    $("#type").val("basic_facilities").change();
+  });
+
+  $(".editLocations").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    updateLocationsId = $(this).attr("id");
+    locationsName = $(this).attr("data_name");
+    locationsDescription = $(this).attr("data_desc");
+    locationsIcon = $(this).attr("data_image");
+    locationsType = $(this).attr("data_type");
+    $("#updateLocations").show();
+    $("#editName").val(locationsName);
+    $("#editDescription").val(locationsDescription);
+    if (locationsType != "") {
+      $("#editType").val(locationsType).change();
+    } else {
+      $("#editType").val("basic_facilities").change();
+    }
+    $("#locationsIcon").attr("src", locationsIcon);
+    document.querySelector(".editLocationsBox").style.display = "flex";
+    $(".editLocationsBox").show();
+  });
+
+  // Locations
+  $("#addLocations").on("click", function (e) {
+    e.preventDefault();
+    $("#addLocations").hide();
+    var title = $("#name").val();
+    if (title != "") {
+      var data = new FormData(document.getElementById("addLocationsForm"));
+
+      $.ajax({
+        url: "/api/locations/publish/",
+        type: "POST",
+        data: data,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        encrypt: "multipart/form-data",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        },
+        error: function (error, response) {
+          popUpMessage(
+            "center",
+            error.responseJSON.msg,
+            error.responseJSON.status
+          );
+          $("#addLocations").show();
+        },
+      });
+    } else {
+      popUpMessage("center", "Kindly enter locations name", "warning");
+      $("#addLocations").show();
+    }
+  });
+
+  $("#updateLocations").on("click", function (e) {
+    e.preventDefault();
+
+    $("#updateLocations").hide();
+    var title = $("#editName").val();
+    if (title != "") {
+      var data = new FormData(document.getElementById("updateLocationsForm"));
+      data.append("id", updateLocationsId);
+
+      $.ajax({
+        url: "/api/locations/update/",
+        type: "POST",
+        data: data,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        encrypt: "multipart/form-data",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        },
+        error: function (error, response) {
+          popUpMessage(
+            "center",
+            error.responseJSON.msg,
+            error.responseJSON.status
+          );
+          $("#updateLocations").show();
+        },
+      });
+    } else {
+      popUpMessage("center", "Kindly enter locations name", "warning");
+      $("#updateLocations").show();
+    }
+  });
 });
