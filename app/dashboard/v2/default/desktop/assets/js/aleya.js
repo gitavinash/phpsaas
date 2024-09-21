@@ -743,4 +743,73 @@ $(document).ready(function (e) {
       $("#updateLocations").show();
     }
   });
+
+  // Generate domestic tour package
+
+  $("#addDomesticPackageBtn").click(function (e) {
+    e.preventDefault();
+    var packageName = $("#name").val().trim();
+    var destinationCity = $("#destination").val().trim();
+    var startingCity = $("#startingCity").val().trim();
+    var duration = $("#duration").val().trim();
+    var travelStyle = $("#travelStyle").val().trim();
+    var outstationVehicle = $("#outstationVehicle").val().trim();
+    var localSighseeignVehicle = $("#localSighseeignVehicle").val().trim();
+
+    if (
+      packageName !== "" &&
+      destinationCity !== "" &&
+      startingCity !== "" &&
+      duration !== "" &&
+      travelStyle !== "" &&
+      outstationVehicle !== "" &&
+      localSighseeignVehicle !== ""
+    ) {
+      var packageName = encodeURIComponent(packageName);
+      var destinationCity = encodeURIComponent(destinationCity);
+      var startingCity = encodeURIComponent(startingCity);
+      var travelStyle = encodeURIComponent(travelStyle);
+      var duration = encodeURIComponent(duration);
+      var outstationVehicle = encodeURIComponent(outstationVehicle);
+      var localSighseeignVehicle = encodeURIComponent(localSighseeignVehicle);
+
+      var redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${destinationCity}&startingCity=${startingCity}&tripDuration=${duration}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
+
+      window.location.href = redirectUrl;
+    } else {
+      popUpMessage(
+        "center",
+        "All fields are required to generate itinerary",
+        "warning"
+      );
+    }
+  });
+
+  $("#createDomesticItineraryBtn").click(function (e) {
+    e.preventDefault();
+
+    // Create an object to hold days data
+    var days = [];
+    var otherFields = {}; // For other fields
+
+    // Collect Quill editor content and titles
+    $(".ql-editor").each(function (index) {
+      var editorContent = $(this).html();
+      var title = $('input[name="dayTitle[]"]').eq(index).val();
+
+      // Push an object for each day into the days array
+      days.push({
+        title: title, // Use index + 1 for the key
+        content: editorContent, // Content from the editor
+      });
+    });
+
+    // Collect other fields (assuming they are in input elements)
+    otherFields.someField1 = $('input[name="someField1"]').val(); // Change according to your input names
+    otherFields.someField2 = $('input[name="someField2"]').val(); // Change according to your input names
+    // Add more fields as needed
+
+    // Log the data to see what you're submitting
+    console.log({ day: days, otherFields: otherFields });
+  });
 });

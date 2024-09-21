@@ -1,19 +1,19 @@
 				</div>
 
 				<footer>
-				    <div class="credit">
-				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
-				                <a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
-				                    target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP_NAME)) ?><sup
-				                        class="trademark">TM</sup></a> | Made
-				                with <i class="fi-rr-heart"></i> in
-				                India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
-				                        Technologies</strong></a></p>
-				    </div>
+					<div class="credit">
+						<p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
+								<a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
+									target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP_NAME)) ?><sup
+										class="trademark">TM</sup></a> | Made
+								with <i class="fi-rr-heart"></i> in
+								India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
+										Technologies</strong></a></p>
+					</div>
 				</footer>
 				</main>
 
-				<?php require_once NOTIFICATION . 'index.php'?>
+				<?php require_once NOTIFICATION . 'index.php' ?>
 				<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 				<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
 				<script src='<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js' type='text/javascript'></script>
@@ -27,20 +27,42 @@
 				<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 				<script>
-				const quill = new Quill('.editor', {
-					theme: 'snow'
-				});
+					// Select all elements with the class 'editor'
+					const editors = document.querySelectorAll('.editor');
+
+					// Initialize an array to store Quill instances
+					const quillInstances = [];
+
+					// Loop through each editor element
+					editors.forEach((editor, index) => {
+						// Create a new Quill instance
+						const quill = new Quill(editor, {
+							theme: 'snow'
+						});
+
+						// Set the initial content
+						const hiddenTextarea = document.getElementById(`editor-${index}`);
+						quill.root.innerHTML = hiddenTextarea.value;
+
+						// Update the hidden input value whenever the content changes
+						quill.on('text-change', function() {
+							hiddenTextarea.value = quill.root.innerHTML;
+						});
+
+						// Store the Quill instance in the array
+						quillInstances.push(quill);
+					});
 				</script>
 				<?php
 
-if ($site_access_type == 'agent') {?>
-				<script>
-const tempId = '<?php echo base64_encode(USER_ID) ?>';
-				</script>
+				if ($site_access_type == 'agent') { ?>
+					<script>
+						const tempId = '<?php echo base64_encode(USER_ID) ?>';
+					</script>
 				<?php
-}
+				}
 
-?>
+				?>
 				<script src="<?php echo ADMIN_JS ?>app.min.js"></script>
 				<script src="<?php echo ADMIN_JS . SITE_APP ?>.min.js"></script>
 				</body>

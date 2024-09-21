@@ -1561,15 +1561,19 @@ section.form label {
   background: #fff;
 }
 
+sup {
+  color: #c60239;
+}
+
 section.form label sup {
-  color: #333;
+  color: #c60239;
   position: absolute;
   right: -5px;
   top: -3px;
 }
 
 section.form input:focus ~ label sup {
-  color: red;
+  color: #c60239;
 }
 
 section.form .btn {
@@ -2537,6 +2541,19 @@ section.form
   font-size: 48px;
 }
 
+.featureList p {
+  float: left;
+  width: 100%;
+  line-height: 21px;
+}
+
+.featureList p span {
+  float: left;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .addNewBtn {
   float: left;
   width: 100%;
@@ -3180,7 +3197,8 @@ strong.stockInfoList {
   border-color: #464646 !important;
 } */
 
-.ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+.ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
   background: #f1f1f1 !important;
   border-color: #f1f1f1 !important;
   margin-left: 10px;

@@ -1,4 +1,4 @@
-<h2 class="heading"><?php echo ucwords($postType) ?> tour package<span>Manage all international tour packages</span>
+<h2 class="heading">International tour package<span>Manage all international tour packages</span>
 </h2>
 <div class="main-menu-list">
     <div class="widget box-2-5">

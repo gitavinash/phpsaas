@@ -2,7 +2,7 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country FROM " . TABLE_PREFIX . "locations WHERE location_country!=101")) {
+if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country, country_name FROM " . TABLE_PREFIX . "locations INNER JOIN " . TABLE_PREFIX . "country ON location_country=country_id WHERE location_country!=101")) {
     $locationsList = array();
     if (mysqli_num_rows($locationsData) != 0) {
         while ($data = mysqli_fetch_assoc($locationsData)) {
@@ -51,7 +51,7 @@ if (count($locationsList) > 0) {
             $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$locationsList[$i]['location_description']}' data_type='{$locationsList[$i]['location_country']}' >
                         <img src='" . (($locationsList[$i]['location_thumbnail'] != '') ?
             $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
-                        <p>{$locationsList[$i]['location_title']}</p>
+                        <p>{$locationsList[$i]['location_title']}<span>{$locationsList[$i]['country_name']}</span></p>
                     </div>
                     ";
     }
@@ -93,7 +93,7 @@ if (count($locationsList) > 0) {
                                     <select class="selectJS form-control" name="country"
                                         id="type"><?php echo $countryDropDown ?></select>
                                 </div>
-                                <input type="hidden" name="state" value="">
+                                <input type="hidden" name="state" value="0">
                             </div>
                     </form>
                 </div>

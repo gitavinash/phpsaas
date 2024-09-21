@@ -1,4 +1,4 @@
-<h2 class="heading"><?php echo ucwords($postType) ?> tour package<span>Manage all domestic tour packages</span></h2>
+<h2 class="heading">Domestic tour package<span>Manage all domestic tour packages</span></h2>
 <div class="main-menu-list">
     <div class="widget box-2-5">
         <a href="packages/domestic/list/">

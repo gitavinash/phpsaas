@@ -2,7 +2,7 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country FROM " . TABLE_PREFIX . "locations WHERE location_country=101")) {
+if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country, state_name FROM " . TABLE_PREFIX . "locations INNER JOIN " . TABLE_PREFIX . "state ON location_state=state_id WHERE location_country=101")) {
     $locationsList = array();
     if (mysqli_num_rows($locationsData) != 0) {
         while ($data = mysqli_fetch_assoc($locationsData)) {
@@ -20,7 +20,7 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
     if ($stateData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
         if (mysqli_num_rows($stateData) != 0) {
             while ($stateInfo = mysqli_fetch_assoc($stateData)) {
-                $stateDropDown .= "<option value='" . str_replace(' ', '_', strtolower($stateInfo['state_name'])) . "'>{$stateInfo['state_name']}</option>";
+                $stateDropDown .= "<option value='" . str_replace(' ', '_', strtolower($stateInfo['state_id'])) . "'>{$stateInfo['state_name']}</option>";
             }
         } else {
             $stateDropDown .= "<option value='No data'>No Data</option>";
@@ -51,7 +51,7 @@ if (count($locationsList) > 0) {
             $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$locationsList[$i]['location_description']}' data_type='{$locationsList[$i]['location_state']}' >
                         <img src='" . (($locationsList[$i]['location_thumbnail'] != '') ?
             $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
-                        <p>{$locationsList[$i]['location_title']}</p>
+                        <p>{$locationsList[$i]['location_title']}<span>{$locationsList[$i]['state_name']}</span></p>
                     </div>
                     ";
     }
