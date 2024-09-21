@@ -95,7 +95,7 @@
                                         echo "<br />";
                                         print_r($result['choices'][0]['message']['content']);
 
-                                        $updateJSONOutput = str_replace('```', '}', str_replace('```json', '', $result['choices'][0]['message']['content']));
+                                        $updateJSONOutput = str_replace(' } }', '}', str_replace('```', '}', str_replace('```json', '', $result['choices'][0]['message']['content'])));
 
                                         echo "<br /><br /><br />New object̉<br /><br />";
 
