@@ -18,7 +18,7 @@ if ($name != '') {
 
         if ($checkVehicle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "vehicles WHERE vehicle_title='{$name}' AND vehicle_type='{$category}'")) {
             if (mysqli_num_rows($checkVehicle) == 0) {
-                if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "vehicles(vehicle_thumbnail, vehicle_title, vehicle_description, vehicle_type) VALUES('{$icon}', '{$name}', '{$description}', '{$category}')")) {
+                if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "vehicles(vehicle_thumbnail, vehicle_title, vehicle_description, vehicle_seating, vehicle_type) VALUES('{$icon}', '{$name}', '{$description}', '{$seating}', '{$category}')")) {
                     $responseCode = 201;
                     $status = 'success';
                     $msg = 'Vehicle added successfully';

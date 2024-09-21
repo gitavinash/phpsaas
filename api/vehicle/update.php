@@ -18,7 +18,7 @@ if ($name != '') {
 
         if ($checkVehicle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "vehicles WHERE vehicle_id='{$id}'")) {
             if (mysqli_num_rows($checkVehicle) != 0) {
-                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "vehicles SET vehicle_thumbnail='{$icon}', vehicle_title='{$name}', vehicle_description='{$description}', vehicle_type='{$category}' WHERE vehicle_id='{$id}'")) {
+                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "vehicles SET vehicle_thumbnail='{$icon}', vehicle_title='{$name}', vehicle_description='{$description}', vehicle_seating='{$vehicle}', vehicle_type='{$category}' WHERE vehicle_id='{$id}'")) {
                     $responseCode = 200;
                     $status = 'success';
                     $msg = 'Vehicle update successfully';

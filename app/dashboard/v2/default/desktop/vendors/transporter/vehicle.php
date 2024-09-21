@@ -2,7 +2,7 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($vehicleData = mysqli_query($connection, "SELECT vehicle_id, vehicle_title, vehicle_description, vehicle_thumbnail, vehicle_is_deletable, vehicle_type FROM " . TABLE_PREFIX . "vehicles")) {
+if ($vehicleData = mysqli_query($connection, "SELECT vehicle_id, vehicle_title, vehicle_seating, vehicle_description, vehicle_thumbnail, vehicle_is_deletable, vehicle_type FROM " . TABLE_PREFIX . "vehicles")) {
     $vehicleList = array();
     if (mysqli_num_rows($vehicleData) != 0) {
         while ($data = mysqli_fetch_assoc($vehicleData)) {
@@ -40,20 +40,20 @@ $typeDropDown = '
             <section>
                 <?php
 
-if (count($vehicleList) > 0) {
-    for ($i = 0; $i < sizeof($vehicleList); $i++) {
-        echo "
-                    <div class='featureList editVehicle' id='" . $vehicleList[$i]['vehicle_id'] . "' data_name='" . $vehicleList[$i]['vehicle_title'] . "' data_image='" . (($vehicleList[$i]['vehicle_thumbnail'] != '') ?
-            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='" . $vehicleList[$i]['vehicle_description'] . "' data_type='" . $vehicleList[$i]['vehicle_type'] . "' >
+                if (count($vehicleList) > 0) {
+                    for ($i = 0; $i < sizeof($vehicleList); $i++) {
+                        echo "
+                    <div class='featureList editVehicle' id='" . $vehicleList[$i]['vehicle_id'] . "' data_name='" . $vehicleList[$i]['vehicle_title'] . "' data_seating='{$vehicleList[$i]['vehicle_seating']}' data_image='" . (($vehicleList[$i]['vehicle_thumbnail'] != '') ?
+                            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='" . $vehicleList[$i]['vehicle_description'] . "' data_type='" . $vehicleList[$i]['vehicle_type'] . "' >
                         <img src='" . (($vehicleList[$i]['vehicle_thumbnail'] != '') ?
-            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
+                            $vehicleList[$i]['vehicle_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$vehicleList[$i]['vehicle_title']}</p>
                     </div>
                     ";
-    }
-}
+                    }
+                }
 
-?>
+                ?>
                 <div class="shortcut">
                     <a href="#" class="addNewVehicle"><i class="fi fi-rr-plus"></i></a>
                 </div>
@@ -76,8 +76,12 @@ if (count($vehicleList) > 0) {
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="description" placeholder="Description*" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="description" placeholder="Description" class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-lable">Maximum seating<sup>*</sup></label>
+                                    <input id="seating" name="seating" type="text" />
                                 </div>
                                 <div class="form-group">
                                     <label class="form-lable">Icon ( size 100px x 100px )</label>
@@ -93,8 +97,7 @@ if (count($vehicleList) > 0) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn" id="addVehicle"><i class="fi-rr-check"></i> Add new room
-                        type</a>
+                    <a href="#" class="btn popUpBtn" id="addVehicle"><i class="fi-rr-check"></i> Add new vehicle</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
@@ -117,8 +120,12 @@ if (count($vehicleList) > 0) {
                                     <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="editDescription" placeholder="Description*" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="editDescription" placeholder="Description" class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-lable">Maximum seating<sup>*</sup></label>
+                                    <input id="vehicleSeating" name="seating" type="text" />
                                 </div>
                                 <div class="form-group">
                                     <label class="form-lable">Icon ( size 100px x 100px )</label>

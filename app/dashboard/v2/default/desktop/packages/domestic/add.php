@@ -39,12 +39,14 @@
                             <p>Starting city<sup>*</sup></p>
                             <select class="selectJS form-control" name="startingCity" id="startingCity">
                                 <option value="select">Select starting city</option>
+
                                 <?php
-                                if ($locations = mysqli_query($connection, "SELECT state_name, country_name FROM " . TABLE_PREFIX . "country INNER JOIN " . TABLE_PREFIX . "state ON state_country_id=country_id WHERE state_country_id=101")) {
+
+                                if ($locations = mysqli_query($connection, "SELECT city_name, state_name, country_name FROM " . TABLE_PREFIX . "country INNER JOIN " . TABLE_PREFIX . "state ON state_country_id=country_id INNER JOIN " . TABLE_PREFIX . "city ON city_state_id=state_id WHERE state_country_id=101")) {
                                     if (mysqli_num_rows($locations)) {
                                         while ($locationData = mysqli_fetch_assoc($locations)) {
-                                            echo "<option value='{$locationData['state_name']}' " . ((strtolower($locationData['state_name']) == 'delhi') ? 'selected' : '')
-                                                . ">{$locationData['state_name']}, {$locationData['country_name']}</option>";
+                                            echo "<option value='{$locationData['city_name']}, {$locationData['state_name']}' " . ((strtolower($locationData['city_name']) == 'new delhi') ? 'selected' : '')
+                                                . ">{$locationData['city_name']}, {$locationData['state_name']}, {$locationData['country_name']}</option>";
                                         }
                                     }
                                 } else {

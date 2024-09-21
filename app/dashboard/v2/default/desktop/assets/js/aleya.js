@@ -286,12 +286,16 @@ $(".editVehicle").click(function (e) {
   updateVehicleId = $(this).attr("id");
   vehicleName = $(this).attr("data_name");
   vehicleDescription = $(this).attr("data_desc");
+  vehicleSeating = $(this).attr("data_seating");
   vehicleImage = $(this).attr("data_image");
   vehicleType = $(this).attr("data_type");
+  console.log(`vehicleSeating:`, vehicleSeating);
+
   $("#updateVehicle").show();
   $("#editName").val(vehicleName);
   $("#editDescription").val(vehicleDescription);
   $("#vehicleIcon").attr("src", vehicleImage);
+  $("#vehicleSeating").val(vehicleSeating);
   if (vehicleType != "") {
     $("#editType").val(vehicleType).change();
   } else {

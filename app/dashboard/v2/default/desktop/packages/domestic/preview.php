@@ -70,6 +70,29 @@
                                     <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>" style="display:none"><?php echo $tripData['exclusion']; ?></textarea>
                                 </div>
                                 <div class="form-group">
+                                    <p>Hotel type<sup>*</sup></p>
+                                    <select class="selectJS form-control" name="outstationVehicle" id="outstationVehicle">
+                                        <option value="select">Select hotel type</option>
+                                        <option value="apartments">Apartments</option>
+                                        <option value="capsule_hotel">Capsule hotel</option>
+                                        <option value="guest_house">Guest house</option>
+                                        <option value="inn">Inn</option>
+                                        <option value="hostel">Hostel</option>
+                                        <option value="house">House</option>
+                                        <option value="home_stay">Home stay</option>
+                                        <option value="1_star_hotel">1 Star Hotel ( Tourist )</option>
+                                        <option value="2_star_hotel">2 Star Hotel ( Standard )</option>
+                                        <option value="3_star_hotel" selected>3 Star Hotel ( Comfort )</option>
+                                        <option value="4_star_hotel">4 Star Hotel ( First Class )</option>
+                                        <option value="5_star_hotel">5 Star Hotel ( Luxury )</option>
+                                        <option value="motel">Motel</option>
+                                        <option value="lodge">Lodge</option>
+                                        <option value="tent">Tent</option>
+                                        <option value="farm_stay">Farm stay</option>
+                                        <option value="resorts">Resorts</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <input type="hidden" name="packageType" value="domestic">
                                     <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
                                     <input type="hidden" name="start" value="<?php echo $startingCity ?>">
