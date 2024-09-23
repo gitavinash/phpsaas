@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="form-group">
                                     <p class="form-lable" id="Label">Trip duration (in Nights)<sup>*</sup></p>
-                                    <input id="duration" name="duration[]" type="number" />
+                                    <input id="duration" name="duration[]" type="number" onwheel="this.blur()" />
                                 </div>
                                 <div class="form-group">
                                     <div class="box-2">

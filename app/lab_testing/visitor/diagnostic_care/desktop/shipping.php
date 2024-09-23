@@ -53,15 +53,15 @@ require_once 'header.php';
                                         extract($testList);
                                         $finalTestsName .= $product_title . ' | ' ?>
 
-                            <tr>
-                                <td class="is-color-blue is-font600 isfont-27">
-                                    <?php echo ucwords($product_title) ?>
-                                </td>
-                                <td class="is-color-blue is-font600 isfont-18">
-                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price;
+                                        <tr>
+                                            <td class="is-color-blue is-font600 isfont-27">
+                                                <?php echo ucwords($product_title) ?>
+                                            </td>
+                                            <td class="is-color-blue is-font600 isfont-18">
+                                                <?php echo $inventory_currency_symbol . ' ' . $inventory_price;
                                                 $productTotalPrice = $productTotalPrice + $inventory_price ?>
-                                </td>
-                            </tr>
+                                            </td>
+                                        </tr>
                             <?php
                                         $i++;
                                     }
@@ -119,7 +119,7 @@ require_once 'header.php';
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="number" class="form-control"
+                                    <input type="number" onwheel="this.blur()" class="form-control"
                                         placeholder="<?php echo $_GET['mobile'] ?>" id="mobile" readonly />
                                 </div>
                             </div>

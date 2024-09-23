@@ -139,7 +139,7 @@
                             <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6">
                                 <h5>QUANTITY</h5>
                                 <div class="quntity-div mt-3">
-                                    <input type="number" placeholder="1" value="1" />
+                                    <input type="number" onwheel="this.blur()" placeholder="1" value="1" />
                                     <div class="controlles"></div>
                                 </div>
                             </div>

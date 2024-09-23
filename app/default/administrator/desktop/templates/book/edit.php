@@ -1,49 +1,45 @@
 <?php
 
-	$id=base64_decode($id);
+$id = base64_decode($id);
 
-	if($productDetails=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."product, ".TABLE_PREFIX."inventory, ".TABLE_PREFIX."link, ".TABLE_PREFIX."meta, ".TABLE_PREFIX."category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND product_type='book' AND link_site_id=".APP_SITE_ID." LIMIT 1")) {
-		if(mysqli_num_rows($productDetails)!=0) {
-			
-			extract(mysqli_fetch_assoc($productDetails));
+if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "product, " . TABLE_PREFIX . "inventory, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta, " . TABLE_PREFIX . "category WHERE category_id=product_category AND inventory_relation_id=product_id AND link_type='product' AND link_relation_id=product_id AND meta_relation_id=link_id AND product_id='{$id}' AND link_status!=301 AND product_type='book' AND link_site_id=" . APP_SITE_ID . " LIMIT 1")) {
+    if (mysqli_num_rows($productDetails) != 0) {
 
-			// Fetch book meta details
+        extract(mysqli_fetch_assoc($productDetails));
 
-			if($productMeta=mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM ".TABLE_PREFIX."product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=".SITE_ID)) {
+        // Fetch book meta details
 
-				if(mysqli_num_rows($productMeta)!=0) {
+        if ($productMeta = mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM " . TABLE_PREFIX . "product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=" . SITE_ID)) {
 
-					$productMetaArray=array();
+            if (mysqli_num_rows($productMeta) != 0) {
 
-					while($productMetaData=mysqli_fetch_assoc($productMeta)) {
+                $productMetaArray = array();
 
-						extract($productMetaData);
-						$productMetaArray[$product_meta_key]=$product_meta_value;
+                while ($productMetaData = mysqli_fetch_assoc($productMeta)) {
 
-					}
+                    extract($productMetaData);
+                    $productMetaArray[$product_meta_key] = $product_meta_value;
+                }
 
-					extract($productMetaArray);
+                extract($productMetaArray);
+            } else {
 
-				} else {
-
-					$author='';
-
-				}
-
-			}
-
-		} else { ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/book/?type=list&status=all';
-</script>
+                $author = '';
+            }
+        }
+    } else { ?>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/book/?type=list&status=all';
+        </script>
 <?php
-		}
-	}
+    }
+}
 
 ?>
-<h2>Update <?php echo (($link_status=='206') ? 'Drafted ' : '').ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?>
-    <span><a href="book/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
+<h2>Update <?php echo (($link_status == '206') ? 'Drafted ' : '') . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?>
+    <span><a href="book/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span>
+</h2>
 
 <div class="form-box">
     <form id="formData" enctype="multipart/form-data">
@@ -55,10 +51,10 @@ window.location.href = 'dashboard/book/?type=list&status=all';
             <div class="form-group">
                 <div class="url">
                     <?php
-						$url=explode('/', ltrim(rtrim($link_url, '/'), '/'));
-					?>
+                    $url = explode('/', ltrim(rtrim($link_url, '/'), '/'));
+                    ?>
                     <p><strong>Permalink</strong></p>
-                    <p><span><?php echo SITE_DOMAIN.'/...'; ?>/</span></p>
+                    <p><span><?php echo SITE_DOMAIN . '/...'; ?>/</span></p>
                     <input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url">
                     <input type="hidden" name='oldURL' value='<?php echo $link_url ?>'>
                 </div>
@@ -90,24 +86,24 @@ window.location.href = 'dashboard/book/?type=list&status=all';
 
                     <div class="box-2">
                         <input type="checkbox" name="in_stock" value=1
-                            <?php echo (($inventory_in_stock==1) ? 'checked' : '' ) ?>> In Stock
+                            <?php echo (($inventory_in_stock == 1) ? 'checked' : '') ?>> In Stock
                     </div>
                     <div class="box-2">
                         <input type="checkbox" name="backorder" value=1
-                            <?php echo (($inventory_backorder==1) ? 'checked' : '' ) ?>> Allowed Backorders (if book is
+                            <?php echo (($inventory_backorder == 1) ? 'checked' : '') ?>> Allowed Backorders (if book is
                         out of stock )
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" class="form-control inside-shadow"
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow"
                                 value="<?php echo $inventory_price ?>" name="salePrice" placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
                                 name="mrp" placeholder="Regular price">
                         </div>
                     </div>
@@ -130,9 +126,9 @@ window.location.href = 'dashboard/book/?type=list&status=all';
                         <div class="form-group">
                             <label>Calculate tax</label>
                             <select name="taxStatus" class="form-control inside-shadow">
-                                <option value="0" <?php echo (($inventory_tax_status==0) ? 'selected' : ' ') ?>>No
+                                <option value="0" <?php echo (($inventory_tax_status == 0) ? 'selected' : ' ') ?>>No
                                 </option>
-                                <option value="1" <?php echo (($inventory_tax_status==1) ? 'selected' : ' ') ?>>Yes
+                                <option value="1" <?php echo (($inventory_tax_status == 1) ? 'selected' : ' ') ?>>Yes
                                 </option>
                             </select>
                         </div>
@@ -140,7 +136,7 @@ window.location.href = 'dashboard/book/?type=list&status=all';
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" name="taxRate" value="<?php echo $inventory_tax_rate ?>"
+                            <input type="number" onwheel="this.blur()" name="taxRate" value="<?php echo $inventory_tax_rate ?>"
                                 placeholder="Tax rate ( in % )" class="form-control inside-shadow">
                         </div>
                     </div>
@@ -177,37 +173,34 @@ window.location.href = 'dashboard/book/?type=list&status=all';
                         <div class="input-images" style="padding-top: .5rem;"></div>
                     </div>
                     <?php
-					
-					
-					
-					if($product_gallery!='') {
-						
-						$productGalleryList=json_decode($product_gallery, TRUE);
-					
-						$oldGalleryImages = array();
 
-						for($i=0; $i<sizeof($productGalleryList); $i++) {
-						
-							$oldGalleryImages[]=array(
-								'id' => $i+1,
-								'name' => $productGalleryList[$i]['name'],
-								'src' => $productGalleryList[$i]['path'],
-								'type' => $productGalleryList[$i]['type'],
-							);
-							
-						}
 
-						$oldGalleryImages=json_encode($oldGalleryImages, TRUE);
 
-					} else {
+                    if ($product_gallery != '') {
 
-						$oldGalleryImages=json_encode('', TRUE);
+                        $productGalleryList = json_decode($product_gallery, TRUE);
 
-					}
-										
-					echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
-					
-					?>
+                        $oldGalleryImages = array();
+
+                        for ($i = 0; $i < sizeof($productGalleryList); $i++) {
+
+                            $oldGalleryImages[] = array(
+                                'id' => $i + 1,
+                                'name' => $productGalleryList[$i]['name'],
+                                'src' => $productGalleryList[$i]['path'],
+                                'type' => $productGalleryList[$i]['type'],
+                            );
+                        }
+
+                        $oldGalleryImages = json_encode($oldGalleryImages, TRUE);
+                    } else {
+
+                        $oldGalleryImages = json_encode('', TRUE);
+                    }
+
+                    echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+
+                    ?>
                 </div>
                 <div class="productAdditionalDetails generalTab" style="display: none;">
 
@@ -252,19 +245,19 @@ window.location.href = 'dashboard/book/?type=list&status=all';
                         <label>Allow search engines to show this book in search results?</label>
                         <select name="robots" class="form-control inside-shadow">
                             <option value="index, follow"
-                                <?php echo (($meta_robots=='index, follow') ? 'selected' : '' ) ?>>Yes</option>
+                                <?php echo (($meta_robots == 'index, follow') ? 'selected' : '') ?>>Yes</option>
                             <option value="noindex, nofollow"
-                                <?php echo (($meta_robots=='noindex, nofollow') ? 'selected' : '' ) ?>>No</option>
+                                <?php echo (($meta_robots == 'noindex, nofollow') ? 'selected' : '') ?>>No</option>
                         </select>
                     </div>
                 </div>
                 <div class="fb" style="display: none;">
-                    <div class="facebookPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+                    <div class="facebookPreviewBox" style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
                         <input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
                         <div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
                         <p id="facebookChangeImage" class='changeImage'>Remove facebook feature image</p>
                     </div>
-                    <div class="facebookUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
+                    <div class="facebookUploadBox" style="display: <?php echo (($fb_img == '') ? 'block' : 'none') ?>;">
                         <span>Set facebook feature image</span>
                         <input type='file' id="facebookImage" name='facebookImage' />
                     </div>
@@ -280,12 +273,12 @@ window.location.href = 'dashboard/book/?type=list&status=all';
                     </div>
                 </div>
                 <div class="tw" style="display: none;">
-                    <div class="twitterPreviewBox" style="display: <?php echo (($fb_img=='') ? 'none' : 'block' ) ?>;">
+                    <div class="twitterPreviewBox" style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
                         <input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
                         <div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
                         <p id="twitterChangeImage" class="changeImage">Remove twitter feature image</p>
                     </div>
-                    <div class="twitterUploadBox" style="display: <?php echo (($fb_img=='') ? 'block' : 'none' ) ?>;">
+                    <div class="twitterUploadBox" style="display: <?php echo (($fb_img == '') ? 'block' : 'none') ?>;">
                         <span>Set twitters feature image</span>
                         <input type='file' id="twitterImage" name='twitterImage' />
                     </div>
@@ -305,20 +298,20 @@ window.location.href = 'dashboard/book/?type=list&status=all';
         <div class="right-box">
             <div class="action-box inside-shadow">
                 <input type="button" id="updatePost" class="btn btn-green btn-block"
-                    value="<?php echo (($product_status==1) ? 'Update ' : 'Publish ' ); ?>product">
+                    value="<?php echo (($product_status == 1) ? 'Update ' : 'Publish '); ?>product">
                 <!-- <input type="submit" class="btn btn-yellow btn-block" value="Save Draft"> -->
                 <input type="hidden" name='postStatus' value='<?php echo $product_status ?>'>
                 <input type="hidden" name="postType" value="<?php echo $product_type; ?>">
                 <input type="hidden" name="id" value="<?php echo $id ?>">
                 <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
-                <a href='<?php echo SITE_URL.$link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
+                <a href='<?php echo SITE_URL . $link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
                     book</a>
             </div>
             <div class="form-group">
                 <h2>feature book</h2>
                 <div class="action-box inside-shadow">
                     <input type="checkbox" value="1" name='featurePost'
-                        <?php echo (($link_is_featured=='1') ? 'checked' : '' ) ?>> Mark as Feature book
+                        <?php echo (($link_is_featured == '1') ? 'checked' : '') ?>> Mark as Feature book
                 </div>
             </div>
             <h2>Categories</h2>
@@ -326,36 +319,36 @@ window.location.href = 'dashboard/book/?type=list&status=all';
 
                 <?php
 
-					if($categoryList=mysqli_query($connection, "SELECT category_id, category_title, link_url FROM ".TABLE_PREFIX."category, ".TABLE_PREFIX."link WHERE category_site_id='".SITE_ID."' AND link_type='category' AND category_type='book' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
-						while($category=mysqli_fetch_assoc($categoryList)) { ?>
-                <div class="form-group">
-                    <input type="radio" name="category"
-                        value="<?php echo $category['category_id'].'_'.str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id']==$category_id) ? 'checked' : '' ) ?>>
-                    <?php echo ucwords($category['category_title']); ?>
-                </div>
+                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND category_type='book' AND link_relation_id=category_id AND link_status=200 ORDER BY category_title ASC")) {
+                    while ($category = mysqli_fetch_assoc($categoryList)) { ?>
+                        <div class="form-group">
+                            <input type="radio" name="category"
+                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                                <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
+                            <?php echo ucwords($category['category_title']); ?>
+                        </div>
                 <?php
-						}
-					}
-				?>
+                    }
+                }
+                ?>
             </div>
             <h2>Tags</h2>
             <?php
 
-				$tagproductID=(($product_parent_id==0) ? $id : $product_parent_id );
-				
-				if($tagList=mysqli_query($connection, "SELECT tag_title FROM ".TABLE_PREFIX."tag WHERE tag_relation_id='{$tagproductID}' AND tag_site_id='".SITE_ID."'")) {
-					if(mysqli_num_rows($tagList)!=0) {
-						while($tagsName=mysqli_fetch_assoc($tagList)) {
-							$tags[]=$tagsName['tag_title'];
-						}
-						$tags=implode(',', $tags);
-					} else {
-						$tags='';
-					}
-				}
+            $tagproductID = (($product_parent_id == 0) ? $id : $product_parent_id);
 
-			?>
+            if ($tagList = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id='{$tagproductID}' AND tag_site_id='" . SITE_ID . "'")) {
+                if (mysqli_num_rows($tagList) != 0) {
+                    while ($tagsName = mysqli_fetch_assoc($tagList)) {
+                        $tags[] = $tagsName['tag_title'];
+                    }
+                    $tags = implode(',', $tags);
+                } else {
+                    $tags = '';
+                }
+            }
+
+            ?>
             <div class="action-box inside-shadow">
                 <div class="form-group">
                     <input type="text" class='tags' />
@@ -366,7 +359,7 @@ window.location.href = 'dashboard/book/?type=list&status=all';
             <div class="tagList" style="display: none;"></div>
             <h2>Feature Image</h2>
             <div class="form-group featureImageUploadBox"
-                style="display: <?php echo (($product_image!='') ? 'none' : 'block') ?>;">
+                style="display: <?php echo (($product_image != '') ? 'none' : 'block') ?>;">
                 <span>Set Feature Image</span>
                 <input type="hidden" name="oldFeatureImage" value="<?php echo $product_image ?>">
                 <input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
@@ -374,8 +367,8 @@ window.location.href = 'dashboard/book/?type=list&status=all';
                     .xlsx, .pdf, .txt, .csv <strong>Maximum upload limit is 300 MB</strong></p>
             </div>
             <div class="img-preview featureImagePreviewBox action-box"
-                style="display: <?php echo (($product_image!='') ? 'block' : 'none') ?>;">
-                <img src="//<?php echo SITE_DOMAIN.$product_image ?>" id="featureImagePath" alt="">
+                style="display: <?php echo (($product_image != '') ? 'block' : 'none') ?>;">
+                <img src="//<?php echo SITE_DOMAIN . $product_image ?>" id="featureImagePath" alt="">
                 <p id="featureChangeImage" class="btn btn-red btn-sm">Remove feature image</p>
             </div>
         </div>

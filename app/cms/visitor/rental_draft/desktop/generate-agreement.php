@@ -105,7 +105,7 @@ if (!isset($validId)) {
                                         placeholder="Full Name*">
                                     <input type="text" class="form-control" name="landlord_father_name"
                                         id="landlordFatherName" placeholder="Father/Mother Name*">
-                                    <input type="number" class="form-control" name="landlord_mobile" id="landlordPhone"
+                                    <input type="number" onwheel="this.blur()" class="form-control" name="landlord_mobile" id="landlordPhone"
                                         placeholder="Phone Number*">
                                     <textarea name="landlord_address" class="form-control" id="landlordAddress"
                                         placeholder="Permanent Address*"></textarea>
@@ -125,7 +125,7 @@ if (!isset($validId)) {
                                         placeholder="Full Name*">
                                     <input type="text" class="form-control" name="tenate_father_name"
                                         id="tenateFatherName" placeholder="Father/Mother Name*">
-                                    <input type="number" class="form-control" name="tenate_mobile" id="tenatePhone"
+                                    <input type="number" onwheel="this.blur()" class="form-control" name="tenate_mobile" id="tenatePhone"
                                         placeholder="Phone Number*">
                                     <textarea name="tenate_address" class="form-control" id="tenateAddress"
                                         placeholder="Permanent Address*"></textarea>
@@ -191,11 +191,11 @@ if (!isset($validId)) {
                                 <h2>Contract details</h2>
                                 <input type="text" name="agreement_start_date" id="agreementStartDate"
                                     class="form-control datepicker" placeholder="Agreement start date*">
-                                <input type="number" id="rentAmount" name="rent_amount" class="form-control"
+                                <input type="number" onwheel="this.blur()" id="rentAmount" name="rent_amount" class="form-control"
                                     placeholder="Monthly rent*">
-                                <input type="number" name="payment_date" id="paymentDate" class="form-control"
+                                <input type="number" onwheel="this.blur()" name="payment_date" id="paymentDate" class="form-control"
                                     placeholder="Rent payment date*">
-                                <input type="number" name="security_amount" id="securityAmount" class="form-control"
+                                <input type="number" onwheel="this.blur()" name="security_amount" id="securityAmount" class="form-control"
                                     placeholder="Security Amount*">
                                 <select name="notice_period" class="form-control" id="noticePeriod">
                                     <option value="#">Notice period*</option>

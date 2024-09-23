@@ -526,11 +526,18 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <a href='' class='btn btn-green' id='updatePaymentBtn'><i class='fi-rr-notes'></i> Update payment
                     records</a>";
                         }
+
+                        if (SITE_APP == 'aleya') { ?>
+
+                            <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
+                                links</a>
+                            <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
+                            <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
+
+                        <?php
+                        }
+
                         ?>
-                        <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                            links</a>
-                        <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
-                        <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
                         <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
 
                     <?php
@@ -636,7 +643,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         </div>
                                         <div class="box-1" id="minPaymentLinkBox" style="display:none">
                                             <div class="form-group">
-                                                <input type="number" id="paymentValue" name="paymentLink" />
+                                                <input type="number" onwheel="this.blur()" id="paymentValue" name="paymentLink" />
                                                 <label class="form-lable" id="paymentAmount">Enter
                                                     amount<sup>*</sup></label>
                                             </div>
@@ -672,7 +679,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 <h4 class="heading">Update payment details</h4>
                                             </div>
                                             <div class="form-group">
-                                                <input type="number" id="paymentAmount" name="amount" />
+                                                <input type="number" onwheel="this.blur()" id="paymentAmount" name="amount" />
                                                 <label class="form-lable" id="paymentAmount">Enter amount<sup>*</sup></label>
                                             </div>
                                             <div class="form-group">

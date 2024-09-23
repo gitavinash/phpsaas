@@ -1,6 +1,6 @@
 <?php
 
-  require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <section>
@@ -87,7 +87,7 @@
                                 <input type="text" class="form-control" placeholder="Full Name">
                             </div>
                             <div class="form-group">
-                                <input type="number" class="form-control" placeholder="Phone No">
+                                <input type="number" onwheel="this.blur()" class="form-control" placeholder="Phone No">
                             </div>
                             <div class="form-group">
                                 <input type="email" class="form-control" placeholder="Email Address">
@@ -111,6 +111,6 @@
 </section>
 <?php
 
-  require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

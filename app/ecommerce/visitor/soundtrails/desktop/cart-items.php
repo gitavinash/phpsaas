@@ -31,19 +31,19 @@ include_once 'header.php';
 
                     ?>
 
-                    <div class="ad-card">
-                        <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
-                                src="<?php echo USER_IMAGES ?>delete.png" alt=""></a>
-                        <div class="cart-img">
-                            <img src="<?php echo $product_thumbnail ?>">
+                        <div class="ad-card">
+                            <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
+                                    src="<?php echo USER_IMAGES ?>delete.png" alt=""></a>
+                            <div class="cart-img">
+                                <img src="<?php echo $product_thumbnail ?>">
+                            </div>
+                            <div class="prodct-nme">
+                                <a href="<?php echo $link_url ?>">
+                                    <h2><?php echo $product_title ?></h2>
+                                </a>
+                                <h5>₹ <?php echo $cart_price ?></h5>
+                            </div>
                         </div>
-                        <div class="prodct-nme">
-                            <a href="<?php echo $link_url ?>">
-                                <h2><?php echo $product_title ?></h2>
-                            </a>
-                            <h5>₹ <?php echo $cart_price ?></h5>
-                        </div>
-                    </div>
 
                     <?php
 
@@ -71,7 +71,7 @@ include_once 'header.php';
                                             name="last_name" class="input" placeholder="Last name" required></li>
                                     <li><label>Email*</label><input type="email" class="form-control" id="email"
                                             name="email" class="input" placeholder="Email" required></li>
-                                    <li><label>Contact No.*</label><input type="number" class="form-control" id="mobile"
+                                    <li><label>Contact No.*</label><input type="number" onwheel="this.blur()" class="form-control" id="mobile"
                                             name="mobile" class="input" placeholder="Contact no." required></li>
                                     <h2 class="heading-2" style="margin-bottom: 20px">Enter Shipping Address</h2>
                                     <li>
@@ -86,7 +86,7 @@ include_once 'header.php';
                                             </div>
                                         </div>
                                     </li>
-                                    <li><input type="number" id="addressMobile" name="address_mobile"
+                                    <li><input type="number" onwheel="this.blur()" id="addressMobile" name="address_mobile"
                                             class="form-control" placeholder="Contact no.*" required></li>
                                     <li><input type="text" name="house_no"
                                             placeholder="Flat, House no., Building, Company, Apartment*"

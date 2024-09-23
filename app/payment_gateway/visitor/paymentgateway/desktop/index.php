@@ -4,7 +4,7 @@ require_once 'header.php';
 ?>
 <div id="searchByMobile">
     <div class="formGroup">
-        <input type="number" name="mobile" id="mobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric"
+        <input type="number" onwheel="this.blur()" name="mobile" id="mobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric"
             autofocus required>
         <label class="error" id="mobileNumberError">Please enter valid mobile no.</label>
     </div>
@@ -19,7 +19,7 @@ require_once 'header.php';
         <label class="error" id="nameError">Please enter a valid name.</label>
     </div>
     <div class="formGroup">
-        <input type="number" id="resMobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric" readonly>
+        <input type="number" onwheel="this.blur()" id="resMobile" placeholder="Mobile *" pattern="[0-9]*" inputmode="numeric" readonly>
         <label class="error" id="mobileNumberError">Please enter valid mobile no.</label>
     </div>
     <div class="formGroup">
@@ -27,7 +27,7 @@ require_once 'header.php';
         <label class="error" id="emailError">Please enter a valid email address.</label>
     </div>
     <div class="formGroup">
-        <input type="number" name="amount" id="amount" placeholder="Amount *" value="<?php echo $_GET['amount'] ?>"
+        <input type="number" onwheel="this.blur()" name="amount" id="amount" placeholder="Amount *" value="<?php echo $_GET['amount'] ?>"
             pattern="[0-9]*" inputmode="numeric" required>
         <label class="error" id="amountError">Please enter a valid amount only in number.</label>
     </div>

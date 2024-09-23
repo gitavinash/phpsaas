@@ -19,7 +19,7 @@
                             <div class="contact_flex">
                                 <div class="contact_input">
                                     <label for="">Phone number</label>
-                                    <input type="number" name="mobile" required>
+                                    <input type="number" onwheel="this.blur()" name="mobile" required>
                                 </div>
                                 <div class="contact_input">
                                     <label for="">Subject</label>
@@ -161,81 +161,81 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <script>
-$('.manage_slider').slick({
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: false,
-    autoplaySpeed: 2000,
-    arrows: true,
-    dots: false,
-    responsive: [{
-            breakpoint: 1200,
-            settings: {
-                slidesToShow: 1,
-            }
-        },
-        {
-            breakpoint: 992,
-            settings: {
-                slidesToShow: 1,
-            }
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 1,
-            }
-        },
-        {
-            breakpoint: 576,
-            settings: {
-                slidesToShow: 1,
-            }
-        },
-    ]
-});
-</script>
-
-<script>
-jQuery(document).ready(function() {
-    if (jQuery(window).width() < 768) {
-        jQuery('.price_slider').slick({
-            infinite: true,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            // autoplay: true,
-            arrows: false,
-            dots: true,
-            mobileFirst: true,
-            responsive: [{
+    $('.manage_slider').slick({
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: false,
+        autoplaySpeed: 2000,
+        arrows: true,
+        dots: false,
+        responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
                 breakpoint: 576,
                 settings: {
                     slidesToShow: 1,
-                    mobileFirst: true,
                 }
-            }, ]
-        });
-    }
-});
+            },
+        ]
+    });
 </script>
 
 <script>
-$('#homeBtn').click(function() {
-    $('.mobile_nav').removeClass('active');
-})
-$('#featureBtn').click(function() {
-    $('.mobile_nav').removeClass('active');
-})
-$('#priceBtn').click(function() {
-    $('.mobile_nav').removeClass('active');
-})
-$('#contactBtn').click(function() {
-    $('.mobile_nav').removeClass('active');
-})
-$('#demoBtn').click(function() {
-    $('.mobile_nav').removeClass('active');
-})
+    jQuery(document).ready(function() {
+        if (jQuery(window).width() < 768) {
+            jQuery('.price_slider').slick({
+                infinite: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                // autoplay: true,
+                arrows: false,
+                dots: true,
+                mobileFirst: true,
+                responsive: [{
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 1,
+                        mobileFirst: true,
+                    }
+                }, ]
+            });
+        }
+    });
+</script>
+
+<script>
+    $('#homeBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
+    })
+    $('#featureBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
+    })
+    $('#priceBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
+    })
+    $('#contactBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
+    })
+    $('#demoBtn').click(function() {
+        $('.mobile_nav').removeClass('active');
+    })
 </script>
 
 </body>

@@ -52,9 +52,9 @@ if (isset($ref)) {
                     }
 
                     if ($loggedInUserMeta['warehouse'] == 'all') { ?>
-                    <select class="selectJS form-control" name="warehouse" id="warehouse" required>
-                        <option value="">Select warehouse</option>
-                        <?php
+                        <select class="selectJS form-control" name="warehouse" id="warehouse" required>
+                            <option value="">Select warehouse</option>
+                            <?php
                             $warehouseFilter = '';
                             if ($loggedInUserMeta['warehouse'] != 'all') {
                                 $warehouseFilter = "warehouse_id IN ({$loggedInUserMeta['warehouse']}) AND ";
@@ -69,8 +69,8 @@ if (isset($ref)) {
                                 }
                             }
                             ?>
-                    </select>
-                    <label for="">Select warehouse</label>
+                        </select>
+                        <label for="">Select warehouse</label>
                     <?php
                     } else {
                         $warehouseFilter = " AND block_warehouse_id={$loggedInUserMeta['warehouse']}";
@@ -84,7 +84,7 @@ if (isset($ref)) {
                     <label class="form-lable" id="Label">Full name<sup>*</sup></label>
                 </div>
                 <div class="form-group">
-                    <input id="mobile" name="mobile" value="<?php echo $customerMobile ?>" type="number" />
+                    <input id="mobile" name="mobile" value="<?php echo $customerMobile ?>" type="number" onwheel="this.blur()" />
                     <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
                 </div>
                 <div class="form-group">

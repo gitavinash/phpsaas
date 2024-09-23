@@ -42,7 +42,7 @@ require_once 'header.php';
                                     <input type="text" name="name" class="form-control" id="name"
                                         placeholder="Full name" required>
                                     <!-- <label for="mobile" class="form-label">Contact number<sup>*</sup></label> -->
-                                    <input type="number" name="mobile" class="form-control" id="mobile"
+                                    <input type="number" onwheel="this.blur()" name="mobile" class="form-control" id="mobile"
                                         placeholder="Mobile number" required>
                                     <!-- <label for="email" class="form-label">Email address</label> -->
                                     <input type="email" name="email" class="form-control" id="email"
@@ -105,9 +105,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                            <div class="mt-auto">
-                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                            </div>
+                                <div class="mt-auto">
+                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                                </div>
                             <?php
                             }
 
@@ -124,9 +124,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                            <div class="mt-auto">
-                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                            </div>
+                                <div class="mt-auto">
+                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                                </div>
                             <?php
                             }
 
@@ -144,9 +144,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                            <div class="mt-auto">
-                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                            </div>
+                                <div class="mt-auto">
+                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                                </div>
                             <?php
                             }
 
@@ -163,9 +163,9 @@ require_once 'header.php';
                             <?php
 
                             if (SITE_VERSION == 'mobile') { ?>
-                            <div class="mt-auto">
-                                <a href="#getStartedSection" class="btn btn-success">Get Started</a>
-                            </div>
+                                <div class="mt-auto">
+                                    <a href="#getStartedSection" class="btn btn-success">Get Started</a>
+                                </div>
                             <?php
                             }
 

@@ -7,10 +7,10 @@ if ($couponDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX .
         extract(mysqli_fetch_assoc($couponDetails));
     } else {
         exit(); ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/coupon/?type=list&status=all';
-</script>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/coupon/?type=list&status=all';
+        </script>
 <?php
     }
 }
@@ -62,7 +62,7 @@ window.location.href = 'dashboard/coupon/?type=list&status=all';
                 <div class="box-2">
                     <div class="form-group">
                         <label>Discount</label>
-                        <input type="number" id="discount" class="form-control inside-shadow"
+                        <input type="number" onwheel="this.blur()" id="discount" class="form-control inside-shadow"
                             value="<?php echo $coupon_discount ?>" name="discount" placeholder="Discount" required>
                     </div>
                 </div>
@@ -88,14 +88,14 @@ window.location.href = 'dashboard/coupon/?type=list&status=all';
                 <div class="box-2">
                     <div class="form-group">
                         <label>Minimum cart amount</label>
-                        <input type="number" id="minCartAmount" value="<?php echo $coupon_min_value ?>"
+                        <input type="number" onwheel="this.blur()" id="minCartAmount" value="<?php echo $coupon_min_value ?>"
                             class="form-control inside-shadow" name="minCartAmount" placeholder="Minimum cart amount">
                     </div>
                 </div>
                 <div class="box-2">
                     <div class="form-group">
                         <label>Maximum discount amount</label>
-                        <input type="number" id="maxDiscount" class="form-control inside-shadow"
+                        <input type="number" onwheel="this.blur()" id="maxDiscount" class="form-control inside-shadow"
                             value="<?php echo $coupon_max_discount ?>" name="maxDiscount"
                             placeholder="( Ignore for same as the discount amount )">
                     </div>
@@ -105,7 +105,7 @@ window.location.href = 'dashboard/coupon/?type=list&status=all';
                 <div class="box-2">
                     <div class="form-group">
                         <label>Limit</label>
-                        <input type="number" id="limit" class="form-control inside-shadow"
+                        <input type="number" onwheel="this.blur()" id="limit" class="form-control inside-shadow"
                             value="<?php echo $coupon_limit ?>" name="limit" placeholder="0 for unlimited use">
                     </div>
                 </div>

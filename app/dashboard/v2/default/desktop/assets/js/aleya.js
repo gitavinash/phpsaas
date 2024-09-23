@@ -748,7 +748,7 @@ $(document).ready(function (e) {
     }
   });
 
-  // Clone add new destination location
+  // Clone add  new destination location
 
   $("#locationDurationContainer").on("click", ".addLocation", function () {
     const $clone = $(".locationDurationGroup:first").clone();
@@ -863,16 +863,20 @@ $(document).ready(function (e) {
     outstationVehicle = encodeURIComponent(outstationVehicle);
     localSighseeignVehicle = encodeURIComponent(localSighseeignVehicle);
 
-    const encodedLocationsData = encodeURIComponent(
-      JSON.stringify(locationsData)
-    );
+    var destinationCity = [];
+    var destinationDuration = [];
 
-    // Generate redirect URL
-    const redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${encodedLocationsData}&startingCity=${startingCity}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
+    // Prepare parameters for each location
+    let locationParams = locationsData.map((data, index) => {
+      destinationCity.push(data.destination);
+      destinationDuration.push(data.duration);
+    });
 
-    console.log(`redirectUrl:`, redirectUrl);
+    destinationCity = destinationCity.join("_");
+    destinationDuration = destinationDuration.join("_");
 
-    // Uncomment this line to enable the redirection
+    const redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${destinationCity}&tripDuration=${destinationDuration}&startingCity=${startingCity}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
+
     window.location.href = redirectUrl;
   });
 

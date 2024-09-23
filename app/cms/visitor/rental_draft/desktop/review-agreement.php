@@ -112,7 +112,7 @@ if (!isset($validId)) {
 
                                             <!-- Input field for 'Other' value -->
                                             <div id="otherValueWrapper" style="display:none;">
-                                                <input type="number" class="form-control" id="otherValue"
+                                                <input type="number" onwheel="this.blur()" class="form-control" id="otherValue"
                                                     placeholder="Enter amount">
                                             </div>
 

@@ -76,7 +76,7 @@ include_once 'header.php';
                                     <li><span>First name*</span><input type="text" id="first_name" name="first_name" class="input" placeholder="First name" required></li>
                                     <li><span>Last name*</span><input type="text" id="last_name" name="last_name" class="input" placeholder="Last name" required></li>
                                     <li><span>Email*</span><input type="email" id="email" name="email" class="input" placeholder="Email" required></li>
-                                    <li><span>Contact No.*</span><input type="number" id="mobile" name="mobile" class="input" placeholder="Contact no." required></li>
+                                    <li><span>Contact No.*</span><input type="number" onwheel="this.blur()" id="mobile" name="mobile" class="input" placeholder="Contact no." required></li>
                                     <h2 class="inter-heading" style="margin-bottom: 20px">Enter Shipping Address</h2>
                                     <li>
                                         <div class="row">
@@ -88,7 +88,7 @@ include_once 'header.php';
                                             </div>
                                         </div>
                                     </li>
-                                    <li><input type="number" id="addressMobile" name="address_mobile" class="form-control" placeholder="Contact no*." required></li>
+                                    <li><input type="number" onwheel="this.blur()" id="addressMobile" name="address_mobile" class="form-control" placeholder="Contact no*." required></li>
                                     <li><input type="text" name="house_no" placeholder="Flat, House no., Building, Company, Apartment*" class="form-control" required></li>
                                     <li><input type="text" name="area" class="form-control" placeholder="Area, Colony, Street, Sector, Village"></li>
                                     <li><input type="text" name="landmark" class="form-control" placeholder="Landmark">

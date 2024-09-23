@@ -934,7 +934,7 @@ if (manageDamageBtn) {
             <div class="full-width popUpUpdateDamageForm formBox_${i}" id="damageForm_${i}">
                 <div class="col-2">
                     <div class="form-group">
-                        <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth" value="${value["damageAreaWidth"]}" type="number" />
+                        <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth" value="${value["damageAreaWidth"]}" type="number" onwheel="this.blur()" />
                         <label class="form-lable" for="damageAreaWidth_${i}">Length</label>
                     </div>
                 </div>
@@ -960,7 +960,7 @@ if (manageDamageBtn) {
                                     </div>
                 <div class="col-2">
                     <div class="form-group">
-                        <input id="damageAreaHeight_${i}" class="height" name="damageAreaHeight" value="${value["damageAreaHeight"]}" type="number" />
+                        <input id="damageAreaHeight_${i}" class="height" name="damageAreaHeight" value="${value["damageAreaHeight"]}" type="number" onwheel="this.blur()" />
                         <label class="form-lable" for="damageAreaHeight_${i}">Height</label>
                     </div>
                 </div>

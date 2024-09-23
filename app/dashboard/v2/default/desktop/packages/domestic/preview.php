@@ -11,19 +11,28 @@
                     <div class="step-open-box step_1_box">
                         <?php
 
-                        if (isset($tripDuration) && isset($travelStyle) && isset($startingCity) && isset($destinationCity) && isset($outstationVehicle) && isset($localSighseeignVehicle)) {
+                        if (isset($travelStyle) && isset($startingCity) && isset($outstationVehicle) && isset($localSighseeignVehicle)) {
 
                             $travelCompanyName = SITE_NAME;
 
-                            require_once MODULES . 'itinerary/single-location.php';
+                            require_once MODULES . 'itinerary/new-location.php';
+                            if (isset($destination2)) {
+                            } else {
+                                // require_once MODULES . 'itinerary/single-location.php';
+                                echo $destination2 . 'is missing';
+                                exit();
+                            }
+
+                            print_r($itineraryData);
+                            exit();
 
                             if (isset($tripData)) { ?>
                                 <div class="form-header">
                                     <h1 style="float:left; width:100%; line-height:60px; padding: 3rem 0px;">
                                         <?php echo $packageName ?>
-                                        <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333">
+                                        <!-- <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333">
                                             <strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Duration: </strong><?php echo $tripDuration . ' nights and ' . ($tripDuration + 1) . ' days' ?>
-                                        </span>
+                                        </span> -->
                                         <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333"><strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Style: </strong><?php echo $travelStyle ?></span>
                                     </h1>
                                 </div>
@@ -132,7 +141,8 @@
                                 }
                             }
                         } else {
-                            echo "Invalid request found";
+                            // echo "Invalid request found";
+                            print_r($_REQUEST);
                         }
                         ?>
                     </div>

@@ -16,7 +16,8 @@ require_once 'header.php';
                                 <p><strong>Address:</strong><br />Azad Bhawan - G-127, Gali no 4, Ashok Vihar Phase 3
                                     Extention,Behind Ekta Group ,Palam Vihar Gurugram Road, Haryana, 122001</p>
                                 <p><strong>Contact no.:</strong><br /><a href="tel:+91-9013622555">+91-9013622555</a>,
-                                    <a href="tel:+91-8950622555">+91-8950622555</a></p>
+                                    <a href="tel:+91-8950622555">+91-8950622555</a>
+                                </p>
                                 <p><strong>Email:</strong><br />support@rentaldraft.com, info@rentaldraft.com</p>
                             </div>
                         </div>
@@ -31,7 +32,7 @@ require_once 'header.php';
                                     <input type="text" name="name" class="form-control" id="name"
                                         placeholder="Full name" required>
                                     <!-- <label for="mobile" class="form-label">Contact number<sup>*</sup></label> -->
-                                    <input type="number" name="mobile" class="form-control" id="mobile"
+                                    <input type="number" onwheel="this.blur()" name="mobile" class="form-control" id="mobile"
                                         placeholder="Mobile number" required>
                                     <!-- <label for="email" class="form-label">Email address</label> -->
                                     <input type="email" name="email" class="form-control" id="email"

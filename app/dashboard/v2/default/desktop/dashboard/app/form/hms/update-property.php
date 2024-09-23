@@ -47,7 +47,7 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <label class="form-lable" id="Label">Property city<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number" />
+                        <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number" onwheel="this.blur()" />
                         <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                     </div>
                     <div class="form-group">
@@ -55,7 +55,7 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <label class="form-lable" id="Label">Email<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <input id="mobile" name="mobile" value="<?php echo $property_mobile ?>" type="number" />
+                        <input id="mobile" name="mobile" value="<?php echo $property_mobile ?>" type="number" onwheel="this.blur()" />
                         <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                     </div>
                     <div class="form-group">
@@ -65,7 +65,7 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                     </div>
                     <div class="form-group">
                         <input id="supportMobile" name="supportMobile" value="<?php echo $property_support_mobile ?>"
-                            type="number" />
+                            type="number" onwheel="this.blur()" />
                         <label class="form-lable" id="Label">Support Contact no.</label>
                     </div>
                     <div class="form-group">

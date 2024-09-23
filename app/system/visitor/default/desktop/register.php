@@ -40,7 +40,7 @@ require_once 'header.php';
                         required />
                 </div>
                 <div class="form-group">
-                    <input type="number" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control"
+                    <input type="number" onwheel="this.blur()" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control"
                         required />
                 </div>
                 <div class="form-group">

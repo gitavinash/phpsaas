@@ -55,13 +55,13 @@
         <label class="form-lable" id="Label">Block code or Item code<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <input id="totalItem" name="totalItem" type="number" />
+        <input id="totalItem" name="totalItem" type="number" onwheel="this.blur()" />
         <label class="form-lable" id="Label">Total slabs in Block<sup>*</sup></label>
     </div>
     <div class="full-width">
         <div class="col-8">
             <div class="form-group">
-                <input id="thickness" name="thickness" type="number" />
+                <input id="thickness" name="thickness" type="number" onwheel="this.blur()" />
                 <label class="form-lable" id="Label">Thickness<sup>*</sup></label>
             </div>
         </div>

@@ -61,12 +61,12 @@ require_once 'header.php';
                                             <div class="hotel_book__now">
                                                 <div class="hotel_price">
                                                     <?php
-if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
-                                                    <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
-                                                    <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
+                                                    if ($user_type == 'travel_agent' || $user_type == 'administrator') { ?>
+                                                        <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
+                                                        <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
                                                     <?php
-}
-?>
+                                                    }
+                                                    ?>
                                                 </div>
                                                 <div class="book_now hotel_book">
                                                     <button class="global_btn">book this now</button>
@@ -83,12 +83,12 @@ if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
                                         <div class="hotel_details">
                                             <div class="hotel_price">
                                                 <?php
-if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
-                                                <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
-                                                <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
+                                                if ($user_type == 'travel_agent' || $user_type == 'administrator') { ?>
+                                                    <h3>₹ <?php echo $property_starting_price ?> <span> / night</span></h3>
+                                                    <p>₹5,500 <span> 29% off </span>No cost EMI from ₹1,471</p>
                                                 <?php
-}
-?>
+                                                }
+                                                ?>
                                             </div>
                                             <div class="book_now hotel_book">
                                                 <button class="global_btn" data-bs-toggle="modal"
@@ -143,44 +143,44 @@ if ($user_type == 'travel_agent' || $user_type == 'administrator') {?>
                             <div class="rooms_container">
                                 <?php
 
-if ($checkRooms = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='{$property_id}' AND room_status=1 AND room_site_id=" . SITE_ID)) {
-    if (mysqli_num_rows($checkRooms) != 0) {
-        while ($roomData = mysqli_fetch_assoc($checkRooms)) {
-            extract($roomData);?>
-                                <div class="room_box">
-                                    <div class="room_box__left">
-                                        <div class="room_img">
-                                            <img src="<?php echo (($room_feature_image != '') ? $room_feature_image : '/upload/others/image-not-found.png') ?>"
-                                                class="img-fluid" alt="">
-                                        </div>
-                                        <div class="room_details">
-                                            <h3><?php echo ucwords(str_replace('_', ' ', $room_type)) ?></h3>
-                                            <!-- <h6>144.0 sq.ft</h6> -->
-                                            <div class="room_details__facelities">
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
-                                                <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
-                                                        alt="">bathroom
-                                                </p>
+                                if ($checkRooms = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='{$property_id}' AND room_status=1 AND room_site_id=" . SITE_ID)) {
+                                    if (mysqli_num_rows($checkRooms) != 0) {
+                                        while ($roomData = mysqli_fetch_assoc($checkRooms)) {
+                                            extract($roomData); ?>
+                                            <div class="room_box">
+                                                <div class="room_box__left">
+                                                    <div class="room_img">
+                                                        <img src="<?php echo (($room_feature_image != '') ? $room_feature_image : '/upload/others/image-not-found.png') ?>"
+                                                            class="img-fluid" alt="">
+                                                    </div>
+                                                    <div class="room_details">
+                                                        <h3><?php echo ucwords(str_replace('_', ' ', $room_type)) ?></h3>
+                                                        <!-- <h6>144.0 sq.ft</h6> -->
+                                                        <div class="room_details__facelities">
+                                                            <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
+                                                                    alt="">bathroom
+                                                            </p>
+                                                            <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
+                                                                    alt="">bathroom
+                                                            </p>
+                                                            <p><img src="<?php echo USER_IMAGES ?>bathroom.png" class="img-fluid"
+                                                                    alt="">bathroom
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="room_box__right">
+                                                    <div class="room_book">
+                                                        <a href="#" class="global_btn">book now</a>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="room_box__right">
-                                        <div class="room_book">
-                                            <a href="#" class="global_btn">book now</a>
-                                        </div>
-                                    </div>
-                                </div>
                                 <?php
-}
-    }
-}
+                                        }
+                                    }
+                                }
 
-?>
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -205,7 +205,7 @@ if ($checkRooms = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "r
                                                 <input type="text" placeholder="Last Name *">
                                             </div>
                                             <div class="form_wrapper__input">
-                                                <input type="number" placeholder="Mobile Number *">
+                                                <input type="number" onwheel="this.blur()" placeholder="Mobile Number *">
                                                 <input type="email" placeholder="Email *">
                                             </div>
                                             <div class="form_wrapper__input">

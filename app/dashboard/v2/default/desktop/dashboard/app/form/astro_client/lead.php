@@ -13,11 +13,11 @@
             <label class="form-lable" id="Label">Email</label>
         </div>
         <div class="form-group">
-            <input id="mobile" name="mobile" type="number" required />
+            <input id="mobile" name="mobile" type="number" onwheel="this.blur()" required />
             <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
         </div>
         <div class="form-group">
-            <input id="mobile" name="alternate_mobile" type="number" />
+            <input id="mobile" name="alternate_mobile" type="number" onwheel="this.blur()" />
             <label class="form-lable" id="Label">Alternate Mobile</label>
         </div>
         <div class="form-group">

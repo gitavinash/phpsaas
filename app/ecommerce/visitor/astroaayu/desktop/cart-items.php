@@ -1,8 +1,8 @@
 <?php
 
-	$totalPrice=0;
+$totalPrice = 0;
 
-	include_once 'header.php';
+include_once 'header.php';
 
 ?>
 
@@ -22,34 +22,34 @@
                     <h3 class="heading-2">Express Delivery Products</h3>
 
                     <?php
-								
-								while($cartData=mysqli_fetch_assoc($checkCart)) {
 
-									extract($cartData);
+                    while ($cartData = mysqli_fetch_assoc($checkCart)) {
 
-									$totalPrice=$totalPrice+$cart_price;
+                        extract($cartData);
 
-									?>
+                        $totalPrice = $totalPrice + $cart_price;
 
-                    <div class="ad-card">
-                        <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
-                                src="<?php echo USER_IMAGES ?>delete.png" alt=""></a>
-                        <div class="cart-img">
-                            <img src="<?php echo $product_thumbnail ?>">
+                    ?>
+
+                        <div class="ad-card">
+                            <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
+                                    src="<?php echo USER_IMAGES ?>delete.png" alt=""></a>
+                            <div class="cart-img">
+                                <img src="<?php echo $product_thumbnail ?>">
+                            </div>
+                            <div class="prodct-nme">
+                                <a href="<?php echo $link_url ?>">
+                                    <h2><?php echo $product_title ?></h2>
+                                </a>
+                                <h5>₹ <?php echo $cart_price ?></h5>
+                            </div>
                         </div>
-                        <div class="prodct-nme">
-                            <a href="<?php echo $link_url ?>">
-                                <h2><?php echo $product_title ?></h2>
-                            </a>
-                            <h5>₹ <?php echo $cart_price ?></h5>
-                        </div>
-                    </div>
 
                     <?php
 
-								}
+                    }
 
-							?>
+                    ?>
 
                 </div>
 
@@ -70,7 +70,7 @@
                                             class="input" placeholder="Last name" required></li>
                                     <li><span>Email</span><input type="email" id="email" name="email" class="input"
                                             placeholder="Email" required></li>
-                                    <li><span>Contact No.</span><input type="number" id="mobile" name="mobile"
+                                    <li><span>Contact No.</span><input type="number" onwheel="this.blur()" id="mobile" name="mobile"
                                             class="input" placeholder="Contact no." required></li>
                                     <h2 class="inter-heading" style="margin-bottom: 20px">Enter Shipping Address</h2>
                                     <li>
@@ -85,7 +85,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li><input type="number" id="addressMobile" name="address_mobile"
+                                    <li><input type="number" onwheel="this.blur()" id="addressMobile" name="address_mobile"
                                             class="form-control" placeholder="Contact no." required></li>
                                     <li><input type="text" name="house_no"
                                             placeholder="Flat, House no., Building, Company, Apartment"
@@ -106,23 +106,20 @@
                                                     style="margin-bottom: 15px">
                                                     <option selected>Choose State</option>
                                                     <?php
-															
-															if($checkState=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."state WHERE state_country_id='101'")) {
 
-																if(mysqli_num_rows($checkState)!=0) {
+                                                    if ($checkState = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id='101'")) {
 
-																	while($stateData=mysqli_fetch_assoc($checkState)) {
+                                                        if (mysqli_num_rows($checkState) != 0) {
 
-																		extract($stateData);
-																		echo "<option value='{$state_id}'>{$state_name}</option>";
+                                                            while ($stateData = mysqli_fetch_assoc($checkState)) {
 
-																	}
+                                                                extract($stateData);
+                                                                echo "<option value='{$state_id}'>{$state_name}</option>";
+                                                            }
+                                                        }
+                                                    }
 
-																}
-
-															}
-
-															?>
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-3">
@@ -163,6 +160,6 @@
 
 <?php
 
-	include_once 'footer.php';
+include_once 'footer.php';
 
 ?>

@@ -39,7 +39,7 @@
                 <div class="box-2">
                     <div class="form-group">
                         <label>Discount</label>
-                        <input type="number" id="discount" class="form-control inside-shadow" name="discount"
+                        <input type="number" onwheel="this.blur()" id="discount" class="form-control inside-shadow" name="discount"
                             placeholder="Discount" required>
                     </div>
                 </div>
@@ -59,14 +59,14 @@
                 <div class="box-2">
                     <div class="form-group">
                         <label>Minimum cart amount</label>
-                        <input type="number" id="minCartAmount" class="form-control inside-shadow" name="minCartAmount"
+                        <input type="number" onwheel="this.blur()" id="minCartAmount" class="form-control inside-shadow" name="minCartAmount"
                             placeholder="Minimum cart amount">
                     </div>
                 </div>
                 <div class="box-2">
                     <div class="form-group">
                         <label>Maximum discount amount</label>
-                        <input type="number" id="maxDiscount" class="form-control inside-shadow" name="maxDiscount"
+                        <input type="number" onwheel="this.blur()" id="maxDiscount" class="form-control inside-shadow" name="maxDiscount"
                             placeholder="( Ignore for same as the discount amount )">
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="box-2">
                     <div class="form-group">
                         <label>Limit</label>
-                        <input type="number" id="limit" class="form-control inside-shadow" name="limit"
+                        <input type="number" onwheel="this.blur()" id="limit" class="form-control inside-shadow" name="limit"
                             placeholder="0 for unlimited use">
                     </div>
                 </div>

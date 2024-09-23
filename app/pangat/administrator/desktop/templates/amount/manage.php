@@ -1,22 +1,19 @@
 <?php
 
-    if(!defined('BREAKFAST_SLOT_PRICE')) {
+if (!defined('BREAKFAST_SLOT_PRICE')) {
 
-        define('BREAKFAST_SLOT_PRICE', 1500);
-        
-    }
+    define('BREAKFAST_SLOT_PRICE', 1500);
+}
 
-    if(!defined('LUNCH_SLOT_PRICE')) {
+if (!defined('LUNCH_SLOT_PRICE')) {
 
-        define('LUNCH_SLOT_PRICE', 3100);
-        
-    }
+    define('LUNCH_SLOT_PRICE', 3100);
+}
 
-    if(!defined('DINNER_SLOT_PRICE')) {
+if (!defined('DINNER_SLOT_PRICE')) {
 
-        define('DINNER_SLOT_PRICE', 3100);
-        
-    }
+    define('DINNER_SLOT_PRICE', 3100);
+}
 
 ?>
 
@@ -41,7 +38,7 @@
                         Breakfast
                     </td>
                     <td>
-                        <input type="number" id="breakfastAmount" placeholder="Breakfast amount" class="form-control"
+                        <input type="number" onwheel="this.blur()" id="breakfastAmount" placeholder="Breakfast amount" class="form-control"
                             value="<?php echo BREAKFAST_SLOT_PRICE ?>"
                             style=" border: 1px solid #333; border-radius: 4px;">
                     </td>
@@ -58,7 +55,7 @@
                         Lunch
                     </td>
                     <td>
-                        <input type="number" id="lunchAmount" placeholder="Lunch amount" class="form-control"
+                        <input type="number" onwheel="this.blur()" id="lunchAmount" placeholder="Lunch amount" class="form-control"
                             value="<?php echo LUNCH_SLOT_PRICE ?>" style=" border: 1px solid #333; border-radius: 4px;">
                     </td>
                     <td>
@@ -73,7 +70,7 @@
                         Dinner
                     </td>
                     <td>
-                        <input type="number" id="dinnerAmount" placeholder="Dinner amount" class="form-control"
+                        <input type="number" onwheel="this.blur()" id="dinnerAmount" placeholder="Dinner amount" class="form-control"
                             value="<?php echo DINNER_SLOT_PRICE ?>"
                             style=" border: 1px solid #333; border-radius: 4px;">
                     </td>

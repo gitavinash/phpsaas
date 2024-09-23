@@ -1,4 +1,4 @@
-<h2 class="heading"><?php echo 'Add New '.ucwords($urlStructure[1]) ?><span>Add new domain tld for domain
+<h2 class="heading"><?php echo 'Add New ' . ucwords($urlStructure[1]) ?><span>Add new domain tld for domain
         registration.</span>
 </h2>
 <div class="main-box">
@@ -26,16 +26,16 @@
                             <label class="form-lable" id="textareaLabel">Domain details</label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="mrpPrice" type="number" />
+                            <input class="form-control" id="mrpPrice" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="mrpPriceLabel">MRP price. ( in ₹ ) <sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="sellingPrice" type="number" />
+                            <input class="form-control" id="sellingPrice" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="sellingPriceLabel">Selling price. ( in ₹ )
                                 <sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" id="costPrice" type="number" />
+                            <input class="form-control" id="costPrice" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="costPriceLabel">Cost on domain. ( in ₹ )</label>
                         </div>
                         <div class="form-group-box">

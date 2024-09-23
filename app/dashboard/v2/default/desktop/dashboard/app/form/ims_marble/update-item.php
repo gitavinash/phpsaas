@@ -63,7 +63,7 @@ if (isset($validId)) {
                                         <div class="col-2">
                                             <div class="form-group">
                                                 <input id="damageAreaWidth" class="width" name="damageAreaWidth" value=""
-                                                    type="number" />
+                                                    type="number" onwheel="this.blur()" />
                                                 <!-- <label class="form-lable" id="Label">Width ( in Centimeters
                                                 )<sup>*</sup></label> -->
                                                 <label class="form-lable" id="Label">Length</label>
@@ -92,7 +92,7 @@ if (isset($validId)) {
                                         <div class="col-2">
                                             <div class="form-group">
                                                 <input id="damageAreaHeight" class="height" name="damageAreaHeight" value=""
-                                                    type="number" />
+                                                    type="number" onwheel="this.blur()" />
                                                 <!-- <label class="form-lable" id="Label">Height ( in Centimeters
                                                 )<sup>*</sup></label> -->
                                                 <label class="form-lable" id="Label">Height</label>
@@ -122,7 +122,7 @@ if (isset($validId)) {
                                         <div class="form-group">
                                             <label class="form-lable" id="Label">Comment</label>
                                             <input id="damageAreaComment" class="comment" name="damageAreaComment"
-                                                value="" type="number" />
+                                                value="" type="number" onwheel="this.blur()" />
                                         </div>
                                     </div> -->
                                     </div>
@@ -251,21 +251,21 @@ if (isset($validId)) {
                         <div class="generateBlockRow">
                             <div class="box-3">
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="slabLenght" id="slabLenght"
+                                    <input type="number" onwheel="this.blur()" class="form-control" name="slabLenght" id="slabLenght"
                                         placeholder="200">
                                     <label class="form-label">Length ( <?php echo $measurementType ?> )<sup>*</sup></label>
                                 </div>
                             </div>
                             <div class="box-3">
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="slabHeight" id="slabHeight"
+                                    <input type="number" onwheel="this.blur()" class="form-control" name="slabHeight" id="slabHeight"
                                         placeholder="100">
                                     <label class="form-label">Height ( <?php echo $measurementType ?> )<sup>*</sup></label>
                                 </div>
                             </div>
                             <div class="box-4">
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="totalSlab" id="totalSlab" placeholder="5">
+                                    <input type="number" onwheel="this.blur()" class="form-control" name="totalSlab" id="totalSlab" placeholder="5">
                                     <label class="form-label">Total slabs<sup>*</sup></label>
                                 </div>
                             </div>

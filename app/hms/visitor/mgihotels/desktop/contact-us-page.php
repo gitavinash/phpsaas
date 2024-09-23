@@ -61,7 +61,7 @@ require_once 'header.php';
                                     <input type="text" placeholder="Last Name *">
                                 </div>
                                 <div class="form_wrapper__input">
-                                    <input type="number" placeholder="Mobile Number *">
+                                    <input type="number" onwheel="this.blur()" placeholder="Mobile Number *">
                                     <input type="email" placeholder="Email *">
                                 </div>
                                 <div class="form_wrapper__input">

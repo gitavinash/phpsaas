@@ -1,18 +1,16 @@
 <?php
 
-    if(defined('CALENDER_START')) {
+if (defined('CALENDER_START')) {
 
-        $day=1;
-        $month=date('m', strtotime(CALENDER_START))-1;
-        $year=date('Y', strtotime(CALENDER_START));
+    $day = 1;
+    $month = date('m', strtotime(CALENDER_START)) - 1;
+    $year = date('Y', strtotime(CALENDER_START));
+} else {
 
-    } else {
-
-        $month='';
-        $year='';
-        $day=date('d');
-
-    }
+    $month = '';
+    $year = '';
+    $day = date('d');
+}
 
 include_once 'header.php';
 
@@ -182,7 +180,7 @@ include_once 'header.php';
                             <p class="color-red">Email is required</p>
                         </div>
                         <div class="form-cont">
-                            <input type="number" name="mobile" inputmode="numeric" pattern="[0-9]*"
+                            <input type="number" onwheel="this.blur()" name="mobile" inputmode="numeric" pattern="[0-9]*"
                                 class="mobName inputClass phoneVerify reqInput" placeholder="Mobile Number" required
                                 min="10" max="10" pattern="[6-9]{1}[0-9]{9}"
                                 title="Enter Your 10 Digit Mobile Number only">
@@ -306,7 +304,7 @@ include_once 'header.php';
                         <p>Donation amount</p>
                     </div>
                     <div class="col-8">
-                        <input type="number" name="donation" id="donationAmount" inputmode="numeric" pattern="[0-9]*"
+                        <input type="number" onwheel="this.blur()" name="donation" id="donationAmount" inputmode="numeric" pattern="[0-9]*"
                             class="form-control" placeholder="If you want to donate any amount.">
                     </div>
                 </div>
@@ -316,7 +314,7 @@ include_once 'header.php';
                     </div>
                     <div class="col-2" style="height: 10px"></div>
                     <div class="col-md-4 col-xs-12">
-                        <input type="hidden" id="calenderMonthLimit" value="<?php echo CALENDER_MONTH_VISIBLE-1 ?>">
+                        <input type="hidden" id="calenderMonthLimit" value="<?php echo CALENDER_MONTH_VISIBLE - 1 ?>">
                         <input type="submit" id="submitForm" class="btn btn-success btn-block" value="">
                     </div>
                 </div>
@@ -327,6 +325,6 @@ include_once 'header.php';
 </section>
 <?php
 
-	include_once 'footer.php';
+include_once 'footer.php';
 
 ?>

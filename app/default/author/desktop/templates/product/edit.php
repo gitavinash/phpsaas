@@ -32,10 +32,10 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
             }
         }
     } else { ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/product/?type=list&status=all';
-</script>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/product/?type=list&status=all';
+        </script>
 <?php
     }
 }
@@ -109,14 +109,14 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" class="form-control inside-shadow"
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow"
                                 value="<?php echo $inventory_price ?>" name="salePrice" placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
                                 name="mrp" placeholder="Regular price">
                         </div>
                     </div>
@@ -149,7 +149,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" name="taxRate" value="<?php echo $inventory_tax_rate ?>"
+                            <input type="number" onwheel="this.blur()" name="taxRate" value="<?php echo $inventory_tax_rate ?>"
                                 placeholder="Tax rate ( in % )" class="form-control inside-shadow">
                         </div>
                     </div>
@@ -393,23 +393,23 @@ window.location.href = 'dashboard/product/?type=list&status=all';
 
             if (SITE_ID == 32) { ?>
 
-            <h2>Brand</h2>
-            <div class="action-box height-200 inside-shadow">
+                <h2>Brand</h2>
+                <div class="action-box height-200 inside-shadow">
 
-                <?php
+                    <?php
 
                     if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
                         while ($brand = mysqli_fetch_assoc($brandList)) { ?>
-                <div class="form-group">
-                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
-                        <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
-                    <?php echo ucwords($brand['category_title']); ?>
-                </div>
-                <?php
+                            <div class="form-group">
+                                <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
+                                    <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
+                                <?php echo ucwords($brand['category_title']); ?>
+                            </div>
+                    <?php
                         }
                     }
                     ?>
-            </div>
+                </div>
             <?php
             }
 
@@ -421,12 +421,12 @@ window.location.href = 'dashboard/product/?type=list&status=all';
 
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND link_status=200 ORDER BY category_title ASC")) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                <div class="form-group">
-                    <input type="radio" name="category"
-                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
-                    <?php echo ucwords($category['category_title']); ?>
-                </div>
+                        <div class="form-group">
+                            <input type="radio" name="category"
+                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                                <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
+                            <?php echo ucwords($category['category_title']); ?>
+                        </div>
                 <?php
                     }
                 }

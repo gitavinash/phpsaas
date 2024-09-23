@@ -31,7 +31,7 @@
                             <label class="form-lable" id="Label">Property city<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="pinCode" name="pinCode" type="number" />
+                            <input id="pinCode" name="pinCode" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -39,7 +39,7 @@
                             <label class="form-lable" id="Label">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="mobile" name="mobile" type="number" />
+                            <input id="mobile" name="mobile" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                         </div>
                         <div class="form-group">

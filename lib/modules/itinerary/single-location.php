@@ -11,7 +11,7 @@ if ($chatGPTKey != '') {
         "messages" => [
             [
                 "role" => "system",
-                "content" => "You are an expert travel planner with more than 10 years of experience in Tour Package Planning. You work for {$travelCompanyName}, a New Delhi-based company that's 5 years old."
+                "content" => "You are an assistant that only responds in JSON format. Any answer provided should be a valid JSON object or array. You are an expert travel planner with more than 10 years of experience in Tour Package Planning. You work for {$travelCompanyName}, a New Delhi-based company that's 5 years old."
             ],
             [
                 "role" => "user",

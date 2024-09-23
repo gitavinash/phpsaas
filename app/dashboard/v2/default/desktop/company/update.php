@@ -1,14 +1,14 @@
 <?php
 
 if (!isset($id)) { ?>
-<script>
-window.location.href = '/dashboard/company/list/';
-</script>
+    <script>
+        window.location.href = '/dashboard/company/list/';
+    </script>
 <?php
 } else if ($id == '') { ?>
-<script>
-window.location.href = '/dashboard/company/list/';
-</script>
+    <script>
+        window.location.href = '/dashboard/company/list/';
+    </script>
 <?php
 }
 
@@ -85,7 +85,7 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             </select>
                         </div>
                         <div class="form-group">
-                            <input id="pinCode" name="pinCode" value="<?php echo $address_pin_code ?>" type="number" />
+                            <input id="pinCode" name="pinCode" value="<?php echo $address_pin_code ?>" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -93,7 +93,7 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             <label class="form-lable" id="Label">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="mobile" name="mobile" value="<?php echo $company_mobile ?>" type="number" />
+                            <input id="mobile" name="mobile" value="<?php echo $company_mobile ?>" type="number" onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                         </div>
                         <div class="form-group">

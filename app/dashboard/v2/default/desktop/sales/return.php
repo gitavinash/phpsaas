@@ -1,18 +1,18 @@
 <?php
 
 if (!isset($id)) { ?>
-<script>
-alert('Return request id is missing');
-window.location.href = '/dashboard/sales_request/list/';
-</script>
-<?php
+    <script>
+        alert('Return request id is missing');
+        window.location.href = '/dashboard/sales_request/list/';
+    </script>
+    <?php
 } else {
     if ($id == '') { ?>
-<script>
-alert('Return request id cannot be blank');
-window.location.href = '/dashboard/sales_request/list/';
-</script>
-<?php
+        <script>
+            alert('Return request id cannot be blank');
+            window.location.href = '/dashboard/sales_request/list/';
+        </script>
+    <?php
     } else {
         $salesId = base64_decode($id);
     }
@@ -20,10 +20,10 @@ window.location.href = '/dashboard/sales_request/list/';
 
 if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
-<script>
-alert('Invalid Return request id found');
-window.location.href = '/dashboard/sales/list/';
-</script>
+        <script>
+            alert('Invalid Return request id found');
+            window.location.href = '/dashboard/sales/list/';
+        </script>
 <?php
     } else {
         extract(mysqli_fetch_assoc($checkSalesRequest));
@@ -56,7 +56,7 @@ window.location.href = '/dashboard/sales/list/';
                                 </div>
                                 <div class="form-group">
                                     <input id="salesId" name="salesId" value="<?php echo base64_decode($id) ?>"
-                                        type="number" required />
+                                        type="number" onwheel="this.blur()" required />
                                     <label class="form-lable" id="Label">Sales id</label>
                                 </div>
                                 <div class="form-group">
@@ -117,7 +117,7 @@ window.location.href = '/dashboard/sales/list/';
                         <div class="returnBlockList"></div>
                     </div>
                     <div class="form-group">
-                        <input id="mobile" name="mobile" value="<?php echo $sales_mobile ?>" type="number" />
+                        <input id="mobile" name="mobile" value="<?php echo $sales_mobile ?>" type="number" onwheel="this.blur()" />
                         <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
                     </div>
                     <div class="form-group">

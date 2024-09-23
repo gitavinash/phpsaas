@@ -1,6 +1,6 @@
 <?php
-        
-    require_once 'header.php';
+
+require_once 'header.php';
 
 ?>
 <section class="banner_wrapper">
@@ -148,12 +148,12 @@
                                 <div class="input-price">
                                     <div class="field">
                                         <span>Min</span>
-                                        <input type="number" class="input-min" value="2500">
+                                        <input type="number" onwheel="this.blur()" class="input-min" value="2500">
                                     </div>
                                     <!-- <div class="separator">-</div> -->
                                     <div class="field">
                                         <span class="max">Max</span>
-                                        <input type="number" class="input-max" value="7500">
+                                        <input type="number" onwheel="this.blur()" class="input-max" value="7500">
                                     </div>
                                 </div>
                             </div>
@@ -379,7 +379,7 @@
 
 </div>
 <?php
-        
-    require_once 'footer.php';
+
+require_once 'footer.php';
 
 ?>

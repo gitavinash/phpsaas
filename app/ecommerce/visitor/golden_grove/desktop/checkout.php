@@ -1,8 +1,8 @@
 <?php
-        
-            require_once 'header.php';
 
-        ?>
+require_once 'header.php';
+
+?>
 <!-- cart page -->
 <section class="cart_wrapper">
     <div class="cart_content">
@@ -125,7 +125,7 @@
                         <input type="text" placeholder="Last Name">
                     </div>
                     <div class="input_flex">
-                        <input type="number" placeholder="Postcode / ZIP">
+                        <input type="number" onwheel="this.blur()" placeholder="Postcode / ZIP">
                         <input type="text" placeholder="Street Address">
                     </div>
                     <div class="input_flex">
@@ -148,7 +148,7 @@
                     </div>
                     <div class="input_flex">
                         <input type="email" placeholder="Email">
-                        <input type="number" placeholder="Mobile Number">
+                        <input type="number" onwheel="this.blur()" placeholder="Mobile Number">
                     </div>
                 </div>
 
@@ -165,7 +165,7 @@
                                 <input type="text" placeholder="Last Name">
                             </div>
                             <div class="input_flex">
-                                <input type="number" placeholder="Postcode / ZIP">
+                                <input type="number" onwheel="this.blur()" placeholder="Postcode / ZIP">
                                 <input type="text" placeholder="Street Address">
                             </div>
                             <div class="input_flex">
@@ -188,7 +188,7 @@
                             </div>
                             <div class="input_flex">
                                 <input type="email" placeholder="Email">
-                                <input type="number" placeholder="Mobile Number">
+                                <input type="number" onwheel="this.blur()" placeholder="Mobile Number">
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
     </div>
 </section>
 <?php
-        
-            require_once 'footer.php';
 
-        ?>
+require_once 'footer.php';
+
+?>

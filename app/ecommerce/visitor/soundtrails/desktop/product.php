@@ -28,18 +28,18 @@
                                 $galleryImages = json_decode($product_gallery, TRUE);
 
                                 if ($galleryImages != '') { ?>
-                            <div class="sm-image-group mt-3 mt-xl-0">
-                                <img src="<?php echo $product_image ?>" class="img-fluid"
-                                    alt="<?php echo $product_title ?>" />
-                            </div>
-                            <?php
+                                    <div class="sm-image-group mt-3 mt-xl-0">
+                                        <img src="<?php echo $product_image ?>" class="img-fluid"
+                                            alt="<?php echo $product_title ?>" />
+                                    </div>
+                                    <?php
 
                                     for ($i = 0; $i < sizeof($galleryImages); $i++) {
 
                                         extract($galleryImages[$i]); ?>
-                            <div class="sm-image-group mt-3">
-                                <img src="<?php echo $path ?>" class="img-fluid" alt="<?php echo $name ?>" />
-                            </div>
+                                        <div class="sm-image-group mt-3">
+                                            <img src="<?php echo $path ?>" class="img-fluid" alt="<?php echo $name ?>" />
+                                        </div>
                             <?php
                                     }
 
@@ -62,19 +62,19 @@
                                                     if ($galleryImages != '') {
 
                                                 ?>
-                                <div class="sm-image-group mt-3 mt-xl-0 mx-3">
-                                    <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
-                                        alt="<?php echo $name ?>" />
-                                </div>
-                                <?php
+                                        <div class="sm-image-group mt-3 mt-xl-0 mx-3">
+                                            <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
+                                                alt="<?php echo $name ?>" />
+                                        </div>
+                                        <?php
 
                                                         for ($i = 0; $i < sizeof($galleryImages); $i++) {
 
                                                             extract($galleryImages[$i]); ?>
-                                <div class="sm-image-group mt-3 mt-xl-0 mx-3">
-                                    <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
-                                        alt="<?php echo $name ?>" />
-                                </div>
+                                            <div class="sm-image-group mt-3 mt-xl-0 mx-3">
+                                                <img src="<?php echo $path ?>" class="img-fluid d-block m-auto"
+                                                    alt="<?php echo $name ?>" />
+                                            </div>
                                 <?php
                                                         }
 
@@ -128,10 +128,10 @@
                         <?php
 
                         if ($inventory_price != $inventory_mrp) { ?>
-                        <p class="ms-5 line">
-                            ₹
-                            <?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $inventory_mrp); ?>/-
-                        </p>
+                            <p class="ms-5 line">
+                                ₹
+                                <?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $inventory_mrp); ?>/-
+                            </p>
                         <?php
                         }
 
@@ -145,7 +145,7 @@
                             <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-xxl-6">
                                 <h5>QUANTITY</h5>
                                 <div class="quntity-div mt-3">
-                                    <input type="number" placeholder="1" value="1" />
+                                    <input type="number" onwheel="this.blur()" placeholder="1" value="1" />
                                     <div class="controlles"></div>
                                 </div>
                             </div>

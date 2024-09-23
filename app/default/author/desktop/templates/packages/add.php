@@ -42,13 +42,13 @@
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" name="salePrice" placeholder="Sale price">
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="salePrice" placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" class="form-control inside-shadow" name="mrp" placeholder="Regular price">
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="mrp" placeholder="Regular price">
                         </div>
                     </div>
                     <div class="box-1">
@@ -76,7 +76,7 @@
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow">
+                            <input type="number" onwheel="this.blur()" name="taxRate" placeholder="Tax rate ( in % )" class="form-control inside-shadow">
                         </div>
                     </div>
                 </div>

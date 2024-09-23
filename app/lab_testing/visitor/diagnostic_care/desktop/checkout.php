@@ -54,17 +54,17 @@ require_once 'header.php';
                                         extract($testList);
                                         $finalTestsName .= $product_title . ' | ' ?>
 
-                            <tr>
-                                <td class="is-color-blue is-font600 isfont-27">
-                                    <?php echo ucwords($product_title) ?>
-                                </td>
-                                <td class="is-color-blue is-font600 isfont-18">
-                                    <?php echo $inventory_currency_symbol . ' ' . $inventory_price; ?></td>
-                                <td class="text-center">
-                                    <i class="bx bx-x-circle text-center fs-3 text-danger removeTest"
-                                        id_val="<?php echo $product_id ?>"></i>
-                                </td>
-                            </tr>
+                                        <tr>
+                                            <td class="is-color-blue is-font600 isfont-27">
+                                                <?php echo ucwords($product_title) ?>
+                                            </td>
+                                            <td class="is-color-blue is-font600 isfont-18">
+                                                <?php echo $inventory_currency_symbol . ' ' . $inventory_price; ?></td>
+                                            <td class="text-center">
+                                                <i class="bx bx-x-circle text-center fs-3 text-danger removeTest"
+                                                    id_val="<?php echo $product_id ?>"></i>
+                                            </td>
+                                        </tr>
                             <?php
                                         $i++;
                                     }
@@ -98,7 +98,7 @@ require_once 'header.php';
 
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <input type="number" name="mobile" class="form-control" placeholder="Mobile *"
+                                    <input type="number" onwheel="this.blur()" name="mobile" class="form-control" placeholder="Mobile *"
                                         id="mobile" required />
                                 </div>
                             </div>

@@ -82,13 +82,13 @@ if (isset($validId)) { ?>
             <label class="form-lable" id="Label">Block code or Item code<sup>*</sup></label>
         </div>
         <div class="form-group">
-            <input id="totalItem" name="totalItem" value="<?php echo $block_total_item ?>" type="number" />
+            <input id="totalItem" name="totalItem" value="<?php echo $block_total_item ?>" type="number" onwheel="this.blur()" />
             <label class="form-lable" id="Label">Total item in Block<sup>*</sup></label>
         </div>
         <div class="full-width">
             <div class="col-8">
                 <div class="form-group">
-                    <input id="thickness" name="thickness" value="<?php echo $block_thickness_size ?>" type="number" />
+                    <input id="thickness" name="thickness" value="<?php echo $block_thickness_size ?>" type="number" onwheel="this.blur()" />
                     <label class="form-lable" id="Label">Thickness<sup>*</sup></label>
                 </div>
             </div>
