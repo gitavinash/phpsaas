@@ -28,7 +28,11 @@
 </tr>
 <tr>
     <td class="box-3"><strong>Place of Birth<sup>*</sup></strong></td>
-    <td class="box-7"><input id="placeOfBirth" name="place_of_birth" class="indianCitySuggestion" value="<?php echo $place_of_birth ?>" type="text" required /></td>
+    <td>
+        <select class="indianCityAutoComplete" style="float: left; width:100%" name="place_of_birth" id="placeOfBirth">
+            <option value="<?php echo $place_of_birth ?>"><?php echo $place_of_birth ?></option>
+        </select>
+    </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Time of birth in hour<sup>*</sup></strong></td>
@@ -36,10 +40,10 @@
         <select class="selectJS form-control" name="time_of_birth_in_hour" id="timeOfBirthInHour" required>
             <option value="">Select Time of Birth ( Hour )</option>
             <?php
-for ($i = 0; $i <= 23; $i++) {
-    echo "<option value='{$i}' " . (($time_of_birth_in_hour == $i) ? 'selected' : '') . " >{$i}</option>";
-}
-?>
+            for ($i = 0; $i <= 23; $i++) {
+                echo "<option value='{$i}' " . (($time_of_birth_in_hour == $i) ? 'selected' : '') . " >{$i}</option>";
+            }
+            ?>
         </select>
     </td>
 </tr>
@@ -49,10 +53,10 @@ for ($i = 0; $i <= 23; $i++) {
         <select class="selectJS form-control" name="time_of_birth_in_minute" id="timeOfBirthInMinute" required>
             <option value="">Select Time of Birth ( Minutes )</option>
             <?php
-for ($i = 0; $i <= 59; $i++) {
-    echo "<option value='{$i}' " . (($time_of_birth_in_minute == $i) ? 'selected' : '') . " >{$i}</option>";
-}
-?>
+            for ($i = 0; $i <= 59; $i++) {
+                echo "<option value='{$i}' " . (($time_of_birth_in_minute == $i) ? 'selected' : '') . " >{$i}</option>";
+            }
+            ?>
         </select>
     </td>
 </tr>

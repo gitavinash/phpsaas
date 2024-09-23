@@ -129,4 +129,7 @@
     width: 100%;
     bottom: 2rem;
   }
+  .fullScreenPopUpBox {
+    height: 100dvh;
+  }
 }

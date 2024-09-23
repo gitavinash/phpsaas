@@ -43,11 +43,11 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                             <p>
                                 <?php
 
-if (isset($date_of_birth)) {
-    echo "<span><strong>Date of Birth:</strong> " . date('d M Y', strtotime($date_of_birth)) . "</span>";
-}
+                                if (isset($date_of_birth)) {
+                                    echo "<span><strong>Date of Birth:</strong> " . date('d M Y', strtotime($date_of_birth)) . "</span>";
+                                }
 
-?>
+                                ?>
                                 <span><strong>Last Update:
                                     </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span>
                             </p>
@@ -68,21 +68,21 @@ if (isset($date_of_birth)) {
                         <a id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
                             history</a>
                         <?php
-if (SITE_APP == 'astro_client') {
-    echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
+                        if (SITE_APP == 'astro_client') {
+                            echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
                             history</a>";
-}
-?>
+                        }
+                        ?>
                         <a id="paymentDetailsBtn" class="btn detailsBtn"><i class="fi-rr-money-check"></i> Payment
                             history</a>
                         <?php
 
-if ($enquiry_status != 5) {?>
-                        <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px" ><i class="fi-rr-edit"></i> Edit
-                            lead</a>
+                        if ($enquiry_status != 5) { ?>
+                            <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i class="fi-rr-edit"></i> Edit
+                                lead</a>
                         <?php
-}
-?>
+                        }
+                        ?>
                     </div>
                 </div>
                 <div class="widget openBtnBox no-padding box-1" id="leadDetailsBox">
@@ -90,156 +90,156 @@ if ($enquiry_status != 5) {?>
                         <table>
                             <?php
 
-if ($enquiry_first_name != '') {
-    echo "<tr>
+                            if ($enquiry_first_name != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>First name</strong></td>
                                 <td class='box-7'>{$enquiry_first_name}</td>
                             </tr>";
-}
+                            }
 
-if ($enquiry_middle_name != '') {
-    echo "<tr>
+                            if ($enquiry_middle_name != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Middle name</strong></td>
                                 <td class='box-7'>{$enquiry_middle_name}</td>
                             </tr>";
-}
+                            }
 
-if ($enquiry_last_name != '') {
-    echo "<tr>
+                            if ($enquiry_last_name != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Last name</strong></td>
                                 <td class='box-7'>{$enquiry_last_name}</td>
                             </tr>";
-}
+                            }
 
-if ($enquiry_email != '') {
-    echo "<tr>
+                            if ($enquiry_email != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Email</strong></td>
                                 <td class='box-7'>{$enquiry_email}</td>
                             </tr>";
-}
+                            }
 
-if ($enquiry_mobile != '') {
-    echo "<tr>
+                            if ($enquiry_mobile != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Mobile</strong></td>
                                 <td class='box-7'>{$enquiry_mobile}</td>
                             </tr>";
-}
+                            }
 
-if ($enquiry_alt_mobile != '') {
-    echo "<tr>
+                            if ($enquiry_alt_mobile != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Altenate Mobile</strong></td>
                                 <td class='box-7'>{$enquiry_alt_mobile}</td>
                             </tr>";
-}
+                            }
 
-if ($enquiry_subject != '') {
-    echo "<tr>
+                            if ($enquiry_subject != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>" . ((SITE_APP == 'aleay') ? 'Tour package' : 'Subject') . "</strong></td>
                                 <td class='box-7'>{$enquiry_subject}</td>
                             </tr>";
-}
+                            }
 
-if ($date_of_travel != '1970-01-01' && $date_of_travel != '') {
-    echo "<tr>
+                            if ($date_of_travel != '1970-01-01' && $date_of_travel != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Date of travel|{$date_of_travel}|</strong></td>
                                 <td class='box-7'>{$date_of_travel}</td>
                             </tr>";
-}
+                            }
 
-if ($number_of_days != 0) {
-    echo "<tr>
+                            if ($number_of_days != 0) {
+                                echo "<tr>
                                 <td class='box-3'><strong>Number of days</strong></td>
                                 <td class='box-7'>{$number_of_days} Nights</td>
                             </tr>";
-}
+                            }
 
-if ($number_of_adults != 0) {
-    echo "<tr>
+                            if ($number_of_adults != 0) {
+                                echo "<tr>
                                 <td class='box-3'><strong>Number of adults</strong></td>
                                 <td class='box-7'>{$number_of_adults}</td>
                             </tr>";
-}
+                            }
 
-if ($number_of_childrens != 0) {
-    echo "<tr>
+                            if ($number_of_childrens != 0) {
+                                echo "<tr>
                                 <td class='box-3'><strong>Number of childrens</strong></td>
                                 <td class='box-7'>{$number_of_childrens}</td>
                             </tr>";
-}
+                            }
 
-if ($number_of_infants != 0) {
-    echo "<tr>
+                            if ($number_of_infants != 0) {
+                                echo "<tr>
                                 <td class='box-3'><strong>Number of infants</strong></td>
                                 <td class='box-7'>{$number_of_infants}</td>
                             </tr>";
-}
+                            }
 
-if ($current_location != '') {
-    echo "<tr>
+                            if ($current_location != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Current location</strong></td>
                                 <td class='box-7'>{$current_location}</td>
                             </tr>";
-}
+                            }
 
-if ($pickup_location != '') {
-    echo "<tr>
+                            if ($pickup_location != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Pickup location</strong></td>
                                 <td class='box-7'>{$pickup_location}</td>
                             </tr>";
-}
+                            }
 
-if ($drop_location != '') {
-    echo "<tr>
+                            if ($drop_location != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Drop location</strong></td>
                                 <td class='box-7'>{$drop_location}</td>
                             </tr>";
-}
+                            }
 
-if ($requirements != '') {
-    echo "<tr>
+                            if ($requirements != '') {
+                                echo "<tr>
                                 <td class='box-3'><strong>Requirements</strong></td>
                                 <td class='box-7'>{$requirements}</td>
                             </tr>";
-} else {
+                            } else {
 
-    if ($enquiry_source != 'facebook') {
-        $enquiryMessage = json_decode($enquiry_message, true);
+                                if ($enquiry_source != 'facebook') {
+                                    $enquiryMessage = json_decode($enquiry_message, true);
 
-        if (is_array($enquiryMessage)) {
-            foreach ($enquiryMessage as $key => $value) {
-                echo "<tr>
+                                    if (is_array($enquiryMessage)) {
+                                        foreach ($enquiryMessage as $key => $value) {
+                                            echo "<tr>
                                         <td class='box-3'><strong>" . str_replace('_', ' ', ucwords($key)) . "</strong></td>
                                         <td class='box-7'>{$value}</td>
                                     </tr>";
-            }
-        }
-    }
-}
+                                        }
+                                    }
+                                }
+                            }
 
-if ($site_access_type != 'agent') {
-    if ($enquiry_source != '') {
-        echo "<tr>
+                            if ($site_access_type != 'agent') {
+                                if ($enquiry_source != '') {
+                                    echo "<tr>
                                     <td class='box-3'><strong>Enquiry source</strong></td>
                                     <td class='box-7'>{$enquiry_source}</td>
                                 </tr>";
-    }
+                                }
 
-    if ($enquiry_medium != '') {
-        echo "<tr>
+                                if ($enquiry_medium != '') {
+                                    echo "<tr>
                                     <td class='box-3'><strong>Enquiry medium</strong></td>
                                     <td class='box-7'>{$enquiry_medium}</td>
                                 </tr>";
-    }
+                                }
 
-    if ($enquiry_campaign != '') {
-        echo "<tr>
+                                if ($enquiry_campaign != '') {
+                                    echo "<tr>
                                     <td class='box-3'><strong>Enquiry campaign</strong></td>
                                     <td class='box-7'>{$enquiry_campaign}</td>
                                 </tr>";
-    }
-}
+                                }
+                            }
 
-?>
+                            ?>
                         </table>
                     </div>
                 </div>
@@ -248,49 +248,49 @@ if ($site_access_type != 'agent') {
                         <div class="historyBox">
                             <?php
 
-if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
-    if (mysqli_num_rows($leadHistory) != 0) {
-        echo "<ol class='timeline'>";
-        while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
-            extract($leadHistoryData);
-            $commentBox = '';
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
+                                if (mysqli_num_rows($leadHistory) != 0) {
+                                    echo "<ol class='timeline'>";
+                                    while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                        extract($leadHistoryData);
+                                        $commentBox = '';
 
-            switch (strtolower($enquiry_notes_meta_type)) {
-                case "assign":
-                    $icon = 'link';
-                    $msg = str_replace('Lead assign', '<a>Lead assign</a>', $enquiry_notes_meta_value);
-                    break;
+                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                            case "assign":
+                                                $icon = 'link';
+                                                $msg = str_replace('Lead assign', '<a>Lead assign</a>', $enquiry_notes_meta_value);
+                                                break;
 
-                case "payment":
-                    $icon = 'indian-rupee-sign';
-                    $msg = '<a>Payment</a>' . $profile_display_name;
-                    break;
+                                            case "payment":
+                                                $icon = 'indian-rupee-sign';
+                                                $msg = '<a>Payment</a>' . $profile_display_name;
+                                                break;
 
-                case "generate":
-                    $icon = 'plus';
-                    $msg = '<a>Added </a>by ' . $profile_display_name;
-                    break;
+                                            case "generate":
+                                                $icon = 'plus';
+                                                $msg = '<a>Added </a>by ' . $profile_display_name;
+                                                break;
 
-                case "update":
-                    $icon = 'refresh';
-                    $msg = '<a>Lead update </a>by ' . $profile_display_name;
-                    break;
+                                            case "update":
+                                                $icon = 'refresh';
+                                                $msg = '<a>Lead update </a>by ' . $profile_display_name;
+                                                break;
 
-                case "duplicate":
-                    $icon = 'refresh';
-                    $msg = '<a>Lead mark Duplicate </a> updated by ' . $profile_display_name;
-                    break;
+                                            case "duplicate":
+                                                $icon = 'refresh';
+                                                $msg = '<a>Lead mark Duplicate </a> updated by ' . $profile_display_name;
+                                                break;
 
-                default:
-                    $icon = 'comment-alt';
-                    $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
-                    if ($enquiry_notes_meta_value != '') {
-                        $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
-                    }
-                    break;
-            }
+                                            default:
+                                                $icon = 'comment-alt';
+                                                $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                                }
+                                                break;
+                                        }
 
-            echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
+                                        echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
                                                     <span class='timeline-item-icon | faded-icon'>
                                                         <i class='fi-rr-{$icon}'></i>
                                                     </span>
@@ -300,78 +300,78 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
-        }
-        echo "</ol>";
-    }
-} else {
-    echo "Something went wrong";
-}
+                                    }
+                                    echo "</ol>";
+                                }
+                            } else {
+                                echo "Something went wrong";
+                            }
 
-?>
+                            ?>
                         </div>
                     </div>
                 </div>
-                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none' >
+                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
                     <div class="leadInfo">
                         <div class="historyBox">
                             <?php
 
-if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
-    if (mysqli_num_rows($leadHistory) != 0) {
-        echo "<ol class='timeline'>";
-        while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
-            extract($leadHistoryData);
-            $commentBox = '';
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
+                                if (mysqli_num_rows($leadHistory) != 0) {
+                                    echo "<ol class='timeline'>";
+                                    while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                        extract($leadHistoryData);
+                                        $commentBox = '';
 
-            switch (strtolower($enquiry_notes_meta_type)) {
-                case "upay":
-                    $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
-                    if (is_array($enquiry_notes_meta_value)) {
-                        extract($enquiry_notes_meta_value);
-                    } else {
-                        $upayMsg = '';
-                        $upayImages = '';
-                    }
-                    $icon = 'story-book';
-                    $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
-                    if ($enquiry_notes_meta_value != '') {
-                        $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
-                        $upayImages = (json_decode($upayImages, true));
-                        if (!empty($upayImages)) {
-                            $commentBox .= "<div class='imagesList' >";
-                            $upayImages = json_decode($upayImages, true);
-                            for ($i = 0; $i < sizeof($upayImages); $i++) {
-                                $fileExtension = strtolower(pathinfo($upayImages[$i]['path'], PATHINFO_EXTENSION));
-                                switch ($fileExtension) {
-                                    case 'pdf':
-                                        $featureThumbnail = "/upload/others/docs/pdf.png";
-                                        break;
-                                    case 'doc':
-                                    case 'docx':
-                                        $featureThumbnail = "/upload/others/docs/doc.png";
-                                        break;
-                                    case 'xls':
-                                    case 'xlsx':
-                                        $featureThumbnail = "/upload/others/docs/xls.png";
-                                        break;
-                                    default:
-                                        $featureThumbnail = $upayImages[$i]['path'];
-                                        break;
-                                }
-                                $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
-                            }
-                            $commentBox .= "</div>";
-                        }
-                        $commentBox .= "</div>";
-                    }
-                    break;
-                default:
-                    $icon = 'times-hexagon';
-                    $msg = '';
-                    break;
-            }
+                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                            case "upay":
+                                                $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
+                                                if (is_array($enquiry_notes_meta_value)) {
+                                                    extract($enquiry_notes_meta_value);
+                                                } else {
+                                                    $upayMsg = '';
+                                                    $upayImages = '';
+                                                }
+                                                $icon = 'story-book';
+                                                $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
+                                                    $upayImages = (json_decode($upayImages, true));
+                                                    if (!empty($upayImages)) {
+                                                        $commentBox .= "<div class='imagesList' >";
+                                                        $upayImages = json_decode($upayImages, true);
+                                                        for ($i = 0; $i < sizeof($upayImages); $i++) {
+                                                            $fileExtension = strtolower(pathinfo($upayImages[$i]['path'], PATHINFO_EXTENSION));
+                                                            switch ($fileExtension) {
+                                                                case 'pdf':
+                                                                    $featureThumbnail = "/upload/others/docs/pdf.png";
+                                                                    break;
+                                                                case 'doc':
+                                                                case 'docx':
+                                                                    $featureThumbnail = "/upload/others/docs/doc.png";
+                                                                    break;
+                                                                case 'xls':
+                                                                case 'xlsx':
+                                                                    $featureThumbnail = "/upload/others/docs/xls.png";
+                                                                    break;
+                                                                default:
+                                                                    $featureThumbnail = $upayImages[$i]['path'];
+                                                                    break;
+                                                            }
+                                                            $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
+                                                        }
+                                                        $commentBox .= "</div>";
+                                                    }
+                                                    $commentBox .= "</div>";
+                                                }
+                                                break;
+                                            default:
+                                                $icon = 'times-hexagon';
+                                                $msg = '';
+                                                break;
+                                        }
 
-            echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
+                                        echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
                                                     <span class='timeline-item-icon | faded-icon'>
                                                         <i class='fi-rr-{$icon}'></i>
                                                     </span>
@@ -381,75 +381,76 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
-        }
-        echo "</ol>";
-    }
-} else {
-    echo "Something went wrong";
-}
+                                    }
+                                    echo "</ol>";
+                                }
+                            } else {
+                                echo "Something went wrong";
+                            }
 
-?>
+                            ?>
                         </div>
                     </div>
                 </div>
                 <div class="widget openBtnBox no-padding box-1" id="paymentDetailsBox">
-                    <div class="leadInfo"><div class="historyBox">
+                    <div class="leadInfo">
+                        <div class="historyBox">
                             <?php
 
-if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
-    if (mysqli_num_rows($leadHistory) != 0) {
-        echo "<ol class='timeline'>";
-        while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
-            extract($leadHistoryData);
-            $commentBox = '';
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
+                                if (mysqli_num_rows($leadHistory) != 0) {
+                                    echo "<ol class='timeline'>";
+                                    while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                        extract($leadHistoryData);
+                                        $commentBox = '';
 
-            switch (strtolower($enquiry_notes_meta_type)) {
-                case "payment":
-                    $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
-                    if (is_array($enquiry_notes_meta_value)) {
-                        extract($enquiry_notes_meta_value);
-                    } else {
-                        $paymentAmount = '';
-                        $paymentImages = '';
-                        $paymentMethod = '';
-                        $paymentDate = '';
-                        $paymentReference = '';
-                        $paymentMsg = '';
-                        $paymentByCustomer = '';
-                    }
-                    $icon = 'indian-rupee-sign';
+                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                            case "payment":
+                                                $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
+                                                if (is_array($enquiry_notes_meta_value)) {
+                                                    extract($enquiry_notes_meta_value);
+                                                } else {
+                                                    $paymentAmount = '';
+                                                    $paymentImages = '';
+                                                    $paymentMethod = '';
+                                                    $paymentDate = '';
+                                                    $paymentReference = '';
+                                                    $paymentMsg = '';
+                                                    $paymentByCustomer = '';
+                                                }
+                                                $icon = 'indian-rupee-sign';
 
-                    if ($paymentByCustomer == true) {
-                        $msg = "<a>Payment</a> received by " . $customerFullName;
-                    } else {
-                        $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
-                    }
+                                                if ($paymentByCustomer == true) {
+                                                    $msg = "<a>Payment</a> received by " . $customerFullName;
+                                                } else {
+                                                    $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
+                                                }
 
-                    if ($enquiry_notes_meta_value != '') {
-                        $commentBox = "<div class='comment'>
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'>
                                                         <p><strong>Amount:</strong> {$paymentAmount}</p>
                                                         <p><strong>Payment method:</strong> {$paymentMethod}</p>
                                                         <p><strong>Date:</strong> {$paymentDate}</p>
                                                         <p><strong>Reference number:</strong> {$paymentReference}</p>
                                                         <p><strong>Comment:</strong> " . str_replace('\r\n', '<br />', $paymentMsg) . "</p>
                                                     ";
-                        $paymentImages = (json_decode($paymentImages, true));
-                        $paymentImages = (json_decode($paymentImages, true));
-                        if ($paymentImages != '') {
-                            $commentBox .= "<div class='imagesList' >";
-                            $commentBox .= "<a href='{$paymentImages['path']}' target='_blank'><img class='leadInfoImage' src='{$paymentImages['path']}' ></a>";
-                            $commentBox .= "</div>";
-                        }
-                        $commentBox .= "</div>";
-                    }
-                    break;
-                default:
-                    $icon = 'times-hexagon';
-                    $msg = '';
-                    break;
-            }
+                                                    $paymentImages = (json_decode($paymentImages, true));
+                                                    $paymentImages = (json_decode($paymentImages, true));
+                                                    if ($paymentImages != '') {
+                                                        $commentBox .= "<div class='imagesList' >";
+                                                        $commentBox .= "<a href='{$paymentImages['path']}' target='_blank'><img class='leadInfoImage' src='{$paymentImages['path']}' ></a>";
+                                                        $commentBox .= "</div>";
+                                                    }
+                                                    $commentBox .= "</div>";
+                                                }
+                                                break;
+                                            default:
+                                                $icon = 'times-hexagon';
+                                                $msg = '';
+                                                break;
+                                        }
 
-            echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
+                                        echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
                                                     <span class='timeline-item-icon | faded-icon'>
                                                         <i class='fi-rr-{$icon}'></i>
                                                     </span>
@@ -459,14 +460,14 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
-        }
-        echo "</ol>";
-    }
-} else {
-    echo "Something went wrong";
-}
+                                    }
+                                    echo "</ol>";
+                                }
+                            } else {
+                                echo "Something went wrong";
+                            }
 
-?>
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -478,16 +479,16 @@ if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, en
                             <form action="#" id="updateLeadForm" autocomplete="off">
                                 <?php
 
-$leadFormPath = $dashboardDirectory . '/dashboard/app/form/' . SITE_APP;
-$leadForm = $leadFormPath . '/edit-lead.php';
-if (!file_exists($leadForm)) {
-    $leadForm =
-        $dashboardDirectory . '/dashboard/app/form/default/edit-lead.php';
-}
+                                $leadFormPath = $dashboardDirectory . '/dashboard/app/form/' . SITE_APP;
+                                $leadForm = $leadFormPath . '/edit-lead.php';
+                                if (!file_exists($leadForm)) {
+                                    $leadForm =
+                                        $dashboardDirectory . '/dashboard/app/form/default/edit-lead.php';
+                                }
 
-require_once $leadForm;
+                                require_once $leadForm;
 
-?>
+                                ?>
                                 <tr>
                                     <td class="box-3">
                                     </td>
@@ -510,45 +511,40 @@ require_once $leadForm;
             <section class="leadQuickLinks">
                 <?php
 
-if ($enquiry_status != 5) {
-    if ($enquiry_status != 4) {
-        if (SITE_APP_ID == 22 && ($enquiry_status == 2 || $enquiry_status == 1)) {
-            echo "<a href='/dashboard/sales/add/?ref=enquiry&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
-        }
-        ?>
-                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
-                <?php
+                if ($enquiry_status != 5) {
+                    if ($enquiry_status != 4) {
+                        if (SITE_APP_ID == 22 && ($enquiry_status == 2 || $enquiry_status == 1)) {
+                            echo "<a href='/dashboard/sales/add/?ref=enquiry&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
+                        }
+                ?>
+                        <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+                        <?php
 
-        if (SITE_APP == 'astro_client') {
-            echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
-            echo "
+                        if (SITE_APP == 'astro_client') {
+                            echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
+                            echo "
                 <a href='' class='btn btn-green' id='updatePaymentBtn'><i class='fi-rr-notes'></i> Update payment
                     records</a>";
-        }
+                        }
+                        ?>
+                        <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
+                            links</a>
+                        <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
+                        <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
+                        <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
 
-        if (SITE_ID == 57) {?>
-                <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                    links</a>
-                <a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>
-                <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
-                <?php
-}
+                    <?php
+                    } else { ?>
 
-        ?>
-                <a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>
-
-                <?php
-} else {?>
-
-                <form method="POST" class="">
-                    <!-- Design a form to assign lead to intern -->
-                </form>
+                        <form method="POST" class="">
+                            <!-- Design a form to assign lead to intern -->
+                        </form>
 
                 <?php
-}
-}
+                    }
+                }
 
-?>
+                ?>
             </section>
         </div>
     </div>
@@ -669,7 +665,7 @@ if ($enquiry_status != 5) {
                     <form method="POST" action="#" id="updatePaymentForm">
                         <section class="form">
                             <div class="step-open-box step_1_box">
-                                <form method="POST" action="#" id="addPaymentRecordForm" >
+                                <form method="POST" action="#" id="addPaymentRecordForm">
                                     <section class="form">
                                         <div class="step-open-box step_1_box">
                                             <div class="form-header">
@@ -778,44 +774,44 @@ if ($enquiry_status != 5) {
 
     <?php
 
-if (SITE_APP == 'astro_client') {?>
+    if (SITE_APP == 'astro_client') { ?>
 
-    <div class="popUp upayBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" id="addUpayForm" >
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Add new upay</h4>
+        <div class="popUp upayBox">
+            <div class="smallPopUpBox">
+                <div class="widget box-7">
+                    <div class="contentArea">
+                        <form method="POST" action="#" id="addUpayForm">
+                            <section class="form">
+                                <div class="step-open-box step_1_box">
+                                    <div class="form-header">
+                                        <h4 class="heading">Add new upay</h4>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea type="text" name="upayText" class="editor upayEditor" id="upayComment"
+                                            placeholder="Add your comment"></textarea>
+                                        <label class="form-lable" id="commentLable">Any comment</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
+                                        <label class="form-lable" id="upayPhoto">Upload photo</label>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="upayText" class="editor upayEditor" id="upayComment"
-                                        placeholder="Add your comment"></textarea>
-                                    <label class="form-lable" id="commentLable">Any comment</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
-                                    <label class="form-lable" id="upayPhoto">Upload photo</label>
-                                </div>
-                            </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
+                <div class="widget box-3">
+                    <div class="actionArea">
+                        <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     <?php
-}
+    }
 
-?>
+    ?>
 
     <div class="popUp itineraryBox">
         <div class="fullScreenPopUpBox">

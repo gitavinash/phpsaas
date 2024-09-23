@@ -748,45 +748,132 @@ $(document).ready(function (e) {
     }
   });
 
+  // Clone add new destination location
+
+  $("#locationDurationContainer").on("click", ".addLocation", function () {
+    const $clone = $(".locationDurationGroup:first").clone();
+
+    const newIndex =
+      $("#locationDurationContainer .locationDurationGroup").length + 1;
+    $clone
+      .find(".indianCityAutoComplete")
+      .attr("id", "destination-" + newIndex)
+      .val("");
+
+    $clone.find(".select2-container").remove();
+
+    $clone.find("input").val("");
+
+    $("#locationDurationContainer").append($clone);
+
+    if ($(".locationDurationGroup").length > 1) {
+      $(".removeLocation").show();
+    }
+
+    initializeSelect2($clone.find(".indianCityAutoComplete"));
+
+    $clone.find(".indianCityAutoComplete").show();
+  });
+
+  $("#locationDurationContainer").on("click", ".removeLocation", function () {
+    $(this).closest(".locationDurationGroup").remove();
+
+    if ($(".locationDurationGroup").length === 1) {
+      $(".removeLocation").hide();
+    }
+  });
+
+  if ($(".locationDurationGroup").length === 1) {
+    $(".removeLocation").hide();
+  }
+
   // Generate domestic tour package
 
   $("#addDomesticPackageBtn").click(function (e) {
     e.preventDefault();
-    var packageName = $("#name").val().trim();
-    var destinationCity = $("#destination").val().trim();
-    var startingCity = $("#startingCity").val().trim();
-    var duration = $("#duration").val().trim();
-    var travelStyle = $("#travelStyle").val().trim();
-    var outstationVehicle = $("#outstationVehicle").val().trim();
-    var localSighseeignVehicle = $("#localSighseeignVehicle").val().trim();
 
+    // Collect and trim all the form values, ensuring they are not undefined
+    var packageName = $("#name").val() ? $("#name").val().trim() : "";
+    var startingCity = $("#startingCity").val()
+      ? $("#startingCity").val().trim()
+      : "";
+    var travelStyle = $("#travelStyle").val()
+      ? $("#travelStyle").val().trim()
+      : "";
+    var outstationVehicle = $("#outstationVehicle").val()
+      ? $("#outstationVehicle").val().trim()
+      : "";
+    var localSighseeignVehicle = $("#localSighseeignVehicle").val()
+      ? $("#localSighseeignVehicle").val().trim()
+      : "";
+
+    // Check if any of the required fields are empty
     if (
-      packageName !== "" &&
-      destinationCity !== "" &&
-      startingCity !== "" &&
-      duration !== "" &&
-      travelStyle !== "" &&
-      outstationVehicle !== "" &&
-      localSighseeignVehicle !== ""
+      !packageName ||
+      !startingCity ||
+      !travelStyle ||
+      !outstationVehicle ||
+      !localSighseeignVehicle
     ) {
-      var packageName = encodeURIComponent(packageName);
-      var destinationCity = encodeURIComponent(destinationCity);
-      var startingCity = encodeURIComponent(startingCity);
-      var travelStyle = encodeURIComponent(travelStyle);
-      var duration = encodeURIComponent(duration);
-      var outstationVehicle = encodeURIComponent(outstationVehicle);
-      var localSighseeignVehicle = encodeURIComponent(localSighseeignVehicle);
-
-      var redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${destinationCity}&startingCity=${startingCity}&tripDuration=${duration}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
-
-      window.location.href = redirectUrl;
-    } else {
       popUpMessage(
         "center",
         "All fields are required to generate itinerary",
         "warning"
       );
+      return;
     }
+
+    // Collect location and duration data
+    const locationsData = [];
+    let allLocationsFilled = true;
+
+    $(".locationDurationGroup").each(function () {
+      const destination = $(this).find(".indianCityAutoComplete").val()
+        ? $(this).find(".indianCityAutoComplete").val().trim()
+        : "";
+      const duration = $(this).find("input[name='duration[]']").val()
+        ? $(this).find("input[name='duration[]']").val().trim()
+        : "";
+
+      // Check if both destination and duration are filled
+      if (!destination || !duration) {
+        allLocationsFilled = false;
+      } else {
+        locationsData.push({
+          destination: destination,
+          duration: duration,
+        });
+      }
+    });
+
+    // Check if all locations are filled
+    if (!allLocationsFilled) {
+      popUpMessage(
+        "center",
+        "Please fill out all destination and duration fields",
+        "warning"
+      );
+      return;
+    }
+
+    // Encode URL parameters
+    packageName = encodeURIComponent(packageName);
+    startingCity = encodeURIComponent(startingCity);
+    travelStyle = encodeURIComponent(travelStyle);
+    outstationVehicle = encodeURIComponent(outstationVehicle);
+    localSighseeignVehicle = encodeURIComponent(localSighseeignVehicle);
+
+    const encodedLocationsData = encodeURIComponent(
+      JSON.stringify(locationsData)
+    );
+
+    // Generate redirect URL
+    const redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${encodedLocationsData}&startingCity=${startingCity}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
+
+    console.log(`redirectUrl:`, redirectUrl);
+
+    // Uncomment this line to enable the redirection
+    window.location.href = redirectUrl;
   });
 
   $("#createDomesticItineraryBtn").click(function (e) {

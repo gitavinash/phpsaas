@@ -18,27 +18,36 @@
                             <p class="form-lable" id="Label">Package name<sup>*</sup></p>
                             <input id="name" name="name" type="text" />
                         </div>
-                        <div class="form-group">
-                            <p>Destination<sup>*</sup></p>
-                            <select class="selectJS form-control" name="destination" id="destination">
-                                <option value="select">Select destination</option>
-                                <?php
-                                if ($locations = mysqli_query($connection, "SELECT location_title, state_name FROM " . TABLE_PREFIX . "locations INNER JOIN " . TABLE_PREFIX . "state ON location_state=state_id WHERE location_country=101 AND state_id!=0")) {
-                                    if (mysqli_num_rows($locations)) {
-                                        while ($locationData = mysqli_fetch_assoc($locations)) {
-                                            echo "<option value='{$locationData['location_title']}'>{$locationData['location_title']}, {$locationData['state_name']}</option>";
-                                        }
-                                    }
-                                } else {
-                                    echo mysqli_error($connection);
-                                }
-                                ?>
-                            </select>
+                        <div id="locationDurationContainer">
+                            <div class="locationDurationGroup">
+                                <div class="form-group">
+                                    <p>Destination<sup>*</sup></p>
+                                    <select class="indianCityAutoComplete form-control" name="destination[]" id="destination-1">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <p class="form-lable" id="Label">Trip duration (in Nights)<sup>*</sup></p>
+                                    <input id="duration" name="duration[]" type="number" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="box-2">
+                                        <button type="button" class="btn btn-success addLocation">+</button>
+                                    </div>
+                                    <div class="box-2">
+                                        <button type="button" class="btn-red removeLocation" style="display:none;">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <p>Starting city<sup>*</sup></p>
-                            <select class="selectJS form-control" name="startingCity" id="startingCity">
-                                <option value="select">Select starting city</option>
+                            <p>Pickup city<sup>*</sup></p>
+                            <select class="indianCityAutoComplete form-control" name="startingCity" id="startingCity">
+                            </select>
+                        </div>
+                        <!-- <div class="form-group">
+                            <p>Drop city<sup>*</sup></p>
+                            <select class="selectJS form-control" name="dropCity" id="dropCity">
+                                <option value="select">Select drop city</option>
 
                                 <?php
 
@@ -54,13 +63,9 @@
                                 }
                                 ?>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="form-group">
-                            <p class="form-lable" id="Label">Trip duration ( in Night )<sup>*</sup></p>
-                            <input id="duration" name="duration" type="number" />
-                        </div>
-                        <div class="form-group">
-                            <p>Travel style</p>
+                            <p>Travel style<sup>*</sup></p>
                             <select class="selectJS form-control" name="travelStyle" id="travelStyle">
                                 <option value="select">Select travel style</option>
                                 <option value="adventure">Adventure Travel</option>

@@ -25,18 +25,20 @@
             <label class="form-lable" id="Label">Date of Birth<sup>*</sup></label>
         </div>
         <div class="form-group">
-            <input id="placeOfBirth" name="place_of_birth" class="indianCitySuggestion" type="text" required />
-            <label class="form-lable" id="Label">Place of Birth<sup>*</sup></label>
+            <p class="form-lable">Place of Birth<sup>*</sup></p>
+            <select class="indianCityAutoComplete" name="place_of_birth" id="placeOfBirth">
+            </select>
+            <!-- <input id="placeOfBirth" name="place_of_birth" class="indianCitySuggestion" type="text" required /> -->
         </div>
         <div class="box-5">
             <div class="form-group">
                 <select class="selectJS form-control" name="time_of_birth_in_hour" id="timeOfBirthInHour" required>
                     <option value="">Select Time of Birth ( Hour )</option>
                     <?php
-for ($i = 0; $i <= 23; $i++) {
-    echo "<option value='{$i}'>{$i}</option>";
-}
-?>
+                    for ($i = 0; $i <= 23; $i++) {
+                        echo "<option value='{$i}'>{$i}</option>";
+                    }
+                    ?>
                 </select>
                 <label class="form-lable" id="timeOfBirthInHour">Time of Birth ( Hour )<sup>*</sup></label>
             </div>
@@ -46,10 +48,10 @@ for ($i = 0; $i <= 23; $i++) {
                 <select class="selectJS form-control" name="time_of_birth_in_minute" id="timeOfBirthInMinute" required>
                     <option value="">Select Time of Birth ( Minute )</option>
                     <?php
-for ($i = 0; $i <= 59; $i++) {
-    echo "<option value='{$i}'>{$i}</option>";
-}
-?>
+                    for ($i = 0; $i <= 59; $i++) {
+                        echo "<option value='{$i}'>{$i}</option>";
+                    }
+                    ?>
                 </select>
                 <label class="form-lable" id="timeOfBirthInMinute">Time of Birth ( Minute )<sup>*</sup></label>
             </div>

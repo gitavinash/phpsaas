@@ -4,19 +4,17 @@ function closePopup(btn) {
   document.querySelector(".popUp").style.display = "none";
 }
 
+/** SweetAlert Pop Up Box */
 
-  /** SweetAlert Pop Up Box */
-
-  function popUpMessage(msgPostion, msgTxt, msgType) {
-    Swal.fire({
-      position: msgPostion,
-      type: msgType,
-      title: msgTxt,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
-
+function popUpMessage(msgPostion, msgTxt, msgType) {
+  Swal.fire({
+    position: msgPostion,
+    type: msgType,
+    title: msgTxt,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
 
 function toggleDisplay(showBox, showEditBtn) {
   $(".openBtnBox").hide(); // Hide all
@@ -52,36 +50,69 @@ const urlQuery = new URLSearchParams(window.location.search);
 let dateRangeParams = urlQuery.get("daterange");
 let leadId = urlQuery.get("id");
 
-$(document).ready(function (e) {
-
-  $(".indianCitySuggestion").autocomplete({
-    source: function(request, response) {
-        // AJAX request to the JSON API
-        $.ajax({
-            url: "/api/city-by-country/", // Replace with your API URL
-            dataType: "json",
-            data: {
-              country_id: 101,
-              query: request.term
-          },
-            success: function(data) {
-          
-                // Map the API response to the format required by jQuery UI autocomplete
-                response($.map(data.cityData, function(item) {
-                    return {
-                        label: item, // What the user sees in the dropdown
-                        value: item // What is set in the input field
-                    };
-                }));
-            },
-            error: function() {
-                response([]); // Handle error or no results
-            }
-        });
+function initializeSelect2(element) {
+  $(element).select2({
+    placeholder: "Select destination",
+    minimumInputLength: 2,
+    ajax: {
+      url: "/api/city-by-country/?country_id=101", // Replace with your API URL
+      dataType: "json",
+      delay: 250,
+      data: function (params) {
+        return {
+          query: params.term,
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: $.map(data.cityData, function (item) {
+            return {
+              id: item,
+              text: item,
+            };
+          }),
+        };
+      },
+      cache: true,
     },
-    minLength: 2, // Minimum characters to trigger the autocomplete
-    delay: 300 // Delay in milliseconds before making the request
-});
+  });
+}
+
+$(document).ready(function (e) {
+  if ($(".indianCityAutoComplete").length) {
+    // Initialize select2 for the existing element
+    initializeSelect2(".indianCityAutoComplete");
+  }
+
+  // $(".indianCitySuggestion").autocomplete({
+  //   source: function (request, response) {
+  //     // AJAX request to the JSON API
+  //     $.ajax({
+  //       url: "/api/city-by-country/", // Replace with your API URL
+  //       dataType: "json",
+  //       data: {
+  //         country_id: 101,
+  //         query: request.term,
+  //       },
+  //       success: function (data) {
+  //         // Map the API response to the format required by jQuery UI autocomplete
+  //         response(
+  //           $.map(data.cityData, function (item) {
+  //             return {
+  //               label: item, // What the user sees in the dropdown
+  //               value: item, // What is set in the input field
+  //             };
+  //           })
+  //         );
+  //       },
+  //       error: function () {
+  //         response([]); // Handle error or no results
+  //       },
+  //     });
+  //   },
+  //   minLength: 2, // Minimum characters to trigger the autocomplete
+  //   delay: 300, // Delay in milliseconds before making the request
+  // });
 
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
   if (dateRangeParams == null) {
@@ -188,7 +219,7 @@ $(document).ready(function (e) {
   function isNumeric(input) {
     return /^\d+$/.test(input);
   }
-  
+
   function createPieChart(objectID, chartData) {
     // Extract labels and counts
     const labels = chartData.labels;
