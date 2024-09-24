@@ -5,7 +5,7 @@ if (isset($_COOKIE['user_data'])) {
     require_once LOGIN_CHECK;
     $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time, subscription_expiry FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_site_id=" . SITE_ID)) {
+    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time, subscription_expiry FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_expiry <= CURDATE(); AND subscription_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkUser) != 0) {
             extract(mysqli_fetch_assoc($checkUser));
             if ($subscription_status == 1) {
@@ -58,14 +58,14 @@ if (isset($_COOKIE['user_data'])) {
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'G-KN6V4VKJN4');
+        gtag('config', 'G-KN6V4VKJN4');
     </script>
 </head>
 
@@ -82,29 +82,29 @@ if (isset($_COOKIE['user_data'])) {
 
                         if (isset($_COOKIE['user_data'])) { ?>
 
-                        <div class="header_right">
-                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                            </p>
-                        </div>
+                            <div class="header_right">
+                                <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                                </p>
+                            </div>
 
-                        <!-- profile side--bar -->
-                        <div class="profile--sideBar">
-                            <div class="profile_container">
-                                <div class="profile_cancel">
-                                    <i class='bx bx-x'></i>
-                                </div>
-                                <div class="profile_header">
-                                    <!-- <div class="profile--img">
+                            <!-- profile side--bar -->
+                            <div class="profile--sideBar">
+                                <div class="profile_container">
+                                    <div class="profile_cancel">
+                                        <i class='bx bx-x'></i>
+                                    </div>
+                                    <div class="profile_header">
+                                        <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                    <div class="user--content">
-                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                        <a href="/logout/">Logout</a>
+                                        <div class="user--content">
+                                            <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                            <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                            <a href="/logout/">Logout</a>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <?php
+                                    <?php
 
                                     if ($activeSubscription == true) {
 
@@ -133,19 +133,19 @@ if (isset($_COOKIE['user_data'])) {
 
                                     ?>
 
+                                </div>
                             </div>
-                        </div>
 
                         <?php
                         } else { ?>
 
 
-                        <div class="header_right">
-                            <!-- <button class="subscribe">subscribe</button> -->
-                            <a href="/subscribe/" class="subscribe">subscribe</a>
-                            <!-- <button class="sign_in"></button> -->
-                            <a href="/login/" class="sign_in">sign in</a>
-                        </div>
+                            <div class="header_right">
+                                <!-- <button class="subscribe">subscribe</button> -->
+                                <a href="/subscribe/" class="subscribe">subscribe</a>
+                                <!-- <button class="sign_in"></button> -->
+                                <a href="/login/" class="sign_in">sign in</a>
+                            </div>
 
                         <?php
                         }
