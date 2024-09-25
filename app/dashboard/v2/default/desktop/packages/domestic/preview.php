@@ -11,29 +11,32 @@
                     <div class="step-open-box step_1_box">
                         <?php
 
-                        if (isset($travelStyle) && isset($startingCity) && isset($outstationVehicle) && isset($localSighseeignVehicle)) {
+                        if (isset($travelStyle) && isset($startingCity) && isset($destinationCity) && isset($tripDuration) && isset($outstationVehicle) && isset($localSighseeignVehicle)) {
 
                             $travelCompanyName = SITE_NAME;
 
-                            require_once MODULES . 'itinerary/new-location.php';
-                            if (isset($destination2)) {
-                            } else {
-                                // require_once MODULES . 'itinerary/single-location.php';
-                                echo $destination2 . 'is missing';
-                                exit();
-                            }
+                            $destinationCity = explode('_', $destinationCity);
+                            $tripDuration = explode('_', $tripDuration);
 
-                            print_r($itineraryData);
-                            exit();
+                            if (sizeof($destinationCity) == 1) {
+                                $multiCity = false;
+                                $destinationCity = $destinationCity[0];
+                                $tripDuration = $tripDuration[0];
+                                require_once MODULES . 'itinerary/single-location.php';
+                            } else {
+                                require_once MODULES . 'itinerary/multiple-location.php';
+                                $destinationCity = $destinationCity[0];
+                                $tripDuration = array_sum($tripDuration);
+                            }
 
                             if (isset($tripData)) { ?>
                                 <div class="form-header">
                                     <h1 style="float:left; width:100%; line-height:60px; padding: 3rem 0px;">
                                         <?php echo $packageName ?>
-                                        <!-- <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333">
+                                        <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333">
                                             <strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Duration: </strong><?php echo $tripDuration . ' nights and ' . ($tripDuration + 1) . ' days' ?>
-                                        </span> -->
-                                        <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333"><strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Style: </strong><?php echo $travelStyle ?></span>
+                                        </span>
+                                        <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333"><strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Style: </strong><?php echo ucwords($travelStyle) ?></span>
                                     </h1>
                                 </div>
                                 <input type="hidden" name="packageName" value="<?php echo $packageName ?>">
@@ -44,7 +47,7 @@
                                     <div class="editor" id="editor1" style="min-height: 200px">
                                         <?php echo $tripData['overview']; ?>
                                     </div>
-                                    <textarea name="overview" id="editor-0" style="display:none"><?php echo $tripData['overview']; ?></textarea>
+                                    <textarea name="overview" id="editor-0" style="display:none"><?php echo (($multiCity == true) ? reset($tripData['overview']) : $tripData['overview']) ?></textarea>
                                 </div>
                                 <?php
                                 $i = 1;
