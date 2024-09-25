@@ -5,7 +5,7 @@ if (isset($_COOKIE['user_data'])) {
     require_once LOGIN_CHECK;
     $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time, subscription_expiry FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND subscription_expiry <= CURDATE(); AND subscription_site_id=" . SITE_ID)) {
+    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time, subscription_expiry FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND CURDATE() <= subscription_expiry AND subscription_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkUser) != 0) {
             extract(mysqli_fetch_assoc($checkUser));
             if ($subscription_status == 1) {
