@@ -6,7 +6,7 @@
             <li class="step-box active" id="step_1"><span>2</span>Itinerary details</li>
         </ul>
         <div class="steps-box">
-            <form action="#" id="saveDomesticPackageForm">
+            <form action="#" id="createTourPackageForm">
                 <section class="form">
                     <div class="step-open-box step_1_box">
                         <?php
@@ -108,7 +108,7 @@
                                     <input type="hidden" name="packageType" value="domestic">
                                     <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
                                     <input type="hidden" name="start" value="<?php echo $startingCity ?>">
-                                    <input type="submit" class="btn" id="createDomesticItineraryBtn" value="Save ininenary">
+                                    <input type="submit" class="btn" id="createTourPackageBtn" value="Save ininenary">
                                 </div>
                                 <?php
                             } else {
@@ -149,8 +149,7 @@
                                 }
                             }
                         } else {
-                            // echo "Invalid request found";
-                            print_r($_REQUEST);
+                            echo "Invalid request found";
                         }
                         ?>
                     </div>

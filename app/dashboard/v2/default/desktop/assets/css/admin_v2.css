@@ -523,7 +523,7 @@ strong {
 }
 
 aside {
-  position: relative;
+  position: fixed;
   float: left;
   width: 240px;
   top: 0;
@@ -540,6 +540,7 @@ aside {
   padding-bottom: 50px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+  overflow: scroll;
 }
 
 aside::-webkit-scrollbar {
