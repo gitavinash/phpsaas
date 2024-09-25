@@ -44,9 +44,6 @@ Ensure each day has at least a 500 word paragraph describing the day's activitie
         "temperature" => 0.7
     ];
 
-    print_r($data);
-    exit();
-
     // Set headers for the API request
     $headers = [
         "Content-Type: application/json",
