@@ -787,6 +787,17 @@ $(document).ready(function (e) {
     $(".removeLocation").hide();
   }
 
+  // Vehicle selection in package
+
+  $('select[name="outstationVehicle"]').on("change", function () {
+    var selectedValue = $(this).val();
+    if (selectedValue.toLowerCase() !== "volvo") {
+      $('select[name="localSighseeignVehicle"]')
+        .val(selectedValue)
+        .trigger("change");
+    }
+  });
+
   // Generate domestic tour package
 
   $("#addDomesticPackageBtn").click(function (e) {
