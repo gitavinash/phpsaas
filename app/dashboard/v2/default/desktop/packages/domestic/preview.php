@@ -110,7 +110,7 @@
                                     <input type="hidden" name="start" value="<?php echo $startingCity ?>">
                                     <input type="submit" class="btn" id="createDomesticItineraryBtn" value="Save ininenary">
                                 </div>
-                        <?php
+                                <?php
                             } else {
                                 $redirectUrl = "/dashboard/packages/domestic/preview/?packageName={$packageName}&destinationCity={$destinationCity}&startingCity={$startingCity}&tripDuration={$tripDuration}&outstationVehicle={$outstationVehicle}&localSighseeignVehicle={$localSighseeignVehicle}&travelStyle={$travelStyle}";
 
@@ -141,6 +141,11 @@
                                     } else {
                                         print_r($decodedContent);
                                     }
+                                } else { ?>
+                                    <script>
+                                        window.location.reload();
+                                    </script>
+                        <?php
                                 }
                             }
                         } else {

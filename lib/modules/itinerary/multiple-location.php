@@ -25,9 +25,9 @@ if ($chatGPTKey != '') {
                 - Format the output in JSON format with:
                 {
                     'overview: [
-                        'intro': {{return_paragraph_overview_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}}
-                        'inclusion': {{inclusion_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}}
-                        'exclusion': {{exclusion_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}}
+                        'intro': {{return_paragraph_overview_of_{$destinationCity[0]}_{$travelStyle}_tour_package_intinenary}}
+                        'inclusion': {{inclusion_of_{$destinationCity[0]}_{$travelStyle}_tour_package_intinenary}}
+                        'exclusion': {{exclusion_of_{$destinationCity[0]}_{$travelStyle}_tour_package_intinenary}}
                     ]
                     'durations':[
                         {
