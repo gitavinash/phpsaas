@@ -11,6 +11,10 @@ if ($chatGPTKey != '') {
         $destinationsAndDurations .= "{$destinationCity[$i]} with {$tripDuration[$i]} nights, ";
     }
 
+    $startTimings = (($outstationVehicle == 'volvo') ? 'in evening' : 'in morning');
+
+    $localSighseeignVehicleUpdated = (($startingCity != $destinationCity[0]) ?  "{$startingCity} to {$destinationCity[0]} will be transferred by {$outstationVehicle} and " : '');
+
     // Prepare the data to send in the API request
     $data = [
         "model" => "gpt-3.5-turbo", // GPT-3.5-turbo model
@@ -21,7 +25,7 @@ if ($chatGPTKey != '') {
             ],
             [
                 "role" => "user",
-                "content" => "Create a detailed {$packageName} package itinerary where travel style is {$travelStyle}. Prepare itinerary for {$destinationsAndDurations}. Tour will be starting from {$startingCity} to {$destinationCity[0]} by {$travelCompanyName}. {$startingCity} to {$destinationCity[0]} will be transferred by {$outstationVehicle} and local sightseeing will be done by {$localSighseeignVehicle}.
+                "content" => "Create a detailed {$packageName} package itinerary where travel style is {$travelStyle}. Prepare itinerary for {$destinationsAndDurations}. Day 1 tour will be starting from {$startingCity}. {$localSighseeignVehicleUpdated}local sightseeing will be done by {$localSighseeignVehicle}.
                 - Format the output in JSON format with:
                 {
                     'overview: [

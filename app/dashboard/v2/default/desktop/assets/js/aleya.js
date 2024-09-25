@@ -893,7 +893,28 @@ $(document).ready(function (e) {
 
   $("#createTourPackageBtn").click(function (e) {
     e.preventDefault();
+
+    var packageType = $("#packageType").val();
+    console.log(`packageType:`, packageType);
+
     var formData = $("#createTourPackageForm").serialize();
-    console.log(`formData`, formData);
+
+    $.ajax({
+      type: "POST",
+      url: "/api/packages/publish/", // Replace with your server-side endpoint URL
+      data: formData,
+      dataType: "json",
+      success: function (response) {
+        if (response.success) {
+          postMessage("center", response.msg, response.status);
+          window.location.href =
+            "/dashboard/packages/" + packageType + "/list/";
+        }
+      },
+      error: function (xhr, status, error) {
+        postMessage("center", response.msg, response.status);
+        console.log(`Error:`, error);
+      },
+    });
   });
 });

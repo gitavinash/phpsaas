@@ -5,6 +5,10 @@ $chatGPTKey = (defined('CHAT_GPT_API') ? CHAT_GPT_API : '');
 if ($chatGPTKey != '') {
     $endpoint = "https://api.openai.com/v1/chat/completions";
 
+    $startTimings = (($outstationVehicle == 'volvo') ? 'in evening' : 'in morning');
+
+    $localSighseeignVehicleUpdated = (($startingCity != $destinationCity[0]) ?  "{$startingCity} to {$destinationCity[0]} will be transferred by {$outstationVehicle} and " : '');
+
     // Prepare the data to send in the API request
     $data = [
         "model" => "gpt-3.5-turbo", // GPT-3.5-turbo model
@@ -15,7 +19,7 @@ if ($chatGPTKey != '') {
             ],
             [
                 "role" => "user",
-                "content" => "Create a detailed {$destinationCity} {$travelStyle} tour package itinerary for {$tripDuration} nights and " . ($tripDuration + 1) . " days. Tour will be starting from {$startingCity} to {$destinationCity} by {$travelCompanyName}. {$startingCity} to {$destinationCity} will be transferred by {$outstationVehicle} and local sightseeing will be done by {$localSighseeignVehicle}.
+                "content" => "Create a detailed {$destinationCity} {$travelStyle} tour package itinerary for {$tripDuration} nights and " . ($tripDuration + 1) . " days. Day 1 tour will be starting from {$startingCity}. {$localSighseeignVehicleUpdated}local sightseeing will be done by {$localSighseeignVehicle}..
                 - Format the output in JSON format with:
                 {
                     'overview: [

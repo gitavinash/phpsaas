@@ -88,3 +88,7 @@ define('SITE_THEME_COLOUR', ((isset($site_theme_color)) ? $site_theme_color : '#
 
 define('ENCRYPT_METHOD', 'AES-128-CTR');
 // define('ENCRYPT_KEY', 'blumox.com');
+
+// Maps key
+
+define('HERE_MAPS_KEY', '6zO_obkSkxtx4j1O9u6QpVTMuKuI75J_ZsWcXaW11To');

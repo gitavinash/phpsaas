@@ -50,6 +50,34 @@ const urlQuery = new URLSearchParams(window.location.search);
 let dateRangeParams = urlQuery.get("daterange");
 let leadId = urlQuery.get("id");
 
+function initializeSelect2HereMaps(element) {
+  $(element).select2({
+    placeholder: "Select destination",
+    minimumInputLength: 2,
+    ajax: {
+      url: "/api/maps/here/autocomplete/", // Replace with your API URL
+      dataType: "json",
+      delay: 250,
+      data: function (params) {
+        return {
+          searchQuery: params.term,
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: $.map(data.locationList, function (item) {
+            return {
+              id: item,
+              text: item,
+            };
+          }),
+        };
+      },
+      cache: true,
+    },
+  });
+}
+
 function initializeSelect2(element) {
   $(element).select2({
     placeholder: "Select destination",
@@ -81,7 +109,7 @@ function initializeSelect2(element) {
 $(document).ready(function (e) {
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
-    initializeSelect2(".indianCityAutoComplete");
+    initializeSelect2HereMaps(".indianCityAutoComplete");
   }
 
   // $(".indianCitySuggestion").autocomplete({

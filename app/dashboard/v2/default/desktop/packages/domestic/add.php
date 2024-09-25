@@ -82,6 +82,7 @@
                                 <option value="roadtrip">Road Trip</option>
                                 <option value="cruise">Cruise Travel</option>
                                 <option value="backpacking">Backpacking Travel</option>
+                                <option value="religious">Religious Travel</option>
                             </select>
                         </div>
                         <div class="form-group">

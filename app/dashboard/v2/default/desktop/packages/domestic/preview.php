@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="form-group">
                                     <p>Hotel type<sup>*</sup></p>
-                                    <select class="selectJS form-control" name="outstationVehicle" id="outstationVehicle">
+                                    <select class="selectJS form-control" name="hotel" id="hotel">
                                         <option value="select">Select hotel type</option>
                                         <option value="apartments">Apartments</option>
                                         <option value="capsule_hotel">Capsule hotel</option>
@@ -105,7 +105,9 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input type="hidden" name="packageType" value="domestic">
+                                    <input type="hidden" name="packageType" id="packageType" value="domestic">
+                                    <input type="hidden" name="outstationVehicle" value="<?php echo $outstationVehicle ?>">
+                                    <input type="hidden" name="localSighseeignVehicle" value="<?php echo $localSighseeignVehicle ?>">
                                     <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
                                     <input type="hidden" name="start" value="<?php echo $startingCity ?>">
                                     <input type="submit" class="btn" id="createTourPackageBtn" value="Save ininenary">
