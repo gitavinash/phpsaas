@@ -18,15 +18,17 @@ if ($chatGPTKey != '') {
                 "content" => "Create a detailed {$destinationCity} {$travelStyle} tour package itinerary for {$tripDuration} nights and " . ($tripDuration + 1) . " days. Tour will be starting from {$startingCity} to {$destinationCity} by {$travelCompanyName}. {$startingCity} to {$destinationCity} will be transferred by {$outstationVehicle} and local sightseeing will be done by {$localSighseeignVehicle}.
                 - Format the output in JSON format with:
                 {
-                    'overview: {overview_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}
+                    'overview: [
+                        'intro': {{return_paragraph_overview_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary_use_,_for_new_line}}
+                        'inclusion': {{inclusion_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}}
+                        'exclusion': {{exclusion_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}}
+                    ]
                     'durations':[
                         {
                             'day': {{day_number}} - {{day_title}},
                             'details': {{detailed_paragraph_for_the_day}}
                         }
                     ]
-                    'inclusion: {inclusion_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}
-                    'exclusion: {exclusion_of_{$destinationCity}_{$travelStyle}_tour_package_intinenary}
                 }
 Ensure each day has at least a 500 word paragraph describing the day's activities also Make sure the JSON is valid and well-formed."
             ]

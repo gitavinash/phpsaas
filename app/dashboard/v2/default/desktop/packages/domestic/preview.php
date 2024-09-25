@@ -47,7 +47,7 @@
                                     <div class="editor" id="editor1" style="min-height: 200px">
                                         <?php echo $tripData['overview']; ?>
                                     </div>
-                                    <textarea name="overview" id="editor-0" style="display:none"><?php echo (($multiCity == true) ? reset($tripData['overview']) : $tripData['overview']) ?></textarea>
+                                    <textarea name="overview" id="editor-0" style="display:none"><?php echo $tripData['overview']['intro'] ?></textarea>
                                 </div>
                                 <?php
                                 $i = 1;
@@ -70,16 +70,16 @@
                                 <div class="form-group">
                                     <p>Inclusions</p>
                                     <div class="editor" style="min-height: 200px">
-                                        <?php echo $tripData['inclusion'] ?>
+                                        <?php echo $tripData['overview']['inclusion'] ?>
                                     </div>
-                                    <textarea name="inclusion" id="editor-<?php echo $i ?>" style="display:none"><?php echo $tripData['inclusion']; ?></textarea>
+                                    <textarea name="inclusion" id="editor-<?php echo $i ?>" style="display:none"><?php echo $tripData['overview']['inclusion']; ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <p>Exclusion</p>
                                     <div class="editor" style="min-height: 200px">
-                                        <?php echo $tripData['exclusion'] ?>
+                                        <?php echo $tripData['overview']['exclusion'] ?>
                                     </div>
-                                    <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>" style="display:none"><?php echo $tripData['exclusion']; ?></textarea>
+                                    <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>" style="display:none"><?php echo $tripData['overview']['exclusion']; ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <p>Hotel type<sup>*</sup></p>
