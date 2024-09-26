@@ -1403,10 +1403,10 @@ $(document).ready(function () {
             <div class='show-5-box box-mb-3-3'>
               <div class='checkbox-wrapper-16'>
                 <label class='checkbox-wrapper'>
-                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='${item.slab_id}_${item.slab_dimension}_${item.slab_total_area}_${item.slab_damage_area}_${slabNetSize}_${item.slab_dimension_type}' />
+                  <input type='checkbox' class='checkbox-input slabCheckbox' name='slabs' value='${item.slab_id}_${item.slab_dimension}_${item.slab_total_area}_${item.slab_damage_area}_${slabNetSize}_${item.slab_dimension_type}_${item.block_slab_id}' />
                   <span class='checkbox-tile'>
                     <span class='checkbox-label'>
-                      ${item.slab_dimension}
+                      <p><strong style='float: left;width: 100%;font-size: 24px;line-height: 32px;color: #333;'>${item.block_slab_id}</strong><span>${item.slab_dimension}</span></p>
                     </span>
                   </span>
                 </label>
