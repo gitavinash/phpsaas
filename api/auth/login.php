@@ -54,6 +54,12 @@ function login($connection, $data)
                 $status = 'error';
                 $msg = 'Invalid Password';
             }
+
+            if ($user_type == 'travel_agent' && SITE_ID == 50) {
+                $url = '/our-hotels/';
+            } else {
+                $hardRedirectURL = (($status == 'success') ? $url : '/login/?alertMsg=' . urlencode($msg));
+            }
         } else {
             $status = 'error';
             $msg = 'No user found';
@@ -61,12 +67,6 @@ function login($connection, $data)
     } else {
         $status = 'error';
         $msg = 'Technical error';
-    }
-
-    if ($user_type == 'travel_agent' && SITE_ID == 50) {
-        $url = '/our-hotels/';
-    } else {
-        $hardRedirectURL = (($status == 'success') ? $url : '/login/?alertMsg=' . urlencode($msg));
     }
 
     $return = array(

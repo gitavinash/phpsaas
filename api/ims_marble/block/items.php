@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     WHEN block_size_dimension = 'sq. ft.' THEN CONCAT(ROUND((block_item_width * block_item_height) / 929.0304, 2))
                     WHEN block_size_dimension = 'sq. mt.' THEN CONCAT(ROUND((block_item_width * block_item_height) / 10000, 2))
                 END AS slab_total_area,
-                block_size_dimension as slab_dimension_type
+                block_size_dimension as slab_dimension_type,
+                block_item_status
             FROM 
                 {$tableNamePrefix}block_item
             INNER JOIN 
@@ -29,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 block_item_parent_id = block_id
             WHERE 
                 block_item_parent_id = {$blockId}
-                AND block_item_status = 1
                 AND block_item_site_id = " . SITE_ID;
 
         // "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON  block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status=1 AND block_item_site_id=" . SITE_ID
@@ -37,8 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($blocks = mysqli_query($connection, $blockItemQuery)) {
             if (mysqli_num_rows($blocks) != 0) {
                 $blockList = array();
+                $i = 1;
                 while ($blocksData = mysqli_fetch_assoc($blocks)) {
-                    $blockList[] = $blocksData;
+                    if ($blocksData['block_item_status'] == 1) {
+                        $blocksData['block_slab_id'] = $i;
+                        $blockList[] = $blocksData;
+                    }
+                    $i++;
                 }
                 $httpStatus = 200;
                 $status = 'success';
