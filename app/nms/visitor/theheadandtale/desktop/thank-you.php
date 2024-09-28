@@ -24,11 +24,11 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
 
         if (strpos(strtolower($product_title), "month") !== false) {
             $subscriptionDuration = 'month';
-            $updateTimeStamp = "subscription_expiry = DATE_ADD(NOW, INTERVAL 1 MONTH)";
+            $updateTimeStamp = "subscription_expiry = DATE_ADD(NOW(), INTERVAL 1 MONTH)";
             $updateTimeStampValue = "DATE_ADD(NOW(), INTERVAL 1 MONTH)";
         } else {
             $subscriptionDuration = 'year';
-            $updateTimeStamp = "subscription_expiry = DATE_ADD(NOW, INTERVAL 1 YEAR)";
+            $updateTimeStamp = "subscription_expiry = DATE_ADD(NOW(), INTERVAL 1 YEAR)";
             $updateTimeStampValue = "DATE_ADD(NOW(), INTERVAL 1 YEAR)";
         }
 
