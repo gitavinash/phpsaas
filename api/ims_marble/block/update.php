@@ -16,7 +16,7 @@ if ($name != '') {
                             if ($productType != '') {
                                 $validRequest = true;
                             } else {
-                                $msg = "kindly select product type";
+                                $msg = "Kindly select product type";
                             }
                         } else {
                             $msg = 'Kindly selext block item thickness size';
