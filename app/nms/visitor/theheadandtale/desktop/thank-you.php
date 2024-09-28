@@ -24,18 +24,19 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
 
         if (strpos(strtolower($product_title), "month") !== false) {
             $subscriptionDuration = 'month';
-            $updateTimeStamp = "subscription_expiry = DATE_ADD(subscription_expiry, 1 MONTH)";
+            $updateTimeStamp = "subscription_expiry = DATE_ADD(NOW, INTERVAL 1 MONTH)";
+            $updateTimeStampValue = "DATE_ADD(NOW(), INTERVAL 1 MONTH)";
         } else {
             $subscriptionDuration = 'year';
-            $updateTimeStamp = "subscription_expiry = DATE_ADD(subscription_expiry, 1 YEAR)";
+            $updateTimeStamp = "subscription_expiry = DATE_ADD(NOW, INTERVAL 1 YEAR)";
+            $updateTimeStampValue = "DATE_ADD(NOW(), INTERVAL 1 YEAR)";
         }
 
-
         if ($orderType != 'news') {
-            if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_time, subscription_status) VALUES('" . SITE_ID . "', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', NOW(), 1)")) {
+            if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_time, subscription_expiry, subscription_status) VALUES('" . SITE_ID . "', '{$transaction_user_id}', '{$product_id}', '{$subscriptionDuration}', '{$transaction_type}', NOW(), {$updateTimeStampValue}, 1)")) {
                 if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_relation_id={$product_id}, subscription_mode='{$subscriptionDuration}', {$updateTimeStamp} WHERE subscription_user_id='{$transaction_user_id}' AND subscription_site_id=" . SITE_ID)) {
-                    echo mysqli_fetch_assoc($connection);
-                    echo "Something went wrong while updating the subscription plan";
+                    echo "Something went wrong while updating the subscription plan<br/><br/><br/>";
+                    echo mysqli_error($connection);
                 }
             }
         }
@@ -46,7 +47,6 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
     echo mysqli_error($connection);
     echo "Something went wrong";
 }
-
 require_once 'header.php';
 
 ?>
@@ -75,20 +75,20 @@ require_once 'header.php';
             <?php
 
             if ($orderType == 'news') { ?>
-            <h1>Thank You for Purchase!</h1>
-            <p>Thank you for choosing to read an article from The Head and Tale. We hope you enjoyed it!</p>
-            <p>We’re glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
-                news, and in-depth reports. If you have any questions, feedback, or suggestions, please feel free to
-                contact us at <a href="mailto: info@theheadandtale.com">info@theheadandtale.com</a>.</p>
+                <h1>Thank You for Purchase!</h1>
+                <p>Thank you for choosing to read an article from The Head and Tale. We hope you enjoyed it!</p>
+                <p>We’re glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
+                    news, and in-depth reports. If you have any questions, feedback, or suggestions, please feel free to
+                    contact us at <a href="mailto: info@theheadandtale.com">info@theheadandtale.com</a>.</p>
             <?php
             } else { ?>
-            <h1>Thank You for Subscribing!</h1>
-            <p>Welcome to The Head and Tale. Your subscription means the world to us.</p>
-            <p>As a valued subscriber, stay tuned for thought-provoking articles, exclusive news, reports, and
-                much more.</p>
-            <p>We appreciate your support and trust in us. If you have any questions, feedback, or suggestions,
-                please don't hesitate to reach out to us at <a href="mailto: info@theheadandtale.com">
-                    info@theheadandtale.com</a></p>
+                <h1>Thank You for Subscribing!</h1>
+                <p>Welcome to The Head and Tale. Your subscription means the world to us.</p>
+                <p>As a valued subscriber, stay tuned for thought-provoking articles, exclusive news, reports, and
+                    much more.</p>
+                <p>We appreciate your support and trust in us. If you have any questions, feedback, or suggestions,
+                    please don't hesitate to reach out to us at <a href="mailto: info@theheadandtale.com">
+                        info@theheadandtale.com</a></p>
             <?php
             }
 
