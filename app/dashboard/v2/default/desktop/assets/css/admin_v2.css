@@ -2605,7 +2605,7 @@ a.tableActionIconBtn {
 .actionBtn a {
   float: left;
   width: 41%;
-  padding: 13px 10px;
+  /* padding: 13px 10px; */
   box-sizing: border-box;
   text-align: center;
   line-height: 3px;
@@ -2620,7 +2620,7 @@ a.tableActionIconBtn {
 .actionBtn span {
   float: left;
   width: 100%;
-  padding: 13px 10px;
+  /* padding: 13px 10px; */
   box-sizing: border-box;
   text-align: center;
   line-height: 3px;

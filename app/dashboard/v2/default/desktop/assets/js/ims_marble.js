@@ -391,7 +391,7 @@ $("#updateWarehouse").click(function (e) {
   }
 });
 
-$(document).on("click", ".deleteButton", function (event) {
+$(document).on("click", ".deleteButtonForDamageArea", function (event) {
   event.preventDefault();
   var disableRedirect = false;
   Swal.fire({
@@ -406,7 +406,13 @@ $(document).on("click", ".deleteButton", function (event) {
     if (result.value) {
       var requestType = $(this).attr("data-type");
       var requestId = $(this).attr("data-id");
+      var requestActionType = $(this).attr("data-action");
       var damageBoxId = $(this).attr("data-damage-id");
+      var pageReload = $(this).attr("data-reload") || false;
+      var pageRedirect = $(this).attr("data-redirect") || false;
+      if (pageReload || pageRedirect) {
+        var redirectTo = $(this).attr("data-url") || `#`;
+      }
       if (typeof $(this).attr("data-action") !== "undefined") {
         var urlPostFix =
           btoa(requestId) +
@@ -417,10 +423,10 @@ $(document).on("click", ".deleteButton", function (event) {
       } else {
         var urlPostFix = btoa(requestId);
       }
-      var pageReload = $(this).attr("data-reload") || false;
-      var pageRedirect = $(this).attr("data-redirect") || false;
-      var redirectTo =
-        $(this).attr("data-url") || `/dashboard/${lastPart}/list/`;
+
+      const parentDiv = $(this).closest(".popUpUpdateDamageForm");
+      var parentId = parentDiv.attr("id");
+
       $.ajax({
         type: "GET",
         url: `/api/${requestType}/delete/?id=` + urlPostFix,
@@ -444,15 +450,18 @@ $(document).on("click", ".deleteButton", function (event) {
                 break;
             }
             setTimeout(function () {
-              if (disableRedirect) {
-                window.location.href = redirectTo;
-              } else {
+              if (disableRedirect == true && pageRedirect == true) {
+                if (disableRedirect) {
+                  window.location.href = redirectTo;
+                }
                 if (pageRedirect) {
                   window.location.href = redirectTo;
-                } else {
-                  location.reload();
                 }
+              } else {
+                $("#" + parentId).hide();
               }
+              console.log(`disableRedirect`, disableRedirect);
+              console.log(`pageRedirect`, pageRedirect);
             }, 1500);
           }
         },
@@ -986,7 +995,7 @@ if (manageDamageBtn) {
                 <div class='col-2'>
                     <div class="form-group">
                       <div class='actionBtn'>
-                          <span class='bgRed deleteButton' data-type='ims_marble/item/' data-action='damage' data-damage-id='${i}' data-id='${activeDamageBoxId}' data-reload='false' data-redirect='false'><i
+                          <span class='bgRed deleteButtonForDamageArea' data-type='ims_marble/item/' data-action='damage' data-damage-id='${i}' data-id='${activeDamageBoxId}' data-reload='false' data-redirect='false'><i
                                   class='fi fi-rr-trash'></i></span>
                       </div>
                     </div>
