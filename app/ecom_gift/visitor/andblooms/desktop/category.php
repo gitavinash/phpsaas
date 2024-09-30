@@ -64,7 +64,7 @@ include_once 'header.php';
 
                     extract($categorySinglePost[$i]);
 
-                    echo "<div class='col-md-3 col-6'>
+                    echo "<div class='col-md-4 col-6'>
                                     <a href='{$link_url}'>
                                         <div class='col-card-3'>
                                             <div class='event-card'>
