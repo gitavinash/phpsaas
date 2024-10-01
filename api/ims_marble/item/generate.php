@@ -54,8 +54,11 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNameP
 
             if ($total_existing_slabs < $block_total_item) {
                 if ($blockTotalSlabs <= ($block_total_item - $total_existing_slabs)) {
+
                     $updateItemQuery = "INSERT INTO {$tableNamePrefix}block_item(block_item_parent_id, block_item_site_id, block_item_user_id, block_item_dimension_type, block_item_width, block_item_height, block_item_status, block_item_created) VALUES" . rtrim($slabValues, ', ');
                     $totalArea = array_sum($singleItemArea);
+
+                    $updateAvailableSlabs = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_available=block_available+{$blockTotalSlabs} WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
 
                     $measurementData = constant(strtoupper('measurement_' . $block_product_type));
                     extract(json_decode($measurementData, TRUE));
@@ -144,7 +147,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNameP
                     $updateBlock = mysqli_query($connection, $updateBlockQuery);
                     $createSlabs = mysqli_query($connection, $updateItemQuery);
 
-                    if ($updateBlock && $createSlabs) {
+                    if ($updateBlock && $createSlabs && $updateAvailableSlabs) {
                         $httpStatus = 204;
                         $status = 'success';
                         $msg = 'New slabs generate successfully';
