@@ -111,6 +111,25 @@ if (isset($showPage)) {
                 margin-top: 5px;
             }
 
+            .hideOnPrint {
+                float: left;
+                display: inline-block;
+                background: #40b56f;
+                border: 1px solid #40b56f;
+                font-weight: 300;
+                letter-spacing: 1px;
+                border-radius: 4px;
+                padding: 5px 10px;
+                cursor: pointer !important;
+                color: #fff;
+                font-size: 1.2rem;
+                width: 60%;
+                position: sticky;
+                bottom: 0;
+                margin: 0px 20%;
+                margin-bottom: 1rem;
+            }
+
             @media print {
 
                 body,
@@ -139,21 +158,21 @@ if (isset($showPage)) {
                 }
 
                 .logo {
-                    max-height: 30px;
+                    max-height: 50px;
                 }
 
                 .qr-code-image {
-                    width: 40px;
-                    height: 40px;
+                    width: 100px;
+                    height: 100px;
                     border: 1px solid #000;
                 }
 
                 .inventory-info {
-                    font-size: 14pt;
+                    font-size: 8pt;
                 }
 
                 .inventory-info h2 {
-                    font-size: 9pt;
+                    font-size: 14pt;
                 }
 
                 .inventory-info p {
@@ -162,6 +181,10 @@ if (isset($showPage)) {
 
                 .credit {
                     font-size: 6pt;
+                }
+
+                .hideOnPrint {
+                    display: none;
                 }
 
                 @page {
@@ -207,6 +230,7 @@ if (isset($showPage)) {
         }
 
         ?>
+        <button onclick="window.print();" class="hideOnPrint" style="margin-top: 20px;">Download / Print</button>
     </body>
 
     </html>
