@@ -13,10 +13,10 @@ $email_header = "
  		<head>
 
 	  		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+	  		<meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 
 	  		<title>Forgot Password</title>
 
-	  		<meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 	  		<style type='text/css'>
 
   				@media only screen and (max-width: 600px) {
@@ -109,7 +109,7 @@ $email_header = "
 
 									<td colspan='4' valign='top' class='image-section' style='border-collapse: collapse;border: 0;margin: 0;padding: 0;-webkit-text-size-adjust: none;color: #555559;font-family: Arial, sans-serif;font-size: 16px;line-height: 26px;background-color: #fff;border-bottom: 4px solid {$themeColor}'>
 
-										<a href='" . SITE_DOMAIN . "'><img class='top-image' src='" . SITE_LOGO . "' style='line-height: 1; max-height: 50px; height: auto; padding: 5px 0px 5px 10px; max-width: 200px' ></a>
+										<a href='" . SITE_DOMAIN . "' target='_blank'><img class='top-image' src='" . SITE_LOGO . "' alt='" . SITE_NAME . " logo' style='line-height: 1; max-height: 50px; height: auto; padding: 5px 0px 5px 10px; max-width: 200px' ></a>
 
 									</td>
 

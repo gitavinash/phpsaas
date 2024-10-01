@@ -25,7 +25,7 @@ if ($name != '') {
                         $msg = 'Kindly enter block item thickenss';
                     }
                 } else {
-                    $msg = 'Block total item cannot be less than ' . $oldTotalItem . ' < ' . $totalItem;
+                    $msg = 'Block total item cannot be less than ' . $oldTotalItem;
                 }
             } else {
                 $msg = 'Kindly enter total items in block';
