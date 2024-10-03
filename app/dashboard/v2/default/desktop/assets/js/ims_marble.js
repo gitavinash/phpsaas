@@ -1648,26 +1648,28 @@ $(document).ready(function () {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Mark it as Sold.",
     }).then((result) => {
-      $.ajax({
-        type: "GET",
-        url: `/api/${productType}/mark-as-sold/?blockId=` + btoa(id),
-        dataType: "JSON",
-        success: function (successResponse) {
-          popUpMessage("center", successResponse.msg, successResponse.status);
-          if (successResponse.status == "success") {
-            setTimeout(function () {
-              window.location.reload();
-            }, 1500);
-          }
-        },
-        error: function (errorResponse) {
-          popUpMessage(
-            "center",
-            errorResponse.responseJSON.msg,
-            errorResponse.responseJSON.status
-          );
-        },
-      });
+      if (result.value) {
+        $.ajax({
+          type: "GET",
+          url: `/api/${productType}/mark-as-sold/?blockId=` + btoa(id),
+          dataType: "JSON",
+          success: function (successResponse) {
+            popUpMessage("center", successResponse.msg, successResponse.status);
+            if (successResponse.status == "success") {
+              setTimeout(function () {
+                window.location.reload();
+              }, 1500);
+            }
+          },
+          error: function (errorResponse) {
+            popUpMessage(
+              "center",
+              errorResponse.responseJSON.msg,
+              errorResponse.responseJSON.status
+            );
+          },
+        });
+      }
     });
   });
 });
