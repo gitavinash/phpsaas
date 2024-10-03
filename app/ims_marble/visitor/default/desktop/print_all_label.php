@@ -167,19 +167,23 @@ if (isset($showPage)) {
                 }
 
                 .inventory-info {
-                    font-size: 8pt;
+                    font-size: 11pt;
                 }
 
                 .inventory-info h2 {
                     font-size: 14pt;
+                    margin-top: 5pt;
+                    float: left;
+                    width: 100%;
                 }
 
                 .inventory-info p {
-                    font-size: 8pt;
+                    font-size: 11pt;
                 }
 
                 .credit {
-                    font-size: 6pt;
+                    font-size: 8pt;
+                    margin-top: 10pt;
                 }
 
                 .hideOnPrint {
