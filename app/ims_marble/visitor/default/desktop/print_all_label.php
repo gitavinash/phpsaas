@@ -141,7 +141,7 @@ if (isset($showPage)) {
                 .label-box {
                     width: 49%;
                     /* Adjust to ensure two boxes per row on print */
-                    height: 5cm;
+                    height: 6cm;
                     /* Adjust height to fit the print page */
                     border: 1px solid #000;
                     page-break-inside: avoid;
