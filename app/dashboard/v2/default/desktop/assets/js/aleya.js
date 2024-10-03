@@ -893,10 +893,8 @@ $(document).ready(function (e) {
 
   $("#createTourPackageBtn").click(function (e) {
     e.preventDefault();
-
+    $("#createTourPackageBtn").hide();
     var packageType = $("#packageType").val();
-    console.log(`packageType:`, packageType);
-
     var formData = $("#createTourPackageForm").serialize();
 
     $.ajax({
@@ -905,15 +903,18 @@ $(document).ready(function (e) {
       data: formData,
       dataType: "json",
       success: function (response) {
-        if (response.success) {
-          postMessage("center", response.msg, response.status);
+        if (response.status) {
+          popUpMessage("center", response.msg, response.status);
           window.location.href =
-            "/dashboard/packages/" + packageType + "/list/";
+            "/dashboard/packages/" + packageType + "/price/?id=" + response.id;
+        } else {
+          $("#createTourPackageBtn").show();
         }
       },
       error: function (xhr, status, error) {
-        postMessage("center", response.msg, response.status);
+        popUpMessage("center", response.msg, response.status);
         console.log(`Error:`, error);
+        $("#createTourPackageBtn").show();
       },
     });
   });

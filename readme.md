@@ -82,3 +82,10 @@ Marble or IMS Inventory
 1 : live
 2 : Sold
 3 : Return
+
+Tour package status
+
+0: Pending
+1: Live
+2: Draft
+3: Delete
