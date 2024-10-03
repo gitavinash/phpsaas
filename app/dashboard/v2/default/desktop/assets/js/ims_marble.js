@@ -1625,13 +1625,49 @@ $(document).ready(function () {
 
   $("#confirmReturnInventory").click(function (e) {
     e.preventDefault();
-    console.log(`i m cliced`);
-
     $(".salesStep_1_box").hide();
     $("#salesStep_1").removeClass("active");
     $(".salesStep_2_box").hide();
     $("#salesStep_2").removeClass("active");
     $(".salesStep_3_box").show();
     $("#salesStep_3").addClass("active");
+  });
+
+  // Mark as sold
+
+  $(".markAsSold").click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr("data-id");
+    var productType = $(this).attr("data-type");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Mark it as Sold.",
+    }).then((result) => {
+      $.ajax({
+        type: "GET",
+        url: `/api/${productType}/mark-as-sold/?blockId=` + btoa(id),
+        dataType: "JSON",
+        success: function (successResponse) {
+          popUpMessage("center", successResponse.msg, successResponse.status);
+          if (successResponse.status == "success") {
+            setTimeout(function () {
+              window.location.reload();
+            }, 1500);
+          }
+        },
+        error: function (errorResponse) {
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+        },
+      });
+    });
   });
 });

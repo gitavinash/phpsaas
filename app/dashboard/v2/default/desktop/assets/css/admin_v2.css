@@ -2604,7 +2604,7 @@ a.tableActionIconBtn {
 
 .actionBtn a {
   float: left;
-  width: 41%;
+  width: 26%;
   /* padding: 13px 10px; */
   box-sizing: border-box;
   text-align: center;
@@ -2613,6 +2613,7 @@ a.tableActionIconBtn {
   border-radius: 4px;
   margin-right: 10px;
   margin-left: 10px;
+  margin-bottom: 10px;
 }
 .actionBtn a i {
   font-size: 24px;
@@ -3209,4 +3210,8 @@ strong.stockInfoList {
 
 .ui-menu .ui-menu-item-wrapper {
   padding: 10px;
+}
+
+.markAsSold {
+  border-radius: 4px;
 }
