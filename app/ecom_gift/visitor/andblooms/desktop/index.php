@@ -126,7 +126,7 @@ include_once 'header.php';
 
                                 echo "<div class='product-slide'>
 												<a href='{$link_url}'>
-													<div class='col-card-3'>
+													<div class='col-card-4'>
 														<div class='event-card'>
 															<div class='img-cd'><img src='{$product_image}' /></div>
 															<h4>{$product_title}</h4>
@@ -178,7 +178,7 @@ include_once 'header.php';
 
                                 echo "<div class='product-slide'>
 												<a href='{$link_url}'>
-													<div class='col-card-3'>
+													<div class='col-card-4'>
 														<div class='event-card'>
 															<div class='img-cd'><img src='{$product_image}' /></div>
 															<h4>{$product_title}</h4>
@@ -228,7 +228,7 @@ include_once 'header.php';
 
                                 echo "<div class='product-slide'>
 											<a href='{$link_url}'>
-												<div class='col-card-3'>
+												<div class='col-card-4'>
 													<div class='event-card'>
 														<div class='img-cd'><img src='{$product_image}' /></div>
 														<h4>{$product_title}</h4>
@@ -276,7 +276,7 @@ include_once 'header.php';
 
                                 echo "<div class='product-slide'>
 											<a href='{$link_url}'>
-												<div class='col-card-3'>
+												<div class='col-card-4'>
 													<div class='event-card'>
 														<div class='img-cd'><img src='{$product_image}' /></div>
 														<h4>{$product_title}</h4>
@@ -324,7 +324,7 @@ include_once 'header.php';
 
                                 echo "<div class='product-slide'>
 											<a href='{$link_url}'>
-												<div class='col-card-3'>
+												<div class='col-card-4'>
 													<div class='event-card'>
 														<div class='img-cd'><img src='{$product_image}' /></div>
 														<h4>{$product_title}</h4>
