@@ -1519,6 +1519,7 @@ section.form .form-header h1 {
   color: #01647b;
   float: left;
   width: 70%;
+  max-width: 100%;
   line-height: 150px;
 }
 
