@@ -162,7 +162,7 @@ if (isset($validId)) {
 
                 $blockItemIndex = '';
 
-                if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status!=3 AND block_item_site_id=" . SITE_ID)) {
+                if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status IN (1,3) AND block_item_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($checkItems) > 0) {
                         $i = 1;
                         while ($blockItem = mysqli_fetch_assoc($checkItems)) {
@@ -221,7 +221,7 @@ if (isset($validId)) {
                                 <div class='actionBtn form-group' style='display:" . (($block_item_status == 2) ? 'none' : 'block') . "' >
                                     <a href='#' class='bgYellow manageDamage' data-index='{$i}' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
                                     <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i></a>
-                                    <a href='#' title='Mark as sold out' class='bgRed markAsSold' data-type='item' data-id='{$block_item_id}' ><i class='fi fi-rr-sold-signal bgRed'></i></a>
+                                    " . (($block_item_status != 3) ? "<a href='#' title='Mark as sold out' class='bgRed markAsSold' data-type='item' data-id='{$block_item_id}' ><i class='fi fi-rr-sold-signal bgRed'></i></a>" : '') . "
                                 </div>
                             </td>
                         </tr>
