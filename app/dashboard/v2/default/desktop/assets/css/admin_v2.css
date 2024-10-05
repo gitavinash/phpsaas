@@ -3216,3 +3216,42 @@ strong.stockInfoList {
 .markAsSold {
   border-radius: 4px;
 }
+
+/* Tooltips */
+
+.tableActionIconBtn {
+  position: relative;
+  display: inline-block;
+}
+
+.tableActionIconBtn:hover::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.tableActionIconBtn::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.dataTables_scrollBody {
+  overflow: visible !important; /* Ensure overflow visibility */
+}

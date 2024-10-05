@@ -756,26 +756,67 @@ $(document).ready(function (e) {
       lengthChange: false,
       autoWidth: false,
       ordering: false,
-      scrollX: true, // Enable horizontal scrolling
+      scrollX: true,
       columnDefs: [
-        { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
+        { type: "date", targets: 4 },
         { width: "20%", targets: 1 },
         {
-          targets: "_all", // Apply to all columns
+          targets: "_all",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).css({
-              "max-width": "150px", // Set the maximum width (adjust as needed)
-              "white-space": "normal", // Allow text wrapping
-              "word-wrap": "break-word", // Ensure words break if necessary
+              "max-width": "150px",
+              "white-space": "normal",
+              "word-wrap": "break-word",
             });
           },
         },
       ],
-      fixedColumns: {
-        leftColumns: 1, // Freeze the first column
-        rightColumns: 1, // Freeze the last column
+      createdRow: function (row, data, dataIndex) {
+        // Get the status from the second last column (negative index -2)
+        var rowDataStatus = data[data.length - 2]; // Access the second last column
+        console.log(`Col status:`, rowDataStatus);
+
+        switch (rowDataStatus.toLowerCase()) {
+          case "draft":
+            $(row).addClass("status-draft");
+            break;
+          case "active":
+            $(row).addClass("status-active");
+            break;
+          case "duplicate":
+            $(row).addClass("status-duplicate");
+            break;
+          case "follow_up":
+            $(row).addClass("status-follow-up");
+            break;
+          case "duplicate":
+            $(row).addClass("status-duplicate");
+            break;
+          case "payment initite":
+            $(row).addClass("status-pg-initite");
+            break;
+          case "payment refund":
+            $(row).addClass("status-pg-refund");
+            break;
+          case "failed":
+            $(row).addClass("status-failed");
+            break;
+          case "soft_delete":
+            $(row).addClass("status-soft-delete");
+            break;
+          case "delete":
+            $(row).addClass("status-delete");
+            break;
+          default:
+            $(row).addClass("status-pending");
+            break;
+        }
       },
-      order: [[4, "desc"]], // Order by the fifth column
+      fixedColumns: {
+        leftColumns: 1,
+        rightColumns: 1,
+      },
+      order: [[4, "desc"]],
     });
   }
 

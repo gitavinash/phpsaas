@@ -21,7 +21,6 @@
             <table class="showTableList">
                 <thead>
                     <tr>
-                        <th>S no.</th>
                         <th>Name</th>
                         <th>Theme</th>
                         <th>Destination</th>
@@ -34,7 +33,7 @@
                 <tbody>
                     <?php
 
-                    if ($packageData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_status!=3 AND tour_package_site_id=" . SITE_ID)) {
+                    if ($packageData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_status!=3 AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
                         if (mysqli_num_rows($packageData) != 0) {
                             $i = 1;
                             while ($packageDataInfo = mysqli_fetch_assoc($packageData)) {
@@ -42,31 +41,33 @@
                                 switch ($tour_package_status) {
                                     case 1:
                                         $packageStatus = 'Active';
-                                        $packageStatusBackground = '#82e0aa';
                                         break;
                                     case 2:
                                         $packageStatus = 'Draft';
-                                        $packageStatusBackground = '#6C757D';
                                         break;
                                     case 3:
                                         $packageStatus = 'Delete';
-                                        $packageStatusBackground = '#DC3545';
                                         break;
                                     default:
                                         $packageStatus = 'Pending';
-                                        $packageStatusBackground = '#FFC107';
                                         break;
                                 }
                                 echo "
-                                    <tr style='background-color: {$packageStatusBackground}' >
-                                        <td>{$i}</td>
-                                        <td>{$tour_package_title}</td>
-                                        <td>{$tour_package_theme}</td>
+                                    <tr>
+                                        <td>{$i}. {$tour_package_title}</td>
+                                        <td>" . ucwords($tour_package_theme) . "</td>
                                         <td>{$tour_package_city}</td>
                                         <td>{$tour_package_duration} Nights</td>
                                         <td>" . ucwords(str_replace('_', ' ', $tour_package_hotel)) . "</td>
                                         <td>{$packageStatus}</td>
-                                        <td></td>
+                                        <td>
+                                            <a href='/dashboard/packages/domestic/edit/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit package' data-title='Edit package'><i class='fi fi-rr-edit bgLightGreen'></i></a>
+                                            <a href='/dashboard/packages/domestic/price/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit price' data-title='Edit price'><i class='fi fi-rr-indian-rupee-sign bgLightGreen'></i></a>
+                                            <a href='/dashboard/packages/domestic/schedule/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Schedule price' data-title='Schedule price'><i class='fi fi-rr-calendar-day bgLightGreen'></i></a>
+                                            <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Manage gallery' data-title='Manage gallery'><i class='fi fi-rr-images bgLightGreen'></i></a>
+                                            <a href='/view-itinerary/?id=" . base64_encode($tour_package_id) . "&theme=" . base64_encode(1) . "' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-grey'></i></a>
+                                            <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
+                                        </td>
                                     </tr>
                                 ";
                                 $i++;

@@ -802,6 +802,7 @@ $(document).ready(function (e) {
 
   $("#addDomesticPackageBtn").click(function (e) {
     e.preventDefault();
+    $("#addDomesticPackageBtn").hide();
 
     // Collect and trim all the form values, ensuring they are not undefined
     var packageName = $("#name").val() ? $("#name").val().trim() : "";
@@ -826,6 +827,7 @@ $(document).ready(function (e) {
       !outstationVehicle ||
       !localSighseeignVehicle
     ) {
+      $("#addDomesticPackageBtn").show();
       popUpMessage(
         "center",
         "All fields are required to generate itinerary",
@@ -859,6 +861,7 @@ $(document).ready(function (e) {
 
     // Check if all locations are filled
     if (!allLocationsFilled) {
+      $("#addDomesticPackageBtn").show();
       popUpMessage(
         "center",
         "Please fill out all destination and duration fields",
