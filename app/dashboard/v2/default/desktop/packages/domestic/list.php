@@ -61,11 +61,11 @@
                                         <td>" . ucwords(str_replace('_', ' ', $tour_package_hotel)) . "</td>
                                         <td>{$packageStatus}</td>
                                         <td>
-                                            <a href='/dashboard/packages/domestic/edit/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit package' data-title='Edit package'><i class='fi fi-rr-edit bgLightGreen'></i></a>
-                                            <a href='/dashboard/packages/domestic/price/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit price' data-title='Edit price'><i class='fi fi-rr-indian-rupee-sign bgLightGreen'></i></a>
-                                            <a href='/dashboard/packages/domestic/schedule/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Schedule price' data-title='Schedule price'><i class='fi fi-rr-calendar-day bgLightGreen'></i></a>
-                                            <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Manage gallery' data-title='Manage gallery'><i class='fi fi-rr-images bgLightGreen'></i></a>
-                                            <a href='/view-itinerary/?id=" . base64_encode($tour_package_id) . "&theme=" . base64_encode(1) . "' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-grey'></i></a>
+                                            <a href='/dashboard/packages/domestic/edit/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit package' data-title='Edit package'><i class='fi fi-rr-edit bgWhite'></i></a>
+                                            <a href='/dashboard/packages/domestic/price/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit price' data-title='Edit price'><i class='fi fi-rr-indian-rupee-sign bgWhite'></i></a>
+                                            <a href='/dashboard/packages/domestic/schedule/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Schedule price' data-title='Schedule price'><i class='fi fi-rr-calendar-day bgWhite'></i></a>
+                                            <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Manage gallery' data-title='Manage gallery'><i class='fi fi-rr-images bgWhite'></i></a>
+                                            <a href='/view-itinerary/?id=" . base64_encode($tour_package_id) . "&theme=" . base64_encode(1) . "' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-blue'></i></a>
                                             <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                         </td>
                                     </tr>

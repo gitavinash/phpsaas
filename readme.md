@@ -39,7 +39,7 @@ Lead status
 3 : follow up
 4 : Failed
 5 : Duplicate
-6 : payment initite
+6 : payment initiate
 7 : Sent for sales request
 8 : Upay done
 
@@ -81,7 +81,9 @@ Marble or IMS Inventory
 0 : Intial
 1 : live
 2 : Sold
-3 : Return
+3 : Sold out
+4 : Return
+5 : Delete
 
 Tour package status
 

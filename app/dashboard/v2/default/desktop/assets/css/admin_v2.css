@@ -78,6 +78,11 @@ ol {
   color: #464646 !important;
 }
 
+.bgWhite {
+  background: #fff !important;
+  color: #333 !important;
+}
+
 .btn-red {
   background: #761b1b !important;
   color: #fff !important;
@@ -88,6 +93,12 @@ ol {
   background: #a9a9a9 !important;
   color: #fff !important;
   border: #a9a9a9 !important;
+}
+
+.btn-blue {
+  background: #59a4f0 !important;
+  color: #fff !important;
+  border: #59a4f0 !important;
 }
 
 .btn-light-green {
@@ -3254,4 +3265,21 @@ strong.stockInfoList {
 
 .dataTables_scrollBody {
   overflow: visible !important; /* Ensure overflow visibility */
+}
+
+/* Ensure the DataTable wrapper allows horizontal scrolling */
+.dataTables_wrapper {
+  overflow-x: auto;
+  overflow-y: hidden; /* You can also allow vertical scrolling if needed */
+}
+
+/* Force table to take up more width so that scrollX can take effect */
+.showTableList {
+  width: 100%; /* Allow table to fill the container */
+  min-width: 1200px; /* Force the table to be wide enough for horizontal scrolling */
+}
+
+.fixed-aside {
+  position: fixed;
+  top: 0;
 }

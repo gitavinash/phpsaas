@@ -112,36 +112,6 @@ $(document).ready(function (e) {
     initializeSelect2HereMaps(".indianCityAutoComplete");
   }
 
-  // $(".indianCitySuggestion").autocomplete({
-  //   source: function (request, response) {
-  //     // AJAX request to the JSON API
-  //     $.ajax({
-  //       url: "/api/city-by-country/", // Replace with your API URL
-  //       dataType: "json",
-  //       data: {
-  //         country_id: 101,
-  //         query: request.term,
-  //       },
-  //       success: function (data) {
-  //         // Map the API response to the format required by jQuery UI autocomplete
-  //         response(
-  //           $.map(data.cityData, function (item) {
-  //             return {
-  //               label: item, // What the user sees in the dropdown
-  //               value: item, // What is set in the input field
-  //             };
-  //           })
-  //         );
-  //       },
-  //       error: function () {
-  //         response([]); // Handle error or no results
-  //       },
-  //     });
-  //   },
-  //   minLength: 2, // Minimum characters to trigger the autocomplete
-  //   delay: 300, // Delay in milliseconds before making the request
-  // });
-
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
   if (dateRangeParams == null) {
     dateRangeValue = "";
@@ -149,7 +119,6 @@ $(document).ready(function (e) {
     dateRangeValue = dateRangeParams;
   }
   if (typeof tempId !== "undefined") {
-    // Update dateRangeParams to include userId=tempId if tempId is not empty
     dateRangeParams += "&userId=" + tempId;
   }
 
@@ -221,28 +190,6 @@ $(document).ready(function (e) {
       }
     });
   });
-
-  // function showNotification() {
-  //   if (!("Notification" in window)) {
-  //     alert("This browser does not support desktop notification");
-  //   } else if (Notification.permission === "granted") {
-  //     const notification = new Notification("Hi there!");
-  //   } else if (Notification.permission !== "denied") {
-  //     Notification.requestPermission().then((permission) => {
-  //       if (permission === "granted") {
-  //         const notification = new Notification("Hi there!");
-  //         // …
-  //       }
-  //     });
-  //   }
-  // }
-
-  // $(document).click(function () {
-  //   showPageLoader();
-  //   setTimeout(function () {
-  //     hidePageLoader();
-  //   }, 500);
-  // });
 
   function isNumeric(input) {
     return /^\d+$/.test(input);
@@ -696,129 +643,92 @@ $(document).ready(function (e) {
   // Total Order
   if ($("#totalOrder").length) {
     increaseCountingNumberAnimation("totalOrderValue", 500 - 100, 500, 1, 86);
-    // createLineChart(
-    //   (objectID = "totalOrderChart"),
-    //   (chartLabel = [
-    //     "Monday",
-    //     "Tueday",
-    //     "Wednesday",
-    //     "Thursday",
-    //     "Friday",
-    //     "Saturday",
-    //     "Sunday",
-    //   ]),
-    //   (currentDataLabel = "1st May 2021 - 8th May 2021"),
-    //   (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
-    //   (currentDataColor = "#239B56"),
-    //   (previousDataLabel = "1st May 2021 - 8th May 2021"),
-    //   (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
-    //   (previousDataColor = "#D1F9D1")
-    // );
   }
 
   // Total Amount of sale
 
   if ($("#totalOrderAmount").length) {
     increaseCountingNumberAnimation("totalOrderAmountValue", 0, 0, 1, 86);
-    // createLineChart(
-    //   (objectID = "totalOrderAmountChart"),
-    //   (chartLabel = [
-    //     "Monday",
-    //     "Tueday",
-    //     "Wednesday",
-    //     "Thursday",
-    //     "Friday",
-    //     "Saturday",
-    //     "Sunday",
-    //   ]),
-    //   (currentDataLabel = "1st May 2021 - 8th May 2021"),
-    //   (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
-    //   (currentDataColor = "#E74C3C"),
-    //   (previousDataLabel = "1st May 2021 - 8th May 2021"),
-    //   (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
-    //   (previousDataColor = "#F9D1D1")
-    // );
   }
-
-  // Destroy any existing instance of DataTable
-  // if ($.fn.DataTable.isDataTable(".showTableList")) {
-  //   $(".showTableList").DataTable().clear().destroy();
-  // }
 
   // Order List
 
-  if ($(".showTableList").length) {
-    $(".showTableList").DataTable({
-      pageLength: 50,
-      fixedHeader: true,
-      responsive: true,
-      searching: true,
-      lengthChange: false,
-      autoWidth: false,
-      ordering: false,
-      scrollX: true,
-      columnDefs: [
-        { type: "date", targets: 4 },
-        { width: "20%", targets: 1 },
-        {
-          targets: "_all",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).css({
-              "max-width": "150px",
-              "white-space": "normal",
-              "word-wrap": "break-word",
-            });
-          },
+  $(".showTableList").DataTable({
+    pageLength: 10,
+    fixedHeader: true,
+    responsive: false, // Disable responsiveness when using fixedColumns and scrollX
+    searching: true,
+    lengthChange: false,
+    autoWidth: false,
+    ordering: false,
+    scrollX: true, // Enable horizontal scrolling
+    scrollCollapse: true, // Collapse the table to fit content
+    columnDefs: [
+      { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
+      { width: "20%", targets: 1 }, // Set width for the second column
+      { width: "150px", targets: -1 },
+      {
+        targets: "_all", // Apply to all columns
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css({
+            "max-width": "150px", // Set the maximum width
+            "white-space": "normal", // Allow text wrapping
+            "word-wrap": "break-word", // Ensure words break if necessary
+          });
         },
-      ],
-      createdRow: function (row, data, dataIndex) {
-        // Get the status from the second last column (negative index -2)
-        var rowDataStatus = data[data.length - 2]; // Access the second last column
-        console.log(`Col status:`, rowDataStatus);
+      },
+    ],
+    createdRow: function (row, data, dataIndex) {
+      var rowDataStatus = data[data.length - 2].toLowerCase(); // Access second last column for status
+      console.log(`Col status:`, rowDataStatus); // Debugging output
 
-        switch (rowDataStatus.toLowerCase()) {
-          case "draft":
-            $(row).addClass("status-draft");
-            break;
-          case "active":
-            $(row).addClass("status-active");
-            break;
-          case "duplicate":
-            $(row).addClass("status-duplicate");
-            break;
-          case "follow_up":
-            $(row).addClass("status-follow-up");
-            break;
-          case "duplicate":
-            $(row).addClass("status-duplicate");
-            break;
-          case "payment initite":
-            $(row).addClass("status-pg-initite");
-            break;
-          case "payment refund":
-            $(row).addClass("status-pg-refund");
-            break;
-          case "failed":
-            $(row).addClass("status-failed");
-            break;
-          case "soft_delete":
-            $(row).addClass("status-soft-delete");
-            break;
-          case "delete":
-            $(row).addClass("status-delete");
-            break;
-          default:
-            $(row).addClass("status-pending");
-            break;
-        }
-      },
-      fixedColumns: {
-        leftColumns: 1,
-        rightColumns: 1,
-      },
-      order: [[4, "desc"]],
-    });
-  }
+      // Apply inline background color for each cell in the row
+      var color;
+      switch (rowDataStatus) {
+        case "draft":
+          color = "#fef9e6"; // Very light and bright pastel yellow for draft
+          break;
+        case "active":
+          color = "#e8fce8"; // Very light and bright pastel green for active
+          break;
+        case "duplicate":
+          color = "#ffe8e8"; // Very light and bright pastel red for duplicate
+          break;
+        case "follow_up":
+          color = "#ffeaf3"; // Very light and bright pastel pink for follow-up
+          break;
+        case "payment initiate":
+          color = "#e6fbff"; // Very light and bright pastel blue for payment initiate
+          break;
+        case "payment refund":
+          color = "#ffe8f7"; // Very light and bright pastel pink-purple for refund
+          break;
+        case "failed":
+          color = "#ffecec"; // Very light and bright pastel coral for failed
+          break;
+        case "soft delete":
+          color = "#fff1f1"; // Very light and bright pastel red for soft delete
+          break;
+        case "delete":
+          color = "#ffeaea"; // Very light and bright pastel pink-red for delete
+          break;
+        default:
+          color = "#fff9e6"; // Very light and bright pastel orange for pending
+          break;
+      }
+
+      // Apply the background color to the row and all its cells
+      $(row).css("background-color", color); // Apply background to row
+      $(row)
+        .find("td")
+        .css("background-color", color + " !important"); // Apply to individual cells in case of overrides
+    },
+    fixedColumns: {
+      leftColumns: 1, // Freeze the first column
+      rightColumns: 1, // Freeze the last column
+    },
+    order: [[4, "desc"]], // Order by the fifth column (date)
+  });
 
   if ($(".showTableListWithoutFilter").length) {
     $(".showTableListWithoutFilter").DataTable({
