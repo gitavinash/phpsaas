@@ -107,6 +107,26 @@ function initializeSelect2(element) {
 }
 
 $(document).ready(function (e) {
+  // Aside
+
+  var stickyDiv = $("#sidebar");
+  var stickyDivOffset = stickyDiv.offset().top + stickyDiv.outerHeight();
+  var windowHeight = $(window).height();
+
+  $(window).scroll(function () {
+    var scrollTop = $(window).scrollTop();
+    var scrollBottom = scrollTop + windowHeight;
+    if (scrollBottom >= stickyDivOffset) {
+      $("aside").css({
+        position: "fixed",
+      });
+    } else {
+      $("aside").css({
+        position: "relative",
+      });
+    }
+  });
+
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
     initializeSelect2HereMaps(".indianCityAutoComplete");

@@ -921,4 +921,33 @@ $(document).ready(function (e) {
       },
     });
   });
+
+  $("#updateTourPackageBtn").click(function (e) {
+    e.preventDefault();
+    $("#updateTourPackageBtn").hide();
+    var packageType = $("#packageType").val();
+    var formData = $("#createTourPackageForm").serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/api/packages/update/", // Replace with your server-side endpoint URL
+      data: formData,
+      dataType: "json",
+      success: function (response) {
+        if (response.status) {
+          popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            window.location.reload();
+          }, 1500);
+        } else {
+          $("#updateTourPackageBtn").show();
+        }
+      },
+      error: function (xhr, status, error) {
+        popUpMessage("center", response.msg, response.status);
+        console.log(`Error:`, error);
+        $("#updateTourPackageBtn").show();
+      },
+    });
+  });
 });

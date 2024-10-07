@@ -1,6 +1,9 @@
 <h2 class="heading"><?php echo 'Preview of ' . ucwords($urlStructure[1]) ?><span>Generate with Smart AI</span>
 </h2>
 <div class="main-box">
+    <div class="shortcut">
+        <a href="<?php echo ACTIVE_URL ?>" data-title="Regerate itinerary"><i class="fi fi-rr-refresh"></i></a>
+    </div>
     <section>
         <ul class="steps-tab">
             <li class="step-box active" id="step_1"><span>2</span>Itinerary details</li>
