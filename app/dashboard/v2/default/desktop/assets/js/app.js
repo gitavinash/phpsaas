@@ -674,7 +674,7 @@ $(document).ready(function (e) {
   // Order List
 
   $(".showTableList").DataTable({
-    pageLength: 10,
+    pageLength: 50,
     fixedHeader: true,
     responsive: false, // Disable responsiveness when using fixedColumns and scrollX
     searching: true,

@@ -21,7 +21,7 @@
                                     </div>
                                     <div class="form-group">
                                         <p class="form-lable" id="Label">Package name<sup>*</sup></p>
-                                        <input id="name" name="name" value="<?php echo $tour_package_title ?>" type="text" />
+                                        <input id="name" name="packageName" value="<?php echo $tour_package_title ?>" type="text" />
                                     </div>
                                     <div class="form-group">
                                         <p class="form-lable" id="Label">Trip duration (in Nights)</p>
@@ -48,7 +48,6 @@
                                             <option value="religious" <?php echo (($tour_package_theme == 'religious') ? 'selected' : '') ?>>Religious Travel</option>
                                         </select>
                                     </div>
-                                    <input type="hidden" name="packageName" value="<?php echo $tour_package_title ?>">
                                     <input type="hidden" name="duration" value="<?php echo $tour_package_duration ?>">
                                     <div class="form-group">
                                         <p class='form-label'>Overview</p>

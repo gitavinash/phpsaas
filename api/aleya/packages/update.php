@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     tour_package_updated_at = NOW()
                 WHERE 
                     tour_package_created_by = " . USER_ID . "
-                    AND tour_package_id = '{$tourPackageId}'
+                    AND tour_package_id = '" . base64_decode($tourPackageId) . "'
                     AND tour_package_site_id = " . SITE_ID;
 
         if (mysqli_query($connection, $updateItineraryQuery)) {

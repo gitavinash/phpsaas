@@ -76,21 +76,21 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                         <th>Time</th>
                         <?php
 
-if ($site_access_type != 'agent') {
-    echo "<th>Source</th><th>Assign to</th>";
-}
-if (SITE_APP != 'astro_client') {
-    echo "<th>Recent note</th>";
-}
+                        if ($site_access_type != 'agent') {
+                            echo "<th>Source</th><th>Assign to</th>";
+                        }
+                        if (SITE_APP != 'astro_client') {
+                            echo "<th>Recent note</th>";
+                        }
 
-?>
+                        ?>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
 
-if ($dataList = mysqli_query($connection, "SELECT
+                    if ($dataList = mysqli_query($connection, "SELECT
     e.enquiry_id,
     e.enquiry_time,
     CASE
@@ -130,112 +130,93 @@ ORDER BY
     e.enquiry_time DESC
 LIMIT
     0, 100")) {
-    if (mysqli_num_rows($dataList) != 0) {
-        while ($data = mysqli_fetch_assoc($dataList)) {
-            extract($data);
-            switch ($enquiry_status) {
-                case 1:
-                    $backgroundColor = '#C7EAE4';
-                    break;
-                case 2:
-                    $backgroundColor = '#F2F3F4';
-                    break;
-                case 3:
-                    $backgroundColor = '#FFD699';
-                    break;
-                case 4:
-                    $backgroundColor = '#FFCCCC';
-                    break;
-                case 5:
-                    $backgroundColor = '#E6E6FA';
-                    break;
-                default:
-                    $backgroundColor = '#FFFFFF';
-            }
+                        if (mysqli_num_rows($dataList) != 0) {
+                            while ($data = mysqli_fetch_assoc($dataList)) {
+                                extract($data);
 
-            ?>
-                    <tr>
-                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo ucwords($enquiry_first_name) ?></td>
-                        <!-- <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_email; ?></td> -->
-                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_mobile; ?></td>
-                        <?php
-
-            if (SITE_APP == 'astro_client') {?>
-                            <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_alt_mobile; ?></td>
-                        <?php
-}
-
-            ?>
-                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_subject; ?></td>
-                        <td style="background: <?php echo $backgroundColor; ?>">
-                            <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
-                        <?php
-
-            if ($site_access_type != 'agent') {?>
-                        <td style="background: <?php echo $backgroundColor; ?>"><?php echo $enquiry_source ?></td>
-                        <td style="background: <?php echo $backgroundColor; ?>">
-                            <form method="POST">
-                                <?php
-if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) {?>
-                                <select class="selectJS form-control" name="userId" required>
-                                    <option value="">Select user</option>
+                    ?>
+                                <tr>
+                                    <td><?php echo ucwords($enquiry_first_name) ?></td>
+                                    <!-- <td><?php echo $enquiry_email; ?></td> -->
+                                    <td><?php echo $enquiry_mobile; ?></td>
                                     <?php
 
-                for ($i = 0; $i < sizeof($userList); $i++) {
-                    echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
-                }
+                                    if (SITE_APP == 'astro_client') { ?>
+                                        <td><?php echo $enquiry_alt_mobile; ?></td>
+                                    <?php
+                                    }
 
-                ?>
-                                </select>
-                                <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
-                                <input type="hidden" name="action" value="assign">
-                                <input type="hidden" name="type" value="leads">
-                                <input type="submit" value="Assign lead to user"
-                                    class="btn dataTableSubmitBtn dataTableBtn">
-                                <?php
-} else {
-                echo $agent_display_name;
-            }
-                ?>
-                            </form>
-                        </td>
-                        <?php
-}
+                                    ?>
+                                    <td><?php echo $enquiry_subject; ?></td>
+                                    <td>
+                                        <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                                    <?php
 
-            if (SITE_APP != 'astro_client') {?>
-                                        <td style="background: <?php echo $backgroundColor; ?>">
+                                    if ($site_access_type != 'agent') { ?>
+                                        <td><?php echo $enquiry_source ?></td>
+                                        <td>
+                                            <form method="POST">
+                                                <?php
+                                                if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
+                                                    <select class="selectJS form-control" name="userId" required>
+                                                        <option value="">Select user</option>
+                                                        <?php
+
+                                                        for ($i = 0; $i < sizeof($userList); $i++) {
+                                                            echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
+                                                        }
+
+                                                        ?>
+                                                    </select>
+                                                    <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
+                                                    <input type="hidden" name="action" value="assign">
+                                                    <input type="hidden" name="type" value="leads">
+                                                    <input type="submit" value="Assign lead to user"
+                                                        class="btn dataTableSubmitBtn dataTableBtn">
+                                                <?php
+                                                } else {
+                                                    echo $agent_display_name;
+                                                }
+                                                ?>
+                                            </form>
+                                        </td>
+                                    <?php
+                                    }
+
+                                    if (SITE_APP != 'astro_client') { ?>
+                                        <td>
                                             <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
                                         </td>
                                     <?php
-}
+                                    }
 
-            ?>
-                        </td>
-                        <td>
-                            <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
-                                class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
-                                lead details</a>
-                            <?php
+                                    ?>
+                                    </td>
+                                    <td>
+                                        <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
+                                            class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
+                                            lead details</a>
+                                        <?php
 
-            if ($enquiry_status == 0 && $site_access_type != 'agent') {?>
+                                        if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
 
 
-                            <a href="#" class="btn dataTableBtn duplicateLead"
-                                id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
-                                as duplicate lead</a>
+                                            <a href="#" class="btn dataTableBtn duplicateLead"
+                                                id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
+                                                as duplicate lead</a>
 
-                            <?php
-}
+                                        <?php
+                                        }
 
-            ?>
-                        </td>
-                    </tr>
+                                        ?>
+                                    </td>
+                                </tr>
                     <?php
-}
-    }
-}
+                            }
+                        }
+                    }
 
-?>
+                    ?>
                 </tbody>
             </table>
         </div>
