@@ -4,6 +4,13 @@ function closePopup(btn) {
   document.querySelector(".popUp").style.display = "none";
 }
 
+function loadExternalJS(filePath) {
+  let script = document.createElement("script"); // Create a <script> element
+  script.src = filePath; // Set the src attribute to the JS file path
+  script.type = "text/javascript"; // Set the type (optional, defaults to "text/javascript")
+  document.body.appendChild(script); // Append the script to the body (or head)
+}
+
 /** SweetAlert Pop Up Box */
 
 function popUpMessage(msgPostion, msgTxt, msgType) {

@@ -951,47 +951,7 @@ $(document).ready(function (e) {
     });
   });
 
-  // Manage price section
-  // Function to clone the priceBox when the clone button is clicked
-  $(".cloneSingleSharingPriceBox").click(function () {
-    let $priceBox = $(".priceBox").first().clone(); // Clone the first .priceBox
-
-    // Clear the inputs of cloned priceBox
-    $priceBox.find("input").each(function () {
-      $(this).val(""); // Clear input values in the cloned box
-    });
-
-    // Add a remove button to the cloned box if more than one box exists
-    if (!$priceBox.find(".removePriceBox").length) {
-      $priceBox.append(
-        '<button type="button" class="removePriceBox">Remove</button>'
-      );
-    }
-
-    // Append the cloned .priceBox to the container
-    $(".priceContainer").append($priceBox);
-
-    // Show remove buttons on all boxes if more than 1 box exists
-    toggleRemoveButton();
-  });
-
-  // Function to remove the priceBox
-  $(".priceContainer").on("click", ".removePriceBox", function () {
-    $(this).closest(".priceBox").remove(); // Remove the clicked priceBox
-
-    // Hide remove button if only one .priceBox is left
-    toggleRemoveButton();
-  });
-
-  // Function to toggle the display of remove buttons
-  function toggleRemoveButton() {
-    if ($(".priceBox").length > 1) {
-      $(".removePriceBox").show(); // Show remove button if more than one priceBox
-    } else {
-      $(".removePriceBox").hide(); // Hide remove button if only one priceBox
-    }
-  }
-
-  // Initialize the state (in case there's only one priceBox at load)
-  toggleRemoveButton();
+  loadExternalJS(
+    "/app/dashboard/v2/default/desktop/assets/js/aleya/package-price.min.js"
+  );
 });

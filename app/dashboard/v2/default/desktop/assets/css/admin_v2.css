@@ -544,7 +544,7 @@ aside {
   padding: 10px 0 10px 0;
   display: block;
   background: #fff;
-  z-index: 9999;
+  z-index: 9;
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
@@ -1538,6 +1538,24 @@ section.form .form-header h2 {
   line-height: 150px;
 }
 
+section.form .form-header h3 {
+  font-size: 32px;
+  color: #01647b;
+  float: left;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+section.form .form-header h3 span {
+  font-size: 18px;
+  color: #838383;
+  float: left;
+  width: 100%;
+  font-weight: 400;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
 h1,
 h2,
 h3,
@@ -1592,8 +1610,8 @@ section.form .btn {
   padding: 10px 30px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid #01647b !important;
-  background: #01647b !important;
+  border: 1px solid #01647b;
+  background: #01647b;
   color: #fff;
   font-family: "Fira Sans", sans-serif;
   font-size: 18px;
@@ -3273,4 +3291,14 @@ strong.stockInfoList {
 .showTableList {
   width: 100%; /* Allow table to fill the container */
   min-width: 1200px; /* Force the table to be wide enough for horizontal scrolling */
+}
+
+.priceBox {
+  float: left;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+.highlight-required {
+  border: 2px solid #c70039 !important;
 }
