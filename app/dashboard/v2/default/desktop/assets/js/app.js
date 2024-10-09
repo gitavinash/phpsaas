@@ -109,23 +109,23 @@ function initializeSelect2(element) {
 $(document).ready(function (e) {
   // Aside
 
-  var stickyDiv = $("#sidebar");
-  var stickyDivOffset = stickyDiv.offset().top + stickyDiv.outerHeight();
-  var windowHeight = $(window).height();
+  // var stickyDiv = $("#sidebar");
+  // var stickyDivOffset = stickyDiv.offset().top + stickyDiv.outerHeight();
+  // var windowHeight = $(window).height();
 
-  $(window).scroll(function () {
-    var scrollTop = $(window).scrollTop();
-    var scrollBottom = scrollTop + windowHeight;
-    if (scrollBottom >= stickyDivOffset) {
-      $("aside").css({
-        position: "fixed",
-      });
-    } else {
-      $("aside").css({
-        position: "relative",
-      });
-    }
-  });
+  // $(window).scroll(function () {
+  //   var scrollTop = $(window).scrollTop();
+  //   var scrollBottom = scrollTop + windowHeight;
+  //   if (scrollBottom >= stickyDivOffset) {
+  //     $("aside").css({
+  //       position: "fixed",
+  //     });
+  //   } else {
+  //     $("aside").css({
+  //       position: "relative",
+  //     });
+  //   }
+  // });
 
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
@@ -805,6 +805,20 @@ $(document).ready(function (e) {
 
     cb(start, end);
   }
+
+  // Date picker without year
+
+  $(".datePickerWithoutYear")
+    .daterangepicker({
+      startDate: start,
+      endDate: end,
+      singleDatePicker: true,
+      minViewMode: "months",
+      locale: {
+        format: "DD MMMM",
+      },
+    })
+    .val(dateRangeValue);
 
   // Select js 2
 

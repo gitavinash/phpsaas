@@ -13,15 +13,15 @@ function forgotPassword($connection, $data)
 
 			extract(mysqli_fetch_assoc($checkUser));
 
-			$passwordResetURL = SITE_DOMAIN . '/verify/password/?transaction=' . $user_salt_key . '&email=' . base64_encode($email);
+			$passwordResetURL = SITE_URL . '/verify/password/?transaction=' . $user_salt_key . '&email=' . base64_encode($email);
 
 			require_once EMAIL_TEMPLATE . 'forgot-password.php';
 
-			if(isset(($emailIsNotDelivered))) {
-				$status = 'warning'; 
+			if (isset(($emailIsNotDelivered))) {
+				$status = 'warning';
 				$msg = $emailIsNotDelivered;
 			} else {
-				$status = 'success'; 
+				$status = 'success';
 				$msg = 'Email has been sent to your register email.';
 			}
 		} else {

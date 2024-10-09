@@ -13,7 +13,7 @@
 
                         if (isset($id)) {
                             $tourPackageId = base64_decode($id);
-                            if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_id='{$tourPackageId}'")) {
+                            if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_id='{$tourPackageId}' AND tour_package_site_id=" . SITE_ID)) {
                                 if (mysqli_num_rows($checkPackage) != 0) {
                                     extract(mysqli_fetch_assoc($checkPackage)); ?>
                                     <div class="form-header">

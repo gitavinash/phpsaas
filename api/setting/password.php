@@ -36,7 +36,7 @@ function password($connection, $data)
                     $status = 'success';
                     $msg = "Password updated successfully";
 
-                    $passwordResetURL = SITE_DOMAIN . '/verify/password/?transaction=' . $user_salt_key . '&email=' . base64_encode($email);
+                    $passwordResetURL = SITE_URL . '/verify/password/?transaction=' . $user_salt_key . '&email=' . base64_encode($email);
 
                     require_once EMAIL_TEMPLATE . 'update-password-notification.php';
                 } else {
