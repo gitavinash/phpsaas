@@ -56,7 +56,7 @@ $email_body = "
     </tr>
     <tr>
         <td style='text-align: center'>
-            <h3>Having trouble clicking the Forgot Password button?</h3>
+            <h3>Having trouble clicking the Reset Your Password button?</h3>
             <p>Simply copy this URL: {$passwordResetURL}</p>
         </td>
     </tr>
