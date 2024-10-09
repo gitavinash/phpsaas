@@ -65,12 +65,6 @@ $email_body = "
             <p>If you did not ask to recover your password, please ignore this email.</p>
         </td>
     </tr>
-    <tr>
-        <td style='text-align: center; margin-top: 20px;'>
-            <p style='font-size: 12px;'>Or copy and paste the following link into your browser:</p>
-            <p style='font-size: 12px;'><a href='{$passwordResetURL}' style='color: {$themeColor}; text-decoration: underline;'>{$passwordResetURL}</a></p>
-        </td>
-    </tr>
 </table>
 ";
 
