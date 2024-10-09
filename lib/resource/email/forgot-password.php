@@ -56,6 +56,12 @@ $email_body = "
     </tr>
     <tr>
         <td style='text-align: center'>
+            <h3>Having trouble clicking the Forgot Password button?</h3>
+            <p>Simply copy this URL: {$passwordResetURL}</p>
+        </td>
+    </tr>
+    <tr>
+        <td style='text-align: center'>
             <p>If you did not ask to recover your password, please ignore this email.</p>
         </td>
     </tr>
