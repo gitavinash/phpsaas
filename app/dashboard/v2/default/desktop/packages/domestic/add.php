@@ -110,7 +110,7 @@
                                 if ($vehicles = mysqli_query($connection, "SELECT vehicle_title, vehicle_type FROM " . TABLE_PREFIX . "vehicles")) {
                                     if (mysqli_num_rows($vehicles)) {
                                         while ($vehiclesData = mysqli_fetch_assoc($vehicles)) {
-                                            echo "<option value='{$vehiclesData['vehicle_title']}' " . ((strtolower($vehiclesData['vehicle_title']) == 'alto') ? 'selected' : '') . ">{$vehiclesData['vehicle_title']}, " . ucwords(str_replace('_', ' ', $vehiclesData['vehicle_type'])) . "</option>";
+                                            echo "<option value='{$vehiclesData['vehicle_title']}' " . ((strtolower($vehiclesData['vehicle_title']) == 'maruti alto') ? 'selected' : '') . ">{$vehiclesData['vehicle_title']}, " . ucwords(str_replace('_', ' ', $vehiclesData['vehicle_type'])) . "</option>";
                                         }
                                     }
                                 } else {

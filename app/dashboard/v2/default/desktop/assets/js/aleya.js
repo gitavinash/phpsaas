@@ -908,14 +908,21 @@ $(document).ready(function (e) {
       success: function (response) {
         if (response.status) {
           popUpMessage("center", response.msg, response.status);
-          window.location.href =
-            "/dashboard/packages/" + packageType + "/price/?id=" + response.id;
+          setTimeout(function () {
+            window.location.href =
+              "/dashboard/packages/" +
+              packageType +
+              "/price/?id=" +
+              response.id +
+              "request=new";
+          }, 1500);
         } else {
           $("#createTourPackageBtn").show();
         }
       },
-      error: function (xhr, status, error) {
-        popUpMessage("center", response.msg, response.status);
+      error: function (errorMsg) {
+        console.log(`errorMsg`, errorMsg);
+        popUpMessage("center", errorMsg.msg, errorMsg.status);
         console.log(`Error:`, error);
         $("#createTourPackageBtn").show();
       },
