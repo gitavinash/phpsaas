@@ -540,6 +540,7 @@ aside {
   /* top: 0; */
   bottom: 0;
   height: auto;
+  min-height: 100vh;
   padding: 10px 0 10px 0;
   display: block;
   background: #fff;
