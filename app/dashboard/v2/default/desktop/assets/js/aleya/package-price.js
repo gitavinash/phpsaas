@@ -119,3 +119,5 @@ $(document).ready(function () {
   removeBox(".removeQuadPriceBox", ".quadPriceBox");
   toggleRemoveButton(".quadPriceBox", ".removeQuadPriceBox");
 });
+
+// Submit form

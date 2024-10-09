@@ -84,6 +84,7 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                         }
 
                         ?>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -133,6 +134,30 @@ LIMIT
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data);
+
+                                switch ($enquiry_status) {
+                                    case 1:
+                                        $leadCurrentStatus = 'Success';
+                                        break;
+                                    case 2:
+                                        $leadCurrentStatus = 'Pending';
+                                        break;
+                                    case 3:
+                                        $leadCurrentStatus = 'Follow up';
+                                        break;
+                                    case 4:
+                                        $leadCurrentStatus = 'Failed';
+                                        break;
+                                    case 5:
+                                        $leadCurrentStatus = 'Duplicate';
+                                        break;
+                                    case 6:
+                                        $leadCurrentStatus = 'Payment initiate';
+                                        break;
+                                    default:
+                                        $leadCurrentStatus = 'Initiate';
+                                        break;
+                                }
 
                     ?>
                                 <tr>
@@ -192,6 +217,7 @@ LIMIT
 
                                     ?>
                                     </td>
+                                    <td><?php echo $leadCurrentStatus ?></td>
                                     <td>
                                         <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
                                             class="btn dataTableBtn"><i class="fi-rr-eye"></i> View

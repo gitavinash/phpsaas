@@ -65,7 +65,7 @@
                                             <a href='/dashboard/packages/domestic/price/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit price' data-title='Edit price'><i class='fi fi-rr-indian-rupee-sign bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Manage gallery' data-title='Manage gallery'><i class='fi fi-rr-images bgWhite'></i></a>
                                             <a href='/view-itinerary/?id=" . base64_encode($tour_package_id) . "&theme=" . base64_encode(1) . "' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-blue'></i></a>
-                                            <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
+                                            <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-type='{$tour_package_type}' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                         </td>
                                     </tr>
                                 ";

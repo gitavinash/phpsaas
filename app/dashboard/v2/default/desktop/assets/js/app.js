@@ -706,7 +706,8 @@ $(document).ready(function (e) {
       },
     ],
     createdRow: function (row, data, dataIndex) {
-      var rowDataStatus = data[data.length - 2].toLowerCase(); // Access second last column for status
+      var rowDataStatus = data[data.length - 2].toLowerCase();
+      var rowDataStatus = rowDataStatus.replace(" ", "_");
       console.log(`Col status:`, rowDataStatus); // Debugging output
 
       // Apply inline background color for each cell in the row
@@ -715,14 +716,20 @@ $(document).ready(function (e) {
         case "draft":
           color = "#fef9e6"; // Very light and bright pastel yellow for draft
           break;
+        case "initiate":
+          color = "#ffffff"; // Very light and bright pastel yellow for draft
+          break;
         case "active":
           color = "#e8fce8"; // Very light and bright pastel green for active
           break;
+        case "success":
+          color = "#C7EAE4"; // Very light and bright pastel green for active
+          break;
         case "duplicate":
-          color = "#ffe8e8"; // Very light and bright pastel red for duplicate
+          color = "#E6E6FA"; // Very light and bright pastel red for duplicate
           break;
         case "follow_up":
-          color = "#ffeaf3"; // Very light and bright pastel pink for follow-up
+          color = "#FFD699"; // Very light and bright pastel pink for follow-up
           break;
         case "payment initiate":
           color = "#e6fbff"; // Very light and bright pastel blue for payment initiate
@@ -740,7 +747,7 @@ $(document).ready(function (e) {
           color = "#ffeaea"; // Very light and bright pastel pink-red for delete
           break;
         default:
-          color = "#fff9e6"; // Very light and bright pastel orange for pending
+          color = "#F2F3F4"; // Very light and bright pastel orange for pending
           break;
       }
 
