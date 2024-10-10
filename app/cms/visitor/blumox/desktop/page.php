@@ -1,44 +1,20 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
-<!-- service banner start -->
-<section class="about_banner">
-    <div class="container">
-        <div class="section_heading">
-            <h2 class="main_heading"><?php echo $page_title ?></h2>
-            <h4 id="service_head"><?php echo $page_title ?></h4>
-            <div class="dot_img">
-                <img src="<?php echo USER_IMAGES ?>svg/text_dot.svg" class="img-fluid" alt="">
-            </div>
-            <div class="colour">
-                <img src="<?php echo USER_IMAGES ?>svg/colour.svg" class="img-fluid" alt="">
-            </div>
-            <div class="triangle_color">
-                <img src="<?php echo USER_IMAGES ?>png/why-color.png" class="img-fluid" alt="">
-            </div>
-        </div>
-    </div>
-    <div class="waves_img">
-        <img src="<?php echo USER_IMAGES ?>svg/waves.svg" class="img-fluid" alt="">
-    </div>
-    <div class="triangle_img">
-        <img src="<?php echo USER_IMAGES ?>svg/triangle-left.svg" class="img-fluid" alt="">
-    </div>
-</section>
-<!-- service banner end -->
 
 <section>
-    <div class="container">
-        <div class="box_content">
-            <p><?php echo $page_description ?></p>
+    <div class="introBox">
+        <h1><?php echo $page_title ?></h1>
+        <div class="policyTextBox">
+            <?php echo $page_description ?>
         </div>
     </div>
 </section>
-<!--  service section end -->
+
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

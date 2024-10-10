@@ -16,7 +16,8 @@ a {
 }
 
 .blumox {
-  font-family: "Righteous", cursive !important;
+  font-weight: 700;
+  font-family: "Lato", sans-serif !important;
 }
 
 header {
@@ -39,6 +40,10 @@ header {
 
 .oxtealBgColor {
   background: #009b72 !important;
+}
+
+.aleyaBgColor {
+  background: #01647b !important;
 }
 
 section {
@@ -416,7 +421,7 @@ a.getInTouchBtn:hover {
 .projectBox .image {
   float: left;
   width: 70%;
-  height: 600px;
+  /* height: 600px; */
   transition: transform 0.5s ease;
 }
 
@@ -426,14 +431,14 @@ a.getInTouchBtn:hover {
 
 .projectBox .image img {
   float: left;
-  width: auto;
-  height: 600px;
+  width: 100%;
+  height: auto;
 }
 
 .projectBox .text {
   float: left;
   width: 50%;
-  min-height: 350px;
+  /* min-height: 350px; */
   margin-left: -20%;
   background: #333;
   padding: 50px 75px;
@@ -506,18 +511,24 @@ a.getInTouchBtn:hover {
 
 .testimonials {
   padding: 5% 10%;
-  text-align: center;
+  text-align: left;
   color: #fff;
 }
 
 .testimonials h3 {
-  line-height: 54px;
+  font-size: 1.2rem;
+  line-height: 2rem;
+  font-weight: 300;
 }
 
 .testimonials p {
   font-size: 1.5em;
   line-height: 32px;
   margin-top: 50px;
+}
+
+.testimonials p span {
+  font-weight: 700;
 }
 
 .introBox {
@@ -592,6 +603,18 @@ footer {
   width: 100%;
   float: left;
   /* filter: grayscale(); */
+}
+
+.tryNowBtn {
+  padding: 0.5rem 2rem;
+  border-radius: 10px;
+  letter-spacing: 2px;
+  border-bottom: 2px solid transparent;
+}
+.tryNowBtn:hover {
+  font-weight: 700;
+  color: inherit;
+  border-bottom: 2px solid #fff;
 }
 
 @media only screen and (max-width: 800px) {
