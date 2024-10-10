@@ -92,10 +92,10 @@ include_once 'header.php';
                             echo "<h2 class='ofer-price'><img src='" . USER_IMAGES . "rupees.svg'> <span>{$inventory_mrp}</span></h2>";
                         } else { ?>
 
-                        <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
-                            <span><?php echo $inventory_price ?></span>
-                        </h2>
-                        <?php
+                            <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
+                                <span><?php echo $inventory_price ?></span>
+                            </h2>
+                            <?php
                             if ($inventory_mrp != 0) {
 
                                 if ($inventory_mrp != $inventory_price) {
@@ -165,7 +165,7 @@ include_once 'header.php';
         <div class="row">
             <div class="col-md-12">
                 <div class="head-1">
-                    <h2>Similar Products</h2>
+                    <h2>You May Also Like</h2>
                     <span class="cart-bodr-h2"></span>
                 </div>
             </div>
