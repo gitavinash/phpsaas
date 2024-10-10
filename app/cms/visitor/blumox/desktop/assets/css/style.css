@@ -443,7 +443,7 @@ a.getInTouchBtn:hover {
   background: #333;
   padding: 50px 75px;
   margin-top: 100px;
-  text-align: center;
+  text-align: left;
   transition: transform 0.5s ease;
 }
 
@@ -460,8 +460,8 @@ a.getInTouchBtn:hover {
 }
 
 .projectBox .text p {
-  font-size: 1.5em;
-  line-height: 48px;
+  font-size: 1.2rem;
+  line-height: 2rem;
   color: #fff;
 }
 
@@ -606,10 +606,10 @@ footer {
 }
 
 .tryNowBtn {
-  padding: 0.5rem 2rem;
-  border-radius: 10px;
+  padding: 0.5rem 1rem 0.5rem 0rem;
   letter-spacing: 2px;
   border-bottom: 2px solid transparent;
+  border-bottom-left-radius: 0px;
 }
 .tryNowBtn:hover {
   font-weight: 700;
