@@ -29,7 +29,7 @@
                         <span>Nidhi Jain Seth</span>
                     </div>
                     <div class="slider">
-                        <p>I’ve ordered from And blooms at various occasions including planning my Diwali gifts to a lot
+                        <p>I’ve ordered from & Blooms at various occasions including planning my Diwali gifts to a lot
                             of clients! Stunning arrangements, extremely customised quick service and fresh exotic
                             flowers are their backbone! Love the staff and the approach and the passion towards bespoke
                             flower gifting! Very niche and very exclusive!</p>

@@ -41,7 +41,7 @@ require_once 'header.php';
             <img src="<?php echo USER_IMAGES ?>and-blooms-testimonial.jpg" alt="">
         </div>
         <div class="text abBgColor">
-            <h2 class="blumox">And Blooms</h2>
+            <h2 class="blumox">& Blooms</h2>
             <p>E-commerce solution to give a better experience in finding better gifts for loved ones.</p>
             <p><a href="https://andblooms.com" class="tryNowBtn" target="_blank">Experience now</a></p>
         </div>
