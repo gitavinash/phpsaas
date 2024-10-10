@@ -14,7 +14,7 @@ require_once 'header.php';
 <section>
     <?php
 
-    if ($services = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE category_status=1 AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='category' AND  category_site_id=" . SITE_ID)) {
+    if ($services = mysqli_query($connection, "SELECT category_image, category_title, link_url, meta_description FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id WHERE category_status=1 AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='category' AND  category_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($services) != 0) {
             $i = 0;
             while ($servicesData = mysqli_fetch_assoc($services)) {
@@ -27,7 +27,7 @@ require_once 'header.php';
                             </div>
                             <div class='text lsBgColor'>
                                 <h2 class='blumox'>{$category_title}</h2>
-                                <p>{$category_description}</p>
+                                <p>{$meta_description}</p>
                                 <p><a href='{$link_url}' class='tryNowBtn'>Get Started!</a></p>
                             </div>
                         </div>
@@ -41,7 +41,7 @@ require_once 'header.php';
                             </div>
                             <div class='text leftBox aleyaBgColor'>
                                 <h2 class='blumox'>{$category_title}</h2>
-                                <p>{$category_description}</p>
+                                <p>{$meta_description}</p>
                                 <p><a href='{$link_url}' class='tryNowBtn'>Get Started!</a></p>
                             </div>
                         </div>
