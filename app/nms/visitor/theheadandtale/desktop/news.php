@@ -90,7 +90,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                 <section class='subscribe_wrapper'>
                         <div class='container'>
                             <div class='subscribe_wrapper__heading'>
-                                <h6><a href='/signup/'>" . ((isset($news_price)) ? (($news_price != 0) ? "Unlock this story now for ₹ {$news_price}" : "Check our subscription plan") : "Check our subscription plan") . "</a></h6>
+                                <h6><a href='/signup/'>" . ((isset($news_price)) ? (($news_price != 0) ? "Unlock this story now for ₹ {$news_price}" : "Check our subscription plan") : "Check our subscription plans") . "</a></h6>
                                 <h3>Stay ahead in fintech leadership with insightful news and ecosystem mastery</h3>
                             </div>
                         </div>
