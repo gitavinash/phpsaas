@@ -271,7 +271,7 @@ if (isset($validId)) {
                             </div>
                             <div class="col-1">
                                 <div class="form-group">
-                                    <a href="#" id="cloneSlabForm" class="btn bgRed" style="float:right"><i
+                                    <a href="#" class="btn cloneSlabForm" style="float:right"><i
                                             class="fi fi-rr-multiple"></i></a>
                                 </div>
                             </div>

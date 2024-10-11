@@ -1228,10 +1228,10 @@ $("#updateMeasurement").click(function (e) {
 });
 
 $(document).ready(function () {
-  $("#cloneSlabForm").click(function (e) {
+  // Use class selector for cloneSlabForm
+  $(document).on("click", ".cloneSlabForm", function (e) {
     e.preventDefault();
 
-    // Function to validate if all inputs have numerical values
     function allInputsHaveValues() {
       var isValid = true;
       $(".generateBlockRow").each(function () {
@@ -1262,14 +1262,49 @@ $(document).ready(function () {
     // Clear the input values in the cloned div
     $clone.find("input").val("");
 
-    // Remove the clone button from the cloned div
-    $clone.find("#cloneSlabForm").parent().remove();
+    // Show the remove button in the cloned row
+    $clone.find(".removeRow").show();
 
     // Append the cloned div to #generateBlockRowBox
     $("#generateBlockRowBox").append($clone);
 
-    // Show the clone button in the last form
-    $(".generateBlockRow").last().find("#cloneSlabForm").show();
+    // Hide the cloneSlabForm button in all rows and show it only in the last row
+    $(".generateBlockRow").find(".cloneSlabForm").hide();
+    $(".generateBlockRow").last().find(".cloneSlabForm").show();
+
+    // Ensure only the last row's remove button is hidden
+    $(".generateBlockRow").find(".removeRow").show(); // Show remove buttons in all rows
+    $(".generateBlockRow").last().find(".removeRow").hide(); // Hide remove button in the last row
+
+    // Attach event handler for the new remove button
+    attachRemoveEvent();
+  });
+
+  function attachRemoveEvent() {
+    $(".removeRow")
+      .off("click")
+      .on("click", function (e) {
+        e.preventDefault();
+        if ($(".generateBlockRow").length > 1) {
+          $(this).closest(".generateBlockRow").remove();
+
+          // Ensure the clone button stays only on the last row
+          $(".generateBlockRow").find(".cloneSlabForm").hide();
+          $(".generateBlockRow").last().find(".cloneSlabForm").show();
+
+          // Ensure the last row's remove button is hidden after removing a row
+          $(".generateBlockRow").find(".removeRow").show();
+          $(".generateBlockRow").last().find(".removeRow").hide();
+        }
+      });
+  }
+
+  // Ensure that the first row hides the remove button on load, but it's shown on others except the last one
+  $(document).ready(function () {
+    // Initially hide the remove button on the first row, and ensure it's hidden only on the last row
+    $(".generateBlockRow").find(".removeRow").show(); // Show remove buttons for all rows
+    $(".generateBlockRow").last().find(".removeRow").hide(); // Hide remove button for the last row only
+    attachRemoveEvent(); // Attach the event handler on page load
   });
 
   $("#createBlockItem").click(function (e) {
