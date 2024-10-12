@@ -31,7 +31,6 @@ require_once 'header.php';
                             </div>
                         </div>
                     ";
-                $i++;
             } else {
                 echo "
                         <div class='projectBox'>
@@ -46,7 +45,6 @@ require_once 'header.php';
                             </div>
                         </div>
                     ";
-                $i = 0;
             }
         }
     } else {

@@ -66,7 +66,6 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 
 				if (mysqli_num_rows($categoryPost) != 0) {
 					while ($categoryPostData = mysqli_fetch_assoc($categoryPost)) {
-
 						$categorySinglePost[] = $categoryPostData;
 					}
 				}
