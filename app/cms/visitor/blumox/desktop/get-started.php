@@ -21,10 +21,10 @@ if (isset($id) && isset($serviceType) && isset($productType)) {
             $profile_email = $email;
             $profile_mobile = $mobile;
             $profile_display_name = $name;
-            $order_id = time();
+            $customOrderId = base64_encode($id . '_' . time());
             $paymentAmount = (($paymentOption != 'full') ? $inventory_price * 0.30 : $inventory_price);
             $cartProduct = ucwords(urldecode($serviceType));
-            $customeRedirection = SITE_URL . '/payment-status/?orderId=' . $order_id;
+            $customRedirection = SITE_URL . '/payment-status/?orderId=' . $customOrderId;
 
             require_once './lib/resource/payment-gateway/cashfree/generate.php';
             exit();

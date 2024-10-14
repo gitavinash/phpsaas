@@ -1,11 +1,6 @@
 <?php
 
-// require_once './lib/resource/payment-gateway/cashfree/generate.php';
-
 $curl = curl_init();
-
-echo $orderId;
-exit();
 
 if (DEVELOPMENT_MODE == TRUE) {
 
@@ -34,9 +29,17 @@ curl_setopt_array($curl, [
 
 $response = curl_exec($curl);
 $err = curl_error($curl);
-
 curl_close($curl);
-
-print_r($response);
-
+$paymentResponse = json_decode($response, TRUE);
+if ($paymentResponse['order_status'] == 'PAID') {
+    $paymentResponse['customer_details']['customer_name'];
+    $paymentResponse['order_amount'];
+    $redirectionUrl = "/thank-you/?name=" . $paymentResponse['customer_details']['customer_name'];
+    header("Location: {$redirectionUrl}", TRUE, 301);
+} else {
+    $paymentResponse['customer_details']['customer_name'];
+    echo "fdf";
+    $redirectionUrl = "/payment-failed/?name=" + $paymentResponse['customer_details']['customer_name'];
+    header("Location: {$redirectionUrl}", TRUE, 301);
+}
 exit();

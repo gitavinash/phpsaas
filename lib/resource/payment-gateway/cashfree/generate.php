@@ -31,12 +31,12 @@
             "customer_phone" => strval((($profile_mobile == "") ? time() : $profile_mobile)),
             "customer_name" => strval($profile_display_name)
         ],
-        "order_id" => $order_id . '_' . time(),
+        "order_id" => $order_id = ((isset($customOrderId)) ? $customOrderId : $order_id . '_' . time()),
         "order_amount" => strval($paymentAmount),
         "order_currency" => "INR",
         "order_note" => $cartProduct,
         "order_meta" => array(
-            "return_url" => ((!isset($customeRedirection)) ? SITE_URL . '/payment/status/?orderId=' . base64_encode($order_id . '_' . time()) . '&app=' . $siteApp . '&orderType=' . $pgRequestType : $customeRedirection)
+            "return_url" => ((!isset($customRedirection)) ? SITE_URL . '/payment/status/?orderId=' . base64_encode($order_id . '_' . time()) . '&app=' . $siteApp . '&orderType=' . $pgRequestType : $customRedirection)
         )
     ];
 
