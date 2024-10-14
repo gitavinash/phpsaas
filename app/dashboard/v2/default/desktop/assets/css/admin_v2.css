@@ -1618,6 +1618,11 @@ section.form .btn {
   cursor: pointer;
 }
 
+section.form .btn:focus {
+  border: 1px solid #01647b;
+  background: #01647b !important;
+}
+
 section.form button {
   float: left;
   padding: 10px 30px;

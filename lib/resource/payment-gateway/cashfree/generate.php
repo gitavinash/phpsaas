@@ -36,7 +36,7 @@
         "order_currency" => "INR",
         "order_note" => $cartProduct,
         "order_meta" => array(
-            "return_url" => SITE_URL . '/payment/status/?orderId=' . base64_encode($order_id . '_' . time()) . '&app=' . $siteApp . '&orderType=' . $pgRequestType
+            "return_url" => ((!isset($customeRedirection)) ? SITE_URL . '/payment/status/?orderId=' . base64_encode($order_id . '_' . time()) . '&app=' . $siteApp . '&orderType=' . $pgRequestType : $customeRedirection)
         )
     ];
 
@@ -75,16 +75,16 @@
 
             if ($updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_reference_id='{$response['cf_order_id']}', transaction_payment_id='{$response['payment_session_id']}',transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID)) { ?>
 
-    <script>
-    window.onload = function() {
-        const cashfree = Cashfree({
-            mode: "<?php echo ((DEVELOPMENT_MODE == true) ? 'sandbox' : 'production') ?>"
-        });
-        cashfree.checkout({
-            paymentSessionId: "<?php echo $response['payment_session_id']; ?>"
-        });
-    }
-    </script>
+                <script>
+                    window.onload = function() {
+                        const cashfree = Cashfree({
+                            mode: "<?php echo ((DEVELOPMENT_MODE == true) ? 'sandbox' : 'production') ?>"
+                        });
+                        cashfree.checkout({
+                            paymentSessionId: "<?php echo $response['payment_session_id']; ?>"
+                        });
+                    }
+                </script>
     <?php
             } else {
 

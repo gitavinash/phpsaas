@@ -59,9 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     tour_package_hotel = '{$hotel}', 
                     tour_package_type = '{$packageType}', 
                     tour_package_outstation_vehicle = '" . strtolower($outstationVehicle) . "', 
-                    tour_package_localsightseen_vehicle = '" . strtolower($localSighseeignVehicle) . "', 
-                    tour_package_status = 0, 
-                    tour_package_updated_at = NOW()
+                    tour_package_localsightseen_vehicle = '" . strtolower($localSighseeignVehicle) . "'
                 WHERE 
                     tour_package_created_by = " . USER_ID . "
                     AND tour_package_id = '" . base64_decode($tourPackageId) . "'

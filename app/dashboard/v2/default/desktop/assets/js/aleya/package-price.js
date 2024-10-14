@@ -121,3 +121,41 @@ $(document).ready(function () {
 });
 
 // Submit form
+
+$(".saveItineraryPriceBtn").click(function (e) {
+  e.preventDefault();
+  $(".saveItineraryPriceBtn").hide();
+  var $form = $(this).closest("form");
+  var isValid = true;
+  $form.find("input[required]").each(function () {
+    if ($(this).val() === "") {
+      isValid = false;
+      $(this).addClass("highlight-required");
+    } else {
+      $(this).removeClass("highlight-required");
+    }
+  });
+
+  if (isValid) {
+    // Submit ajax request
+
+    var formData = $form.serialize();
+    $.ajax({
+      type: "POST",
+      url: "/api/packages/price/",
+      data: formData,
+      success: function (response) {
+        alert("Form submitted successfully!");
+      },
+      error: function (error) {
+        console.log(`error`, error);
+
+        popUpMessage("center", error.responseJSON.msg, "warning");
+        $(".saveItineraryPriceBtn").show();
+      },
+    });
+  } else {
+    $(".saveItineraryPriceBtn").show();
+    popUpMessage("center", "Please fill all required fields.", "warning");
+  }
+});

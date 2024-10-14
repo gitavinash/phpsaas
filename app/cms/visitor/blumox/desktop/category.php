@@ -27,10 +27,11 @@ require_once 'header.php';
                                 <h2 class='blumox'>{$service_title}</h2>
                                 <p>{$meta_description}</p>
                                 <p>Starting from INR {$inventory_price} /-</p>
-                                <p><a href='{$link_url}' class='tryNowBtn'>Get Started!</a></p>
-                            </div>
-                        </div>
-                    ";
+                                <p><a href='/get-started/?id=" . base64_encode($service_id) . "&productType=" . urlencode(strtolower($category_type)) . "&serviceType=" . urlencode(strtolower($service_title)) . "' class='tryNowBtn'>Get Started!</a></p>
+                                </div>
+                                </div>
+                                ";
+                // <p><a href='{$link_url}' class='tryNowBtn'>Get Started!</a></p>
             } else {
                 echo "
                         <div class='projectBox'>
@@ -41,7 +42,7 @@ require_once 'header.php';
                                 <h2 class='blumox'>{$service_title}</h2>
                                 <p>{$meta_description}</p>
                                 <p>Starting from INR {$inventory_price} /-</p>
-                                <p><a href='{$link_url}' class='tryNowBtn'>Get Started!</a></p>
+                                <p><a href='/get-started/?id=" . base64_encode($service_id) . "&serviceType=" . urlencode(strtolower($service_title)) . "' class='tryNowBtn'>Get Started!</a></p>
                             </div>
                         </div>
                     ";
