@@ -7,21 +7,19 @@ $status = 'warning';
 $msg = 'Invalid request';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $quoteType = ucwords($priceType);
     $requiredFields = [
-        'packageName',
-        'travelStyle',
-        'duration',
-        'overview',
-        'dayTitle',
-        'dayContent',
-        'inclusion',
-        'exclusion',
-        'hotel',
-        'packageType',
-        'outstationVehicle',
-        'localSighseeignVehicle',
-        'location',
-        'start',
+        "sessionStart{$quoteType}Sharing",
+        "sessionEnd{$quoteType}Sharing",
+        "netCostAdult{$quoteType}Sharing",
+        "mrpAdult{$quoteType}Sharing",
+        "sellingPriceAdult{$quoteType}Sharing",
+        "agentPriceAdult{$quoteType}Sharing",
+        "netCostChild{$quoteType}Sharing",
+        "mrpChild{$quoteType}Sharing",
+        "sellingPriceChild{$quoteType}Sharing",
+        "agentPriceChild{$quoteType}Sharing",
+        "tourPackageId",
     ];
 
     $allValid = true; // Flag to check if all fields are valid
@@ -33,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     if (isset($validRequest)) {
-        $msg = 'valid';
+        print_r($netCostAdultSingleSharing);
+        print_r(${"netCostAdult" . $quoteType . "Sharing"});
     } else {
         $msg = 'Not valid request';
     }

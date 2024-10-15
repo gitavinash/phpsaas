@@ -821,18 +821,30 @@ $(document).ready(function (e) {
   }
 
   // Date picker without year
-
-  $(".datePickerWithoutYear")
-    .daterangepicker({
-      startDate: start,
-      endDate: end,
-      singleDatePicker: true,
-      minViewMode: "months",
-      locale: {
-        format: "DD MMMM",
-      },
-    })
-    .val(dateRangeValue);
+  $("body").on("focus", ".datePickerWithoutYear", function () {
+    $(this)
+      .daterangepicker({
+        startDate: start,
+        endDate: end,
+        singleDatePicker: true,
+        minViewMode: "months",
+        locale: {
+          format: "DD MMMM",
+        },
+      })
+      .val(dateRangeValue);
+  });
+  // $(".datePickerWithoutYear")
+  //   .daterangepicker({
+  //     startDate: start,
+  //     endDate: end,
+  //     singleDatePicker: true,
+  //     minViewMode: "months",
+  //     locale: {
+  //       format: "DD MMMM",
+  //     },
+  //   })
+  //   .val(dateRangeValue);
 
   // Select js 2
 

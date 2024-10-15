@@ -139,7 +139,9 @@ $(".saveItineraryPriceBtn").click(function (e) {
   if (isValid) {
     // Submit ajax request
 
-    var formData = $form.serialize();
+    var formData = $form.serializeArray();
+    console.log(`formData`, formData);
+
     $.ajax({
       type: "POST",
       url: "/api/packages/price/",
@@ -149,9 +151,8 @@ $(".saveItineraryPriceBtn").click(function (e) {
       },
       error: function (error) {
         console.log(`error`, error);
-
-        popUpMessage("center", error.responseJSON.msg, "warning");
         $(".saveItineraryPriceBtn").show();
+        popUpMessage("center", error.responseJSON.msg, "warning");
       },
     });
   } else {
