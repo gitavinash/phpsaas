@@ -27,49 +27,49 @@
                                         <div class="form-group">
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Starting date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartSingleSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartSingleSharing[]" type="text" required />
                                             </div>
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Ending Date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndSingleSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndSingleSharing[]" type="text" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Adult ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostAdultSingleSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostAdultSingleSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpAdultSingleSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpAdultSingleSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceAdultSingleSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceAdultSingleSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceAdultSingleSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceAdultSingleSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Children ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostChildSingleSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostChildSingleSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpChildSingleSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpChildSingleSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceChildSingleSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceChildSingleSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceChildSingleSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceChildSingleSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                     </div>
@@ -93,49 +93,49 @@
                                         <div class="form-group">
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Starting date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartDoubleSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartDoubleSharing[]" type="text" required />
                                             </div>
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Ending Date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndDoubleSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndDoubleSharing[]" type="text" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Adult ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostAdultDoubleSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostAdultDoubleSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpAdultDoubleSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpAdultDoubleSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceAdultDoubleSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceAdultDoubleSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceAdultDoubleSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceAdultDoubleSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Children ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostChildDoubleSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostChildDoubleSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpChildDoubleSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpChildDoubleSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceChildDoubleSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceChildDoubleSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceChildDoubleSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceChildDoubleSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                     </div>
@@ -159,49 +159,49 @@
                                         <div class="form-group">
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Starting date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartTripleSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartTripleSharing[]" type="text" required />
                                             </div>
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Ending Date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndTripleSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndTripleSharing[]" type="text" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Adult ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostAdultTripleSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostAdultTripleSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpAdultTripleSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpAdultTripleSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceAdultTripleSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceAdultTripleSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceAdultTripleSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceAdultTripleSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Children ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostChildTripleSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostChildTripleSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpChildTripleSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpChildTripleSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceChildTripleSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceChildTripleSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceChildTripleSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceChildTripleSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                     </div>
@@ -227,49 +227,49 @@
                                         <div class="form-group">
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Starting date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartQuadSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 July" name="sessionStartQuadSharing[]" type="text" required />
                                             </div>
                                             <div class="box-5">
                                                 <p class="form-lable" id="Label">Ending Date<sup>*</sup></p>
-                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndQuadSharing" type="text" required />
+                                                <input id="name" class="datePickerWithoutYear" placeholder="15 August" name="sessionEndQuadSharing[]" type="text" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Adult ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostAdultQuadSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostAdultQuadSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpAdultQuadSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpAdultQuadSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceAdultQuadSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceAdultQuadSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceAdultQuadSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceAdultQuadSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h2>Price per Children ( in ₹ )</h2>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                                <input id="name" name="netCostChildQuadSharing" placeholder="999" type="number" required />
+                                                <input id="name" name="netCostChildQuadSharing[]" placeholder="999" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">MRP</p>
-                                                <input id="name" name="mrpChildQuadSharing" placeholder="1999" type="number" />
+                                                <input id="name" name="mrpChildQuadSharing[]" placeholder="1999" type="number" />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                                <input id="name" name="sellingPriceChildQuadSharing" placeholder="1799" type="number" required />
+                                                <input id="name" name="sellingPriceChildQuadSharing[]" placeholder="1799" type="number" required />
                                             </div>
                                             <div class="box-2-5">
                                                 <p class="form-lable" id="Label">Sales team price</p>
-                                                <input id="name" name="agentPriceChildQuadSharing" placeholder="1499" type="number" />
+                                                <input id="name" name="agentPriceChildQuadSharing[]" placeholder="1499" type="number" />
                                             </div>
                                         </div>
                                     </div>

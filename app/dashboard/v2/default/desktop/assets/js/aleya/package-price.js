@@ -3,7 +3,9 @@ function addRemoveButton(box, removeClass) {
     $(box)
       .first()
       .append(
-        `<button type="button" class="${removeClass.slice(1)}">Remove</button>`
+        `<button type="button" class="btn-red ${removeClass.slice(
+          1
+        )}">Remove</button>`
       );
   }
 }
@@ -147,7 +149,10 @@ $(".saveItineraryPriceBtn").click(function (e) {
       url: "/api/packages/price/",
       data: formData,
       success: function (response) {
-        alert("Form submitted successfully!");
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          window.location.reload();
+        }, 1500);
       },
       error: function (error) {
         console.log(`error`, error);
