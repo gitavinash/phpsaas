@@ -90,17 +90,17 @@ function initializeSelect2(element) {
     placeholder: "Select destination",
     minimumInputLength: 2,
     ajax: {
-      url: "/api/city-by-country/?country_id=101", // Replace with your API URL
+      url: "/api/maps/here/autocomplete/",
       dataType: "json",
       delay: 250,
       data: function (params) {
         return {
-          query: params.term,
+          searchQuery: params.term,
         };
       },
       processResults: function (data) {
         return {
-          results: $.map(data.cityData, function (item) {
+          results: $.map(data.locationList, function (item) {
             return {
               id: item,
               text: item,

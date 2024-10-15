@@ -750,7 +750,8 @@ $(document).ready(function (e) {
 
   // Clone add  new destination location
 
-  $("#locationDurationContainer").on("click", ".addLocation", function () {
+  $("#locationDurationContainer").on("click", ".addLocation", function (e) {
+    e.preventDefault();
     const $clone = $(".locationDurationGroup:first").clone();
 
     const newIndex =
@@ -921,10 +922,10 @@ $(document).ready(function (e) {
         }
       },
       error: function (errorMsg) {
+        $("#createTourPackageBtn").show();
         console.log(`errorMsg`, errorMsg);
         popUpMessage("center", errorMsg.msg, errorMsg.status);
         console.log(`Error:`, error);
-        $("#createTourPackageBtn").show();
       },
     });
   });
@@ -960,5 +961,8 @@ $(document).ready(function (e) {
 
   loadExternalJS(
     "/app/dashboard/v2/default/desktop/assets/js/aleya/package-price.min.js"
+  );
+  loadExternalJS(
+    "/app/dashboard/v2/default/desktop/assets/js/aleya/lead-view.min.js"
   );
 });

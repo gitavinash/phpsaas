@@ -47,6 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $deleteQuery = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "tour_package_price WHERE tour_package_price_parent_id='{$packageId}' AND tour_package_price_type='{$priceType}' AND tour_package_price_site_id=" . SITE_ID);
 
+        $updatePackageStatus = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "tour_package SET tour_package_status=1 WHERE tour_package_id='{$packageId}' AND tour_package_site_id=" . SITE_ID);
+
         $sessionStartKey = "sessionStart{$quoteType}Sharing";
         $sessionEndKey = "sessionEnd{$quoteType}Sharing";
         $netAdultPrice = "netCostAdult{$quoteType}Sharing";
@@ -80,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $insertQuery = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tour_package_price(tour_package_price_parent_id, tour_package_price_site_id, tour_package_price_user_id, tour_package_price_date_start, tour_package_price_date_end, tour_package_price_net_adult, tour_package_price_net_child, tour_package_price_mrp_adult, tour_package_price_mrp_child, tour_package_price_selling_adult, tour_package_price_selling_child, tour_package_price_agent_adult, tour_package_price_agent_child, tour_package_price_type, tour_package_price_status, tour_package_price_created_at) VALUES" . rtrim($queryValue, ','));
 
-        if ($deleteQuery && $insertQuery) {
+        if ($deleteQuery && $insertQuery && $updatePackageStatus) {
             $httpStatus = 201;
             $status = 'success';
             $msg = 'Price updated successfully';

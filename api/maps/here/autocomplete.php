@@ -29,11 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // Check if the items array exists
         if (isset($responseData['items']) && is_array($responseData['items'])) {
+            $i = 0;
             foreach ($responseData['items'] as $item) {
                 // Check if address and label exist
                 if (isset($item['address']['label'])) {
-                    $locationList[] = $item['address']['label'];
+                    $locationList[] = ((isset($item['address']['label'])) ? $item['address']['label'] : '');
+                    // $locationList[$i]['location'] = ((isset($item['address']['label'])) ? $item['address']['label'] : '');
+                    // $locationList[$i]['city'] = ((isset($item['address']['city'])) ? $item['address']['city'] : '');
+                    // $locationList[$i]['district'] = ((isset($item['address']['county'])) ? $item['address']['county'] : '');
+                    // $locationList[$i]['state'] = ((isset($item['address']['state'])) ? $item['address']['state'] : '');
+                    // $locationList[$i]['country'] = ((isset($item['address']['countryName'])) ? $item['address']['countryName'] : '');
+                    // $locationList[$i]['pincode'] = ((isset($item['address']['postalCode'])) ? $item['address']['postalCode'] : '');
                 }
+                $i++;
             }
             $httpStatus = 200;
             $status = 'success';

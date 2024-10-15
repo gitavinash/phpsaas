@@ -820,16 +820,52 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
     ?>
 
-    <div class="popUp itineraryBox">
+    <div class="popUp itineraryBox" style="display: block">
         <div class="fullScreenPopUpBox">
             <div class="widget box-8">
                 <div class="contentArea">
-                    <h4 class="heading"><?php echo $enquiry_subject ?> Itinerary</span></h2>
+                    <div class="box-1">
+                        <div class="box-5">
+                            <h4>Select destination</h4>
+                            <select class="indianCityAutoComplete form-control" id="itineraryDestination">
+                            </select>
+                        </div>
+                        <div class="box-5">
+                            <h4>Travel Style</h4>
+                            <select class="selectJS form-control" name="travelStyle" id="itineraryStyle">
+                                <option value="select">Select travel style</option>
+                                <option value="adventure">Adventure Travel</option>
+                                <option value="cultural" selected>Cultural Travel</option>
+                                <option value="luxury">Luxury Travel</option>
+                                <option value="solo">Solo Travel</option>
+                                <option value="group">Group Travel</option>
+                                <option value="eco">Eco/Responsible Travel</option>
+                                <option value="honeymoon">Honeymoon Travel</option>
+                                <option value="couple">Couple Travel</option>
+                                <option value="family">Family Travel</option>
+                                <option value="wellness">Wellness/Retreat Travel</option>
+                                <option value="budget">Budget Travel</option>
+                                <option value="roadtrip">Road Trip</option>
+                                <option value="cruise">Cruise Travel</option>
+                                <option value="backpacking">Backpacking Travel</option>
+                                <option value="religious">Religious Travel</option>
+                            </select>
+                        </div>
+                        <div class="box-1">
+                            <a href="#" class="btn" id="fetchItinerary" style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="editor" id="itineraryEditorBox" style="height: 100dvh">
+
+                        </div>
+                        <textarea name="itinerary" id="itineraryEditorTextarea" style="display:none"><?php echo $tour_package_inclusions; ?></textarea>
+                    </div>
                 </div>
             </div>
             <div class="widget box-2">
                 <div class="actionArea">
-                    <a class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
+                    <a class="btn popUpBtn" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
                     <a class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload itinerary</a>
                     <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
