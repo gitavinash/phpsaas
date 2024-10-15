@@ -145,10 +145,13 @@ if (isset($validId)) {
         </div>
     </div>
 
-    <div class="step-open-box step_1_box">
+    <div class="step-open-box step_1_box full-width">
         <div class="form-header">
-            <h1><?php echo (($balanceSlabs != 0) ? 'Add slabs upto ( ' . $balanceSlabs . ' slabs )' : "{$block_code} - {$block_title} Manage block Slabs") ?>
-            </h1>
+            <h3 style="float:left; width:100%; margin-bottom: 2rem">
+                <?php echo $block_code . ' - ' . $block_title ?>
+                <span><?php echo (($balanceSlabs != 0) ? 'Add slabs upto ( ' . $balanceSlabs . ' slabs )' : 'Manage block Slabs') ?></span>
+            </h3>
+            </h3>
         </div>
     </div>
 
