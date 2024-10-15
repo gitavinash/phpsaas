@@ -99,10 +99,10 @@
                     <ul>
                         <li><a href="/about-us/">About</a></li>
                         <li><a href="/our-work/">Work</a></li>
-                        <li><a href="/products/">Products</a></li>
+                        <!-- <li><a href="/products/">Products</a></li> -->
                         <li><a href="/services/">Services</a></li>
                         <li><a href="/contact-us/">Contact Us</a></li>
-                        <li><a href="https://pay.blumox.com/">Pay Now</a></li>
+                        <!-- <li><a href="https://pay.blumox.com/">Pay Now</a></li> -->
                     </ul>
                 </div>
                 <div class="legalLinks">
