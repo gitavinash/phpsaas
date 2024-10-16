@@ -46,6 +46,7 @@ $("#fetchItinerary").click(function (e) {
     });
   } else {
     popUpMessage("center", "Select itinerary destination", "warning");
+    $("#fetchItinerary").show();
   }
 });
 
