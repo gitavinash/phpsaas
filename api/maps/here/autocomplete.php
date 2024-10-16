@@ -33,13 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             foreach ($responseData['items'] as $item) {
                 // Check if address and label exist
                 if (isset($item['address']['label'])) {
-                    $locationList[] = ((isset($item['address']['label'])) ? $item['address']['label'] : '');
-                    // $locationList[$i]['location'] = ((isset($item['address']['label'])) ? $item['address']['label'] : '');
-                    // $locationList[$i]['city'] = ((isset($item['address']['city'])) ? $item['address']['city'] : '');
-                    // $locationList[$i]['district'] = ((isset($item['address']['county'])) ? $item['address']['county'] : '');
-                    // $locationList[$i]['state'] = ((isset($item['address']['state'])) ? $item['address']['state'] : '');
-                    // $locationList[$i]['country'] = ((isset($item['address']['countryName'])) ? $item['address']['countryName'] : '');
-                    // $locationList[$i]['pincode'] = ((isset($item['address']['postalCode'])) ? $item['address']['postalCode'] : '');
+                    if (!isset($address)) {
+                        $locationList[] = ((isset($item['address']['label'])) ? $item['address']['label'] : '');
+                    } else {
+                        $locationList[$i]['location'] = ((isset($item['address']['label'])) ? $item['address']['label'] : '');
+                        $locationList[$i]['city'] = ((isset($item['address']['city'])) ? $item['address']['city'] : '');
+                        $locationList[$i]['district'] = ((isset($item['address']['county'])) ? $item['address']['county'] : '');
+                        $locationList[$i]['state'] = ((isset($item['address']['state'])) ? $item['address']['state'] : '');
+                        $locationList[$i]['country'] = ((isset($item['address']['countryName'])) ? $item['address']['countryName'] : '');
+                        $locationList[$i]['pincode'] = ((isset($item['address']['postalCode'])) ? $item['address']['postalCode'] : '');
+                        $locationList[$i]['address'] = (($locationList[$i]['city'] != '') ? $locationList[$i]['city'] . ', ' : '') . (($locationList[$i]['district'] != '') ? $locationList[$i]['district'] . ', ' : '') . (($locationList[$i]['state'] != '') ? $locationList[$i]['state'] . ', ' : '') . (($locationList[$i]['country'] != '') ? $locationList[$i]['country'] . ', ' : '') . (($locationList[$i]['pincode'] != '') ? $locationList[$i]['pincode'] . ', ' : '');
+                    }
                 }
                 $i++;
             }

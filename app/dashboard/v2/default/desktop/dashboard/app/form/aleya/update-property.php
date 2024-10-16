@@ -42,9 +42,19 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             rows="10"><?php echo $property_address ?></textarea>
                         <label class="form-lable" id="Label">Address<sup>*</sup></label>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <input id="city" name="city" value="<?php echo $property_city ?>" type="text" />
                         <label class="form-lable" id="Label">Property city<sup>*</sup></label>
+                    </div>
+                    <div class="form-group">
+                        <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number" onwheel="this.blur()" />
+                        <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
+                    </div> -->
+                    <div class="form-group">
+                        <select class="indianCityAutoCompleteWithCompleteAddress form-control" name="city" id="city">
+                            <option value="<?php echo $property_city ?>"><?php echo $property_city ?></option>
+                        </select>
+                        <label class="form-lable " id="Label">Property city<sup>*</sup></label>
                     </div>
                     <div class="form-group">
                         <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number" onwheel="this.blur()" />
@@ -158,6 +168,24 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
 
                             ?>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="selectJS form-control" name="roomType" id="roomType" multiple>
+                            <option value=""></option>
+                            <?php
+                            if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {
+                                $roomsList = array();
+                                if (mysqli_num_rows($roomsData) != 0) {
+                                    while ($data = mysqli_fetch_assoc($roomsData)) {
+                                        extract($data);
+                                        echo "<option value='" . str_replace(' ', '_', strtolower($category_title)) . "'>" . ucwords($category_title) . "</option>";
+                                    }
+                                }
+                            }
+                            ?>
+                        </select>
+                        <label class="form-lable" id="Label">Room types</label>
                     </div>
                     <div class="box-1">
                         <div class="form-group">

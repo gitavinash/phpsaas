@@ -187,6 +187,10 @@ $("#showItinerary").click(function (e) {
       } Days</td>
         </tr>
         <tr>
+          <td>Price</td>
+          <td>₹ per person</td>
+        </tr>
+        <tr>
           <td>Prepared by</td>
           <td></td>
         </tr>

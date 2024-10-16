@@ -41,6 +41,9 @@ if ($name != '') {
     $fb_desc = ((isset($fb_desc)) ? $fb_desc : $meta_desc);
     $tw_desc = ((isset($tw_desc)) ? $tw_desc : $meta_desc);
 
+    echo $roomType;
+    exit();
+
     if ($checkURL = mysqli_query($connection, "SELECT link_relation_id FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_site_id='" . SITE_ID . "'")) {
 
         if (mysqli_num_rows($checkURL) == 0) {

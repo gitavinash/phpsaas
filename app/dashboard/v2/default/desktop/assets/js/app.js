@@ -59,7 +59,7 @@ let leadId = urlQuery.get("id");
 
 function initializeSelect2HereMaps(element) {
   $(element).select2({
-    placeholder: "Select destination",
+    placeholder: "Select location",
     minimumInputLength: 2,
     ajax: {
       url: "/api/maps/here/autocomplete/", // Replace with your API URL
@@ -83,6 +83,47 @@ function initializeSelect2HereMaps(element) {
       cache: true,
     },
   });
+}
+
+function initializeSelect2HereMapsWithCompleteAddress(element) {
+  $(element)
+    .select2({
+      placeholder: "Select location",
+      minimumInputLength: 2,
+      ajax: {
+        url: "/api/maps/here/autocomplete/?address=full", // Replace with your API URL
+        dataType: "json",
+        delay: 250,
+        data: function (params) {
+          return {
+            searchQuery: params.term,
+          };
+        },
+        processResults: function (data) {
+          console.log(`data`, data);
+          return {
+            results: $.map(data.locationList, function (item) {
+              return {
+                id: item.address,
+                text: item.location,
+                pinCode: item.pincode,
+              };
+            }),
+          };
+        },
+        cache: true,
+      },
+    })
+    .on("select2:select", function (e) {
+      var selectedData = e.params.data;
+
+      // Update the #pinCode input field with the pinCode from the selected item
+      if (selectedData && selectedData.pinCode) {
+        $("#pinCode").val(selectedData.pinCode);
+      } else {
+        $("#pinCode").val(""); // Clear if no pinCode available
+      }
+    });
 }
 
 function initializeSelect2(element) {
@@ -137,6 +178,13 @@ $(document).ready(function (e) {
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
     initializeSelect2HereMaps(".indianCityAutoComplete");
+  }
+
+  if ($(".indianCityAutoCompleteWithCompleteAddress").length) {
+    // Initialize select2 for the existing element
+    initializeSelect2HereMapsWithCompleteAddress(
+      ".indianCityAutoCompleteWithCompleteAddress"
+    );
   }
 
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
