@@ -820,7 +820,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
     ?>
 
-    <div class="popUp itineraryBox" style="display: block;">
+    <div class="popUp itineraryBox">
         <div class="fullScreenPopUpBox">
             <div class="widget box-8">
                 <div class="contentArea">
