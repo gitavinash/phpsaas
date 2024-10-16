@@ -10,7 +10,8 @@ if (isset($orderId)) {
 
         if (mysqli_num_rows($checkTransaction) != 0) {
 
-            extract(mysqli_fetch_assoc($checkTransaction));
+            print_r(mysqli_fetch_assoc($checkTransaction));
+            // extract(mysqli_fetch_assoc($checkTransaction));
 
             $curl = curl_init();
 
@@ -84,7 +85,12 @@ if (isset($orderId)) {
                     mysqli_query($connection, "ROLLBACK");
                 }
             } else {
-                echo "<h1>Something went wrong while trying to fetch payment status</h1>";
+                if (DEVELOPMENT_MODE == TRUE) {
+                    print_r($response);
+                    exit();
+                } else {
+                    echo "<h1>Something went wrong while trying to fetch payment status</h1>";
+                }
             }
         } else {
             echo "<h1>Invalid order id</h1>";
