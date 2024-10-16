@@ -95,6 +95,7 @@ $("#updateRoomType").on("click", function (e) {
 
 $("#addProperty").click(function (e) {
   e.preventDefault();
+  console.log(`addProperty button clicked`);
   $("#addProperty").hide();
   const name = $("#name").val();
   const description = $("#description").val();

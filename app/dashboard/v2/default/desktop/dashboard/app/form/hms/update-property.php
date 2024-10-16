@@ -43,8 +43,10 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <label class="form-lable" id="Label">Address<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <input id="city" name="city" value="<?php echo $property_city ?>" type="text" />
-                        <label class="form-lable" id="Label">Property city<sup>*</sup></label>
+                        <select class="indianCityAutoCompleteWithCompleteAddress form-control" name="city" id="city">
+                            <option value="<?php echo $property_city ?>"><?php echo $property_city ?></option>
+                        </select>
+                        <label class="form-lable " id="Label">Property city<sup>*</sup></label>
                     </div>
                     <div class="form-group">
                         <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number" onwheel="this.blur()" />
