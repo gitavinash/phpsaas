@@ -154,12 +154,13 @@ $("#showItinerary").click(function (e) {
       `;
     });
 
-    var itineraryHtmlBody = `
+    var itineraryHtmlBody =
+      `
       <h1>${matchedItinerary.tour_package_title}</h1>
       <table>
         <tr>
           <td>Destination</td>
-          <td></td>
+          <td>${matchedItinerary.tour_package_city}</td>
         </tr>
         <tr>
           <td>Theme</td>
@@ -167,7 +168,9 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Stay option</td>
-          <td>${matchedItinerary.tour_package_hotel}</td>
+          <td>` +
+      matchedItinerary.tour_package_hotel.replace(/_/g, " ") +
+      `</td>
         </tr>
         <tr>
           <td>Pickup point</td>
@@ -180,8 +183,8 @@ $("#showItinerary").click(function (e) {
         <tr>
           <td>Duration</td>
           <td>${matchedItinerary.tour_package_duration} Nights / ${
-      matchedItinerary.tour_package_duration + 1
-    } Days</td>
+        matchedItinerary.tour_package_duration + 1
+      } Days</td>
         </tr>
         <tr>
           <td>Prepared by</td>
@@ -198,17 +201,13 @@ $("#showItinerary").click(function (e) {
       <p>${matchedItinerary.tour_package_exclusions}</p>
     `;
 
-    // Ensure the editor is properly initialized
-    if (!window.quill) {
-      window.quill = new Quill(".itineraryEditor", {
-        theme: "snow", // You can choose other themes like 'bubble'
-      });
-    }
+    $("#itineraryEditorBox").html(itineraryHtmlBody);
 
-    // Convert HTML to Quill Delta and set the content
-    var delta = window.quill.clipboard.convert(itineraryHtmlBody);
-    window.quill.setContents(delta);
-
+    tinymce.init({
+      selector: "#itineraryEditorBox",
+      license_key: "gpl",
+      menubar: true,
+    });
     $("#editorBox").show();
   } else {
     popUpMessage(

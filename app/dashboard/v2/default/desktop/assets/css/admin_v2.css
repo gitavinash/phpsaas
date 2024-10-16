@@ -2247,6 +2247,10 @@ section.form
   text-align: center;
 }
 
+#itineraryEditorBox {
+  min-height: 80dvh;
+}
+
 .fullScreenPopUpBox {
   width: 100%;
   height: 100vh;

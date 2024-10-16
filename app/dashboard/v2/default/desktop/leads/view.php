@@ -866,8 +866,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         </div>
                     </div>
                     <div class="form-group" id="editorBox" style="display: none;">
-                        <div class="editor" id="itineraryEditorBox" style="min-height: 500px"></div>
-                        <textarea name="itinerary" id="itineraryEditorTextarea" style="display:none"></textarea>
+                        <!-- <div class="itineraryEditor" id="itineraryEditorBox" style="min-height: 500px"></div> -->
+                        <textarea name="itinerary" id="itineraryEditorBox"></textarea>
                     </div>
                 </div>
             </div>
