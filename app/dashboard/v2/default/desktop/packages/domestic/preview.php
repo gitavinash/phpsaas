@@ -112,12 +112,13 @@
                                     <input type="hidden" name="outstationVehicle" value="<?php echo $outstationVehicle ?>">
                                     <input type="hidden" name="localSighseeignVehicle" value="<?php echo $localSighseeignVehicle ?>">
                                     <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
-                                    <input type="hidden" name="start" value="<?php echo $startingCity ?>">
+                                    <input type="hidden" name="startCity" value="<?php echo $startingCity ?>">
+                                    <input type="hidden" name="endCity" value="<?php echo $endCity ?>">
                                     <input type="submit" class="btn" id="createTourPackageBtn" value="Save ininenary">
                                 </div>
                                 <?php
                             } else {
-                                $redirectUrl = "/dashboard/packages/domestic/preview/?packageName={$packageName}&destinationCity={$destinationCity}&startingCity={$startingCity}&tripDuration={$tripDuration}&outstationVehicle={$outstationVehicle}&localSighseeignVehicle={$localSighseeignVehicle}&travelStyle={$travelStyle}";
+                                $redirectUrl = "/dashboard/packages/domestic/preview/?packageName={$packageName}&destinationCity={$destinationCity}&startingCity={$startingCity}&endCity={$endCity}&tripDuration={$tripDuration}&outstationVehicle={$outstationVehicle}&localSighseeignVehicle={$localSighseeignVehicle}&travelStyle={$travelStyle}";
 
                                 echo "
                                 <p><br /><br /><br />Something went wrong while generating Itinerary<br /><br /><br /></p>

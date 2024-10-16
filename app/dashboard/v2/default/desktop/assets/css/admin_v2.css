@@ -2223,6 +2223,30 @@ section.form
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
+.itinerarySearchBox {
+  background: #01647b;
+  padding: 0% 1%;
+  box-sizing: border-box;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: absolute;
+  bottom: 1rem;
+}
+
+.itinerarySearchBox h3 {
+  color: #f1f1f1;
+}
+
+.itinerarySearchBox a {
+  font-weight: 700 !important;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 2rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
 .fullScreenPopUpBox {
   width: 100%;
   height: 100vh;

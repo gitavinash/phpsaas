@@ -44,6 +44,11 @@
                             <select class="indianCityAutoComplete form-control" name="startingCity" id="startingCity">
                             </select>
                         </div>
+                        <div class="form-group">
+                            <p>Drop-off city<sup>*</sup></p>
+                            <select class="indianCityAutoComplete form-control" name="endCity" id="endCity">
+                            </select>
+                        </div>
                         <!-- <div class="form-group">
                             <p>Drop city<sup>*</sup></p>
                             <select class="selectJS form-control" name="dropCity" id="dropCity">

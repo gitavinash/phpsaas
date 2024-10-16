@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'outstationVehicle',
         'localSighseeignVehicle',
         'location',
-        'start',
+        'startCity',
+        'startCity',
     ];
 
     $allValid = true; // Flag to check if all fields are valid
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         $msg = 'Valid request';
-        $insertItinerary = "INSERT INTO " . TABLE_PREFIX . "tour_package(tour_package_site_id, tour_package_created_by, tour_package_title, tour_package_theme, tour_package_start_from, tour_package_city, tour_package_duration, tour_package_overview, tour_package_itinerary, tour_package_inclusions, tour_package_exclusions, tour_package_hotel, tour_package_state, tour_package_country,  tour_package_type, tour_package_outstation_vehicle, tour_package_localsightseen_vehicle, tour_package_status, tour_package_created_at) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$packageName}', '{$travelStyle}', '{$start}', '{$cityName}', '{$duration}', '{$overview}', '{$tourItinerary}', '{$inclusion}', '{$exclusion}', '{$hotel}', '{$stateName}', '{$countryName}', '{$packageType}', '" . strtolower($outstationVehicle) . "', '" . strtolower($localSighseeignVehicle) . "', 2, NOW())";
+        $insertItinerary = "INSERT INTO " . TABLE_PREFIX . "tour_package(tour_package_site_id, tour_package_created_by, tour_package_title, tour_package_theme, tour_package_start_from, tour_package_end_to, tour_package_city, tour_package_duration, tour_package_overview, tour_package_itinerary, tour_package_inclusions, tour_package_exclusions, tour_package_hotel, tour_package_state, tour_package_country,  tour_package_type, tour_package_outstation_vehicle, tour_package_localsightseen_vehicle, tour_package_status, tour_package_created_at) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$packageName}', '{$travelStyle}', '{$startCity}', '{$endCity}', '{$cityName}', '{$duration}', '{$overview}', '{$tourItinerary}', '{$inclusion}', '{$exclusion}', '{$hotel}', '{$stateName}', '{$countryName}', '{$packageType}', '" . strtolower($outstationVehicle) . "', '" . strtolower($localSighseeignVehicle) . "', 2, NOW())";
 
         if (mysqli_query($connection, $insertItinerary)) {
             $itineraryId = mysqli_insert_id($connection);

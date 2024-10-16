@@ -750,8 +750,8 @@ $(document).ready(function (e) {
 
   // Clone add  new destination location
 
-  $("#locationDurationContainer").on("click", ".addLocation", function (e) {
-    e.preventDefault();
+  $("#locationDurationContainer").on("click", ".addLocation", function () {
+    // e.preventDefault();
     const $clone = $(".locationDurationGroup:first").clone();
 
     const newIndex =
@@ -810,6 +810,7 @@ $(document).ready(function (e) {
     var startingCity = $("#startingCity").val()
       ? $("#startingCity").val().trim()
       : "";
+    var endCity = $("#endCity").val() ? $("#endCity").val().trim() : "";
     var travelStyle = $("#travelStyle").val()
       ? $("#travelStyle").val().trim()
       : "";
@@ -874,6 +875,7 @@ $(document).ready(function (e) {
     // Encode URL parameters
     packageName = encodeURIComponent(packageName);
     startingCity = encodeURIComponent(startingCity);
+    endCity = encodeURIComponent(endCity);
     travelStyle = encodeURIComponent(travelStyle);
     outstationVehicle = encodeURIComponent(outstationVehicle);
     localSighseeignVehicle = encodeURIComponent(localSighseeignVehicle);
@@ -890,7 +892,7 @@ $(document).ready(function (e) {
     destinationCity = destinationCity.join("_");
     destinationDuration = destinationDuration.join("_");
 
-    const redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${destinationCity}&tripDuration=${destinationDuration}&startingCity=${startingCity}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
+    const redirectUrl = `/dashboard/packages/domestic/preview/?packageName=${packageName}&destinationCity=${destinationCity}&tripDuration=${destinationDuration}&startingCity=${startingCity}&endCity=${endCity}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
 
     window.location.href = redirectUrl;
   });
