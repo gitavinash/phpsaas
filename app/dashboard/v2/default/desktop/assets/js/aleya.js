@@ -804,6 +804,7 @@ $(document).ready(function (e) {
 
   $("#addDomesticPackageBtn").click(function (e) {
     e.preventDefault();
+    console.log(`addDomesticPackageBtn is clicked:`, addDomesticPackageBtn);
     $("#addDomesticPackageBtn").hide();
 
     // Collect and trim all the form values, ensuring they are not undefined
