@@ -19,7 +19,7 @@ if ($chatGPTKey != '') {
             ],
             [
                 "role" => "user",
-                "content" => "Create a detailed {$packageName} package itinerary where travel style is {$travelStyle}. Prepare itinerary for {$destinationsAndDurations}. Day 1 tour will be starting from {$startingCity} and tour will be end at {$endCity}. {$localSighseeignVehicleUpdated}local sightseeing will be done by {$localSighseeignVehicle}.
+                "content" => "Create a detailed {$packageName} package itinerary where travel style is {$travelStyle}. Prepare itinerary for {$tripDuration} Night and " . ($tripDuration + 1) . " Days. Day 1 tour will be starting from {$startingCity} and tour will be end at {$endCity}. {$localSighseeignVehicleUpdated}local sightseeing will be done by {$localSighseeignVehicle}.
                 - Format the output in JSON format with:
                 {
                     'overview: [
