@@ -16,7 +16,7 @@ if (!isset($id)) { ?>
 
 $blockId = base64_decode($id);
 
-if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUNT(block_item_id) as balanceSlabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status=1 AND block_item_parent_id={$blockId} AND block_item_status IN (1,3) AND block_site_id=" . SITE_ID)) {
+if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUNT(block_item_id) as balanceSlabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status!=1 AND block_item_parent_id={$blockId} AND block_item_status IN (1,3) AND block_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkInventory) > 0) {
         $validId = true;
         extract(mysqli_fetch_assoc($checkInventory));
