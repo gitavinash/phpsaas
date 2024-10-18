@@ -740,8 +740,8 @@ $(document).ready(function (e) {
     scrollCollapse: true, // Collapse the table to fit content
     columnDefs: [
       { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
-      { width: "20%", targets: 1 }, // Set width for the second column
-      { width: "150px", targets: -1 },
+      // { width: "20%", targets: 1 }, // Set width for the second column
+      // { width: "150px", targets: -1 },
       {
         targets: "_all", // Apply to all columns
         createdCell: function (td, cellData, rowData, row, col) {
@@ -756,8 +756,6 @@ $(document).ready(function (e) {
     createdRow: function (row, data, dataIndex) {
       var rowDataStatus = data[data.length - 2].toLowerCase();
       var rowDataStatus = rowDataStatus.replace(" ", "_");
-      console.log(`Col status:`, rowDataStatus); // Debugging output
-
       // Apply inline background color for each cell in the row
       var color;
       switch (rowDataStatus) {
