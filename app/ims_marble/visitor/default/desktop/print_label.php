@@ -184,10 +184,10 @@ if (isset($showPage)) { ?>
                 default:
                     echo "
                     <div class='inventory-info'>
-                        <p><strong>Name:</strong> {$block_title}</p>
-                        <p><strong>ID:</strong> {$block_code} <strong>Slabs:</strong>
-                            {$block_total_item} " . (($block_total_item == 1) ? 'Pc.' : 'Pcs.') . "
-                            <strong>Thickness:</strong> {$block_thickness_size} {$block_thickness_dimension}
+                        <p><strong>Name: {$block_title}</strong></p>
+                        <p><strong>ID: {$block_code} Slabs:
+                            {$block_total_item} " . (($block_total_item == 1) ? 'Pc.' : 'Pcs.') . "</strong>
+                            <strong>Thickness: {$block_thickness_size} {$block_thickness_dimension}</strong>
                         </p>
                     </div>";
                     break;
