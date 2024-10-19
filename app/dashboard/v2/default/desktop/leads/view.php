@@ -505,8 +505,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </section>
         </div>
     </div>
-
     <div class="widget no-padding box-2-5" id="fixedDiv">
+
         <div class="main-box">
             <section class="leadQuickLinks">
                 <?php

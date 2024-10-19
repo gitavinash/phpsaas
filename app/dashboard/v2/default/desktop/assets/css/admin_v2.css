@@ -2096,6 +2096,14 @@ section.form
   padding: 10px 0px;
 }
 
+.largeThead tr {
+  height: 0.1rem;
+}
+
+.largeThead thead tr:last-child {
+  background: red !important;
+}
+
 .leadActions a {
   float: left;
   margin-right: 10px;

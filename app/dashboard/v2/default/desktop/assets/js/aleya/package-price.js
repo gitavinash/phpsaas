@@ -44,6 +44,8 @@ function cloneBox(boxClass, removeClass, containerClass) {
     $(this).val("");
   });
 
+  $boxClone.addClass("cloneSlabForm");
+
   if (!$boxClone.find(removeClass).length) {
     $boxClone.append(
       `<button type="button" class="${removeClass.slice(1)}">Remove</button>`
@@ -122,6 +124,13 @@ $(document).ready(function () {
   toggleRemoveButton(".quadPriceBox", ".removeQuadPriceBox");
 });
 
+// Price Box
+
+$("#openPackagePriceBox").click(function (e) {
+  e.preventDefault();
+  $(".priceBox").show();
+});
+
 // Submit form
 
 $(".saveItineraryPriceBtn").click(function (e) {
@@ -151,7 +160,11 @@ $(".saveItineraryPriceBtn").click(function (e) {
       success: function (response) {
         popUpMessage("center", response.msg, response.status);
         setTimeout(function () {
-          window.location.reload();
+          $form[0].reset();
+          $("html, body").animate({ scrollTop: 0 }, "slow");
+          $form.find(".removeDoublePriceBox").remove();
+          $form.find(".cloneSlabForm").remove();
+          $(".saveItineraryPriceBtn").show();
         }, 1500);
       },
       error: function (error) {
@@ -164,4 +177,71 @@ $(".saveItineraryPriceBtn").click(function (e) {
     $(".saveItineraryPriceBtn").show();
     popUpMessage("center", "Please fill all required fields.", "warning");
   }
+});
+
+// Edit price
+
+$(".editPrice").click(function (e) {
+  e.preventDefault();
+  var dataId = $(this).attr("data-id");
+
+  // Clear form fields first
+  var fieldsToClear = [
+    "#startDate",
+    "#endDate",
+    "#adultNet",
+    "#adultMRP",
+    "#adultSelling",
+    "#adultAgent",
+    "#childNet",
+    "#childMRP",
+    "#childSelling",
+    "#childAgent",
+  ];
+  fieldsToClear.forEach(function (field) {
+    $(field).val("");
+  });
+
+  $(".editPriceBox").show();
+
+  var priceInfo = localStorage.getItem(`packageInfo_${dataId}`);
+  priceInfo = JSON.parse(priceInfo);
+
+  // Common datepicker initialization function
+  function initDatePicker(elementId, selectedDate) {
+    $(elementId)
+      .daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        autoUpdateInput: false,
+        locale: {
+          format: "YYYY-MM-DD", // Internal format for daterangepicker
+        },
+      })
+      .on("apply.daterangepicker", function (ev, picker) {
+        var date = new Date(picker.startDate.format("YYYY-MM-DD"));
+        var options = { day: "numeric", month: "long" }; // Custom format
+        $(this).val(date.toLocaleDateString("en-GB", options)); // Set formatted date
+      });
+
+    // Set the initial date after initializing the datepicker
+    var dateObj = new Date(selectedDate);
+    $(elementId).val(
+      dateObj.toLocaleDateString("en-GB", { day: "numeric", month: "long" })
+    );
+  }
+
+  // Set datepicker and formatted values for start and end dates
+  initDatePicker("#startDate", priceInfo.tour_package_price_date_start);
+  initDatePicker("#endDate", priceInfo.tour_package_price_date_end);
+
+  // Set values for other fields
+  $("#adultNet").val(priceInfo.tour_package_price_net_adult);
+  $("#adultMRP").val(priceInfo.tour_package_price_mrp_adult);
+  $("#adultSelling").val(priceInfo.tour_package_selling_agent_adult);
+  $("#adultAgent").val(priceInfo.tour_package_price_agent_adult);
+  $("#childNet").val(priceInfo.tour_package_price_net_child);
+  $("#childMRP").val(priceInfo.tour_package_price_mrp_child);
+  $("#childSelling").val(priceInfo.tour_package_selling_agent_child);
+  $("#childAgent").val(priceInfo.tour_package_price_agent_child);
 });

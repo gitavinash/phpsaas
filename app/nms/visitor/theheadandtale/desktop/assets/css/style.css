@@ -127,6 +127,104 @@ section {
   width: 1200px;
 }
 
+.left-container {
+  float: left;
+  width: 70%;
+}
+
+.right-container {
+  float: right;
+  width: 30%;
+}
+
+.hightlightBox {
+  float: left;
+  width: 95%;
+  box-sizing: border-box;
+  margin: 4% 0% 1% 5%;
+  margin-bottom: 3rem;
+  background: #f5c3aa;
+  padding: 1rem 1rem;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+}
+
+.hightlightBox h2 {
+  float: left;
+  width: 100%;
+  margin-bottom: 1rem !important;
+}
+
+.hightlightBox ol {
+  float: left;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.hightlightBox li {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 32px;
+  margin-bottom: 0.5rem;
+  font-size: 24px;
+  border-bottom: 1px solid #fd0100;
+  padding: 5px 0px;
+}
+.hightlightBox li:last-child {
+  border-bottom: none;
+}
+.hightlightBox a {
+  text-decoration: none;
+  color: inherit;
+}
+.hightlightBox a:hover {
+  color: var(--grey-color);
+}
+
+.nonHightlightBox {
+  float: left;
+  width: 95%;
+  box-sizing: border-box;
+  margin: 4% 0% 1% 5%;
+  margin-bottom: 3rem;
+  padding: 1rem 1rem;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+}
+
+.nonHightlightBox ol {
+  float: left;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.nonHightlightBox li {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 32px;
+  margin-bottom: 0.5rem;
+  font-size: 24px;
+  border-bottom: 1px solid #fd0100;
+  padding: 5px 0px;
+}
+.nonHightlightBox li img {
+  float: left;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.nonHightlightBox li:last-child {
+  border-bottom: none;
+}
+.nonHightlightBox a {
+  text-decoration: none;
+  color: inherit;
+}
+.nonHightlightBox a:hover {
+  color: var(--grey-color);
+}
 .row {
   width: 100%;
 }
@@ -140,7 +238,7 @@ section {
   width: 100%;
   border: 1px solid #f3f3f3;
   padding: 10px;
-  margin: 42px 0px;
+  margin: 1rem 0px;
   color: var(--black-color);
   border-radius: 10px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -149,14 +247,10 @@ section {
   color: inherit !important;
 }
 .news_box:hover {
-  color: var(--black-color);
+  color: var(--grey-color);
 }
 .news_box__width {
   width: 80% !important;
-}
-.news_box:first-child {
-  /* margin: 50px 0px; */
-  margin-top: 50px;
 }
 
 .news_box .feature_image {
@@ -168,30 +262,10 @@ section {
   height: 100%;
 }
 
-.news_box:first-child .feature_image {
-  float: left;
-  width: 55%;
-  box-sizing: border-box;
-}
-
-.news_box:first-child .feature_image img {
-  max-height: 430px;
-  height: auto;
-}
-
 .feature_image img {
   width: 100%;
   border-radius: 10px;
   object-fit: cover;
-}
-
-.news_box:first-child .feature_image img:nth-child(2) {
-  height: 30px;
-  width: 30px;
-  margin-top: 10px;
-  position: static;
-  float: left;
-  margin-left: -40px;
 }
 
 .news_box .feature_image img:nth-child(2) {
@@ -210,12 +284,67 @@ section {
   box-sizing: border-box;
 }
 
-.news_box:first-child .news_intro {
+.featureArticle .news_box {
+  margin-top: 50px;
+}
+
+.featureArticle .news_box .feature_image {
+  float: left;
+  width: 55%;
+  box-sizing: border-box;
+}
+
+.featureArticle .news_box .feature_image img {
+  max-height: 430px;
+  height: auto;
+}
+
+.featureArticle .news_box .feature_image img:nth-child(2) {
+  height: 30px;
+  width: 30px;
+  margin-top: 10px;
+  position: static;
+  float: left;
+  margin-left: -40px;
+}
+
+.featureArticle .news_box .news_intro {
   float: left;
   width: 42%;
   margin-left: 2%;
   box-sizing: border-box;
 }
+/* 
+.news_box:first-child {
+  margin-top: 50px;
+}
+
+.news_box:first-child .feature_image {
+  float: left;
+  width: 55%;
+  box-sizing: border-box;
+}
+
+.news_box:first-child .feature_image img {
+  max-height: 430px;
+  height: auto;
+}
+
+.news_box:first-child .feature_image img:nth-child(2) {
+  height: 30px;
+  width: 30px;
+  margin-top: 10px;
+  position: static;
+  float: left;
+  margin-left: -40px;
+}
+
+.news_box:first-child .news_intro {
+  float: left;
+  width: 42%;
+  margin-left: 2%;
+  box-sizing: border-box;
+} */
 
 .news_intro h2 {
   font-size: 32px;

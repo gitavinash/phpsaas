@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     switch (count($placeInfo)) {
         case 1:
-            $itineraryQuery = "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_country LIKE '%{$destination}%' {$themeQuery} AND tour_package_status=1 AND  tour_package_site_id=" . SITE_ID;
+            $itineraryQuery = "TRIM(tour_package_country)='{$destination}' {$themeQuery} ";
             $cityName = $destination;
             break;
         case 2:
@@ -25,18 +25,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $countryName = $placeInfo[1];
             $cityName = $stateName;
 
-            $itineraryQuery = "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_state LIKE '%{$stateName}%' {$themeQuery} AND tour_package_status=1 AND  tour_package_site_id=" . SITE_ID;
+            $itineraryQuery = "TRIM(tour_package_state)='{$stateName}' {$themeQuery} ";
             break;
         default:
             $cityName = $placeInfo[0];
             $stateName = $placeInfo[count($placeInfo) - 2];
             $countryName = end($placeInfo);
 
-            $itineraryQuery = "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_city LIKE '%{$cityName}%' AND tour_package_state LIKE '%{$stateName}%' {$themeQuery} AND tour_package_status=1 AND  tour_package_site_id=" . SITE_ID;
+            $itineraryQuery = "TRIM(tour_package_city)='{$cityName}' AND tour_package_state='{$stateName}' {$themeQuery}";
             break;
     }
 
-    if ($checkItinerary = mysqli_query($connection, $itineraryQuery)) {
+    $finalInsertQuery = "SELECT * FROM " . TABLE_PREFIX . "tour_package INNER JOIN " . TABLE_PREFIX .
+        "tour_package_price ON tour_package_price_parent_id=tour_package_id WHERE {$itineraryQuery} AND TRIM(tour_package_price_type) IN ('double', 'single') tour_package_status=1 AND  tour_package_site_id=" . SITE_ID;
+
+    if ($checkItinerary = mysqli_query($connection, $finalInsertQuery)) {
         if (mysqli_num_rows($checkItinerary) != 0) {
             $itineraryList = array();
             while ($checkItineraryInfo = mysqli_fetch_assoc($checkItinerary)) {
@@ -50,6 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $httpStatus = 404;
             $msg = "No intenary found for {$cityName} {$theme}";
         }
+    } else {
+        $msg = ((DEVELOPMENT_MODE == TRUE) ? mysqli_error($connection) : 'Something went wrong while executing query');
     }
 }
 

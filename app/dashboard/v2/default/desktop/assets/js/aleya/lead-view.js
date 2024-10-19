@@ -50,90 +50,6 @@ $("#fetchItinerary").click(function (e) {
   }
 });
 
-// Show itinerary
-
-// $("#showItinerary").click(function (e) {
-//   e.preventDefault();
-//   $("#itineraryListBox").hide();
-
-//   var itineraryList = $("#itineraryList").val();
-//   var itineraryData = JSON.parse(localStorage.getItem("itineraryList"));
-//   var matchedItinerary = itineraryData.find(
-//     (item) => item.tour_package_id == itineraryList
-//   );
-
-//   if (matchedItinerary) {
-//     var dayWiseItinerary = JSON.parse(matchedItinerary.tour_package_itinerary);
-
-//     var dayWiseItineraryContent = "";
-//     dayWiseItinerary.forEach((list) => {
-//       dayWiseItineraryContent += `
-//         <h3>${list.day}</h3>
-//         <p>${list.overview}</p>
-//       `;
-//     });
-
-//     var itineraryHtmlBody = `
-//       <h1>${matchedItinerary.tour_package_title}</h1>
-//       <table>
-//         <tr>
-//           <td>Destination</td>
-//           <td></td>
-//         </tr>
-//         <tr>
-//           <td>Theme</td>
-//           <td>${matchedItinerary.tour_package_theme}</td>
-//         </tr>
-//         <tr>
-//           <td>Stay option</td>
-//           <td>${matchedItinerary.tour_package_hotel}</td>
-//         </tr>
-//         <tr>
-//           <td>Pickup point</td>
-//           <td>${matchedItinerary.tour_package_start_from}</td>
-//         </tr>
-//         <tr>
-//           <td>Drop point</td>
-//           <td>${matchedItinerary.tour_package_end_to}</td>
-//         </tr>
-//         <tr>
-//           <td>Duration</td>
-//           <td>${matchedItinerary.tour_package_duration} Nights / ${
-//       matchedItinerary.tour_package_duration + 1
-//     } Days</td>
-//         </tr>
-//         <tr>
-//           <td>Prepared by</td>
-//           <td></td>
-//         </tr>
-//       </table>
-//       <h2>Overview</h2>
-//       <p>${matchedItinerary.tour_package_overview}</p>
-//       <h2>Day wise itinerary</h2>
-//       <div>${dayWiseItineraryContent}</div>
-//       <h2>Inclusions</h2>
-//       <p>${matchedItinerary.tour_package_inclusions}</p>
-//       <h2>Exclusions</h2>
-//       <p>${matchedItinerary.tour_package_exclusions}</p>
-//     `;
-
-//     var quill = new Quill(".itineraryEditor", {
-//       theme: "snow", // You can choose other themes like 'bubble'
-//     });
-
-//     var delta = quill.clipboard.convert(itineraryHtmlBody);
-//     quill.setContents(delta);
-
-//     $("#editorBox").show();
-//   } else {
-//     popUpMessage(
-//       "center",
-//       "Something went wrong while fetching local Itineary details",
-//       "error"
-//     );
-//   }
-// });
-
 $("#showItinerary").click(function (e) {
   e.preventDefault();
   $("#itineraryListBox").hide();
@@ -183,9 +99,13 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Duration</td>
-          <td>${matchedItinerary.tour_package_duration} Nights / ${
-        matchedItinerary.tour_package_duration + 1
-      } Days</td>
+          <td>` +
+      matchedItinerary.tour_package_duration +
+      ` Nights / ` +
+      matchedItinerary.tour_package_duration +
+      1 +
+      `
+      Days</td>
         </tr>
         <tr>
           <td>Price</td>
