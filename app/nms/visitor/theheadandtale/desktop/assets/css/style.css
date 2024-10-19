@@ -284,6 +284,10 @@ section {
   box-sizing: border-box;
 }
 
+.featureArticle {
+  min-height: 100px;
+}
+
 .featureArticle .news_box {
   margin-top: 50px;
 }
@@ -314,6 +318,17 @@ section {
   margin-left: 2%;
   box-sizing: border-box;
 }
+
+.mediaFile {
+  float: left;
+  padding: 2rem 0rem;
+}
+.mediaFile h1 {
+  float: left;
+  width: 100%;
+  margin-bottom: 1rem !important;
+}
+
 /* 
 .news_box:first-child {
   margin-top: 50px;
@@ -543,6 +558,9 @@ section {
   }
   .news_box__width {
     width: 100% !important;
+  }
+  .featureArticle {
+    min-height: 20px;
   }
   .left-container {
     float: left;
