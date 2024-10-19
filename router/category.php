@@ -62,7 +62,13 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 
 			/* * Fetching product of the category */
 
-			if ($categoryPost = mysqli_query($connection, "SELECT DISTINCT (link_id) as link_id, link_url, {$category_type}_id, {$category_type}_image, {$category_type}_title, meta_description, inventory_price, inventory_mrp, inventory_currency_symbol, inventory_in_stock FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "{$category_type} ON link_relation_id={$category_type}_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id={$category_type}_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY {$sortBy} " . PAGINATION)) {
+			$addFilter = "";
+
+			if ($category_type == 'news') {
+				$addFilter .= ",news_paid";
+			}
+
+			if ($categoryPost = mysqli_query($connection, "SELECT DISTINCT (link_id) as link_id, link_url, {$category_type}_id, {$category_type}_image, {$category_type}_title, meta_description, inventory_price, inventory_mrp, inventory_currency_symbol, inventory_in_stock {$addFilter} FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "{$category_type} ON link_relation_id={$category_type}_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id={$category_type}_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY {$sortBy} " . PAGINATION)) {
 
 				if (mysqli_num_rows($categoryPost) != 0) {
 					while ($categoryPostData = mysqli_fetch_assoc($categoryPost)) {

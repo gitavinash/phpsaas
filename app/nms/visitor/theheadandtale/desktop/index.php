@@ -14,6 +14,7 @@ INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id
 INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
 WHERE link_type = 'news' 
 AND link_status = 200 
+AND news_category NOT IN (202, 280)
 AND link_site_id = " . SITE_ID . " 
 ORDER BY link_is_featured DESC, link_published DESC
 LIMIT 0, 100")) {
