@@ -544,6 +544,26 @@ section {
   .news_box__width {
     width: 100% !important;
   }
+  .left-container {
+    float: left;
+    width: 100%;
+  }
+
+  .right-container {
+    float: right;
+    width: 100%;
+  }
+
+  .hightlightBox {
+    width: 100%;
+    margin-left: 0%;
+    margin-right: 0%;
+  }
+  .nonHightlightBox {
+    width: 100%;
+    margin-left: 0%;
+    margin-right: 0%;
+  }
 }
 @media (max-width: 720px) {
   .news_box:first-child {
