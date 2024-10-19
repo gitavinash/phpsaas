@@ -6,7 +6,7 @@ require_once 'header.php';
 <section>
     <div class="row">
         <div class="container">
-            <div class="featr">
+            <div class="featureArticle">
                 <?php
                 $i = 0;
                 if (isset($categorySinglePost[$i])) {
