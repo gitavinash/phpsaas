@@ -1,3 +1,11 @@
+<script>
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('packageInfo_')) {
+            localStorage.removeItem(key);
+        }
+    }
+</script>
 <h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All hostings list will be displayed here.</span>
 </h2>
 <div class="main-box">
@@ -5,21 +13,6 @@
         <a href="/dashboard/packages/domestic/price/?id=<?php echo $id ?>" data-title="Add new price"><i class="fi fi-rr-plus"></i></a>
     </div>
     <section>
-        <div class="filters">
-            <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value=""><?php echo ucwords($urlStructure[1]) ?> Status</option>
-                    <option value="1">Confirm</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Cancel</option>
-                </select>
-            </div>
-            <div class="form-group right">
-                <label>Date</label>
-                <input type="text" class="dateRangePicker" placeholder="Select date range">
-            </div>
-        </div>
         <div class="list-box">
             <table class="showTableList largeThead">
                 <thead>
@@ -51,10 +44,11 @@
                         if (mysqli_num_rows($packageData) != 0) {
                             $i = 1;
                             while ($packageDataInfo = mysqli_fetch_assoc($packageData)) {
+
                                 $packageDataInfoJSON = json_encode($packageDataInfo, TRUE);
                                 echo "
                                 <script>
-                                localStorage.setItem('packageInfo_{$i}', JSON.stringify({$packageDataInfoJSON}));
+                                localStorage.setItem('packageInfo_{$packageDataInfo['tour_package_price_id']}', JSON.stringify({$packageDataInfoJSON}));
                                 </script>
                                 ";
                                 extract($packageDataInfo);
@@ -86,8 +80,8 @@
                                         <td>" . ucwords($tour_package_price_type) . "</td>
                                         <td>{$packageStatus}</td>
                                         <td>
-                                            <a href='#' class='tableActionIconBtn editPrice' title='Edit price' data-id='{$i}' data-title='Edit price'><i class='fi fi-rr-edit bgWhite'></i></a>
-                                            <a href='#' data-type='packages' data-id='{$tour_package_price_id}' title='Delete price' data-type='{}' data-title='Delete price' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
+                                            <a href='#' class='tableActionIconBtn editPrice' title='Edit price' data-id='{$tour_package_price_id}' data-title='Edit price'><i class='fi fi-rr-edit bgWhite'></i></a>
+                                            <a href='#' data-type='packages/price' data-id='{$tour_package_price_id}' title='Delete price' data-title='Delete price' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                         </td>
                                     </tr>
                                 ";

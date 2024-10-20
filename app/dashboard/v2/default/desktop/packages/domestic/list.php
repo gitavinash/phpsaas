@@ -5,21 +5,6 @@
         <a href="/dashboard/packages/domestic/add/"><i class="fi fi-rr-plus"></i></a>
     </div>
     <section>
-        <div class="filters">
-            <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value=""><?php echo ucwords($urlStructure[1]) ?> Status</option>
-                    <option value="1">Confirm</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Cancel</option>
-                </select>
-            </div>
-            <div class="form-group right">
-                <label>Date</label>
-                <input type="text" class="dateRangePicker" placeholder="Select date range">
-            </div>
-        </div>
         <div class="list-box">
             <table class="showTableList">
                 <thead>

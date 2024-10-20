@@ -276,6 +276,7 @@ $("#updateProperty").click(function (e) {
 
 $(".addNewVehicle").click(function (e) {
   e.preventDefault();
+  console.log(`addNewVehicle clicked`);
   $(".popUp").hide();
   document.querySelector(".vehicleBox").style.display = "flex";
   $(".vehicleBox").show();

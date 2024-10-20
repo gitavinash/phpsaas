@@ -1,3 +1,4 @@
+var selectedItinaryId = 0;
 function addRemoveButton(box, removeClass) {
   if (!$(box).first().find(removeClass).length) {
     $(box)
@@ -182,8 +183,8 @@ $(".saveItineraryPriceBtn").click(function (e) {
 // Edit price
 
 $(".editPrice").click(function (e) {
+  selectedItinaryId = $(this).attr("data-id");
   e.preventDefault();
-  var dataId = $(this).attr("data-id");
 
   // Clear form fields first
   var fieldsToClear = [
@@ -204,7 +205,7 @@ $(".editPrice").click(function (e) {
 
   $(".editPriceBox").show();
 
-  var priceInfo = localStorage.getItem(`packageInfo_${dataId}`);
+  var priceInfo = localStorage.getItem(`packageInfo_${selectedItinaryId}`);
   priceInfo = JSON.parse(priceInfo);
 
   // Common datepicker initialization function
@@ -238,10 +239,47 @@ $(".editPrice").click(function (e) {
   // Set values for other fields
   $("#adultNet").val(priceInfo.tour_package_price_net_adult);
   $("#adultMRP").val(priceInfo.tour_package_price_mrp_adult);
-  $("#adultSelling").val(priceInfo.tour_package_selling_agent_adult);
+  $("#adultSelling").val(priceInfo.tour_package_price_selling_adult);
   $("#adultAgent").val(priceInfo.tour_package_price_agent_adult);
   $("#childNet").val(priceInfo.tour_package_price_net_child);
   $("#childMRP").val(priceInfo.tour_package_price_mrp_child);
-  $("#childSelling").val(priceInfo.tour_package_selling_agent_child);
+  $("#childSelling").val(priceInfo.tour_package_price_selling_child);
   $("#childAgent").val(priceInfo.tour_package_price_agent_child);
+});
+
+$("#updateItineraryPriceBtn").click(function (e) {
+  e.preventDefault();
+
+  const formData = new FormData();
+
+  formData.append("startDate", $("#startDate").val());
+  formData.append("endDate", $("#endDate").val());
+  formData.append("adultNet", $("#adultNet").val());
+  formData.append("adultMRP", $("#adultMRP").val());
+  formData.append("adultSelling", $("#adultSelling").val());
+  formData.append("adultAgent", $("#adultAgent").val());
+  formData.append("childNet", $("#childNet").val());
+  formData.append("childMRP", $("#childMRP").val());
+  formData.append("childSelling", $("#childSelling").val());
+  formData.append("childAgent", $("#childAgent").val());
+  formData.append("id", btoa(selectedItinaryId));
+
+  $.ajax({
+    type: "POST",
+    url: "/api/packages/price-update/",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      popUpMessage("center", response.msg, response.status);
+      setTimeout(function () {
+        window.location.reload();
+      }, 1500);
+    },
+    error: function (error) {
+      console.log(`error`, error);
+      $(".saveItineraryPriceBtn").show();
+      popUpMessage("center", error.responseJSON.msg, "warning");
+    },
+  });
 });
