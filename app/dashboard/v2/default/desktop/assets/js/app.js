@@ -4,6 +4,10 @@ function closePopup(btn) {
   document.querySelector(".popUp").style.display = "none";
 }
 
+function capitalizeWords(str) {
+  return str.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function loadExternalJS(filePath) {
   let script = document.createElement("script"); // Create a <script> element
   script.src = filePath; // Set the src attribute to the JS file path

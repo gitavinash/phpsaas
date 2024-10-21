@@ -71,6 +71,14 @@ $("#showItinerary").click(function (e) {
       `;
     });
 
+    var tripDurationDays = parseInt(matchedItinerary.tour_package_duration) + 1;
+
+    var tripDuration =
+      matchedItinerary.tour_package_duration +
+      " Nights / " +
+      tripDurationDays +
+      " Days";
+
     var itineraryHtmlBody =
       `
       <h1>${matchedItinerary.tour_package_title}</h1>
@@ -81,7 +89,9 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Theme</td>
-          <td>${matchedItinerary.tour_package_theme}</td>
+          <td>` +
+      capitalizeWords(matchedItinerary.tour_package_theme) +
+      `</td>
         </tr>
         <tr>
           <td>Stay option</td>
@@ -99,13 +109,7 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Duration</td>
-          <td>` +
-      matchedItinerary.tour_package_duration +
-      ` Nights / ` +
-      matchedItinerary.tour_package_duration +
-      1 +
-      `
-      Days</td>
+          <td>${tripDuration}</td>
         </tr>
         <tr>
           <td>Price</td>
