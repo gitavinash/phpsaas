@@ -55,6 +55,8 @@ $("#showItinerary").click(function (e) {
   $("#itineraryListBox").hide();
 
   var itineraryList = $("#itineraryList").val();
+  $("#itinenaryId").val(itineraryList);
+
   var itineraryData = JSON.parse(localStorage.getItem("itineraryList"));
   var matchedItinerary = itineraryData.find(
     (item) => item.tour_package_id == itineraryList
@@ -151,4 +153,13 @@ $("#showItinerary").click(function (e) {
 
 $("#sendItinerary").click(function (e) {
   e.preventDefault();
+  const itinenaryId = $("#itinenaryId").val();
+});
+
+// Download PDF itinerary
+
+$("#downloadItinerary").click(function (e) {
+  e.preventDefault();
+  const itinenaryId = $("#itinenaryId").val();
+  // window.open("/view-itinenary/?id=" + itinenaryId, "_blank");
 });
