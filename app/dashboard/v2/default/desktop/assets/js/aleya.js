@@ -970,4 +970,7 @@ $(document).ready(function (e) {
   loadExternalJS(
     "/app/dashboard/v2/default/desktop/assets/js/aleya/lead-view.min.js"
   );
+  loadExternalJS(
+    "/app/dashboard/v2/default/desktop/assets/js/aleya/property.min.js"
+  );
 });

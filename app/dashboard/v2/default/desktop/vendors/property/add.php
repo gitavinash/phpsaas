@@ -90,7 +90,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <select class="selectJS form-control" name="roomType" id="roomType" multiple>
+                            <select class="selectJS form-control" name="roomType[]" id="roomType" multiple>
                                 <option value=""></option>
                                 <?php
                                 if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {

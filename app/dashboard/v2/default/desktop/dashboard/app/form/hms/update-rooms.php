@@ -19,7 +19,7 @@
         <div class="row" style="padding: 0px 1rem; box-sizing: border-box">
             <?php
 
-            if ($checkHotel = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='" . base64_decode($id) . "' AND room_status=1 AND room_site_id=" . SITE_ID . " ORDER BY room_ep_b2c ASC ")) {
+            if ($checkHotel = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='" . base64_decode($id) . "' AND room_site_id=" . SITE_ID . " ORDER BY room_ep_b2c ASC ")) {
                 if (mysqli_num_rows($checkHotel) != 0) {
                     while ($hotelData = mysqli_fetch_assoc($checkHotel)) {
                         extract($hotelData);

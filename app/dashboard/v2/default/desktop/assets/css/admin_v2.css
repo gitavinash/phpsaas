@@ -2747,6 +2747,16 @@ table td {
   font-size: 1.2rem;
   line-height: 1.7rem;
 }
+.roomBox .details p sup {
+  margin-left: 5px;
+  background: #afafaf;
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
 .roomBox .details p span {
   font-weight: 300;
   float: right;

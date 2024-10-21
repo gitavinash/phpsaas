@@ -19,10 +19,30 @@
         <div class="row" style="padding: 0px 1rem; box-sizing: border-box">
             <?php
 
-            if ($checkHotel = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='" . base64_decode($id) . "' AND room_status=1 AND room_site_id=" . SITE_ID . " ORDER BY room_ep_b2c ASC ")) {
+            if ($checkHotel = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "room WHERE room_property_id='" . base64_decode($id) . "' AND room_site_id=" . SITE_ID . " ORDER BY room_ep_b2c ASC ")) {
                 if (mysqli_num_rows($checkHotel) != 0) {
                     while ($hotelData = mysqli_fetch_assoc($checkHotel)) {
+
+                        $hotelDataJSON = json_encode($hotelData, TRUE);
+
+            ?>
+                        <script>
+                            for (let i = 0; i < localStorage.length; i++) {
+                                const key = localStorage.key(i);
+                                if (key && key.startsWith('roomInfo_')) {
+                                    localStorage.removeItem(key);
+                                }
+                            }
+                        </script>
+            <?php
                         extract($hotelData);
+
+                        echo "
+                                <script>
+                                localStorage.setItem('roomInfo_{$room_id}', JSON.stringify({$hotelDataJSON}));
+                                </script>
+                                ";
+
                         echo "
             <div class='box-4'>
             <div class='safeBox'>
@@ -31,12 +51,12 @@
                         <img src='" . (($room_feature_image != '') ? $room_feature_image : '/upload/others/image-not-found.png') . "' alt=''>
                     </div>
                     <div class='details'>
-                        <p>" . ucwords(str_replace('_', ' ', $room_type)) . " <span>₹ {$room_ep_b2c}</span></p>
+                        <p>" . ucwords(str_replace('_', ' ', $room_type)) . (($room_status == 0) ? "<sup>Draft</sup>" : '') . " <span>₹ {$room_ep_b2c}</span></p>
                     </div>
                     <div class='btnGroup'>
                         <div class='row'>
                             <div class='box-5'>
-                                <a href='#' id='editRoom' data-id='{$room_id}'><i class='fi fi-rr-pencil'></i> Edit</a>
+                                <a href='#' class='editRoom' data-id='{$room_id}'><i class='fi fi-rr-pencil'></i> Edit</a>
                             </div>
                             <div class='box-5'>
                                 <a href='#' data-type='room' data-id='{$room_id}' title='Delete room' class='deleteButton'
