@@ -213,15 +213,18 @@ if (isset($showPage)) {
                 <div class='inventory-info'>
                     <?php if ($theme == 1): ?>
                         <h2>Block Information</h2>
-                        <p><strong>Name:</strong> <?php echo htmlspecialchars($block_title); ?></p>
-                        <p><strong>ID:</strong> <?php echo htmlspecialchars($block_code); ?></p>
-                        <p><strong>Slabs:</strong> <?php echo htmlspecialchars($block_total_item); ?> <?php echo ($block_total_item == 1) ? 'Pc.' : 'Pcs.'; ?></p>
-                        <p><strong>Thickness:</strong> <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?></p>
+                        <p><strong>Name: <?php echo htmlspecialchars($block_title); ?></strong></p>
+                        <p><strong>ID: <?php echo htmlspecialchars($block_code); ?></strong></p>
+                        <p><strong>Slabs: <?php echo htmlspecialchars($block_total_item); ?> <?php echo ($block_total_item == 1) ? 'Pc.' : 'Pcs.'; ?></strong></p>
+                        <p><strong>Thickness: <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?></strong></p>
                     <?php else: ?>
-                        <p><strong>Name:</strong> <?php echo htmlspecialchars($block_title); ?></p>
-                        <p><strong>ID:</strong> <?php echo htmlspecialchars($block_code); ?>
-                            <strong>Slabs:</strong> <?php echo htmlspecialchars($block_total_item) . (($block_total_item == 1) ? ' Pc.' : ' Pcs.'); ?>
-                            <strong>Thickness:</strong> <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?>
+                        <p><strong>Name:<?php echo htmlspecialchars($block_title); ?></strong></p>
+                        <p>
+                            <strong>
+                                ID:<?php echo htmlspecialchars($block_code); ?>
+                                Slabs:</strong> <?php echo htmlspecialchars($block_total_item) . (($block_total_item == 1) ? ' Pc.' : ' Pcs.'); ?>
+                            Thickness:</strong> <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?>
+                            </strong>
                         </p>
                     <?php endif; ?>
                 </div>
