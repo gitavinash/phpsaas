@@ -4,8 +4,7 @@ $("#addPolicy").click(function (e) {
   console.log(`addPolicy is clicked`);
 
   var title = $("#title").val() || "";
-  var description = quillInstances[0].getText().trim();
-
+  var description = $("#editor-0").val() || "";
   console.log(`description`, description);
 
   if (title.trim() !== "") {
@@ -50,8 +49,9 @@ $("#updatePolicy").click(function (e) {
   console.log(`updatePolicy is clicked`);
 
   var title = $("#title").val() || "";
-  var description = quillInstances[0].getText().trim();
+  var description = $("#editor-0").val() || "";
   var id = $("#id").val() || "";
+  console.log(`description`, description);
 
   if (id.trim() !== "") {
     if (title.trim() !== "") {

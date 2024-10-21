@@ -41,7 +41,7 @@ if ($checkSupplier = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX .
                             <label class="form-lable" id="Label">Policy name<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <div class="editor" id="editor1" style="min-height: 500px"></div>
+                            <div class="editor" id="editor0" style="min-height: 500px"></div>
                             <textarea name="description" id="editor-0" style="display:none"><?php echo $page_description; ?></textarea>
                             <label class="form-lable" id="Label">Description<sup>*</sup></label>
                         </div>
