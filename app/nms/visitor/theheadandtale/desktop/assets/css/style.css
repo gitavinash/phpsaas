@@ -143,16 +143,22 @@ section {
   box-sizing: border-box;
   margin: 4% 0% 1% 5%;
   margin-bottom: 3rem;
-  background: #f5c3aa;
-  padding: 1rem 1rem;
+  background: #f2f2f2;
+  /* padding: 1rem 1rem; */
   border-radius: 10px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+  box-shadow: rgb(8 8 8 / 20%) 0 8px 24px;
 }
 
 .hightlightBox h2 {
   float: left;
   width: 100%;
   margin-bottom: 1rem !important;
+  color: #ec1816;
+  background: #f5c3aa;
+  padding: 1rem 1rem;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: 24px;
 }
 
 .hightlightBox ol {
@@ -162,14 +168,14 @@ section {
   list-style: none;
 }
 .hightlightBox li {
-  float: left;
   width: 100%;
   box-sizing: border-box;
-  line-height: 32px;
+  line-height: 24px;
   margin-bottom: 0.5rem;
-  font-size: 24px;
-  border-bottom: 1px solid #fd0100;
-  padding: 5px 0px;
+  font-size: 16px;
+  /* border-bottom: 1px solid #fd0100; */
+  padding: 5px 1rem;
+  font-weight: bold;
 }
 .hightlightBox li:last-child {
   border-bottom: none;
@@ -177,6 +183,7 @@ section {
 .hightlightBox a {
   text-decoration: none;
   color: inherit;
+  font-weight: 700;
 }
 .hightlightBox a:hover {
   color: var(--grey-color);

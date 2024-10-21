@@ -21,7 +21,7 @@
                 <tbody>
                     <?php
 
-                    if ($packageData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package WHERE tour_package_status!=3 AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
+                    if ($packageData = mysqli_query($connection, "SELECT tour_package_id, tour_package_title, tour_package_type, tour_package_city, tour_package_theme, tour_package_duration, tour_package_hotel, tour_package_status, link_url FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE  tour_package_status!=3 AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
                         if (mysqli_num_rows($packageData) != 0) {
                             $i = 1;
                             while ($packageDataInfo = mysqli_fetch_assoc($packageData)) {
@@ -42,7 +42,7 @@
                                 }
                                 echo "
                                     <tr>
-                                        <td>{$i}. {$tour_package_title}</td>
+                                        <td>{$tour_package_title}</td>
                                         <td>" . ucwords($tour_package_theme) . "</td>
                                         <td>{$tour_package_city}</td>
                                         <td>{$tour_package_duration}N/" . ($tour_package_duration + 1) . "D</td>
@@ -52,8 +52,7 @@
                                             <a href='/dashboard/packages/domestic/edit/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit package' data-title='Edit package'><i class='fi fi-rr-edit bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/price/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit price' data-title='Edit price'><i class='fi fi-rr-indian-rupee-sign bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/price-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Price lists' data-title='Price list'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
-                                            <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Manage gallery' data-title='Manage gallery'><i class='fi fi-rr-images bgWhite'></i></a>
-                                            <a href='/view-itinerary/?id=" . base64_encode($tour_package_id) . "&theme=" . base64_encode(1) . "' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-blue'></i></a>
+                                            <a href='{$link_url}' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-blue'></i></a>
                                             <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-type='{$tour_package_type}' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                         </td>
                                     </tr>

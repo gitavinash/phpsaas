@@ -45,7 +45,7 @@ function publish($connection, $data)
 
                 /* Insert data into link table */
 
-                $addNewPage = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "page(page_image, page_thumbnail, page_title, page_description, page_owner_id, page_status, page_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '" . USER_ID . "', '1', 'page')");
+                $addNewPage = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "page(page_site_id, page_image, page_thumbnail, page_title, page_description, page_owner_id, page_status, page_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '" . USER_ID . "', '1', 'page')");
                 $pageID = mysqli_insert_id($connection);
 
                 $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$pageID}', '{$link_status}', 'page', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");

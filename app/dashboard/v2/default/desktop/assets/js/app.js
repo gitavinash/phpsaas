@@ -1476,4 +1476,6 @@ $(document).ready(function (e) {
       },
     });
   });
+
+  loadExternalJS("/app/dashboard/v2/default/desktop/assets/js/policy.min.js");
 });

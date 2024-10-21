@@ -14,7 +14,7 @@ INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id
 INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
 WHERE link_type = 'news' 
 AND link_status = 200 
-AND news_category NOT IN (202, 280)
+AND news_category IN (201, 202)
 AND link_site_id = " . SITE_ID . " 
 ORDER BY link_is_featured DESC, link_published DESC
 LIMIT 0, 100")) {
@@ -106,10 +106,10 @@ LIMIT 0, 100")) {
             </div>
             <div class="right-container">
                 <div class="hightlightBox">
-                    <h2>Fintech Hightlights</h2>
+                    <h2>Fintech Hightlights of the day</h2>
                     <?php
 
-                    if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=202 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
+                    if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=281 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
                         echo "<ol>";
                         if (mysqli_num_rows($checkFinTechArticles) != 0) {
                             while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {

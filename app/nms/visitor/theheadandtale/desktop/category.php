@@ -6,31 +6,10 @@ require_once 'header.php';
 <section>
     <div class="row">
         <div class="container">
-            <div class="featureArticle">
-                <?php
-                $i = 0;
-                if (isset($categorySinglePost[$i])) {
-                    extract($categorySinglePost[$i]);
-                    echo "<div class='news_box'><a href='{$link_url}'>
-                                        <div class='feature_image'>
-                                            <img src='{$news_image}' alt='{$news_title}'>
-                                            " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
-                    </div>
-                    <div class='news_intro'>
-                        <h2>{$news_title}</h2>
-                        <p><span>
-                                " . date('M d, Y', strtotime($link_published)) . "
-                        </span></p>
-                        <p>{$meta_description}</p>
-                    </div>
-                    </a></div>";
-                }
-                ?>
-            </div>
             <div class="left-container">
                 <?php
 
-                for ($i = 1; $i < 5; $i++) {
+                for ($i = 0; $i < 5; $i++) {
                     if (isset($categorySinglePost[$i])) {
                         extract($categorySinglePost[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>

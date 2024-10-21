@@ -11,12 +11,12 @@ if (isset($id)) {
     $msg = 'Price id is required';
 }
 
-if ($checkData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package_price WHERE tour_package_price_id='{$priceId}' AND tour_package_price_status=1 AND tour_package_price_site_id=" . SITE_ID)) {
+if ($checkData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package_price WHERE tour_package_price_id='{$priceId}' AND tour_package_price_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkData) == 1) {
 
         extract(mysqli_fetch_assoc($checkData));
         if (isset($deleteData)) {
-            if (mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "tour_package_price WHERE tour_package_price_id='{$priceId}' AND tour_package_price_status=1 AND tour_package_price_site_id=" . SITE_ID)) {
+            if (mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "tour_package_price WHERE tour_package_price_id='{$priceId}' AND tour_package_price_site_id=" . SITE_ID)) {
                 $httpStatus = 201;
                 $status = 'success';
                 $msg = 'Price is deleted successfully';
