@@ -218,7 +218,7 @@ if (isset($showPage)) {
                         <p><strong>Slabs: <?php echo htmlspecialchars($block_total_item); ?> <?php echo ($block_total_item == 1) ? 'Pc.' : 'Pcs.'; ?></strong></p>
                         <p><strong>Thickness: <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?></strong></p>
                     <?php else: ?>
-                        <p><strong>Name:<?php echo htmlspecialchars($block_title); ?></strong></p>
+                        <p><strong>Name: <?php echo htmlspecialchars($block_title); ?></strong></p>
                         <p>
                             <strong>
                                 ID:<?php echo htmlspecialchars($block_code); ?>
