@@ -113,7 +113,7 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Price</td>
-          <td>₹ per person</td>
+          <td>₹ ${matchedItinerary.tour_package_price_selling_adult} per person</td>
         </tr>
         <tr>
           <td>Prepared by</td>

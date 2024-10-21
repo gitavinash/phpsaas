@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stateName = $placeInfo[count($placeInfo) - 2];
             $countryName = end($placeInfo);
 
-            $itineraryQuery = "TRIM(tour_package_city)='{$cityName}' AND tour_package_state='{$stateName}' {$themeQuery}";
+            $itineraryQuery = "TRIM(tour_package_city)='{$cityName}' {$themeQuery}";
             break;
     }
 

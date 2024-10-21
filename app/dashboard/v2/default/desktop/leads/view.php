@@ -874,7 +874,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             <div class="widget box-2">
                 <div class="actionArea">
                     <a class="btn popUpBtn" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
-                    <a class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload itinerary</a>
+                    <a href="#" class="btn popUpBtn" target="_blank"><i class="fi-rr-file-pdf"></i> Download itinerary</a>
                     <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
