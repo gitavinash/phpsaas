@@ -48,7 +48,7 @@ LIMIT 0, 100")) {
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('M d, Y', strtotime($link_published)) . "
+                    " . date('M d, Y h:i A', strtotime($link_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>
@@ -71,7 +71,7 @@ LIMIT 0, 100")) {
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('M d, Y', strtotime($link_published)) . "
+                    " . date('M d, Y h:i A', strtotime($link_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>
