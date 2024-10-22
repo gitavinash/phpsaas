@@ -183,6 +183,11 @@ section {
   border-bottom: none;
 }
 
+.hightlightBox a.readMore {
+  float: right;
+  text-align: right;
+}
+
 .hightlightBox a {
   text-decoration: none;
   color: inherit;
