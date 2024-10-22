@@ -126,7 +126,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addDomesticPackageBtn" value="Generate package">
+                                <input type="button" class="btn btn-green" id="addDomesticPackageBtn" value="Generate package">
                             </div>
                         </div>
                     </div>
