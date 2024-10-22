@@ -55,16 +55,27 @@ require_once 'header.php';
             </div>
             <div class="right-container">
                 <div class="hightlightBox">
-                    <h2>Fintech Hightlights</h2>
+                    <h2>Fintech Hightlights of the day</h2>
                     <?php
 
-                    if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=202 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
+                    if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_image, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=281 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
                         echo "<ol>";
                         if (mysqli_num_rows($checkFinTechArticles) != 0) {
                             while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
                                 extract($finTechArticlesInfo);
-                                echo "<li><a href='{$link_url}' title='{$news_title}'>{$news_title}</a></li>";
+                                echo "<li>
+                                        <a href='{$link_url}' title='{$news_title}'>
+                                            <div class='img' ><img src='{$news_image}' ></div>
+                                            <div class='text'><h3>{$news_title}</h3></div>
+                                        </a>
+                                </li>";
                             }
+                            echo
+                            "<li>
+                                        <a href='/category/news/' class='readMore'>
+                                            Read more highlights...
+                                        </a>
+                                </li>";
                         } else {
                             echo "<li><a title=''>No article found</a></li>";
                         }
@@ -90,49 +101,6 @@ require_once 'header.php';
                     }
                     ?>
                 </div>
-
-                <?php
-                if (isset($categorySinglePost[$i])) { ?>
-                    <div class="nonHightlightBox">
-                        <?php
-                        echo "<ol>";
-                        for ($i = 10; $i < 15; $i++) {
-                            if (isset($categorySinglePost[$i])) {
-                                extract($categorySinglePost[$i]);
-                                echo "<li><a href='{$link_url}' title='{$news_title}'>{$news_title}</a></li>";
-                            }
-                        }
-                        echo "</ol>";
-                        ?>
-                    </div>
-                <?php
-                }
-                ?>
-
-                <?php
-
-                if (isset($categorySinglePost[$i])) { ?>
-                    <div class="nonHightlightBox">
-                        <?php
-                        echo "<ol>";
-                        for ($i = 15; $i < 20; $i++) {
-                            if (isset($categorySinglePost[$i])) {
-                                extract($categorySinglePost[$i]);
-                                echo "<li>
-                            <a href='{$link_url}' title='{$news_title}'>
-                                <img src='{$news_image}' alt='{$news_title}' title='{$news_title}' >
-                                {$news_title}
-                            </a>
-                            </li>";
-                            }
-                        }
-                        echo "</ol>";
-                        ?>
-                    </div>
-                <?php
-                }
-
-                ?>
             </div>
         </div>
     </div>
