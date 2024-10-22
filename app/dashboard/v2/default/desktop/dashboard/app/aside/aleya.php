@@ -19,6 +19,10 @@ if ($site_access_type == 'administrator') { ?>
         </div>
     </li>
 
+<?php
+}
+
+if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
 
     <li class="header-section-name">
         <p>Vendors<span>Manage vendor.</span></p>
@@ -91,10 +95,6 @@ if ($site_access_type == 'administrator') { ?>
                         </ul>
                     </div>
                 </li> -->
-<?php
-}
-
-if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
 
     <li class="header-section-name">
         <p>Packages<span>Manage all tour packages.</span></p>
