@@ -13,9 +13,9 @@
             }
 
             if ($loggedInUserMeta['warehouse'] == 'all') { ?>
-            <select class="selectJS form-control" name="warehouse" id="warehouse" required>
-                <option value="">Select warehouse</option>
-                <?php
+                <select class="selectJS form-control" name="warehouse" id="warehouse" required>
+                    <option value="">Select warehouse</option>
+                    <?php
                     $warehouseFilter = '';
                     if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND {$warehouseFilter} warehouse_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($warehouseList) != 0) {
@@ -26,8 +26,8 @@
                         }
                     }
                     ?>
-            </select>
-            <label for="">Select warehouse</label>
+                </select>
+                <label for="">Select warehouse</label>
             <?php
             } else {
                 echo "<input type='hidden' name='warehouse' value='{$loggedInUserMeta['warehouse']}'>";
@@ -65,13 +65,13 @@
         </div>
         <div class="box-1">
             <div class="form-group">
-                <!-- <input type="submit" class="btn btn-green" id="addEnquiry" value="Add new lead"> -->
+                <!-- <input type="button" class="btn btn-green" id="addEnquiry" value="Add new lead"> -->
                 <input type="hidden" name="type" value="enquiry">
                 <input type="hidden" name="action" value="new">
                 <input type="hidden" name="subject" value="Marble request">
                 <input type="hidden" name="sender" value="<?php echo base64_encode("aviansh@blumox.com") ?>">
                 <input type="hidden" name="redirect_url" value="/dashboard/leads/list/">
-                <input type="submit" class="btn btn-green" value="Add lead">
+                <input type="button" class="btn btn-green" value="Add lead">
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
         }
     }
 
-?>
+    ?>
  <h2 class="heading">Setting Configuration<span>Manage basic configurations</span></h2>
  <div class="main-box">
      <section>
@@ -78,7 +78,7 @@
                              <input type="hidden" name="site_theme" value="#00657B">
                              <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>">
                              <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>">
-                             <input type="submit" id="updateWebsite" class="btn btn-green" value="Update Website">
+                             <input type="button" id="updateWebsite" class="btn btn-green" value="Update Website">
                          </div>
              </form>
      </section>

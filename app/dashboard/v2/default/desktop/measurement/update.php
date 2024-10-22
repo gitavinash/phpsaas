@@ -1,14 +1,14 @@
 <?php
 
 if (!isset($id)) { ?>
-<script>
-window.location.href = '/dashboard/measurement/list/';
-</script>
+    <script>
+        window.location.href = '/dashboard/measurement/list/';
+    </script>
 <?php
 } else if ($id == '') { ?>
-<script>
-window.location.href = '/dashboard/measurement/list/';
-</script>
+    <script>
+        window.location.href = '/dashboard/measurement/list/';
+    </script>
 <?php
 }
 
@@ -91,7 +91,7 @@ if ($checkMeasurement = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFI
                         <div class="box-1">
                             <div class="form-group">
                                 <input type="hidden" name="configurationId" value="<?php echo $id ?>">
-                                <input type="submit" class="btn btn-green" id="updateMeasurement"
+                                <input type="button" class="btn btn-green" id="updateMeasurement"
                                     value="Update measurement">
                             </div>
                         </div>

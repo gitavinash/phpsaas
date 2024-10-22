@@ -44,7 +44,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addMeasurement"
+                                <input type="button" class="btn btn-green" id="addMeasurement"
                                     value="Add new measurement">
                             </div>
                         </div>

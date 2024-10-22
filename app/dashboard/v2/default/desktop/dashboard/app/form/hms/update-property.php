@@ -165,7 +165,7 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <div class="form-group">
                             <input type="hidden" name="oldFeatureImage" value="<?php echo $property_thumbnail ?>">
                             <input type="hidden" name="propertyId" value="<?php echo base64_encode($propertyId) ?>">
-                            <input type="submit" class="btn btn-green" id="updateProperty" value="Update property">
+                            <input type="button" class="btn btn-green" id="updateProperty" value="Update property">
                         </div>
                     </div>
                 </div>

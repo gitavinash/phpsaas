@@ -87,7 +87,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addWarehouse" value="Add new warehouse">
+                                <input type="button" class="btn btn-green" id="addWarehouse" value="Add new warehouse">
                             </div>
                         </div>
                     </div>

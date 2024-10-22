@@ -187,7 +187,7 @@ if (isset($validId)) { ?>
                 <input type="hidden" name="oldItemCode" value="<?php echo $block_code ?>">
                 <input type="hidden" name="oldFeatureImage" value="<?php echo $block_feature_image ?>">
                 <input type="hidden" name="oldGalleryImages" value="<?php echo $block_gallery ?>">
-                <input type="submit" class="btn btn-green" id="updateBlock" value="Update block">
+                <input type="button" class="btn btn-green" id="updateBlock" value="Update block">
             </div>
         </div>
     </div>

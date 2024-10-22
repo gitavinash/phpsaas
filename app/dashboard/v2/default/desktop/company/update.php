@@ -141,7 +141,7 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <div class="box-1">
                             <div class="form-group">
                                 <input type="hidden" name="companyId" value="<?php echo $companyId ?>">
-                                <input type="submit" class="btn btn-green" id="updateCompany" value="Update company">
+                                <input type="button" class="btn btn-green" id="updateCompany" value="Update company">
                             </div>
                         </div>
                     </div>

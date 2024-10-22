@@ -58,13 +58,13 @@
         </div>
         <div class="box-1">
             <div class="form-group">
-                <!-- <input type="submit" class="btn btn-green" id="addEnquiry" value="Add new lead"> -->
+                <!-- <input type="button" class="btn btn-green" id="addEnquiry" value="Add new lead"> -->
                 <input type="hidden" name="type" value="enquiry">
                 <input type="hidden" name="action" value="new">
                 <input type="hidden" name="subject" value="New client">
                 <input type="hidden" name="sender" value="<?php echo base64_encode("aviansh@blumox.com") ?>">
                 <input type="hidden" name="redirect_url" value="/dashboard/leads/list/">
-                <input type="submit" class="btn btn-green" value="Add lead">
+                <input type="button" class="btn btn-green" value="Add lead">
             </div>
         </div>
     </div>

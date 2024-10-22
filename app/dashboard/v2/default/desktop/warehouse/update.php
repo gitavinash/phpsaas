@@ -123,7 +123,7 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                         <div class="box-1">
                             <div class="form-group">
                                 <input type="hidden" name="warehouseId" value="<?php echo $warehouseId ?>">
-                                <input type="submit" class="btn btn-green" id="updateWarehouse" value="Update warehouse">
+                                <input type="button" class="btn btn-green" id="updateWarehouse" value="Update warehouse">
                             </div>
                         </div>
                     </div>

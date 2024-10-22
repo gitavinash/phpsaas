@@ -125,7 +125,7 @@
     </div>
     <div class="box-1">
         <div class="form-group">
-            <input type="submit" class="btn btn-green" id="addBlock" value="Add new block">
+            <input type="button" class="btn btn-green" id="addBlock" value="Add new block">
         </div>
     </div>
 </div>

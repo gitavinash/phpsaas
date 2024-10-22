@@ -63,7 +63,7 @@ if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "us
                                 <div class="form-group">
                                     <input type="hidden" name="type" value="setting">
                                     <input type="hidden" name="action" value="profile">
-                                    <input type="submit" id="updateProfile" class="btn btn-green" value="Update Profile">
+                                    <input type="button" id="updateProfile" class="btn btn-green" value="Update Profile">
                                 </div>
                     </form>
             </section>

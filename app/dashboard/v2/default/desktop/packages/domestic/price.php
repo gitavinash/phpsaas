@@ -83,7 +83,7 @@
                                         <div class="form-group">
                                             <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
                                             <input type="hidden" name="priceType" value="single">
-                                            <input type="submit" class="btn saveItineraryPriceBtn" value="Update single sharing ininenary price">
+                                            <input type="button" class="btn saveItineraryPriceBtn" value="Update single sharing ininenary price">
                                         </div>
                                     </form>
                                 </div>
@@ -149,7 +149,7 @@
                                         <div class="form-group">
                                             <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
                                             <input type="hidden" name="priceType" value="double">
-                                            <input type="submit" class="btn saveItineraryPriceBtn" value="Update double sharing ininenary price">
+                                            <input type="button" class="btn saveItineraryPriceBtn" value="Update double sharing ininenary price">
                                         </div>
                                     </form>
                                 </div>
@@ -215,7 +215,7 @@
                                         <div class="form-group">
                                             <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
                                             <input type="hidden" name="priceType" value="triple">
-                                            <input type="submit" class="btn saveItineraryPriceBtn" value="Update triple sharing ininenary price">
+                                            <input type="button" class="btn saveItineraryPriceBtn" value="Update triple sharing ininenary price">
                                         </div>
                                     </form>
                                 </div>
@@ -283,7 +283,7 @@
                                         <div class="form-group">
                                             <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
                                             <input type="hidden" name="priceType" value="quad">
-                                            <input type="submit" class="btn saveItineraryPriceBtn" value="Update quad sharing ininenary price">
+                                            <input type="button" class="btn saveItineraryPriceBtn" value="Update quad sharing ininenary price">
                                         </div>
                                     </form>
                                 </div>

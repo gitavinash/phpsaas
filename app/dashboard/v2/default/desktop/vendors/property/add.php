@@ -108,7 +108,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addProperty" value="Add new property">
+                                <input type="button" class="btn btn-green" id="addProperty" value="Add new property">
                             </div>
                         </div>
                     </div>

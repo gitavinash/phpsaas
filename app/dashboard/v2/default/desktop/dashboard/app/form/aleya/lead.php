@@ -76,7 +76,7 @@
         </div>
         <div class="box-1">
             <div class="form-group">
-                <input type="submit" class="btn btn-green" id="addEnquiry" value="Add new lead">
+                <input type="button" class="btn btn-green" id="addEnquiry" value="Add new lead">
             </div>
         </div>
     </div>

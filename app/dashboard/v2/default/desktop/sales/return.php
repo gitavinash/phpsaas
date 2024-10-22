@@ -65,7 +65,7 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
                                 </div>
                                 <div class="form-group">
-                                    <!-- <input type="submit" cla¯ss="btn btn-green step-box" id="salesStep_2" value="N new sale"> -->
+                                    <!-- <input type="button" cla¯ss="btn btn-green step-box" id="salesStep_2" value="N new sale"> -->
                                     <a class="btn btn-green" style="float: right;" id="returnInventory">Next, select
                                         inventory<i class="fi fi-rr-arrow-right"></i></a>
                                 </div>

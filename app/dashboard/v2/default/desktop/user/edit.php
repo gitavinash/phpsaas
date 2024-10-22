@@ -114,7 +114,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                             <input type="hidden" name="id" value="<?php echo base64_encode($user_id) ?>">
                             <input type="hidden" name="type" value="user">
                             <input type="hidden" name="action" value="update">
-                            <input type="submit" class="btn btn-green" value="Update user">
+                            <input type="button" class="btn btn-green" value="Update user">
                         </div>
                         <section class="form">
                     </div>

@@ -114,7 +114,7 @@
                                     <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
                                     <input type="hidden" name="startCity" value="<?php echo $startingCity ?>">
                                     <input type="hidden" name="endCity" value="<?php echo $endCity ?>">
-                                    <input type="submit" class="btn" id="createTourPackageBtn" value="Save ininenary">
+                                    <input type="button" class="btn" id="createTourPackageBtn" value="Save ininenary">
                                 </div>
                                 <?php
                             } else {

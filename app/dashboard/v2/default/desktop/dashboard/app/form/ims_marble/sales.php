@@ -99,7 +99,7 @@ if (isset($ref)) {
                 </div>
                 <div class="box-1">
                     <div class="form-group">
-                        <!-- <input type="submit" cla¯ss="btn btn-green step-box" id="salesStep_2" value="N new sale"> -->
+                        <!-- <input type="button" cla¯ss="btn btn-green step-box" id="salesStep_2" value="N new sale"> -->
                         <a class="btn btn-green step-box" style="float: right;" id="salesStep_2">Next, add Inventory <i
                                 class="fi fi-rr-arrow-right"></i></a>
                     </div>

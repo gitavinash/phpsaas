@@ -22,7 +22,7 @@
                             <input type="hidden" name="action" value="password">
                             <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>">
                             <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>">
-                            <input type="submit" id="updatePasswordBtn" value='Change Password' class='btn btn-green'>
+                            <input type="button" id="updatePasswordBtn" value='Change Password' class='btn btn-green'>
                         </div>
             </form>
     </section>

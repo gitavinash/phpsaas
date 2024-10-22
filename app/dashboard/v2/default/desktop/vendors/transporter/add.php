@@ -49,7 +49,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="submit" class="btn btn-green" id="addTransporter" value="Add new transporter">
+                                <input type="button" class="btn btn-green" id="addTransporter" value="Add new transporter">
                             </div>
                         </div>
                     </div>

@@ -127,7 +127,7 @@
     </td>
     <td class="box-7">
         <input type="hidden" name="leadId" value="<?php echo $enquiry_id ?>">
-        <input type="submit" id="updateEnquiry" class="btn btn-green"
+        <input type="button" id="updateEnquiry" class="btn btn-green"
             value="Update lead">
     </td>
 </tr>

@@ -196,7 +196,7 @@ LIMIT
                                                     <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
                                                     <input type="hidden" name="action" value="assign">
                                                     <input type="hidden" name="type" value="leads">
-                                                    <input type="submit" value="Assign lead to user"
+                                                    <input type="button" value="Assign lead to user"
                                                         class="btn dataTableSubmitBtn dataTableBtn">
                                                 <?php
                                                 } else {

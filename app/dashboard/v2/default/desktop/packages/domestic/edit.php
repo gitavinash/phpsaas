@@ -151,7 +151,7 @@
                                     <div class="form-group">
                                         <input type="hidden" name="packageType" id="packageType" value="domestic">
                                         <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
-                                        <input type="submit" class="btn" id="updateTourPackageBtn" value="Update ininenary">
+                                        <input type="button" class="btn" id="updateTourPackageBtn" value="Update ininenary">
                                     </div>
 
                         <?php

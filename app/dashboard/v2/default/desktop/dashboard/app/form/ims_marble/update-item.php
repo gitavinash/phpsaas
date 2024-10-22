@@ -240,7 +240,7 @@ if (isset($validId)) {
                 <div class="form-group">
                     <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
                     <input type="hidden" name="blockItemIndex" value="<?php echo rtrim($blockItemIndex, ',') ?>">
-                    <input type="submit" class="btn btn-green" id="updateBlockItem" value="Update block Slabs">
+                    <input type="button" class="btn btn-green" id="updateBlockItem" value="Update block Slabs">
                 </div>
             </div>
         </div>
@@ -284,7 +284,7 @@ if (isset($validId)) {
                         <input type="hidden" name="blockId" id="blockId" value="<?php echo $block_id ?>">
                         <input type="hidden" name="blockTotalCount" id="blockTotalCount"
                             value="<?php echo $block_total_item ?>">
-                        <input type="submit" class="btn btn-green" id="createBlockItem" value="Generate block Slabs">
+                        <input type="button" class="btn btn-green" id="createBlockItem" value="Generate block Slabs">
                     </div>
                 </form>
             </div>

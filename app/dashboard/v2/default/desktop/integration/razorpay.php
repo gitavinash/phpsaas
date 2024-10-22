@@ -17,7 +17,7 @@
                         <div class="form-group">
                             <!-- <input type="hidden" name="type" value="user">
                             <input type="hidden" name="action" value="publish"> -->
-                            <input type="submit" class="btn btn-green" value="Update bank details">
+                            <input type="button" class="btn btn-green" value="Update bank details">
                         </div>
                     </section>
                 </form>
