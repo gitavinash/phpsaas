@@ -775,45 +775,46 @@ $(document).ready(function (e) {
 
       // Apply inline background color for each cell in the row
       var color;
+
       switch (rowDataStatus) {
         case "draft":
-          color = "#fef9e6"; // Very light and bright pastel yellow for draft
+          color = "#f9e29f"; // Darkened pastel yellow for draft
           break;
         case "initiate":
-          color = "#ffffff"; // Very light and bright pastel yellow for draft
+          color = "#f5f5f5"; // Soft greyish white for initiate
           break;
         case "active":
-          color = "#e8fce8"; // Very light and bright pastel green for active
+          color = "#b4e2b4"; // Darkened pastel green for active
           break;
         case "sold_out":
-          color = "#ca869a"; // Very light and bright pastel green for active
+          color = "#b87085"; // Darkened pastel pinkish-red for sold out
           break;
         case "success":
-          color = "#C7EAE4"; // Very light and bright pastel green for active
+          color = "#A9D5D1"; // Darkened pastel teal for success
           break;
         case "duplicate":
-          color = "#E6E6FA"; // Very light and bright pastel red for duplicate
+          color = "#C8C8F0"; // Darkened lavender for duplicate
           break;
         case "follow_up":
-          color = "#FFD699"; // Very light and bright pastel pink for follow-up
+          color = "#E6AF60"; // Darkened pastel orange for follow-up
           break;
         case "payment initiate":
-          color = "#e6fbff"; // Very light and bright pastel blue for payment initiate
+          color = "#B3E6F0"; // Darkened pastel blue for payment initiate
           break;
         case "payment refund":
-          color = "#ffe8f7"; // Very light and bright pastel pink-purple for refund
+          color = "#F6B0DB"; // Darkened pastel pink-purple for refund
           break;
         case "failed":
-          color = "#ffecec"; // Very light and bright pastel coral for failed
+          color = "#F8B3B3"; // Darkened pastel coral for failed
           break;
         case "soft delete":
-          color = "#fff1f1"; // Very light and bright pastel red for soft delete
+          color = "#F5B0B0"; // Darkened pastel red for soft delete
           break;
         case "delete":
-          color = "#ffeaea"; // Very light and bright pastel pink-red for delete
+          color = "#F8A6A6"; // Darkened pastel pink-red for delete
           break;
         default:
-          color = "#F2F3F4"; // Very light and bright pastel orange for pending
+          color = "#D1D2D4"; // Soft grey for default (pending)
           break;
       }
 
