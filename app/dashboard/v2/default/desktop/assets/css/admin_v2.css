@@ -218,7 +218,7 @@ textarea {
 }
 
 /* Scroll bar */
-
+/* 
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -236,7 +236,7 @@ textarea {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #167a92;
-}
+} */
 
 /* Defalt container size */
 
