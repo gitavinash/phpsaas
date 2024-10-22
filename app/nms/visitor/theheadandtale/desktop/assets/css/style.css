@@ -168,6 +168,7 @@ section {
   list-style: none;
 }
 .hightlightBox li {
+  float: left;
   width: 100%;
   box-sizing: border-box;
   line-height: 24px;
@@ -177,14 +178,28 @@ section {
   padding: 5px 1rem;
   font-weight: bold;
 }
+
 .hightlightBox li:last-child {
   border-bottom: none;
 }
+
 .hightlightBox a {
   text-decoration: none;
   color: inherit;
   font-weight: 700;
 }
+
+.hightlightBox img {
+  max-width: 150px;
+  float: left;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+
+.hightlightBox h3 {
+  font-size: 16px;
+}
+
 .hightlightBox a:hover {
   color: var(--grey-color);
 }
