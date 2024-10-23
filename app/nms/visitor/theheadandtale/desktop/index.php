@@ -48,7 +48,7 @@ LIMIT 0, 100")) {
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('M d, Y h:i A', strtotime($link_published)) . "
+                    " . date('d M Y, h:i A', strtotime($link_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>
@@ -60,7 +60,7 @@ LIMIT 0, 100")) {
             <div class="left-container">
                 <?php
 
-                for ($i = 1; $i < 5; $i++) {
+                for ($i = 1; $i < 15; $i++) {
                     if (isset($latestNewsData[$i])) {
                         extract($latestNewsData[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
@@ -71,7 +71,7 @@ LIMIT 0, 100")) {
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('M d, Y h:i A', strtotime($link_published)) . "
+                    " . date('d M Y, h:i A', strtotime($link_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>
@@ -95,7 +95,7 @@ LIMIT 0, 100")) {
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('M d, Y', strtotime($link_published)) . "
+                    " . date('d M Y, h:i A', strtotime($link_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>

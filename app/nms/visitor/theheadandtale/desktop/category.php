@@ -33,7 +33,7 @@ require_once 'header.php';
 
                 // Rest 5-10 news articles
 
-                for ($i = 5; $i < 10; $i++) {
+                for ($i = 0; $i < 10; $i++) {
                     if (isset($categorySinglePost[$i])) {
                         extract($categorySinglePost[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
@@ -44,7 +44,7 @@ require_once 'header.php';
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('M d, Y h:i A', strtotime($link_published)) . "
+                    " . date('d M Y, h:i A', strtotime($link_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>
