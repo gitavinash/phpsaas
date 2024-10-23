@@ -7,7 +7,7 @@ require_once 'header.php';
     <div class="row">
         <div class="container">
             <div class="left-container">
-                <div class="pageHeading">
+                <div class="categoryHeading">
                     <h1><?php echo $category_title ?></h1>
                 </div>
                 <?php
