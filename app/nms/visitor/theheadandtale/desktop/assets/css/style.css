@@ -584,6 +584,64 @@ section {
   border-bottom: 10px solid #f5c3aa;
 }
 
+nav {
+  background-color: #f1f0f1;
+  padding: 15px 0;
+  overflow: hidden; /* Prevent content overflow */
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent line breaks in the menu */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+nav ul::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+}
+
+nav ul li {
+  display: inline-block; /* Ensure items stay in a single line */
+  margin: 0 15px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+nav ul li a:hover {
+  color: #007bff;
+}
+
+nav ul li a.disable {
+  color: #aaa;
+  pointer-events: none;
+}
+
+nav ul li a.partnerInsights {
+  color: #5b9ad5;
+}
+
+/* Responsive for mobile */
+@media (max-width: 768px) {
+  nav ul {
+    justify-content: flex-start; /* Align items to the left for scrollability */
+  }
+
+  nav ul li {
+    margin: 0 10px; /* Adjust spacing for smaller screens */
+  }
+}
+
 @media (max-width: 992px) {
   .blog_banner__left {
     margin-top: 1rem;

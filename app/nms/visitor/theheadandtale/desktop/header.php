@@ -71,52 +71,51 @@ if (isset($_COOKIE['user_data'])) {
 
 <body oncontextmenu="return false;">
     <header>
-        <nav>
-            <div class="myHeader <?php echo (($link_type == 'page') ? 'about_bg' : '') ?>">
-                <div class="container">
-                    <div class="header_flex">
-                        <div class="company-logo">
-                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
+        <div class="myHeader <?php echo (($link_type == 'page') ? 'about_bg' : '') ?>">
+            <div class="container">
+                <div class="header_flex">
+                    <div class="company-logo">
+                        <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
+                    </div>
+                    <?php
+
+                    if (isset($_COOKIE['user_data'])) { ?>
+
+                        <div class="header_right">
+                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                            </p>
                         </div>
-                        <?php
 
-                        if (isset($_COOKIE['user_data'])) { ?>
-
-                            <div class="header_right">
-                                <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                                </p>
-                            </div>
-
-                            <!-- profile side--bar -->
-                            <div class="profile--sideBar">
-                                <div class="profile_container">
-                                    <div class="profile_cancel">
-                                        <i class='bx bx-x'></i>
-                                    </div>
-                                    <div class="profile_header">
-                                        <!-- <div class="profile--img">
+                        <!-- profile side--bar -->
+                        <div class="profile--sideBar">
+                            <div class="profile_container">
+                                <div class="profile_cancel">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <div class="profile_header">
+                                    <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                        <div class="user--content">
-                                            <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                            <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                            <a href="/logout/">Logout</a>
-                                        </div>
+                                    <div class="user--content">
+                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                        <a href="/logout/">Logout</a>
                                     </div>
+                                </div>
 
-                                    <?php
+                                <?php
 
-                                    if ($activeSubscription == true) {
+                                if ($activeSubscription == true) {
 
-                                        if ($subscription_mode == 'month') {
-                                            $increseDuration = "+1 month";
-                                        } else {
-                                            $increseDuration = "+1 year";
-                                        }
+                                    if ($subscription_mode == 'month') {
+                                        $increseDuration = "+1 month";
+                                    } else {
+                                        $increseDuration = "+1 year";
+                                    }
 
-                                        $expiryDate = date('d M Y', strtotime($subscription_time . $increseDuration));;
+                                    $expiryDate = date('d M Y', strtotime($subscription_time . $increseDuration));;
 
-                                        echo "<div class='manage_link'>
+                                    echo "<div class='manage_link'>
                                             <a href='/manage-subscription/'>MANAGE MY SUBSCRIPTION</a>
                                         </div>
 
@@ -125,35 +124,44 @@ if (isset($_COOKIE['user_data'])) {
                                             <h3>{${$subscription_type . '_title'}}</h3>
                                             <p>Next billing date : {$expiryDate}</p>
                                         </div>";
-                                    } else {
-                                        echo "<div class='manage_link'>
+                                } else {
+                                    echo "<div class='manage_link'>
                                             <a href='/subscribe/'>BUY SUBSCRIPTION</a>
                                         </div>";
-                                    }
+                                }
 
-                                    ?>
+                                ?>
 
-                                </div>
                             </div>
+                        </div>
 
-                        <?php
-                        } else { ?>
+                    <?php
+                    } else { ?>
 
 
-                            <div class="header_right">
-                                <!-- <button class="subscribe">subscribe</button> -->
-                                <a href="/subscribe/" class="subscribe">subscribe</a>
-                                <!-- <button class="sign_in"></button> -->
-                                <a href="/login/" class="sign_in">sign in</a>
-                            </div>
+                        <div class="header_right">
+                            <!-- <button class="subscribe">subscribe</button> -->
+                            <a href="/subscribe/" class="subscribe">subscribe</a>
+                            <!-- <button class="sign_in"></button> -->
+                            <a href="/login/" class="sign_in">sign in</a>
+                        </div>
 
-                        <?php
-                        }
+                    <?php
+                    }
 
-                        ?>
-                    </div>
+                    ?>
                 </div>
             </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="" title="">Deep-Tales</a></li>
+                <li><a href="" title="">To-The-Point</a></li>
+                <li><a href="" title="">News</a></li>
+                <li><a href="" title="">Money-Trivia</a></li>
+                <li><a href="#" title="" class="disable">Report</a></li>
+                <li><a href="" title="" class="partnerInsights">Partner Insights</a></li>
+            </ul>
         </nav>
     </header>
     <main <?php echo (($link_type == 'page') ? 'style="border-top: 0px"' : '') ?>>
