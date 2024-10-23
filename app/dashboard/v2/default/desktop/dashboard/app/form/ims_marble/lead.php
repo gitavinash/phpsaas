@@ -71,7 +71,7 @@
                 <input type="hidden" name="subject" value="Marble request">
                 <input type="hidden" name="sender" value="<?php echo base64_encode("aviansh@blumox.com") ?>">
                 <input type="hidden" name="redirect_url" value="/dashboard/leads/list/">
-                <input type="button" class="btn btn-green" value="Add lead">
+                <input type="submit" class="btn btn-green" value="Add lead">
             </div>
         </div>
     </div>
