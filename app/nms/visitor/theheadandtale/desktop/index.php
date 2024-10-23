@@ -106,7 +106,7 @@ LIMIT 0, 100")) {
             </div>
             <div class="right-container">
                 <div class="hightlightBox">
-                    <h2>Fintech Hightlights of the day</h2>
+                    <h2>Fintech Hightlights</h2>
                     <?php
 
                     if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_image, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=281 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
@@ -138,7 +138,7 @@ LIMIT 0, 100")) {
                     <h2>Editor's Pick</h2>
                     <?php
 
-                    if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=280 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
+                    if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=281 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
                         echo "<ol>";
                         if (mysqli_num_rows($checkFinTechArticles) != 0) {
                             while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
