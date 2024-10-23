@@ -137,6 +137,12 @@ section {
   width: 30%;
 }
 
+.categoryHeading {
+  float: left;
+  width: 100%;
+  padding: 2rem 0rem;
+}
+
 .hightlightBox {
   float: left;
   width: 95%;
