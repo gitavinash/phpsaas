@@ -167,6 +167,7 @@ section {
   padding: 0;
   list-style: none;
 }
+
 .hightlightBox li {
   float: left;
   width: 100%;
@@ -177,6 +178,17 @@ section {
   /* border-bottom: 1px solid #fd0100; */
   padding: 5px 1rem;
   font-weight: bold;
+}
+
+.hightlightBox li .img {
+  float: left;
+  width: 35%;
+  margin-right: 2%;
+}
+
+.hightlightBox li .text {
+  float: left;
+  width: 63%;
 }
 
 .hightlightBox li:last-child {
@@ -198,9 +210,8 @@ section {
 }
 
 .hightlightBox img {
-  max-width: 150px;
+  max-width: 100%;
   float: left;
-  margin-right: 10px;
   border-radius: 10px;
 }
 
