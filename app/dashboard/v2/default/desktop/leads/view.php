@@ -311,67 +311,70 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         </div>
                     </div>
                 </div>
-                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
-                    <div class="leadInfo">
-                        <div class="historyBox">
-                            <?php
+                <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
-                                if (mysqli_num_rows($leadHistory) != 0) {
-                                    echo "<ol class='timeline'>";
-                                    while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
-                                        extract($leadHistoryData);
-                                        $commentBox = '';
+                if (SITE_APP_ID == 24) { ?>
+                    <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
+                        <div class="leadInfo">
+                            <div class="historyBox">
+                                <?php
 
-                                        switch (strtolower($enquiry_notes_meta_type)) {
-                                            case "upay":
-                                                $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
-                                                if (is_array($enquiry_notes_meta_value)) {
-                                                    extract($enquiry_notes_meta_value);
-                                                } else {
-                                                    $upayMsg = '';
-                                                    $upayImages = '';
-                                                }
-                                                $icon = 'story-book';
-                                                $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
-                                                if ($enquiry_notes_meta_value != '') {
-                                                    $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
-                                                    $upayImages = (json_decode($upayImages, true));
-                                                    if (!empty($upayImages)) {
-                                                        $commentBox .= "<div class='imagesList' >";
-                                                        $upayImages = json_decode($upayImages, true);
-                                                        for ($i = 0; $i < sizeof($upayImages); $i++) {
-                                                            $fileExtension = strtolower(pathinfo($upayImages[$i]['path'], PATHINFO_EXTENSION));
-                                                            switch ($fileExtension) {
-                                                                case 'pdf':
-                                                                    $featureThumbnail = "/upload/others/docs/pdf.png";
-                                                                    break;
-                                                                case 'doc':
-                                                                case 'docx':
-                                                                    $featureThumbnail = "/upload/others/docs/doc.png";
-                                                                    break;
-                                                                case 'xls':
-                                                                case 'xlsx':
-                                                                    $featureThumbnail = "/upload/others/docs/xls.png";
-                                                                    break;
-                                                                default:
-                                                                    $featureThumbnail = $upayImages[$i]['path'];
-                                                                    break;
+                                if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id,  enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
+                                    if (mysqli_num_rows($leadHistory) != 0) {
+                                        echo "<ol class='timeline'>";
+                                        while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
+                                            extract($leadHistoryData);
+                                            $commentBox = '';
+
+                                            switch (strtolower($enquiry_notes_meta_type)) {
+                                                case "upay":
+                                                    $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
+                                                    if (is_array($enquiry_notes_meta_value)) {
+                                                        extract($enquiry_notes_meta_value);
+                                                    } else {
+                                                        $upayMsg = '';
+                                                        $upayImages = '';
+                                                    }
+                                                    $icon = 'story-book';
+                                                    $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
+                                                    if ($enquiry_notes_meta_value != '') {
+                                                        $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
+                                                        $upayImages = (json_decode($upayImages, true));
+                                                        if (!empty($upayImages)) {
+                                                            $commentBox .= "<div class='imagesList' >";
+                                                            $upayImages = json_decode($upayImages, true);
+                                                            for ($i = 0; $i < sizeof($upayImages); $i++) {
+                                                                $fileExtension = strtolower(pathinfo($upayImages[$i]['path'], PATHINFO_EXTENSION));
+                                                                switch ($fileExtension) {
+                                                                    case 'pdf':
+                                                                        $featureThumbnail = "/upload/others/docs/pdf.png";
+                                                                        break;
+                                                                    case 'doc':
+                                                                    case 'docx':
+                                                                        $featureThumbnail = "/upload/others/docs/doc.png";
+                                                                        break;
+                                                                    case 'xls':
+                                                                    case 'xlsx':
+                                                                        $featureThumbnail = "/upload/others/docs/xls.png";
+                                                                        break;
+                                                                    default:
+                                                                        $featureThumbnail = $upayImages[$i]['path'];
+                                                                        break;
+                                                                }
+                                                                $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
                                                             }
-                                                            $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
+                                                            $commentBox .= "</div>";
                                                         }
                                                         $commentBox .= "</div>";
                                                     }
-                                                    $commentBox .= "</div>";
-                                                }
-                                                break;
-                                            default:
-                                                $icon = 'times-hexagon';
-                                                $msg = '';
-                                                break;
-                                        }
+                                                    break;
+                                                default:
+                                                    $icon = 'times-hexagon';
+                                                    $msg = '';
+                                                    break;
+                                            }
 
-                                        echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
+                                            echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
                                                     <span class='timeline-item-icon | faded-icon'>
                                                         <i class='fi-rr-{$icon}'></i>
                                                     </span>
@@ -380,18 +383,27 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                             on <time>" . date('d-m-Y h:i A', strtotime(($enquiry_notes_update))) . "</time></span>
                                                     </div>
                                                     {$commentBox}
-                                                </li>";
-                                    }
-                                    echo "</ol>";
-                                }
-                            } else {
-                                echo "Something went wrong";
-                            }
+                                                    ";
+                                            if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
+                                                echo "<a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>";
+                                            }
 
-                            ?>
+                                            echo  "</li>";
+                                        }
+                                        echo "</ol>";
+                                    }
+                                } else {
+                                    echo "Something went wrong";
+                                }
+
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php
+                }
+
+                ?>
                 <div class="widget openBtnBox no-padding box-1" id="paymentDetailsBox">
                     <div class="leadInfo">
                         <div class="historyBox">
