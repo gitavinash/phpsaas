@@ -7,9 +7,12 @@ require_once 'header.php';
     <div class="row">
         <div class="container">
             <div class="left-container">
+                <div class="pageHeading">
+                    <h1><?php echo $category_title ?></h1>
+                </div>
                 <?php
 
-                for ($i = 0; $i < 5; $i++) {
+                for ($i = 0; $i < 20; $i++) {
                     if (isset($categorySinglePost[$i])) {
                         extract($categorySinglePost[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
