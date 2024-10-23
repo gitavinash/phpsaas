@@ -27,30 +27,6 @@ require_once 'header.php';
         </a></div>";
                     }
                 }
-
-                // Youtube section
-
-
-                // Rest 5-10 news articles
-
-                for ($i = 0; $i < 10; $i++) {
-                    if (isset($categorySinglePost[$i])) {
-                        extract($categorySinglePost[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}'>
-                                        <div class='feature_image'>
-                                            <img src='{$news_image}' alt='{$news_title}'>
-                                            " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
-        </div>
-        <div class='news_intro'>
-            <h2>{$news_title}</h2>
-            <p><span>
-                    " . date('d M Y, h:i A', strtotime($link_published)) . "
-            </span></p>
-            <p>{$meta_description}</p>
-        </div>
-        </a></div>";
-                    }
-                }
                 ?>
             </div>
             <div class="right-container">
