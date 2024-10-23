@@ -155,12 +155,12 @@ if (isset($_COOKIE['user_data'])) {
         </div>
         <nav>
             <ul>
-                <li><a href="" title="">Deep-Tales</a></li>
-                <li><a href="" title="">To-The-Point</a></li>
-                <li><a href="" title="">News</a></li>
-                <li><a href="" title="">Money-Trivia</a></li>
-                <li><a href="#" title="" class="disable">Report</a></li>
-                <li><a href="" title="" class="partnerInsights">Partner Insights</a></li>
+                <li><a href="/category/deep-tales/" title="">Deep-Tales</a></li>
+                <li><a href="/category/to-the-point/" title="">To-The-Point</a></li>
+                <li><a href="/category/news/" title="">News</a></li>
+                <li><a href="/category/money-trivia/" title="">Money-Trivia</a></li>
+                <li><a href="/category/report/" title="" class="disable">Report</a></li>
+                <li><a href="/category/partner-insights/" title="" class="partnerInsights">Partner Insights</a></li>
             </ul>
         </nav>
     </header>
