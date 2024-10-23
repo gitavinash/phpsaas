@@ -60,7 +60,7 @@ LIMIT 0, 100")) {
             <div class="left-container">
                 <?php
 
-                for ($i = 1; $i < 15; $i++) {
+                for ($i = 1; $i < 5; $i++) {
                     if (isset($latestNewsData[$i])) {
                         extract($latestNewsData[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
@@ -84,7 +84,7 @@ LIMIT 0, 100")) {
 
                 // Rest 5-10 news articles
 
-                for ($i = 5; $i < 10; $i++) {
+                for ($i = 5; $i < 20; $i++) {
                     if (isset($latestNewsData[$i])) {
                         extract($latestNewsData[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
