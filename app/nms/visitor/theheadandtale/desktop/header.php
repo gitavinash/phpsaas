@@ -155,12 +155,12 @@ if (isset($_COOKIE['user_data'])) {
         </div>
         <nav>
             <ul>
-                <li><a href="/category/deep-tales/" title="">Deep-Tales</a></li>
-                <li><a href="/category/to-the-point/" title="">To-The-Point</a></li>
-                <li><a href="/category/news/" title="">News</a></li>
-                <li><a href="/category/money-trivia/" title="">Money-Trivia</a></li>
-                <li><a href="/category/report/" title="" class="disable">Report</a></li>
-                <li><a href="/category/partner-insights/" title="" class="partnerInsights">Partner Insights</a></li>
+                <li><a href="/category/deep-tales/" <?php echo ((BASE_URL == '/category/deep-tales/') ? 'class="active"' : '') ?> title="Deep-Tales">Deep-Tales</a></li>
+                <li><a href="/category/to-the-point/" <?php echo ((BASE_URL == '/category/to-the-point/') ? 'class="active"' : '') ?> title="To-The-Point">To-The-Point</a></li>
+                <li><a href="/category/news/" <?php echo ((BASE_URL == '/category/news/') ? 'class="active"' : '') ?> title="News">News</a></li>
+                <li><a href="/category/money-trivia/" <?php echo ((BASE_URL == '/category/money-trivia/') ? 'class="active"' : '') ?> title="Money-Trivia">Money-Trivia</a></li>
+                <li><a href="/category/report/" title="Report" <?php echo ((BASE_URL == '/category/report/') ? 'class="active"' : '') ?> class="disable">Report</a></li>
+                <li><a href="/category/partner-insights/" title="Partner Insights" class="partnerInsights">Partner Insights</a></li>
             </ul>
         </nav>
     </header>
