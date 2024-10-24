@@ -274,6 +274,10 @@ require_once 'header.php';
                     <input type="text" class="form-control form_control2" name="placeOfBirth" id="Place"
                         placeholder="Place of Birth" />
                 </div>
+                <div class="col-12 mb-3">
+                    <label for="Place" class="form-label form_label2">Place Of Birth</label>
+                    <textarea name="problem" class="form-control form_control2" placeholder="Share your problems" required></textarea>
+                </div>
                 <input type="hidden" name="type" value="enquiry">
                 <input type="hidden" name="action" value="new">
                 <input type="hidden" name="subject" value="Homepage Free-Prediction Form">

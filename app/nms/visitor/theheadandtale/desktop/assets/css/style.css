@@ -644,6 +644,9 @@ nav ul li a.partnerInsights {
   nav ul li {
     margin: 0 10px; /* Adjust spacing for smaller screens */
   }
+  nav ul li a {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 992px) {
