@@ -54,7 +54,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 }
 
                 echo "<tr>
-                                <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong> - ' : '') . "</td>
+                                <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong>' : '') . "</td>
                                 <td style='font-weight: 300'>$block_title</td>
                                 <td>{$warehouse_title}</td>
                                 <td>" . ucwords($block_product_type) . "</td>
