@@ -177,13 +177,21 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                 ?>
 
             </div>
-            <div class="user_content">
-                <p>The author is Founder and Editor of The Head and Tale. She can be reached at
-                    <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a><br />
-                    Tweets <a href='https://twitter.com/artijourno' target="_blank"
-                        style="font-style: italic">@artijourno</a>
-                </p>
-            </div>
+
+            <?php
+
+            if ($news_owner_id == 9423) { ?>
+                <div class="user_content">
+                    <p>The author is Founder and Editor of The Head and Tale. She can be reached at
+                        <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a><br />
+                        Tweets <a href='https://twitter.com/artijourno' target="_blank"
+                            style="font-style: italic">@artijourno</a>
+                    </p>
+                </div>
+            <?php
+            }
+
+            ?>
         </div>
     </div>
 </section>
