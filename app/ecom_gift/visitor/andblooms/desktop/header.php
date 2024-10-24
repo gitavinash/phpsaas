@@ -373,6 +373,9 @@
                                         <a class="nav-link" style="color: #fff" href="/tag/father/"><b>Father's
                                                 Day</b></a>
                                     </li> -->
+                                    <li class="nav-item " style="background: #F19EB5;">
+                                        <a class="nav-link" style="color: #fff" href="/tag/deepawali/"><b>Deepawali</b></a>
+                                    </li>
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
