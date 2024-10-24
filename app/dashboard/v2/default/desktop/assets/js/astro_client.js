@@ -17,7 +17,7 @@ $(document).ready(function (e) {
     var data = new FormData(document.getElementById("addUpayForm"));
     data.append("leadId", leadId);
     $.ajax({
-      url: "/api/leads/upay/",
+      url: "/api/astro_client/leads/upay/",
       type: "POST",
       data: data,
       processData: false,

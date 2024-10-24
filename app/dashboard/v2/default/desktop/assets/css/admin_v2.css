@@ -2320,6 +2320,12 @@ section.form
 .timeline-item + .extra-space {
   margin-top: 48px;
 }
+.timeline-action {
+  margin-top: 10px;
+  float: left;
+  width: 100%;
+  margin-bottom: 10px;
+}
 
 .new-comment {
   width: 100%;

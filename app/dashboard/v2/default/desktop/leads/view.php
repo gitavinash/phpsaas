@@ -385,7 +385,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     {$commentBox}
                                                     ";
                                             if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                                echo "<a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>";
+                                                echo "<div class='timeline-action'><a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a></div>";
                                             }
 
                                             echo  "</li>";
