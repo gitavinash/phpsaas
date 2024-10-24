@@ -4,6 +4,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 <table class="showTableList">
     <thead>
         <tr>
+            <th>Code</th>
             <th>Name</th>
             <th>Warehouse</th>
             <th>Type</th>
@@ -53,8 +54,9 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 }
 
                 echo "<tr>
-                                <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong> - ' : '') . "{$block_title}</td>
-                                <td>{$warehouse_title}, {$city_name}, {$state_name} - {$address_pin_code}</td>
+                                <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong> - ' : '') . "</td>
+                                <td style='font-weight: 300'>$block_title</td>
+                                <td>{$warehouse_title}</td>
                                 <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
                                 <td>{$block_available}</td>
