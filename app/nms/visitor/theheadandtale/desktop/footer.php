@@ -46,6 +46,7 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
                             <a href="/terms-and-conditions/">terms and conditions</a>
                             <a href="/privacy-policy/">privacy policy</a>
                             <a href="/refund-policy/">refund policy</a>
+                            <a href="/partner-insights-guidelines/">partner insights guidelines</a>
                             <a href="/subscribe/" class="subscribe_btn">subscribe</a>
                         </div>
                     </div>

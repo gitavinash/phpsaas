@@ -590,6 +590,10 @@ nav {
   overflow: hidden; /* Prevent content overflow */
 }
 
+.pinkBackground {
+  background-color: #fae9e7 !important;
+}
+
 nav ul {
   list-style-type: none;
   margin: 0;

@@ -153,7 +153,31 @@ if (isset($_COOKIE['user_data'])) {
                 </div>
             </div>
         </div>
-        <nav>
+        <?php
+
+        switch (BASE_URL) {
+            case '/partner-insights-guidelines/':
+                $changeBackground = "class='pinkBackground'";
+                break;
+            case '/about-us/':
+                $changeBackground = "class='pinkBackground'";
+                break;
+            case '/terms-and-conditions/':
+                $changeBackground = "class='pinkBackground'";
+                break;
+            case '/privacy-policy/':
+                $changeBackground = "class='pinkBackground'";
+                break;
+            case '/refund-policy/':
+                $changeBackground = "class='pinkBackground'";
+                break;
+            default:
+                $changeBackground = "";
+                break;
+        }
+
+        ?>
+        <nav <?php echo $changeBackground ?>>
             <ul>
                 <li><a href="/category/deep-tales/" <?php echo ((BASE_URL == '/category/deep-tales/') ? 'class="active"' : '') ?> title="Deep-Tales">Deep-Tales</a></li>
                 <li><a href="/category/to-the-point/" <?php echo ((BASE_URL == '/category/to-the-point/') ? 'class="active"' : '') ?> title="To-The-Point">To-The-Point</a></li>
