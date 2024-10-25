@@ -107,27 +107,27 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-        <tr>
-            <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
-            <td><?php echo $enquiry_subject; ?></td>
-            <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
-            <td><?php echo $enquiry_mobile; ?></td>
-            <?php
+                    <tr>
+                        <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
+                        <td><?php echo $enquiry_subject; ?></td>
+                        <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
+                        <td><?php echo $enquiry_mobile; ?></td>
+                        <?php
 
                         if (SITE_ID != 35) { ?>
-            <td><?php echo ucfirst($enquiry_message); ?></td>
-            <?php
+                            <td><?php echo ucfirst($enquiry_message); ?></td>
+                        <?php
                         } else {
                             $missData = json_decode($enquiry_message, TRUE);
 
                             echo "<td>" . ((isset($missData['dateOfBirth'])) ? $missData['dateOfBirth'] : '') . "</td>";
                             echo "<td>" . ((isset($missData['hourOfBirth'])) ? $missData['hourOfBirth'] . ':' . $missData['minuteOfBirth'] : '') . "</td>";
                             echo "<td>" . ((isset($missData['placeOfBirth'])) ? $missData['placeOfBirth'] : '') . "</td>";
-                            echo "<td>" . ((isset($missData['message'])) ? $missData['message'] : '') . "</td>";
+                            echo "<td>" . ((isset($missData['message'])) ? $missData['message'] : ((isset($missData['problem'])) ? $missData['problem'] : '')) . "</td>";
                         }
 
                         ?>
-            <!-- <td>
+                        <!-- <td>
                 <?php
 
                     switch ($enquiry_status) {
@@ -148,7 +148,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 
                 ?>
             </td> -->
-        </tr>
+                    </tr>
         <?php
 
                 }
