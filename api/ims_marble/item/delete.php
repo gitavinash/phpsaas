@@ -103,9 +103,9 @@ if ($checkData = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}bloc
                 $totalAreaOfItem = $block_item_width * $block_item_height;
                 $totalAreaOfItem = number_format((float)$totalAreaOfItem, 2, '.', '');
 
-                $deleteDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=3 WHERE block_item_id={$blockId} AND block_item_site_id=" . SITE_ID);
+                $deleteDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=2 WHERE block_item_id={$blockId} AND block_item_site_id=" . SITE_ID);
 
-                $deleteBlockItemDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_total_item=block_total_item-1, block_net_size=block_net_size-$totalAreaOfItem, block_gross_size=block_gross_size-$totalAreaOfItem WHERE block_id={$block_item_parent_id} AND block_site_id=" . SITE_ID);
+                $deleteBlockItemDataFromDatabase = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_total_item=block_total_item-1, block_available=block_available-1, block_net_size=block_net_size-$totalAreaOfItem, block_gross_size=block_gross_size-$totalAreaOfItem WHERE block_id={$block_item_parent_id} AND block_site_id=" . SITE_ID);
 
                 if ($deleteDataFromDatabase && $deleteBlockItemDataFromDatabase) {
                     $msg = "Block item deleted successfully";

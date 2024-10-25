@@ -45,7 +45,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                     case 4:
                         $blockStatus = 'Return';
                         break;
-                    case 5:
+                    case 2:
                         $blockStatus = 'Delete';
                         break;
                     default:

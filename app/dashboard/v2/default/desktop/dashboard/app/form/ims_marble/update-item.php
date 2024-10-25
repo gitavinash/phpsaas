@@ -165,7 +165,7 @@ if (isset($validId)) {
 
                 $blockItemIndex = '';
 
-                if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status IN (1,3) AND block_item_site_id=" . SITE_ID)) {
+                if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($checkItems) > 0) {
                         $i = 1;
                         while ($blockItem = mysqli_fetch_assoc($checkItems)) {

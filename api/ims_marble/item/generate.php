@@ -29,7 +29,7 @@ if (isset($validRequest)) {
     mysqli_query($connection, "START TRANSACTION");
 
     if ($checkBlock = mysqli_query($connection, "SELECT block_product_type,
-block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_item_status=1 AND block_status=1 AND block_item_parent_id={$blockId} AND block_site_id=" . SITE_ID)) {
+block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_item_status IN (1, 3) AND block_status=1 AND block_item_parent_id={$blockId} AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
 
