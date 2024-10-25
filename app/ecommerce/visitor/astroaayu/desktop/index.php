@@ -275,7 +275,7 @@ require_once 'header.php';
                         placeholder="Place of Birth" />
                 </div>
                 <div class="col-12 mb-3">
-                    <label for="Place" class="form-label form_label2">Place Of Birth</label>
+                    <label for="Place" class="form-label form_label2">Share your problems</label>
                     <textarea name="problem" class="form-control form_control2" placeholder="Share your problems" required></textarea>
                 </div>
                 <input type="hidden" name="type" value="enquiry">
