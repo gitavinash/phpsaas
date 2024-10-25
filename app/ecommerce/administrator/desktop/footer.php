@@ -27,42 +27,42 @@
 			<?php
 
 			if (isset($_GET['editor'])) { ?>
-			<script type='text/javascript'>
-$(window).bind('beforeunload', function() {
-    return "Leaving this page will reset the wizard";
-});
-			</script>
+				<script type='text/javascript'>
+					$(window).bind('beforeunload', function() {
+						return "Leaving this page will reset the wizard";
+					});
+				</script>
 			<?php
 			}
 
 			if (isset($_GET['responseMsg'])) { ?>
 
-			<script type='text/javascript'>
-alert("<?php echo $_GET['responseMsg'] ?>");
-			</script>
+				<script type='text/javascript'>
+					alert("<?php echo $_GET['responseMsg'] ?>");
+				</script>
 
-			<?php
+				<?php
 			}
 
 			if (isset($_GET['type'])) {
 
 				if ($_GET['type'] == 'list' ||  $_GET['type'] == 'category') { ?>
 
-			<script>
-$(document).ready(function() {
-    $('#table').DataTable();
-});
-			</script>
+					<script>
+						$(document).ready(function() {
+							$('#table').DataTable();
+						});
+					</script>
 
-			<?php
+				<?php
 				} else { ?>
 
-			<script>
-$(document).ready(function() {
-    $('.selectSimilarProduct').select2();
-})
-			</script>
-			<?php
+					<script>
+						$(document).ready(function() {
+							$('.selectSimilarProduct').select2();
+						})
+					</script>
+				<?php
 				} ?>
 
 			<?php
@@ -74,15 +74,18 @@ $(document).ready(function() {
 			<?php
 
 			if (@$_GET['type'] == 'list' || @$_GET['type'] == 'single' || @$_GET['type'] == 'multiple') { ?>
-			<script>
-$('#table').DataTable({
-    dom: 'Bfrtip',
-    buttons: [{
-        extend: 'excel',
-        text: 'Download Excel file'
-    }]
-});
-			</script>
+				<script>
+					$('#table').DataTable({
+						dom: 'Bfrtip',
+						buttons: [{
+							extend: 'excel',
+							text: 'Download Excel file'
+						}],
+						order: [
+							[0, 'desc']
+						]
+					});
+				</script>
 			<?php
 			}
 
