@@ -1,18 +1,18 @@
 <?php
 
 if (!isset($id)) { ?>
-<script>
-alert('Sales request id is missing');
-window.location.href = '/dashboard/sales_request/list/';
-</script>
-<?php
+    <script>
+        alert('Sales request id is missing');
+        window.location.href = '/dashboard/sales_request/list/';
+    </script>
+    <?php
 } else {
     if ($id == '') { ?>
-<script>
-alert('Sales request id cannot be blank');
-window.location.href = '/dashboard/sales_request/list/';
-</script>
-<?php
+        <script>
+            alert('Sales request id cannot be blank');
+            window.location.href = '/dashboard/sales_request/list/';
+        </script>
+    <?php
     } else {
         $salesId = base64_decode($id);
     }
@@ -20,10 +20,10 @@ window.location.href = '/dashboard/sales_request/list/';
 
 if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
-<script>
-alert('Invalid Sales request id found');
-window.location.href = '/dashboard/sales_request/list/';
-</script>
+        <script>
+            alert('Invalid Sales request id found');
+            window.location.href = '/dashboard/sales_request/list/';
+        </script>
 <?php
     } else {
         extract(mysqli_fetch_assoc($checkSalesRequest));
@@ -81,6 +81,7 @@ window.location.href = '/dashboard/sales_request/list/';
                                     <th class="text-center" colspan="100">Slabs Details</th>
                                 </tr>
                                 <tr>
+                                    <th>Slab ID</th>
                                     <th>Size</th>
                                     <th>Qty</th>
                                     <th>Gross Qty.</th>
@@ -108,23 +109,40 @@ window.location.href = '/dashboard/sales_request/list/';
                                     $valuesCount = [];
                                     $slabDetails = [];
 
-                                    foreach ($objects as $object) {
-                                        list($number, $slabDimension, $grossSize, $damageSize, $netSize, $dimensionsType) = explode("_", $object);
-                                        if (isset($valuesCount[$slabDimension])) {
-                                            $valuesCount[$slabDimension]['count']++;
-                                            $valuesCount[$slabDimension]['grossSize'] += $grossSize;
-                                            $valuesCount[$slabDimension]['damageSize'] += $damageSize;
-                                            $valuesCount[$slabDimension]['netSize'] += $netSize;
-                                        } else {
-                                            $valuesCount[$slabDimension] = [
-                                                'count' => 1,
-                                                'grossSize' => $grossSize,
-                                                'damageSize' => $damageSize,
-                                                'netSize' => $netSize,
-                                                'dimensionType' => $dimensionsType,
-                                            ];
-                                        }
-                                    }
+                                    // foreach ($objects as $object) {
+                                    //     $newObject = explode('_', $object);
+
+                                    //     print_r($newObject);
+
+                                    //     $number = $newObject[0] ?? null;
+                                    //     $slabDimension = $newObject[1] ?? null;
+                                    //     $grossSize = $newObject[2] ?? 0;
+                                    //     $damageSize = $newObject[3] ?? 0;
+                                    //     $netSize = $newObject[4] ?? 0;
+                                    //     $dimensionsType = $newObject[5] ?? null;
+                                    //     $slabNumber = $newObject[6] ?? null;
+
+                                    //     // Old slab count method
+
+                                    //     if ($slabDimension !== null) {
+                                    //         if (isset($valuesCount[$slabDimension])) {
+                                    //             $valuesCount[$slabDimension]['slabId'] += $slabNumber;
+                                    //             $valuesCount[$slabDimension]['count']++;
+                                    //             $valuesCount[$slabDimension]['grossSize'] += $grossSize;
+                                    //             $valuesCount[$slabDimension]['damageSize'] += $damageSize;
+                                    //             $valuesCount[$slabDimension]['netSize'] += $netSize;
+                                    //         } else {
+                                    //             $valuesCount[$slabDimension] = [
+                                    //                 'slabId' => $slabNumber,
+                                    //                 'count' => 1,
+                                    //                 'grossSize' => $grossSize,
+                                    //                 'damageSize' => $damageSize,
+                                    //                 'netSize' => $netSize,
+                                    //                 'dimensionType' => $dimensionsType,
+                                    //             ];
+                                    //         }
+                                    //     }
+                                    // }
 
                                     $j = 1;
 
@@ -136,42 +154,103 @@ window.location.href = '/dashboard/sales_request/list/';
                                     $totalSlabsNetSize = 0;
 
                                     // Display slab details
-                                    foreach ($valuesCount as $slabDimension => $details) {
-                                        echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
-                                        echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
-                                        echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
-                                        echo "<td>{$slabDimension}</td>";
-                                        echo "<td>{$details['count']} " . (($details['count'] == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                        echo "<td>{$details['grossSize']} {$details['dimensionType']}</td>";
-                                        echo "<td>{$details['damageSize']} {$details['dimensionType']}</td>";
-                                        echo "<td>{$details['netSize']} {$details['dimensionType']}</td>";
-                                        echo "</tr>";
+                                    // foreach ($valuesCount as $slabDimension => $details) {
 
-                                        $totalSlabs += $details['count'];
-                                        $totalSlabsGrossSize += $details['grossSize'];
-                                        $totalSlabsDamageSize += $details['damageSize'];
-                                        $totalSlabsNetSize += $details['netSize'];
+                                    //     print_r($valuesCount);
 
-                                        if ($j == $sizeOfSlabDimension) {
-                                            echo "<tr class='ending'>";
-                                            echo "<td class='sno-column' colspan=3><strong>Slab total</strong></td>";
-                                            echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                            echo "<td>{$totalSlabsGrossSize} {$details['dimensionType']}</td>";
-                                            echo "<td>{$totalSlabsDamageSize} {$details['dimensionType']}</td>";
-                                            echo "<td>{$totalSlabsNetSize} {$details['dimensionType']}</td>";
-                                            echo "</tr><tr><td colspan=100></td></tr>";
-                                            $totalBlockSlabs += $totalSlabs;
-                                            $totalBlockGrossSize += $totalSlabsGrossSize;
-                                            $totalBlockDamageSize += $totalSlabsDamageSize;
-                                            $totalBlockNetSize += $totalSlabsNetSize;
-                                            $totalBlockDimensionType = $details['dimensionType'];
+                                    //     echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
+                                    //     echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
+                                    //     echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
+                                    //     echo "<td>{$details['slabId']}</td>";
+                                    //     echo "<td>{$slabDimension}</td>";
+                                    //     echo "<td>{$details['count']} " . (($details['count'] == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                    //     echo "<td>{$details['grossSize']} {$details['dimensionType']}</td>";
+                                    //     echo "<td>{$details['damageSize']} {$details['dimensionType']}</td>";
+                                    //     echo "<td>{$details['netSize']} {$details['dimensionType']}</td>";
+                                    //     echo "</tr>";
+
+                                    //     $totalSlabs += $details['count'];
+                                    //     $totalSlabsGrossSize += $details['grossSize'];
+                                    //     $totalSlabsDamageSize += $details['damageSize'];
+                                    //     $totalSlabsNetSize += $details['netSize'];
+
+                                    //     // Each block total
+
+                                    //     if ($j == $sizeOfSlabDimension) {
+                                    //         echo "<tr class='ending'>";
+                                    //         echo "<td class='sno-column' colspan=4><strong>Slab total</strong></td>";
+                                    //         echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                    //         echo "<td>{$totalSlabsGrossSize} {$details['dimensionType']}</td>";
+                                    //         echo "<td>{$totalSlabsDamageSize} {$details['dimensionType']}</td>";
+                                    //         echo "<td>{$totalSlabsNetSize} {$details['dimensionType']}</td>";
+                                    //         echo "</tr><tr><td colspan=100></td></tr>";
+                                    //         $totalBlockSlabs += $totalSlabs;
+                                    //         $totalBlockGrossSize += $totalSlabsGrossSize;
+                                    //         $totalBlockDamageSize += $totalSlabsDamageSize;
+                                    //         $totalBlockNetSize += $totalSlabsNetSize;
+                                    //         $totalBlockDimensionType = $details['dimensionType'];
+                                    //     }
+
+                                    //     $j++;
+                                    // }
+
+
+                                    foreach ($objects as $slabDimension => $details) {
+
+                                        if (isset($objects)) {
+                                            $newObject = explode('_', $details);
+                                            $number = $newObject[0] ?? null;
+                                            $slabDimension = $newObject[1] ?? null;
+                                            $grossSize = $newObject[2] ?? 0;
+                                            $damageSize = $newObject[3] ?? 0;
+                                            $netSize = sprintf("%.2f", $newObject[4] ?? 0);
+                                            $dimensionsType = $newObject[5] ?? null;
+                                            $slabNumber = $newObject[6] ?? null;
+
+
+                                            echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
+                                            echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
+                                            echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
+                                            echo "<td>{$slabNumber}</td>";
+                                            echo "<td>{$slabDimension}</td>";
+                                            echo "<td>1 Pc.</td>";
+                                            echo "<td>{$damageSize}</td>";
+                                            echo "<td>{$damageSize}</td>";
+                                            echo "<td>{$netSize} {$dimensionsType}</td>";
+                                            echo "</tr>";
+
+                                            $totalSlabs += 1;
+                                            $totalSlabsGrossSize += $grossSize;
+                                            $totalSlabsDamageSize += $damageSize;
+                                            $totalSlabsNetSize += $netSize;
+
+                                            // Each block total
+
+                                            if ($j == count($objects)) {
+                                                echo "<tr class='ending'>";
+                                                echo "<td class='sno-column' colspan=4><strong>Slab total</strong></td>";
+                                                echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                                echo "<td>{$totalSlabsGrossSize} {$dimensionsType}</td>";
+                                                echo "<td>{$totalSlabsDamageSize} {$dimensionsType}</td>";
+                                                echo "<td>{$totalSlabsNetSize} {$dimensionsType}</td>";
+                                                echo "</tr><tr><td colspan=100></td></tr>";
+                                                $totalBlockSlabs += $totalSlabs;
+                                                $totalBlockGrossSize += $totalSlabsGrossSize;
+                                                $totalBlockDamageSize += $totalSlabsDamageSize;
+                                                $totalBlockNetSize += $totalSlabsNetSize;
+                                                $totalBlockDimensionType = $dimensionsType;
+                                            }
+
+                                            $j++;
                                         }
-
-                                        $j++;
                                     }
+
+
+                                    // Total 
+
                                     if ($i == sizeof($blockData)) {
                                         echo "<tr><td colspan=100></td></tr><tr>";
-                                        echo "<td colspan=3><strong>Total</strong></td>";
+                                        echo "<td colspan=4><strong>Total</strong></td>";
                                         echo "<td>{$totalBlockSlabs} " . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
                                         echo "<td>{$totalBlockGrossSize} {$totalBlockDimensionType}</td>";
                                         echo "<td>{$totalBlockDamageSize} {$totalBlockDimensionType}</td>";
@@ -194,26 +273,26 @@ window.location.href = '/dashboard/sales_request/list/';
             <section class="leadQuickLinks">
                 <?php
                 if ($sales_status == 0) {
-                    
-                    if($site_access_type!='sales_executive') { ?>
-                <a href="" class="btn btn-green" id="approveSalesRequest"
-                    data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
-                    data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
-                        class="fi-rr-check"></i> Approve
-                    request</a>
-                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
-                        class="fi-rr-print"></i> Print</a>
+
+                    if ($site_access_type != 'sales_executive') { ?>
+                        <a href="" class="btn btn-green" id="approveSalesRequest"
+                            data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
+                            data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
+                                class="fi-rr-check"></i> Approve
+                            request</a>
+                        <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
+                                class="fi-rr-print"></i> Print</a>
                     <?php
                     }
                     ?>
-                <a href="#" data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
-                    class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
-                    data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
-                    request</a>
+                    <a href="#" data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
+                        class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
+                        data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
+                        request</a>
                 <?php
                 } else { ?>
-                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
-                        class="fi-rr-print"></i> Print</a>
+                    <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
+                            class="fi-rr-print"></i> Print</a>
                 <?php
                 }
                 ?>

@@ -10,98 +10,205 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
     <style>
-    body {
-        padding: 0;
-        margin: 0 auto;
-    }
-
-    .main-box {
-        padding: 0;
-        margin: 0;
-    }
-
-    .footer {
-        width: 100%;
-        text-align: center;
-        font-size: 14px;
-        line-height: 32px;
-    }
-
-    .footer::after {
-        content: "Developed by Blumox Technologies";
-    }
-
-    @media print {
-
-        /* Hide non-printable elements */
-        .no-print {
-            display: none;
+        body {
+            padding: 0;
+            margin: 0 auto;
         }
 
-        /* Adjust layout for printing */
-        body {
-            margin: 0;
+        .main-box {
             padding: 0;
-            font-size: 12pt;
+            margin: 0;
         }
 
         .footer {
-            position: static;
-            margin-top: 20px;
-        }
-
-        /* Make tables more printable */
-        table {
             width: 100%;
-            border-collapse: collapse;
+            text-align: center;
+            font-size: 14px;
+            line-height: 32px;
         }
 
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        .footer::after {
+            content: "Developed by Blumox Technologies";
         }
 
-        th {
-            background-color: #f2f2f2;
-            text-align: left;
-        }
+        @media print {
 
-        .no-padding {
-            padding: 0 !important;
-        }
+            /* Reset default margins and paddings */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        .box-1,
-        .box-5 {
-            margin-bottom: 20px;
-        }
+            /* Page setup for A4 size */
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
 
-        .btn-group {
-            display: none;
-        }
+            /* Layout adjustments */
+            body {
+                font-size: 8pt;
+                color: #333;
+                line-height: 1.2;
+                margin: 0;
+            }
 
-        .main-box section {
-            border: no-padding;
+            section {
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            .main-box {
+                padding: 0;
+                margin: 0 auto;
+                max-width: 100%;
+            }
+
+            .header {
+                text-align: center;
+                font-size: 12pt;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+
+            /* Section title styling for visibility */
+            .section-title {
+                font-weight: bold;
+                font-size: 10pt;
+                margin-bottom: 5px;
+                border-bottom: 1px solid #333;
+                padding-bottom: 2px;
+            }
+
+            /* Container styling with equal height for Customer and Salesman sections */
+            .widget-container {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            /* Section Styling */
+            .widget {
+                border: 1px solid #ddd;
+                padding: 6px;
+                margin-bottom: 8px;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: 150px;
+                /* Set minimum height for uniformity */
+            }
+
+            .userInfo p {
+                margin: 4px 0;
+                font-size: 8pt;
+            }
+
+            .userInfo strong {
+                display: inline-block;
+                width: 100px;
+            }
+
+            /* Table Styling */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 8pt;
+                margin-top: 8px;
+            }
+
+            th,
+            td {
+                border: 1px solid #666;
+                padding: 4px 6px;
+                text-align: left;
+                vertical-align: middle;
+            }
+
+            th {
+                background-color: #f0f0f0;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .summary-row td {
+                font-weight: bold;
+                background-color: #f7f7f7;
+            }
+
+            /* Footer Styling */
+            .footer {
+                font-size: 7pt;
+                color: #888;
+                border-top: 1px solid #ccc;
+                padding-top: 5mm;
+                text-align: center;
+                position: fixed;
+                bottom: 10mm;
+                width: 100%;
+            }
+
+            /* Hide non-print elements */
+            .btn-group,
+            .no-print {
+                display: none;
+            }
+
+            /* Avoid page breaks inside rows */
+            tr,
+            td,
+            th {
+                page-break-inside: avoid;
+            }
+
+            /* Ensure .leadActions content is visible */
+            .leadActions {
+                display: block !important;
+                margin-bottom: 10px;
+            }
+
+            .leadActions a {
+                font-size: 8pt;
+                padding: 4px 8px;
+                text-decoration: none;
+                color: #333;
+                border: 1px solid #666;
+                border-radius: 4px;
+                display: inline-block;
+                margin-right: 5px;
+            }
+
+            /* Additional styling for icons if needed */
+            .leadActions i {
+                font-size: 8pt;
+                margin-right: 4px;
+            }
+
+            /* Ensure other non-print elements are still hidden */
+            .no-print {
+                display: none;
+            }
         }
-    }
     </style>
 </head>
 
 <body>
     <?php
     if (!isset($id)) { ?>
-    <script>
-    alert('Sales request id is missing');
-    window.location.href = '/dashboard/sales_request/list/';
-    </script>
-    <?php
+        <script>
+            alert('Sales request id is missing');
+            window.location.href = '/dashboard/sales_request/list/';
+        </script>
+        <?php
     } else {
         if ($id == '') { ?>
-    <script>
-    alert('Sales request id cannot be blank');
-    window.location.href = '/dashboard/sales_request/list/';
-    </script>
-    <?php
+            <script>
+                alert('Sales request id cannot be blank');
+                window.location.href = '/dashboard/sales_request/list/';
+            </script>
+        <?php
         } else {
             $salesId = base64_decode($id);
         }
@@ -109,10 +216,10 @@
 
     if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
-    <script>
-    alert('Invalid Sales request id found');
-    window.location.href = '/dashboard/sales_request/list/';
-    </script>
+            <script>
+                alert('Invalid Sales request id found');
+                window.location.href = '/dashboard/sales_request/list/';
+            </script>
     <?php
         } else {
             extract(mysqli_fetch_assoc($checkSalesRequest));
@@ -168,6 +275,7 @@
                                     <th class="text-center" colspan="100">Slabs Details</th>
                                 </tr>
                                 <tr>
+                                    <th>Slab ID</th>
                                     <th>Size</th>
                                     <th>Qty</th>
                                     <th>Gross Qty.</th>
@@ -195,24 +303,6 @@
                                     $valuesCount = [];
                                     $slabDetails = [];
 
-                                    foreach ($objects as $object) {
-                                        list($number, $slabDimension, $grossSize, $damageSize, $netSize, $dimensionsType) = explode("_", $object);
-                                        if (isset($valuesCount[$slabDimension])) {
-                                            $valuesCount[$slabDimension]['count']++;
-                                            $valuesCount[$slabDimension]['grossSize'] += $grossSize;
-                                            $valuesCount[$slabDimension]['damageSize'] += $damageSize;
-                                            $valuesCount[$slabDimension]['netSize'] += $netSize;
-                                        } else {
-                                            $valuesCount[$slabDimension] = [
-                                                'count' => 1,
-                                                'grossSize' => $grossSize,
-                                                'damageSize' => $damageSize,
-                                                'netSize' => $netSize,
-                                                'dimensionType' => $dimensionsType,
-                                            ];
-                                        }
-                                    }
-
                                     $j = 1;
 
                                     $sizeOfSlabDimension = sizeof($valuesCount);
@@ -222,43 +312,62 @@
                                     $totalSlabsDamageSize = 0;
                                     $totalSlabsNetSize = 0;
 
-                                    // Display slab details
-                                    foreach ($valuesCount as $slabDimension => $details) {
-                                        echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
-                                        echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
-                                        echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
-                                        echo "<td>{$slabDimension}</td>";
-                                        echo "<td>{$details['count']} " . (($details['count'] == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                        echo "<td>{$details['grossSize']} {$details['dimensionType']}</td>";
-                                        echo "<td>{$details['damageSize']} {$details['dimensionType']}</td>";
-                                        echo "<td>{$details['netSize']} {$details['dimensionType']}</td>";
-                                        echo "</tr>";
+                                    foreach ($objects as $slabDimension => $details) {
 
-                                        $totalSlabs += $details['count'];
-                                        $totalSlabsGrossSize += $details['grossSize'];
-                                        $totalSlabsDamageSize += $details['damageSize'];
-                                        $totalSlabsNetSize += $details['netSize'];
+                                        if (isset($objects)) {
+                                            $newObject = explode('_', $details);
+                                            $number = $newObject[0] ?? null;
+                                            $slabDimension = $newObject[1] ?? null;
+                                            $grossSize = $newObject[2] ?? 0;
+                                            $damageSize = $newObject[3] ?? 0;
+                                            $netSize = sprintf("%.2f", $newObject[4] ?? 0);
+                                            $dimensionsType = $newObject[5] ?? null;
+                                            $slabNumber = $newObject[6] ?? null;
 
-                                        if ($j == $sizeOfSlabDimension) {
-                                            echo "<tr class='ending'>";
-                                            echo "<td class='sno-column' colspan=3><strong>Slab total</strong></td>";
-                                            echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                            echo "<td>{$totalSlabsGrossSize} {$details['dimensionType']}</td>";
-                                            echo "<td>{$totalSlabsDamageSize} {$details['dimensionType']}</td>";
-                                            echo "<td>{$totalSlabsNetSize} {$details['dimensionType']}</td>";
-                                            echo "</tr><tr><td colspan=100></td></tr>";
-                                            $totalBlockSlabs += $totalSlabs;
-                                            $totalBlockGrossSize += $totalSlabsGrossSize;
-                                            $totalBlockDamageSize += $totalSlabsDamageSize;
-                                            $totalBlockNetSize += $totalSlabsNetSize;
-                                            $totalBlockDimensionType = $details['dimensionType'];
+
+                                            echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
+                                            echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
+                                            echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
+                                            echo "<td>{$slabNumber}</td>";
+                                            echo "<td>{$slabDimension}</td>";
+                                            echo "<td>1 Pc.</td>";
+                                            echo "<td>{$damageSize}</td>";
+                                            echo "<td>{$damageSize}</td>";
+                                            echo "<td>{$netSize} {$dimensionsType}</td>";
+                                            echo "</tr>";
+
+                                            $totalSlabs += 1;
+                                            $totalSlabsGrossSize += $grossSize;
+                                            $totalSlabsDamageSize += $damageSize;
+                                            $totalSlabsNetSize += $netSize;
+
+                                            // Each block total
+
+                                            if ($j == count($objects)) {
+                                                echo "<tr class='ending'>";
+                                                echo "<td class='sno-column' colspan=4><strong>Slab total</strong></td>";
+                                                echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                                echo "<td>{$totalSlabsGrossSize} {$dimensionsType}</td>";
+                                                echo "<td>{$totalSlabsDamageSize} {$dimensionsType}</td>";
+                                                echo "<td>{$totalSlabsNetSize} {$dimensionsType}</td>";
+                                                echo "</tr><tr><td colspan=100></td></tr>";
+                                                $totalBlockSlabs += $totalSlabs;
+                                                $totalBlockGrossSize += $totalSlabsGrossSize;
+                                                $totalBlockDamageSize += $totalSlabsDamageSize;
+                                                $totalBlockNetSize += $totalSlabsNetSize;
+                                                $totalBlockDimensionType = $dimensionsType;
+                                            }
+
+                                            $j++;
                                         }
-
-                                        $j++;
                                     }
+
+
+                                    // Total 
+
                                     if ($i == sizeof($blockData)) {
                                         echo "<tr><td colspan=100></td></tr><tr>";
-                                        echo "<td colspan=3><strong>Total</strong></td>";
+                                        echo "<td colspan=4><strong>Total</strong></td>";
                                         echo "<td>{$totalBlockSlabs} " . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
                                         echo "<td>{$totalBlockGrossSize} {$totalBlockDimensionType}</td>";
                                         echo "<td>{$totalBlockDamageSize} {$totalBlockDimensionType}</td>";

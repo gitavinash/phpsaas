@@ -29,8 +29,8 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                     <td>{$profile_mobile}</td>
                     <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>
-                        <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>
-                        <a href='#' data-type='sales' data-id='{$sales_id}' title='Delete sales' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
+                        <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales' data-title='View sales request'><i class='fi fi-rr-eye bgLightGreen'></i></a>
+                        <a href='#' data-type='sales' data-id='{$sales_id}' title='Delete sales' data-title='Delete sales' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                     </td>
                 </tr>";
             }
