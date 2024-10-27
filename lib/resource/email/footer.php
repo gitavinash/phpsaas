@@ -1,5 +1,11 @@
 <?php
 
+if (defined('SITE_ADDRESS')) {
+	$address = "<p style='margin: 5px 0; font-size: 12px; line-height: 18px; color: #555559;'>" . SITE_ADDRESS . "</p>";
+} else {
+	$address = "";
+}
+
 $email_footer = "							</td>
 					</tr>				
 				</table>
@@ -12,7 +18,7 @@ $email_footer = "							</td>
 						<td class='inside-footer' align='center' valign='middle' style='border-collapse: collapse; border: 0; margin: 0; padding: 20px; -webkit-text-size-adjust: none; color: #555559; font-family: Arial, sans-serif; font-size: 12px; line-height: 16px; vertical-align: middle; text-align: center; width: 100%; max-width: 580px;'>
 							<div id='address' class='mktEditable' style='margin: 0; padding: 0;'>
 								<b style='color: {$themeColor}; font-size: 14px;'>" . SITE_NAME . "</b><br/>
-								<p style='margin: 5px 0; font-size: 12px; line-height: 18px; color: #555559;'>" . SITE_ADDRESS . "</p>
+								{$address}
 							</div>
 						</td>
 					</tr>
@@ -20,7 +26,7 @@ $email_footer = "							</td>
 			</td>
 		</tr>
 	</table>
-</td>
+</td> 
 </tr>
 </table>
 </body>
