@@ -35,7 +35,9 @@
                                 <input type="hidden" name="action" value="new">
                                 <input type="hidden" name="subject" value="Contact us">
                                 <input type="hidden" name="sender"
-                                    value="<?php echo base64_encode("avinash.kumar@aleya.in") ?>">
+                                    value="<?php echo base64_encode("sales@aleya.in") ?>">
+                                <input type="hidden" name="cc"
+                                    value="<?php echo base64_encode("avinashsharma114@gmail.com") ?>">
                                 <input type="hidden" name="redirect_url" value="https://aleya.in/">
                                 <input type="submit" value="send message" style="color: #fff !important"
                                     class="global_btn">
