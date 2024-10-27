@@ -42,7 +42,6 @@ function register($connection, $data)
 
                     $siteURL = $username . '.' . SITE_DOMAIN;
                     $userType = ((isset($reg_type)) ? $reg_type : 'subscriber');
-
                 } else {
 
                     $status = 'warning';
@@ -54,8 +53,7 @@ function register($connection, $data)
                 $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', NOW(), '" . IP . "')");
                 $userID = mysqli_insert_id($connection);
 
-                if (!isset($userType)) {
-
+                if (isset($userType)) {
                     $insertSite = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site(site_owner_id, site_url, site_status) VALUES('{$userID}', '{$siteURL}', 0)");
                     $siteID = mysqli_insert_id($connection);
 
@@ -71,7 +69,6 @@ function register($connection, $data)
                 }
 
                 $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$mobile}', '{$profile_display_name}', '{$email}')");
-
             }
         } else {
 
@@ -82,7 +79,6 @@ function register($connection, $data)
             $insertSiteApp = true;
             $insertProfile = true;
             $insertSiteSetting = true;
-
         }
 
         $userType = ((isset($userType)) ? $userType : 'administrator');
@@ -113,7 +109,6 @@ function register($connection, $data)
             $msg = 'Something is wrong while trying to register';
             mysqli_query($connection, 'ROLLBACK');
         }
-
     } else {
         $msg = ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : 'Unable to run query');
     }
