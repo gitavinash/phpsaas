@@ -1,9 +1,9 @@
 <?php
 
 $siteErrorLogPath = ERROR_LOG . SITE_DOMAIN . '/';
-if (!is_dir($siteErrorLogPath)) {
-    mkdir($siteErrorLogPath, 0755, true);
-}
+// if (!is_dir($siteErrorLogPath)) {
+mkdir($siteErrorLogPath, 0755, true);
+// }
 
 ini_set("log_errors", 1);
 ini_set("error_log", $siteErrorLogPath . 'error.log'); // Logs errors to logs/error.log in project root
@@ -169,20 +169,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 exit();
                             }
                         }
-                    } {
-                        custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
+                    } else {
+                        custom_log("Facebook page is not found in Database", "WARNING");
                     }
                 } else {
-                    custom_log(`Aleya visitor Something went wrong while running the query ` . json_encode($_REQUEST, TRUE), 'ERROR');
+                    custom_log(`Aleya visitor Something went wrong while running the query {$rawData}`, 'ERROR');
                 }
             }
         } else {
-            custom_log(json_encode($_REQUEST, TRUE), "WARNING");
+            custom_log(`Request body:` . $rawData, "WARNING");
         }
     } else {
         custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
+        custom_log(`Request body:` . $rawData, "WARNING");
     }
 } else {
+
+    custom_log("GET request received  {$rawData}", "WARNING");
+
     // Define your verification token (set in the Facebook app settings)
     $verificationToken = "EAANL49oYVsUBO6JuQz6tUkyiPbzZCGOei96dLTf3p3D18GPFA5eeq8cQPVAzwfqEabtre3s31njbO3z7KokfyUUWDuBPfeMCWCgLVkZA9BHYLZAZCZA3W2VjprlK0CKxuLH8hB6y7HR3xVRdNR8mzKZCmfvwmbwtplChgi5h25YGCqcp3KigmSk07E";
 
