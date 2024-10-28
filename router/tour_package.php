@@ -12,7 +12,7 @@ switch ($link_status) {
 
         /** Fetch data from database table  */
 
-        if ($tourPackageData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE link_id='{$link_id}' AND tour_package_status!=3 AND tour_package_site_id=" . APP_SITE_ID . " ORDER BY tour_package_created_at DESC")) {
+        if ($tourPackageData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE link_id='{$link_id}' AND tour_package_status!=3 AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
 
             if (mysqli_num_rows($tourPackageData) != 0) {
 
@@ -59,7 +59,11 @@ switch ($link_status) {
                 }
             } else {
 
-                echo 'Error';
+                if (DEVELOPMENT_MODE == TRUE) {
+                    echo "SELECT * FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE link_id='{$link_id}' AND tour_package_status!=3 AND tour_package_site_id=" . APP_SITE_ID . " ORDER BY tour_package_created_at DESC";
+                } else {
+                    echo "Error";
+                }
             }
         } else {
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Musafir India Trip - Kullu Manali Volvo Tour Package</title>
+    <title><?php echo SITE_NAME ?> - <?php echo $tour_package_title ?></title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -176,28 +176,26 @@
     <div class="container">
         <!-- Header with Logo and Company Name -->
         <header>
-            <img src="https://musafirindiatrip.com/img/general/logo.png" alt="Company Logo">
-            <div class="company-name">Musafir India Trip</div>
+            <!-- <img src="https://musafirindiatrip.com/img/general/logo.png" alt="Company Logo"> -->
+            <div class="company-name"><?php echo SITE_NAME ?></div>
         </header>
 
-        <h1>Kullu Manali Volvo Tour Package</h1>
+        <h1><?php echo $tour_package_title ?></h1>
         <p>Dear Mr. Customer,</p>
-        <p>Greetings from <strong>Musafir India Trip</strong>!</p>
-        <p>We are pleased to provide you with the details of the <strong>Kullu Manali Volvo Tour Package (5 Nights / 6 Days)</strong>. Kindly review the details below, and feel free to contact us for further assistance.</p>
+        <p>Greetings from <strong><?php echo SITE_NAME ?></strong>!</p>
+        <p><?php echo $tour_package_overview ?></p>
 
         <!-- Package Overview -->
         <div class="package-details">
             <h2>Tour Package Overview</h2>
-            <p><span class="highlight">Travel Date:</span> Off Season 2023</p>
-            <p><span class="highlight">No. of Adults:</span> 2 Adults</p>
-            <p><span class="highlight">Duration:</span> 5 Nights / 6 Days</p>
-            <p><span class="highlight">Destination:</span> Kullu Manali</p>
+            <p><span class="highlight">Duration:</span> <?php echo $tour_package_duration ?> Nights / <?php echo $tour_package_duration + 1 ?> Days</p>
+            <p><span class="highlight">Destination:</span> <?php echo $tour_package_city ?>, <?php echo $tour_package_state ?>, <?php echo $tour_package_country ?></p>
         </div>
 
         <!-- Simplified Itinerary -->
         <div class="section">
             <h2>Itinerary</h2>
-
+            <!-- 
             <h3>Day 01: Delhi - Manali</h3>
             <p>Catch the Volvo bus from Delhi to Manali in the evening (6:00 PM). Overnight journey in the Volvo bus.</p>
 
@@ -205,21 +203,34 @@
             <p>Arrive in Manali in the morning. Check-in at the hotel and proceed for local sightseeing, including Hadimba Devi Temple, Tibetan Monasteries, and Mall Road. Dinner and overnight stay at the hotel.</p>
 
             <h3>Day 03: Return to Delhi</h3>
-            <p>After your stay in Manali, catch the Volvo bus in the evening and return to Delhi.</p>
+            <p>After your stay in Manali, catch the Volvo bus in the evening and return to Delhi.</p> -->
+
+            <?php
+
+            $itineraryData = json_decode($tour_package_itinerary, TRUE);
+
+            for ($i = 0; $i < count($itineraryData); $i++) {
+                echo "<h3>{$itineraryData[$i]['day']}</h3>";
+                echo "<p>{$itineraryData[$i]['overview']}</p>";
+            }
+
+            ?>
+
         </div>
 
         <!-- Package Inclusions -->
         <div class="package-details">
             <h2>Package Inclusions</h2>
             <ul>
-                <li>Delhi - Manali - Delhi Volvo Bus (2 Tickets)</li>
-                <li>3 Nights Accommodation in Hotel (Double Sharing)</li>
-                <li>Welcome Drink on Arrival</li>
-                <li>Daily Morning Tea, Breakfast, and Dinner</li>
-                <li>Half Day Sightseeing of Local Manali by Private Car</li>
-                <li>Full Day Sightseeing of Solang Valley by Private Car</li>
-                <li>Pick-up and Drop from Manali Volvo Bus Stand to Hotel</li>
-                <li>All Hotel and Transport Taxes Included</li>
+                <?php
+
+                $inclusionsList = explode(', ', $tour_package_inclusions);
+
+                foreach ($inclusionsList as $inclusions) {
+                    echo "<li>" . ucfirst(strtolower($inclusions)) . "</li>";
+                }
+
+                ?>
             </ul>
         </div>
 
@@ -227,11 +238,15 @@
         <div class="package-details">
             <h2>Package Exclusions</h2>
             <ul>
-                <li>Rohtang Pass Cost</li>
-                <li>Heater Charges</li>
-                <li>Any Airfare</li>
-                <li>Any Entry Fees</li>
-                <li>GST 5%</li>
+                <?php
+
+                $exclusionsList = explode(', ', $tour_package_exclusions);
+
+                foreach ($exclusionsList as $exclusions) {
+                    echo "<li>" . ucfirst(strtolower($exclusions)) . "</li>";
+                }
+
+                ?>
             </ul>
         </div>
 
@@ -283,11 +298,11 @@
         </div>
 
         <!-- Footer with Contact Details -->
-        <footer>
+        <!-- <footer>
             <p>Contact us at:</p>
             <p>Phone: +91-1234567890 | Email: info@musafirindiatrip.com</p>
             <p>Website: www.musafirindiatrip.com</p>
-        </footer>
+        </footer> -->
     </div>
 
 </body>

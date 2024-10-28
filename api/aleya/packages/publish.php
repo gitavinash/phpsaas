@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $url = convertToUnderscore($packageName);
-        $url = '/' . $url . '-' . time() . '/';
+        $url = strtolower('/' . $url . '-' . time() . '/');
 
         $insertLink = "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$itineraryId}', 200, 'tour_package', '" . USER_ID . "', '" . SITE_ID . "', NOW(), NOW())";
         $createPublicLink = mysqli_query($connection, $insertLink);
