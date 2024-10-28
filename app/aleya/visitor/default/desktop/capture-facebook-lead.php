@@ -1,5 +1,24 @@
 <?php
 
+// Define your verification token (set in the Facebook app settings)
+$verificationToken = "EAANL49oYVsUBO6JuQz6tUkyiPbzZCGOei96dLTf3p3D18GPFA5eeq8cQPVAzwfqEabtre3s31njbO3z7KokfyUUWDuBPfeMCWCgLVkZA9BHYLZAZCZA3W2VjprlK0CKxuLH8hB6y7HR3xVRdNR8mzKZCmfvwmbwtplChgi5h25YGCqcp3KigmSk07E";
+
+// Handle Facebook verification
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['hub_mode']) && $_GET['hub_mode'] === 'subscribe') {
+    // Check if the verify token matches
+    if ($_GET['hub_verify_token'] === $verificationToken) {
+        // Respond with the hub.challenge token from Facebook to complete verification
+        echo $_GET['hub_challenge'];
+        exit();
+    } else {
+        // Return a 403 Forbidden if the tokens do not match
+        header('HTTP/1.1 403 Forbidden');
+        echo "Verification token mismatch";
+        exit();
+    }
+}
+
+
 $siteErrorLogPath = ERROR_LOG . SITE_DOMAIN . '/';
 if (!is_dir($siteErrorLogPath)) {
     mkdir($siteErrorLogPath, 0755, true);
