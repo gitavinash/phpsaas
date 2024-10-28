@@ -172,14 +172,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } {
                         custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
                     }
+                } else {
+                    custom_log(`Aleya default Something went wrong while running the query ` . json_encode($_REQUEST, TRUE), 'ERROR');
                 }
             }
         } else {
-            custom_log($_REQUEST, "WARNING");
+            custom_log(json_encode($_REQUEST, TRUE), "WARNING");
         }
     } else {
         custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
     }
 } else {
-    custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
+    custom_log("Invalid request type {$_SERVER['REQUEST_METHOD']}" . json_encode($_REQUEST), "WARNING");
 }
