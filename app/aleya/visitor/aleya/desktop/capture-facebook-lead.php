@@ -1,9 +1,9 @@
 <?php
 
 $siteErrorLogPath = ERROR_LOG . SITE_DOMAIN . '/';
-// if (!is_dir($siteErrorLogPath)) {
-mkdir($siteErrorLogPath, 0755, true);
-// }
+if (!is_dir($siteErrorLogPath)) {
+    mkdir($siteErrorLogPath, 0755, true);
+}
 
 ini_set("log_errors", 1);
 ini_set("error_log", $siteErrorLogPath . 'error.log'); // Logs errors to logs/error.log in project root
