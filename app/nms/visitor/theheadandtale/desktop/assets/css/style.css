@@ -659,7 +659,7 @@ nav ul li a.partnerInsights {
   float: left;
   width: 88%;
   display: block;
-  margin: 0 5rem 1rem 5rem;
+  margin: 0 5rem 10rem 5rem;
   text-align: left;
 }
 .tags::before {
