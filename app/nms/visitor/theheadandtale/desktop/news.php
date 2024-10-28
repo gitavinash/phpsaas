@@ -178,21 +178,6 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
             </div>
 
-            <div class="tags">
-                <ul>
-                    <?php
-
-                    $tagName = explode(', ', $tagName);
-
-                    for ($i = 0; $i < sizeof($tagName); $i++) {
-
-                        echo "<li><a href='/tag/" . str_replace(' ', '-', $tagName[$i]) . "'>{$tagName[$i]}</a></li>";
-                    }
-
-                    ?>
-                </ul>
-            </div>
-
             <?php
 
             if ($news_owner_id == 9423) { ?>
@@ -207,6 +192,20 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
             }
 
             ?>
+            <div class="tags">
+                <ul>
+                    <?php
+
+                    $tagName = explode(', ', $tagName);
+
+                    for ($i = 0; $i < sizeof($tagName); $i++) {
+
+                        echo "<li><a href='/tag/" . str_replace(' ', '-', $tagName[$i]) . "'>{$tagName[$i]}</a></li>";
+                    }
+
+                    ?>
+                </ul>
+            </div>
         </div>
     </div>
 </section>
