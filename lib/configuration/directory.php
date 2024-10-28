@@ -20,6 +20,10 @@ define('META_DIR', RESOURCE . 'meta/');
 define('DEFAULT_META', META_DIR . 'index.php');
 define('SCHEMA_DATA', RESOURCE . 'schema/');
 
+/** Log directory */
+
+define('ERROR_LOG', ROOT . '/logs/error/');
+
 /** Defualt UI Resource */
 
 define('UI_LIBRARY', str_replace(ROOT, '', RESOURCE) . 'ui/');

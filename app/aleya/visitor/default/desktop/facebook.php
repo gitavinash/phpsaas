@@ -1,5 +1,31 @@
 <?php
 
+$siteErrorLogPath = ERROR_LOG . SITE_DOMAIN . '/';
+if (!is_dir($siteErrorLogPath)) {
+    mkdir($siteErrorLogPath, 0755, true);
+}
+
+ini_set("log_errors", 1);
+ini_set("error_log", $siteErrorLogPath . 'error.log'); // Logs errors to logs/error.log in project root
+
+function custom_log($message, $type = 'INFO')
+{
+    global $siteErrorLogPath;
+    $logFile = $siteErrorLogPath . 'error.log';
+
+    // Format: [timestamp] [type] URL - Message
+    $formattedMessage = "[" . date("Y-m-d H:i:s") . "] [$type] ";
+    $formattedMessage .= "URL: " . ($_SERVER['REQUEST_URI'] ?? 'N/A') . " | ";
+    $formattedMessage .= "Message: " . $message . PHP_EOL;
+    $formattedMessage .= "----------------------------------------" . PHP_EOL;
+
+    file_put_contents(
+        $logFile,
+        $formattedMessage,
+        FILE_APPEND
+    );
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rawData = file_get_contents('php://input');
     if (!empty($rawData)) {
@@ -143,9 +169,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 exit();
                             }
                         }
+                    } {
+                        custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
                     }
                 }
             }
+        } else {
+            custom_log($_REQUEST, "WARNING");
         }
+    } else {
+        custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
     }
+} else {
+    custom_log("No 'entry' or 'changes' field found in JSON data", "WARNING");
 }
