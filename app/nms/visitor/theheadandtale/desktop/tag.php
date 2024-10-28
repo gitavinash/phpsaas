@@ -49,7 +49,6 @@ require_once 'header.php';
                     }
                 }
                 ?>
-                ?>
             </div>
             <div class="right-container">
                 <div class="hightlightBox">
