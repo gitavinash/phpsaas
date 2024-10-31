@@ -8,8 +8,8 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             <th>Email</th>
             <th>Mobile</th>
             <th>Address</th>
-            <th>Status</th>
             <th>Sales date</th>
+            <th>Status</th>
             <th></th>
         </tr>
     </thead>
@@ -32,6 +32,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                     <td>{$sales_email}</td>
                     <td>{$sales_mobile}</td>
                     <td>{$sales_address}</td>
+                    <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>";
                 switch ($sales_status) {
                     case 1:
@@ -48,7 +49,6 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                         break;
                 }
                 echo "</td>
-                    <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>
                         <a href='/dashboard/sales_request/view/?id=" . base64_encode($sales_id) . "' class='tableActionIconBtn' title='Edit sales' data-title='Edit sales'><i class='fi fi-rr-eye bgLightGreen'></i></a>";
                 echo (($sales_status == 0) ? "

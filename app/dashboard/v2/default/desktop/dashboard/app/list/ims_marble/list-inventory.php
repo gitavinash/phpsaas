@@ -11,8 +11,8 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             <th>Total slabs</th>
             <th>Avl. slabs</th>
             <th>Gross qty.</th>
-            <th>Less qty.</th>
             <th>Net Size</th>
+            <th>Less qty.</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -61,8 +61,8 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                                 <td>{$block_total_item}</td>
                                 <td>{$block_available}</td>
                                 <td>" . (($block_gross_size == '') ? '0 ' : $block_gross_size) . ' ' . $block_size_dimension . "</td>
-                                <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . (($block_net_size == '') ? '0 ' : $block_net_size) . ' ' . $block_size_dimension . "</td>
+                                <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . $blockStatus . "</td>
                                 <td>
                                 <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block'><i class='fi fi-rr-edit bgWhite'></i></a>

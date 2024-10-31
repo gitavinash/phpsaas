@@ -786,6 +786,9 @@ $(document).ready(function (e) {
         case "active":
           color = "#b4e2b4"; // Darkened pastel green for active
           break;
+        case "approved":
+          color = "#b4e2b4"; // Darkened pastel green for active
+          break;
         case "sold_out":
           color = "#b87085"; // Darkened pastel pinkish-red for sold out
           break;
