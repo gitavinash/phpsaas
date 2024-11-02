@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (mysqli_num_rows($checkPage) != 0) {
                         extract(mysqli_fetch_assoc($checkPage));
 
-                        if ($checkEmail = mysqli_query($connection, "SELECT site_configuration_value as toAddress FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id='{$fb_forms_site_id}' AND site_configuration_key='enquiry_email' AND site_configuration_status=1")) {
+                        if ($checkEmail = mysqli_query($connection, "SELECT site_configuration_value as toAddress, site_name as companyName, site_domain FROM " . TABLE_PREFIX . "site_configuration INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_configuration_site_id WHERE site_configuration_site_id='{$fb_forms_site_id}' AND site_configuration_key='enquiry_email' AND site_configuration_status=1")) {
                             if (mysqli_num_rows($checkEmail) != 0) {
                                 extract(mysqli_fetch_assoc($checkEmail));
 
@@ -125,8 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     mysqli_query($connection, "ROLLBACK");
                                 }
 
+                                $emailSubject = "Facebook enquiry | {$subject}";
+                                $enquiryUrl = "https://{$site_domain}/dashboard/leads/view/?id=" . base64_encode($leadId);
+
                                 $email_body = "
-                                    <h2>{$subject}</h2>
+                                    <h2>{$emailSubject}</h2>
                                     <table>
                                         <tr>
                                             <td>Name: </td>
@@ -140,6 +143,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <td>Mobile: </td>
                                             <td>{$mobile}</td>
                                         </tr>
+                                        <tr>
+                                            <td>View enquiry: </td>
+                                            <td>{$enquiryUrl}</td>
+                                        </tr>
                                     </table>
                                     ";
 
@@ -148,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 if (isset($sender)) {
                                     if (!isset($doNotSendEmail)) {
                                         require SEND_EMAIL;
-                                        require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                                        require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                     }
                                 }
 
@@ -159,11 +166,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 exit();
                             }
+                        } else {
+                            custom_log("Site configurations is not found in Database", "WARNING");
+                            echo "Site configurations is not found in Database";
+                            exit();
                         }
                     } else {
                         custom_log("Facebook page is not found in Database", "WARNING");
-                        echo "";
-                        exit("Facebook page is not found in Database");
                     }
                 } else {
                     custom_log(`Aleya visitor Something went wrong while running the query {$rawData}`, 'ERROR');
