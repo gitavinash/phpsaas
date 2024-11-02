@@ -125,11 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     mysqli_query($connection, "ROLLBACK");
                                 }
 
-                                $emailSubject = "Facebook enquiry | {$subject}";
+                                $subject = "Facebook enquiry | {$subject}";
                                 $enquiryUrl = "https://{$site_domain}/dashboard/leads/view/?id=" . base64_encode($leadId);
 
                                 $email_body = "
-                                    <h2>{$emailSubject}</h2>
+                                    <h2>{$subject}</h2>
                                     <table>
                                         <tr>
                                             <td>Name: </td>
