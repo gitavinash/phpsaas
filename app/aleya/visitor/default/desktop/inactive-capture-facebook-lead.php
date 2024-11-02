@@ -1,5 +1,4 @@
 <?php
-
 $siteErrorLogPath = ERROR_LOG . SITE_DOMAIN . '/';
 if (!is_dir($siteErrorLogPath)) {
     mkdir($siteErrorLogPath, 0755, true);
