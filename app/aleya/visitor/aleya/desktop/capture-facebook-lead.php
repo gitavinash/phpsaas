@@ -128,7 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $sender = $email;
                                 if (isset($sender)) {
                                     if (!isset($doNotSendEmail)) {
-                                        require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
+                                        if (isset($toAddress)) {
+                                            require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
+                                        }
                                         require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                     }
                                 }
