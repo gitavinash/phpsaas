@@ -78,23 +78,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 for ($i = 0; $i < count($formData); $i++) {
 
-                                    switch ($formData[$i]['name']) {
-                                        case 'full_name':
+                                    switch (true) {
+                                        case $formData[$i]['name'] === 'full_name':
                                             $name = $formData[$i]['values'][0];
                                             break;
-                                        case 'name':
+                                        case $formData[$i]['name'] === 'name':
                                             $name = $formData[$i]['values'][0];
                                             break;
-                                        case 'email':
+                                        case $formData[$i]['name'] === 'email':
                                             $email = $formData[$i]['values'][0];
                                             break;
-                                        case 'phone_number':
+                                        case $formData[$i]['name'] === 'phone_number':
                                             $mobile = $formData[$i]['values'][0];
                                             break;
-                                        case 'whatsapp_number':
+                                        case $formData[$i]['name'] === 'whatsapp_number':
                                             $mobile = $formData[$i]['values'][0];
                                             break;
-                                        case 'whatsapp_no':
+                                        case $formData[$i]['name'] === 'whatsapp_no':
+                                            $mobile = $formData[$i]['values'][0];
+                                            break;
+                                        case strpos($formData[$i]['name'], 'mobile') !== false:
+                                            $mobile = $formData[$i]['values'][0];
+                                            break;
+                                        case strpos($formData[$i]['name'], 'whatsapp') !== false:
+                                            $mobile = $formData[$i]['values'][0];
+                                            break;
+                                        case strpos($formData[$i]['name'], 'phone') !== false:
                                             $mobile = $formData[$i]['values'][0];
                                             break;
                                         default:
