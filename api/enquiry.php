@@ -225,7 +225,7 @@ if ($mobile != '') {
                 $currentUrl .= '?' . $_SERVER['QUERY_STRING'];
             }
 
-            $alternate_mobile=((isset($alternate_mobile)) ? $alternate_mobile : '');
+            $alternate_mobile = ((isset($alternate_mobile)) ? $alternate_mobile : '');
 
             $trafficMedium = mysqli_real_escape_string($connection, ((isset($_GET['utm_medium']) ? $_GET['utm_medium'] : (($trafficSource == 'facebook') ? 'social' : ''))));
             $trafficCampaign = mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : '')));
@@ -245,35 +245,35 @@ if ($mobile != '') {
                 mysqli_query($connection, "ROLLBACK");
             }
 
-            $email_body = "
-    <h2>{$subject}</h2>
-    <table>
-        <tr>
-            <td>Name: </td>
-            <td>{$first_name} {$last_name}</td>
-        </tr>
-        <tr>
-            <td>Email: </td>
-            <td>{$email}</td>
-        </tr>
-        <tr>
-            <td>Mobile: </td>
-            <td>{$mobile}</td>
-        </tr>
-        {$messageForm}
-    </table>
-    ";
+            //         $email_body = "
+            // <h2>{$subject}</h2>
+            // <table>
+            //     <tr>
+            //         <td>Name: </td>
+            //         <td>{$first_name} {$last_name}</td>
+            //     </tr>
+            //     <tr>
+            //         <td>Email: </td>
+            //         <td>{$email}</td>
+            //     </tr>
+            //     <tr>
+            //         <td>Mobile: </td>
+            //         <td>{$mobile}</td>
+            //     </tr>
+            //     {$messageForm}
+            // </table>
+            // ";
 
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {
-                    
-                    require SEND_EMAIL;
 
-                    if(SITE_APP=='aleya') {
-                        if(isset($email)) {
+                    require APP_EMAIL_TEMPLATE . 'default-enquiry.php';
+
+                    if (SITE_APP == 'aleya') {
+                        if (isset($email)) {
                             unset($ccAddress);
                             unset($bccAddress);
-                            $toAddress=$email;
+                            $toAddress = $email;
                             if (file_exists(APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php')) {
                                 require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
                             }
