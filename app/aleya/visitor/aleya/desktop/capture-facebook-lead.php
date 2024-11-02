@@ -125,36 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     mysqli_query($connection, "ROLLBACK");
                                 }
 
-                                $subject = "Facebook enquiry | {$subject}";
-                                $enquiryUrl = "https://{$site_domain}/dashboard/leads/view/?id=" . base64_encode($leadId);
-
-                                $email_body = "
-                                    <h2>{$subject}</h2>
-                                    <table>
-                                        <tr>
-                                            <td>Name: </td>
-                                            <td>{$name}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Email: </td>
-                                            <td>{$email}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mobile: </td>
-                                            <td>{$mobile}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>View enquiry: </td>
-                                            <td>{$enquiryUrl}</td>
-                                        </tr>
-                                    </table>
-                                    ";
-
                                 $sender = $email;
-
                                 if (isset($sender)) {
                                     if (!isset($doNotSendEmail)) {
-                                        require SEND_EMAIL;
+                                        require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
                                         require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                     }
                                 }

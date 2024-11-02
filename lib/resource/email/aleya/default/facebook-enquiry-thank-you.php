@@ -3,7 +3,7 @@
 $tourPackage = $subject;
 $subject = "Confirmation of Your Enquiry for {$subject} | " . SITE_NAME;
 
-include_once 'header.php';
+require 'header.php';
 
 $email_body = "
 		
@@ -50,6 +50,4 @@ $email_body = "
     
     ";
 
-$email_body;
-
-include_once 'footer.php';
+require 'footer.php';
