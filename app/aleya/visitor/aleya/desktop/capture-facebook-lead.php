@@ -79,31 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 for ($i = 0; $i < count($formData); $i++) {
 
                                     switch (true) {
-                                        case $formData[$i]['name'] === 'full_name':
+                                        case strpos($formData[$i]['name'], 'name') !== false && strpos($formData[$i]['name'], 'email') === false:
                                             $name = $formData[$i]['values'][0];
                                             break;
-                                        case $formData[$i]['name'] === 'name':
-                                            $name = $formData[$i]['values'][0];
-                                            break;
-                                        case $formData[$i]['name'] === 'email':
+                                        case strpos($formData[$i]['name'], 'email') !== false:
                                             $email = $formData[$i]['values'][0];
                                             break;
-                                        case $formData[$i]['name'] === 'phone_number':
-                                            $mobile = $formData[$i]['values'][0];
-                                            break;
-                                        case $formData[$i]['name'] === 'whatsapp_number':
-                                            $mobile = $formData[$i]['values'][0];
-                                            break;
-                                        case $formData[$i]['name'] === 'whatsapp_no':
-                                            $mobile = $formData[$i]['values'][0];
-                                            break;
-                                        case strpos($formData[$i]['name'], 'mobile') !== false:
-                                            $mobile = $formData[$i]['values'][0];
-                                            break;
-                                        case strpos($formData[$i]['name'], 'whatsapp') !== false:
-                                            $mobile = $formData[$i]['values'][0];
-                                            break;
-                                        case strpos($formData[$i]['name'], 'phone') !== false:
+                                        case strpos($formData[$i]['name'], 'phone') !== false || strpos($formData[$i]['name'], 'whatsapp') !== false || strpos($formData[$i]['name'], 'mobile') !== false || strpos($formData[$i]['name'], 'whatsaap') !== false:
                                             $mobile = $formData[$i]['values'][0];
                                             break;
                                         default:
@@ -180,6 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     } else {
                         custom_log("Facebook page is not found in Database", "WARNING");
+                        echo "";
+                        exit("Facebook page is not found in Database");
                     }
                 } else {
                     custom_log(`Aleya visitor Something went wrong while running the query {$rawData}`, 'ERROR');
