@@ -1,6 +1,6 @@
 <?php
 
-	$email_footer="	
+$email_footer = "	
 							</td>
 						</tr>				
 					</table>
@@ -21,7 +21,7 @@
 
 								<div id='address' class='mktEditable'>
 
-									<a href='https://aleya.in?utm_source=".SITE_NAME."&utm_medium=email'><img class='top-image' src='https://crm.musafirindiatrip.com//upload/others/aleya-logo.png' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
+									<a href='https://aleya.in?utm_source=" . SITE_NAME . "&utm_medium=email'><img class='top-image' src='https://crm.musafirindiatrip.com//upload/others/aleya-logo.png' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
 									<p><strong><a href='https://aleya.in'>Aleya - Travel ERP Software</a></strong></p>
 									
 								</div>
@@ -61,10 +61,8 @@
 
 		</html>";
 
-	$email_body = $email_header.$email_body.$email_footer;
+$email_body = $email_header . $email_body . $email_footer;
 
-	/* Send email */
+/* Send email */
 
-	$toAddress = ((isset($email)) ? $email : $profile_email ); // Email receiver id
-	
-	require SEND_EMAIL;
+require SEND_EMAIL;

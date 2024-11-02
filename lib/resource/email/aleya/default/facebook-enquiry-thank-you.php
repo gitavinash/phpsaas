@@ -49,5 +49,5 @@ $email_body = "
             </tr>
     
     ";
-
+$toAddress = ((isset($email)) ? $email : $profile_email);
 require 'footer.php';

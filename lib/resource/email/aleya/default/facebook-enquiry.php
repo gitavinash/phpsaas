@@ -53,5 +53,4 @@ $email_body = "
 		</tr>
 	</table>
 ";
-
 require 'footer.php';

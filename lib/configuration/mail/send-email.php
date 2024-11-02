@@ -20,7 +20,7 @@ if (!defined(EMAIL_ENABLE)) {
 		$mail->SMTPAuth = true;
 
 		if (SMTP_SSL == 'true') {
-			$mail->SMTPSecure = ((SMTP_HOST=='smtp.gmail.com') ? 'ssl' : 'tls');
+			$mail->SMTPSecure = ((SMTP_HOST == 'smtp.gmail.com') ? 'ssl' : 'tls');
 		}
 
 		$mail->Port = SMTP_PORT;
@@ -54,19 +54,13 @@ if (!defined(EMAIL_ENABLE)) {
 				$mail->AddBCC(trim($cc));
 			}
 		}
-		
-
-		// if (isset($bccAddress)) {
-
-		// 	$mail->AddBCC($bccAddress);
-		// }
 
 		$mail->Subject = $subject;
 		$mail->Body = $email_body;
 
 		if (DEVELOPMENT_MODE == true) {
 			if (!$mail->Send()) {
-				$emailIsNotDelivered=$mail->ErrorInfo;
+				$emailIsNotDelivered = $mail->ErrorInfo;
 			}
 		} else {
 

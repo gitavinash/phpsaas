@@ -128,10 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $sender = $email;
                                 if (isset($sender)) {
                                     if (!isset($doNotSendEmail)) {
-                                        // if (isset($toAddress)) {
-                                        //     $sender = $toAddress;
-                                        //     require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
-                                        // }
+                                        require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
                                         require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                     }
                                 }
@@ -145,8 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                         } else {
                             custom_log("Site configurations is not found in Database", "WARNING");
-                            echo "Site configurations is not found in Database";
-                            exit();
                         }
                     } else {
                         custom_log("Facebook page is not found in Database", "WARNING");
