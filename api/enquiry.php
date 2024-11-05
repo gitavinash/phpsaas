@@ -267,7 +267,7 @@ if ($mobile != '') {
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {
 
-                    require APP_EMAIL_TEMPLATE . 'default-enquiry.php';
+                    require_once APP_EMAIL_TEMPLATE . 'default-enquiry.php';
 
                     if (SITE_APP == 'aleya') {
                         if (isset($email)) {
