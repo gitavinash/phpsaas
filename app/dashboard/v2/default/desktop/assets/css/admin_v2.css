@@ -2860,7 +2860,7 @@ p.blockIcon span {
 }
 
 .blockSlabBox .fullScreenPopUpBox {
-  position: absolute;
+  /* position: absolute; */
   overflow: hidden;
   width: 100%;
 }
