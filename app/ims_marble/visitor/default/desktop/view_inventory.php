@@ -11,65 +11,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
         rel="stylesheet">
     <style>
-    body {
-        font-family: "Rubik", sans-serif;
-        margin: 0;
-        padding: 0;
-        font-size: 0.8rem;
-    }
+        body {
+            font-family: "Rubik", sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 0.8rem;
+        }
 
-    img {
-        max-height: 100px;
-    }
+        img {
+            max-height: 100px;
+        }
 
-    h1 {
-        font-size: 1.5rem !important;
-        text-align: center;
-        margin-bottom: 20px;
-    }
+        h1 {
+            font-size: 1.5rem !important;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        float: left;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            float: left;
+        }
 
-    th,
-    td {
-        border: 1px solid #000;
-        text-align: center;
-        padding: 8px;
-        width: auto;
-        /* Each column will take up equal space */
-    }
+        th,
+        td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+            width: auto;
+            /* Each column will take up equal space */
+        }
 
-    th {
-        background-color: #f2f2f2;
-    }
+        th {
+            background-color: #f2f2f2;
+        }
 
-    tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
-    tbody tr:hover {
-        background-color: #f1f1f1;
-    }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
 
-    a {
-        display: block;
-        width: 100%;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: #fff;
-        background-color: <?php echo SITE_THEME_COLOUR ?>;
-        border-radius: 5px;
-        text-align: center;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-        box-sizing: border-box;
-        cursor: pointer;
-    }
+        a {
+            display: block;
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: <?php echo SITE_THEME_COLOUR ?>;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -81,7 +81,7 @@
 
     if (isset($id)) {
         $blockId = base64_decode($id);
-        if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status=1 AND block_item_site_id=" . SITE_ID)) {
+        if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status IN (1,3) AND block_item_site_id=" . SITE_ID)) {
             if (mysqli_num_rows($checkBlock) > 0) {
                 $i = 1;
                 while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
@@ -192,7 +192,8 @@
                     $netArea = number_format((float)$totalArea -
                         $block_item_damage_size, 2, '.', '');
 
-                    echo "
+                    if ($block_item_status == 1) {
+                        echo "
                     <tr>
                         <td>{$i}</td>
                         <td>{$block_item_width}</td>
@@ -203,9 +204,11 @@
                         <td>{$netArea}</td>
                     </tr>
                 ";
-                    $i++;
+                        $i++;
+                    } else {
+                        $i++;
+                    }
                 }
-
                 echo "
                     <tr>
                         <td colspan='3' ><strong>Block Gross Size ( $calculationType )</strong></td>
