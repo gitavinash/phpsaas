@@ -24,16 +24,10 @@ $email_body = "
 		<tr>
 			<td style='text-align: center'>
 				<table style='width: 100%; margin-top: 10px; border: 1px solid #ddd; font-size: 14px; line-height: 26px;'>
-					";
-
-if (isset($name) || isset($first_name)) {
-	echo "<tr>
+					<tr>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Name:</td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$first_name} {$last_name}</td>
-					</tr>";
-}
-
-echo "
+					</tr>
 					<tr>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Email:</td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$email}</td>
