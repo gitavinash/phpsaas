@@ -1,6 +1,6 @@
 <?php
 
-$enquiryUrl = "https://{$site_domain}/dashboard/leads/view/?id=" . base64_encode($leadId);
+$enquiryUrl = SITE_URL . "/dashboard/leads/view/?id=" . base64_encode($leadId);
 
 
 require 'header.php';
@@ -10,7 +10,7 @@ $email_body = "
 		<tr>
 			<td style='text-align: center'>
 				<p style='float: left; width: 100%; text-align: left; font-size: 14px; line-height: 26px'>
-					Hello <strong>{$companyName} </strong>Team,
+					Hello <strong>" . SITE_NAME . " </strong>Team,
 				</p>
 			</td>
 		</tr>
@@ -24,10 +24,16 @@ $email_body = "
 		<tr>
 			<td style='text-align: center'>
 				<table style='width: 100%; margin-top: 10px; border: 1px solid #ddd; font-size: 14px; line-height: 26px;'>
-					<tr>
+					";
+
+if (isset($name) || isset($first_name)) {
+	echo "<tr>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Name:</td>
-						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$name}</td>
-					</tr>
+						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$first_name} {$last_name}</td>
+					</tr>";
+}
+
+echo "
 					<tr>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Email:</td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$email}</td>
