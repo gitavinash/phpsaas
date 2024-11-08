@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block inventory details | <?php echo SITE_NAME ?></title>
+    <title>Block Inventory Details | <?php echo SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,33 +20,67 @@
             margin: 0;
         }
 
+        .main-box section {
+            border: none;
+        }
+
         .footer {
+            float: left;
             width: 100%;
             text-align: center;
             font-size: 14px;
             line-height: 32px;
+            background: #fff;
+            padding: 10px 0px;
         }
 
         .footer::after {
             content: "Developed by Blumox Technologies";
         }
 
-        @media print {
+        /* Floating buttons */
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
 
-            /* Reset default margins and paddings */
+        .btn {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .btn-download {
+            background-color: #007bff;
+        }
+
+        /* Print styles */
+        @media print {
             * {
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
             }
 
-            /* Page setup for A4 size */
             @page {
                 size: A4;
                 margin: 12mm;
             }
 
-            /* Layout adjustments */
             body {
                 font-size: 8pt;
                 color: #333;
@@ -72,7 +106,6 @@
                 margin-bottom: 8px;
             }
 
-            /* Section title styling for visibility */
             .section-title {
                 font-weight: bold;
                 font-size: 10pt;
@@ -81,14 +114,12 @@
                 padding-bottom: 2px;
             }
 
-            /* Container styling with equal height for Customer and Salesman sections */
             .widget-container {
                 display: flex;
                 justify-content: space-between;
                 gap: 10px;
             }
 
-            /* Section Styling */
             .widget {
                 border: 1px solid #ddd;
                 padding: 6px;
@@ -98,7 +129,6 @@
                 flex-direction: column;
                 justify-content: space-between;
                 min-height: 150px;
-                /* Set minimum height for uniformity */
             }
 
             .userInfo p {
@@ -109,6 +139,9 @@
             .userInfo strong {
                 display: inline-block;
                 width: 100px;
+                background-color: #f0f0f0;
+                /* Background color for labels */
+                padding: 4px;
             }
 
             /* Table Styling */
@@ -138,7 +171,21 @@
                 background-color: #f7f7f7;
             }
 
-            /* Footer Styling */
+            .leadActions a {
+                float: left;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                font-size: 16px;
+                font-weight: 400;
+                padding: 10px 20px;
+            }
+
+            .btn-green {
+                background: #01647b !important;
+                color: #fff !important;
+                border: #01647b !important;
+            }
+
             .footer {
                 font-size: 7pt;
                 color: #888;
@@ -150,20 +197,18 @@
                 width: 100%;
             }
 
-            /* Hide non-print elements */
             .btn-group,
-            .no-print {
+            .no-print,
+            .floating-btn {
                 display: none;
             }
 
-            /* Avoid page breaks inside rows */
             tr,
             td,
             th {
                 page-break-inside: avoid;
             }
 
-            /* Ensure .leadActions content is visible */
             .leadActions {
                 display: block !important;
                 margin-bottom: 10px;
@@ -180,13 +225,11 @@
                 margin-right: 5px;
             }
 
-            /* Additional styling for icons if needed */
             .leadActions i {
                 font-size: 8pt;
                 margin-right: 4px;
             }
 
-            /* Ensure other non-print elements are still hidden */
             .no-print {
                 display: none;
             }
@@ -230,7 +273,6 @@
 
     ?>
     <div class="box-1">
-
         <div class="main-box">
             <section>
                 <div class="widget no-padding box-5">
@@ -242,8 +284,7 @@
                         <p><strong>Name</strong><?php echo $sales_name ?></p>
                         <p><strong>Mobile</strong><?php echo $sales_mobile ?></p>
                         <p><strong>Email</strong><?php echo $sales_email ?></p>
-                        <p><strong style="width: 100px; height: 50px">Address</strong><?php echo $sales_address ?>
-                        </p>
+                        <p><strong style="width: 100px; height: 50px">Address</strong><?php echo $sales_address ?></p>
                     </div>
                 </div>
                 <div class="widget no-padding box-5">
@@ -298,14 +339,8 @@
                                     $keyArray = explode('_', str_replace('salesBlocks_', '', $key));
                                     $productName = $keyArray[1];
 
-                                    // Exploding string and processing data
                                     $objects = explode(",", $value);
-                                    $valuesCount = [];
-                                    $slabDetails = [];
-
                                     $j = 1;
-
-                                    $sizeOfSlabDimension = sizeof($valuesCount);
 
                                     $totalSlabs = 0;
                                     $totalSlabsGrossSize = 0;
@@ -324,15 +359,14 @@
                                             $dimensionsType = $newObject[5] ?? null;
                                             $slabNumber = $newObject[6] ?? null;
 
-
                                             echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
                                             echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
                                             echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
                                             echo "<td>{$slabNumber}</td>";
                                             echo "<td>{$slabDimension}</td>";
                                             echo "<td>1 Pc.</td>";
-                                            echo "<td>{$damageSize}</td>";
-                                            echo "<td>{$damageSize}</td>";
+                                            echo "<td>{$grossSize} {$dimensionsType}</td>";
+                                            echo "<td>{$damageSize} {$dimensionsType}</td>";
                                             echo "<td>{$netSize} {$dimensionsType}</td>";
                                             echo "</tr>";
 
@@ -340,8 +374,6 @@
                                             $totalSlabsGrossSize += $grossSize;
                                             $totalSlabsDamageSize += $damageSize;
                                             $totalSlabsNetSize += $netSize;
-
-                                            // Each block total
 
                                             if ($j == count($objects)) {
                                                 echo "<tr class='ending'>";
@@ -362,9 +394,6 @@
                                         }
                                     }
 
-
-                                    // Total 
-
                                     if ($i == sizeof($blockData)) {
                                         echo "<tr><td colspan=100></td></tr><tr>";
                                         echo "<td colspan=4><strong>Total</strong></td>";
@@ -384,11 +413,49 @@
             </section>
             <div class="footer"></div>
         </div>
-
     </div>
+
+    <!-- Floating Buttons for Print and Download PDF -->
+    <div class="floating-btn">
+        <button class="btn btn-print" onclick="printPage()">
+            <i class="fas fa-print"></i> Print
+        </button>
+        <button class="btn btn-download" onclick="downloadPDF()">
+            <i class="fas fa-file-download"></i> Download PDF
+        </button>
+    </div>
+
+    <!-- Include html2pdf.js for PDF creation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+        function printPage() {
+            window.print();
+        }
+
+        function downloadPDF() {
+            const element = document.body;
+
+            const options = {
+                margin: 0.5,
+                filename: 'sales-request-<?php echo base64_decode($id) ?>.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+
+            html2pdf().set(options).from(element).save();
+        }
+    </script>
 </body>
 
 </html>
-<?php
-exit();
-?>
+<?php exit(); ?>
