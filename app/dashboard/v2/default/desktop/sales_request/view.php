@@ -109,41 +109,6 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     $valuesCount = [];
                                     $slabDetails = [];
 
-                                    // foreach ($objects as $object) {
-                                    //     $newObject = explode('_', $object);
-
-                                    //     print_r($newObject);
-
-                                    //     $number = $newObject[0] ?? null;
-                                    //     $slabDimension = $newObject[1] ?? null;
-                                    //     $grossSize = $newObject[2] ?? 0;
-                                    //     $damageSize = $newObject[3] ?? 0;
-                                    //     $netSize = $newObject[4] ?? 0;
-                                    //     $dimensionsType = $newObject[5] ?? null;
-                                    //     $slabNumber = $newObject[6] ?? null;
-
-                                    //     // Old slab count method
-
-                                    //     if ($slabDimension !== null) {
-                                    //         if (isset($valuesCount[$slabDimension])) {
-                                    //             $valuesCount[$slabDimension]['slabId'] += $slabNumber;
-                                    //             $valuesCount[$slabDimension]['count']++;
-                                    //             $valuesCount[$slabDimension]['grossSize'] += $grossSize;
-                                    //             $valuesCount[$slabDimension]['damageSize'] += $damageSize;
-                                    //             $valuesCount[$slabDimension]['netSize'] += $netSize;
-                                    //         } else {
-                                    //             $valuesCount[$slabDimension] = [
-                                    //                 'slabId' => $slabNumber,
-                                    //                 'count' => 1,
-                                    //                 'grossSize' => $grossSize,
-                                    //                 'damageSize' => $damageSize,
-                                    //                 'netSize' => $netSize,
-                                    //                 'dimensionType' => $dimensionsType,
-                                    //             ];
-                                    //         }
-                                    //     }
-                                    // }
-
                                     $j = 1;
 
                                     $sizeOfSlabDimension = sizeof($valuesCount);
@@ -152,48 +117,6 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     $totalSlabsGrossSize = 0;
                                     $totalSlabsDamageSize = 0;
                                     $totalSlabsNetSize = 0;
-
-                                    // Display slab details
-                                    // foreach ($valuesCount as $slabDimension => $details) {
-
-                                    //     print_r($valuesCount);
-
-                                    //     echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
-                                    //     echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
-                                    //     echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
-                                    //     echo "<td>{$details['slabId']}</td>";
-                                    //     echo "<td>{$slabDimension}</td>";
-                                    //     echo "<td>{$details['count']} " . (($details['count'] == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                    //     echo "<td>{$details['grossSize']} {$details['dimensionType']}</td>";
-                                    //     echo "<td>{$details['damageSize']} {$details['dimensionType']}</td>";
-                                    //     echo "<td>{$details['netSize']} {$details['dimensionType']}</td>";
-                                    //     echo "</tr>";
-
-                                    //     $totalSlabs += $details['count'];
-                                    //     $totalSlabsGrossSize += $details['grossSize'];
-                                    //     $totalSlabsDamageSize += $details['damageSize'];
-                                    //     $totalSlabsNetSize += $details['netSize'];
-
-                                    //     // Each block total
-
-                                    //     if ($j == $sizeOfSlabDimension) {
-                                    //         echo "<tr class='ending'>";
-                                    //         echo "<td class='sno-column' colspan=4><strong>Slab total</strong></td>";
-                                    //         echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                    //         echo "<td>{$totalSlabsGrossSize} {$details['dimensionType']}</td>";
-                                    //         echo "<td>{$totalSlabsDamageSize} {$details['dimensionType']}</td>";
-                                    //         echo "<td>{$totalSlabsNetSize} {$details['dimensionType']}</td>";
-                                    //         echo "</tr><tr><td colspan=100></td></tr>";
-                                    //         $totalBlockSlabs += $totalSlabs;
-                                    //         $totalBlockGrossSize += $totalSlabsGrossSize;
-                                    //         $totalBlockDamageSize += $totalSlabsDamageSize;
-                                    //         $totalBlockNetSize += $totalSlabsNetSize;
-                                    //         $totalBlockDimensionType = $details['dimensionType'];
-                                    //     }
-
-                                    //     $j++;
-                                    // }
-
 
                                     foreach ($objects as $slabDimension => $details) {
 
@@ -214,8 +137,8 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                             echo "<td>{$slabNumber}</td>";
                                             echo "<td>{$slabDimension}</td>";
                                             echo "<td>1 Pc.</td>";
-                                            echo "<td>{$damageSize}</td>";
-                                            echo "<td>{$damageSize}</td>";
+                                            echo "<td>{$grossSize} {$dimensionsType}</td>";
+                                            echo "<td>{$damageSize} {$dimensionsType}</td>";
                                             echo "<td>{$netSize} {$dimensionsType}</td>";
                                             echo "</tr>";
 
