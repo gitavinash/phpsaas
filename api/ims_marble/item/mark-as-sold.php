@@ -111,8 +111,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $totalArea = number_format((float)$totalArea, 2, '.', '');
 
                 $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET 
-                block_available=block_available-1, block_damage_size=block_damage_size-{$block_item_damage_size},  block_net_size=block_net_size-{$totalArea} WHERE block_id='{$block_item_parent_id}' AND block_status=1 AND block_site_id=" . SITE_ID);
-                if ($checkBlock && $updateBlockItem && $updateBlock) {
+                block_available=block_available-1, block_damage_size=block_damage_size-{$block_item_damage_size},  block_gross_size=block_gross_size-{$totalArea}, block_net_size=block_net_size-{$totalArea} WHERE block_id='{$block_item_parent_id}' AND block_status=1 AND block_site_id=" . SITE_ID);
+
+                if ($checkTotalRow = mysqli_query($connection, "SELECT count(block_item_id) as totalSlabsInBlock FROM {$tableNamePrefix}block_item WHERE block_item_parent_id={$block_item_parent_id} AND block_item_status=1 AND block_item_site_id=" . SITE_ID)) {
+                    if (mysqli_num_rows($checkTotalRow) != 0) {
+                        extract(mysqli_fetch_assoc($checkTotalRow));
+                        if ($totalSlabsInBlock == 0) {
+                            $updateBlockStatusToSoldOut = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status=3 WHERE block_id='{$block_item_parent_id}' AND block_status=1 AND block_site_id=" . SITE_ID);
+                        } else {
+                            $updateBlockStatusToSoldOut = true;
+                        }
+                    }
+                }
+
+                if ($checkBlock && $updateBlockItem && $updateBlock && $updateBlockStatusToSoldOut) {
                     $httpStatus = 201;
                     $status = 'success';
                     $msg = 'Slab is now Mark as Sold successfully';
