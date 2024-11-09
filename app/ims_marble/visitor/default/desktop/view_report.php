@@ -376,14 +376,16 @@ require_once LOGIN_CHECK;
                 $damageSumArray = array_fill(0, $numCols, 0);
                 foreach ($slabDamageCount as $row) {
                     foreach ($row as $index => $value) {
-                        $damageSumArray[$index] += $value;
+                        if (isset($damageSumArray[$index])) {
+                            $damageSumArray[$index] += $value;
+                        }
                     }
                 }
 
                 echo "
                     <tr>
                         <td colspan='3' style='text-align:right' ><strong>Gross Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>{$block_gross_size}</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>" . round($block_gross_size, 2) . "</strong></td>
                         <td></td>
                         <td></td>
                         <td><strong>" . number_format((float)((isset($damageSumArray[0])) ? $damageSumArray[0] : 0), 2, '.', '') . "</strong></td>
@@ -405,12 +407,12 @@ require_once LOGIN_CHECK;
                     </tr>
                     <tr>
                         <td colspan='3' style='text-align:right' ><strong>Damage Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>{$block_damage_size}</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>" . round($block_damage_size, 2) . "</strong></td>
                         <td colspan=100 ></td>
                     </tr>
                     <tr>
                         <td colspan='3' style='text-align:right' ><strong>Net Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>{$block_net_size}</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>" . round($block_net_size, 2) . "</strong></td>
                         <td colspan=100 ></td>
                     </tr>
                     ";

@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         break;
                 }
 
-                $totalArea = number_format((float)$totalArea, 2, '.', '');
+                $totalArea = number_format((float)$totalArea, 5, '.', '');
 
                 $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET 
                 block_available=block_available-1, block_damage_size=block_damage_size-{$block_item_damage_size},  block_gross_size=block_gross_size-{$totalArea}, block_net_size=block_net_size-{$totalArea} WHERE block_id='{$block_item_parent_id}' AND block_status=1 AND block_site_id=" . SITE_ID);
