@@ -52,6 +52,11 @@
             background-color: #f1f1f1;
         }
 
+        .sold_out {
+            background-color: #C60239 !important;
+            color: #fefefe;
+        }
+
         /* Hide the download button in print/PDF */
         @media print {
             #download {
@@ -70,10 +75,6 @@
             cursor: pointer;
             text-decoration: none;
             transition: background-color 0.3s ease;
-        }
-
-        a#download:hover {
-            background-color: #333;
         }
 
         p.credit strong {
@@ -161,18 +162,16 @@
                         $totalArea = number_format((float)$totalArea, 2, '.', '');
                         $netArea = number_format($totalArea - $block_item_damage_size, 2, '.', '');
 
-                        if ($block_item_status == 1) {
-                            echo "
-                            <tr>
+                        echo "
+                            <tr " . (($block_item_status == '3') ? 'class="sold_out"' : '') . " >
                                 <td>{$i}</td>
-                                <td>{$block_item_width}</td>
+                                <td>{$block_item_width} {$block_item_status}</td>
                                 <td>{$block_item_height}</td>
                                 <td>{$block_thickness_size}</td>
                                 <td>{$totalArea}</td>
                                 <td>{$block_item_damage_size}</td>
                                 <td>{$netArea}</td>
                             </tr>";
-                        }
                         $i++;
                     }
                     echo "</table>";
