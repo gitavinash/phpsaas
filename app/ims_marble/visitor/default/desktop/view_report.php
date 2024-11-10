@@ -397,7 +397,7 @@ require_once LOGIN_CHECK;
                         <td><strong>" . number_format((float)((isset($damageSumArray[2])) ? $damageSumArray[2] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
-                        <td><strong>" . number_format((float)((isset($slabDamageCount[3])) ? $damageSumArray[3] : 0), 2, '.', '') . "</strong></td>
+                        <td><strong>" . number_format((float)((isset($damageSumArray[3])) ? $damageSumArray[3] : 0), 2, '.', '') . "</strong></td>
                         <td></td>
                         <td></td>
                         <td><strong>" . number_format((float)((isset($damageSumArray[4])) ? $damageSumArray[4] : 0), 2, '.', '') . "</strong></td>
@@ -412,7 +412,7 @@ require_once LOGIN_CHECK;
                     </tr>
                     <tr>
                         <td colspan='3' style='text-align:right' ><strong>Net Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>" . round($block_net_size, 2) . "</strong></td>
+                        <td colspan='1' style='text-align:right' ><strong>" . round($block_gross_size - $block_damage_size, 2) . "</strong></td>
                         <td colspan=100 ></td>
                     </tr>
                     ";

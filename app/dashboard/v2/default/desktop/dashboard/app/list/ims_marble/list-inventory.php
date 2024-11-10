@@ -61,7 +61,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                                 <td>{$block_total_item}</td>
                                 <td>{$block_available}</td>
                                 <td>" . (($block_gross_size == '') ? '0 ' : $block_gross_size) . ' ' . $block_size_dimension . "</td>
-                                <td>" . (($block_net_size == '') ? '0 ' : $block_net_size) . ' ' . $block_size_dimension . "</td>
+                                <td>" . (($block_net_size == '') ? '0 ' : $block_gross_size - $block_damage_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $block_size_dimension . "</td>
                                 <td>" . $blockStatus . "</td>
                                 <td>
