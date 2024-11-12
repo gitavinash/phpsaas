@@ -1,6 +1,6 @@
 				</div>
 
-				<footer>
+				<!-- <footer>
 					<div class="credit">
 						<p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
 								<a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
@@ -10,7 +10,7 @@
 								India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
 										Technologies</strong></a></p>
 					</div>
-				</footer>
+				</footer> -->
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
