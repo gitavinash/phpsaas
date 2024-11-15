@@ -102,7 +102,6 @@ if (isset($showPage)) { ?>
             img.qr-code-image {
                 width: 150px;
                 height: 150px;
-                border: 1px solid #f1f1f1;
                 float: right;
                 border-radius: 15px;
                 /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); */

@@ -79,7 +79,6 @@ if (isset($showPage)) {
             .qr-code-image {
                 width: 70px;
                 height: 70px;
-                border: 1px solid #f1f1f1;
                 border-radius: 15px;
             }
 
