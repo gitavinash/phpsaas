@@ -105,7 +105,7 @@ if (isset($showPage)) { ?>
                 border: 1px solid #f1f1f1;
                 float: right;
                 border-radius: 15px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); */
             }
 
             .credit {
@@ -175,10 +175,10 @@ if (isset($showPage)) { ?>
                     echo "
                     <div class='inventory-info'>
                         <h2>Block Information</h2>
-                        <p><strong>Name:</strong> {$block_title}</p>
-                        <p><strong>ID:</strong> {$block_code}</p>
-                        <p><strong>Slabs:</strong> {$block_total_item} " . (($block_total_item == 1) ? 'Pc.' : 'Pcs.') . "</p>
-                        <p><strong>Thickness:</strong> {$block_thickness_size} {$block_thickness_dimension}</p>
+                        <p><strong>Name: {$block_title}</strong></p>
+                        <p><strong>ID: {$block_code}</strong></p>
+                        <p><strong>Slabs: {$block_total_item} " . (($block_total_item == 1) ? 'Pc.' : 'Pcs.') . "</strong></p>
+                        <p><strong>Thickness: {$block_thickness_size} {$block_thickness_dimension}</strong></p>
                     </div>";
                     break;
                 default:
@@ -194,9 +194,9 @@ if (isset($showPage)) { ?>
             }
 
             ?>
-            <div class="credit">
+            <!-- <div class="credit">
                 <p><strong>Developed by</strong> Blumox Technologies</p>
-            </div>
+            </div> -->
         </div>
     </body>
 

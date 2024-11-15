@@ -81,7 +81,6 @@ if (isset($showPage)) {
                 height: 70px;
                 border: 1px solid #f1f1f1;
                 border-radius: 15px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
 
             .inventory-info {
@@ -227,9 +226,6 @@ if (isset($showPage)) {
                             </strong>
                         </p>
                     <?php endif; ?>
-                </div>
-                <div class="credit">
-                    <p><strong>Developed by</strong> Blumox Technologies</p>
                 </div>
             </div>
         <?php
