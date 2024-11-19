@@ -89,6 +89,34 @@ function initializeSelect2HereMaps(element) {
   });
 }
 
+function initializeSelect2HereMapsForInternational(element) {
+  $(element).select2({
+    placeholder: "Select location",
+    minimumInputLength: 2,
+    ajax: {
+      url: "/api/maps/here/autocomplete-international/", // Replace with your API URL
+      dataType: "json",
+      delay: 250,
+      data: function (params) {
+        return {
+          searchQuery: params.term,
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: $.map(data.locationList, function (item) {
+            return {
+              id: item,
+              text: item,
+            };
+          }),
+        };
+      },
+      cache: true,
+    },
+  });
+}
+
 function initializeSelect2HereMapsWithCompleteAddress(element) {
   $(element)
     .select2({
@@ -182,6 +210,11 @@ $(document).ready(function (e) {
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
     initializeSelect2HereMaps(".indianCityAutoComplete");
+  }
+
+  if ($(".internationalCityAutoComplete").length) {
+    // Initialize select2 for the existing element
+    initializeSelect2HereMapsForInternational(".internationalCityAutoComplete");
   }
 
   if ($(".indianCityAutoCompleteWithCompleteAddress").length) {

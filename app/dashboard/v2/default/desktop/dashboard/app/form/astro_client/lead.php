@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <p class="form-lable">Place of Birth<sup>*</sup></p>
-            <select class="indianCityAutoComplete" name="place_of_birth" id="placeOfBirth">
+            <select class="internationalCityAutoComplete" name="place_of_birth" id="placeOfBirth">
             </select>
             <!-- <input id="placeOfBirth" name="place_of_birth" class="indianCitySuggestion" type="text" required /> -->
         </div>

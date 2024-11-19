@@ -220,7 +220,7 @@ LIMIT
                                     <td><?php echo $leadCurrentStatus ?></td>
                                     <td>
                                         <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>"
-                                            class="btn dataTableBtn"><i class="fi-rr-eye"></i> View
+                                            class="btn dataTableBtn" target="_blank"><i class="fi-rr-eye"></i> View
                                             lead details</a>
                                         <?php
 
