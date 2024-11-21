@@ -314,7 +314,7 @@ if (SITE_VERSION == 'desktop') { ?>
 
         // Product Zoom
 
-        $('.picZoomer').picZoomer();
+        // $('.picZoomer').picZoomer();
 
 
         $(function() {
