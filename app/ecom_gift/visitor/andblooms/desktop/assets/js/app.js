@@ -487,7 +487,7 @@ $(document).ready(function() {
 
     // // Product Zoom
 
-    // $('.picZoomer').picZoomer();
+    $('.picZoomer').picZoomer();
 
     $('.sorting').on('change', function(){
         var sorting = $(this).find(":selected").val();

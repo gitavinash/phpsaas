@@ -4480,3 +4480,11 @@ form.franchise textarea {
 .mobile-bg {
   background: #fff;
 }
+
+.picZoomer-cursor {
+  display: none !important;
+}
+
+.picZoomer-zoom-wp {
+  display: none !important;
+}
