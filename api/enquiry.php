@@ -267,7 +267,11 @@ if ($mobile != '') {
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {
 
-                    require_once APP_EMAIL_TEMPLATE . 'default-enquiry.php';
+                    if (file_exists(APP_EMAIL_TEMPLATE . 'default-enquiry.php')) {
+                        require_once APP_EMAIL_TEMPLATE . 'default-enquiry.php';
+                    } else {
+                        require_once EMAIL_TEMPLATE . 'default-enquiry.php';
+                    }
 
                     if (SITE_APP == 'aleya') {
                         if (isset($email)) {
@@ -284,7 +288,8 @@ if ($mobile != '') {
         }
 
         if (strpos($redirect_url, '/shipping/') !== false) {
-            $postUrlValue = "&name=" . urlencode($name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
+
+            $postUrlValue = "&name=" . urlencode($first_name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) . "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" . urlencode($address);
             header("Location: {$redirect_url}{$postUrlValue}", TRUE, 301);
         } else {
 
