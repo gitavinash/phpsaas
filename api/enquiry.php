@@ -196,8 +196,15 @@ if ($mobile != '') {
             }
         }
 
-        if ($freshEnquiry == true) {
+        $saveEnquiry = TRUE;
 
+        if (SITE_APP_ID == 20) {
+            if ($freshEnquiry != TRUE) {
+                $saveEnquiry == FALSE;
+            }
+        }
+
+        if ($saveEnquiry == TRUE) {
             // Start record enquiry data into table
 
             mysqli_query($connection, "START TRANSACTION");
@@ -244,25 +251,6 @@ if ($mobile != '') {
             } else {
                 mysqli_query($connection, "ROLLBACK");
             }
-
-            //         $email_body = "
-            // <h2>{$subject}</h2>
-            // <table>
-            //     <tr>
-            //         <td>Name: </td>
-            //         <td>{$first_name} {$last_name}</td>
-            //     </tr>
-            //     <tr>
-            //         <td>Email: </td>
-            //         <td>{$email}</td>
-            //     </tr>
-            //     <tr>
-            //         <td>Mobile: </td>
-            //         <td>{$mobile}</td>
-            //     </tr>
-            //     {$messageForm}
-            // </table>
-            // ";
 
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {

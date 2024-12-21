@@ -61,10 +61,13 @@ if (!defined(EMAIL_ENABLE)) {
 		if (DEVELOPMENT_MODE == true) {
 			if (!$mail->Send()) {
 				$emailIsNotDelivered = $mail->ErrorInfo;
+				echo $emailIsNotDelivered;
+				exit();
 			}
 		} else {
-
 			$mail->Send();
 		}
 	}
+
+	exit();
 }

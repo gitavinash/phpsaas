@@ -1,8 +1,5 @@
 <?php
 
-$enquiryUrl = SITE_URL . "/dashboard/leads/view/?id=" . base64_encode($leadId);
-
-
 require 'header.php';
 
 $email_body = "
@@ -36,10 +33,7 @@ $email_body = "
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Mobile:</td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$mobile}</td>
 					</tr>
-					<tr>
-						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>View enquiry:</td>
-						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'><a href='{$enquiryUrl}'>Click here to view enquiry details</a></td>
-					</tr>
+					{$messageForm}
 				</table>
 			</td>
 		</tr>
@@ -52,4 +46,5 @@ $email_body = "
 		</tr>
 	</table>
 ";
+
 require 'footer.php';
