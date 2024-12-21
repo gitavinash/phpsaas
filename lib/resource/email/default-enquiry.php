@@ -22,15 +22,15 @@ $email_body = "
 			<td style='text-align: center'>
 				<table style='width: 100%; margin-top: 10px; border: 1px solid #ddd; font-size: 14px; line-height: 26px;'>
 					<tr>
-						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Name:</td>
+						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'><strong>Name:</strong></td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$first_name} {$last_name}</td>
 					</tr>
 					<tr>
-						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Email:</td>
+						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'><strong>Email:</strong></td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$email}</td>
 					</tr>
 					<tr>
-						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>Mobile:</td>
+						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'><strong>Mobile:</strong></td>
 						<td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>{$mobile}</td>
 					</tr>
 					{$messageForm}

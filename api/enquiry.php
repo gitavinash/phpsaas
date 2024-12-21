@@ -173,7 +173,7 @@ unset($enquiryMeta['subject']);
 $messageForm = '';
 
 foreach ($enquiryMeta as $key => $value) {
-    $messageForm .= "<tr><td>{$key}</td><td>$value</td></tr>";
+    $messageForm .= "<tr><td style='padding: 8px; text-align: left; border: 1px solid #ddd;'><strong>" . ucwords(str_replace('_', ' ', $key)) . ":</strong></td><td style='padding: 8px; text-align: left; border: 1px solid #ddd;'>$value</td></tr>";
 }
 
 $messageDB = json_encode($enquiryMeta, TRUE);
