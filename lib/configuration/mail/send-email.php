@@ -68,6 +68,4 @@ if (!defined(EMAIL_ENABLE)) {
 			$mail->Send();
 		}
 	}
-
-	exit();
 }
