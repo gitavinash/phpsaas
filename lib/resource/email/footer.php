@@ -37,6 +37,8 @@ $email_body = $email_header . $email_body . $email_footer;
 
 /* Send email */
 
-$toAddress = $email; // Email receiver id
+if (SITE_APP_ID == 20) {
+	$toAddress = $email; // Email receiver id
+}
 
 require_once SEND_EMAIL;
