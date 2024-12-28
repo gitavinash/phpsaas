@@ -40,7 +40,7 @@ LIMIT 0, 100")) {
                 for ($i = 0; $i < 1; $i++) {
                     if (isset($latestNewsData[$i])) {
                         extract($latestNewsData[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}'>
+                        echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
                                         <div class='feature_image'>
                                             <img src='{$news_image}' alt='{$news_title}'>
                                             " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
@@ -63,7 +63,7 @@ LIMIT 0, 100")) {
                 for ($i = 1; $i < 5; $i++) {
                     if (isset($latestNewsData[$i])) {
                         extract($latestNewsData[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}'>
+                        echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
                                         <div class='feature_image'>
                                             <img src='{$news_image}' alt='{$news_title}'>
                                             " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
@@ -87,7 +87,7 @@ LIMIT 0, 100")) {
                 for ($i = 5; $i < 20; $i++) {
                     if (isset($latestNewsData[$i])) {
                         extract($latestNewsData[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}'>
+                        echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
                                         <div class='feature_image'>
                                             <img src='{$news_image}' alt='{$news_title}'>
                                             " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
@@ -115,7 +115,7 @@ LIMIT 0, 100")) {
                             while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
                                 extract($finTechArticlesInfo);
                                 echo "<li>
-                                        <a href='{$link_url}' title='{$news_title}'>
+                                        <a href='{$link_url}' title='{$news_title}' target='_blank'>
                                             <div class='img' ><img src='{$news_image}' ></div>
                                             <div class='text'><h3>{$news_title}</h3></div>
                                         </a>
@@ -144,7 +144,7 @@ LIMIT 0, 100")) {
                             while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
                                 extract($finTechArticlesInfo);
                                 echo "<li>
-                                        <a href='{$link_url}' title='{$news_title}'>
+                                        <a href='{$link_url}' title='{$news_title} target='_blank''>
                                             <div class='img' ><img src='{$news_image}' ></div>
                                             <div class='text'><h3>{$news_title}</h3></div>
                                         </a>

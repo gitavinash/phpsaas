@@ -32,7 +32,7 @@ require_once 'header.php';
 								while ($queryResultsData = mysqli_fetch_assoc($queryResults)) {
 
 									extract($queryResultsData);
-									echo "<div class='news_box'><a href='{$link_url}'>
+									echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
                                         <div class='feature_image'>
                                             <img src='{$news_image}' alt='{$news_title}'>
                                             " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
@@ -55,7 +55,7 @@ require_once 'header.php';
 							extract($queryPost[$i]);
 
 							echo "<div class='col-md-3'>
-										<a href='{$link_url}'>
+										<a href='{$link_url}' target='_blank'>
 											<div class='col-card-3'>
 												<div class='event-card'>
 													<div class='img-cd'>
@@ -95,7 +95,7 @@ require_once 'header.php';
 							while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
 								extract($finTechArticlesInfo);
 								echo "<li>
-                                        <a href='{$link_url}' title='{$news_title}'>
+                                        <a href='{$link_url}' title='{$news_title}' target='_blank'>
                                             <div class='img' ><img src='{$news_image}' ></div>
                                             <div class='text'><h3>{$news_title}</h3></div>
                                         </a>
@@ -124,7 +124,7 @@ require_once 'header.php';
 							while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
 								extract($finTechArticlesInfo);
 								echo "<li>
-                                        <a href='{$link_url}' title='{$news_title}'>
+                                        <a href='{$link_url}' title='{$news_title}' target='_blank'>
                                             <div class='img' ><img src='{$news_image}' ></div>
                                             <div class='text'><h3>{$news_title}</h3></div>
                                         </a>
