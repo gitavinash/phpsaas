@@ -71,10 +71,16 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
     const searchContainer = document.querySelector('.search-container');
     const searchInput = document.getElementById('searchInput');
 
-    // Expand the search area
+    // Expand the search area and apply autofocus on mobile
     searchButton.addEventListener('click', () => {
         searchContainer.classList.add('expanded');
-        searchInput.focus();
+
+        // Ensure the search input has enough time to expand
+        setTimeout(() => {
+            if (window.innerWidth <= 768) {
+                searchInput.focus(); // Apply autofocus for mobile devices
+            }
+        }, 200); // Wait a bit for the expansion animation to complete
     });
 
     // Close the search area
