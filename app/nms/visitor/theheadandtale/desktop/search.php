@@ -74,9 +74,8 @@ require_once 'header.php';
 
 					<!-- No Result found -->
 
-					<section class='continue-shopping'>
+					<section class='categoryHeading'>
 						<h1><span>No news found</span></h1>
-						<a href="/" class="btn btn-success">Go to homepage</a>
 					</section>
 
 				<?php
