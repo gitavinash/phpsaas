@@ -65,6 +65,32 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 <?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo USER_JS ?>script.min.js"></script>
+<script>
+    const searchButton = document.getElementById('searchButton');
+    const closeButton = document.getElementById('closeButton');
+    const searchContainer = document.querySelector('.search-container');
+    const searchInput = document.getElementById('searchInput');
+
+    // Expand the search area
+    searchButton.addEventListener('click', () => {
+        searchContainer.classList.add('expanded');
+        searchInput.focus();
+    });
+
+    // Close the search area
+    closeButton.addEventListener('click', () => {
+        searchContainer.classList.remove('expanded');
+        searchInput.value = ''; // Clear input
+    });
+
+    // Redirect to /search/?q={value} when the "Enter" key is pressed
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && searchInput.value.trim() !== '') {
+            const query = encodeURIComponent(searchInput.value.toLowerCase());
+            window.location.href = `/search/?q=${query}`;
+        }
+    });
+</script>
 </body>
 
 </html>

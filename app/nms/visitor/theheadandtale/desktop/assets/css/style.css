@@ -144,6 +144,10 @@ section {
   padding: 1rem 1rem;
 }
 
+.categoryHeading span {
+  color: #aaaaaa;
+}
+
 .hightlightBox {
   float: left;
   width: 95%;
@@ -637,6 +641,111 @@ nav ul li a.disable {
 
 nav ul li a.partnerInsights {
   color: #5b9ad5;
+}
+
+/* Search box */
+/* General styling */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-btn {
+  display: flex;
+  align-items: center;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 30px;
+}
+
+.search-btn svg {
+  height: 16px;
+  margin-right: 8px;
+}
+
+.search-btn svg path {
+  color: #fff;
+}
+
+.search-btn .btn-text {
+  display: block;
+}
+
+.search-input {
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+/* Close button */
+.close-btn {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.close-btn .icon-close {
+  font-size: 20px;
+}
+
+/* Show input and close button when expanded */
+.search-container.expanded .search-input {
+  width: 300%;
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-container.expanded .search-btn {
+  background-color: #0056b3;
+}
+
+.search-container.expanded .close-btn {
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* Make input always visible on desktop */
+@media (min-width: 769px) {
+  .search-input {
+    width: 500px; /* Adjust width as needed */
+    opacity: 1;
+    visibility: visible;
+    position: static;
+    transform: none;
+  }
+
+  .search-btn {
+    display: none;
+  }
+}
+
+/* Hide the input on mobile and only show it when expanded */
+@media (max-width: 768px) {
+  .search-btn .btn-text {
+    display: none;
+  }
 }
 
 /* Responsive for mobile */
