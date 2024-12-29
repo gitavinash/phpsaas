@@ -83,6 +83,11 @@ require_once 'header.php';
 
 				?>
 
+				<?php
+
+				require_once 'pagination.php';
+
+				?>
 			</div>
 			<?php
 

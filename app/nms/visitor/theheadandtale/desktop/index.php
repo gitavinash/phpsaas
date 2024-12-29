@@ -103,6 +103,11 @@ LIMIT 0, 100")) {
                     }
                 }
                 ?>
+                <!-- <?php
+
+                        require_once 'pagination.php';
+
+                        ?> -->
             </div>
             <?php
 
