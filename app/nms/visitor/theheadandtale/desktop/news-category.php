@@ -12,7 +12,7 @@ require_once 'header.php';
                 </div>
                 <?php
 
-                for ($i = 0; $i < 100; $i++) {
+                for ($i = 0; $i < PER_PAGE_LIMIT; $i++) {
                     if (isset($categorySinglePost[$i])) {
                         extract($categorySinglePost[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
