@@ -89,11 +89,11 @@
                             <i class="fa-brands fa-facebook-f"></i>
                         </div>
                     </a>
-                    <a href="https://twitter.com/astroaayu " class="contact_icon_container" target="_blank">
+                    <!-- <a href="https://twitter.com/astroaayu " class="contact_icon_container" target="_blank">
                         <div class="contact_icon_box_page color_change_social twitter_bg">
                             <i class="fa-brands fa-twitter"></i>
                         </div>
-                    </a>
+                    </a> -->
                     <a href="https://www.instagram.com/astroaayu" class="contact_icon_container" target="_blank">
                         <div class="contact_icon_box_page color_change_social instagram">
                             <i class="fa-brands fa-instagram"></i>
