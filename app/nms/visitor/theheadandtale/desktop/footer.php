@@ -71,16 +71,23 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
     const searchContainer = document.querySelector('.search-container');
     const searchInput = document.getElementById('searchInput');
 
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check if the device is mobile
+        if (window.innerWidth <= 768) {
+            searchButton.click(); // Simulate a click on the search button
+        }
+    });
+
     // Expand the search area and apply autofocus on mobile
     searchButton.addEventListener('click', () => {
         searchContainer.classList.add('expanded');
 
         // Ensure the search input has enough time to expand
-        setTimeout(() => {
-            if (window.innerWidth <= 768) {
-                searchInput.focus(); // Apply autofocus for mobile devices
-            }
-        }, 200); // Wait a bit for the expansion animation to complete
+        // setTimeout(() => {
+        //     if (window.innerWidth <= 768) {
+        //         searchInput.focus(); // Apply autofocus for mobile devices
+        //     }
+        // }, 200); // Wait a bit for the expansion animation to complete
     });
 
     // Close the search area

@@ -729,7 +729,7 @@ nav ul li a.partnerInsights {
 /* Make input always visible on desktop */
 @media (min-width: 769px) {
   .search-input {
-    width: 500px; /* Adjust width as needed */
+    width: 500px;
     opacity: 1;
     visibility: visible;
     position: static;
@@ -743,9 +743,33 @@ nav ul li a.partnerInsights {
 
 /* Hide the input on mobile and only show it when expanded */
 @media (max-width: 768px) {
+  .search-container {
+    float: left;
+    width: 100%;
+    margin-top: 85px;
+    left: 0px;
+    position: absolute;
+  }
+  .search-btn {
+    display: block;
+  }
   .search-btn .btn-text {
     display: none;
   }
+  .search-container.expanded .search-input {
+    width: 96%;
+    opacity: 1;
+    visibility: visible;
+    box-sizing: border-box;
+    margin: 0% 2%;
+    display: block;
+  }
+  .search-container.expanded .close-btn {
+    display: none;
+  }
+  /* .search-btn {
+    display: none;
+  } */
 }
 
 /* Responsive for mobile */
