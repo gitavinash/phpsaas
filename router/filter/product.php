@@ -20,6 +20,9 @@ if ($checkProducts = mysqli_query($connection, "SELECT product_title,product_ima
             $productList[] = $productData;
         }
 
+        // Set SEO meta tags
+
+        $meta_title = "Products under ₹ {$max} | " . SITE_NAME;
 
         $filterThemePath = USER_PATH . 'filter.php';
 
