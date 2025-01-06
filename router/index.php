@@ -175,6 +175,12 @@ switch ($urlStructure[0]) {
 		require_once 'search/index.php';
 		break;
 
+		/** For all type of filter process */
+
+	case 'filter':
+		require_once 'filter/index.php';
+		break;
+
 	case 'tag':
 		require_once 'tag.php';
 		break;

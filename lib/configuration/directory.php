@@ -222,6 +222,14 @@ if (file_exists(USER_PATH . '502.php')) {
 	define('ERROR_502', DEFAULT_VISITOR_PATH . '502.php');
 }
 
+if (file_exists(USER_PATH . '500.php')) {
+
+	define('ERROR_500', USER_PATH . '500.php');
+} else {
+
+	define('ERROR_500', DEFAULT_VISITOR_PATH . '500.php');
+}
+
 /* Default HTTP Error pages path of visitor */
 
 define('ADMIN_ERROR_403', ADMIN_PATH . '403.php');

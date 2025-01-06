@@ -379,6 +379,19 @@
                                     <li class="nav-item ">
                                         <a class="nav-link " href="/category/subscription/">Subscription</a>
                                     </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop"
+                                            data-toggle="dropdown">Quick selections
+                                        </a>
+                                        <div class="dropdown-menu mega-menu">
+                                            <div class="mega1">
+                                                <div class="menu-titl"><a href="#">Under price<span
+                                                            class="cart-bodr"></span></a></div>
+                                                <a class="dropdown-item" href="/filter/product/?filterType=price&min=0&max=1999">Under ₹ 1999</a>
+                                                <a class="dropdown-item" href="/filter/product/?filterType=price&min=0&max=2999">Under ₹ 2999</a>
+                                            </div>
+                                        </div>
+                                    </li>
                                 </ul>
 
                                 <a href="/contact/" class="cont-menu">Contact Us</a>

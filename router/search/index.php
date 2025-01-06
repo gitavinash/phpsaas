@@ -1,31 +1,28 @@
 <?php
 
-    $link_type = $type = ((isset($type)) ? $type : 'default' );
-    $tag_type='';
-    $tag_description='';
+$link_type = $type = ((isset($type)) ? $type : 'default');
+$tag_type = '';
+$tag_description = '';
 
+/** Search query */
 
+$searchKeyword = str_replace('-', ' ', mysqli_real_escape_string($connection, $q));
 
-    /** Search query */
+switch ($type) {
 
-    $searchKeyword=str_replace('-', ' ', mysqli_real_escape_string($connection, $q));
+    case 'domain':
 
-    switch($type) {
+        // Include search from end theme template
 
-        case 'domain' : 
+        require_once 'domain.php';
+        break;
 
-            // Include search from end theme template
+    default:
 
-            require_once 'domain.php';
-            break;
+        // Search query from database tag table
 
-        default : 
+        require_once 'database.php';
+        break;
+}
 
-            // Search query from database tag table
-
-            require_once 'database.php';
-            break;
-
-    }
-
-    exit();
+exit();
