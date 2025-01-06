@@ -41,4 +41,8 @@ if (SITE_APP_ID == 20) {
 	$toAddress = $email; // Email receiver id
 }
 
+if (!isset($toAddress)) {
+	$toAddress = $email;
+}
+
 require_once SEND_EMAIL;
