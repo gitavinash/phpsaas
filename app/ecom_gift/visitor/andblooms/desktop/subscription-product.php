@@ -236,7 +236,7 @@ include_once 'header.php';
                             }
                         } else {
 
-                            echo $relatedProductQuery;
+                            echo "No Product found";
                             exit();
                         }
                     }
