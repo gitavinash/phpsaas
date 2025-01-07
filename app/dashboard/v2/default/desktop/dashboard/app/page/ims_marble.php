@@ -24,3 +24,10 @@
 
     ?>
 </div>
+<div class="widget box-2 box-mb-5">
+    <?php
+
+    require_once ADMIN_PATH . 'dashboard/widgets/pending-request.php';
+
+    ?>
+</div>

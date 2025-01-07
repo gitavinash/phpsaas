@@ -738,6 +738,8 @@ $(document).ready(function (e) {
     });
   }
 
+  // Enquiry performance
+
   if ($("#enquiryPerformace").length) {
     $.ajax({
       type: "GET",
@@ -745,6 +747,22 @@ $(document).ready(function (e) {
       dataType: "json",
       success: function (response) {
         createPieChart("enquiryPerformace", response);
+      },
+      error: function (response) {
+        console.log(`Error : `, response);
+      },
+    });
+  }
+
+  // Pending request
+
+  if ($("#totalPendingRequest").length) {
+    $.ajax({
+      type: "GET",
+      url: "/api/report/pending-request/?daterange=" + dateRangeParams,
+      dataType: "json",
+      success: function (response) {
+        dashboardWidgetWithoutChart("totalPendingRequest", response);
       },
       error: function (response) {
         console.log(`Error : `, response);
