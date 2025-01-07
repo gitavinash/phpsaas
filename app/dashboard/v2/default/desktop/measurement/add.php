@@ -29,6 +29,7 @@
                                 <option value="in">Inches</option>
                                 <option value="ft">Feet</option>
                                 <option value="mt">Meter</option>
+                                <option value="mt_weight">Metric Ton</option>
                             </select>
                             <label class="form-lable" id="Label">Measurement<sup>*</sup></label>
                         </div>
@@ -39,6 +40,7 @@
                                 <option value="sq. in.">Square Inches</option>
                                 <option value="sq. ft." selected>Square Feet</option>
                                 <option value="sq. mt.">Square Meter</option>
+                                <option value="mt_weight">Metric Ton</option>
                             </select>
                             <label class="form-lable" id="Label">Calculation<sup>*</sup></label>
                         </div>

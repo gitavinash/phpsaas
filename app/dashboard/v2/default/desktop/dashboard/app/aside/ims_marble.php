@@ -139,6 +139,22 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser' ||
             </ul>
         </div>
     </li>
+
+    <!-- <li <?php echo ((strpos(ADMIN_BASE_URL, '/product/') !== false) ? 'class="active"' : '') ?>>
+        <a href="product/"><i class="fi fi-rr-boxes"></i> Solid blocks</a>
+        <div class="side-menu">
+            <ul>
+                <li><a href="product/list/"><i class="fi fi-rr-apps-sort"></i> All solid blocks</a></li>
+                <li><a href="product/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
+            </ul>
+        </div>
+        <div class="bottom-menu">
+            <ul>
+                <li><a href="product/list/"><i class="fi fi-rr-apps-sort"></i> All solid blocks</a></li>
+                <li><a href="product/add/"><i class="fi fi-rr-add"></i> Add new block</a></li>
+            </ul>
+        </div> -->
+    </li>
 <?php
 }
 

@@ -35,6 +35,9 @@ if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUN
             case 'mt':
                 $measurementType = 'Meter';
                 break;
+            case 'mt_weight':
+                $measurementType = 'Matric Ton';
+                break;
             default:
                 $measurementType = 'Feet';
                 break;
@@ -187,6 +190,8 @@ if (isset($validId)) {
                                     case 'mt':
                                         $blockSizeCalculation = 'Meter';
                                         break;
+                                    case 'mt_weight':
+                                        $blockSizeCalculation = 'Matric Ton';
                                     default:
                                         $blockSizeCalculation = 'Feet';
                                         break;
@@ -196,7 +201,31 @@ if (isset($validId)) {
                             echo "<script>
                         localStorage.setItem('blockItem_{$block_item_id}', '{$block_item_damage_area}');
                     </script>";
-                            echo "
+
+                            if (strpos($block_size_dimension, '_weight') !== false) {
+                                // for weight related products
+
+                                echo "
+                        <tr style='" . (($block_item_status == 2) ? 'background: #f27474' : '') . "' >
+                            <td>
+                                <div class='form-group' >
+                                    {$i}
+                                </div>
+                            </td>
+                            <td>
+                                <div class='form-group'>
+                                    <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
+                                    <label class='form-lable' id='Label'>Weight ( in {$blockSizeCalculation} )<sup>*</sup></label>
+                                </div>
+                            </td>
+                                <div class='form-group' style='display: none' >
+                                    <input name='height[{$block_item_id}]' class='heightValues' value='0' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
+                                    <label class='form-lable' id='Label'>Height ( in {$blockSizeCalculation} )<sup>*</sup></label>
+                                </div>
+                        </tr>
+                    ";
+                            } else {
+                                echo "
                         <tr style='" . (($block_item_status == 2) ? 'background: #f27474' : '') . "' >
                             <td>
                                 <div class='form-group' >
@@ -229,6 +258,8 @@ if (isset($validId)) {
                             </td>
                         </tr>
                     ";
+                            }
+
                             $i++;
                         }
                     }
@@ -252,32 +283,65 @@ if (isset($validId)) {
                 <form>
                     <div id="generateBlockRowBox">
                         <div class="generateBlockRow">
-                            <div class="box-3">
-                                <div class="form-group">
-                                    <input type="number" onwheel="this.blur()" class="form-control" name="slabLenght" id="slabLenght"
-                                        placeholder="200">
-                                    <label class="form-label">Length ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                            <?php
+
+                            if (strpos($block_size_dimension, '_weight') !== false) { ?>
+
+                                <!-- For solid block or metric ton weight wise block -->
+
+                                <div class="box-1">
+                                    <div class="form-group">
+                                        <input type="number" onwheel="this.blur()" class="form-control" name="slabLenght" id="slabLenght"
+                                            placeholder="10">
+                                        <label class="form-label">Weight ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="box-3">
-                                <div class="form-group">
-                                    <input type="number" onwheel="this.blur()" class="form-control" name="slabHeight" id="slabHeight"
-                                        placeholder="100">
-                                    <label class="form-label">Height ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                                <div class="box-1" style="display: none;">
+                                    <div class="form-group">
+                                        <input type="number" onwheel="this.blur()" class="form-control" name="slabHeight" id="slabHeight" value="0"
+                                            placeholder="200">
+                                        <label class="form-label">Height ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="box-4">
-                                <div class="form-group">
-                                    <input type="number" onwheel="this.blur()" class="form-control" name="totalSlab" id="totalSlab" placeholder="5">
-                                    <label class="form-label">Total slabs<sup>*</sup></label>
+                                <div class="box-1" style="display: none;">
+                                    <div class="form-group">
+                                        <input type="number" value="1" onwheel="this.blur()" class="form-control" name="totalSlab" id="totalSlab"
+                                            placeholder="200">
+                                        <label class="form-label">Total slabs ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-1">
-                                <div class="form-group">
-                                    <a href="#" class="btn cloneSlabForm" style="float:right"><i
-                                            class="fi fi-rr-multiple"></i></a>
+                            <?php
+                            } else { ?>
+                                <div class="box-3">
+                                    <div class="form-group">
+                                        <input type="number" onwheel="this.blur()" class="form-control" name="slabLenght" id="slabLenght"
+                                            placeholder="200">
+                                        <label class="form-label">Length ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="box-3">
+                                    <div class="form-group">
+                                        <input type="number" onwheel="this.blur()" class="form-control" name="slabHeight" id="slabHeight"
+                                            placeholder="100">
+                                        <label class="form-label">Height ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                                    </div>
+                                </div>
+                                <div class="box-4">
+                                    <div class="form-group">
+                                        <input type="number" onwheel="this.blur()" class="form-control" name="totalSlab" id="totalSlab" placeholder="5">
+                                        <label class="form-label">Total slabs<sup>*</sup></label>
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <div class="form-group">
+                                        <a href="#" class="btn cloneSlabForm" style="float:right"><i
+                                                class="fi fi-rr-multiple"></i></a>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+
+                            ?>
                         </div>
                     </div>
                     <div class="form-group">

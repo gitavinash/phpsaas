@@ -40,13 +40,9 @@ include_once 'header.php';
                 <div class="float-right">
                     <select name="sort" class="form-select sorting">
                         <option value="#">Sort by</option>
-                        <option value="latest" <?php echo ((@$_GET['sort'] == 'latest') ? 'selected' : '') ?>>Latest
-                        </option>
-                        <option value="price_low" <?php echo ((@$_GET['sort'] == 'price_low') ? 'selected' : '') ?>>
-                            Price
-                            low to high</option>
-                        <option value="price_high" <?php echo ((@$_GET['sort'] == 'price_high') ? 'selected' : '') ?>>
-                            Price high to low</option>
+                        <option value="latest" <?php echo ((@$_GET['sort'] == 'latest') ? 'selected' : '') ?>>Latest</option>
+                        <option value="price_low" <?php echo ((@$_GET['sort'] == 'price_low') ? 'selected' : '') ?>>Price low to high</option>
+                        <option value="price_high" <?php echo ((@$_GET['sort'] == 'price_high') ? 'selected' : '') ?>>Price high to low</option>
                     </select>
                 </div>
             </div>

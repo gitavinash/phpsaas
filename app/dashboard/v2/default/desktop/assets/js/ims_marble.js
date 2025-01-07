@@ -1722,4 +1722,71 @@ $(document).ready(function () {
       }
     });
   });
+
+  // Transfer block
+
+  // Add new supplier
+
+  $("#transferBlock").click(function (e) {
+    e.preventDefault();
+    $("#transferBlock").hide();
+    var newWareHouseId = $("#newWareHouseId").val();
+    var reason = $("#reason").val();
+    console.log(`Reason: `, reason);
+
+    if (newWareHouseId == "select") {
+      newWareHouseId = "";
+    }
+
+    submitRequest = false;
+    msg = "Required input is missing";
+
+    if (newWareHouseId != "") {
+      if (reason != "") {
+        submitRequest = true;
+      } else {
+        msg = "Kindly enter reason for transfer";
+      }
+    } else {
+      msg = "Kindly select new warehouse location";
+    }
+
+    if (!submitRequest) {
+      popUpMessage("center", msg, "warning");
+      $("#transferBlock").show();
+    } else {
+      var formData = new FormData(document.getElementById("blockTransferForm"));
+
+      console.log(`formData`, formData);
+
+      $.ajax({
+        type: "POST",
+        url: "/api/block/transfer/",
+        dataType: "JSON",
+        data: formData,
+        processData: false,
+        contentType: false,
+        encrypt: "multipart/form-data",
+        success: function (successResponse) {
+          $("#transferBlock").show();
+          popUpMessage("center", successResponse.msg, successResponse.status);
+          if (successResponse.status == "success") {
+            setTimeout(function () {
+              const blockId = btoa(successResponse.id);
+              window.location.href = `/dashboard/inventory/list/`;
+            }, 1500);
+          }
+        },
+        error: function (errorResponse) {
+          $("#transferBlock").show();
+          console.log(`Error:`, errorResponse);
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+        },
+      });
+    }
+  });
 });

@@ -714,7 +714,7 @@ nav.side-nav ul li:hover > .side-menu ul li {
 }
 
 nav.side-nav ul li:hover .side-menu ul li a {
-  line-height: 24px;
+  line-height: 28px;
   color: #f5f5f5;
 }
 
@@ -723,7 +723,7 @@ nav.side-nav ul li:hover .side-menu ul li a i {
 }
 
 nav.side-nav ul li:hover .side-menu ul li a:hover {
-  line-height: 24px;
+  line-height: 28px;
   color: #fff;
   background: rgba(3, 99, 123, 0.5);
 }
@@ -2654,6 +2654,12 @@ section.form
 }
 
 a.tableActionIconBtn {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+span.tableActionIconBtn {
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
