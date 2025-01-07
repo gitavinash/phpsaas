@@ -21,7 +21,7 @@ if (isset($validRequest)) {
 
     mysqli_query($connection, "START TRANSACTION");
 
-    if ($checkBlock = mysqli_query($connection, "SELECT block_product_type, block_gross_size, block_damage_size FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+    if ($checkBlock = mysqli_query($connection, "SELECT block_product_type, block_gross_size, block_damage_size, block_size_dimension FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
             $blockItemIndex = explode(",", $blockItemIndex);
@@ -129,8 +129,13 @@ if (isset($validRequest)) {
                     break;
             }
 
-            $totalArea = number_format((float)$totalArea, 2, '.', '');
-            $block_net_size = $totalArea - $block_damage_size;
+            if (strpos($block_size_dimension, '_weight') !== false) {
+                $totalArea = array_sum($width);
+                $block_net_size = $totalArea;
+            } else {
+                $totalArea = number_format((float)$totalArea, 2, '.', '');
+                $block_net_size = $totalArea - $block_damage_size;
+            }
 
             $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size='{$totalArea}' WHERE block_id='{$blockId}'AND block_site_id=" . SITE_ID;
 

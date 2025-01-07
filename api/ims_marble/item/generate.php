@@ -29,7 +29,7 @@ if (isset($validRequest)) {
     mysqli_query($connection, "START TRANSACTION");
 
     if ($checkBlock = mysqli_query($connection, "SELECT block_product_type,
-block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_item_status IN (1, 3) AND block_status=1 AND block_item_parent_id={$blockId} AND block_site_id=" . SITE_ID)) {
+block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimension FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_item_status IN (1, 3) AND block_status=1 AND block_item_parent_id={$blockId} AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
 
@@ -47,6 +47,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNameP
                 for ($j = 0; $j < $slabsData[$i]['totalSlab']; $j++) {
                     $slabValues = $slabValues . "({$blockId}, " . SITE_ID . ", " . USER_ID . ", '{$measurementType}', '{$slabsData[$i]['slabLenght']}', '{$slabsData[$i]['slabHeight']}', 1, now()),";
                     $singleItemArea[] = $slabsData[$i]['slabLenght'] * $slabsData[$i]['slabHeight'];
+                    $singleItemWeight[] = $slabsData[$i]['slabLenght'];
                 }
 
                 $blockTotalSlabs = $blockTotalSlabs + $slabsData[$i]['totalSlab'];
@@ -141,7 +142,12 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs FROM {$tableNameP
                             break;
                     }
 
-                    $totalArea = number_format((float)$totalArea, 2, '.', '');
+
+                    if (strpos($block_size_dimension, '_weight') !== false) {
+                        $totalArea = array_sum($singleItemWeight);
+                    } else {
+                        $totalArea = number_format((float)$totalArea, 2, '.', '');
+                    }
 
                     $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size=block_gross_size+'{$totalArea}', block_net_size=block_net_size+'{$totalArea}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID;
                     $updateBlock = mysqli_query($connection, $updateBlockQuery);
