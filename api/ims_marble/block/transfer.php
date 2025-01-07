@@ -27,7 +27,7 @@ if ($reason != '') {
 }
 
 if (isset($validRequest)) {
-    if ($checkBlock = mysqli_query($connection, "SELECT block_size_dimension, block_product_type, block_gross_size, block_damage_size, block_net_size, COUNT(block_item_id) as totalExistingSlab FROM {$tableNamePrefix}block INNER JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status=1 AND block_item_status=1 AND block_site_id=" . SITE_ID)) {
+    if ($checkBlock = mysqli_query($connection, "SELECT block_size_dimension, block_product_type, block_gross_size, block_damage_size, block_net_size, COUNT(block_item_id) as totalExistingSlab, block_status FROM {$tableNamePrefix}block INNER JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status=1 AND block_item_status=1 AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
 
@@ -42,12 +42,13 @@ if (isset($validRequest)) {
                     'new_location' => $newWareHouseId,
                     'reason' => $reason,
                     'description' => $description,
+                    'old_status' =>  $block_status
                 )
             ), TRUE);
 
             // Add new request
 
-            $addNewRequest = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "request(request_site_id, request_user_id, request_type, request_relation_id, request_data, request_status, request_time) VALUES(" . SITE_ID . ", " . USER_ID . ", 'block', '{$blockId}', '{$requestData}', 0, current_timestamp())");
+            $addNewRequest = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "request(request_site_id, request_user_id, request_type, request_relation_id, request_title, request_data, request_status, request_time) VALUES(" . SITE_ID . ", " . USER_ID . ", 'block', '{$blockId}', 'Warehouse Transfer request', '{$requestData}', 0, current_timestamp())");
 
             if ($updateBlock && $addNewRequest) {
                 $httpStatus = 201;

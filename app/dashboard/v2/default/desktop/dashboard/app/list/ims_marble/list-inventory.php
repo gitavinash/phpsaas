@@ -81,7 +81,11 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 if (strpos($block_size_dimension, '_weight') !== false) {
                     echo "<td>
                         <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block'><i class='fi fi-rr-edit bgWhite'></i></a>
-                        <a href='/dashboard/inventory/transfer/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn transferBtn' title='Transfer block to new location' data-title='Transfer block to new location'><i class='fi fi-rr-calendar-shift-swap bgWhite'></i></a>
+                        ";
+
+                    echo (($block_status != 5) ? "<a href='/dashboard/inventory/transfer/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn transferBtn' title='Transfer block to new location' data-title='Transfer block to new location'><i class='fi fi-rr-calendar-shift-swap bgWhite'></i></a>" : "");
+                    echo "
+                        <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
                         <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                     </td>";
                 } else {
