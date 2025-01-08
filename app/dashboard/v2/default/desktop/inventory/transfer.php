@@ -27,7 +27,7 @@
 
                     $blockId = base64_decode($id);
 
-                    if ($checkInventory = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+                    if ($checkInventory = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=block_warehouse_id WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID . " AND warehouse_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($checkInventory) > 0) {
                             $validId = true;
                             extract(mysqli_fetch_assoc($checkInventory));
@@ -64,7 +64,7 @@
                                         if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                                             if (mysqli_num_rows($warehouseList) > 0) {
                                                 while ($row = mysqli_fetch_array($warehouseList)) {
-                                                    echo "<option value='{$row['warehouse_id']}'" . (($row['warehouse_id'] == $block_warehouse_id) ? 'selected' : '') . ">{$row['warehouse_title']}</option>";
+                                                    echo "<option value='{$row['warehouse_id']}_{$row['warehouse_title']}'" . (($row['warehouse_id'] == $block_warehouse_id) ? 'selected' : '') . ">{$row['warehouse_title']}</option>";
                                                 }
                                             }
                                         }
@@ -82,7 +82,7 @@
                                         if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_id!={$block_warehouse_id} AND warehouse_site_id=" . SITE_ID)) {
                                             if (mysqli_num_rows($warehouseList) > 0) {
                                                 while ($row = mysqli_fetch_array($warehouseList)) {
-                                                    echo "<option value='{$row['warehouse_id']}'>{$row['warehouse_title']}</option>";
+                                                    echo "<option value='{$row['warehouse_id']}_{$row['warehouse_title']}'>{$row['warehouse_title']}</option>";
                                                 }
                                             }
                                         }
@@ -109,7 +109,7 @@
                             <div class="box-1">
                                 <div class="form-group">
                                     <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
-                                    <input type="hidden" name="currentWarehouse" value="<?php echo $block_warehouse_id ?>">
+                                    <input type="hidden" name="currentWarehouse" value="<?php echo $block_warehouse_id . '_' . $warehouse_title ?>">
                                     <input type="button" class="btn btn-green" id="transferBlock" value="Send transfer request">
                                 </div>
                             </div>

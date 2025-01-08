@@ -281,10 +281,8 @@ $(document).ready(function (e) {
               setTimeout(function () {
                 console.log(`disableRedirect`, disableRedirect);
                 if (disableRedirect) {
-                  console.log(`i m here`);
                   window.location.href = `/dashboard/${lastPart}/list/`;
                 } else {
-                  console.log(`i m here 2`);
                   location.reload();
                 }
               }, 1500);

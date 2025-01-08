@@ -1,7 +1,7 @@
 <?php
 $statusCondition = '';
-if (isset($leadStatus)) {
-    $statusCondition = "request_status={$leadStatus} AND ";
+if (isset($status)) {
+    $statusCondition = "request_status={$status} AND ";
 }
 
 if (isset($daterange)) {

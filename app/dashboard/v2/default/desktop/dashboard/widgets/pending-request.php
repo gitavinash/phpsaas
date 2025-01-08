@@ -6,7 +6,7 @@ if ($site_access_type == 'administrator') {
     $userFilter = "?agentId={$user_id}&";
 }
 
-$url = "/dashboard/request/list/{$userFilter}status=2&daterange={$startDate} - {$endDate}";
+$url = "/dashboard/request/list/{$userFilter}status=0&daterange={$startDate} - {$endDate}";
 
 ?>
 <a href="<?php echo $url ?>">

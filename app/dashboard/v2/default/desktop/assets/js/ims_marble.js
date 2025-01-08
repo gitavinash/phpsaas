@@ -1789,4 +1789,45 @@ $(document).ready(function () {
       });
     }
   });
+
+  $("#approveRequestBtn").click(function (e) {
+    $("#approveRequestBtn").hide();
+    console.log(`im here`);
+    e.preventDefault();
+    var requestId = $(this).attr("data-id");
+
+    var processRequest = false;
+    if (requestId != "") {
+      processRequest = true;
+    } else {
+      msg = "Request id is required";
+    }
+
+    if (processRequest) {
+      $.ajax({
+        type: "GET",
+        url: "/api/request/approve/?id=" + requestId,
+        dataType: "JSON",
+        success: function (successResponse) {
+          popUpMessage("center", successResponse.msg, successResponse.status);
+          if (successResponse.status == "success") {
+            setTimeout(function () {
+              window.location.href = `/dashboard/request/list/`;
+            }, 1500);
+          }
+          $("#approveRequestBtn").show();
+        },
+        error: function (errorResponse) {
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+          $("#approveRequestBtn").show();
+        },
+      });
+    } else {
+      popUpMessage("center", msg, "warning");
+    }
+  });
 });
