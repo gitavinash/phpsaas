@@ -33,11 +33,11 @@ if (isset($_GET['status'])) {
         $statusFilter = "AND block_status='{$statusFilterValue}'";
     } else {
         $statusFilterValue = '#';
-        $statusFilter = 'block_status!=2';
+        $statusFilter = 'AND block_status!=2';
     }
 } else {
     $statusFilterValue = '#';
-    $statusFilter = 'block_status!=2';
+    $statusFilter = 'AND block_status!=2';
 }
 
 ?>
@@ -196,12 +196,13 @@ if (isset($_GET['status'])) {
 
                 echo "</tr>";
             }
-        } else {
-            if (DEVELOPMENT_MODE == TRUE) {
-                echo "Debugging query: SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_code ASC, block_title ASC";
-            }
         }
         echo "</tbody>";
+    } else {
+        if (DEVELOPMENT_MODE == TRUE) {
+            echo "Debugging: " . mysqli_error($connection);
+            echo "Query: SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_site_id='" . SITE_ID . "' {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} ORDER BY block_code ASC, block_title ASC";
+        }
     }
 
     ?>
