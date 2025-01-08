@@ -1792,7 +1792,6 @@ $(document).ready(function () {
 
   $("#approveRequestBtn").click(function (e) {
     $("#approveRequestBtn").hide();
-    console.log(`im here`);
     e.preventDefault();
     var requestId = $(this).attr("data-id");
 
@@ -1828,6 +1827,24 @@ $(document).ready(function () {
       });
     } else {
       popUpMessage("center", msg, "warning");
+    }
+  });
+
+  $("#applyInventoryFilter").click(function (e) {
+    e.preventDefault();
+    var warehouseFilter = $("#warehouseFilter").val();
+    var typeFilter = $("#typeFilter").val();
+    var statusFilter = $("#statusFilter").val();
+    if (warehouseFilter != "#" || typeFilter != "#" || statusFilter != "#") {
+      var currentUrl = `${window.location.origin}${window.location.pathname}`;
+      var redirectTo = `${currentUrl}?warehouse=${warehouseFilter}&product_type=${typeFilter}&status=${statusFilter}`;
+      window.location.href = redirectTo;
+    } else {
+      popUpMessage(
+        "center",
+        "Kinldy select minimum 1 filter conditions",
+        "warning"
+      );
     }
   });
 });

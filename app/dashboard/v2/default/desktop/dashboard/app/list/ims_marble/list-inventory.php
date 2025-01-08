@@ -1,6 +1,98 @@
 <?php
 $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
+
+if (isset($_GET['warehouse'])) {
+    if ($_GET['warehouse'] != '') {
+        $warehouseFilterValue = $_GET['warehouse'];
+        $warehouseFilter = "AND block_warehouse_id='{$warehouseFilterValue}'";
+    } else {
+        $warehouseFilterValue = '#';
+        $warehouseFilter = '';
+    }
+} else {
+    $warehouseFilterValue = '#';
+    $warehouseFilter = '';
+}
+
+if (isset($_GET['product_type'])) {
+    if ($_GET['product_type'] != '') {
+        $typeFilterValue = $_GET['product_type'];
+        $typeFilter = "AND block_product_type='{$typeFilterValue}'";
+    } else {
+        $typeFilterValue = '#';
+        $typeFilter = '';
+    }
+} else {
+    $typeFilterValue = '#';
+    $typeFilter = '';
+}
+
+if (isset($_GET['status'])) {
+    if ($_GET['status'] != '') {
+        $statusFilterValue = $_GET['status'];
+        $statusFilter = "AND block_status='{$statusFilterValue}'";
+    } else {
+        $statusFilterValue = '#';
+        $statusFilter = 'block_status!=2';
+    }
+} else {
+    $statusFilterValue = '#';
+    $statusFilter = 'block_status!=2';
+}
+
 ?>
+<div class="tableFilter">
+    <div class="filterBox">
+        <label>Filter by</label>
+    </div>
+    <div class="filterBox">
+        <select id="warehouseFilter">
+            <option value="">Warehouse</option>
+            <?php
+
+            if ($checkWarehouse = mysqli_query($connection, "SELECT warehouse_id, warehouse_title FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND warehouse_site_id=" . SITE_ID)) {
+                if (mysqli_num_rows($checkWarehouse) != 0) {
+                    while ($warehouseData = mysqli_fetch_assoc($checkWarehouse)) {
+                        echo "<option value='{$warehouseData['warehouse_id']}' " . (($warehouseData['warehouse_id'] == $warehouseFilterValue) ? 'selected' : '') . " >{$warehouseData['warehouse_title']}</option>";
+                    }
+                }
+            }
+
+            ?>
+        </select>
+    </div>
+    <div class="filterBox">
+        <select id="typeFilter">
+            <option value="">Product type</option>
+            <?php
+
+            if ($checkProductType = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID)) {
+                if (mysqli_num_rows($checkProductType) != 0) {
+                    while ($productData = mysqli_fetch_assoc($checkProductType)) {
+                        $productTypeValues = strtolower(str_replace('measurement_', '', $productData['site_configuration_key']));
+                        echo "<option value='{$productTypeValues}'" . (($productTypeValues == $typeFilterValue) ? 'selected' : '') . ">" . ucwords(str_replace('measurement_', '', $productData['site_configuration_key'])) . "</option>";
+                    }
+                }
+            }
+
+            ?>
+        </select>
+    </div>
+    <div class="filterBox">
+        <select id="statusFilter">
+            <option value="">Status</option>
+            <option value="1" <?php echo (($statusFilterValue == '1') ? 'selected' : '') ?>>Active</option>
+            <option value="3" <?php echo (($statusFilterValue == '3') ? 'selected' : '') ?>>Sold out</option>
+            <option value="4" <?php echo (($statusFilterValue == '4') ? 'selected' : '') ?>>Return</option>
+            <option value="2" <?php echo (($statusFilterValue == '2') ? 'selected' : '') ?>>Delete</option>
+            <option value="5" <?php echo (($statusFilterValue == '5') ? 'selected' : '') ?>>Transfer request pending</option>
+            <option value="0" <?php echo (($statusFilterValue == '0') ? 'selected' : '') ?>>Pending</option>
+        </select>
+    </div>
+    <div class="filterBox">
+        <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
+    </div>
+</div>
 <table class="showTableList">
     <thead>
         <tr>
@@ -20,12 +112,13 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
     <?php
 
     if ($site_access_type != 'administrator' && $site_access_type != 'both') {
-        $userFilter = 'block_user_id="' . USER_ID . '" AND ';
+        $userFilter = 'AND block_user_id="' . USER_ID . '" ';
     } else {
         $userFilter = '';
     }
 
-    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE {$userFilter} block_status!=2 AND block_site_id='" . SITE_ID . "' ORDER BY block_code ASC, block_title ASC")) {
+
+    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_site_id='" . SITE_ID . "' {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} ORDER BY block_code ASC, block_title ASC")) {
         echo "<tbody>";
         if (mysqli_num_rows($inventoryList) > 0) {
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
@@ -102,6 +195,10 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                 }
 
                 echo "</tr>";
+            }
+        } else {
+            if (DEVELOPMENT_MODE == TRUE) {
+                echo "Debugging query: SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} AND block_site_id='" . SITE_ID . "' ORDER BY block_code ASC, block_title ASC";
             }
         }
         echo "</tbody>";

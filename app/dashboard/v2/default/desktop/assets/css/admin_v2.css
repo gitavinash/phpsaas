@@ -3365,3 +3365,33 @@ strong.stockInfoList {
 .highlight-required {
   border: 2px solid #c70039 !important;
 }
+
+.tableFilter {
+  float: left;
+  width: 100%;
+}
+
+.tableFilter .filterBox {
+  float: left;
+  width: auto;
+}
+.tableFilter .filterBox label {
+  float: left;
+  line-height: 36px;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.tableFilter .filterBox select {
+  float: left;
+  padding: 7px 10px;
+  font-size: 16px;
+  border: 1px solid #3333;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.tableFilter .filterBox a {
+  float: left;
+  padding: 8px 20px;
+}
