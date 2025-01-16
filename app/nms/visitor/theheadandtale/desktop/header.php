@@ -42,46 +42,6 @@ if (isset($_COOKIE['user_data'])) {
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <style>
-        @media print {
-            body * {
-                visibility: hidden;
-                /* Hide all content */
-            }
-
-            .no-print {
-                visibility: visible;
-                /* Show only this content */
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                /* Center horizontally and vertically */
-                font-size: 20px;
-                font-weight: bold;
-                color: red;
-                text-align: center;
-                page-break-after: avoid;
-                /* Prevent page breaks */
-                max-width: 90%;
-                /* Ensure content fits within the page */
-                word-wrap: break-word;
-                /* Handle long text gracefully */
-            }
-
-            html,
-            body {
-                height: 100%;
-                /* Ensure full-page height */
-                overflow: hidden;
-                /* Prevent scrolling during print */
-                margin: 0;
-                /* Remove margins */
-                padding: 0;
-            }
-
-        }
-    </style>
     <?php
 
     if (BASE_URL == '/thank-you/') {
