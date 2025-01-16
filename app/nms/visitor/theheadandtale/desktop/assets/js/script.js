@@ -219,3 +219,26 @@ $("body").on("contextmenu", function (e) {
 $("body").bind("cut copy", function (e) {
   e.preventDefault();
 });
+
+//
+// For Print
+//
+
+// Override the print method
+window.print = function () {
+  alert("Print is not allowed");
+};
+
+// Listen for print media queries and show the message
+const noPrintDiv = document.querySelector(".no-print");
+const mediaQueryList = window.matchMedia("print");
+
+mediaQueryList.addEventListener("change", (e) => {
+  if (e.matches) {
+    // Print dialog is opened
+    noPrintDiv.style.display = "block";
+  } else {
+    // Print dialog is closed
+    noPrintDiv.style.display = "none";
+  }
+});

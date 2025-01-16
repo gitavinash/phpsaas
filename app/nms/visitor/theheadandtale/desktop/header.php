@@ -42,6 +42,25 @@ if (isset($_COOKIE['user_data'])) {
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .no-print {
+                visibility: visible;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 20px;
+                font-weight: bold;
+                color: red;
+                text-align: center;
+            }
+        }
+    </style>
     <?php
 
     if (BASE_URL == '/thank-you/') {
@@ -70,6 +89,8 @@ if (isset($_COOKIE['user_data'])) {
 </head>
 
 <body oncontextmenu="return false;">
+    <div class="no-print" style="display: none;">Print is not allowed<br />Protected by Blumox Technologies<br />www.blumox.com</div>
+    </div>
     <header>
         <div class="myHeader <?php echo (($link_type == 'page') ? 'about_bg' : '') ?>">
             <div class="container">
