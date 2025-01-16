@@ -248,7 +248,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id, enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
@@ -299,7 +299,12 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                             on <time>" . date('d-m-Y h:i A', strtotime(($enquiry_notes_update))) . "</time></span>
                                                     </div>
                                                     {$commentBox}
+                                                    ";
+                                        echo "
                                                 </li>";
+                                        if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
+                                            echo "<a href='#' data-type='leads/follow_up' data-id='{$enquiry_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
+                                        }
                                     }
                                     echo "</ol>";
                                 }
@@ -409,7 +414,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id, enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
@@ -472,6 +477,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
+                                        if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
+                                            echo "<a href='#' data-type='leads/payment' data-id='{$enquiry_notes_id}' title='Delete payment record' data-title='Delete payment record' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete payment record</a>";
+                                        }
                                     }
                                     echo "</ol>";
                                 }
