@@ -70,7 +70,7 @@ if (isset($_COOKIE['user_data'])) {
 </head>
 
 <body oncontextmenu="return false;">
-    <div class="no-print" style="display: none;">Print is not allowed<br />Protected by Blumox Technologies<br />www.blumox.com</div>
+    <div class="no-print" style="display: none;">Print is not allowed</div>
     </div>
     <header>
         <div class="myHeader <?php echo (($link_type == 'page') ? 'about_bg' : '') ?>">
