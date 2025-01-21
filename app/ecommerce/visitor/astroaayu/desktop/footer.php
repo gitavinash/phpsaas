@@ -85,81 +85,81 @@
 <!-- bootstrap js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- font-awesome-kit -->
-<script src="https://kit.fontawesome.com/c051bef6f7.js" crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <!-- jquery -->
 <!-- slider main -->
 <script>
-$(".testimonial_slider").slick({
-    dots: false,
-    infinite: false,
-    speed: 300,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    autoplay: false,
-    autoplaySpeed: 3000,
-    arrows: true,
-    prevArrow: '<span class="prev_arrow"><i class="fas fa-arrow-left"></i></span>',
-    nextArrow: '<span class="next-arrow"><i class="fas fa-arrow-right"></i></span>',
-    responsive: [{
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 2,
-                slidesToScroll: 1,
-                infinite: true,
+    $(".testimonial_slider").slick({
+        dots: false,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        autoplay: false,
+        autoplaySpeed: 3000,
+        arrows: true,
+        prevArrow: '<span class="prev_arrow"><i class="fas fa-arrow-left"></i></span>',
+        nextArrow: '<span class="next-arrow"><i class="fas fa-arrow-right"></i></span>',
+        responsive: [{
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    infinite: true,
+                },
             },
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
             },
-        },
-        {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
             },
-        },
-    ],
-});
+        ],
+    });
 </script>
 <script>
-$(".testi_slider").slick({
-    dots: true,
-    arrows: true,
-    infinite: true,
-    speed: 300,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    autplay: true,
-    autplaySpeed: 1500,
-    responsive: [{
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                infinite: true,
-                dots: true,
+    $(".testi_slider").slick({
+        dots: true,
+        arrows: true,
+        infinite: true,
+        speed: 300,
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        autplay: true,
+        autplaySpeed: 1500,
+        responsive: [{
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: true,
+                },
             },
-        },
-        {
-            breakpoint: 600,
-            settings: {
-                slidesToShow: 1,
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                },
             },
-        },
-        {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
             },
-        },
-    ],
-});
+        ],
+    });
 </script>
 </body>
 
