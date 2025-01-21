@@ -96,6 +96,7 @@ if (isset($_GET['status'])) {
 <table class="showTableList">
     <thead>
         <tr>
+            <th>S. No.</th>
             <th>Code</th>
             <th>Name</th>
             <th>Warehouse</th>
@@ -121,6 +122,12 @@ if (isset($_GET['status'])) {
     if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_site_id='" . SITE_ID . "' {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} ORDER BY block_code ASC, block_title ASC")) {
         echo "<tbody>";
         if (mysqli_num_rows($inventoryList) > 0) {
+            $serialNo = 1;
+            $totalNoOfSlabs = 0;
+            $totalNoOfAvailableSlabs = 0;
+            $totalGrossQty = 0;
+            $totalNetQty = 0;
+            $totalLessQty = 0;
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
                 extract($inventoryData);
 
@@ -159,6 +166,7 @@ if (isset($_GET['status'])) {
                 }
 
                 echo "<tr>
+                                <td>{$serialNo}</td>
                                 <td style='font-weight: 300'>" . (($block_code != '') ? '<strong style="color: #000; font-weight: 700" >' . $block_code . '</strong>' : '') . "</td>
                                 <td style='font-weight: 300'>$block_title</td>
                                 <td>{$warehouse_title}</td>
@@ -195,6 +203,13 @@ if (isset($_GET['status'])) {
                 }
 
                 echo "</tr>";
+                $serialNo++;
+
+                $totalNoOfSlabs = $totalNoOfSlabs + $block_total_item;
+                $totalNoOfAvailableSlabs = $totalNoOfAvailableSlabs + $block_available;
+                $totalGrossQty = $totalGrossQty + $block_gross_size;
+                $totalNetQty = $totalNetQty + $block_net_size;
+                $totalLessQty = $totalLessQty + $block_damage_size;
             }
         }
         echo "</tbody>";
