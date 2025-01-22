@@ -93,7 +93,7 @@ if (isset($_GET['status'])) {
         <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
     </div>
 </div>
-<table class="showTableList">
+<table class="showInventoryTableList display nowrap" style="width: 100%;">
     <thead>
         <tr>
             <th>S. No.</th>
@@ -123,11 +123,11 @@ if (isset($_GET['status'])) {
         echo "<tbody>";
         if (mysqli_num_rows($inventoryList) > 0) {
             $serialNo = 1;
-            $totalNoOfSlabs = 0;
-            $totalNoOfAvailableSlabs = 0;
-            $totalGrossQty = 0;
-            $totalNetQty = 0;
-            $totalLessQty = 0;
+            $totalNoOfSlabs = array();
+            $totalNoOfAvailableSlabs = array();
+            $totalGrossQty = array();
+            $totalNetQty = array();
+            $totalLessQty = array();
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
                 extract($inventoryData);
 
@@ -205,14 +205,23 @@ if (isset($_GET['status'])) {
                 echo "</tr>";
                 $serialNo++;
 
-                $totalNoOfSlabs = $totalNoOfSlabs + $block_total_item;
-                $totalNoOfAvailableSlabs = $totalNoOfAvailableSlabs + $block_available;
-                $totalGrossQty = $totalGrossQty + $block_gross_size;
-                $totalNetQty = $totalNetQty + $block_net_size;
-                $totalLessQty = $totalLessQty + $block_damage_size;
+                $totalNoOfSlabs[] = $block_total_item;
+                $totalNoOfAvailableSlabs[] = $block_available;
+                $totalGrossQty[] = $block_gross_size;
+                $totalNetQty[] = $block_net_size;
+                $totalLessQty[] = $block_damage_size;
             }
         }
+        echo "
+        <th colspan=5>Total</th>
+        <th>" . array_sum($totalNoOfSlabs) . "</th>
+        <th>" . array_sum($totalNoOfAvailableSlabs) . "</th>
+        <th>" . array_sum($totalGrossQty) . "</th>
+        <th>" . array_sum($totalNetQty) . "</th>
+        <th>" . array_sum($totalLessQty) . "</th>
+        <th colspan=2></th>";
         echo "</tbody>";
+        print_r($totalNoOfSlabs);
     } else {
         if (DEVELOPMENT_MODE == TRUE) {
             echo "Debugging: " . mysqli_error($connection);
