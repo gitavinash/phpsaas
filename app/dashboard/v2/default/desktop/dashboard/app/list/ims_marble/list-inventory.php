@@ -221,7 +221,6 @@ if (isset($_GET['status'])) {
         <th>" . array_sum($totalLessQty) . "</th>
         <th colspan=2></th>";
         echo "</tbody>";
-        print_r($totalNoOfSlabs);
     } else {
         if (DEVELOPMENT_MODE == TRUE) {
             echo "Debugging: " . mysqli_error($connection);
