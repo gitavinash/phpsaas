@@ -213,13 +213,16 @@ if (isset($_GET['status'])) {
             }
         }
         echo "
-        <th colspan=5>Total</th>
-        <th>" . array_sum($totalNoOfSlabs) . "</th>
-        <th>" . array_sum($totalNoOfAvailableSlabs) . "</th>
-        <th>" . array_sum($totalGrossQty) . "</th>
-        <th>" . array_sum($totalNetQty) . "</th>
-        <th>" . array_sum($totalLessQty) . "</th>
-        <th colspan=2></th>";
+        <tfoot>
+        <tr>
+            <td colspan=5>Total</td>
+            <td>" . array_sum($totalNoOfSlabs) . "</td>
+            <td>" . array_sum($totalNoOfAvailableSlabs) . "</td>
+            <td>" . array_sum($totalGrossQty) . "</td>
+            <td>" . array_sum($totalNetQty) . "</td>
+            <td>" . array_sum($totalLessQty) . "</td>
+            <td colspan=2></td>
+        </tr></tfoot>";
         echo "</tbody>";
     } else {
         if (DEVELOPMENT_MODE == TRUE) {

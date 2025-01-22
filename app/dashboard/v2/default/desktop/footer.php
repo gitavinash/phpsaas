@@ -54,6 +54,76 @@
 						// Store the Quill instance in the array
 						quillInstances.push(quill);
 					});
+					$(document).ready(function() {
+						$(".showInventoryTableList").DataTable({
+							pageLength: 50,
+							fixedHeader: true, // Ensure the header is fixed
+							responsive: false, // Disable responsiveness as it may conflict with FixedColumns
+							searching: true,
+							lengthChange: false,
+							autoWidth: false,
+							ordering: false,
+							scrollX: true, // Enable horizontal scrolling
+							scrollCollapse: true, // Allow table to collapse to fit content
+							columnDefs: [{
+									type: "date",
+									targets: 4, // Assuming the date column is the fifth column (index 4)
+								},
+								{
+									width: "20%",
+									targets: 1, // Set width for the second column
+								},
+								{
+									width: "150px",
+									targets: -1, // Set minimum width for the last column
+								},
+								{
+									targets: "_all", // Apply to all columns
+									createdCell: function(td, cellData, rowData, row, col) {
+										$(td).css({
+											"max-width": "150px", // Set maximum width
+											"white-space": "normal", // Allow text wrapping
+											"word-wrap": "break-word", // Ensure words break if necessary
+										});
+									},
+								},
+							],
+							createdRow: function(row, data, dataIndex) {
+								// Get the status from the row data
+								var rowDataStatus = data[data.length - 2].toLowerCase().replace(" ", "_");
+
+								// Map status to background color
+								var colors = {
+									draft: "#f9e29f",
+									initiate: "#f5f5f5",
+									active: "#b4e2b4",
+									approved: "#b4e2b4",
+									sold_out: "#b87085",
+									success: "#A9D5D1",
+									duplicate: "#C8C8F0",
+									follow_up: "#E6AF60",
+									payment_initiate: "#B3E6F0",
+									payment_refund: "#F6B0DB",
+									failed: "#F8B3B3",
+									soft_delete: "#F5B0B0",
+									delete: "#F8A6A6",
+								};
+
+								var color = colors[rowDataStatus] || "#D1D2D4"; // Default to grey
+
+								// Apply background color to row
+								$(row).css("background-color", color);
+								$(row).find("td").css("background-color", color + " !important");
+							},
+							fixedColumns: {
+								leftColumns: 2, // Freeze the first two columns
+								rightColumns: 1, // Freeze the last column
+							},
+							order: [
+								[4, "desc"],
+							], // Order by the fifth column (date)
+						});
+					});
 				</script>
 				<?php
 
