@@ -13,20 +13,20 @@
             if (file_exists($leadForm)) {
                 require_once $leadForm;
             } else { ?>
-            <table class="showTableList">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Company</th>
-                        <th>Address</th>
-                        <th>City</th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td colspan="5">Table informartion is missing</td>
-                    </tr>
-                </thead>
-            </table>
+                <table class="showInventoryTableList">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Table informartion is missing</td>
+                        </tr>
+                    </thead>
+                </table>
             <?php
             }
 
