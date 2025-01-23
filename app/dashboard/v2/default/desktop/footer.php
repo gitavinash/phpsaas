@@ -1,6 +1,6 @@
 				</div>
 
-				<!-- <footer>
+				<footer>
 					<div class="credit">
 						<p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
 								<a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
@@ -10,7 +10,7 @@
 								India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
 										Technologies</strong></a></p>
 					</div>
-				</footer> -->
+				</footer>
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
@@ -56,19 +56,38 @@
 					});
 					$(document).ready(function() {
 						$(".showInventoryTableList").DataTable({
-							pageLength: 100,
+							pageLength: 50,
 							fixedHeader: true,
 							responsive: false,
 							searching: true,
 							lengthChange: false,
 							autoWidth: false,
-							ordering: false,
+							ordering: true,
 							scrollX: true,
 							scrollCollapse: true,
 							columnDefs: [{
-								targets: -1,
-								width: '160px',
-							}, ],
+									type: "date",
+									targets: 4,
+								},
+								{
+									width: "20%",
+									targets: 1,
+								},
+								{
+									width: "150px",
+									targets: -1,
+								},
+								{
+									targets: "_all",
+									createdCell: function(td, cellData, rowData, row, col) {
+										$(td).css({
+											"max-width": "150px",
+											"white-space": "normal",
+											"word-wrap": "break-word",
+										});
+									},
+								},
+							],
 							createdRow: function(row, data, dataIndex) {
 								var rowDataStatus = data[data.length - 2].toLowerCase().replace(" ", "_");
 								var colors = {
@@ -94,7 +113,10 @@
 							fixedColumns: {
 								leftColumns: 2,
 								rightColumns: 1,
-							}
+							},
+							order: [
+								[4, "desc"],
+							],
 						});
 					});
 				</script>
