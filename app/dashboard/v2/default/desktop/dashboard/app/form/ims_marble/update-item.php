@@ -36,7 +36,7 @@ if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUN
                 $measurementType = 'Meter';
                 break;
             case 'mt_weight':
-                $measurementType = 'Matric Ton';
+                $measurementType = 'Metric Ton';
                 break;
             default:
                 $measurementType = 'Feet';
@@ -191,7 +191,7 @@ if (isset($validId)) {
                                         $blockSizeCalculation = 'Meter';
                                         break;
                                     case 'mt_weight':
-                                        $blockSizeCalculation = 'Matric Ton';
+                                        $blockSizeCalculation = 'Metric Ton';
                                     default:
                                         $blockSizeCalculation = 'Feet';
                                         break;

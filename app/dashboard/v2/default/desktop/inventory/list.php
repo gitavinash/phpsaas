@@ -13,7 +13,7 @@
             if (file_exists($leadForm)) {
                 require_once $leadForm;
             } else { ?>
-                <table class="showInventoryTableList">
+                <table class="showTableList">
                     <thead>
                         <tr>
                             <th>Name</th>

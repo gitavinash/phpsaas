@@ -107,7 +107,7 @@ if (isset($_GET['status'])) {
             <th>Net Size</th>
             <th>Less qty.</th>
             <th>Status</th>
-            <th></th>
+            <th style="width:160px"></th>
         </tr>
     </thead>
     <?php
@@ -158,7 +158,7 @@ if (isset($_GET['status'])) {
 
                 switch ($block_size_dimension) {
                     case 'mt_weight':
-                        $blockDimension = 'Matric Ton';
+                        $blockDimension = 'Metric Ton';
                         break;
                     default:
                         $blockDimension = $block_size_dimension;
@@ -212,6 +212,7 @@ if (isset($_GET['status'])) {
                 $totalLessQty[] = $block_damage_size;
             }
         }
+        echo "</tbody>";
         echo "
         <tfoot>
         <tr>
@@ -223,7 +224,6 @@ if (isset($_GET['status'])) {
             <td>" . array_sum($totalLessQty) . "</td>
             <td colspan=2></td>
         </tr></tfoot>";
-        echo "</tbody>";
     } else {
         if (DEVELOPMENT_MODE == TRUE) {
             echo "Debugging: " . mysqli_error($connection);

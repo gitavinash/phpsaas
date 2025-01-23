@@ -3395,16 +3395,3 @@ strong.stockInfoList {
   float: left;
   padding: 8px 20px;
 }
-
-.dataTables_scrollHeadInner,
-.dataTables_scrollBody {
-  width: 100% !important;
-}
-
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
-  overflow: auto !important; /* Fix scroll issues */
-}
-
-table.dataTable {
-  border-collapse: collapse !important; /* Prevent spacing issues */
-}
