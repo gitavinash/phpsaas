@@ -208,7 +208,9 @@ if (isset($validRequest)) {
                             $dimensions = constant(strtoupper('measurement_' . $productType));
                             extract(json_decode($dimensions, TRUE));
 
-                            $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_warehouse_id='{$warehouseId}', block_supplier_id='{$supplier}', block_title='{$name}', block_description='{$description}', block_feature_image='{$featureImage}', block_gallery='{$gallery}', block_code='{$itemCode}', block_thickness_size='{$thickness}', block_thickness_dimension='{$thicknessSize}', block_product_type='{$productType}', block_size_dimension='{$calculationType}', block_total_item='{$totalItem}', block_damage_size='{$block_damage_size}', block_net_size='{$block_net_size}', block_gross_size='{$block_gross_size}'  WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
+                            $blockDescription = mysqli_real_escape_string($connection, $_REQUEST['description']);
+
+                            $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_warehouse_id='{$warehouseId}', block_supplier_id='{$supplier}', block_title='{$name}', block_description='{$blockDescription}', block_feature_image='{$featureImage}', block_gallery='{$gallery}', block_code='{$itemCode}', block_thickness_size='{$thickness}', block_thickness_dimension='{$thicknessSize}', block_product_type='{$productType}', block_size_dimension='{$calculationType}', block_total_item='{$totalItem}', block_damage_size='{$block_damage_size}', block_net_size='{$block_net_size}', block_gross_size='{$block_gross_size}'  WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
 
                             if ($block_product_type != $productType) {
                                 $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_dimension_type='{$measurementType}' WHERE block_item_parent_id='{$blockId}' AND block_item_site_id=" . SITE_ID);
