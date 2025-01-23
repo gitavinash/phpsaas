@@ -191,7 +191,8 @@ if (isset($_GET['status'])) {
                     </td>";
                 } else {
                     echo "<td>
-                                <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
+                        <div class='tableActionButton'>
+                            <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
                                 <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code' data-title='Show QR code' target='_blank'><i class='fi fi-rr-qr-scan bgWhite'></i></a>
                                 <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs' target='_blank'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
                                 <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block' data-title='Print block inventory report' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
@@ -199,7 +200,8 @@ if (isset($_GET['status'])) {
                                 " . (($block_status == 1) ? "
                                 <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>
                                 <a href='#' title='Mark as sold out' data-title='Mark as Sold Out' class='tableActionIconBtn markAsSold' data-type='block' data-id='{$block_id}'  target='_blank'><i class='fi fi-rr-sold-signal bgRed'></i></a>" : "") . "
-                                </td>";
+                        </div>            
+                    </td>";
                 }
 
                 echo "</tr>";

@@ -66,27 +66,18 @@
 							scrollX: true,
 							scrollCollapse: true,
 							columnDefs: [{
-									type: "date",
-									targets: 4,
-								},
-								{
-									width: "20%",
-									targets: 1,
-								},
-								{
-									width: "150px",
+									width: "200px",
 									targets: -1,
 								},
 								{
 									targets: "_all",
 									createdCell: function(td, cellData, rowData, row, col) {
 										$(td).css({
-											"max-width": "150px",
 											"white-space": "normal",
 											"word-wrap": "break-word",
 										});
 									},
-								},
+								}
 							],
 							createdRow: function(row, data, dataIndex) {
 								var rowDataStatus = data[data.length - 2].toLowerCase().replace(" ", "_");
@@ -113,10 +104,7 @@
 							fixedColumns: {
 								leftColumns: 2,
 								rightColumns: 1,
-							},
-							order: [
-								[4, "desc"],
-							],
+							}
 						});
 					});
 				</script>

@@ -2720,7 +2720,6 @@ table {
 }
 
 table tr {
-  height: 80px;
   vertical-align: top;
 }
 
@@ -3405,6 +3404,24 @@ strong.stockInfoList {
   overflow: auto !important; /* Fix scroll issues */
 }
 
+table.dataTable td:last-child {
+  max-width: 200px;
+  width: 200px !important;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
 table.dataTable {
   border-collapse: collapse !important; /* Prevent spacing issues */
+  /* table-layout: fixed; */
+  width: 100%;
+}
+
+.dataTables_wrapper {
+  overflow-x: auto;
+}
+
+.tableActionButton {
+  float: left;
+  width: 160px !important;
 }
