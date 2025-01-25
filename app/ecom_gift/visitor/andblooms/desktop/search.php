@@ -61,7 +61,7 @@ include_once 'header.php';
 
 								extract($queryResultsData);
 
-								echo "<div class='col-md-3'>
+								echo "<div class='col-md-4'>
 													<a href='{$link_url}'>
 														<div class='col-card-3'>
 															<div class='event-card'>
