@@ -26,10 +26,6 @@
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>zoom-gallery/zoom.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <script type='text/javascript' async=''
-        src='https://marketing.contlo.com/js/contlo_messaging_v3.js?v=3&shop_id=0ae781f421ea9e9f9a0c48de4572354e'>
-    </script>
-
     <?php require_once DEFAULT_META; ?>
 
     <meta name="google-site-verification" content="HT7OlsigSJmSLCG9PCz7JmCbyRGmzUeJapljsV4KRIg" />
