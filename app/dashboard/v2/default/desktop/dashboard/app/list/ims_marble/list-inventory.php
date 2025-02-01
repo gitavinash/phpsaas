@@ -91,7 +91,22 @@ if (isset($_GET['status'])) {
     </div>
     <div class="filterBox">
         <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
-        <a href="/print_stock/" target="_blank" class="btn btn-green date-btn">Print Stock</a>
+        <select value="#" id="printInventory" class="filterBox bgYellow printBlockFilter">
+            <option value="#" selected>🖨️ Print inventory</option>
+            <option value="all">Print all inventory</option>
+            <?php
+
+            if ($checkProductType = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID)) {
+                if (mysqli_num_rows($checkProductType) != 0) {
+                    while ($productData = mysqli_fetch_assoc($checkProductType)) {
+                        $productTypeValues = strtolower(str_replace('measurement_', '', $productData['site_configuration_key']));
+                        echo "<option value='{$productTypeValues}'" . (($productTypeValues == $typeFilterValue) ? 'selected' : '') . ">" . ucwords(str_replace('measurement_', '', $productData['site_configuration_key'])) . " inventory</option>";
+                    }
+                }
+            }
+
+            ?>
+        </select>
     </div>
 </div>
 <table class="showInventoryTableList display nowrap" style="width: 100%;">
@@ -178,33 +193,19 @@ if (isset($_GET['status'])) {
                                 <td>" . (($block_net_size == '') ? '0 ' : $block_gross_size - $block_damage_size) . ' ' . $blockDimension . "</td>
                                 <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $blockDimension . "</td>
                                 <td>" . $blockStatus . "</td>
-                                ";
-
-                if (strpos($block_size_dimension, '_weight') !== false) {
-                    echo "<td>
-                        <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
-                        ";
-
-                    echo (($block_status != 5) ? "<a href='/dashboard/inventory/transfer/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn transferBtn' title='Transfer block to new location' data-title='Transfer block to new location' target='_blank'><i class='fi fi-rr-calendar-shift-swap bgWhite'></i></a>" : "");
-                    echo "
-                        <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs' target='_blank'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
-                        <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>
-                    </td>";
-                } else {
-                    echo "<td>
-                        <div class='tableActionButton'>
-                            <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
-                                <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code' data-title='Show QR code' target='_blank'><i class='fi fi-rr-qr-scan bgWhite'></i></a>
-                                <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs' target='_blank'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
-                                <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block' data-title='Print block inventory report' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
-                                <a href='/print_label/?id=" . base64_encode($block_id) . "&theme=2' title='Print block'  data-title='Print block label' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-print bgWhite'></i></a>
-                                " . (($block_status == 1) ? "
-                                <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>
-                                <a href='#' title='Mark as sold out' data-title='Mark as Sold Out' class='tableActionIconBtn markAsSold' data-type='block' data-id='{$block_id}'  target='_blank'><i class='fi fi-rr-sold-signal bgRed'></i></a>" : "") . "
-                        </div>            
-                    </td>";
-                }
-
+                                <td>
+                                    <div class='tableActionButton'>
+                                        <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
+                                            <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code' data-title='Show QR code' target='_blank'><i class='fi fi-rr-qr-scan bgWhite'></i></a>
+                                            <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs' target='_blank'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
+                                            <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block' data-title='Print block inventory report' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
+                                            <a href='/print_label/?id=" . base64_encode($block_id) . "&theme=2' title='Print block'  data-title='Print block label' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-print bgWhite'></i></a>
+                                            " . (($block_status != 5) ? "<a href='/dashboard/inventory/transfer/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn transferBtn' title='Transfer block to new location' data-title='Transfer block to new location' target='_blank'><i class='fi fi-rr-calendar-shift-swap bgYellow'></i></a>" : '') . "
+                                            <a href='#' title='Mark as sold out' data-title='Mark as Sold Out' class='tableActionIconBtn markAsSold' data-type='block' data-id='{$block_id}'  target='_blank'><i class='fi fi-rr-sold-signal bgRed'></i></a>
+                                            " . (($block_status == 1) ? "
+                                            <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>" : "") . "
+                                    </div>            
+                                </td>";
                 echo "</tr>";
                 $serialNo++;
 

@@ -3374,6 +3374,7 @@ strong.stockInfoList {
   float: left;
   width: auto;
 }
+
 .tableFilter .filterBox label {
   float: left;
   line-height: 36px;
@@ -3393,6 +3394,14 @@ strong.stockInfoList {
 .tableFilter .filterBox a {
   float: left;
   padding: 8px 20px;
+}
+
+.tableFilter .filterBox .printBlockFilter {
+  float: left;
+  width: 194px;
+  margin-left: 20px;
+  margin-right: 0px;
+  outline: none;
 }
 
 .dataTables_scrollHeadInner,

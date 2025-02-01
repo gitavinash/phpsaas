@@ -1847,4 +1847,18 @@ $(document).ready(function () {
       );
     }
   });
+
+  // Show inventory print
+
+  $("#printInventory").change(function () {
+    var selectedValue = $(this).val();
+
+    // Check if the value is not empty or "#"
+    if (selectedValue && selectedValue !== "#") {
+      var printInventoryURL =
+        "/print_stock/?inventoryType=" + encodeURI(selectedValue);
+      window.open(printInventoryURL, "_blank");
+      $(this).val("#");
+    }
+  });
 });
