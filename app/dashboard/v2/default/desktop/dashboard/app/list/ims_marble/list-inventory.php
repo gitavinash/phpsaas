@@ -91,6 +91,7 @@ if (isset($_GET['status'])) {
     </div>
     <div class="filterBox">
         <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
+        <a href="/print_stock/" target="_blank" class="btn btn-green date-btn">Print Stock</a>
     </div>
 </div>
 <table class="showInventoryTableList display nowrap" style="width: 100%;">
