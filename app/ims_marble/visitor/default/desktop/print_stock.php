@@ -1,241 +1,199 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
 
-// Table name prefix definition
-$tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Stock| <?php echo SITE_NAME ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Lato", serif;
+            font-style: normal;
+            padding: 0;
+            margin: 0px;
+        }
 
-// Check if the required ID is set
-if (isset($theme)) {
-    // Decode the block ID
-    $theme = isset($theme) ? $theme : 1;
+        @media print {
+            body {
+                font-family: "Lato", serif;
+                font-style: normal;
+                padding: 0;
+                margin: 0;
+            }
 
-    $query = "SELECT block_title, block_qr, block_code, block_total_item, block_available, block_thickness_size, block_thickness_dimension FROM {$tableNamePrefix}block 
-              INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id = warehouse_id 
-              INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id = address_id 
-              INNER JOIN " . TABLE_PREFIX . "city ON address_city_id = city_id 
-              INNER JOIN " . TABLE_PREFIX . "state ON address_state_id = state_id 
-              WHERE block_status = 1 
-              AND block_site_id = " . SITE_ID;
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+            }
 
-    // Execute the query
-    if ($checkBlock = mysqli_query($connection, $query)) {
-        if (mysqli_num_rows($checkBlock) > 0) {
-            $showPage = true;
+            th,
+            td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: left;
+            }
+
+            thead {
+                background-color: #f2f2f2;
+                font-weight: bold;
+            }
+
+            tfoot {
+                display: table-row-group;
+                /* Prevent repeating on each page */
+                background-color: #e6e6e6;
+                font-weight: bold;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            tr:hover {
+                background-color: #ddd;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <?php
+    $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
+    $block_size_dimension = 'sq. ft.';
+    if (isset($_GET['warehouse'])) {
+        if ($_GET['warehouse'] != '#') {
+            $warehouseFilterValue = $_GET['warehouse'];
+            $warehouseFilter = "AND block_warehouse_id='{$warehouseFilterValue}'";
         } else {
-            $msg = "Block not found or inactive.";
+            $warehouseFilterValue = '';
+            $warehouseFilter = '';
         }
     } else {
-        $msg = "Error executing query.";
-        error_log("SQL Error: " . mysqli_error($connection));
+        $warehouseFilterValue = '';
+        $warehouseFilter = '';
     }
-} else {
-    $msg = "Missing required details";
-}
 
-// Display the page if $showPage is set
-if (isset($showPage)) {
-?>
-    <!DOCTYPE html>
-    <html lang="en">
+    if (isset($_GET['product_type'])) {
+        if ($_GET['product_type'] != '#') {
+            $typeFilterValue = $_GET['product_type'];
+            $typeFilter = "AND block_product_type='{$typeFilterValue}'";
+        } else {
+            $typeFilterValue = '';
+            $typeFilter = '';
+        }
+    } else {
+        $typeFilterValue = '';
+        $typeFilter = '';
+    }
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Print label | <?php echo htmlspecialchars(SITE_NAME); ?></title>
+    if (isset($_GET['status'])) {
+        if ($_GET['status'] != '#') {
+            $statusFilterValue = $_GET['status'];
+            $statusFilter = "AND block_status='{$statusFilterValue}'";
+        } else {
+            $statusFilterValue = '';
+            $statusFilter = 'AND block_status!=2';
+        }
+    } else {
+        $statusFilterValue = '';
+        $statusFilter = 'AND block_status!=2';
+    }
 
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #eaeaea;
-            }
+    $query = "
+    SELECT 
+        w.warehouse_title, 
+        block_size_dimension, 
+        CONCAT('[', 
+            GROUP_CONCAT(
+                JSON_OBJECT(
+                    'block_code', b.block_code, 
+                    'block_title', b.block_title, 
+                    'net_weight', b.block_net_size, 
+                    'block_thickness', CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension)
+                )
+                ORDER BY b.block_code ASC
+                SEPARATOR ','
+            ), 
+        ']') AS block_details
+    FROM {$tableNamePrefix}block AS b
+    INNER JOIN " . TABLE_PREFIX . "warehouse AS w ON b.block_warehouse_id = w.warehouse_id 
+    LEFT JOIN " . TABLE_PREFIX . "supplier AS s ON b.block_supplier_id = s.supplier_id 
+    INNER JOIN " . TABLE_PREFIX . "address AS a ON w.warehouse_address_id = a.address_id 
+    INNER JOIN " . TABLE_PREFIX . "state AS st ON a.address_state_id = st.state_id 
+    INNER JOIN " . TABLE_PREFIX . "city AS c ON a.address_city_id = c.city_id 
+    WHERE b.block_site_id = '" . SITE_ID . "' 
+    {$statusFilter} 
+    {$typeFilter} 
+    {$warehouseFilter} 
+    GROUP BY w.warehouse_title
+    ORDER BY w.warehouse_title ASC
+";
 
-            .label-box {
-                width: 48%;
-                /* Adjust width to fit two boxes per row */
-                padding: 10px;
-                background-color: #fff;
-                border: 1px solid #ddd;
-                transition: all 0.3s ease-in-out;
-                margin: 1%;
-                box-sizing: border-box;
-                display: inline-block;
-                vertical-align: top;
-                float: left;
-                /* Float left to place label-box side by side */
-            }
-
-            .label-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 10px;
-            }
-
-            .logo {
-                max-height: 40px;
-            }
-
-            .qr-code-image {
-                width: 70px;
-                height: 70px;
-                border-radius: 15px;
-            }
-
-            .inventory-info {
-                margin-top: 10px;
-                font-size: 10pt;
-            }
-
-            .inventory-info h2 {
-                margin: 0 0 8px 0;
-                font-size: 14px;
-                color: #333;
-            }
-
-            .inventory-info p {
-                margin: 5px 0;
-                font-size: 12px;
-                color: #666;
-            }
-
-            .inventory-info p strong {
-                color: #333;
-            }
-
-            .credit {
-                font-size: 8px;
-                text-align: right;
-                margin-top: 5px;
-            }
-
-            .hideOnPrint {
-                float: left;
-                display: inline-block;
-                background: #40b56f;
-                border: 1px solid #40b56f;
-                font-weight: 300;
-                letter-spacing: 1px;
-                border-radius: 4px;
-                padding: 5px 10px;
-                cursor: pointer !important;
-                color: #fff;
-                font-size: 1.2rem;
-                width: 60%;
-                position: sticky;
-                bottom: 0;
-                margin: 0px 20%;
-                margin-bottom: 1rem;
-            }
-
-            @media print {
-
-                body,
-                html {
-                    margin: 0;
-                    padding: 0;
-                }
-
-                .label-box {
-                    width: 49%;
-                    /* Adjust to ensure two boxes per row on print */
-                    height: 6cm;
-                    /* Adjust height to fit the print page */
-                    border: 1px solid #000;
-                    page-break-inside: avoid;
-                    break-inside: avoid;
-                    margin: 0;
-                    padding: 5mm;
-                    box-sizing: border-box;
-                    float: left;
-                    /* Ensure two boxes are placed side by side */
-                }
-
-                .label-header {
-                    margin-bottom: 5px;
-                }
-
-                .logo {
-                    max-height: 50px;
-                }
-
-                .qr-code-image {
-                    width: 100px;
-                    height: 100px;
-                }
-
-                .inventory-info {
-                    font-size: 11pt;
-                }
-
-                .inventory-info h2 {
-                    font-size: 14pt;
-                    margin-top: 5pt;
-                    float: left;
-                    width: 100%;
-                }
-
-                .inventory-info p {
-                    font-size: 11pt;
-                }
-
-                .credit {
-                    font-size: 8pt;
-                    margin-top: 10pt;
-                }
-
-                .hideOnPrint {
-                    display: none;
-                }
-
-                @page {
-                    size: A4;
-                    margin: 10mm;
-                }
-            }
-        </style>
-
-
-    </head>
-
-    <body>
+    ?>
+    <table class="showInventoryTableList display nowrap" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>S. No.</th>
+                <th>Code</th>
+                <th>Title</th>
+                <th>Net weight</th>
+                <th>Thickness</th>
+            </tr>
+        </thead>
         <?php
 
-        while ($labelData = mysqli_fetch_assoc($checkBlock)) {
-            extract($labelData); ?>
-            <div class="label-box">
-                <div class="label-header">
-                    <img src="<?php echo htmlspecialchars(SITE_LOGO); ?>" alt="Logo" class="logo">
-                    <img src="<?php echo htmlspecialchars($block_qr); ?>" alt="QR Code" class="qr-code-image">
-                </div>
-                <div class='inventory-info'>
-                    <?php if ($theme == 1): ?>
-                        <h2>Block Information</h2>
-                        <p><strong>Name: <?php echo htmlspecialchars($block_title); ?></strong></p>
-                        <p><strong>ID: <?php echo htmlspecialchars($block_code); ?></strong></p>
-                        <p><strong>Slabs: <?php echo htmlspecialchars($block_total_item); ?> <?php echo ($block_total_item == 1) ? 'Pc.' : 'Pcs.'; ?></strong></p>
-                        <p><strong>Thickness: <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?></strong></p>
-                    <?php else: ?>
-                        <p><strong>Name: <?php echo htmlspecialchars($block_title); ?></strong></p>
-                        <p>
-                            <strong>
-                                ID:<?php echo htmlspecialchars($block_code); ?>
-                                Slabs:<?php echo htmlspecialchars($block_total_item) . (($block_total_item == 1) ? ' Pc.' : ' Pcs.'); ?>
-                                Thickness: <?php echo htmlspecialchars($block_thickness_size) . ' ' . htmlspecialchars($block_thickness_dimension); ?>
-                            </strong>
-                        </p>
-                    <?php endif; ?>
-                </div>
-            </div>
-        <?php
+        if ($inventoryList = mysqli_query($connection, $query)) {
+            echo "<tbody>";
+            $totalNetQty = array();
+            if (mysqli_num_rows($inventoryList) > 0) {
+                while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
+                    extract($inventoryData);
+                    $serialNo = 1;
+                    echo "<tr>
+                        <td colspan=5><strong>{$warehouse_title}</strong></td>";
+                    echo "</tr>";
+                    $blockLists = json_decode($block_details, TRUE);
+                    foreach ($blockLists as $block_values) {
+                        echo "<tr>";
+                        echo "<td>{$serialNo}</td>";
+                        echo "<td>{$block_values['block_code']}</td>";
+                        echo "<td>{$block_values['block_title']}</td>";
+                        echo "<td>{$block_values['net_weight']}</td>";
+                        echo "<td>{$block_values['block_thickness']}</td>";
+                        echo "</tr>";
+                        $serialNo++;
+                        $totalNetQty[] = $block_values['net_weight'];
+                    }
+                }
+            }
+            echo "</tbody>";
+            echo "
+        <tfoot>
+        <tr>
+            <td colspan=3><strong>Total</strong></td>
+            <td colspan=4>" . array_sum($totalNetQty) . " {$block_size_dimension}</td>
+        </tr></tfoot>";
+        } else {
+            if (DEVELOPMENT_MODE == TRUE) {
+                echo "Debugging: " . mysqli_error($connection);
+            }
         }
 
         ?>
-        <button onclick="window.print();" class="hideOnPrint" style="margin-top: 20px;">Download / Print</button>
-    </body>
+    </table>
+    <footer>
+        <script>
+            window.onload = function() {
+                window.print();
+            };
+        </script>
+    </footer>
+</body>
 
-    </html>
-<?php
-}
-exit();
-?>
+</html>

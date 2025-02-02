@@ -1346,6 +1346,16 @@ table.dataTable thead th {
   width: 60px;
   height: 60px;
   z-index: 9999;
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.shortcut:hover {
+  transform: scale(1.1);
+}
+
+.shortcut:active {
+  transform: scale(0.95); /* Slight zoom-out when clicked */
 }
 
 .shortcut a {
@@ -1881,8 +1891,6 @@ section.form
 }
 
 .btn {
-  /* background: #40b56f;
-  border: 1px solid #40b56f; */
   background: #d8e9ed;
   border: 1px solid #d8e9ed;
   color: #333;
@@ -1891,6 +1899,16 @@ section.form
   border-radius: 4px;
   padding: 5px 10px;
   cursor: pointer !important;
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.btn:hover {
+  transform: scale(1.02);
+}
+
+.btn:active {
+  transform: scale(0.95); /* Slight zoom-out when clicked */
 }
 
 .btn i {
@@ -2657,6 +2675,16 @@ a.tableActionIconBtn {
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+a.tableActionIconBtn:hover {
+  transform: scale(1.1);
+}
+
+a.tableActionIconBtn:active {
+  transform: scale(0.95); /* Slight zoom-out when clicked */
 }
 
 span.tableActionIconBtn {
@@ -3402,6 +3430,11 @@ strong.stockInfoList {
   margin-left: 20px;
   margin-right: 0px;
   outline: none;
+}
+
+a.printBlockFilter {
+  width: 154px !important;
+  text-align: center;
 }
 
 .dataTables_scrollHeadInner,

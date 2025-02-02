@@ -54,59 +54,6 @@
 						// Store the Quill instance in the array
 						quillInstances.push(quill);
 					});
-					$(document).ready(function() {
-						$(".showInventoryTableList").DataTable({
-							pageLength: 50,
-							fixedHeader: true,
-							responsive: false,
-							searching: true,
-							lengthChange: false,
-							autoWidth: false,
-							ordering: true,
-							scrollX: true,
-							scrollCollapse: true,
-							columnDefs: [{
-									width: "200px",
-									targets: -1,
-								},
-								{
-									targets: "_all",
-									createdCell: function(td, cellData, rowData, row, col) {
-										$(td).css({
-											"white-space": "normal",
-											"word-wrap": "break-word",
-										});
-									},
-								}
-							],
-							createdRow: function(row, data, dataIndex) {
-								var rowDataStatus = data[data.length - 2].toLowerCase().replace(" ", "_");
-								var colors = {
-									draft: "#f9e29f",
-									initiate: "#f5f5f5",
-									active: "#b4e2b4",
-									approved: "#b4e2b4",
-									sold_out: "#b87085",
-									success: "#A9D5D1",
-									duplicate: "#C8C8F0",
-									follow_up: "#E6AF60",
-									payment_initiate: "#B3E6F0",
-									payment_refund: "#F6B0DB",
-									failed: "#F8B3B3",
-									soft_delete: "#F5B0B0",
-									delete: "#F8A6A6",
-								};
-
-								var color = colors[rowDataStatus] || "#D1D2D4";
-								$(row).css("background-color", color);
-								$(row).find("td").css("background-color", color + " !important");
-							},
-							fixedColumns: {
-								leftColumns: 2,
-								rightColumns: 1,
-							}
-						});
-					});
 				</script>
 				<?php
 

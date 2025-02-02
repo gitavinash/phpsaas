@@ -91,7 +91,8 @@ if (isset($_GET['status'])) {
     </div>
     <div class="filterBox">
         <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
-        <select value="#" id="printInventory" class="filterBox bgYellow printBlockFilter">
+        <a href="/print_stock/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank">🖨️ Print inventory</a>
+        <!-- <select value="#" id="printInventory" class="filterBox bgYellow printBlockFilter">
             <option value="#" selected>🖨️ Print inventory</option>
             <option value="all">Print all inventory</option>
             <?php
@@ -106,7 +107,7 @@ if (isset($_GET['status'])) {
             }
 
             ?>
-        </select>
+        </select> -->
     </div>
 </div>
 <table class="showInventoryTableList display nowrap" style="width: 100%;">
@@ -200,6 +201,7 @@ if (isset($_GET['status'])) {
                                             <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs' target='_blank'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
                                             <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block' data-title='Print block inventory report' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
                                             <a href='/print_label/?id=" . base64_encode($block_id) . "&theme=2' title='Print block'  data-title='Print block label' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-print bgWhite'></i></a>
+                                            <a href='/dashboard/inventory/logs/?id=" . base64_encode($block_id) . "' title='Print block'  data-title='Show Transfer history' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-notebook bgWhite'></i></a>
                                             " . (($block_status != 5) ? "<a href='/dashboard/inventory/transfer/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn transferBtn' title='Transfer block to new location' data-title='Transfer block to new location' target='_blank'><i class='fi fi-rr-calendar-shift-swap bgYellow'></i></a>" : '') . "
                                             <a href='#' title='Mark as sold out' data-title='Mark as Sold Out' class='tableActionIconBtn markAsSold' data-type='block' data-id='{$block_id}'  target='_blank'><i class='fi fi-rr-sold-signal bgRed'></i></a>
                                             " . (($block_status == 1) ? "
