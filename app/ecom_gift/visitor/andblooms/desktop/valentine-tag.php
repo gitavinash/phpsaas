@@ -46,7 +46,7 @@ if (is_array($tagPost)) {
 
                 <?php
 
-                if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_mrp FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_relation_id IN ({$resultTags}) AND link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 GROUP BY link_url ORDER BY link_is_featured, link_modified DESC")) {
+                if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_mrp FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_relation_id IN ({$resultTags}) AND link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 GROUP BY link_url ORDER BY link_is_featured DESC, link_modified DESC")) {
 
                     if (mysqli_num_rows($tagResults) != 0) {
 
@@ -76,7 +76,7 @@ if (is_array($tagPost)) {
                                         if ($inventory_mrp != $inventory_price) {
 
                                             $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
-                                            echo '<span style="font-weight: 400;font-size: 16px; color: #898686;text-decoration: line-through;margin-right: 10px;"> ' . (($inventory_price != 0) ? $inventory_price : $inventory_mrp) . " </span><span style='color: #01bd01'>({$discountPersantage}% OFF)</span>";
+                                            echo '<span style="font-weight: 400;font-size: 16px; color: #898686;text-decoration: line-through;margin-right: 10px;"> ' . (($inventory_price != 0) ? $inventory_mrp : $inventory_mrp) . " </span><span style='color: #01bd01'>({$discountPersantage}% OFF)</span>";
                                         }
                                     }
 
