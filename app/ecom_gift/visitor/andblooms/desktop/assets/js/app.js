@@ -456,7 +456,7 @@ $(document).ready(function() {
     });
 
     // Product Gallery
-
+if ($('#productGalleryImages').length) {
     if($('#productGalleryImages').length) {
 
         $('#productGallery').ezPlus({
@@ -501,7 +501,7 @@ $(document).ready(function() {
         }
         return false;
     });
-
+}
     $('.checkCoupon').hide();
 
     $('#couponCode').on('input', function(){
@@ -512,13 +512,11 @@ $(document).ready(function() {
             $('.checkCoupon').hide();
         }
     });
-
-
+    
     /** Check Coupon */
 
     $('.checkCoupon').click(function(e) {
         e.preventDefault();
- 
         var couponCode = $('#couponCode').val();
 
         var paymentMode = 'online';
@@ -539,9 +537,6 @@ $(document).ready(function() {
                     'action' : 'validate'
                 },
                 success: function(data) {
-
-                    console.log(data);
-                    
                     if(data.status==200) {
 
                         $('.couponMsg').css('color', '#28a745');
