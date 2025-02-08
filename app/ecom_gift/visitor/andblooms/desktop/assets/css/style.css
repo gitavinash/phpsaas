@@ -3860,6 +3860,7 @@ footer {
     text-align: center !important;
     margin: 0 3% 10px 3% !important;
     z-index: 9999 !important;
+    max-height: 44px;
   }
   a.buy-now-on-whatsapp {
     color: #fff;
@@ -3874,6 +3875,7 @@ footer {
     z-index: 9999 !important;
     float: right;
     right: 0;
+    max-height: 44px;
   }
   a.buy-now-on-whatsapp img {
     width: 100%;
