@@ -169,12 +169,12 @@ ORDER BY w.warehouse_title ASC;
                             <td colspan=4>" . array_sum($blockNetSize) . " {$block_size_dimension}</td>
                         </tr>";
 
-                    echo "<tr class='no-border'>
-                            <td colspan=7></td>
-                        </tr>";
-                    echo "<tr class='no-border'>
-                            <td colspan=7></td>
-                        </tr>";
+                    // echo "<tr class='no-border'>
+                    //         <td colspan=7></td>
+                    //     </tr>";
+                    // echo "<tr class='no-border'>
+                    //         <td colspan=7></td>
+                    //     </tr>";
 
                     $measurementByWeight = false;
                 }
