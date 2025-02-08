@@ -58,63 +58,52 @@
             tr:hover {
                 background-color: #ddd;
             }
+
+            .no-border {
+                border: none !important;
+            }
+
+            .no-border td {
+                border: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
     <?php
+    $measurementByWeight = false;
     $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
     $block_size_dimension = 'sq. ft.';
-    if (isset($_GET['warehouse'])) {
-        if ($_GET['warehouse'] != '#') {
-            $warehouseFilterValue = $_GET['warehouse'];
-            $warehouseFilter = "AND block_warehouse_id='{$warehouseFilterValue}'";
-        } else {
-            $warehouseFilterValue = '';
-            $warehouseFilter = '';
+    function getFilterCondition($param, $column, $default = '')
+    {
+        if (isset($_GET[$param]) && $_GET[$param] !== '' && $_GET[$param] !== '#') {
+            $value = htmlspecialchars($_GET[$param], ENT_QUOTES, 'UTF-8'); // Sanitize input
+            return ["AND {$column}='{$value}'", $value];
         }
-    } else {
-        $warehouseFilterValue = '';
-        $warehouseFilter = '';
+        return [$default, ''];
     }
 
-    if (isset($_GET['product_type'])) {
-        if ($_GET['product_type'] != '#') {
-            $typeFilterValue = $_GET['product_type'];
-            $typeFilter = "AND block_product_type='{$typeFilterValue}'";
-        } else {
-            $typeFilterValue = '';
-            $typeFilter = '';
-        }
-    } else {
-        $typeFilterValue = '';
-        $typeFilter = '';
-    }
+    // Get warehouse filter
+    list($warehouseFilter, $warehouseFilterValue) = getFilterCondition('warehouse', 'block_warehouse_id');
 
-    if (isset($_GET['status'])) {
-        if ($_GET['status'] != '#') {
-            $statusFilterValue = $_GET['status'];
-            $statusFilter = "AND block_status='{$statusFilterValue}'";
-        } else {
-            $statusFilterValue = '';
-            $statusFilter = 'AND block_status!=2';
-        }
-    } else {
-        $statusFilterValue = '';
-        $statusFilter = 'AND block_status!=2';
-    }
+    // Get product type filter
+    list($typeFilter, $typeFilterValue) = getFilterCondition('product_type', 'block_product_type');
+
+    // Get status filter (defaulting to `AND block_status!=2`)
+    list($statusFilter, $statusFilterValue) = getFilterCondition('status', 'block_status', 'AND block_status!=2');
 
     $query = "
     SELECT 
         w.warehouse_title, 
+        b.block_size_dimension,
         CONCAT('[', 
             GROUP_CONCAT(
                 REPLACE(REPLACE(
                     JSON_OBJECT(
                         'block_code', IFNULL(b.block_code, ''), 
                         'block_title', IFNULL(b.block_title, ''), 
-                        'Net. Weight', IFNULL(b.block_net_size, ''), 
+                        'net_weight', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2), 
                         'block_thickness', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), '')
                     ), '\\\\', ''), '\"', '\"'
                 ) 
@@ -154,7 +143,15 @@
             $totalNetQty = array();
             if (mysqli_num_rows($inventoryList) > 0) {
                 while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
+                    $blockNetSize = array();
                     extract($inventoryData);
+                    switch ($block_size_dimension) {
+                        case 'mt_weight':
+                            $block_size_dimension = 'mt (t)';
+                            $measurementByWeight = TRUE;
+                            break;
+                    }
+
                     $serialNo = 1;
                     echo "<tr>
                         <td colspan=5><strong>{$warehouse_title}</strong></td>";
@@ -165,26 +162,44 @@
                         echo "<td>{$serialNo}</td>";
                         echo "<td>{$block_values['block_code']}</td>";
                         echo "<td>{$block_values['block_title']}</td>";
-                        echo "<td>{$block_values['net_weight']}</td>";
-                        echo "<td>{$block_values['block_thickness']}</td>";
+                        echo "<td>{$block_values['net_weight']} {$block_size_dimension}</td>";
+                        echo (($measurementByWeight == true) ? "<td></td>" : "<td>{$block_values['block_thickness']}</td>");
                         echo "</tr>";
                         $serialNo++;
                         $totalNetQty[] = $block_values['net_weight'];
+                        $blockNetSize[] = $block_values['net_weight'];
                     }
+
+                    echo "<tr>
+                            <td colspan=3>Block total</td>
+                            <td colspan=4>" . array_sum($blockNetSize) . " {$block_size_dimension}</td>
+                        </tr>";
+
+                    echo "<tr class='no-border'>
+                            <td colspan=7></td>
+                        </tr>";
+                    echo "<tr class='no-border'>
+                            <td colspan=7></td>
+                        </tr>";
+
+                    $measurementByWeight = false;
                 }
             }
             echo "</tbody>";
-            echo "
-        <tfoot>
-        <tr>
-            <td colspan=3><strong>Total</strong></td>
-            <td colspan=4>" . array_sum($totalNetQty) . " {$block_size_dimension}</td>
-        </tr></tfoot>";
         } else {
             if (DEVELOPMENT_MODE == TRUE) {
                 echo "Debugging: " . mysqli_error($connection);
             }
         }
+
+        // echo "
+        //         <tfoot>
+        //         <tr>
+        //             <td colspan=3><strong>All Total</strong></td>
+        //             <td colspan=4>" . array_sum($totalNetQty) . " {$block_size_dimension}</td>
+        //         </tr>
+        //     </tfoot>
+        // ";
 
         ?>
     </table>
