@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Stock | <?php echo SITE_NAME ?></title>
+    <title><?php echo SITE_NAME . ' stocks list' ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -14,6 +14,72 @@
             font-style: normal;
             padding: 0;
             margin: 0px;
+        }
+
+        img {
+            float: left;
+            max-height: 100px;
+            text-align: center;
+        }
+
+        .showCompanyDetails {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            /* Removes the border of the table */
+        }
+
+        .showCompanyDetails table {
+            border-collapse: collapse;
+            /* Ensures borders do not double up */
+            border: none;
+            /* Removes table border */
+        }
+
+        .showCompanyDetails th,
+        .showCompanyDetails td {
+            border: none;
+            /* Removes cell borders */
+            padding: 10px;
+            /* Optional: Adjusts spacing inside cells */
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tfoot {
+            display: table-row-group;
+            /* Prevent repeating on each page */
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .no-border {
+            border: none !important;
+        }
+
+        .no-border td {
+            border: none !important;
         }
 
         @media print {
@@ -28,7 +94,6 @@
                 width: 100%;
                 border-collapse: collapse;
                 border-spacing: 0;
-                font-family: Arial, sans-serif;
                 font-size: 12px;
             }
 
@@ -71,6 +136,15 @@
 </head>
 
 <body>
+    <table class="showCompanyDetails display nowrap" style="width: 100%;">
+        <tbody>
+            <tr>
+                <td>
+                    <h1><?php echo SITE_NAME ?></h1>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <?php
     $measurementByWeight = false;
     $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
@@ -235,7 +309,6 @@ ORDER BY w.warehouse_title ASC;
     <footer>
         <script>
             window.onload = function() {
-                document.title = <?php echo str_replace(' ', '_', strtolower(SITE_NAME) . date('d-m-Y')); ?> ";
                 window.print();
             };
         </script>
