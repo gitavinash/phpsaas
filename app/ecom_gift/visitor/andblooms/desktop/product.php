@@ -136,7 +136,7 @@ include_once 'header.php';
 
                         $whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
 
-                        echo (($inventory_in_stock == 0) ? "<a class='out-of-stock'>Out of stock</a>" : "<a href='#' id='addToCart' class='cart-ad-btn'>Buy Now</a> <a href='{$whatsappUrl}' class='buy-now-on-whatsapp' title='{$product_title}' target='_blank' ><img src='" . USER_IMAGES . "order-on-whatsapp.png' alt='Buy now on Whatsapp'></a>");
+                        echo (($inventory_in_stock == 0) ? "<a class='out-of-stock'>Out of stock</a>" : "<a href='#' id='addToCart' class='cart-ad-btn'>Add to cart</a> <a href='{$whatsappUrl}' class='buy-now-on-whatsapp' title='{$product_title}' target='_blank' ><img src='" . USER_IMAGES . "order-on-whatsapp.png' alt='Buy now on Whatsapp'></a>");
 
                         ?>
 

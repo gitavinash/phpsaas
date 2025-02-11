@@ -3377,7 +3377,7 @@ a.delet:hover span {
 }
 
 .cart-purchase {
-  width: 100%;
+  width: 100%; /* Keeps the original width */
   float: left;
   box-shadow: 0 1px 8px #00000021;
   padding: 20px;
@@ -3385,6 +3385,18 @@ a.delet:hover span {
   margin-bottom: 20px;
   margin-top: 80px;
   background: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+.cart-purchase.sticky {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 0; /* Prevents layout shift */
+  max-width: 350px;
+  height: 100vh;
 }
 
 .cart-purchase h2 {

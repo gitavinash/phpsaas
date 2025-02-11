@@ -93,7 +93,41 @@
     // Get status filter (defaulting to `AND block_status!=2`)
     list($statusFilter, $statusFilterValue) = getFilterCondition('status', 'block_status', 'AND block_status!=2');
 
-    $query = "
+    if (DEVELOPMENT_MODE == true) {
+        $query = "
+    SELECT 
+        w.warehouse_title, 
+        b.block_size_dimension,
+        CONCAT('[', 
+            GROUP_CONCAT(
+                REPLACE(REPLACE(
+                    JSON_OBJECT(
+                        'block_code', IFNULL(b.block_code, ''), 
+                        'block_title', IFNULL(b.block_title, ''), 
+                        'net_weight', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2), 
+                        'block_thickness', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), '')
+                    ), '\\\\', ''), '\"', '\"'
+                ) 
+                ORDER BY b.block_code ASC
+                SEPARATOR ','
+            ), 
+        ']') AS block_details
+    FROM {$tableNamePrefix}block AS b
+    INNER JOIN " . TABLE_PREFIX . "warehouse AS w ON b.block_warehouse_id = w.warehouse_id 
+    LEFT JOIN " . TABLE_PREFIX . "supplier AS s ON b.block_supplier_id = s.supplier_id 
+    INNER JOIN " . TABLE_PREFIX . "address AS a ON w.warehouse_address_id = a.address_id 
+    INNER JOIN " . TABLE_PREFIX . "state AS st ON a.address_state_id = st.state_id 
+    INNER JOIN " . TABLE_PREFIX . "city AS c ON a.address_city_id = c.city_id 
+    WHERE b.block_site_id = '" . SITE_ID . "' 
+    {$statusFilter} 
+    {$typeFilter} 
+    {$warehouseFilter} 
+    GROUP BY w.warehouse_title
+    ORDER BY w.warehouse_title ASC
+";
+    } else {
+
+        $query = "
     SELECT 
     w.warehouse_title, 
     b.block_size_dimension,
@@ -118,6 +152,7 @@ WHERE b.block_site_id = '" . SITE_ID . "'
 GROUP BY w.warehouse_title, b.block_size_dimension
 ORDER BY w.warehouse_title ASC;
 ";
+    }
 
     ?>
     <table class="showInventoryTableList display nowrap" style="width: 100%;">
@@ -200,6 +235,7 @@ ORDER BY w.warehouse_title ASC;
     <footer>
         <script>
             window.onload = function() {
+                document.title = <?php echo str_replace(' ', '_', strtolower(SITE_NAME) . date('d-m-Y')); ?> ";
                 window.print();
             };
         </script>

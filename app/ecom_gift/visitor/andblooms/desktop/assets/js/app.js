@@ -30,6 +30,30 @@ $(document).ready(function() {
     var deliverySlot = '';
     var orderID = '';
 
+    // Cart stick
+
+    var cartPurchase = $(".cart-purchase");
+
+    function handleSticky() {
+        if ($(window).width() > 768) { // Only apply on screens wider than 768px (desktop)
+            $(window).on("scroll", function () {
+                if ($(window).scrollTop() > 200) {
+                    cartPurchase.addClass("sticky");
+                } else {
+                    cartPurchase.removeClass("sticky");
+                }
+            });
+        } else {
+            cartPurchase.removeClass("sticky"); // Remove sticky class on smaller screens
+            $(window).off("scroll"); // Remove scroll event on mobile
+        }
+    }
+
+    handleSticky(); // Run on page load
+
+    $(window).on("resize", function () {
+        handleSticky(); // Re-run when window is resized
+    });
     /** Add to cart */
 
     $('#addToCart').click(function(e) {
@@ -66,9 +90,35 @@ $(document).ready(function() {
                   $('#selectedImg').attr('src', data.productImage);
                   $('#selectedQty').text('');
                   $('#selectedQty').append(data.productQty);
+                // alert('Product added to cart successfully');
+                // Get the element
+const cartCircle = document.querySelector('.crt-crcl');
 
-                //   window.location.href='/checkout/';
-                alert('Product added to cart successfully');
+// Increment the value
+if (cartCircle) {
+    let currentValue = parseInt(cartCircle.textContent.trim(), 10) || 0;
+    cartCircle.textContent = currentValue + 1;
+}
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Product Added!',
+                text: 'Do you want to go to the checkout page?',
+                showCancelButton: true,
+                confirmButtonText: 'Go to Checkout',
+                cancelButtonText: 'Continue Shopping',
+                reverseButtons: true // Puts the cancel button first
+            }).then((result) => {
+                if (result.value) {
+                    console.log("Redirecting to checkout..."); // Debugging output
+                    window.location.href = '/checkout/';
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    console.log("User chose to continue shopping.");
+                } else {
+                    console.log("Unexpected action:", result);
+                }
+            });
+
                 $('#addToCart').html('Added to cart');
 
               } else {

@@ -150,7 +150,7 @@
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
 <script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
-<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
