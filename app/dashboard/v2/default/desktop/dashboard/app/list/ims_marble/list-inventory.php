@@ -173,14 +173,16 @@ if (isset($_GET['status'])) {
                         break;
                 }
 
-                switch ($block_size_dimension) {
-                    case 'mt_weight':
-                        $blockDimension = 'Metric Ton';
-                        break;
-                    default:
-                        $blockDimension = $block_size_dimension;
-                        break;
-                }
+                // switch ($block_size_dimension) {
+                //     case 'mt (t)':
+                //         $blockDimension = 'Metric Ton';
+                //         break;
+                //     default:
+                //         $blockDimension = $block_size_dimension;
+                //         break;
+                // }
+
+                $blockDimension = $block_size_dimension;
 
                 echo "<tr>
                                 <td>{$serialNo}</td>

@@ -248,12 +248,12 @@ ORDER BY w.warehouse_title ASC;
                 while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
                     $blockNetSize = array();
                     extract($inventoryData);
-                    switch ($block_size_dimension) {
-                        case 'mt_weight':
-                            $block_size_dimension = 'mt (t)';
-                            $measurementByWeight = TRUE;
-                            break;
-                    }
+                    // switch ($block_size_dimension) {
+                    //     case 'mt (t)':
+                    //         $block_size_dimension = 'mt (t)';
+                    //         $measurementByWeight = TRUE;
+                    //         break;
+                    // }
 
                     $serialNo = 1;
                     echo "<tr>

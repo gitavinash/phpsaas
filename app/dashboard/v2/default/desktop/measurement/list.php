@@ -47,8 +47,9 @@
                                 case 'mt':
                                     $measurementType = 'Meter';
                                     break;
-                                case 'mt_weight':
+                                case 'mt (t)':
                                     $measurementType = 'Metric Ton';
+                                    break;
                                 default:
                                     $measurementType = 'Feet';
                                     break;
@@ -67,8 +68,9 @@
                                 case 'sq. mt.':
                                     $calculationType = 'Square Meter';
                                     break;
-                                case 'mt_weight':
-                                    $measurementType = 'Metric Ton';
+                                case 'mt (t)':
+                                    $calculationType = 'Metric Ton';
+                                    break;
                                 default:
                                     $calculationType = 'Square Feet';
                                     break;

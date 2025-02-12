@@ -156,7 +156,7 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                                 echo "<td>{$totalSlabsGrossSize} {$dimensionsType}</td>";
                                                 echo "<td>{$totalSlabsDamageSize} {$dimensionsType}</td>";
                                                 echo "<td>{$totalSlabsNetSize} {$dimensionsType}</td>";
-                                                echo "</tr><tr><td colspan=100></td></tr>";
+                                                echo "</tr>";
                                                 $totalBlockSlabs += $totalSlabs;
                                                 $totalBlockGrossSize += $totalSlabsGrossSize;
                                                 $totalBlockDamageSize += $totalSlabsDamageSize;
@@ -167,23 +167,31 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                             $j++;
                                         }
                                     }
-
-
-                                    // Total 
-
-                                    if ($i == sizeof($blockData)) {
-                                        echo "<tr><td colspan=100></td></tr><tr>";
-                                        echo "<td colspan=4><strong>Total</strong></td>";
-                                        echo "<td>{$totalBlockSlabs} " . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                        echo "<td>{$totalBlockGrossSize} {$totalBlockDimensionType}</td>";
-                                        echo "<td>{$totalBlockDamageSize} {$totalBlockDimensionType}</td>";
-                                        echo "<td>{$totalBlockNetSize} {$totalBlockDimensionType}</td>";
-                                        echo "</tr>";
-                                    }
                                     $i++;
                                 }
                                 ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6"><strong>Adjust aerials</strong></td>
+                                    <td>
+                                        <select class="selectJS" id="aerialAdjustment" name="aerialAdjustment">
+                                            <option value="increase">Increase ( + )</option>
+                                            <option value="decrease">Decrease ( - )</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" id="aerialValue" name="aerialValue" class="form-control" value="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan=4><strong>Total</strong></td>
+                                    <td><?php echo $totalBlockSlabs . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') ?></td>
+                                    <td><?php echo $totalBlockGrossSize . " " . $totalBlockDimensionType ?></td>
+                                    <td><?php echo $totalBlockDamageSize . " " . $totalBlockDimensionType ?></td>
+                                    <td><span id="salesRequestNetValue"><?php echo $totalBlockNetSize . "</span> " . $totalBlockDimensionType ?></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -203,6 +211,8 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                             data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
                                 class="fi-rr-check"></i> Approve
                             request</a>
+                        <!-- <a href='#' target="_blank" class="btn btn-green"><i
+                                class="fi-rr-plus-minus" id="adjustAerials" data-id="<?php echo $id ?>"></i> Adjust aerials</a> -->
                         <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
                                 class="fi-rr-print"></i> Print</a>
                     <?php

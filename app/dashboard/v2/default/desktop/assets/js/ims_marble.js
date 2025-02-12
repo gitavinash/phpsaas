@@ -1915,4 +1915,35 @@ $(document).ready(function () {
       rightColumns: 1,
     },
   });
+
+  // Aerial adjustment
+  let $aerialValue = $("#aerialValue");
+  let $aerialAdjustment = $("#aerialAdjustment");
+  let $salesRequestNetValue = $("#salesRequestNetValue");
+
+  let originalValue = parseFloat($salesRequestNetValue.text()) || 0; // Store initial value
+
+  function updateNetValue() {
+    let aerialValue = parseFloat($aerialValue.val()) || 0;
+
+    // Ensure the value never goes below 0
+    if (aerialValue < 0) {
+      aerialValue = 0;
+      $aerialValue.val(0);
+    }
+
+    let adjustmentType = $aerialAdjustment.val();
+    let newValue = originalValue; // Reset to original value
+
+    if (adjustmentType === "increase") {
+      newValue += aerialValue;
+    } else if (adjustmentType === "decrease") {
+      newValue -= aerialValue;
+    }
+
+    $salesRequestNetValue.text(newValue.toFixed(2)); // Update with 2 decimal places
+  }
+
+  $aerialValue.on("input", updateNetValue);
+  $aerialAdjustment.on("change", updateNetValue);
 });

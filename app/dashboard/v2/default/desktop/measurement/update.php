@@ -65,7 +65,7 @@ if ($checkMeasurement = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFI
                                 </option>
                                 <option value="mt" <?php echo (($measurementType == 'mt') ? 'selected' : '') ?>>Meter
                                 </option>
-                                <option value="mt_weight" <?php echo (($measurementType == 'mt (t)') ? 'selected' : '') ?>>Metric Ton</option>
+                                <option value="mt (t)" <?php echo (($measurementType == 'mt (t)') ? 'selected' : '') ?>>Metric Ton</option>
                             </select>
                             <label class="form-lable" id="Label">Measurement<sup>*</sup></label>
                         </div>
@@ -86,7 +86,7 @@ if ($checkMeasurement = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFI
                                 <option value="sq. mt."
                                     <?php echo (($calculationType == 'sq. mt.') ? 'selected' : '') ?>>
                                     Square Meter</option>
-                                <option value="mt_weight" <?php echo (($calculationType == 'mt (t)') ? 'selected' : '') ?>>Metric Ton</option>
+                                <option value="mt (t)" <?php echo (($calculationType == 'mt (t)') ? 'selected' : '') ?>>Metric Ton</option>
                             </select>
                             <label class="form-lable" id="Label">Calculation<sup>*</sup></label>
                         </div>
