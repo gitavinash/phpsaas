@@ -286,7 +286,7 @@ if (isset($validId)) {
                         <div class="generateBlockRow">
                             <?php
 
-                            if (strpos($block_size_dimension, '_weight') !== false) { ?>
+                            if ($block_size_dimension == 'mt (t)') { ?>
 
                                 <!-- For solid block or metric ton weight wise block -->
 
