@@ -748,7 +748,7 @@ $("#addBlock").click(function (e) {
           setTimeout(function () {
             const blockId = btoa(successResponse.id);
             // window.location.href = `/dashboard/inventory/update/?id=${blockId}`;
-            window.location.href = `dashboard/inventory/update/?updateType=item&id=${blockId}`;
+            window.location.href = `/dashboard/inventory/update/?updateType=item&id=${blockId}`;
           }, 1500);
         }
       },

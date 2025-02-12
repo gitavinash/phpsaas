@@ -233,26 +233,44 @@ if (isset($validId)) {
                                     {$i}
                                 </div>
                             </td>
-                            <td>
-                                <div class='form-group'>
-                                    <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
-                                    <label class='form-lable' id='Label'>Length ( in {$blockSizeCalculation} )<sup>*</sup></label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class='form-group'>
-                                    <input name='height[{$block_item_id}]' class='heightValues' value='{$block_item_height}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
-                                    <label class='form-lable' id='Label'>Height ( in {$blockSizeCalculation} )<sup>*</sup></label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class='form-group'>
-                                    " . (($block_item_damage_count != '') ?  $block_item_damage_count . ' Damages' : '') . "
-                                </div>
-                            </td>
-                            <td>
+                            ";
+
+                                if ($block_size_dimension == 'mt (t)') {
+                                    echo "
+                                    <td>
+                                        <div class='form-group'>
+                                            <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
+                                            <label class='form-lable' id='Label'>Weight ( in {$blockSizeCalculation} )<sup>*</sup></label>
+                                        </div>
+                                    </td>";
+                                } else {
+                                    echo "
+                                    <td>
+                                        <div class='form-group'>
+                                            <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
+                                            <label class='form-lable' id='Label'>Length ( in {$blockSizeCalculation} )<sup>*</sup></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class='form-group'>
+                                            <input name='height[{$block_item_id}]' class='heightValues' value='{$block_item_height}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
+                                            <label class='form-lable' id='Label'>Height ( in {$blockSizeCalculation} )<sup>*</sup></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class='form-group'>
+                                            " . (($block_item_damage_count != '') ?  $block_item_damage_count . ' Damages' : '') . "
+                                        </div>
+                                    </td>";
+                                }
+
+                                echo "<td>
                                 <div class='actionBtn form-group' style='display:" . (($block_item_status == 2) ? 'none' : 'block') . "' >
-                                    <a href='#' class='bgYellow manageDamage' data-index='{$i}' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>
+                                    ";
+                                if ($block_size_dimension != 'mt (t)') {
+                                    echo "<a href='#' class='bgYellow manageDamage' data-index='{$i}' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>";
+                                }
+                                echo "
                                     " . (($block_item_status != 3) ? "
                                     <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i></a><a href='#' title='Mark as sold out' class='bgRed markAsSold' data-type='item' data-id='{$block_item_id}' ><i class='fi fi-rr-sold-signal bgRed'></i></a>" : '') . "
                                 </div>
