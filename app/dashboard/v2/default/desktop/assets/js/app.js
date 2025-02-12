@@ -1037,6 +1037,32 @@ $(document).ready(function (e) {
     e.preventDefault();
   });
 
+  $("#convertToSale").click(function (e) {
+    e.preventDefault();
+    let leadId = $(this).data("id");
+
+    if (!leadId) {
+      popUpMessage("center", "Lead ID is missing", "warning");
+      return;
+    } else {
+      console.log(`${leadId}`);
+      $.ajax({
+        type: "GET",
+        url: "/api/leads/confirm/?id=" + leadId,
+        dataType: "json",
+        success: function (response) {
+          popUpMessage("center", response.msg, response.status);
+          setTimeout(function () {
+            window.location.reload();
+          }, 1500);
+        },
+        error: function (response) {
+          console.log(`Error : `, response);
+        },
+      });
+    }
+  });
+
   $("#followUpBtn").click(function (e) {
     document.querySelector(".followUpBox").style.display = "flex";
     $(".followUpBox").show();
