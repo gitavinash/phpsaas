@@ -25,7 +25,6 @@ if (isset($validRequest)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
             $blockItemIndex = explode(",", $blockItemIndex);
-
             $widthQuery = '';
             $heightQuery = '';
             $singleItemArea = array();
@@ -35,8 +34,10 @@ if (isset($validRequest)) {
                     $width[$index] = $_POST["width"][$index];
                     $height[$index] = $_POST["height"][$index];
                     $singleItemArea[] = $_POST["width"][$index] * $_POST["height"][$index];
-                } else {
-                    echo "Missing width or height for index $index";
+                } else if (isset($_POST["width"][$index])) {
+                    $width[$index] = $_POST["width"][$index];
+                    $height[$index] = 0;
+                    $singleItemArea[] = $_POST["width"][$index];
                 }
             }
 
@@ -129,7 +130,7 @@ if (isset($validRequest)) {
                     break;
             }
 
-            if (strpos($block_size_dimension, '_weight') !== false) {
+            if ($block_size_dimension == 'mt (t)') {
                 $totalArea = array_sum($width);
                 $block_net_size = $totalArea;
             } else {
@@ -166,7 +167,7 @@ if (isset($validRequest)) {
                 mysqli_query($connection, "COMMIT");
             } else {
                 $status = 'error';
-                $msg = 'Something went wrong while trying to update block item';
+                $msg = ((DEVELOPMENT_MODE == TRUE) ? mysqli_error($connection) : 'Something went wrong while trying to update block item');
                 mysqli_query($connection, "ROLLBACK");
             }
         } else {

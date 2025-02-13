@@ -143,7 +143,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimen
                     }
 
 
-                    if (strpos($block_size_dimension, '_weight') !== false) {
+                    if ($block_size_dimension == 'mt (t)') {
                         $totalArea = array_sum($singleItemWeight);
                     } else {
                         $totalArea = number_format((float)$totalArea, 2, '.', '');
