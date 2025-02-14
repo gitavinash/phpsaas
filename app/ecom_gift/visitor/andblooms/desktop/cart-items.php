@@ -340,7 +340,7 @@ include_once 'header.php';
                                 <div class="custom-control custom-radio">
                                     <input type="radio" class="deliveryTimeSlot custom-control-input" id="midnight23" name="deliveryTime" value="23:00 - 01:00">
                                     <label class="custom-control-label" for="midnight23">23:00 - 01:00 hrs<br /><span style="color: red;">We will deliver product on
-                                            <?php echo (((int) date('H') < 20) ? date('jS F') : date('jS F', strtotime('+1 days'))); ?>
+                                            <?php echo (((int) date('H') < 20) ? date('jS F') : date('jS F')); ?>
                                             after 11:00PM.</span></label>
                                 </div>
                             </div>

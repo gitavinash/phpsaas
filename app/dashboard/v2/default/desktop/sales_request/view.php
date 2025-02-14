@@ -185,7 +185,13 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan=4><strong>Total</strong></td>
+                                    <td colspan="4"><strong>Any comment</strong></td>
+                                    <td colspan="4">
+                                        <textarea name="message"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan=4><strong>Grand total</strong></td>
                                     <td><?php echo $totalBlockSlabs . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') ?></td>
                                     <td><?php echo $totalBlockGrossSize . " " . $totalBlockDimensionType ?></td>
                                     <td><?php echo $totalBlockDamageSize . " " . $totalBlockDimensionType ?></td>
