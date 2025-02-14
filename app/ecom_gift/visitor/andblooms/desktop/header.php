@@ -156,7 +156,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="web-detail dn-s">
-                            <p>Latest Update: Delivery available in Delhi NCR & Kolkata only</p>
+                            <p><strong>Notice:</strong> Due to the Valentine's Day rush, the minimum delivery time will be 2 hours. Thank you for your patience!</p>
                             <!-- <p><span class="material-icons">email</span></p> -->
                         </div>
 

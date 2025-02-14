@@ -41,6 +41,13 @@ a:hover {
   background: #d4946d;
   color: #fff;
   padding: 8px 0;
+  position: fixed;
+  width: 100%;
+  z-index: 9999;
+}
+
+.header-mid {
+  padding-top: 50px;
 }
 
 .web-detail {
@@ -3830,7 +3837,7 @@ footer {
     text-align: left;
   }
   .dn-s {
-    display: none;
+    /* display: none; */
   }
   .dn-l {
     display: block;
@@ -3849,9 +3856,9 @@ footer {
     z-index: 999;
     background: #fff;
   }
-  .header-top {
+  /* .header-top {
     display: none;
-  }
+  } */
   .cart-mob {
     position: absolute;
     right: 0;
