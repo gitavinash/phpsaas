@@ -8,6 +8,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
             <th>Email</th>
             <th>Mobile</th>
             <th>Address</th>
+            <th>Aerials</th>
             <th>Sales date</th>
             <th>Status</th>
             <th></th>
@@ -32,6 +33,7 @@ $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
                     <td>{$sales_email}</td>
                     <td>{$sales_mobile}</td>
                     <td>{$sales_address}</td>
+                    <td>" . (($sales_aerial_value != 0) ? 'Applied' : 'Not Applied') . "</td>
                     <td>" . date('d M Y h:i:s A', strtotime($sales_created)) . "</td>
                     <td>";
                 switch ($sales_status) {

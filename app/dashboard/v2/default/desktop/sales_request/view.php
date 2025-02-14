@@ -101,73 +101,80 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                 $totalBlockDimensionType = '';
 
                                 foreach ($blockData as $key => $value) {
-                                    $keyArray = explode('_', str_replace('salesBlocks_', '', $key));
-                                    $productName = $keyArray[1];
+                                    if ($key != 'aerials') {
+                                        $keyArray = explode('_', str_replace('salesBlocks_', '',  $key));
+                                        $productName = $keyArray[1];
 
-                                    // Exploding string and processing data
-                                    $objects = explode(",", $value);
-                                    $valuesCount = [];
-                                    $slabDetails = [];
+                                        // Exploding string and processing data
+                                        $objects = explode(",", $value);
+                                        $valuesCount = [];
+                                        $slabDetails = [];
 
-                                    $j = 1;
+                                        $j = 1;
 
-                                    $sizeOfSlabDimension = sizeof($valuesCount);
+                                        $sizeOfSlabDimension = sizeof($valuesCount);
 
-                                    $totalSlabs = 0;
-                                    $totalSlabsGrossSize = 0;
-                                    $totalSlabsDamageSize = 0;
-                                    $totalSlabsNetSize = 0;
+                                        $totalSlabs = 0;
+                                        $totalSlabsGrossSize = 0;
+                                        $totalSlabsDamageSize = 0;
+                                        $totalSlabsNetSize = 0;
 
-                                    foreach ($objects as $slabDimension => $details) {
+                                        foreach ($objects as $slabDimension => $details) {
 
-                                        if (isset($objects)) {
-                                            $newObject = explode('_', $details);
-                                            $number = $newObject[0] ?? null;
-                                            $slabDimension = $newObject[1] ?? null;
-                                            $grossSize = $newObject[2] ?? 0;
-                                            $damageSize = $newObject[3] ?? 0;
-                                            $netSize = sprintf("%.2f", $newObject[4] ?? 0);
-                                            $dimensionsType = $newObject[5] ?? null;
-                                            $slabNumber = $newObject[6] ?? null;
+                                            if (isset($objects)) {
+                                                $newObject = explode('_', $details);
+                                                $number = $newObject[0] ?? null;
+                                                $slabDimension = $newObject[1] ?? null;
+                                                $grossSize = $newObject[2] ?? 0;
+                                                $damageSize = $newObject[3] ?? 0;
+                                                $netSize = sprintf("%.2f", $newObject[4] ?? 0);
+                                                $dimensionsType = $newObject[5] ?? null;
+                                                $slabNumber = $newObject[6] ?? null;
 
 
-                                            echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
-                                            echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
-                                            echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
-                                            echo "<td>{$slabNumber}</td>";
-                                            echo "<td>{$slabDimension}</td>";
-                                            echo "<td>1 Pc.</td>";
-                                            echo "<td>{$grossSize} {$dimensionsType}</td>";
-                                            echo "<td>{$damageSize} {$dimensionsType}</td>";
-                                            echo "<td>{$netSize} {$dimensionsType}</td>";
-                                            echo "</tr>";
-
-                                            $totalSlabs += 1;
-                                            $totalSlabsGrossSize += $grossSize;
-                                            $totalSlabsDamageSize += $damageSize;
-                                            $totalSlabsNetSize += $netSize;
-
-                                            // Each block total
-
-                                            if ($j == count($objects)) {
-                                                echo "<tr class='ending'>";
-                                                echo "<td class='sno-column' colspan=4><strong>Slab total</strong></td>";
-                                                echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
-                                                echo "<td>{$totalSlabsGrossSize} {$dimensionsType}</td>";
-                                                echo "<td>{$totalSlabsDamageSize} {$dimensionsType}</td>";
-                                                echo "<td>{$totalSlabsNetSize} {$dimensionsType}</td>";
+                                                echo "<tr " . (($j == 1) ? "class='starting'" : '') . ">";
+                                                echo "<td class='sno-column'>" . (($j == 1) ? $i : '') . "</td>";
+                                                echo "<td>" . (($j == 1) ? $productName : '') . "</td>";
+                                                echo "<td>{$slabNumber}</td>";
+                                                echo "<td>{$slabDimension}</td>";
+                                                echo "<td>1 Pc.</td>";
+                                                echo "<td>{$grossSize} {$dimensionsType}</td>";
+                                                echo "<td>{$damageSize} {$dimensionsType}</td>";
+                                                echo "<td>{$netSize} {$dimensionsType}</td>";
                                                 echo "</tr>";
-                                                $totalBlockSlabs += $totalSlabs;
-                                                $totalBlockGrossSize += $totalSlabsGrossSize;
-                                                $totalBlockDamageSize += $totalSlabsDamageSize;
-                                                $totalBlockNetSize += $totalSlabsNetSize;
-                                                $totalBlockDimensionType = $dimensionsType;
-                                            }
 
-                                            $j++;
+                                                $totalSlabs += 1;
+                                                $totalSlabsGrossSize += $grossSize;
+                                                $totalSlabsDamageSize += $damageSize;
+                                                $totalSlabsNetSize += $netSize;
+
+                                                // Each block total
+
+                                                if ($j == count($objects)) {
+                                                    echo "<tr class='ending'>";
+                                                    echo "<td class='sno-column' colspan=4><strong>Slab total</strong></td>";
+                                                    echo "<td>{$totalSlabs} " . (($totalSlabs == 1) ? 'Pc.' : 'Pcs.') . "</td>";
+                                                    echo "<td>{$totalSlabsGrossSize} {$dimensionsType}</td>";
+                                                    echo "<td>{$totalSlabsDamageSize} {$dimensionsType}</td>";
+                                                    echo "<td>{$totalSlabsNetSize} {$dimensionsType}</td>";
+                                                    echo "</tr>";
+                                                    $totalBlockSlabs += $totalSlabs;
+                                                    $totalBlockGrossSize += $totalSlabsGrossSize;
+                                                    $totalBlockDamageSize += $totalSlabsDamageSize;
+                                                    $totalBlockNetSize += $totalSlabsNetSize;
+                                                    $totalBlockDimensionType = $dimensionsType;
+                                                }
+
+                                                $j++;
+                                            }
                                         }
+                                        $i++;
                                     }
-                                    $i++;
+                                }
+                                if (!isset($blockData['aerials'])) {
+                                    $blockData['aerials']['operation'] = '+';
+                                    $blockData['aerials']['value'] = '0';
+                                    $blockData['aerials']['comment'] = '';
                                 }
                                 ?>
                             </tbody>
@@ -176,18 +183,18 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     <td colspan="6"><strong>Adjust aerials</strong></td>
                                     <td>
                                         <select class="selectJS" id="aerialAdjustment" name="aerialAdjustment">
-                                            <option value="increase">Increase ( + )</option>
-                                            <option value="decrease">Decrease ( - )</option>
+                                            <option value="increase" <?php echo (($blockData['aerials']['operation'] == '+') ? 'selected' : '') ?>>Increase ( + )</option>
+                                            <option value="decrease" <?php echo (($blockData['aerials']['operation'] == '-') ? 'selected' : '') ?>>Decrease ( - )</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" id="aerialValue" name="aerialValue" class="form-control" value="0">
+                                        <input type="number" id="aerialValue" name="aerialValue" class="form-control" value="<?php echo $blockData['aerials']['value'] ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4"><strong>Any comment</strong></td>
                                     <td colspan="4">
-                                        <textarea name="message"></textarea>
+                                        <textarea id="aerialComment" name="aerialComment"><?php echo $blockData['aerials']['comment'] ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>

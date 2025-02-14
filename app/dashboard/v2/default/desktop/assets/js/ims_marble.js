@@ -1559,6 +1559,9 @@ $(document).ready(function () {
     var agentID = $(this).attr("data-agent");
     var refId = $(this).attr("data-refid");
     var refType = $(this).attr("data-reftype");
+    var aerialAdjustment = $("#aerialAdjustment").val();
+    var aerialValue = $("#aerialValue").val();
+    var aerialComment = $("#aerialComment").val();
     if (requestId != "") {
       $.ajax({
         type: "GET",
@@ -1570,7 +1573,13 @@ $(document).ready(function () {
           "&refId=" +
           refId +
           "&refType=" +
-          refType,
+          refType +
+          "&aerialAdjustment=" +
+          aerialAdjustment +
+          "&aerialValue=" +
+          aerialValue +
+          "&aerialComment=" +
+          aerialComment,
         dataType: "JSON",
         success: function (successResponse) {
           if (successResponse.status == "success") {

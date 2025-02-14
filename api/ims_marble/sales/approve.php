@@ -112,19 +112,14 @@ if ($validRequest) {
                     }
                 }
             }
+            $aerialAdjustment = (($aerialAdjustment == 'increase') ? '+' : '-');
+            $salesData['aerials']['operation'] = $aerialAdjustment;
+            $salesData['aerials']['value'] = $aerialValue;
+            $salesData['aerials']['comment'] = $aerialComment;
+            $salesData = json_encode($salesData);
 
-            $updateSalesRequest = mysqli_query($connection, "UPDATE {$tableNamePrefix}sales SET sales_status=1 WHERE sales_id='{$requestId}' AND sales_agent_id='{$agentId}' AND sales_status=0 AND sales_site_id=" . SITE_ID);
 
-            // if ($checkTotalRow = mysqli_query($connection, "SELECT count(block_item_id) as totalSlabsInBlock FROM {$tableNamePrefix}block_item WHERE block_item_parent_id={$blockInfoData['block_id']} AND block_item_status=1 AND block_item_site_id=" . SITE_ID)) {
-            //     if (mysqli_num_rows($checkTotalRow) != 0) {
-            //         extract(mysqli_fetch_assoc($checkTotalRow));
-            //         if ($totalSlabsInBlock == 0) {
-            //             $updateBlockStatusToSoldOut = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status=3 WHERE block_id='{$blockInfoData['block_id']}' AND block_status=1 AND block_site_id=" . SITE_ID);
-            //         } else {
-            //             $updateBlockStatusToSoldOut = true;
-            //         }
-            //     }
-            // }
+            $updateSalesRequest = mysqli_query($connection, "UPDATE {$tableNamePrefix}sales SET sales_status=1, sales_aerial_op='{$aerialAdjustment}', sales_aerial_value='{$aerialValue}', sales_data='{$salesData}' WHERE sales_id='{$requestId}' AND sales_agent_id='{$agentId}' AND sales_status=0 AND sales_site_id=" . SITE_ID);
 
             if ($updateBlockSize && $updateBlockSlab && $updateSalesRequest) {
                 $status = 'success';
