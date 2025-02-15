@@ -202,7 +202,14 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     <td><?php echo $totalBlockSlabs . (($totalBlockSlabs == 1) ? 'Pc.' : 'Pcs.') ?></td>
                                     <td><?php echo $totalBlockGrossSize . " " . $totalBlockDimensionType ?></td>
                                     <td><?php echo $totalBlockDamageSize . " " . $totalBlockDimensionType ?></td>
-                                    <td><span id="salesRequestNetValue"><?php echo $totalBlockNetSize . "</span> " . $totalBlockDimensionType ?></td>
+                                    <td>
+                                        <span id="salesRequestNetValue">
+                                            <?php echo (trim($blockData['aerials']['operation']) == '+')
+                                                ? ($totalBlockNetSize + $blockData['aerials']['value'])
+                                                : ($totalBlockNetSize - $blockData['aerials']['value']); ?>
+                                        </span>
+                                        <?php echo $totalBlockDimensionType; ?>
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>

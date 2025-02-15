@@ -1514,6 +1514,7 @@ $(document).ready(function () {
 
   $("#salesRequest").click(function (e) {
     e.preventDefault();
+    $("#salesRequest").hide();
     $.ajax({
       type: "POST",
       url: "/api/sales/create/",
@@ -1549,11 +1550,13 @@ $(document).ready(function () {
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
+        $("#salesRequest").show();
       },
     });
   });
 
   $("#approveSalesRequest").click(function (e) {
+    $("#approveSalesRequest").hide();
     e.preventDefault();
     var requestId = $(this).attr("data-id");
     var agentID = $(this).attr("data-agent");
@@ -1596,10 +1599,12 @@ $(document).ready(function () {
             errorResponse.responseJSON.msg,
             errorResponse.responseJSON.status
           );
+          $("#approveSalesRequest").show();
         },
       });
     } else {
       popUpMessage("center", "Invalid sales request id received", "warning");
+      $("#approveSalesRequest").show();
     }
   });
 
