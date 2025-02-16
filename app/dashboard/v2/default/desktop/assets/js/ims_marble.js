@@ -2052,6 +2052,7 @@ $(document).ready(function () {
 
     $("#transportSlabs").click(function (e) {
       e.preventDefault();
+      $("#transportSlabs").hide();
       let selectedSlabs = $(".slabCheckbox:checked")
         .map(function () {
           return $(this).val();
@@ -2066,11 +2067,20 @@ $(document).ready(function () {
           data: JSON.stringify({ slabs: selectedSlabs }),
           success: function (response) {
             alert("Slabs sent successfully!");
+            $("#transportSlabs").show();
           },
           error: function (error) {
             alert("Error sending slabs!");
+            $("#transportSlabs").show();
           },
         });
+      } else {
+        popUpMessage(
+          "center",
+          "Kindly select minimum 1 slab for transfer",
+          "warning"
+        );
+        $("#transportSlabs").show();
       }
     });
   }
