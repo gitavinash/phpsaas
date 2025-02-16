@@ -161,6 +161,19 @@ if (isset($validId)) {
     <?php
 
     if ($balanceSlabs == 0) { ?>
+
+        <!-- Show select all btn -->
+
+        <section class="actionStickySection">
+            <div class="col-5">
+                <button id="selectAllBtn">Select All</button>
+                <button id="unSelectAllBtn">Unselect All</button>
+            </div>
+            <div class="col-5">
+                <button id="transportSlabs" class="bgYellow right" style="margin-right: 0px;"><i class='fi fi-rr-calendar-shift-swap'></i> Transfer Block Warehouse</button>
+            </div>
+        </section>
+
         <!-- Show all slabs list -->
         <div class="step-open-box step_1_box full-width">
             <table>
@@ -203,16 +216,18 @@ if (isset($validId)) {
                         localStorage.setItem('blockItem_{$block_item_id}', '{$block_item_damage_area}');
                     </script>";
 
+                            echo "
+                        <tr style='" . (($block_item_status == 2) ? 'background: #f27474' : '') . "' >
+                            <td style='width: 30px;line-height: 53px;text-align: center;'>
+                                {$i}
+                            </td>
+                            ";
+
                             if (strpos($block_size_dimension, '_weight') !== false) {
                                 // for weight related products
 
                                 echo "
-                        <tr style='" . (($block_item_status == 2) ? 'background: #f27474' : '') . "' >
                             <td>
-                                <div class='form-group' >
-                                    {$i}
-                                </div>
-                            </td>
                             <td>
                                 <div class='form-group'>
                                     <input name='width[{$block_item_id}]' class='widthValues' value='{$block_item_width}' type='number' " . (($block_item_status == 2) ? 'readonly' : '') . " />
@@ -226,14 +241,6 @@ if (isset($validId)) {
                         </tr>
                     ";
                             } else {
-                                echo "
-                        <tr style='" . (($block_item_status == 2) ? 'background: #f27474' : '') . "' >
-                            <td>
-                                <div class='form-group' >
-                                    {$i}
-                                </div>
-                            </td>
-                            ";
 
                                 if ($block_size_dimension == 'mt (t)') {
                                     echo "
@@ -275,9 +282,18 @@ if (isset($validId)) {
                                     <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i></a><a href='#' title='Mark as sold out' class='bgRed markAsSold' data-type='item' data-id='{$block_item_id}' ><i class='fi fi-rr-sold-signal bgRed'></i></a>" : '') . "
                                 </div>
                             </td>
-                        </tr>
                     ";
                             }
+
+                            echo "
+
+                            <td style='width:40px'>
+                                <div class='form-check form-check-inline multipleSelect'>
+                                    <input class='form-check-input slabCheckbox' type='checkbox' name='slabs' id='slab{$i}'>
+                                </div>
+                            </td>
+                        </tr>
+                            ";
 
                             $i++;
                         }

@@ -1960,4 +1960,118 @@ $(document).ready(function () {
 
   $aerialValue.on("input", updateNetValue);
   $aerialAdjustment.on("change", updateNetValue);
+
+  // make stickey
+
+  if ($(".actionStickySection").length) {
+    var $stickySection = $(".actionStickySection");
+
+    $(window).scroll(function () {
+      var scrollTop = $(window).scrollTop();
+      var offsetTop = $stickySection.offset().top; // Get latest position
+      var sectionHeight = $stickySection.outerHeight();
+
+      console.clear(); // Clear previous logs
+
+      if (scrollTop >= 350) {
+        $stickySection.addClass("sticky");
+      } else {
+        $stickySection.removeClass("sticky");
+      }
+    });
+  }
+
+  // For multiple checkbox
+
+  if ($(".slabCheckbox").length) {
+    function updateButtonState() {
+      let totalCheckboxes = $(".slabCheckbox").length;
+      let checkedCheckboxes = $(".slabCheckbox:checked").length;
+
+      // Manage select/unselect all buttons
+      if (checkedCheckboxes === totalCheckboxes) {
+        $("#selectAllBtn")
+          .prop("disabled", true)
+          .removeClass("btn-primary")
+          .addClass("btn-secondary");
+        $("#unSelectAllBtn")
+          .prop("disabled", false)
+          .removeClass("btn-secondary")
+          .addClass("btn-primary");
+      } else if (checkedCheckboxes === 0) {
+        $("#unSelectAllBtn")
+          .prop("disabled", true)
+          .removeClass("btn-primary")
+          .addClass("btn-secondary");
+        $("#selectAllBtn")
+          .prop("disabled", false)
+          .removeClass("btn-secondary")
+          .addClass("btn-primary");
+      } else {
+        $("#selectAllBtn, #unSelectAllBtn").prop("disabled", false);
+        $("#selectAllBtn").removeClass("btn-secondary").addClass("btn-primary");
+        $("#unSelectAllBtn")
+          .removeClass("btn-secondary")
+          .addClass("btn-primary");
+      }
+
+      // Manage transportSlabs button
+      if (checkedCheckboxes > 0) {
+        $("#transportSlabs")
+          .prop("disabled", false)
+          .removeClass("btn-secondary")
+          .addClass("btn-primary");
+      } else {
+        $("#transportSlabs")
+          .prop("disabled", true)
+          .removeClass("btn-primary")
+          .addClass("btn-secondary");
+      }
+    }
+
+    if ($(".slabCheckbox").length) {
+      $("#selectAllBtn").click(function (e) {
+        e.preventDefault();
+        $(".slabCheckbox").prop("checked", true);
+        updateButtonState();
+      });
+
+      $("#unSelectAllBtn").click(function (e) {
+        e.preventDefault();
+        $(".slabCheckbox").prop("checked", false);
+        updateButtonState();
+      });
+
+      $(".slabCheckbox").change(function () {
+        updateButtonState();
+      });
+
+      // Initial state check
+      updateButtonState();
+    }
+
+    $("#transportSlabs").click(function (e) {
+      e.preventDefault();
+      let selectedSlabs = $(".slabCheckbox:checked")
+        .map(function () {
+          return $(this).val();
+        })
+        .get();
+
+      if (selectedSlabs.length > 0) {
+        $.ajax({
+          url: "https://your-api-endpoint.com/sendSlabs",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ slabs: selectedSlabs }),
+          success: function (response) {
+            alert("Slabs sent successfully!");
+          },
+          error: function (error) {
+            alert("Error sending slabs!");
+          },
+        });
+      }
+    });
+  }
 });
