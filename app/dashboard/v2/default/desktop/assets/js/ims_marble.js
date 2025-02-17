@@ -2053,6 +2053,7 @@ $(document).ready(function () {
     $("#transportSlabs").click(function (e) {
       e.preventDefault();
       $("#transportSlabs").hide();
+      var blockId = $("#updateBlockId").val();
       let selectedSlabs = $(".slabCheckbox:checked")
         .map(function () {
           return $(this).val();
@@ -2061,16 +2062,16 @@ $(document).ready(function () {
 
       if (selectedSlabs.length > 0) {
         $.ajax({
-          url: "https://your-api-endpoint.com/sendSlabs",
           type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify({ slabs: selectedSlabs }),
+          url: "/api/item/transfer/",
+          dataType: "JSON",
+          data: { slabs: selectedSlabs, blockId: blockId },
           success: function (response) {
-            alert("Slabs sent successfully!");
+            popUpMessage("center", "Slabs sent successfully!", "success");
             $("#transportSlabs").show();
           },
           error: function (error) {
-            alert("Error sending slabs!");
+            popUpMessage("center", error.responseJSON.msg, "error");
             $("#transportSlabs").show();
           },
         });

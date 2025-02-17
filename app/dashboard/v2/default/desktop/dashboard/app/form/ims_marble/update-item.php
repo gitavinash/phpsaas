@@ -289,7 +289,7 @@ if (isset($validId)) {
 
                             <td style='width:40px'>
                                 <div class='form-check form-check-inline multipleSelect'>
-                                    <input class='form-check-input slabCheckbox' type='checkbox' name='slabs' id='slab{$i}'>
+                                    <input class='form-check-input slabCheckbox' type='checkbox' name='slabs' value='{$block_item_id}'>
                                 </div>
                             </td>
                         </tr>
@@ -304,7 +304,7 @@ if (isset($validId)) {
             </table>
             <div class="box-1">
                 <div class="form-group">
-                    <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
+                    <input type="hidden" id="updateBlockId" name="blockId" value="<?php echo $block_id ?>">
                     <input type="hidden" name="blockItemIndex" value="<?php echo rtrim($blockItemIndex, ',') ?>">
                     <input type="button" class="btn btn-green" id="updateBlockItem" value="Update block Slabs">
                 </div>
