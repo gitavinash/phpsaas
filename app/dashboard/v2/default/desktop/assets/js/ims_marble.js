@@ -1970,9 +1970,6 @@ $(document).ready(function () {
       var scrollTop = $(window).scrollTop();
       var offsetTop = $stickySection.offset().top; // Get latest position
       var sectionHeight = $stickySection.outerHeight();
-
-      console.clear(); // Clear previous logs
-
       if (scrollTop >= 350) {
         $stickySection.addClass("sticky");
       } else {
@@ -2060,25 +2057,33 @@ $(document).ready(function () {
         })
         .get();
 
+      // Send request to API
       if (selectedSlabs.length > 0) {
         $.ajax({
           type: "POST",
           url: "/api/item/transfer/",
           dataType: "JSON",
-          data: { slabs: selectedSlabs, blockId: blockId },
+          data: {
+            slabs: selectedSlabs,
+            blockId: blockId,
+          },
           success: function (response) {
-            popUpMessage("center", "Slabs sent successfully!", "success");
+            popUpMessage("center", response.msg, "success");
             $("#transportSlabs").show();
           },
           error: function (error) {
-            popUpMessage("center", error.responseJSON.msg, "error");
             $("#transportSlabs").show();
+            popUpMessage(
+              "center",
+              error.responseJSON.msg,
+              error.responseJSON.status ? error.responseJSON.status : "error"
+            );
           },
         });
       } else {
         popUpMessage(
           "center",
-          "Kindly select minimum 1 slab for transfer",
+          "Kindly select minimum 1 slab to transfer",
           "warning"
         );
         $("#transportSlabs").show();

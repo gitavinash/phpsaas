@@ -285,15 +285,12 @@ if (isset($validId)) {
                     ";
                             }
 
-                            echo "
-
-                            <td style='width:40px'>
+                            echo (($block_item_status == 1) ? "<td style='width:40px'>
                                 <div class='form-check form-check-inline multipleSelect'>
                                     <input class='form-check-input slabCheckbox' type='checkbox' name='slabs' value='{$block_item_id}'>
                                 </div>
                             </td>
-                        </tr>
-                            ";
+                        </tr>" : "");
 
                             $i++;
                         }
