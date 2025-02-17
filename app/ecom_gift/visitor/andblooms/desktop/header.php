@@ -156,7 +156,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="web-detail dn-s">
-                            <p><strong>Notice:</strong> Due to the Valentine's Day rush, the minimum delivery time will be 2 hours. Thank you for your patience!</p>
+                            <p><strong>Women's Day </strong>is on March 8, 2025! Explore our special collection & order in advance for timely delivery. 💐</p>
                             <!-- <p><span class="material-icons">email</span></p> -->
                         </div>
 
