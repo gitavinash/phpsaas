@@ -927,6 +927,9 @@ if (manageDamageBtn) {
         $(this).val("");
       });
 
+    $("#addNewDamage").show();
+    $("#updateDamage").show();
+    $("#damageForm").show();
     $(".cloneDamageForm").empty();
     $("#damageFormPrevious").empty();
     $(".popUpUpdateDamageFormInputs").empty();
@@ -1000,6 +1003,99 @@ if (manageDamageBtn) {
                       </div>
                     </div>
                 </div>
+            </div>
+        `;
+            $(".popUpUpdateDamageFormInputs").append(formHtml);
+          }
+          i++;
+        });
+      }
+    }
+    $(".manageDamageBox").show();
+  });
+}
+
+var viewDamage = document.getElementsByClassName("viewDamage");
+
+if (viewDamage) {
+  $(".viewDamage").click(function (e) {
+    e.preventDefault();
+    activeDamageBoxId = $(this).attr("data-id");
+    $("#blockItemId").text($(this).attr("data-index"));
+    $(".popUpUpdateDamageForm")
+      .find("input")
+      .each(function () {
+        $(this).val("");
+      });
+
+    $("#addNewDamage").hide();
+    $("#updateDamage").hide();
+    $("#damageForm").hide();
+    $(".cloneDamageForm").empty();
+    $("#damageFormPrevious").empty();
+    $(".popUpUpdateDamageFormInputs").empty();
+    var localValues = localStorage.getItem(`blockItem_${activeDamageBoxId}`);
+    oldJsonObject = localValues;
+    if (localValues != "") {
+      localValues = JSON.parse(localValues);
+      if (Array.isArray(localValues)) {
+        var i = 1;
+        localValues.forEach(function (value) {
+          if (value["damageAreaWidth"] != "") {
+            var formHtml =
+              `
+            <div class="full-width popUpUpdateDamageForm formBox_${i}" id="damageForm_${i}">
+                <div class="col-2">
+                    <div class="form-group">
+                        <input id="damageAreaWidth_${i}" class="width" name="damageAreaWidth" value="${value["damageAreaWidth"]}" type="number" onwheel="this.blur()" />
+                        <label class="form-lable" for="damageAreaWidth_${i}">Length</label>
+                    </div>
+                </div>
+                <div class="col-2">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                name="damageAreaWidthThicknessDimension" disabled>
+                                                <option value="mm" ` +
+              (measurementType == "millimeter" ? "selected" : "") +
+              `>Millimeter</option>
+                                                <option value="cm" ` +
+              (measurementType == "centimeter" ? "selected" : "") +
+              `>Centimeter</option>
+                                                <option value="in" ` +
+              (measurementType == "inches" ? "selected" : "") +
+              `>Inches</option>
+                                                <option value="ft" ` +
+              (measurementType == "feet" ? "selected" : "") +
+              `>Feet</option>
+                                            </select>
+                                            <label class="form-lable" id="Label">Size<sup>*</sup></label>
+                                        </div>
+                                    </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <input id="damageAreaHeight_${i}" class="height" name="damageAreaHeight" value="${value["damageAreaHeight"]}" type="number" onwheel="this.blur()" />
+                        <label class="form-lable" for="damageAreaHeight_${i}">Height</label>
+                    </div>
+                </div>
+                <div class="col-2">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                name="damageAreaHeightThicknessDimension" disabled><option value="mm" ` +
+              (measurementType == "millimeter" ? "selected" : "") +
+              `>Millimeter</option>
+                                                <option value="cm" ` +
+              (measurementType == "centimeter" ? "selected" : "") +
+              `>Centimeter</option>
+                                                <option value="in" ` +
+              (measurementType == "inches" ? "selected" : "") +
+              `>Inches</option>
+                                                <option value="ft" ` +
+              (measurementType == "feet" ? "selected" : "") +
+              `>Feet</option>
+                                            </select>
+                                            <label class="form-lable" id="Label">Size<sup>*</sup></label>
+                                        </div>
+                                    </div>
             </div>
         `;
             $(".popUpUpdateDamageFormInputs").append(formHtml);
@@ -2051,35 +2147,49 @@ $(document).ready(function () {
       e.preventDefault();
       $("#transportSlabs").hide();
       var blockId = $("#updateBlockId").val();
+      var newWarehouseId = $("#newWarehouseId").val();
       let selectedSlabs = $(".slabCheckbox:checked")
         .map(function () {
           return $(this).val();
         })
         .get();
+      let selectedSlabsSeqId = $(".slabCheckbox:checked")
+        .map(function () {
+          return $(this).data("id");
+        })
+        .get();
 
       // Send request to API
       if (selectedSlabs.length > 0) {
-        $.ajax({
-          type: "POST",
-          url: "/api/item/transfer/",
-          dataType: "JSON",
-          data: {
-            slabs: selectedSlabs,
-            blockId: blockId,
-          },
-          success: function (response) {
-            popUpMessage("center", response.msg, "success");
-            $("#transportSlabs").show();
-          },
-          error: function (error) {
-            $("#transportSlabs").show();
-            popUpMessage(
-              "center",
-              error.responseJSON.msg,
-              error.responseJSON.status ? error.responseJSON.status : "error"
-            );
-          },
-        });
+        if (newWarehouseId != "select") {
+          $.ajax({
+            type: "POST",
+            url: "/api/item/transfer/",
+            dataType: "JSON",
+            data: {
+              slabs: selectedSlabs,
+              blockId: blockId,
+              newWarehouseId: newWarehouseId,
+              selectedSlabsSeqId: selectedSlabsSeqId,
+            },
+            success: function (response) {
+              popUpMessage("center", response.msg, "success");
+              $(".slabCheckbox:checked").hide();
+              $("#transportSlabs").show();
+            },
+            error: function (error) {
+              $("#transportSlabs").show();
+              popUpMessage(
+                "center",
+                error.responseJSON.msg,
+                error.responseJSON.status ? error.responseJSON.status : "error"
+              );
+            },
+          });
+        } else {
+          popUpMessage("center", "Select warehouse to transfer", "warning");
+          $("#transportSlabs").show();
+        }
       } else {
         popUpMessage(
           "center",
@@ -2090,4 +2200,7 @@ $(document).ready(function () {
       }
     });
   }
+  $("#newWarehouseId").selectJS({
+    width: "200px", // Add this to apply a custom width
+  });
 });

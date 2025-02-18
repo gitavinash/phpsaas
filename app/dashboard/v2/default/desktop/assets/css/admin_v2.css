@@ -2157,7 +2157,7 @@ section.form
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9999;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -3506,4 +3506,8 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
   pointer-events: none;
+}
+
+.warehouseTranfer span.select2.select2-container.select2-container--default {
+  width: 45% !important;
 }

@@ -91,10 +91,12 @@ if ($checkEnquiry = mysqli_query($connection, $requestQuery)) {
 
                             if (is_array($requestMessageData)) {
                                 foreach ($requestMessageData as $key => $value) {
-                                    echo "<tr>
+                                    if (strpos($key, 'hide_') === false) {
+                                        echo "<tr>
                                         <td class='box-3'><strong>" . str_replace('_', ' ', ucwords($key)) . "</strong></td>
                                         <td class='box-7'>" . ucfirst(str_replace('_', ' - ', $value)) . "</td>
                                     </tr>";
+                                    }
                                 }
                             }
 

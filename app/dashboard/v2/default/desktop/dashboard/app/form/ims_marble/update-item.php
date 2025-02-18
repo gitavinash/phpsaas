@@ -16,7 +16,7 @@ if (!isset($id)) { ?>
 
 $blockId = base64_decode($id);
 
-if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUNT(block_item_id) as balanceSlabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND  block_item_parent_id={$blockId} AND block_item_status IN (1,3) AND block_site_id=" . SITE_ID)) {
+if ($checkInventory = mysqli_query($connection, "SELECT *, block_total_item-COUNT(block_item_id) as balanceSlabs FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND  block_item_parent_id={$blockId} AND block_item_status IN (1,3,5) AND block_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkInventory) > 0) {
         $validId = true;
         extract(mysqli_fetch_assoc($checkInventory));
@@ -165,11 +165,27 @@ if (isset($validId)) {
         <!-- Show select all btn -->
 
         <section class="actionStickySection">
-            <div class="col-5">
+            <div class="col-4">
                 <button id="selectAllBtn">Select All</button>
                 <button id="unSelectAllBtn">Unselect All</button>
             </div>
-            <div class="col-5">
+            <div class="col-3">
+                <select class="selectJS warehouseTranfer form-control" style="width: 200px" name="newWarehouseId" id="newWarehouseId">
+                    <option value="select" selected>Select warehouse</option>
+                    <?php
+
+                    if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
+                        if (mysqli_num_rows($warehouseList) > 0) {
+                            while ($row = mysqli_fetch_array($warehouseList)) {
+                                echo "<option value='{$row['warehouse_id']}_{$row['warehouse_title']}' >{$row['warehouse_title']}</option>";
+                            }
+                        }
+                    }
+
+                    ?>
+                </select>
+            </div>
+            <div class="col-3">
                 <button id="transportSlabs" class="bgYellow right" style="margin-right: 0px;"><i class='fi fi-rr-calendar-shift-swap'></i> Transfer Block Warehouse</button>
             </div>
         </section>
@@ -181,7 +197,7 @@ if (isset($validId)) {
 
                 $blockItemIndex = '';
 
-                if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status IN (1,3) AND block_item_site_id=" . SITE_ID)) {
+                if ($checkItems = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item WHERE block_item_parent_id='{$blockId}' AND block_item_status IN (1,3,5) AND block_item_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($checkItems) > 0) {
                         $i = 1;
                         while ($blockItem = mysqli_fetch_assoc($checkItems)) {
@@ -275,10 +291,10 @@ if (isset($validId)) {
                                 <div class='actionBtn form-group' style='display:" . (($block_item_status == 2) ? 'none' : 'block') . "' >
                                     ";
                                 if ($block_size_dimension != 'mt (t)') {
-                                    echo "<a href='#' class='bgYellow manageDamage' data-index='{$i}' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>";
+                                    echo "<a href='#' class='bgYellow " . (($block_item_status == 1) ? 'manageDamage' : 'viewDamage') . "' data-index='{$i}' data-id='{$block_item_id}'><i class='fi fi-rr-damage'></i></a>";
                                 }
                                 echo "
-                                    " . (($block_item_status != 3) ? "
+                                    " . (($block_item_status == 1) ? "
                                     <a href='#' class='bgRed deleteButton' data-type='ims_marble/item/' data-id='{$block_item_id}' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i></a><a href='#' title='Mark as sold out' class='bgRed markAsSold' data-type='item' data-id='{$block_item_id}' ><i class='fi fi-rr-sold-signal bgRed'></i></a>" : '') . "
                                 </div>
                             </td>
@@ -287,7 +303,7 @@ if (isset($validId)) {
 
                             echo (($block_item_status == 1) ? "<td style='width:40px'>
                                 <div class='form-check form-check-inline multipleSelect'>
-                                    <input class='form-check-input slabCheckbox' type='checkbox' name='slabs' value='{$block_item_id}'>
+                                    <input class='form-check-input slabCheckbox' type='checkbox' data-id='{$i}' name='slabs' value='{$block_item_id}'>
                                 </div>
                             </td>
                         </tr>" : "");

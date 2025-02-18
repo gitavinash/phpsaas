@@ -27,17 +27,19 @@ if ($reason != '') {
 }
 
 if (isset($validRequest)) {
-    if ($checkBlock = mysqli_query($connection, "SELECT block_size_dimension, block_product_type, block_gross_size, block_damage_size, block_net_size, COUNT(block_item_id) as totalExistingSlab, block_status FROM {$tableNamePrefix}block INNER JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status=1 AND block_item_status=1 AND block_site_id=" . SITE_ID)) {
+    if ($checkBlock = mysqli_query($connection, "SELECT block_title, block_code, block_size_dimension, block_product_type, block_gross_size, block_damage_size, block_net_size, COUNT(block_item_id) as totalExistingSlab, block_status FROM {$tableNamePrefix}block INNER JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_status=1 AND block_item_status=1 AND block_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
 
             mysqli_query($connection, "START TRANSACTION");
 
-            $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status=5  WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID);
+            $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status=5  WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID);
 
             $requestData = json_encode(array(
                 'title' => 'Warehouse Transfer request',
                 'data' => array(
+                    'block_title' => $block_title,
+                    'block_code' => $block_code,
                     'current_location' => $currentWarehouse,
                     'new_location' => $newWareHouseId,
                     'reason' => $reason,
