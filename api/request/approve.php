@@ -21,13 +21,24 @@ if (isset($deleteData)) {
             extract(mysqli_fetch_assoc($checkData));
 
             $requestData = json_decode($request_data, TRUE);
+
             $oldBlockStatus = $requestData['data']['old_status'];
             $newWarehouse = explode('_', $requestData['data']['new_location']);
             $oldWarehouse = $requestData['data']['current_location'];
 
+            // Delete request
+
             $updateRequest = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "request SET request_status=1 WHERE request_id='{$requestId}' AND request_site_id=" . SITE_ID);
 
+            // Update block status to old status
+
             $updateBlockStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status={$oldBlockStatus}, block_warehouse_id={$newWarehouse[0]} WHERE block_id='{$request_relation_id}' AND block_site_id=" . SITE_ID);
+
+            if (isset($requestData['data']['hide_slabs_id_array'])) {
+
+                echo "under development";
+                exit();
+            }
 
             if ($updateRequest && $updateBlockStatus) {
                 $msg = "Request accepted successfully";

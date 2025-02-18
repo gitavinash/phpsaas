@@ -112,7 +112,7 @@ if ($checkEnquiry = mysqli_query($connection, $requestQuery)) {
         <div class="main-box">
             <section class="leadQuickLinks">
                 <a href="" class="btn btn-green" data-id="<?php echo base64_encode($request_id) ?>" id="approveRequestBtn"><i class="fi-rr-check"></i> Approve</a>
-                <a href='#' data-type='request' data-id='<?php echo $request_id ?>' title='Delete request' data-title='Delete request' class='btn btn-red deleteButton' data-reload='true' data-redirect='true'><i class='fi fi-rr-trash bgRed'></i> Delete request</a>
+                <a href='#' data-type='request' data-id='<?php echo $request_id ?>' title='Delete request' data-title='Delete request' class='btn btn-red deleteButton' data-reload='false' data-redirect="/dashboard/request/list/" data-redirect='true'><i class='fi fi-rr-trash bgRed'></i> Delete request</a>
             </section>
         </div>
     </div>

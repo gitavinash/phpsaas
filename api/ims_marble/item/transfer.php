@@ -58,7 +58,7 @@ if (isset($validRequest)) {
                     )
                 ), TRUE);
 
-                $updateBlockSlabsStatus = true;
+                $updateBlockSlabsStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=5 WHERE block_item_parent_id='{$blockId}' AND block_item_status=1 AND block_item_site_id=" . SITE_ID);
             } else {
 
                 $blockItemSlabsId = implode(',', $_REQUEST['slabs']);

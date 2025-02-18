@@ -1927,16 +1927,17 @@ $(document).ready(function () {
           $("#approveRequestBtn").show();
         },
         error: function (errorResponse) {
+          $("#approveRequestBtn").show();
           popUpMessage(
             "center",
             errorResponse.responseJSON.msg,
             errorResponse.responseJSON.status
           );
-          $("#approveRequestBtn").show();
         },
       });
     } else {
       popUpMessage("center", msg, "warning");
+      $("#approveRequestBtn").show();
     }
   });
 

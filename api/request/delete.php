@@ -23,9 +23,18 @@ if (isset($deleteData)) {
             $requestData = json_decode($request_data, TRUE);
             $oldBlockStatus = $requestData['data']['old_status'];
 
+            // Delete request
+
             $deleteDataFromDatabase = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "request WHERE request_id={$requestId} AND request_site_id=" . SITE_ID);
 
+            // Update block status to old status
+
             $updateBlockStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status={$oldBlockStatus} WHERE block_id='{$request_relation_id}' AND block_site_id=" . SITE_ID);
+
+            if (isset($requestData['data']['hide_slabs_id_array'])) {
+                $updateBlockStatus = false;
+                $msg = 'Feature is under development';
+            }
 
             if ($deleteDataFromDatabase && $updateBlockStatus) {
                 $msg = "Request deleted successfully";
