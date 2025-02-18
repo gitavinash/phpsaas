@@ -78,6 +78,8 @@ if (isset($validRequest)) {
                         'old_status' =>  $block_status
                     )
                 ), TRUE);
+
+                $updateBlockSlabsStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=5 WHERE block_item_id IN ($blockItemSlabsId) AND block_item_parent_id='{$blockId}' AND block_item_status=1 AND block_item_site_id=" . SITE_ID);
             }
 
             // Add new request
@@ -85,8 +87,6 @@ if (isset($validRequest)) {
             $addNewRequest = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "request(request_site_id, request_user_id, request_type, request_relation_id, request_title, request_data, request_status, request_time) VALUES(" . SITE_ID . ", " . USER_ID . ", 'block', '{$blockId}', 'Warehouse Transfer request', '{$requestData}', 0, current_timestamp())");
 
             $updateBlockStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_status=5  WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID);
-
-            $updateBlockSlabsStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_status=5 WHERE block_item_id IN ($blockItemSlabsId) AND block_item_parent_id='{$blockId}' AND block_item_status=1 AND block_item_site_id=" . SITE_ID);
 
             if ($requestData && $addNewRequest && $updateBlockStatus && $updateBlockSlabsStatus) {
                 $msg = 'Block transfer request sent successfully';
