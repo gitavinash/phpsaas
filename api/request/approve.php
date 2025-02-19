@@ -1,5 +1,7 @@
 <?php
 
+require_once LOGIN_CHECK;
+
 $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 
 $httpStatus = 500;
@@ -208,7 +210,6 @@ WHERE
                     $countSize = explode(',', $requestData['data']['hide_slabs_id_array']);
                     $totalSlabsToTransfer = count($countSize);
 
-
                     // Old warehouse info
 
                     $oldLocationMeta = explode('_', $requestData['data']['current_location']);
@@ -240,8 +241,28 @@ WHERE
 
                                     $createNewBlock = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}block(block_site_id, block_user_id, block_warehouse_id, block_supplier_id, block_title, block_description, block_feature_image, block_gallery, block_code, block_thickness_size, block_thickness_dimension, block_product_type, block_size_dimension, block_total_item, block_status, block_created, block_gross_size, block_damage_size, block_net_size, block_available) VALUES(" . SITE_ID . ", '{
                                     $block_user_id}',  {$newWarehouseId}, '{$block_supplier_id}', '{$block_title}', '{$block_description}', '{$block_feature_image}', '{$block_gallery}', '{$newBlockCode}', '{$block_thickness_size}', '{$block_thickness_dimension}', '{$block_product_type}', '{$block_size_dimension}', '{$totalSlabsToTransfer}', 1, now(), '{$updateGrossSize}', '{$updateDamageSize}', '{$updateNetSize}', '{$totalSlabsToTransfer}')");
-
                                     $newWarehouseBlockId = mysqli_insert_id($connection);
+
+                                    // Generate QR Code
+
+                                    require_once QR_CODE . 'qrlib.php';
+                                    $uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/qrcode/';
+                                    if (!is_dir($uploadPath)) {
+                                        mkdir($uploadPath, 0755, true);
+                                    }
+
+                                    $qrCodeURL = SITE_URL . '/view_block/?id=' . base64_encode($newWarehouseBlockId);
+
+                                    $qrCodeFile = $uploadPath . 'block_no_' . $newWarehouseBlockId . '.png';
+                                    QRcode::png($qrCodeURL, $qrCodeFile, 'H', 16, 1);
+                                    // if (!file_exists($qrCodeFile)) {
+                                    // }
+                                    $publicQRCodeURL = str_replace(ROOT, '', $qrCodeFile);
+
+
+                                    // Block QR Update
+
+                                    mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_qr='{$publicQRCodeURL}' WHERE block_id='{$newWarehouseBlockId}' AND block_site_id=" . SITE_ID);
 
                                     // Swap old block id with new block id
 

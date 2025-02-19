@@ -93,7 +93,7 @@ if ($checkEnquiry = mysqli_query($connection, $requestQuery)) {
                                 foreach ($requestMessageData as $key => $value) {
                                     if (strpos($key, 'hide_') === false) {
                                         echo "<tr>
-                                        <td class='box-3'><strong>" . str_replace('_', ' ', ucwords($key)) . "</strong></td>
+                                        <td class='box-3'><strong>" . str_replace('_', ' ', ucwords(str_replace('_array', '', $key))) . "</strong></td>
                                         <td class='box-7'>" . ucfirst(str_replace('_', ' - ', $value)) . "</td>
                                     </tr>";
                                     }
