@@ -2005,6 +2005,7 @@ $(document).ready(function () {
         active: "#b4e2b4",
         approved: "#b4e2b4",
         sold_out: "#b87085",
+        rejected: "#b87085",
         success: "#A9D5D1",
         duplicate: "#C8C8F0",
         follow_up: "#E6AF60",
