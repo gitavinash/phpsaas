@@ -15,9 +15,10 @@ $google_oauth_client_id = GOOGLE_AUTH_CLIENT_ID;
 $google_oauth_client_secret = GOOGLE_AUTH_CLIENT_SECRET;
 
 if (DEVELOPMENT_MODE == true) {
-    $google_oauth_redirect_uri = 'http://localhost/oauth/google/';
+    $google_oauth_redirect_uri =
+        'http://localhost/oauth/google/?redirect_url=' . $redirectUrl;
 } else {
-    $google_oauth_redirect_uri = SITE_URL . '/oauth/google/';
+    $google_oauth_redirect_uri = SITE_URL . '/oauth/google/?redirect_url=' . $redirectUrl;
 }
 
 $google_oauth_version = 'v3';
