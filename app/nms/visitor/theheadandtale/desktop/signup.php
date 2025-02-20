@@ -57,7 +57,16 @@ if (isset($_COOKIE['user_data'])) {
                         <input type="hidden" name="userRole" value="subscriber">
                         <input type="hidden" name="type" value="user">
                         <input type="hidden" name="action" value="subscriber">
-                        <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/">
+                        <!-- <input type="hidden" name="hardRedirectURL" value="<?php echo ((isset($refUrl)) ? $refUrl : '/thankyou_signup/') ?>"> -->
+                        <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/<?php echo ((isset($refUrl)) ? '?refUrl=' . $refUrl : '') ?>">
+                        <?php
+
+                        if (isset($auth)) { ?>
+                            <input type="hidden" name="autologin" value="true">
+                        <?php
+                        }
+
+                        ?>
                         <input type="submit" class="button" value="Sign up">
                     </div>
                     <div class="or">

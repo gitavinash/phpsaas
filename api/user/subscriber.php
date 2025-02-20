@@ -5,8 +5,8 @@ function subscriber($connection, $data)
 
     extract($data);
 
-    $msg='';
-    $status='warning';
+    $msg = '';
+    $status = 'warning';
 
     if ($email == '') {
 
@@ -35,7 +35,7 @@ function subscriber($connection, $data)
 
     // User registraion process
 
-    if($msg=='') {
+    if ($msg == '') {
 
         if ($checkEmail = mysqli_query($connection, "SELECT user_email FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}'")) {
 
@@ -100,10 +100,21 @@ function subscriber($connection, $data)
         }
     }
 
-    $msg=urlencode($msg);
+    $msg = urlencode($msg);
 
     if ($status === 'success') {
-        header("Location: {$hardRedirectURL}?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+
+        if (isset($autologin)) {
+            require_once API_MODULES . 'auth/autologin.php';
+        } else {
+            $startRedirection = true;
+        }
+
+        if ($startRedirection) {
+            header("Location: {$hardRedirectURL}?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+        } else {
+            echo "Something went wrong is redirection -> " . $msg;
+        }
     } else {
         header("Location: /signup/?responseMsg={$msg}&status={$status}", TRUE, 301);
     }
