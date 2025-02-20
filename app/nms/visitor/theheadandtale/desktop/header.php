@@ -157,7 +157,7 @@ if (isset($_COOKIE['user_data'])) {
                             <!-- <button class="subscribe">subscribe</button> -->
                             <a href="/subscribe/" class="subscribe">subscribe</a>
                             <!-- <button class="sign_in"></button> -->
-                            <a href="/login/" class="sign_in">sign in</a>
+                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>" class="sign_in">sign in</a>
                         </div>
 
                     <?php

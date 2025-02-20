@@ -50,7 +50,7 @@ if (isset($_COOKIE['user_data'])) {
                     <div class="sign--in_btn">
                         <input type="hidden" name="type" value="auth">
                         <input type="hidden" name="action" value="login">
-                        <input type="hidden" name="redirect_url" value="/">
+                        <input type="hidden" name="redirect_url" value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/') ?>">
                         <input type="hidden" name="hardRedirect" value="true">
                         <input type="hidden" name="hardRedirectURL" value="/dashboard/">
                         <input type="submit" class="button" value="Sign in">
@@ -77,8 +77,8 @@ if (isset($_COOKIE['user_data'])) {
     <?php require_once NOTIFICATION . 'index.php'; ?>
     <script src="<?php echo USER_JS ?>script.min.js"></script>
     <?php
-    
-    if(isset($alertMsg)) {
+
+    if (isset($alertMsg)) {
         echo "<script>alert('{$alertMsg}')</script>";
     }
 
