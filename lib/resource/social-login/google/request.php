@@ -9,7 +9,7 @@ if (!defined('ENABLE_GOOGLE_AUTH')) {
 
 // Initialize the session
 session_start();
-$redirectUrl = '/dashboard/';
+$redirectUrl = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 // Update the following variables
 $google_oauth_client_id = GOOGLE_AUTH_CLIENT_ID;
 $google_oauth_client_secret = GOOGLE_AUTH_CLIENT_SECRET;
