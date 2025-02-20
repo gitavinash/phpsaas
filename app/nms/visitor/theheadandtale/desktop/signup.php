@@ -1,6 +1,6 @@
 <?php
 
-$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
+// $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
 if (isset($responseMsg)) {
     echo "<script>alert('{$responseMsg}')</script>";
@@ -72,7 +72,7 @@ if (isset($_COOKIE['user_data'])) {
                     <div class="or">
                         <p>or</p>
                     </div>
-                    <a href='/oauth/google/' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
+                    <a href='/oauth/google/?redirect_url=<?php echo ((isset($refUrl)) ? $refUrl : '/manage-subscription/') ?>' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
                             class="img-fluid" alt=""> login
                         with
                         google</a>
