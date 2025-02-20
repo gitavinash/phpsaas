@@ -1,15 +1,10 @@
 <?php
-
-session_destroy();
-
 if (!defined('ENABLE_GOOGLE_AUTH')) {
     echo "<h2>Google oAuth is disable for this domain: " . SITE_URL . "</h2>";
     exit();
 }
-
-// Initialize the session
-session_start();
 $redirectUrl = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
+
 // Update the following variables
 $google_oauth_client_id = GOOGLE_AUTH_CLIENT_ID;
 $google_oauth_client_secret = GOOGLE_AUTH_CLIENT_SECRET;
@@ -142,7 +137,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                         ob_start();
 
                         setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('user_email', base64_encode($email), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                        setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
@@ -158,6 +153,10 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
             }
 
             // echo $redirectUrl;
+
+            if (SITE_APP_ID == 3) {
+                $redirectUrl = $_SESSION['redirect_after_login'];
+            }
             header("Location: {$redirectUrl}", TRUE, 301);
             exit;
         } else {
@@ -167,6 +166,9 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
         exit('Invalid access token! Please try again later!');
     }
 } else {
+    // Initialize the session
+    session_start();
+    $_SESSION['redirect_after_login'] = isset($_GET['redirect_url']) ? $_GET['redirect_url'] : '/manage-subscription/';
     // Define params and redirect to Google Authentication page
     $params = [
         'response_type' => 'code',
