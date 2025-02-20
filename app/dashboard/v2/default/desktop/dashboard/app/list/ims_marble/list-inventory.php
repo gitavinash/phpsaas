@@ -199,7 +199,7 @@ if (isset($_GET['status'])) {
                                 <td>
                                     <div class='tableActionButton'>
                                         <a href='/dashboard/inventory/update/?id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Edit block' data-title='Edit block' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
-                                            <a href='{$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code' data-title='Show QR code' target='_blank'><i class='fi fi-rr-qr-scan bgWhite'></i></a>
+                                            <a href='/download/?downloadUrl={$block_qr}' class='tableActionIconBtn' target='_blank' title='Show QR Code' data-title='Download QR code' target='_blank'><i class='fi fi-rr-qr-scan bgWhite'></i></a>
                                             <a href='/dashboard/inventory/update/?updateType=item&id=" . base64_encode($block_id) . "' class='tableActionIconBtn' title='Update block item' data-title='Update block slabs' target='_blank'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
                                             <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block' data-title='Print block inventory report' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
                                             <a href='/print_label/?id=" . base64_encode($block_id) . "&theme=2' title='Print block'  data-title='Print block label' class='tableActionIconBtn' target='_blank' target='_blank'><i class='fi fi-rr-print bgWhite'></i></a>
