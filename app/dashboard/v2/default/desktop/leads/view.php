@@ -723,7 +723,6 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 <label class="form-lable" id="paymentAmount">Enter amount<sup>*</sup></label>
                                             </div>
                                             <div class="form-group">
-                                                <!-- <p>Payment method <sup>*</sup></p> -->
                                                 <select class="selectJS form-control" id="paymentRecordTitle"
                                                     name="payment_method">
                                                     <option value=""></option>
