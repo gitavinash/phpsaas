@@ -57,8 +57,8 @@ if (isset($_COOKIE['user_data'])) {
                         <input type="hidden" name="userRole" value="subscriber">
                         <input type="hidden" name="type" value="user">
                         <input type="hidden" name="action" value="subscriber">
-                        <!-- <input type="hidden" name="hardRedirectURL" value="<?php echo ((isset($refUrl)) ? $refUrl : '/thankyou_signup/') ?>"> -->
-                        <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/<?php echo ((isset($refUrl)) ? '?refUrl=' . $refUrl : '') ?>">
+                        <!-- <input type="hidden" name="hardRedirectURL" value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/thankyou_signup/') ?>"> -->
+                        <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/<?php echo ((isset($redirect_url)) ? '?refUrl=' . $redirect_url : '') ?>">
                         <?php
 
                         if (isset($auth)) { ?>
@@ -72,13 +72,13 @@ if (isset($_COOKIE['user_data'])) {
                     <div class="or">
                         <p>or</p>
                     </div>
-                    <a href='/oauth/google/?redirect_url=<?php echo ((isset($refUrl)) ? $refUrl : '/manage-subscription/') ?>' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
+                    <a href='/oauth/google/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
                             class="img-fluid" alt=""> login
                         with
                         google</a>
                     <br />
                     <div class="login_input">
-                        <p><br />Already have an Account? <a href="/login/">Log in</a></p>
+                        <p><br />Already have an Account? <a href="/login/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>">Log in</a></p>
                     </div>
                 </form>
 

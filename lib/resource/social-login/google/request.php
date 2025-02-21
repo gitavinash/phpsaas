@@ -157,7 +157,43 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
             if (SITE_APP_ID == 3) {
                 $redirectUrl = $_SESSION['redirect_after_login'];
             }
-            header("Location: {$redirectUrl}", TRUE, 301);
+
+            if (isset($_SESSION['base_url'])) { ?>
+                <!DOCTYPE html>
+                <html lang="en">
+
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Redirect to new url.</title>
+                    <script>
+                        window.onload = function() {
+                            document.getElementById("autoSubmitForm").submit();
+                        };
+                    </script>
+                </head>
+
+                <body>
+                    <form id="autoSubmitForm" action="<?php echo $_SESSION['base_url'] ?>" method="<?php echo $_SESSION['method'] ?>">
+                        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?>">
+                        <input type="hidden" name="redirect_url" value="<?php echo str_replace('?redirect_url=', '', $_SESSION['redirect_after_login']) ?>">
+                        <noscript>
+                            <p>JavaScript is disabled. Please click the submit button.</p>
+                            <button type="submit">Submit</button>
+                        </noscript>
+                    </form>
+                </body>
+
+                </html>
+
+<?php
+
+            } else {
+                // header("Location: {$redirectUrl}", TRUE, 301);
+                echo "<pre>";
+                print_r($_SESSION);
+                echo "</pre>";
+            }
             exit;
         } else {
             exit('Could not retrieve profile information! Please try again later!');
@@ -168,7 +204,18 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 } else {
     // Initialize the session
     session_start();
-    $_SESSION['redirect_after_login'] = isset($_GET['redirect_url']) ? $_GET['redirect_url'] : '/manage-subscription/';
+    $_SESSION['redirect_after_login'] = isset($redirect_url) ? $redirect_url : '/manage-subscription/';
+
+
+    if (isset($baseUrl)) {
+        $_SESSION['base_url'] = isset($baseUrl) ? $baseUrl : '';
+        $_SESSION['method'] = isset($method) ? $method : '';
+        $_SESSION['id'] = isset($id) ? $id : '';
+    } else {
+        print_r($_REQUEST);
+        exit();
+    }
+
     // Define params and redirect to Google Authentication page
     $params = [
         'response_type' => 'code',
