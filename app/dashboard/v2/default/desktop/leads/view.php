@@ -308,7 +308,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         echo "
                                                 </li>";
                                         if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                            echo "<a href='#' style='float:left; margin-right: 60%;' data-type='leads/follow_up' data-id='{$enquiry_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
+                                            echo "<a href='#' style='float:left; margin-right: 75%;' data-type='leads/follow_up' data-id='{$enquiry_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
                                         }
                                     }
                                     echo "</ol>";
