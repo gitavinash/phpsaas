@@ -103,6 +103,7 @@ function register($connection, $data)
             } else {
                 $url = '/website-setup/?setup_id=' . base64_encode($email);
             }
+            exit();
         } else {
 
             $status = 'error';

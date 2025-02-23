@@ -53,18 +53,27 @@ if (isset($_COOKIE['user_data'])) {
                         <input type="hidden" name="redirect_url" value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/') ?>">
                         <input type="hidden" name="hardRedirect" value="true">
                         <input type="hidden" name="hardRedirectURL" value="/dashboard/">
+                        <?php
+
+                        if (isset($baseUrl)) {
+                            echo "<input type='hidden' name='baseUrl' value='{$baseUrl}'>";
+                            echo "<input type='hidden' name='method' value='{$method}'>";
+                            echo "<input type='hidden' name='id' value='{$id}'>";
+                        }
+
+                        ?>
                         <input type="submit" class="button" value="Sign in">
                     </div>
                 </form>
                 <div class="or">
                     <p>or</p>
                 </div>
-                <a href='/oauth/google/?redirect_url=<?php echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>' class="authBtn"><img
+                <a href='/oauth/google/?redirect_url=<?php echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl  : '') ?>' class="authBtn"><img
                         src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt=""> login
                     with
                     google</a>
                 <br />
-                <p>Don't have an account? <a href="/signup/">Sign up</a></p>
+                <p>Don't have an account? <a href="/signup/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url . '&auth=true' : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl . '&auth=true' : '') ?>">Sign up</a></p>
                 <div class="form_bottom">
                     <p>By signing for The Head And Tale, you agree to the <a href="/terms-and-conditions/"
                             target="_blank"> Terms &

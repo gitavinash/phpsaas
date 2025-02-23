@@ -16,6 +16,10 @@ function subscriber($connection, $data)
     if ($name == '') {
 
         $msg = 'Please enter a name';
+    } else {
+        $fullName = explode(' ', $name);
+        $first_name = $fullName[0];
+        $last_name = str_replace($first_name, '', $name);
     }
 
     if ($mobile == '') {
@@ -111,7 +115,42 @@ function subscriber($connection, $data)
         }
 
         if ($startRedirection) {
-            header("Location: {$hardRedirectURL}?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+            if (isset($baseUrl)) {
+                header("Content-Type: text/html; charset=UTF-8");
+
+?>
+                <!DOCTYPE html>
+                <html lang="en">
+
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Redirect to new url.</title>
+                    <script>
+                        window.onload = function() {
+                            console.log("Form submission initiated."); // Debugging log
+                            document.getElementById("autoSubmitForm").submit();
+                        };
+                    </script>
+                </head>
+
+                <body>
+                    <form id="autoSubmitForm" action="<?php echo $baseUrl ?>" method="<?php echo $method ?>">
+                        <input type="hidden" name="id" value="<?php echo $id ?>">
+                        <input type="hidden" name="redirect_url" value="<?php echo $hardRedirectURL ?>">
+                        <noscript>
+                            <p>JavaScript is disabled. Please click the submit button.</p>
+                            <button type="submit">Submit</button>
+                        </noscript>
+                    </form>
+                </body>
+
+                </html>
+
+<?
+            } else {
+                header("Location: {$hardRedirectURL}?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+            }
         } else {
             echo "Something went wrong is redirection -> " . $msg;
         }

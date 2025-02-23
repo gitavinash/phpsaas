@@ -5,6 +5,23 @@ if (!isset($id)) {
     exit();
 }
 
+if (SITE_ID == 49) {
+    require_once LOGIN_CHECK;
+
+    $userSaltKey = base64_decode($_COOKIE['user_data']);
+
+    if ($checkUser = mysqli_query($connection, "SELECT subscription_status, subscription_relation_id, subscription_type, subscription_mode, subscription_time, subscription_expiry FROM " . TABLE_PREFIX . "user LEFT JOIN " . TABLE_PREFIX . "subscription ON user_id = subscription_user_id WHERE user_salt_key = '{$userSaltKey}' AND CURDATE() <= subscription_expiry AND subscription_site_id=" . SITE_ID)) {
+        if (mysqli_num_rows($checkUser) != 0) {
+            extract(mysqli_fetch_assoc($checkUser));
+            if ($subscription_status == 1) {
+                $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/');
+                header("Location: {$redirect_url}", TRUE, 301);
+                exit();
+            }
+        }
+    }
+}
+
 $orderId = base64_decode($id);
 
 if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, order_total_price, order_currency, cart_relation_type FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE order_id='{$orderId}' AND order_status=0 AND order_site_id=" . SITE_ID . " ORDER BY cart_updated DESC")) {
