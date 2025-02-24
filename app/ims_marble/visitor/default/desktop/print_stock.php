@@ -162,7 +162,7 @@
     list($warehouseFilter, $warehouseFilterValue) = getFilterCondition('warehouse', 'block_warehouse_id');
 
     // Get product type filter
-    list($typeFilter, $typeFilterValue) = getFilterCondition('product_type', 'block_product_type');
+    list($typeFilter, $typeFilterValue) = getFilterCondition('productType', 'block_product_type');
 
     // Get status filter (defaulting to `AND block_status!=2`)
     list($statusFilter, $statusFilterValue) = getFilterCondition('status', 'block_status', 'AND block_status!=2');

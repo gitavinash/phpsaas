@@ -6,7 +6,7 @@ if (isset($_GET['warehouse'])) {
         $warehouseFilterValue = $_GET['warehouse'];
         $warehouseFilter = "AND block_warehouse_id='{$warehouseFilterValue}'";
     } else {
-        $warehouseFilterValue = '#';
+        $warehouseFilterValue = '';
         $warehouseFilter = '';
     }
 } else {
@@ -19,11 +19,11 @@ if (isset($_GET['product_type'])) {
         $typeFilterValue = $_GET['product_type'];
         $typeFilter = "AND block_product_type='{$typeFilterValue}'";
     } else {
-        $typeFilterValue = '#';
+        $typeFilterValue = '';
         $typeFilter = '';
     }
 } else {
-    $typeFilterValue = '#';
+    $typeFilterValue = '';
     $typeFilter = '';
 }
 
@@ -91,7 +91,8 @@ if (isset($_GET['status'])) {
     </div>
     <div class="filterBox">
         <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
-        <a href="/print_stock/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank">🖨️ Print inventory</a>
+        <a href="/print_stock/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Quick print">🖨️</a>
+        <!-- <a href="/print_stock_in_detailed/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Print Detailed Report">🖨️ Print Detailed Report</a> -->
         <!-- <select value="#" id="printInventory" class="filterBox bgYellow printBlockFilter">
             <option value="#" selected>🖨️ Print inventory</option>
             <option value="all">Print all inventory</option>
