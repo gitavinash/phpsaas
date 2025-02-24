@@ -1961,17 +1961,17 @@ $(document).ready(function () {
 
   // Show inventory print
 
-  $("#printInventory").change(function () {
-    var selectedValue = $(this).val();
+  // $("#printInventory").change(function () {
+  //   var selectedValue = $(this).val();
 
-    // Check if the value is not empty or "#"
-    if (selectedValue && selectedValue !== "#") {
-      var printInventoryURL =
-        "/print_stock/?inventoryType=" + encodeURI(selectedValue);
-      window.open(printInventoryURL, "_blank");
-      $(this).val("#");
-    }
-  });
+  //   // Check if the value is not empty or "#"
+  //   if (selectedValue && selectedValue !== "#") {
+  //     var printInventoryURL =
+  //       "/print_stock/?inventoryType=" + encodeURI(selectedValue);
+  //     window.open(printInventoryURL, "_blank");
+  //     $(this).val("#");
+  //   }
+  // });
   $(".showInventoryTableList").DataTable({
     pageLength: 50,
     fixedHeader: true,

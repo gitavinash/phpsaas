@@ -3433,14 +3433,14 @@ strong.stockInfoList {
 
 .tableFilter .filterBox .printBlockFilter {
   float: left;
-  width: 194px;
+  /* width: 194px; */
   margin-left: 20px;
   margin-right: 0px;
   outline: none;
 }
 
 a.printBlockFilter {
-  width: 154px !important;
+  /* width: 154px !important; */
   text-align: center;
 }
 
