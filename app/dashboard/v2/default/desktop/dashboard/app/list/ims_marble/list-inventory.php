@@ -10,7 +10,7 @@ if (isset($_GET['warehouse'])) {
         $warehouseFilter = '';
     }
 } else {
-    $warehouseFilterValue = '#';
+    $warehouseFilterValue = '';
     $warehouseFilter = '';
 }
 
@@ -32,11 +32,11 @@ if (isset($_GET['status'])) {
         $statusFilterValue = $_GET['status'];
         $statusFilter = "AND block_status='{$statusFilterValue}'";
     } else {
-        $statusFilterValue = '#';
+        $statusFilterValue = '';
         $statusFilter = 'AND block_status!=2';
     }
 } else {
-    $statusFilterValue = '#';
+    $statusFilterValue = '';
     $statusFilter = 'AND block_status!=2';
 }
 
@@ -92,23 +92,7 @@ if (isset($_GET['status'])) {
     <div class="filterBox">
         <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
         <a href="/print_stock/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Quick print">🖨️</a>
-        <!-- <a href="/print_stock_in_detailed/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Print Detailed Report">🖨️ Print Detailed Report</a> -->
-        <!-- <select value="#" id="printInventory" class="filterBox bgYellow printBlockFilter">
-            <option value="#" selected>🖨️ Print inventory</option>
-            <option value="all">Print all inventory</option>
-            <?php
-
-            if ($checkProductType = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID)) {
-                if (mysqli_num_rows($checkProductType) != 0) {
-                    while ($productData = mysqli_fetch_assoc($checkProductType)) {
-                        $productTypeValues = strtolower(str_replace('measurement_', '', $productData['site_configuration_key']));
-                        echo "<option value='{$productTypeValues}'" . (($productTypeValues == $typeFilterValue) ? 'selected' : '') . ">" . ucwords(str_replace('measurement_', '', $productData['site_configuration_key'])) . " inventory</option>";
-                    }
-                }
-            }
-
-            ?>
-        </select> -->
+        <a href="/print_stock_in_detailed/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Print Detailed Report">🖨️ Print Detailed Report</a>
     </div>
 </div>
 <table class="showInventoryTableList display nowrap" style="width: 100%;">
