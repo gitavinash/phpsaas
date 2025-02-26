@@ -265,15 +265,6 @@ ORDER BY w.warehouse_title ASC;
                     $warehouse_title = $inventoryData['warehouse_title'];
                     $block_size_dimension = $inventoryData['block_size_dimension'];
                     $blockLists = json_decode($inventoryData['block_details'], TRUE);
-
-                    echo "<pre>";
-                    print_r($inventoryData['block_details']);
-                    echo "</pre>";
-
-                    echo "<pre>";
-                    print_r($blockLists);
-                    echo "</pre>";
-                    exit();
                     echo "<tr>
                 <td colspan=5><strong>{$warehouse_title}</strong></td>
             </tr>";
