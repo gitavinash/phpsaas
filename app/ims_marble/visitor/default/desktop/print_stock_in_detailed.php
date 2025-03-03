@@ -37,6 +37,7 @@
             /* Ensures borders do not double up */
             border: none;
             /* Removes table border */
+            text-align: center;
         }
 
         .showCompanyDetails th,
@@ -81,6 +82,15 @@
         .no-border td {
             border: none !important;
         }
+            .left {
+                text-align: left !important;
+            }
+            .right {
+                text-align: right !important;
+            }
+            .center {
+                text-align: center !important;
+            }
 
         @media print {
             body {
@@ -89,19 +99,31 @@
                 padding: 0;
                 margin: 0;
             }
+            .left {
+                text-align: left !important;
+            }
+            
+            .right {
+                text-align: right !important;
+            }
 
             table {
                 width: 100%;
                 border-collapse: collapse;
                 border-spacing: 0;
                 font-size: 12px;
+                text-align: center
             }
 
             th,
             td {
                 border: 1px solid #000;
                 padding: 8px;
-                text-align: left;
+                text-align: center;
+            }
+
+            .center {
+                text-align: center !important;
             }
 
             thead {
@@ -169,7 +191,6 @@
 
     mysqli_query($connection, "SET SESSION group_concat_max_len = 10000000");
 
-    if (DEVELOPMENT_MODE == true) {
         $query = "
     SELECT
         w.warehouse_title,
@@ -178,15 +199,24 @@
             JSON_OBJECT(
                 'block_code', IFNULL(b.block_code, ''),
                 'block_title', IFNULL(b.block_title, ''),
+                'gross_weight', FORMAT(ROUND(IFNULL(b.block_gross_size, 0), 2), 2),
+                'damage_weight', FORMAT(ROUND(IFNULL(b.block_damage_size, 0), 2), 2),
                 'net_weight', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2),
                 'block_thickness', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), ''),
+                'block_dimension_type', IFNULL(b.block_size_dimension, ''),
+                'block_slab_dimension_type', (
+                    SELECT GROUP_CONCAT(DISTINCT bi.block_item_dimension_type SEPARATOR ', ') 
+                    FROM {$tableNamePrefix}block_item AS bi
+                    WHERE bi.block_item_parent_id = b.block_id
+                ),
                 'block_slabs', (
                     SELECT JSON_ARRAYAGG(
                         JSON_OBJECT(
                             'width', IFNULL(bi.block_item_width, ''),
                             'height', IFNULL(bi.block_item_height, ''),
-                            'dimension', IFNULL(bi.block_item_dimension_type, ''),
-                            'damage_size', IFNULL(bi.block_item_damage_size, ''),
+                            'slab_gross_size', IFNULL(bi.block_item_gross_size, ''),
+                            'slab_net_size', IFNULL(bi.block_item_net_size, ''),
+                            'slab_damage_size', IFNULL(bi.block_item_damage_size, ''),
                             'damage_area', IFNULL(bi.block_item_damage_area, ''),
                             'total_damage', IFNULL(bi.block_item_damage_count, ''),
                             'slab_status', IFNULL(bi.block_item_status, '')
@@ -213,110 +243,142 @@
         w.warehouse_title, b.block_size_dimension
     ORDER BY
         w.warehouse_title ASC";
-    } else {
 
-        $query = "
-    SELECT 
-    w.warehouse_title, 
-    b.block_size_dimension,
-    JSON_ARRAYAGG(
-        JSON_OBJECT(
-            'block_code', IFNULL(b.block_code, ''), 
-            'block_title', IFNULL(b.block_title, ''), 
-            'net_weight', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2), 
-            'block_thickness', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), '')
-        )
-    ) AS block_details
-FROM {$tableNamePrefix}block AS b
-INNER JOIN " . TABLE_PREFIX . "warehouse AS w ON b.block_warehouse_id = w.warehouse_id 
-LEFT JOIN " . TABLE_PREFIX . "supplier AS s ON b.block_supplier_id = s.supplier_id 
-INNER JOIN " . TABLE_PREFIX . "address AS a ON w.warehouse_address_id = a.address_id 
-INNER JOIN " . TABLE_PREFIX . "state AS st ON a.address_state_id = st.state_id 
-INNER JOIN " . TABLE_PREFIX . "city AS c ON a.address_city_id = c.city_id 
-WHERE b.block_site_id = '" . SITE_ID . "' 
-{$statusFilter} 
-{$typeFilter} 
-{$warehouseFilter} 
-GROUP BY w.warehouse_title, b.block_size_dimension
-ORDER BY w.warehouse_title ASC;
-";
+    if ($inventoryList = mysqli_query($connection, $query)) {
+        if(mysqli_num_rows($inventoryList) > 0) {
+            $warehouseBlockData=extract(mysqli_fetch_assoc($inventoryList));
+
+            echo "
+                <table>
+                    <tr>
+                        <td colspan=100 class='left' ><strong><h1>{$warehouse_title}</h1></strong><br /><br /></td>
+                    </tr>
+                </table>
+            ";
+
+            $warehouseBlockDetails = json_decode($block_details, true);
+
+            // print_r($warehouseBlockDetails);
+
+            foreach($warehouseBlockDetails as $blockKey => $blockValue) {
+                extract($blockValue);
+                echo "<table>
+                    <tr>
+                        <td colspan=100 class='left' ><strong><h2>{$block_title} - {$block_code}</h2></strong></td>
+                    </tr>
+                    <div class='center'>
+                        <tr>
+                            <td rowspan=2>S no.</td>
+                            <td rowspan=2>Width ({$block_slab_dimension_type})</td>
+                            <td rowspan=2>Height ({$block_slab_dimension_type})</td>
+                            <td rowspan=2>Net Weight ({$block_dimension_type})</td>
+                            <td colspan=100>Damage Area</td>
+                        </tr>
+                        <tr>
+                            
+                            <td>Width ({$block_slab_dimension_type})</td>
+                            <td>Height ({$block_slab_dimension_type})</td>
+                            <td>Net Weight ({$block_dimension_type})</td>
+
+                            <td>Width ({$block_slab_dimension_type})</td>
+                            <td>Height ({$block_slab_dimension_type})</td>
+                            <td>Net Weight ({$block_dimension_type})</td>
+
+                            <td>Width ({$block_slab_dimension_type})</td>
+                            <td>Height ({$block_slab_dimension_type})</td>
+                            <td>Net Weight ({$block_dimension_type})</td>
+
+                            <td>Width ({$block_slab_dimension_type})</td>
+                            <td>Height ({$block_slab_dimension_type})</td>
+                            <td>Net Weight ({$block_dimension_type})</td>
+
+                            <td>Width ({$block_slab_dimension_type})</td>
+                            <td>Height ({$block_slab_dimension_type})</td>
+                            <td>Net Weight ({$block_dimension_type})</td>
+                        </tr>
+                    </div>";
+
+                $i=0;
+                foreach($block_slabs as $slabsKey => $slabsvalue) {
+                    echo "
+                        <tr>
+                            <td>".($i+1)."</td>
+                            <td>{$slabsvalue['width']}</td>
+                            <td>{$slabsvalue['height']}</td>
+                            <td>{$slabsvalue['slab_net_size']}</td>";
+
+                            $warehouseBlockSlabDamageArea=json_decode($slabsvalue['damage_area'], true);
+
+                            for($j=0; $j<5; $j++) {
+                                if(isset($warehouseBlockSlabDamageArea[$j])) {
+                                    echo "
+                                        <td>{$warehouseBlockSlabDamageArea[$j]['damageAreaWidth']}</td>
+                                        <td>{$warehouseBlockSlabDamageArea[$j]['damageAreaHeight']}</td>
+                                        <td></td>
+                                    ";
+                                } else {
+                                    echo "
+                                        <td class='center' >-</td>
+                                        <td class='center'>-</td>
+                                        <td class='center'>-</td>
+                                    ";
+                                }
+                            }
+
+                            // foreach($warehouseBlockSlabDamageArea as $key => $value) {
+                            //     echo "
+                            //         <td>{$value['damageAreaWidth']}</td>
+                            //         <td>{$value['damageAreaHeight']}</td>
+                            //         <td></td>
+                            //     ";
+                            // }
+
+                        echo "</tr>
+                    ";
+                    $i++;
+                }
+
+                echo "
+                    <tr>
+                        <td colspan=3 class='right'><strong>Gross Qty. ( {$block_dimension_type} )</strong></td>
+                        <td>{$gross_weight}</td>
+                        <td colspan=2></td>
+                        <td class='right'></td>
+                        <td colspan=2></td>
+                        <td class='right'></td>
+                        <td colspan=2></td>
+                        <td class='right'></td>
+                        <td colspan=2></td>
+                        <td class='right'></td>
+                        <td colspan=2></td>
+                        <td class='right'></td>
+                    </tr>
+                    <tr>
+                        <td colspan=3 class='right'><strong>Damage Qty. ( {$block_dimension_type} )</strong></td>
+                        <td colspan=100 class='left'>{$damage_weight}</td>
+                    </tr>
+                    <tr>
+                        <td colspan=3 class='right'><strong>Net Qty. ( {$block_dimension_type} )</strong></td>
+                        <td colspan=100 class='left'>{$net_weight}</td>
+                    </tr>
+                    <tr>
+                        <td colspan=100><br /><br /></td>
+                    </tr>
+                </table>";
+            }
+
+
+            // echo "<pre>";
+            // print_r($warehouseBlockData);
+            // echo"</pre>";
+            // echo "<pre>";
+            // print_r(json_decode($warehouseBlockData["block_details"], true));
+            // echo"</pre>";
+        }
     }
 
     ?>
-    <table class="showInventoryTableList display nowrap" style="width: 100%;">
-        <thead>
-            <tr>
-                <th>S. No.</th>
-                <th>Code</th>
-                <th>Title</th>
-                <th>Net weight</th>
-                <th>Thickness</th>
-            </tr>
-        </thead>
-        <?php
-
-
-        if ($inventoryList = mysqli_query($connection, $query)) {
-            echo "<tbody>";
-            $totalNetQty = array();
-            if (mysqli_num_rows($inventoryList) > 0) {
-                $serialNo = 1;
-                while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
-                    $warehouse_title = $inventoryData['warehouse_title'];
-                    $block_size_dimension = $inventoryData['block_size_dimension'];
-                    $blockLists = json_decode($inventoryData['block_details'], TRUE);
-                    echo "<tr>
-                <td colspan=5><strong>{$warehouse_title}</strong></td>
-            </tr>";
-
-                    $blockNetSize = array();
-
-                    foreach ($blockLists as $block_values) {
-                        echo "<tr>";
-                        echo "<td>{$serialNo}</td>";
-                        echo "<td>{$block_values['block_code']}</td>";
-                        echo "<td>{$block_values['block_title']}</td>";
-                        echo "<td>{$block_values['net_weight']} {$block_size_dimension}</td>";
-                        echo "<td>{$block_values['block_thickness']}</td>";
-                        echo "</tr>";
-
-                        $serialNo++;
-                        $totalNetQty[] = $block_values['net_weight'];
-                        $blockNetSize[] = $block_values['net_weight'];
-                    }
-
-                    echo "<tr>
-                    <td colspan=3>Block total</td>
-                    <td colspan=2>" . array_sum($blockNetSize) . " {$block_size_dimension}</td>
-                </tr>";
-                }
-            }
-            echo "</tbody>";
-        } else {
-            if (DEVELOPMENT_MODE == TRUE) {
-                echo "Debugging: " . mysqli_error($connection);
-            }
-        }
-
-        // Display Total Net Quantity
-        echo "
-    <tfoot>
-    <tr>
-        <td colspan=3><strong>All Total</strong></td>
-        <td colspan=2>" . array_sum($totalNetQty) . " {$block_size_dimension}</td>
-    </tr>
-    </tfoot>
-";
-
-        ?>
-    </table>
-    <footer>
-        <!-- <script>
-            window.onload = function() {
-                window.print();
-            };
-        </script> -->
-    </footer>
+    
 </body>
 
 </html>
