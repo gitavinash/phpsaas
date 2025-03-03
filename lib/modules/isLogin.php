@@ -16,7 +16,7 @@ if (!isset($_COOKIE['user_data'])) {
 
 			$encryptEmail = base64_encode($user_email);
 
-			if ($user_status != 1) {
+			if ($user_status != 1 && SITE_APP_ID!=3) {
 
 				header("Location: /verify-account/?email={$encryptEmail}");
 				exit();
