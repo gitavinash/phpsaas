@@ -13,7 +13,7 @@ if (isset($id) && isset($serviceType) && isset($productType)) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $userType = 'client';
-            mysqli_query($connection, "START TRANSATION");
+            mysqli_query($connection, "START TRANSACTION");
 
             // Process to checkout page
 

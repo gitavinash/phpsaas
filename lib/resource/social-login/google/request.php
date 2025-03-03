@@ -132,7 +132,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
                     extract(mysqli_fetch_assoc($checkSiteAccess));
 
-                    if ($site_access_status == 1 && $user_status == 1) {
+                    if ($site_access_status == 1) {
 
                         ob_start();
 

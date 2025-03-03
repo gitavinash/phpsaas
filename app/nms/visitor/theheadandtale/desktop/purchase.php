@@ -11,7 +11,7 @@ if (!isset($news_price)) {
 
 $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-mysqli_query($connection, "START TRANSATION");
+mysqli_query($connection, "START TRANSACTION");
 
 if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$userSaltKey}' AND user_status=1")) {
     if (mysqli_num_rows($checkUser) != 0) {

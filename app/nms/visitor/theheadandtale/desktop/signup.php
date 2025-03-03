@@ -73,9 +73,7 @@ if (isset($_COOKIE['user_data'])) {
                         <p>or</p>
                     </div>
                     <a href='/oauth/google/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
-                            class="img-fluid" alt=""> login
-                        with
-                        google</a>
+                            class="img-fluid" alt="">Continue with Google</a>
                     <br />
                     <div class="login_input">
                         <p><br />Already have an Account? <a href="/login/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>">Log in</a></p>
