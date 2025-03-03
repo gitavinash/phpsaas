@@ -189,10 +189,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 <?php
 
             } else {
-                // header("Location: {$redirectUrl}", TRUE, 301);
-                echo "<pre>";
-                print_r($_SESSION);
-                echo "</pre>";
+                header("Location: {$redirectUrl}", TRUE, 301);
             }
             exit;
         } else {
@@ -211,9 +208,6 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
         $_SESSION['base_url'] = isset($baseUrl) ? $baseUrl : '';
         $_SESSION['method'] = isset($method) ? $method : '';
         $_SESSION['id'] = isset($id) ? $id : '';
-    } else {
-        print_r($_REQUEST);
-        exit();
     }
 
     // Define params and redirect to Google Authentication page
