@@ -108,7 +108,7 @@ function login($connection, $data)
 
             </html>
 
-<?
+<?php
 
         } else {
             header("Location: {$hardRedirectURL}", true, 301);
