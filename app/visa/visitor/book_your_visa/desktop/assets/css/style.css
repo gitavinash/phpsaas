@@ -1,0 +1,924 @@
+body {
+  max-width: 1366px;
+  margin: 0 auto !important;
+  float: none !important;
+  background: #f2f2f2;
+  font-family: "PT Sans", sans-serifm;
+}
+
+a {
+  color: inherit;
+  text-decoration: none !important;
+}
+
+.leftText {
+  text-align: left !important;
+}
+
+.blumox {
+  font-weight: 700;
+  font-family: "Lato", sans-serif !important;
+}
+
+header {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.lsBgColor {
+  background: #5fc5d4 !important;
+}
+
+.pkBgColor {
+  background: #d01f29 !important;
+}
+
+.abBgColor {
+  background: #d4946d !important;
+}
+
+.oxtealBgColor {
+  background: #009b72 !important;
+}
+
+.aleyaBgColor {
+  background: #01647b !important;
+}
+
+section {
+  float: left;
+  width: 100%;
+  padding: 0% 5% !important;
+}
+
+section form h2 {
+  font-size: 1.5rem;
+  line-height: 2.5rem;
+}
+section form {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s;
+}
+
+.popUpModal {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 9999 !important;
+  text-align: center;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  height: 100vh;
+  display: none;
+}
+
+.popUpBox {
+  max-width: 500px;
+  height: 100vh;
+  float: right;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+}
+
+.popUpBox h3 {
+  text-align: center;
+  font-weight: 600;
+}
+
+.formGroup {
+  float: left;
+  width: 100%;
+  text-align: left;
+}
+
+.formGroup label {
+  float: left;
+  width: 100%;
+}
+
+.formGroup input {
+  float: left;
+  width: 100%;
+  border: none;
+  padding: 7px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  outline: none;
+}
+
+.formGroup input[type="text"],
+input[type="number"],
+input[type="email"] {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+
+.formGroup input[type="submit"] {
+  text-align: left;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 10px;
+  border-radius: 0px;
+}
+
+.formGroup textarea {
+  float: left;
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  padding: 7px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  outline: none;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+
+.heart {
+  background-color: #3ab4f1;
+  display: inline-block;
+  height: 30px;
+  margin: 0 10px;
+  position: relative;
+  top: 0;
+  transform: rotate(-45deg);
+  width: 30px;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+  background-color: #3ab4f1;
+  border-radius: 50%;
+  height: 30px;
+  position: absolute;
+  width: 30px;
+}
+
+.heart:before {
+  top: -15px;
+  left: 0;
+}
+
+.heart:after {
+  left: 15px;
+  top: 0;
+}
+
+.side-default-padding {
+  padding: 0% 10%;
+}
+
+.logo {
+  float: left;
+  padding: 20px 0px;
+}
+
+.logo img {
+  float: left;
+  height: 70px;
+}
+
+.menu {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-height: 100px;
+  z-index: 1;
+}
+
+.menu span {
+  transition: box-shadow 0.3s;
+  float: right;
+  height: 70px;
+  width: 70px;
+  border-radius: 100%;
+  background: #fff;
+  line-height: 70px;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menu span::after {
+  content: "menu";
+}
+
+.menu span:hover {
+  box-shadow: 0 0 50px #ccc;
+}
+
+.closeMenu {
+  display: none;
+}
+
+.closeMenu span::after {
+  content: "x" !important;
+  font-size: 42px;
+  line-height: 65px;
+  font-weight: 400;
+}
+
+.closeMenu span:hover {
+  box-shadow: 0 0 50px #ccc;
+}
+
+@-webkit-keyframes expand {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+
+@-webkit-keyframes compress {
+  0% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
+}
+
+.menuBox {
+  position: fixed;
+  left: 0;
+  float: left;
+  overflow: auto;
+  width: 100%;
+  height: 0%;
+  background: #f2f2f2;
+  z-index: 2;
+  transition: all 1s ease;
+}
+
+.menuBox section {
+  max-width: 1366px;
+  margin: 0 auto !important;
+  float: none !important;
+  padding: 0px !important;
+}
+
+.menuBox .menuList {
+  float: left;
+  width: 100%;
+  padding: 10% 0%;
+}
+
+.menuBox .menuList li {
+  list-style: none;
+  float: left;
+  width: 50%;
+  box-sizing: border-box;
+  padding-left: 0%;
+  padding-bottom: 1%;
+  font-size: 4em;
+  font-weight: 700;
+}
+
+.menuBox .menuList li:nth-child(even) {
+  padding-left: 0%;
+}
+
+.menuBox a:hover {
+  color: #3ab4f1;
+  transition: 0.3s;
+}
+
+.menuBox .legalLinks {
+  float: left;
+  width: 70%;
+  box-sizing: border-box;
+  padding: 5% 0%;
+  left: 0;
+  bottom: 0;
+}
+
+.menuBox .legalLinks li {
+  list-style: none;
+  float: left;
+  font-size: 1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 32px;
+}
+
+.menuBox .legalLinks li:last-child {
+  width: 100%;
+}
+
+.menuBox .legalLinks li::after {
+  content: "/";
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #939393;
+}
+
+.menuBox .legalLinks li::after {
+  content: "/";
+  padding-left: 20px;
+  color: #939393;
+}
+
+.menuBox .legalLinks li:last-child::after {
+  content: none;
+}
+
+.menuBox .legalLinks li:nth-last-child(2)::after {
+  content: none;
+}
+
+.menuBox .socialLinks {
+  float: left;
+  width: 30%;
+  box-sizing: border-box;
+  padding: 5% 0%;
+  right: 0;
+  bottom: 0;
+}
+
+.menuBox .socialLinks li {
+  list-style: none;
+  float: left;
+  font-size: 1em;
+  font-weight: 700;
+  padding-right: 2%;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.welcomeNote {
+  float: left;
+  width: 100%;
+  padding: 100px 15% 50px 15%;
+}
+
+.welcomeNote h1 {
+  color: #333;
+  font-size: 5em;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 5px;
+  padding: 0% 2.5% 50px 2.5%;
+}
+
+img.welcomeLogo {
+  height: 70px;
+  margin-top: -6px;
+}
+
+.welcomeNote p {
+  text-align: center;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 75px;
+}
+
+.welcomeNote p:last-child {
+  margin-bottom: 50px;
+}
+
+.welcomeNote p strong {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.btn {
+  border: none !important;
+  border-bottom: 2px solid #3ab4f1 !important;
+  padding: 10px 10px 6px 10px !important;
+}
+
+.btn:hover {
+  background-color: #3ab4f1;
+  color: #fff;
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+}
+a.getInTouchBtn {
+  border-bottom: 2px solid #3ab4f1;
+  padding: 5px 10px 5px 10px;
+}
+
+a.getInTouchBtn:hover {
+  background-color: #3ab4f1;
+  color: #fff;
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+}
+
+.projectBox {
+  float: left;
+  width: 100%;
+  margin: 50px 0px 100px 0px;
+}
+
+.projectBox .image {
+  float: left;
+  width: 70%;
+  /* height: 600px; */
+  transition: transform 0.5s ease;
+}
+
+.projectBox .leftImageBox {
+  margin-left: 25% !important;
+}
+
+.projectBox .image img {
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.projectBox .text {
+  float: left;
+  width: 50%;
+  /* min-height: 350px; */
+  margin-left: -20%;
+  background: #333;
+  padding: 50px 75px;
+  margin-top: 100px;
+  text-align: left;
+  transition: transform 0.5s ease;
+}
+
+.projectBox .leftBox {
+  width: 50% !important;
+  margin-left: -95% !important;
+}
+
+.projectBox .text h2 {
+  color: #fff;
+  font-size: 2.5em;
+  line-height: 70px;
+  letter-spacing: 5px;
+}
+
+.projectBox .text p {
+  font-size: 1.2rem;
+  line-height: 2rem;
+  color: #fff;
+}
+
+.projectBox:hover .image {
+  transform: scale(0.95);
+}
+
+.projectBox:hover .text {
+  transform: scale(1.05);
+}
+
+.linkBox {
+  float: left;
+  width: 100%;
+  padding: 75px 15% 75px 15%;
+}
+
+.linkBox p {
+  text-align: center;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.linkBox p strong {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.testimonialBox {
+  left: 0;
+  width: 100%;
+  min-height: 400px;
+  background: #3ab4f1;
+  padding: 5% !important;
+}
+
+.testimonialBox h2 {
+  text-align: center;
+  font-size: 4em;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.testimonials {
+  padding: 5% 10%;
+  text-align: left;
+  color: #fff;
+}
+
+.testimonials h3 {
+  font-size: 1.2rem;
+  line-height: 2rem;
+  font-weight: 300;
+}
+
+.testimonials p {
+  font-size: 1.5em;
+  line-height: 32px;
+  margin-top: 50px;
+}
+
+.testimonials p span {
+  font-weight: 700;
+}
+
+.introBox {
+  float: left;
+  width: 100%;
+  padding: 100px 15% 50px 15%;
+  text-align: center;
+}
+
+.introBox h1 {
+  font-weight: 700;
+  padding: 50px 0px 0px 0px;
+  font-size: 5em;
+}
+
+.introBox p {
+  font-weight: 400;
+  padding: 0px 0px;
+  font-size: 1.5em;
+  text-align: center;
+  color: #333;
+  line-height: 55px;
+}
+
+.contactBox p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  line-height: 24px;
+}
+
+.contactBox p a {
+  text-decoration: none;
+}
+
+.contactBox p a:hover {
+  color: #3ab4f1;
+  text-decoration: none;
+  -webkit-transition: color 500ms linear;
+  -ms-transition: color 500ms linear;
+  transition: color 500ms linear;
+}
+
+.contactBox p span {
+  font-size: 16px;
+}
+
+.policyTextBox {
+  font-size: 18px;
+  text-align: justify;
+  line-height: 38px;
+}
+
+.policyTextBox p {
+  font-size: 18px;
+  text-align: justify;
+  line-height: 38px;
+}
+
+.policyTextBox p strong {
+  font-size: 24px;
+  line-height: 42px;
+}
+
+.policyTextBox b {
+  font-size: 24px;
+  line-height: 42px;
+}
+
+footer {
+  /* background: url("../images/logo.png") bottom center no-repeat; */
+  width: 100%;
+  float: left;
+  /* filter: grayscale(); */
+}
+
+.tryNowBtn {
+  padding: 0.5rem 1rem 0.5rem 0rem;
+  letter-spacing: 2px;
+  border-bottom: 2px solid transparent;
+  border-bottom-left-radius: 0px;
+}
+.tryNowBtn:hover {
+  font-weight: 700;
+  color: inherit;
+  border-bottom: 2px solid #fff;
+}
+
+.notFound {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 2rem 0rem;
+}
+
+.inline-radio .form-check-input {
+  appearance: none;
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.inline-radio .form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.inline-radio .form-check-input:checked::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.inline-radio .form-check-label {
+  margin-left: 8px;
+  margin-right: 20px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+  .popUpBox {
+    width: 90%;
+    height: 100vh;
+    float: right;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .logo {
+    float: left;
+    padding: 10px 5%;
+  }
+  .logo img {
+    float: left;
+    height: 50px;
+  }
+  .heart {
+    height: 20px;
+    width: 20px;
+  }
+
+  .heart:before,
+  .heart:after {
+    height: 20px;
+    width: 20px;
+  }
+
+  .heart:before {
+    top: -9px;
+  }
+
+  .heart:after {
+    left: 9px;
+  }
+
+  .menu {
+    top: 10px;
+    right: 10px;
+    max-height: 100px;
+  }
+
+  .menu span {
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    font-size: 14px;
+  }
+
+  .closeMenu span::after {
+    font-size: 32px;
+    line-height: 46px;
+  }
+
+  .menuBox .menuList {
+    float: left;
+    width: 100%;
+    padding: 20% 0% 5% 0%;
+  }
+
+  .menuBox .menuList li {
+    width: 100%;
+    font-size: 2em;
+  }
+
+  .menuBox .legalLinks {
+    width: 100%;
+    padding: 5% 0%;
+    position: absolute;
+  }
+
+  .menuBox .legalLinks li {
+    list-style: none;
+    float: left;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 28px;
+  }
+
+  .menuBox .legalLinks li::after {
+    content: "/";
+    padding-left: 10px;
+    color: #939393;
+  }
+
+  .welcomeNote {
+    padding: 100px 5% 50px 5%;
+  }
+
+  .welcomeNote h1 {
+    font-size: 2em;
+    line-height: 80px;
+  }
+
+  img.welcomeLogo {
+    margin-top: 0px;
+  }
+
+  .welcomeNote p {
+    font-size: 16px;
+    margin-bottom: 50px;
+  }
+
+  .welcomeNote p:last-child {
+    margin-bottom: 30px;
+  }
+
+  .welcomeNote p strong {
+    font-size: 24px;
+  }
+
+  .popUpBox {
+    max-width: 500px;
+    height: 100vh;
+    float: right;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+  }
+
+  .projectBox {
+    margin: 0px;
+    margin-bottom: 100px;
+  }
+
+  .projectBox .image {
+    float: left;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .projectBox .image img {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .projectBox .leftImageBox {
+    margin: 0px !important;
+  }
+
+  .projectBox .text {
+    float: left;
+    width: 100%;
+    margin: 0px;
+    margin-top: -10%;
+    padding: 20% 5% 10% 5%;
+    height: auto;
+  }
+  .projectBox .leftBox {
+    margin: 0px !important;
+    width: 100% !important;
+    margin-top: -10% !important;
+  }
+
+  .projectBox .text h2 {
+    font-size: 24px;
+    line-height: 50px;
+    text-align: left;
+  }
+
+  .projectBox .text p {
+    font-size: 16px;
+    line-height: 32px;
+    text-align: left;
+  }
+
+  .testimonialBox {
+    left: 0;
+    width: 100%;
+    min-height: 400px;
+    background: #3ab4f1;
+    padding: 5% !important;
+  }
+
+  .testimonialBox h2 {
+    font-size: 2.5em;
+    margin-top: 50px;
+  }
+
+  .testimonials {
+    padding: 5% 10%;
+    text-align: center;
+    color: #fff;
+  }
+
+  .testimonials h3 {
+    font-size: 18px;
+    text-align: left;
+    line-height: 32px;
+  }
+
+  .testimonials p {
+    text-align: left;
+    font-size: 16px;
+    line-height: 32px;
+  }
+
+  .linkBox {
+    padding: 10% 5% 10% 5%;
+  }
+
+  .introBox {
+    padding: 50px 5% 50px 5%;
+  }
+
+  .introBox h1 {
+    font-weight: 700;
+    padding: 50px 0px;
+    font-size: 3em;
+  }
+
+  .introBox p {
+    font-size: 18px;
+    text-align: left;
+    line-height: 42px;
+  }
+
+  .policyTextBox {
+    font-size: 14px;
+    line-height: 28px !important;
+  }
+
+  .policyTextBox p {
+    font-size: 14px;
+    line-height: 28px !important;
+  }
+
+  .policyTextBox p strong {
+    font-size: 18px;
+    line-height: 32px;
+  }
+
+  .policyTextBox b {
+    font-size: 18px;
+    line-height: 32px;
+  }
+
+  footer {
+    margin-bottom: 100px;
+  }
+}

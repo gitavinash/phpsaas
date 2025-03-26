@@ -156,7 +156,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="web-detail dn-s">
-                            <p><strong>Women's Day </strong>is on March 8, 2025! Explore our special collection & order in advance for timely delivery. 💐</p>
+                            <!-- <p><strong>Women's Day </strong>is on March 8, 2025! Explore our special collection & order in advance for timely delivery. 💐</p> -->
                             <!-- <p><span class="material-icons">email</span></p> -->
                         </div>
 
@@ -365,10 +365,10 @@
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/">Blooms of
                                             <?php echo date('F') ?></a>
                                     </li>
-                                    <li class="nav-item " style="background: #F19EB5;">
+                                    <!-- <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/women/"><b>Women's
                                                 Day</b></a>
-                                    </li>
+                                    </li> -->
                                     <!-- <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/christmas/"><b>Christmas</b></a>
                                     </li> -->

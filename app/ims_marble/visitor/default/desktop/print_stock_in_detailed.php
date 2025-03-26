@@ -191,95 +191,42 @@
 
     mysqli_query($connection, "SET SESSION group_concat_max_len = 10000000");
 
-    //     $query = "
-    // SELECT
-    //     w.warehouse_title,
-    //     b.block_size_dimension,
-    //     JSON_ARRAYAGG(
-    //         JSON_OBJECT(
-    //             'block_code', IFNULL(b.block_code, ''),
-    //             'block_title', IFNULL(b.block_title, ''),
-    //             'gross_weight', FORMAT(ROUND(IFNULL(b.block_gross_size, 0), 2), 2),
-    //             'damage_weight', FORMAT(ROUND(IFNULL(b.block_damage_size, 0), 2), 2),
-    //             'net_weight', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2),
-    //             'block_thickness', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), ''),
-    //             'block_dimension_type', IFNULL(b.block_size_dimension, ''),
-    //             'block_slab_dimension_type', (
-    //                 SELECT GROUP_CONCAT(DISTINCT bi.block_item_dimension_type SEPARATOR ', ') 
-    //                 FROM {$tableNamePrefix}block_item AS bi
-    //                 WHERE bi.block_item_parent_id = b.block_id
-    //             ),
-    //             'block_slabs', (
-    //                 SELECT JSON_ARRAYAGG(
-    //                     JSON_OBJECT(
-    //                         'width', IFNULL(bi.block_item_width, ''),
-    //                         'height', IFNULL(bi.block_item_height, ''),
-    //                         'slab_gross_size', IFNULL(bi.block_item_gross_size, ''),
-    //                         'slab_net_size', IFNULL(bi.block_item_net_size, ''),
-    //                         'slab_damage_size', IFNULL(bi.block_item_damage_size, ''),
-    //                         'damage_area', IFNULL(bi.block_item_damage_area, ''),
-    //                         'total_damage', IFNULL(bi.block_item_damage_count, ''),
-    //                         'slab_status', IFNULL(bi.block_item_status, '')
-    //                     )
-    //                 ) 
-    //                 FROM {$tableNamePrefix}block_item AS bi
-    //                 WHERE bi.block_item_parent_id = b.block_id
-    //             )
-    //         )
-    //     ) AS block_details
-    // FROM
-    //     {$tableNamePrefix}block AS b
-    //     INNER JOIN " . TABLE_PREFIX . "warehouse AS w ON b.block_warehouse_id = w.warehouse_id
-    //     LEFT JOIN " . TABLE_PREFIX . "supplier AS s ON b.block_supplier_id = s.supplier_id
-    //     INNER JOIN " . TABLE_PREFIX . "address AS a ON w.warehouse_address_id = a.address_id
-    //     INNER JOIN " . TABLE_PREFIX . "state AS st ON a.address_state_id = st.state_id
-    //     INNER JOIN " . TABLE_PREFIX . "city AS c ON a.address_city_id = c.city_id
-    // WHERE
-    //     b.block_site_id = '" . SITE_ID . "'
-    //     {$statusFilter} 
-    //     {$typeFilter} 
-    //     {$warehouseFilter}
-    // GROUP BY
-    //     w.warehouse_title, b.block_size_dimension
-    // ORDER BY
-    //     w.warehouse_title ASC";
-
-    $query = $query = "
+        $query = "
     SELECT
         w.warehouse_title,
         b.block_size_dimension,
-        CONCAT('[', GROUP_CONCAT(
-            CONCAT(
-                '{\"block_code\":\"', IFNULL(b.block_code, ''), '\",',
-                '\"block_title\":\"', IFNULL(b.block_title, ''), '\",',
-                '\"gross_weight\":\"', FORMAT(ROUND(IFNULL(b.block_gross_size, 0), 2), 2), '\",',
-                '\"damage_weight\":\"', FORMAT(ROUND(IFNULL(b.block_damage_size, 0), 2), 2), '\",',
-                '\"net_weight\":\"', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2), '\",',
-                '\"block_thickness\":\"', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), ''), '\",',
-                '\"block_dimension_type\":\"', IFNULL(b.block_size_dimension, ''), '\",',
-                '\"block_slab_dimension_type\":\"', (
+        JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'block_code', IFNULL(b.block_code, ''),
+                'block_title', IFNULL(b.block_title, ''),
+                'gross_weight', FORMAT(ROUND(IFNULL(b.block_gross_size, 0), 2), 2),
+                'damage_weight', FORMAT(ROUND(IFNULL(b.block_damage_size, 0), 2), 2),
+                'net_weight', FORMAT(ROUND(IFNULL(b.block_net_size, 0), 2), 2),
+                'block_thickness', IFNULL(CONCAT(b.block_thickness_size, ' ', b.block_thickness_dimension), ''),
+                'block_dimension_type', IFNULL(b.block_size_dimension, ''),
+                'block_slab_dimension_type', (
                     SELECT GROUP_CONCAT(DISTINCT bi.block_item_dimension_type SEPARATOR ', ') 
                     FROM {$tableNamePrefix}block_item AS bi
                     WHERE bi.block_item_parent_id = b.block_id
-                ), '\",',
-                '\"block_slabs\":', (
-                    SELECT CONCAT('[', GROUP_CONCAT(
-                        CONCAT(
-                            '{\"width\":\"', IFNULL(bi.block_item_width, ''), '\",',
-                            '\"height\":\"', IFNULL(bi.block_item_height, ''), '\",',
-                            '\"slab_gross_size\":\"', IFNULL(bi.block_item_gross_size, ''), '\",',
-                            '\"slab_net_size\":\"', IFNULL(bi.block_item_net_size, ''), '\",',
-                            '\"slab_damage_size\":\"', IFNULL(bi.block_item_damage_size, ''), '\",',
-                            '\"damage_area\":\"', IFNULL(bi.block_item_damage_area, ''), '\",',
-                            '\"total_damage\":\"', IFNULL(bi.block_item_damage_count, ''), '\",',
-                            '\"slab_status\":\"', IFNULL(bi.block_item_status, ''), '\"'
-                        ), '}'
-                    ) SEPARATOR ','), ']')
+                ),
+                'block_slabs', (
+                    SELECT JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'width', IFNULL(bi.block_item_width, ''),
+                            'height', IFNULL(bi.block_item_height, ''),
+                            'slab_gross_size', IFNULL(bi.block_item_gross_size, ''),
+                            'slab_net_size', IFNULL(bi.block_item_net_size, ''),
+                            'slab_damage_size', IFNULL(bi.block_item_damage_size, ''),
+                            'damage_area', IFNULL(bi.block_item_damage_area, ''),
+                            'total_damage', IFNULL(bi.block_item_damage_count, ''),
+                            'slab_status', IFNULL(bi.block_item_status, '')
+                        )
+                    ) 
                     FROM {$tableNamePrefix}block_item AS bi
                     WHERE bi.block_item_parent_id = b.block_id
-                ), '}'
+                )
             )
-        SEPARATOR ','), ']') AS block_details
+        ) AS block_details
     FROM
         {$tableNamePrefix}block AS b
         INNER JOIN " . TABLE_PREFIX . "warehouse AS w ON b.block_warehouse_id = w.warehouse_id
@@ -296,6 +243,7 @@
         w.warehouse_title, b.block_size_dimension
     ORDER BY
         w.warehouse_title ASC";
+
 
     if ($inventoryList = mysqli_query($connection, $query)) {
         if(mysqli_num_rows($inventoryList) > 0) {
