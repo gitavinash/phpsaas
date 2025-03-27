@@ -100,10 +100,10 @@ $(document).ready(function (e) {
     var tempDiv = $("<div>").html(decodedHtml);
     tempDiv.find(".imagesList").remove();
     var cleanedHtml = tempDiv.find(".comment").html().trim();
-    $("#editUpayComment").val(cleanedHtml);
     if (cleanedHtml == "<p></p>") {
       cleanedHtml = "";
     }
+    $("#editUpayComment").val(cleanedHtml);
     globalCopyContent = cleanedHtml;
     upayId = dataId;
     document.querySelector(".editUpayBox").style.display = "flex";
@@ -128,7 +128,7 @@ $(document).ready(function (e) {
         window.open($("#upayContentValue").attr("href"), "_blank");
       }, 1000);
     } else {
-      alert("No content available to copy.");
+      popUpMessage("center", "No content available to copy.", "error");
     }
   });
 });
