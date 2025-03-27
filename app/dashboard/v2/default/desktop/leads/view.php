@@ -896,7 +896,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <span class="btn popUpBtn" id="updateUpayBtn"><i class="fi-rr-check"></i> Update Upay</span>
+                    <span class="btn popUpBtn" id="updateUpayBtn" data-id=""><i class="fi-rr-check"></i> Update
+                        Upay</span>
                     <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>

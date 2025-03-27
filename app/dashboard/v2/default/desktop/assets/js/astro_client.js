@@ -1,6 +1,6 @@
 $(document).ready(function (e) {
   var globalCopyContent = "";
-
+  var upayId = "";
   function copyToClipboard(content) {
     var tempDiv = $("<div contenteditable='true'>").html(content).css({
       position: "absolute",
@@ -63,6 +63,35 @@ $(document).ready(function (e) {
     });
   });
 
+  $("#updateUpayBtn").click(function (e) {
+    e.preventDefault();
+    var data = new FormData(document.getElementById("editUpayForm"));
+    data.append("upayId", leadId);
+    $.ajax({
+      url: "/api/astro_client/leads/update_upay/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status == 404 ? "error" : error.responseJSON.status
+        );
+        $("#addAmenities").show();
+      },
+    });
+  });
+
   $(".upayEditButton").click(function (e) {
     e.preventDefault();
     var dataId = $(this).attr("data-id");
@@ -72,7 +101,11 @@ $(document).ready(function (e) {
     tempDiv.find(".imagesList").remove();
     var cleanedHtml = tempDiv.find(".comment").html().trim();
     $("#editUpayComment").val(cleanedHtml);
+    if (cleanedHtml == "<p></p>") {
+      cleanedHtml = "";
+    }
     globalCopyContent = cleanedHtml;
+    upayId = dataId;
     document.querySelector(".editUpayBox").style.display = "flex";
     $(".editUpayBox").show();
     hidePageLoader();
@@ -93,7 +126,7 @@ $(document).ready(function (e) {
       );
       setTimeout(function () {
         window.open($("#upayContentValue").attr("href"), "_blank");
-      }, 500);
+      }, 1000);
     } else {
       alert("No content available to copy.");
     }
