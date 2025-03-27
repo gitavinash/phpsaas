@@ -29,7 +29,6 @@ function popUpMessage(msgPostion, msgTxt, msgType) {
 
 function toggleDisplay(showBox, showEditBtn) {
   $(".openBtnBox").hide(); // Hide all
-  console.log(`showBox`, showBox);
   document.querySelector(showBox).style.display = "block";
   if (showEditBtn) {
     $("#leadEditBtn").show();

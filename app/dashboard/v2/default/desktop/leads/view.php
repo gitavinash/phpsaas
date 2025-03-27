@@ -395,7 +395,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     {$commentBox}
                                                     ";
                                             if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                                echo "<div class='timeline-action'><a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a></div>";
+                                                echo "<div class='timeline-action'>
+                                                        <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Edit upay' data-msg='".base64_encode($commentBox)."' class='btn dataTableBtn btn-blue upayEditButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-edit'></i> Edit upay</a>
+                                                        <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>
+                                                    </div>";
                                             }
 
                                             echo  "</li>";
@@ -833,9 +836,43 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <h4 class="heading">Add new upay</h4>
                                     </div>
                                     <div class="form-group">
-                                        <textarea type="text" name="upayText" class="editor upayEditor" id="upayComment"
+                                        <textarea type="text" name="upayText" class="editor editUpayEditor" id="upayComment"
                                             placeholder="Add your comment"></textarea>
                                         <label class="form-lable" id="commentLable">Any comment</label>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
+                                        <label class="form-lable" id="upayPhoto">Upload photo</label>
+                                    </div> -->
+                                </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="widget box-3">
+                    <div class="actionArea">
+                        <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="popUp editUpayBox">
+            <div class="smallPopUpBox">
+                <div class="widget box-7">
+                    <div class="contentArea">
+                        <form method="POST" action="#" id="editUpayForm">
+                            <section class="form">
+                                <div class="step-open-box step_1_box">
+                                    <div class="form-header">
+                                        <h4 class="heading">Edit upay</h4>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea type="text" name="upayText" class="editor upayEditor" id="editUpayComment"
+                                            placeholder="Add your comment"></textarea>
+                                        <label class="form-lable" id="commentLable">Any comment</label>
+                                        <p class="copyToClipboard"><a href="https://onlinehtmleditor.dev/" id="upayContentValue" target="_blank">Click here to format the content</a></p>
                                     </div>
                                     <div class="form-group">
                                         <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
@@ -847,7 +884,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 </div>
                 <div class="widget box-3">
                     <div class="actionArea">
-                        <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
+                        <span class="btn popUpBtn" id="updateUpayBtn"><i class="fi-rr-check"></i> Update Upay</span>
                         <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                             Cancel</span>
                     </div>

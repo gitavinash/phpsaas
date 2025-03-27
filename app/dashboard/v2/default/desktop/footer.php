@@ -30,30 +30,20 @@
 				<script src="<?php echo JS_LIBRARY ?>tinymce/tinymce.min.js"></script>
 				<script>
 					if ($(".editor").length) {
-						// Select all elements with the class 'editor'
 						const editors = document.querySelectorAll('.editor');
-
-						// Initialize an array to store Quill instances
 						const quillInstances = [];
-
-						// Loop through each editor element
 						editors.forEach((editor, index) => {
-							// Create a new Quill instance
 							const quill = new Quill(editor, {
 								theme: 'snow'
 							});
 
 							if ($(`#editor-${index}`).length) {
-								// Set the initial content
 								const hiddenTextarea = document.getElementById(`editor-${index}`);
 								quill.root.innerHTML = hiddenTextarea.value;
-
-								// Update the hidden input value whenever the content changes
 								quill.on('text-change', function() {
 									hiddenTextarea.value = quill.root.innerHTML;
 								});
 								quillInstances.push(quill);
-								// Store the Quill instance in the array
 							}
 						});
 					}

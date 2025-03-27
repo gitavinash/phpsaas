@@ -1942,6 +1942,7 @@ section.form
 .dataTableBtn {
   float: left;
   margin-top: 5px;
+  margin-right: 20px;
   font-size: 13px;
   font-weight: 600;
   color: #333;
@@ -3510,4 +3511,12 @@ button:disabled {
 
 .warehouseTranfer span.select2.select2-container.select2-container--default {
   width: 45% !important;
+}
+
+.copyToClipboard {
+  float: left !important;
+  width: 100% !important;
+  padding: 10px 0px !important;
+  font-size: 12px !important;
+  color: #030fc8 !important;
 }
