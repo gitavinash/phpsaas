@@ -78,8 +78,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <?php
 
                         if ($enquiry_status != 5) { ?>
-                            <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i class="fi-rr-edit"></i> Edit
-                                lead</a>
+                        <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i
+                                class="fi-rr-edit"></i> Edit
+                            lead</a>
                         <?php
                         }
                         ?>
@@ -324,10 +325,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <?php
 
                 if (SITE_APP_ID == 24) { ?>
-                    <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
-                        <div class="leadInfo">
-                            <div class="historyBox">
-                                <?php
+                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
+                    <div class="leadInfo">
+                        <div class="historyBox">
+                            <?php
 
                                 if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id,  enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
                                     if (mysqli_num_rows($leadHistory) != 0) {
@@ -410,9 +411,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                 }
 
                                 ?>
-                            </div>
                         </div>
                     </div>
+                </div>
                 <?php
                 }
 
@@ -548,8 +549,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         }
                 ?>
 
-                        <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
-                        <?php
+                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+                <?php
 
                         if (SITE_APP == 'astro_client') {
                             echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
@@ -560,18 +561,18 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                         if (SITE_APP == 'aleya') { ?>
 
-                            <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                                links</a>
-                            <?php
+                <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
+                    links</a>
+                <?php
 
                             if ($enquiry_status != 1) {
                                 echo '<a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>';
                             }
 
                             ?>
-                            <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
+                <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
 
-                            <?php
+                <?php
                         }
 
                             ?><?php
@@ -583,14 +584,14 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                 ?>
 
 
-                        <?php
+                <?php
                     } else { ?>
 
-                            <form method="POST" class="">
-                                <!-- Design a form to assign lead to intern -->
-                            </form>
+                <form method="POST" class="">
+                    <!-- Design a form to assign lead to intern -->
+                </form>
 
-                    <?php
+                <?php
                     }
                 }
 
@@ -686,7 +687,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         </div>
                                         <div class="box-1" id="minPaymentLinkBox" style="display:none">
                                             <div class="form-group">
-                                                <input type="number" onwheel="this.blur()" id="paymentValue" name="paymentLink" />
+                                                <input type="number" onwheel="this.blur()" id="paymentValue"
+                                                    name="paymentLink" />
                                                 <label class="form-lable" id="paymentAmount">Enter
                                                     amount<sup>*</sup></label>
                                             </div>
@@ -722,8 +724,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 <h4 class="heading">Update payment details</h4>
                                             </div>
                                             <div class="form-group">
-                                                <input type="number" onwheel="this.blur()" id="paymentAmount" name="amount" />
-                                                <label class="form-lable" id="paymentAmount">Enter amount<sup>*</sup></label>
+                                                <input type="number" onwheel="this.blur()" id="paymentAmount"
+                                                    name="amount" />
+                                                <label class="form-lable" id="paymentAmount">Enter
+                                                    amount<sup>*</sup></label>
                                             </div>
                                             <div class="form-group">
                                                 <select class="selectJS form-control" id="paymentRecordTitle"
@@ -741,15 +745,19 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 <label class="form-lable">Payment method <sup>*</sup></label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" class="datepicker" placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate" name="payment_date" />
+                                                <input type="text" class="datepicker"
+                                                    placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate"
+                                                    name="payment_date" />
                                                 <label class="form-lable">Payment Date</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber" name="reference_number" />
+                                                <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber"
+                                                    name="reference_number" />
                                                 <label class="form-lable">Reference number</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="file" id="fileUpload" name="files" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
+                                                <input type="file" id="fileUpload" name="files"
+                                                    accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
                                                 <label class="form-lable" id="upayPhoto">Upload photo</label>
                                             </div>
                                             <div class="form-group">
@@ -825,72 +833,76 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
     if (SITE_APP == 'astro_client') { ?>
 
-        <div class="popUp upayBox">
-            <div class="smallPopUpBox">
-                <div class="widget box-7">
-                    <div class="contentArea">
-                        <form method="POST" action="#" id="addUpayForm">
-                            <section class="form">
-                                <div class="step-open-box step_1_box">
-                                    <div class="form-header">
-                                        <h4 class="heading">Add new upay</h4>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea type="text" name="upayText" class="editor editUpayEditor" id="upayComment"
-                                            placeholder="Add your comment"></textarea>
-                                        <label class="form-lable" id="commentLable">Any comment</label>
-                                    </div>
-                                    <!-- <div class="form-group">
-                                        <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
-                                        <label class="form-lable" id="upayPhoto">Upload photo</label>
-                                    </div> -->
+    <div class="popUp upayBox">
+        <div class="smallPopUpBox">
+            <div class="widget box-7">
+                <div class="contentArea">
+                    <form method="POST" action="#" id="addUpayForm">
+                        <section class="form">
+                            <div class="step-open-box step_1_box">
+                                <div class="form-header">
+                                    <h4 class="heading">Add new upay</h4>
                                 </div>
-                        </form>
-                    </div>
+                                <div class="form-group">
+                                    <textarea type="text" name="upayText" class="editor editUpayEditor" id="upayComment"
+                                        placeholder="Add your comment"></textarea>
+                                    <label class="form-lable" id="commentLable">Any comment</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" id="fileUpload" name="files[]"
+                                        accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
+                                    <label class="form-lable" id="upayPhoto">Upload files</label>
+                                </div>
+                            </div>
+                    </form>
                 </div>
-                <div class="widget box-3">
-                    <div class="actionArea">
-                        <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
-                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                            Cancel</span>
-                    </div>
+            </div>
+            <div class="widget box-3">
+                <div class="actionArea">
+                    <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                        Cancel</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="popUp editUpayBox">
-            <div class="smallPopUpBox">
-                <div class="widget box-7">
-                    <div class="contentArea">
-                        <form method="POST" action="#" id="editUpayForm">
-                            <section class="form">
-                                <div class="step-open-box step_1_box">
-                                    <div class="form-header">
-                                        <h4 class="heading">Edit upay</h4>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea type="text" name="upayText" class="editor upayEditor" id="editUpayComment"
-                                            placeholder="Add your comment"></textarea>
-                                        <label class="form-lable" id="commentLable">Any comment</label>
-                                        <p class="copyToClipboard"><a href="https://onlinehtmleditor.dev/" id="upayContentValue" target="_blank">Click here to format the content</a></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" id="fileUpload" name="files[]" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
-                                        <label class="form-lable" id="upayPhoto">Upload photo</label>
-                                    </div>
+    <div class="popUp editUpayBox">
+        <div class="smallPopUpBox">
+            <div class="widget box-7">
+                <div class="contentArea">
+                    <form method="POST" action="#" id="editUpayForm">
+                        <section class="form">
+                            <div class="step-open-box step_1_box">
+                                <div class="form-header">
+                                    <h4 class="heading">Edit upay</h4>
                                 </div>
-                        </form>
-                    </div>
+                                <div class="form-group">
+                                    <textarea type="text" name="upayText" class="editor upayEditor" id="editUpayComment"
+                                        placeholder="Add your comment"></textarea>
+                                    <label class="form-lable" id="commentLable">Any comment</label>
+                                    <p class="copyToClipboard"><a href="https://onlinehtmleditor.dev/"
+                                            id="upayContentValue" target="_blank">Click here to format the content</a>
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" id="fileUpload" name="files[]"
+                                        accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
+                                    <label class="form-lable" id="upayPhoto">Upload files</label>
+                                </div>
+                            </div>
+                    </form>
                 </div>
-                <div class="widget box-3">
-                    <div class="actionArea">
-                        <span class="btn popUpBtn" id="updateUpayBtn"><i class="fi-rr-check"></i> Update Upay</span>
-                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                            Cancel</span>
-                    </div>
+            </div>
+            <div class="widget box-3">
+                <div class="actionArea">
+                    <span class="btn popUpBtn" id="updateUpayBtn"><i class="fi-rr-check"></i> Update Upay</span>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                        Cancel</span>
                 </div>
             </div>
         </div>
+    </div>
     <?php
     }
 
@@ -930,7 +942,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                 </select>
                             </div>
                             <div class="box-1">
-                                <a href="#" class="btn" id="fetchItinerary" style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
+                                <a href="#" class="btn" id="fetchItinerary"
+                                    style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
                             </div>
                         </div>
                     </div>
@@ -938,7 +951,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary</h4>
                         <select class="selectJS form-control" id="itineraryList"></select>
                         <div class="box-1">
-                            <a href="#" class="btn" id="showItinerary" style="float: left; padding:0.5rem 2rem; margin-top:10px">Show Itinerary</a>
+                            <a href="#" class="btn" id="showItinerary"
+                                style="float: left; padding:0.5rem 2rem; margin-top:10px">Show Itinerary</a>
                         </div>
                     </div>
                     <div class="form-group" id="editorBox" style="display: none;">
@@ -951,7 +965,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <div class="actionArea">
                     <input type="hidden" id="itinenaryId" value="">
                     <a class="btn popUpBtn" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
-                    <a href="#" class="btn popUpBtn" id="downloadItinerary" target="_blank"><i class="fi-rr-file-pdf"></i> Download itinerary</a>
+                    <a href="#" class="btn popUpBtn" id="downloadItinerary" target="_blank"><i
+                            class="fi-rr-file-pdf"></i> Download itinerary</a>
                     <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>
                 </div>
