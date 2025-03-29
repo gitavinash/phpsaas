@@ -3915,7 +3915,10 @@ footer {
     border-radius: 15px;
   }
   .cloth-card {
-    display: none;
+    /* display: none; */
+  }
+  .cloth-card .acce-card {
+    float: left;
   }
   .mob-bag {
     position: relative;
@@ -4100,6 +4103,13 @@ footer {
   }
   .main-card a.card-link {
     margin-left: 0;
+    float: left;
+    width: 46%;
+    padding: 0px 2%;
+    box-sizing: content-box;
+    max-height: 125px;
+    margin-bottom: 50px;
+    overflow: hidden;
   }
   .carousel-home {
     margin-bottom: 0 !important;
