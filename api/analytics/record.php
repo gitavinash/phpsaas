@@ -76,9 +76,6 @@ function record($connection, $data)
         } else {
             $recordUserSession=true;
         }
-    } else {
-        echo "qujsdf";
-        exit();
     }
     
     
