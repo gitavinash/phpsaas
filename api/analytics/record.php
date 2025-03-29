@@ -69,11 +69,23 @@ function record($connection, $data)
         $deviceID = $_COOKIE['device_id'];
     }
 
-    $recordUserSession=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_sessions(us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) VALUES('".SITE_ID."', '{$user_id}', '{$analyticsId}', '{$deviceID}', 1)");
-
+    
+    if($checkUserSession=mysqli_query($connection, "SELECT us_id FROM ".TABLE_PREFIX."user_sessions WHERE us_active_device='{$deviceID}' AND us_status=1 AND us_user_id='{$user_id}' AND us_site_id=".SITE_ID)) {
+        if(mysqli_num_rows($checkUserSession)==0) {
+            $recordUserSession=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."user_sessions(us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) VALUES('".SITE_ID."', '{$user_id}', '{$analyticsId}', '{$deviceID}', 1)");
+        } else {
+            $recordUserSession=true;
+        }
+    } else {
+        echo "qujsdf";
+        exit();
+    }
+    
+    
     if ($recordIPData && $recordAnalytics && $recordUserSession) {
             $msg = 200;
             $msg = 'Capture';
+            $status='success';
             mysqli_query($connection, "COMMIT");
     } else {
         // echo "Something went wrong while capturing the analytics records";
