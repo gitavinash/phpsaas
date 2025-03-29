@@ -618,6 +618,57 @@ if ($('#productGalleryImages').length) {
 
         }
         
-    })
+    });
+
+    if ($(".product-gallery").length) {
+        let $mainImg = $(".picZoomer .touchedPic");
+        let $thumbnails = $(".piclist li img");
+        let $piclist = $(".piclist");
+        let scrollAmount = 100; // Scroll speed
+
+        // Change main image on thumbnail click
+        $thumbnails.click(function () {
+            $(".piclist li img.active").removeClass("active");
+            $(this).addClass("active");
+            $mainImg.attr("src", $(this).attr("src"));
+        });
+
+        // Zoom effect with cursor movement
+        $(".picZoomer").on("mousemove", function (e) {
+            let offset = $(this).offset();
+            let x = ((e.pageX - offset.left) / $(this).width()) * 100;
+            let y = ((e.pageY - offset.top) / $(this).height()) * 100;
+            
+            $mainImg.css({
+                "transform-origin": `${x}% ${y}%`,
+                "transform": "scale(2)", // Adjust scale as needed
+                "cursor": "zoom-out"
+            });
+        }).on("mouseleave", function () {
+            $mainImg.css({
+                "transform": "scale(1)",
+                "cursor": "zoom-in"
+            });
+        });
+
+        // Zoom effect on click (Mobile)
+        $mainImg.on("click", function () {
+            if ($(this).hasClass("zoomed")) {
+                $(this).removeClass("zoomed").css("transform", "scale(1)");
+            } else {
+                $(this).addClass("zoomed").css("transform", "scale(2)");
+            }
+        });
+
+        // Scroll left/right functionality
+        $("#prev-img").click(function () {
+            $piclist.animate({ scrollLeft: "-=" + scrollAmount }, 300);
+        });
+
+        $("#next-img").click(function () {
+            $piclist.animate({ scrollLeft: "+=" + scrollAmount }, 300);
+        });
+    }
+}
 
 });

@@ -49,7 +49,7 @@ include_once 'header.php';
                     $galleryImages = json_decode($product_gallery, TRUE);
 
                     if ($galleryImages != '') {
-
+ 
                         echo "<ul class='piclist' ><li><img src='{$product_image}' /></li>";
 
                         for ($i = 0; $i < sizeof($galleryImages); $i++) {
@@ -92,10 +92,10 @@ include_once 'header.php';
                             echo "<h2 class='ofer-price'><img src='" . USER_IMAGES . "rupees.svg'> <span>{$inventory_mrp}</span></h2>";
                         } else { ?>
 
-                            <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
-                                <span><?php echo $inventory_price ?></span>
-                            </h2>
-                            <?php
+                        <h2 class="ofer-price"><img src="<?php echo USER_IMAGES ?>rupees.svg">
+                            <span><?php echo $inventory_price ?></span>
+                        </h2>
+                        <?php
                             if ($inventory_mrp != 0) {
 
                                 if ($inventory_mrp != $inventory_price) {
@@ -166,17 +166,17 @@ include_once 'header.php';
                                 } else {
                                     if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
                             ?>
-                                        <h2>Care & Tips</h2>
-                                        <ul>
-                                            <li>Start by removing the bouquet wrapper.</li>
-                                            <li>Cut the stems by one or two inches from the bottom to ensure better water
-                                                intake.
-                                            </li>
-                                            <li>Choose a vase and fill it with water.</li>
-                                            <li>Remove the leaves below the water level to prevent bacterial growth.</li>
-                                            <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-                                            <li>Make sure to place the vase in indirect sunlight.</li>
-                                        </ul>
+                            <h2>Care & Tips</h2>
+                            <ul>
+                                <li>Start by removing the bouquet wrapper.</li>
+                                <li>Cut the stems by one or two inches from the bottom to ensure better water
+                                    intake.
+                                </li>
+                                <li>Choose a vase and fill it with water.</li>
+                                <li>Remove the leaves below the water level to prevent bacterial growth.</li>
+                                <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
+                                <li>Make sure to place the vase in indirect sunlight.</li>
+                            </ul>
 
                             <?php
                                     }
@@ -198,18 +198,18 @@ include_once 'header.php';
                                     if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
                             ?>
 
-                                        <h2>Delivery Information</h2>
-                                        <ul>
-                                            <li>The image displayed is indicative. Actual product may vary in design & shape
-                                            </li>
-                                            <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
-                                            <li>The chosen delivery time is an estimate.</li>
-                                            <li>Since flowers are perishable in nature, we will be able to attempt delivery of
-                                                your
-                                                order once.</li>
-                                            <li>Occasionally, substitution of flowers is necessary due unavailability issues.
-                                            </li>
-                                        </ul>
+                            <h2>Delivery Information</h2>
+                            <ul>
+                                <li>The image displayed is indicative. Actual product may vary in design & shape
+                                </li>
+                                <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
+                                <li>The chosen delivery time is an estimate.</li>
+                                <li>Since flowers are perishable in nature, we will be able to attempt delivery of
+                                    your
+                                    order once.</li>
+                                <li>Occasionally, substitution of flowers is necessary due unavailability issues.
+                                </li>
+                            </ul>
 
                             <?php
 
