@@ -6,6 +6,24 @@
 
 	    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
 
+		// Delete active session from database
+
+		if (isset($_COOKIE['user_data'])) {
+        $user_salt_key = base64_decode($_COOKIE['user_data']);
+			if ($checkUserIsReal = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$user_salt_key}'")) {
+				if (mysqli_num_rows($checkUserIsReal) != 0) {
+					extract(mysqli_fetch_assoc($checkUserIsReal));
+					$deviceID = $_COOKIE['device_id'];
+					if($checkUserSession=mysqli_query($connection, "SELECT us_id FROM ".TABLE_PREFIX."user_sessions WHERE us_active_device='{$deviceID}' AND us_user_id='{$user_id}' AND us_site_id=".SITE_ID)) {
+						if(mysqli_num_rows($checkUserSession)!=0) {
+							extract(mysqli_fetch_assoc($checkUserSession));
+							if(mysqli_query($connection, "DELETE FROM ".TABLE_PREFIX."user_sessions WHERE us_id='{$us_id}'"));
+						}
+					}
+				}
+			}
+		}
+
 	    foreach($cookies as $cookie) {
 
 			// Destroy all session and cache for logout the session

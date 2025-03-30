@@ -21,6 +21,31 @@ if (isset($_COOKIE['user_data'])) {
             }
         }
     }
+
+    // Check user active session
+
+    if($checkUserSession=mysqli_query($connection, "SELECT us_active_device FROM ".TABLE_PREFIX."user_sessions WHERE us_status=1 AND us_user_id='{$user_id}' AND us_site_id=".SITE_ID)) {
+        if(mysqli_num_rows($checkUserSession)>2) {
+            $showLogoutBtn=0;
+            $excluded_paths = ['/manage-subscription/', '/terms-and-conditions/', '/about-us/', '/terms-and-conditions/', '/privacy-policy/', '/refund-policy/'];
+            $is_excluded = false;
+            foreach ($excluded_paths as $path) {
+                if (strpos(BASE_URL, $path) !== false) {
+                    $is_excluded = true;
+                    break;
+                }
+            }
+
+            if (!$is_excluded) {
+                require_once 'user-suspend.php';
+                exit();
+            }
+
+        } else {
+            $showLogoutBtn=1;
+        }
+    }
+
 }
 
 ?>
@@ -58,22 +83,27 @@ if (isset($_COOKIE['user_data'])) {
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
 
-        gtag('config', 'G-KN6V4VKJN4');
+    gtag('config', 'G-KN6V4VKJN4');
     </script>
     <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "qicb9eq9ym");
-</script>
+    </script>
 </head>
 
 <body oncontextmenu="return false;">
@@ -89,7 +119,8 @@ if (isset($_COOKIE['user_data'])) {
                     <div class="search-container">
                         <button class="search-btn" id="searchButton">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                <path fill="#<?php echo ((SITE_VERSION == 'mobile') ? '5B99D5' : 'FFFFFF') ?>" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                <path fill="#<?php echo ((SITE_VERSION == 'mobile') ? '5B99D5' : 'FFFFFF') ?>"
+                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
                             </svg>
                             <span class="btn-text">Search</span>
                         </button>
@@ -102,29 +133,34 @@ if (isset($_COOKIE['user_data'])) {
 
                     if (isset($_COOKIE['user_data'])) { ?>
 
-                        <div class="header_right">
-                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                            </p>
-                        </div>
+                    <div class="header_right">
+                        <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                        </p>
+                    </div>
 
-                        <!-- profile side--bar -->
-                        <div class="profile--sideBar">
-                            <div class="profile_container">
-                                <div class="profile_cancel">
-                                    <i class='bx bx-x'></i>
-                                </div>
-                                <div class="profile_header">
-                                    <!-- <div class="profile--img">
+                    <!-- profile side--bar -->
+                    <div class="profile--sideBar">
+                        <div class="profile_container">
+                            <div class="profile_cancel">
+                                <i class='bx bx-x'></i>
+                            </div>
+                            <div class="profile_header">
+                                <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                    <div class="user--content">
-                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                        <a href="/logout/">Logout</a>
-                                    </div>
-                                </div>
+                                <div class="user--content">
+                                    <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                    <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                    <?php
+                                    
+                                    echo (($showLogoutBtn==1) ? '<a href="/logout/">Logout</a>' : '');
 
-                                <?php
+                                    ?>
+
+                                </div>
+                            </div>
+
+                            <?php
 
                                 if ($activeSubscription == true) {
 
@@ -153,19 +189,20 @@ if (isset($_COOKIE['user_data'])) {
 
                                 ?>
 
-                            </div>
                         </div>
+                    </div>
 
                     <?php
                     } else { ?>
 
 
-                        <div class="header_right">
-                            <!-- <button class="subscribe">subscribe</button> -->
-                            <a href="/subscribe/" class="subscribe">subscribe</a>
-                            <!-- <button class="sign_in"></button> -->
-                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>" class="sign_in">sign in</a>
-                        </div>
+                    <div class="header_right">
+                        <!-- <button class="subscribe">subscribe</button> -->
+                        <a href="/subscribe/" class="subscribe">subscribe</a>
+                        <!-- <button class="sign_in"></button> -->
+                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                            class="sign_in">sign in</a>
+                    </div>
 
                     <?php
                     }
@@ -200,12 +237,22 @@ if (isset($_COOKIE['user_data'])) {
         ?>
         <nav <?php echo $changeBackground ?>>
             <ul>
-                <li><a href="/category/deep-tales/" <?php echo ((BASE_URL == '/category/deep-tales/') ? 'class="active"' : '') ?> title="Deep-Tales">Deep-Tales</a></li>
-                <li><a href="/category/to-the-point/" <?php echo ((BASE_URL == '/category/to-the-point/') ? 'class="active"' : '') ?> title="To-The-Point">To-The-Point</a></li>
-                <li><a href="/category/news/" <?php echo ((BASE_URL == '/category/news/') ? 'class="active"' : '') ?> title="News">News</a></li>
-                <li><a href="/category/money-trivia/" <?php echo ((BASE_URL == '/category/money-trivia/') ? 'class="active"' : '') ?> title="Money-Trivia">Money-Trivia</a></li>
-                <li><a href="/category/report/" title="Report" <?php echo ((BASE_URL == '/category/report/') ? 'class="active"' : '') ?> class="disable">Report</a></li>
-                <li><a href="/category/partner-insights/" title="Partner Insights" class="partnerInsights">Partner Insights</a></li>
+                <li><a href="/category/deep-tales/"
+                        <?php echo ((BASE_URL == '/category/deep-tales/') ? 'class="active"' : '') ?>
+                        title="Deep-Tales">Deep-Tales</a></li>
+                <li><a href="/category/to-the-point/"
+                        <?php echo ((BASE_URL == '/category/to-the-point/') ? 'class="active"' : '') ?>
+                        title="To-The-Point">To-The-Point</a></li>
+                <li><a href="/category/news/" <?php echo ((BASE_URL == '/category/news/') ? 'class="active"' : '') ?>
+                        title="News">News</a></li>
+                <li><a href="/category/money-trivia/"
+                        <?php echo ((BASE_URL == '/category/money-trivia/') ? 'class="active"' : '') ?>
+                        title="Money-Trivia">Money-Trivia</a></li>
+                <li><a href="/category/report/" title="Report"
+                        <?php echo ((BASE_URL == '/category/report/') ? 'class="active"' : '') ?>
+                        class="disable">Report</a></li>
+                <li><a href="/category/partner-insights/" title="Partner Insights" class="partnerInsights">Partner
+                        Insights</a></li>
             </ul>
         </nav>
     </header>
