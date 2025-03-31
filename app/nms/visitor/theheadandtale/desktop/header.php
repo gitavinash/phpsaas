@@ -24,27 +24,29 @@ if (isset($_COOKIE['user_data'])) {
 
     // Check user active session
 
-    if($checkUserSession=mysqli_query($connection, "SELECT us_active_device FROM ".TABLE_PREFIX."user_sessions WHERE us_status=1 AND us_user_id='{$user_id}' AND us_site_id=".SITE_ID)) {
-        if(mysqli_num_rows($checkUserSession)>2) {
-            $showLogoutBtn=0;
-            $excluded_paths = ['/manage-subscription/', '/terms-and-conditions/', '/about-us/', '/terms-and-conditions/', '/privacy-policy/', '/refund-policy/'];
-            $is_excluded = false;
-            foreach ($excluded_paths as $path) {
-                if (strpos(BASE_URL, $path) !== false) {
-                    $is_excluded = true;
-                    break;
+    if (!in_array($user_id, [9423, 9473, 9505])) {
+        if($checkUserSession=mysqli_query($connection, "SELECT us_active_device FROM ".TABLE_PREFIX."user_sessions WHERE us_status=1 AND us_user_id='{$user_id}' AND us_site_id=".SITE_ID)) {
+            if(mysqli_num_rows($checkUserSession)>2) {
+                $showLogoutBtn=0;
+                $excluded_paths = ['/manage-subscription/', '/terms-and-conditions/', '/about-us/', '/terms-and-conditions/', '/privacy-policy/', '/refund-policy/'];
+                $is_excluded = false;
+                foreach ($excluded_paths as $path) {
+                    if (strpos(BASE_URL, $path) !== false) {
+                        $is_excluded = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!$is_excluded) {
-                require_once 'user-suspend.php';
-                exit();
-            }
+                if (!$is_excluded) {
+                    require_once 'user-suspend.php';
+                    exit();
+                }
 
-        } else {
-            $showLogoutBtn=1;
+            } else {
+                $showLogoutBtn=1;
+            }
         }
-    }
+}
 
 }
 
