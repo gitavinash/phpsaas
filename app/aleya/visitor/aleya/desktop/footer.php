@@ -52,7 +52,7 @@
                     <p><strong>Phone: </strong><a href="tel:+91-9355239595">+91-9355239595</a>, <a
                             href="tel:+91-9355239494">+91-9355239494</a></p>
                     <p><strong>Email: </strong><a href="mailto:sales@aleya.in">sales@aleya.in</a>, <a
-                            href="mailto:contact@aleya.in">contact@aleya.in</a></p>
+                            href="mailto:support@aleya.in">support@aleya.in</a></p>
                     <p><strong>Corporate Office: </strong><a href="https://maps.app.goo.gl/JoFYSsRLWAwjAg5q8"
                             target="_blank">B-38,
                             Upper Ground Floor, Vishal Enclave,
@@ -163,81 +163,81 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <script>
-    $('.manage_slider').slick({
-        infinite: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: false,
-        autoplaySpeed: 2000,
-        arrows: true,
-        dots: false,
-        responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-            {
+$('.manage_slider').slick({
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: false,
+    autoplaySpeed: 2000,
+    arrows: true,
+    dots: false,
+    responsive: [{
+            breakpoint: 1200,
+            settings: {
+                slidesToShow: 1,
+            }
+        },
+        {
+            breakpoint: 992,
+            settings: {
+                slidesToShow: 1,
+            }
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 1,
+            }
+        },
+        {
+            breakpoint: 576,
+            settings: {
+                slidesToShow: 1,
+            }
+        },
+    ]
+});
+</script>
+
+<script>
+jQuery(document).ready(function() {
+    if (jQuery(window).width() < 768) {
+        jQuery('.price_slider').slick({
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            // autoplay: true,
+            arrows: false,
+            dots: true,
+            mobileFirst: true,
+            responsive: [{
                 breakpoint: 576,
                 settings: {
                     slidesToShow: 1,
+                    mobileFirst: true,
                 }
-            },
-        ]
-    });
+            }, ]
+        });
+    }
+});
 </script>
 
 <script>
-    jQuery(document).ready(function() {
-        if (jQuery(window).width() < 768) {
-            jQuery('.price_slider').slick({
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                // autoplay: true,
-                arrows: false,
-                dots: true,
-                mobileFirst: true,
-                responsive: [{
-                    breakpoint: 576,
-                    settings: {
-                        slidesToShow: 1,
-                        mobileFirst: true,
-                    }
-                }, ]
-            });
-        }
-    });
-</script>
-
-<script>
-    $('#homeBtn').click(function() {
-        $('.mobile_nav').removeClass('active');
-    })
-    $('#featureBtn').click(function() {
-        $('.mobile_nav').removeClass('active');
-    })
-    $('#priceBtn').click(function() {
-        $('.mobile_nav').removeClass('active');
-    })
-    $('#contactBtn').click(function() {
-        $('.mobile_nav').removeClass('active');
-    })
-    $('#demoBtn').click(function() {
-        $('.mobile_nav').removeClass('active');
-    })
+$('#homeBtn').click(function() {
+    $('.mobile_nav').removeClass('active');
+})
+$('#featureBtn').click(function() {
+    $('.mobile_nav').removeClass('active');
+})
+$('#priceBtn').click(function() {
+    $('.mobile_nav').removeClass('active');
+})
+$('#contactBtn').click(function() {
+    $('.mobile_nav').removeClass('active');
+})
+$('#demoBtn').click(function() {
+    $('.mobile_nav').removeClass('active');
+})
 </script>
 
 </body>
