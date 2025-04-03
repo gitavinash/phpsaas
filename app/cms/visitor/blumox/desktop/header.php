@@ -16,7 +16,9 @@
     <meta name="msapplication-TileColor" content="#3ab4f1">
     <meta name="theme-color" content="#3ab4f1">
     <!-- css -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
@@ -25,29 +27,29 @@
     <?php require_once DEFAULT_META; ?>
 
     <script type="text/javascript">
-        (function(c, l, a, r, i, t, y) {
-            c[a] = c[a] || function() {
-                (c[a].q = c[a].q || []).push(arguments)
-            };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i;
-            y = l.getElementsByTagName(r)[0];
-            y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", "fvi9wdlvm3");
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "fvi9wdlvm3");
     </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-00T4DDHZXS"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
 
-        gtag('config', 'G-00T4DDHZXS');
+    gtag('config', 'G-00T4DDHZXS');
     </script>
 
 </head>
@@ -99,10 +101,10 @@
                     <ul>
                         <li><a href="/about-us/">About</a></li>
                         <li><a href="/our-work/">Work</a></li>
-                        <!-- <li><a href="/products/">Products</a></li> -->
+                        <li><a href="/products/">Products</a></li>
                         <li><a href="/services/">Services</a></li>
                         <li><a href="/contact-us/">Contact Us</a></li>
-                        <!-- <li><a href="https://pay.blumox.com/">Pay Now</a></li> -->
+                        <li><a href="https://pay.blumox.com/">Pay Now</a></li>
                     </ul>
                 </div>
                 <div class="legalLinks">
