@@ -39,7 +39,9 @@ if (isset($mobile)) {
     unset($messageDB['mobile']);
     $messageDB = json_encode($messageDB, true);
 
-    $updateEnquiry = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_first_name='{$first_name}',enquiry_middle_name='{$middle_name}', enquiry_last_name='{$last_name}', enquiry_email='{$email}', enquiry_message='{$messageDB}' WHERE enquiry_id='{$leadId}'");
+    $updateAltMobile=((isset($alt_mobile)) ? ", enquiry_alt_mobile='{$alt_mobile}'" : "");
+
+    $updateEnquiry = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "enquiry SET enquiry_first_name='{$first_name}',enquiry_middle_name='{$middle_name}', enquiry_last_name='{$last_name}', enquiry_email='{$email}', enquiry_message='{$messageDB}' {$updateAltMobile} WHERE enquiry_id='{$leadId}'");
 
     if ($updateEnquiry) {
         $status = 'success';

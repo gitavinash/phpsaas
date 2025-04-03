@@ -849,9 +849,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <label class="form-lable" id="commentLable">Any comment</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="file" id="fileUpload" name="files[]"
-                                        accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
-                                    <label class="form-lable" id="upayPhoto">Upload files</label>
+                                    <input id="fileInput" type="file" name="files[]" multiple>
+                                    <div id="dropzone" class="dragAndDrop">Drag & Drop Files Here</div>
                                 </div>
                             </div>
                     </form>
@@ -886,6 +885,11 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     </p>
                                 </div>
                                 <div class="form-group">
+                                    <div class="productGallery">
+                                        <div class="input-field">
+                                            <div class="input-images" style="padding-top: .5rem;"></div>
+                                        </div>
+                                    </div>
                                     <input type="file" id="fileUpload" name="files[]"
                                         accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx" multiple>
                                     <label class="form-lable" id="upayPhoto">Upload files</label>
