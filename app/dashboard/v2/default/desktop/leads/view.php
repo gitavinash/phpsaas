@@ -852,7 +852,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <div id="dropZone">
                                         <span class="defaultText">Drag & Drop files here or click to upload</span>
                                     </div>
-                                    <input type="file" id="fileInput" accept=".pdf, .jpg, .jpeg, .png" multiple />
+                                    <input type="file" id="fileInput" name="files[]" accept=".pdf, .jpg, .jpeg, .png"
+                                        multiple />
                                 </div>
                             </div>
                     </form>
@@ -886,13 +887,13 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                             id="upayContentValue" target="_blank">Click here to format the content</a>
                                     </p>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <div id="editDropZone">
                                         <span class="editDefaultText">Drag & Drop files here or click to upload</span>
                                     </div>
-                                    <input type="file" id="editFileInput" accept=".pdf, .jpg, .jpeg, .png" multiple />
-                                </div>
-
+                                    <input type="file" id="editFileInput" name="files[]"
+                                        accept=".pdf, .jpg, .jpeg, .png" multiple />
+                                </div> -->
                             </div>
                     </form>
                 </div>

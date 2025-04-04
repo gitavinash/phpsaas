@@ -35,7 +35,6 @@ $(document).ready(function (e) {
 
   $("#addUpayBtn").click(function (e) {
     e.preventDefault();
-
     var data = new FormData(document.getElementById("addUpayForm"));
     data.append("leadId", leadId);
     $.ajax({
@@ -66,7 +65,7 @@ $(document).ready(function (e) {
   $("#updateUpayBtn").click(function (e) {
     e.preventDefault();
     var data = new FormData(document.getElementById("editUpayForm"));
-    data.append("upayId", leadId);
+    data.append("upayId", btoa(upayId));
     $.ajax({
       url: "/api/astro_client/leads/update_upay/",
       type: "POST",

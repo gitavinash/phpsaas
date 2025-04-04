@@ -552,12 +552,9 @@ aside {
   display: block;
   background: #fff;
   z-index: 9;
-  box-shadow:
-    0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-    0 12.5px 10px rgba(0, 0, 0, 0.06),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-    0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
 }
 
@@ -1349,12 +1346,9 @@ table.dataTable thead th {
   text-align: center;
   right: 2%;
   bottom: 3%;
-  box-shadow:
-    0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-    0 12.5px 10px rgba(0, 0, 0, 0.06),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-    0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
   width: 60px;
   height: 60px;
@@ -2259,8 +2253,7 @@ section.form
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow:
-    rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
@@ -2298,8 +2291,7 @@ section.form
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow:
-    rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
@@ -2467,6 +2459,8 @@ section.form
   width: 100%;
   padding: 10px 0px 0px 0px;
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: flex-start; /* Centers the image horizontally */
   align-items: center; /* Centers the image vertically */
 }
@@ -2475,6 +2469,9 @@ section.form
   float: left;
   width: 100px;
   height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #e8e8e8;
 }
 .comment .imagesList img.leadInfoImage {
@@ -3100,9 +3097,7 @@ th {
 }
 .checkbox-wrapper-16 .checkbox-input:focus + .checkbox-tile {
   border-color: #03637b;
-  box-shadow:
-    0 5px 10px rgba(0, 0, 0, 0.1),
-    0 0 0 4px #167a92;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #167a92;
 }
 .checkbox-wrapper-16 .checkbox-input:focus + .checkbox-tile:before {
   transform: scale(1);
