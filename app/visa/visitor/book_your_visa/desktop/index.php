@@ -4,261 +4,305 @@
 
 ?>
 
-<section class="heroSection container-fluid">
-    <div class="row">
-        <div class="col">
-            <h1>Apply for Your Visa Hassle-Free<span>Quick, Secure & Reliable!</span></h1>
-            <form>
-                <select class="selectJS form-control selectDestination" name="state" id="state"
-                    placeholder="Select your destination">
-                    <option value="US" data-flag="https://flagcdn.com/w80/us.png">United States</option>
-                    <option value="CA" data-flag="https://flagcdn.com/w80/ca.png">Canada</option>
-                    <option value="GB" data-flag="https://flagcdn.com/w80/gb.png">United Kingdom</option>
-                    <option value="AU" data-flag="https://flagcdn.com/w80/au.png">Australia</option>
-                    <option value="AE" data-flag="https://flagcdn.com/w80/ae.png">United Arab Emirates</option>
-                    <option value="DE" data-flag="https://flagcdn.com/w80/de.png">Germany</option>
-                    <option value="NZ" data-flag="https://flagcdn.com/w80/nz.png">New Zealand</option>
-                    <option value="SG" data-flag="https://flagcdn.com/w80/sg.png">Singapore</option>
-                    <option value="SA" data-flag="https://flagcdn.com/w80/sa.png">Saudi Arabia</option>
-                    <option value="QA" data-flag="https://flagcdn.com/w80/qa.png">Qatar</option>
-                    <option value="MY" data-flag="https://flagcdn.com/w80/my.png">Malaysia</option>
-                    <option value="TH" data-flag="https://flagcdn.com/w80/th.png">Thailand</option>
-                    <option value="FR" data-flag="https://flagcdn.com/w80/fr.png">France</option>
-                    <option value="IT" data-flag="https://flagcdn.com/w80/it.png">Italy</option>
-                    <option value="NL" data-flag="https://flagcdn.com/w80/nl.png">Netherlands</option>
-                    <option value="JP" data-flag="https://flagcdn.com/w80/jp.png">Japan</option>
-                    <option value="KR" data-flag="https://flagcdn.com/w80/kr.png">South Korea</option>
-                    <option value="PT" data-flag="https://flagcdn.com/w80/pt.png">Portugal</option>
-                    <option value="ES" data-flag="https://flagcdn.com/w80/es.png">Spain</option>
-                    <option value="ZA" data-flag="https://flagcdn.com/w80/za.png">South Africa</option>
-                </select>
-            </form>
-            <p class="suggestions"><strong>Suggestions:</strong> <a href="#">United States</a>, <a href="#">United Arab
-                    Emirates</a>, <a href="#">Canada</a>, <a href="#">Australia</a></p>
-        </div>
-        <div class=" col">
-            <img src="<?php echo USER_IMAGES ?>passport.png" class="heroImage" alt="">
-        </div>
-    </div>
-</section>
-
-<section class="visa-steps py-5">
-    <div class="container text-center">
-        <h2 class="fw-bold mb-4">
-            Get Your Visa in <span class="text-primary">3 Simple Steps</span>
-        </h2>
-
-        <div class="row justify-content-center">
-            <!-- Step 1 -->
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-icon">1️⃣</div>
-                    <h4 class="fw-semibold mt-3">Apply Online</h4>
-                    <p>Select your destination and complete the application securely.</p>
-                </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-icon">2️⃣</div>
-                    <h4 class="fw-semibold mt-3">Submit Documents</h4>
-                    <p>We review and process your application with accuracy.</p>
-                </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-icon">3️⃣</div>
-                    <h4 class="fw-semibold mt-3">Receive Your Visa</h4>
-                    <p>Get approval and travel with confidence.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Call to Action -->
-        <a href="#" class="btn btn-primary btn-lg mt-4 px-4">Start Your Application</a>
-    </div>
-</section>
-
-<section class="popularDestination container-fluid">
-    <h2>Popular destinations<span>Explore the Most Sought-After Visa Destinations</span></h2>
-    <div class="row">
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
+<main class="pt-20">
+    <section class="relative min-h-[600px] flex items-center bg-cover bg-center"
+        style="background-image: url('https://public.readdy.ai/ai/img_res/13478c863c920ba5b9efb04ca2ae165d.jpg')">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/90 to-white/30"></div>
+        <div class="container mx-auto px-4 relative">
+            <div class="max-w-2xl">
+                <h1 class="text-5xl font-bold text-gray-900 mb-6">
+                    Simple Visa Application Process
+                </h1>
+                <p class="text-xl text-gray-700 mb-8">
+                    Get your visa hassle-free with our streamlined online process.
+                    Expert support at every step.
+                </p>
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl">
+                    <div class="flex space-x-4 mb-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Country</label>
+                            <div class="relative">
+                                <select
+                                    class="selectJS selectDestination w-full border border-gray-300 rounded-button px-4 py-2.5 appearance-none bg-white pr-10">
+                                    <option value="#">Choose destination</option>
+                                    <option value="US" data-flag="https://flagcdn.com/w80/us.png">United States</option>
+                                    <option value="CA" data-flag="https://flagcdn.com/w80/ca.png">Canada</option>
+                                    <option value="GB" data-flag="https://flagcdn.com/w80/gb.png">United Kingdom
+                                    </option>
+                                    <option value="AU" data-flag="https://flagcdn.com/w80/au.png">Australia</option>
+                                    <option value="AE" data-flag="https://flagcdn.com/w80/ae.png">United Arab Emirates
+                                    </option>
+                                    <option value="DE" data-flag="https://flagcdn.com/w80/de.png">Germany</option>
+                                    <option value="NZ" data-flag="https://flagcdn.com/w80/nz.png">New Zealand</option>
+                                    <option value="SG" data-flag="https://flagcdn.com/w80/sg.png">Singapore</option>
+                                    <option value="SA" data-flag="https://flagcdn.com/w80/sa.png">Saudi Arabia</option>
+                                    <option value="QA" data-flag="https://flagcdn.com/w80/qa.png">Qatar</option>
+                                    <option value="MY" data-flag="https://flagcdn.com/w80/my.png">Malaysia</option>
+                                    <option value="TH" data-flag="https://flagcdn.com/w80/th.png">Thailand</option>
+                                    <option value="FR" data-flag="https://flagcdn.com/w80/fr.png">France</option>
+                                    <option value="IT" data-flag="https://flagcdn.com/w80/it.png">Italy</option>
+                                    <option value="NL" data-flag="https://flagcdn.com/w80/nl.png">Netherlands</option>
+                                    <option value="JP" data-flag="https://flagcdn.com/w80/jp.png">Japan</option>
+                                    <option value="KR" data-flag="https://flagcdn.com/w80/kr.png">South Korea</option>
+                                    <option value="PT" data-flag="https://flagcdn.com/w80/pt.png">Portugal</option>
+                                    <option value="ES" data-flag="https://flagcdn.com/w80/es.png">Spain</option>
+                                    <option value="ZA" data-flag="https://flagcdn.com/w80/za.png">South Africa</option>
+                                </select>
+                                <i
+                                    class="ri-arrow-down-s-line absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center"></i>
+                            </div>
+                        </div>
+                        <!-- <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Visa Type</label>
+                            <div class="relative">
+                                <select
+                                    class="w-full border border-gray-300 rounded-button px-4 py-2.5 appearance-none bg-white pr-10">
+                                    <option value="">Select type</option>
+                                    <option value="tourist">Tourist</option>
+                                    <option value="business">Business</option>
+                                    <option value="student">Student</option>
+                                </select>
+                                <i
+                                    class="ri-arrow-down-s-line absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center"></i>
+                            </div>
+                        </div> -->
                     </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Dubai</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="destinationWithPrice">
-                <a href="">
-                    <div class="bgImage">
-                        <img src="https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg" alt=""
-                            title="">
-                    </div>
-                    <div class="destinationText">
-                        <h3>Quick</h3>
-                        <p><strong>Get your VISA by:</strong> <?php echo date('d M Y', strtotime('+7 days')) ?></p>
-                    </div>
-                    <div class="destinationFlag">
-                        <img src="https://flagcdn.com/w80/ae.png" alt="" title="">
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="why-choose-us">
-    <div class="container">
-        <h2>Why Choose Us?<span>Your Trusted Partner for a Smooth Visa Experience</span></h2>
-        <div class="row">
-            <div class="col-3">
-                <div class="feature">
-                    <i class="fas fa-bolt"></i>
-                    <h3>Quick Processing</h3>
-                    <p>Get your visa approved quickly and easily.</p>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="feature">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Secure & Reliable</h3>
-                    <p>Your data and application are in safe hands.</p>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="feature">
-                    <i class="fas fa-user-tie"></i>
-                    <h3>Expert Consultation</h3>
-                    <p>Personalized assistance at every step.</p>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="feature">
-                    <i class="fas fa-tags"></i>
-                    <h3>Affordable Pricing</h3>
-                    <p>Transparent fees with no hidden charges.</p>
+                    <a href="#home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/01326cc7-a753-40bd-8a2c-197499e10c8c"
+                        data-readdy="true"
+                        class="w-full bg-primary text-white font-medium py-3 !rounded-button hover:bg-primary/90 cursor-pointer block text-center">
+                        Apply for Visa Now
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+            <div class="flex justify-between max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-earth-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="font-medium mb-2">Select Country</h3>
+                    <p class="text-sm text-gray-600">
+                        Choose your destination and visa type
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-file-list-3-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="font-medium mb-2">Fill Details</h3>
+                    <p class="text-sm text-gray-600">
+                        Complete your application form
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-upload-cloud-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="font-medium mb-2">Upload Documents</h3>
+                    <p class="text-sm text-gray-600">Submit required documents</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-radar-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="font-medium mb-2">Track Status</h3>
+                    <p class="text-sm text-gray-600">Monitor your application</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">
+                Popular Destinations
+            </h2>
+            <div class="grid grid-cols-4 gap-6">
+                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/2adbb78ae9b4adaf452e0e695697df0f.jpg" alt="USA"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">United States</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 5-7 days</span>
+                            <span>From $160</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/15e5b1cb313701eb6769351b7d409fd1.jpg" alt="UK"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">United Kingdom</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 3-5 weeks</span>
+                            <span>From $140</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/ea06b1fd81a39d7277c6e245ee760542.jpg" alt="Canada"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">Canada</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 4-6 weeks</span>
+                            <span>From $150</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/94b208d58fffd671872f71a9f6a3909a.jpg" alt="Australia"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">Australia</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 2-4 weeks</span>
+                            <span>From $170</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+            <div class="grid grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="ri-file-list-3-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="text-xl font-medium mb-4">Document Assistance</h3>
+                    <p class="text-gray-600 mb-6">
+                        Expert guidance on documentation requirements and verification
+                        services
+                    </p>
+                    <button class="text-primary hover:text-primary/80 font-medium cursor-pointer">
+                        Learn More
+                    </button>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="ri-timer-flash-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="text-xl font-medium mb-4">Fast Processing</h3>
+                    <p class="text-gray-600 mb-6">
+                        Quick turnaround times with priority processing options
+                        available
+                    </p>
+                    <button class="text-primary hover:text-primary/80 font-medium cursor-pointer">
+                        Learn More
+                    </button>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="ri-customer-service-2-line text-primary ri-2x"></i>
+                    </div>
+                    <h3 class="text-xl font-medium mb-4">Expert Support</h3>
+                    <p class="text-gray-600 mb-6">
+                        24/7 customer support and personalized assistance throughout the
+                        process
+                    </p>
+                    <button class="text-primary hover:text-primary/80 font-medium cursor-pointer">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Why Choose Us</h2>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-4xl font-bold text-primary mb-2">50K+</div>
+                            <div class="text-gray-600">Visas Processed</div>
+                        </div>
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-4xl font-bold text-primary mb-2">100+</div>
+                            <div class="text-gray-600">Countries Served</div>
+                        </div>
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-4xl font-bold text-primary mb-2">98%</div>
+                            <div class="text-gray-600">Success Rate</div>
+                        </div>
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-4xl font-bold text-primary mb-2">24/7</div>
+                            <div class="text-gray-600">Support</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6">What Our Customers Say</h3>
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-primary pl-4">
+                            <p class="text-gray-600 italic mb-2">
+                                "Excellent service! The process was smooth and the support
+                                team was very helpful throughout."
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Sarah Thompson</div>
+                                    <div class="text-sm text-gray-500">
+                                        United States Visa
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-l-4 border-primary pl-4">
+                            <p class="text-gray-600 italic mb-2">
+                                "Fast and reliable service. Got my visa approved without any
+                                hassle. Highly recommended!"
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Michael Chen</div>
+                                    <div class="text-sm text-gray-500">Australia Visa</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 
 <?php
 
