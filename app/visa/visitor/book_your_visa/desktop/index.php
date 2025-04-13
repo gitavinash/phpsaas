@@ -24,7 +24,6 @@
                             <div class="relative">
                                 <select
                                     class="selectJS selectDestination w-full border border-gray-300 rounded-button px-4 py-2.5 appearance-none bg-white pr-10">
-                                    <option value="#">Choose destination</option>
                                     <option value="US" data-flag="https://flagcdn.com/w80/us.png">United States</option>
                                     <option value="CA" data-flag="https://flagcdn.com/w80/ca.png">Canada</option>
                                     <option value="GB" data-flag="https://flagcdn.com/w80/gb.png">United Kingdom

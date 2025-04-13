@@ -6,11 +6,10 @@ $(document).ready(function (e) {
       }
       var flagUrl = $(country.element).data("flag");
       var $country = $(
-        '<span><img src="' +
-          flagUrl +
-          '" class="flag-img" style="width: 30px; height: 30px; margin-right: 10px; border-radius: 100%" />' +
-          country.text +
-          "</span>"
+        `<div style="display: flex; align-items: center; padding: 5px;">
+          <img src="${flagUrl}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+          <span>${country.text}</span>
+        </div>`
       );
       return $country;
     }

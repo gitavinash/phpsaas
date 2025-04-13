@@ -41,3 +41,29 @@ body {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+/* Select JS */
+
+.select2-container .select2-selection--single {
+  height: auto !important;
+  padding: 2px 0px;
+}
+
+.select2-selection__arrow {
+  display: none;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  border-color: #d5d5d5 !important;
+  border-radius: 5px !important;
+}
+
+.select2-container--default
+  .select2-search--dropdown
+  .select2-search__field:focus-visible {
+  outline: none;
+}
+
+.select2-search--dropdown .select2-search__field {
+  padding: 7px !important;
+}
