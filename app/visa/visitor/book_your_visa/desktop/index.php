@@ -119,44 +119,8 @@
             <h2 class="text-3xl font-bold text-center mb-12">
                 Popular Destinations
             </h2>
-            <div class="grid grid-cols-4 gap-6">
-                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
-                    <img src="https://public.readdy.ai/ai/img_res/2adbb78ae9b4adaf452e0e695697df0f.jpg" alt="USA"
-                        class="w-full h-48 object-cover" />
-                    <div class="p-4">
-                        <div class="flex items-center mb-3">
-                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                            <h3 class="font-medium">United States</h3>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-600 mb-4">
-                            <span>Processing: 5-7 days</span>
-                            <span>From $160</span>
-                        </div>
-                        <button
-                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
-                            Apply Now
-                        </button>
-                    </div>
-                </div>
-                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
-                    <img src="https://public.readdy.ai/ai/img_res/15e5b1cb313701eb6769351b7d409fd1.jpg" alt="UK"
-                        class="w-full h-48 object-cover" />
-                    <div class="p-4">
-                        <div class="flex items-center mb-3">
-                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                            <h3 class="font-medium">United Kingdom</h3>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-600 mb-4">
-                            <span>Processing: 3-5 weeks</span>
-                            <span>From $140</span>
-                        </div>
-                        <button
-                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
-                            Apply Now
-                        </button>
-                    </div>
-                </div>
-                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
+            <div class="grid leftToRightSlider countrySlider">
+                <div class="country-card relative slides bg-white rounded-lg shadow-lg overflow-hidden group">
                     <img src="https://public.readdy.ai/ai/img_res/ea06b1fd81a39d7277c6e245ee760542.jpg" alt="Canada"
                         class="w-full h-48 object-cover" />
                     <div class="p-4">
@@ -174,7 +138,79 @@
                         </button>
                     </div>
                 </div>
-                <div class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group">
+                <div class="country-card relative slides bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/94b208d58fffd671872f71a9f6a3909a.jpg" alt="Australia"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">Australia</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 2-4 weeks</span>
+                            <span>From $170</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative slides bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/2adbb78ae9b4adaf452e0e695697df0f.jpg" alt="USA"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">United States</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 5-7 days</span>
+                            <span>From $160</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative slides bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/15e5b1cb313701eb6769351b7d409fd1.jpg" alt="UK"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">United Kingdom</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 3-5 weeks</span>
+                            <span>From $140</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative slides bg-white rounded-lg shadow-lg overflow-hidden group">
+                    <img src="https://public.readdy.ai/ai/img_res/ea06b1fd81a39d7277c6e245ee760542.jpg" alt="Canada"
+                        class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
+                            <h3 class="font-medium">Canada</h3>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span>Processing: 4-6 weeks</span>
+                            <span>From $150</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+                <div class="country-card relative slides bg-white rounded-lg shadow-lg overflow-hidden group">
                     <img src="https://public.readdy.ai/ai/img_res/94b208d58fffd671872f71a9f6a3909a.jpg" alt="Australia"
                         class="w-full h-48 object-cover" />
                     <div class="p-4">

@@ -67,3 +67,12 @@ body {
 .select2-search--dropdown .select2-search__field {
   padding: 7px !important;
 }
+
+/* Slick slider */
+
+.leftToRightSlider .slick-slide {
+  margin: 0 10px;
+}
+.slick-arrow {
+  display: none !important;
+}
