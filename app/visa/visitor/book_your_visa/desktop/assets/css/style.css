@@ -3,9 +3,19 @@ body {
   padding: 0;
   float: none !important;
   background: #fefefe;
-  font-family: "Sarabun", sans-serif;
   font-weight: 400;
   color: #212529;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-family: "Krona One", sans-serif !important;
 }
 
 .margin-bottom-50 {
@@ -50,7 +60,7 @@ body {
 
 .select2-container .select2-selection--single {
   height: auto !important;
-  padding: 2px 0px;
+  padding: 5px 0px;
 }
 
 .select2-selection__arrow {
@@ -80,4 +90,54 @@ body {
 }
 .slick-arrow {
   display: none !important;
+}
+
+/* Start application */
+
+.country-card {
+  cursor: pointer;
+  position: relative;
+  background: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.country-card:hover {
+  transform: translateY(-5px); /* Change to -15px if needed */
+}
+
+.country-card.selected {
+  border-color: #37b5b4;
+  box-shadow: 0 0 0 2px #37b5b4;
+}
+
+.purpose-card {
+  cursor: pointer;
+  position: relative;
+  background: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.purpose-card:hover {
+  transform: translateY(-5px); /* Change to -15px if needed */
+}
+
+.purpose-card.selected {
+  border-color: #37b5b4;
+  box-shadow: 0 0 0 2px #37b5b4;
+}
+
+.applicationBox {
+  background: #e7f0fb;
+  padding: 5em 5em;
+  border-radius: 10px;
+}
+
+.visa-card img {
+  border: 1px solid #d5d5d5;
+}
+
+@media screen and (max-width: 768px) {
+  .applicationBox {
+    padding: 2em 2em;
+  }
 }

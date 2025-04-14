@@ -23,26 +23,30 @@
             <div>
                 <h4 class="text-lg font-medium mb-4">Quick Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/9f34c980-a94a-40ad-a75a-26c425acdbd2"
-                            data-readdy="true" class="text-gray-400 hover:text-white">About Us</a></li>
-                    <li><a href="home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/f7575e7a-911b-496a-97e0-242730868177"
-                            data-readdy="true" class="text-gray-400 hover:text-white">Visa Services</a></li>
-                    <li><a href="home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/bfd35c08-38de-47ad-9329-be4e37217bf2"
-                            data-readdy="true" class="text-gray-400 hover:text-white">Track Application</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">Support Center</a></li>
-                    <li><a href="home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/37b27c16-d208-45b7-a13e-383d04546c3e"
-                            data-readdy="true" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                    <li><a href="/about-us/" data-readdy="true" class="text-gray-400 hover:text-white">About Us</a></li>
+                    <li><a href="/services/" data-readdy="true" class="text-gray-400 hover:text-white">Visa Services</a>
+                    </li>
+                    <li><a href="/track-application/" data-readdy="true" class="text-gray-400 hover:text-white">Track
+                            Application</a></li>
+                    <li><a href="/travel-agent-registration/" data-readdy="true"
+                            class="text-gray-400 hover:text-white">Travel Agent Registration</a></li>
+                    <li><a href="/contact-us/" data-readdy="true" class="text-gray-400 hover:text-white">Contact Us</a>
+                    </li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-lg font-medium mb-4">Popular Visas</h4>
                 <ul class="space-y-2">
-                    <li><a href="home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/3a77d40d-1923-4361-93c9-19f15cc5d3d9"
-                            data-readdy="true" class="text-gray-400 hover:text-white">USA Visa</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">UK Visa</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">Canada Visa</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">Australia Visa</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">Schengen Visa</a></li>
+                    <li><a href="/start-application/?country=united%20states" data-readdy="true" data-readdy="true"
+                            class="text-gray-400 hover:text-white">USA Visa</a></li>
+                    <li><a href="/start-application/?country=united%20ingdom" class="text-gray-400 hover:text-white">UK
+                            Visa</a></li>
+                    <li><a href="/start-application/?country=canada" class="text-gray-400 hover:text-white">Canada
+                            Visa</a></li>
+                    <li><a href="/start-application/?country=australia" class="text-gray-400 hover:text-white">Australia
+                            Visa</a></li>
+                    <li><a href="/start-application/?country=cchengen" class="text-gray-400 hover:text-white">Schengen
+                            Visa</a></li>
                 </ul>
             </div>
             <div>
@@ -58,13 +62,14 @@
         </div>
         <div class="border-t border-gray-800 pt-8">
             <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                <div class="text-gray-400 text-center md:text-left">© 2025 <?php echo SITE_NAME ?>. All rights
-                    reserved.</div>
+                <div class="text-gray-400 text-center md:text-left">© <?php echo date('Y ').SITE_NAME ?>. All rights
+                    reserved. | Design and Developed by <a href="https://blumox.com" target="_blank">Blumox
+                        Technologies</a></div>
                 <div class="flex flex-wrap justify-center md:justify-end gap-4 md:space-x-6">
-                    <a href="home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/f4f81475-b150-4e5b-b0f0-c3587c6cacd5"
-                        data-readdy="true" class="text-gray-400 hover:text-white">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
-                    <a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a>
+                    <a href="/privacy-policy/" data-readdy="true" class="text-gray-400 hover:text-white">Privacy
+                        Policy</a>
+                    <a href="/terms-of-services/" class="text-gray-400 hover:text-white">Terms of Service</a>
+                    <a href="/refund-policy/" class="text-gray-400 hover:text-white">Refund Policy</a>
                 </div>
             </div>
         </div>

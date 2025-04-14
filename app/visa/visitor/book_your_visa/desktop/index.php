@@ -5,7 +5,7 @@
 ?>
 <main class="pt-20">
     <section class="relative min-h-[600px] flex items-center bg-cover bg-center"
-        style="background-image: url('https://public.readdy.ai/ai/img_res/13478c863c920ba5b9efb04ca2ae165d.jpg')">
+        style="background-image: url('<?php echo USER_IMAGES ?>background.jpg')">
         <div class="absolute inset-0 bg-gradient-to-r from-white/90 to-white/30"></div>
         <div class="container mx-auto px-4 relative">
             <div class="max-w-2xl">
@@ -20,6 +20,7 @@
                             <div class="relative">
                                 <select
                                     class="selectJS selectDestination w-full border border-gray-300 rounded-button px-4 py-2.5 appearance-none bg-white pr-10">
+                                    <option></option>
                                     <option value="US" data-flag="https://flagcdn.com/w80/us.png">United States
                                     </option>
                                     <option value="CA" data-flag="https://flagcdn.com/w80/ca.png">Canada</option>
@@ -69,8 +70,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <a href="#home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/01326cc7-a753-40bd-8a2c-197499e10c8c"
-                        data-readdy="true"
+                    <a href="/start-application/" data-readdy="true"
                         class="w-full bg-primary text-white font-medium py-3 !rounded-button hover:bg-primary/90 cursor-pointer block text-center">
                         Apply for Visa Now
                     </a>
@@ -135,9 +135,9 @@
                                     <span>Processing: 5-7 days</span>
                                     <span>From $160</span>
                                 </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
+                                <a href="/start-application/"
+                                    class="w-full float-left text-center bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
+                                    Now</a>
                             </div>
                         </div>
                         <div

@@ -30,41 +30,6 @@ $(document).ready(function (e) {
     $("html, body").animate({ scrollTop: 0 }, "smooth");
   });
 
-  const $chatButton = $("#chatButton");
-  let $chatWindow = null;
-
-  $chatButton.on("click", function () {
-    if (!$chatWindow) {
-      $chatWindow = $(`
-                <div class="fixed bottom-24 right-6 w-80 bg-white rounded-lg shadow-xl z-50">
-                    <div class="p-4 bg-primary rounded-t-lg flex justify-between items-center">
-                        <h3 class="text-white font-medium">Chat Support</h3>
-                        <button class="text-white hover:text-gray-200" id="closeChat">
-                            <i class="ri-close-line"></i>
-                        </button>
-                    </div>
-                    <div class="h-96 p-4 overflow-y-auto">
-                        <div class="text-center text-gray-500 text-sm mb-4">How can we help you today?</div>
-                    </div>
-                    <div class="p-4 border-t">
-                        <div class="flex space-x-2">
-                            <input type="text" placeholder="Type your message..." class="flex-1 px-3 py-2 border rounded-button text-sm">
-                            <button class="bg-primary text-white px-4 !rounded-button hover:bg-primary/90">
-                                <i class="ri-send-plane-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `);
-      $("body").append($chatWindow);
-
-      $("#closeChat").on("click", function () {
-        $chatWindow.remove();
-        $chatWindow = null;
-      });
-    }
-  });
-
   // Select JS
 
   if ($(".selectJS").length) {
@@ -90,5 +55,102 @@ $(document).ready(function (e) {
       templateSelection: formatCountry,
       width: "100%", // Optional: Adjust width
     });
+  }
+
+  // Visa service page
+
+  if ($("#countryScroll").length) {
+    const $scrollContainer = $("#countryScroll");
+    $("#scroll-left").on("click", function () {
+      $scrollContainer.animate({ scrollLeft: "-=300" }, 400);
+    });
+    $("#scroll-right").on("click", function () {
+      $scrollContainer.animate({ scrollLeft: "+=300" }, 400);
+    });
+  }
+
+  // Visa details page
+
+  if ($("#visaMainContent")) {
+    // Toggle between Business and Standard buttons
+    const $buttons = $("button");
+    const $businessBtn = $buttons.eq(2);
+    const $standardBtn = $buttons.eq(3);
+
+    $businessBtn.on("click", function () {
+      $businessBtn
+        .removeClass("bg-gray-100 text-gray-500")
+        .addClass("bg-white text-gray-800 shadow-sm");
+      $standardBtn
+        .removeClass("bg-white text-gray-800 shadow-sm")
+        .addClass("bg-gray-100 text-gray-500");
+    });
+
+    $standardBtn.on("click", function () {
+      $standardBtn
+        .removeClass("bg-gray-100 text-gray-500")
+        .addClass("bg-white text-gray-800 shadow-sm");
+      $businessBtn
+        .removeClass("bg-white text-gray-800 shadow-sm")
+        .addClass("bg-gray-100 text-gray-500");
+    });
+
+    // Quick menu navigation
+    const $menuItems = $("nav div");
+    const $mainContent = $("#visaMainContent");
+
+    $menuItems.on("click", function () {
+      // Remove active class from all menu items
+      $menuItems
+        .removeClass("text-primary border-l-4 border-primary")
+        .addClass("text-gray-700 hover:text-primary");
+
+      // Add active class to clicked item
+      $(this)
+        .removeClass("text-gray-700 hover:text-primary")
+        .addClass("text-primary border-l-4 border-primary");
+
+      // Get target section text
+      const targetSection = $(this).find("span").text();
+
+      // Scroll to corresponding section
+      $mainContent.children().each(function () {
+        if ($(this).text().includes(targetSection)) {
+          $(this)[0].scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+          $(this).addClass("bg-blue-50");
+          setTimeout(() => {
+            $(this).removeClass("bg-blue-50");
+          }, 1000);
+          return false; // break loop
+        }
+      });
+    });
+
+    // Bottom sticky bar
+
+    // const $bottomBar = $("#bottomBar");
+    // const $content = $("#visaMainContent");
+
+    // $(window).on("scroll", function () {
+    //   const contentBottom = $content.offset().top + $content.outerHeight();
+    //   const scrollBottom = $(window).scrollTop() + $(window).height();
+
+    //   if (scrollBottom >= contentBottom) {
+    //     // Switch to absolute to stay within content
+    //     $bottomBar
+    //       .removeClass("fixed bottom-0")
+    //       .addClass("absolute")
+    //       .css({ bottom: "0" });
+    //   } else {
+    //     // Keep it fixed at bottom of screen
+    //     $bottomBar
+    //       .removeClass("absolute")
+    //       .addClass("fixed bottom-0")
+    //       .css({ bottom: "" }); // reset inline style
+    //   }
+    // });
   }
 });
