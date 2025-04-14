@@ -8,6 +8,10 @@ body {
   color: #212529;
 }
 
+.margin-bottom-50 {
+  margin-bottom: 50px !important;
+}
+
 /* Homepage CSS */
 
 :where([class^="ri-"])::before {
@@ -71,7 +75,8 @@ body {
 /* Slick slider */
 
 .leftToRightSlider .slick-slide {
-  margin: 0 10px;
+  margin: 10px 10px;
+  margin-bottom: 50px;
 }
 .slick-arrow {
   display: none !important;
