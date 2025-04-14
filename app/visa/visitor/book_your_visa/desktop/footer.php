@@ -83,7 +83,7 @@
 <?php require_once NOTIFICATION.'index.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-<script src="<?php echo USER_JS ?>talwind.config.js"></script>
+<script src="<?php echo USER_JS ?>tailwind.config.js"></script>
 <script src="<?php echo USER_JS ?>app.min.js"></script>
 </body>
 
