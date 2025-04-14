@@ -75,7 +75,7 @@ $(document).ready(function (e) {
       var flagUrl = $(country.element).data("flag");
       var $country = $(
         `<div style="display: flex; align-items: center; padding: 5px;">
-          <img src="${flagUrl}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+          <img src="${flagUrl}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; border: 1px solid #bcbcbc;" />
           <span>${country.text}</span>
         </div>`
       );
