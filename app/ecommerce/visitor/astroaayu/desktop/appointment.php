@@ -233,10 +233,11 @@
                     <input type="hidden" name="action" value="new">
                     <input type="hidden" name="subject" value="Appointment Form">
                     <input type="hidden" name="sender" value="bW9oaXRhZ2dhcndhbDExMTk0QGdtYWlsLmNvbQ==">
+                    <input type="hidden" name="recaptcha_token" id="recaptcha_token">
                     <input type="hidden" name="redirect_url"
                         value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                     <div class="col-12 mt-3">
-                        <input type="submit" value="Make An Appointment" class="submit submit_btn">
+                        <input type="submit" value="Make An Appointment" class="submit verifyRecaptcha submit_btn">
                     </div>
                     <p>
                         <br /><strong>Note: </strong>For booking your appointment you can call on: +91 8505850919.

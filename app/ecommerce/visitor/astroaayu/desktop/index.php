@@ -276,16 +276,18 @@ require_once 'header.php';
                 </div>
                 <div class="col-12 mb-3">
                     <label for="Place" class="form-label form_label2">Share your problems</label>
-                    <textarea name="problem" class="form-control form_control2" placeholder="Share your problems" required></textarea>
+                    <textarea name="problem" class="form-control form_control2" placeholder="Share your problems"
+                        required></textarea>
                 </div>
                 <input type="hidden" name="type" value="enquiry">
                 <input type="hidden" name="action" value="new">
                 <input type="hidden" name="subject" value="Homepage Free-Prediction Form">
                 <input type="hidden" name="sender" value="bW9oaXRhZ2dhcndhbDExMTk0QGdtYWlsLmNvbQ==">
+                <input type="hidden" name="recaptcha_token" id="recaptcha_token">
                 <input type="hidden" name="redirect_url"
                     value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                 <div class="col-12 text-center">
-                    <button type="submit" class="send_msg">Submit</button>
+                    <button type="submit" class="send_msg verifyRecaptcha">Submit</button>
                 </div>
                 <p class="mt-3 text-center color_red">Our Acharya Will Call You </p>
             </form>

@@ -38,9 +38,10 @@
                         <input type="hidden" name="action" value="new">
                         <input type="hidden" name="subject" value="Contact Us">
                         <input type="hidden" name="sender" value="bW9oaXRhZ2dhcndhbDExMTk0QGdtYWlsLmNvbQ==">
+                        <input type="hidden" name="recaptcha_token" id="recaptcha_token">
                         <input type="hidden" name="redirect_url"
                             value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
-                        <input type="submit" class="submit_btn_contact" value="Submit">
+                        <input type="submit" class="submit_btn_contact verifyRecaptcha" value="Submit">
                     </form>
                 </div>
             </div>

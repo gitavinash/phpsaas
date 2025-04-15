@@ -72,7 +72,7 @@
 
 <!--Jquery Cdn-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="<?php echo USER_JS ?>app.js"></script>
+<script src="<?php echo USER_JS ?>app.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
 </script>
@@ -90,76 +90,77 @@
 <!-- jquery -->
 <!-- slider main -->
 <script>
-    $(".testimonial_slider").slick({
-        dots: false,
-        infinite: false,
-        speed: 300,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autoplay: false,
-        autoplaySpeed: 3000,
-        arrows: true,
-        prevArrow: '<span class="prev_arrow"><i class="fas fa-arrow-left"></i></span>',
-        nextArrow: '<span class="next-arrow"><i class="fas fa-arrow-right"></i></span>',
-        responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    infinite: true,
-                },
+var recaptchaSiteKey = "<?php echo GOOGLE_RECAPTCHA_SITE_KEY ?>";
+$(".testimonial_slider").slick({
+    dots: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    autoplay: false,
+    autoplaySpeed: 3000,
+    arrows: true,
+    prevArrow: '<span class="prev_arrow"><i class="fas fa-arrow-left"></i></span>',
+    nextArrow: '<span class="next-arrow"><i class="fas fa-arrow-right"></i></span>',
+    responsive: [{
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                infinite: true,
             },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                },
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
             },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                },
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
             },
-        ],
-    });
+        },
+    ],
+});
 </script>
 <script>
-    $(".testi_slider").slick({
-        dots: true,
-        arrows: true,
-        infinite: true,
-        speed: 300,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autplay: true,
-        autplaySpeed: 1500,
-        responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true,
-                },
+$(".testi_slider").slick({
+    dots: true,
+    arrows: true,
+    infinite: true,
+    speed: 300,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    autplay: true,
+    autplaySpeed: 1500,
+    responsive: [{
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: true,
             },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 1,
-                },
+        },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 1,
             },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                },
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
             },
-        ],
-    });
+        },
+    ],
+});
 </script>
 </body>
 

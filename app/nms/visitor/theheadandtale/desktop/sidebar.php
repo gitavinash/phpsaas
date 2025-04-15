@@ -25,6 +25,8 @@
                 echo "<li><a title=''>No article found</a></li>";
             }
             echo "</ol>";
+        } else {
+            echo ((DEVELOPMENT_MODE==true) ? mysqli_error($connection) :  "");
         }
         ?>
     </div>
