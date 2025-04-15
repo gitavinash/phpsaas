@@ -5,7 +5,7 @@
 ?>
 <main>
     <div class="min-h-screen flex flex-col justify-between">
-        <div class="flex flex-col lg:flex-row">
+        <div class="flex flex-col lg:flex-row pt-20">
             <!-- Sidebar Navigation -->
             <div class="hidden lg:block w-full lg:w-72 border-b lg:border-b-0 lg:border-r border-gray-100 bg-white p-6">
                 <h1 class="text-2xl font-bold mb-1">Switzerland Visa Application</h1>
