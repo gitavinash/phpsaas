@@ -211,26 +211,41 @@ $("#continueToPayment").click(function (e) {
       $("#continueToPayment").show();
     },
   });
-
-  function getRecaptchaToken() {
-    return new Promise(function (resolve, reject) {
-      grecaptcha.ready(function () {
-        grecaptcha
-          .execute("site_key", { action: "subscribe_newsletter" })
-          .then(function (token) {
-            resolve(token); // <--- this sends token to the .then() below
-          })
-          .catch(function (error) {
-            reject(error); // handles errors if grecaptcha fails
-          });
-      });
-    });
-  }
-
-  console.log(`tets recaptcha`);
-
-  if ($(".verifyRecaptcha").lenght) {
-    console.log(`Get captcha`);
-    getRecaptchaToken(recaptchaSiteKey);
-  }
 });
+
+function getRecaptchaToken() {
+  return new Promise(function (resolve, reject) {
+    grecaptcha.ready(function () {
+      grecaptcha
+        .execute("site_key", { action: "subscribe_newsletter" })
+        .then(function (token) {
+          resolve(token); // <--- this sends token to the .then() below
+        })
+        .catch(function (error) {
+          reject(error); // handles errors if grecaptcha fails
+        });
+    });
+  });
+}
+
+console.log(`tets recaptcha`);
+
+// Check if a form exists
+if ($("form").length > 0) {
+  $("form").on("submit", function (e) {
+    console.log(`recaptchaSiteKey`, recaptchaSiteKey);
+
+    e.preventDefault(); // Prevent the default form submission
+
+    getRecaptchaToken()
+      .then(function (recaptchaSiteKey) {
+        // Do something with the token, like sending it to your server
+        console.log(`recaptchaSiteKey: `, recaptchaSiteKey);
+      })
+      .catch(function (error) {
+        console.error("Recaptcha error:", error);
+      });
+  });
+} else {
+  console.log("Form not found");
+}

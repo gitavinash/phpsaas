@@ -7,70 +7,59 @@ require 'Exception.php';
 require 'PHPMailer.php';
 require 'SMTP.php';
 
-// Define EMAIL_ENABLE constant if not already defined
 if (!defined('EMAIL_ENABLE')) {
-    define('EMAIL_ENABLE', 1); // Set to 1 to enable email functionality
+    define('EMAIL_ENABLE', 1);
 }
 
 if (EMAIL_ENABLE == 1) {
 
-    /** Include email configuration file */
-
     require_once 'smtp-configuration.php';
-
-    /** PHP SMTP Email Code */
 
     $mail = new PHPMailer(true);
 
     try {
+		$mail->SMTPDebug = 2; // or use 3 for even more verbose output
+		$mail->Debugoutput = 'html';
         $mail->isSMTP();
-        $mail->Host = SMTP_HOST;  /* SMTP server */
+        $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
-		$mail->SMTPSecure = 'tls';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-
         $mail->setFrom(SMTP_EMAIL, SMTP_NAME);
-        $mail->isHTML(true);
         $mail->addReplyTo(REPLY_EMAIL);
 
+        if (empty($toAddress)) {
+            throw new Exception('Recipient email address is missing.');
+        }
         $mail->addAddress($toAddress);
 
         if (isset($ccAddress)) {
-            if (!is_array($ccAddress)) {
-                $ccAddresses = explode(',', $ccAddress);
-            } else {
-                $ccAddresses = $ccAddress;
-            }
+            $ccAddresses = is_array($ccAddress) ? $ccAddress : explode(',', $ccAddress);
             foreach ($ccAddresses as $cc) {
                 $mail->addCC(trim($cc));
             }
         }
+
         if (isset($bccAddress)) {
-            if (!is_array($bccAddress)) {
-                $bccAddresses = explode(',', $bccAddress);
-            } else {
-                $bccAddresses = $bccAddress;
-            }
+            $bccAddresses = is_array($bccAddress) ? $bccAddress : explode(',', $bccAddress);
             foreach ($bccAddresses as $bcc) {
                 $mail->addBCC(trim($bcc));
             }
         }
 
+        $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8';
         $mail->Subject = $subject;
-        $mail->Body = $email_body;
+        $mail->Body    = $email_body;
+        $mail->AltBody = strip_tags($email_body);
 
-        // if (DEVELOPMENT_MODE == true) {
-            if (!$mail->send()) {
-                $emailIsNotDelivered = $mail->ErrorInfo;
-                echo $emailIsNotDelivered;
-                exit();
-            }
-        // } else {
-        //     $mail->send();
-        // }
+        if (!$mail->send()) {
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit();
+        }
     } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        echo "Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}";
     }
 }
