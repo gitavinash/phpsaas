@@ -1,74 +1,75 @@
 <?php
 
-require_once 'PHPMailer.php';
-require_once 'SMTP.php';
-require_once 'Exception.php';
-require_once 'smtp-configuration.php'; // Include SMTP configuration file
-
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-if (!defined(EMAIL_ENABLE)) {
+require 'Exception.php';
+require 'PHPMailer.php';
+require 'SMTP.php';
 
-	if (EMAIL_ENABLE == 1) {
+if (EMAIL_ENABLE == 1) {
 
-		/** Include email sonfiguration file */
+    /** Include email configuration file */
 
-		$mail = new PHPMailer(true); // Enable exceptions
+    require_once 'smtp-configuration.php';
 
-		try {
-			$mail->isSMTP();
-			$mail->Host = SMTP_HOST;  /* SMTP server */
-			$mail->SMTPAuth = true;
+    /** PHP SMTP Email Code */
 
-			if (SMTP_SSL == 'true') {
-				$mail->SMTPSecure = ((SMTP_HOST == 'smtp.gmail.com') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS);
-			}
+    $mail = new PHPMailer(true);
 
-			$mail->Port = SMTP_PORT;
-			$mail->Username = SMTP_USERNAME;
-			$mail->Password = SMTP_PASSWORD;
+    try {
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;  /* SMTP server */
+        $mail->SMTPAuth = true;
 
-			$mail->setFrom(SMTP_EMAIL, SMTP_NAME);
+        if (SMTP_SSL == 'true') {
+            $mail->SMTPSecure = ((SMTP_HOST == 'smtp.gmail.com') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS);
+        }
 
-			if (!filter_var(REPLY_EMAIL, FILTER_VALIDATE_EMAIL)) {
-				throw new Exception("Invalid REPLY_EMAIL constant: " . REPLY_EMAIL);
-			}
-			$mail->addReplyTo(REPLY_EMAIL);
-			
-			$mail->isHTML(true);
+        $mail->Port = SMTP_PORT;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
 
-			$mail->addAddress($toAddress);
+        $mail->setFrom(SMTP_EMAIL, SMTP_NAME);
+        $mail->isHTML(true);
+        $mail->addReplyTo(REPLY_EMAIL);
 
-			if (isset($ccAddress)) {
-				$ccAddresses = is_array($ccAddress) ? $ccAddress : explode(',', $ccAddress);
-				foreach ($ccAddresses as $cc) {
-					$mail->addCC(trim($cc));
-				}
-			}
+        $mail->addAddress($toAddress);
 
-			if (isset($bccAddress)) {
-				$bccAddresses = is_array($bccAddress) ? $bccAddress : explode(',', $bccAddress);
-				foreach ($bccAddresses as $bcc) {
-					$mail->addBCC(trim($bcc));
-				}
-			}
+        if (isset($ccAddress)) {
+            if (!is_array($ccAddress)) {
+                $ccAddresses = explode(',', $ccAddress);
+            } else {
+                $ccAddresses = $ccAddress;
+            }
+            foreach ($ccAddresses as $cc) {
+                $mail->addCC(trim($cc));
+            }
+        }
+        if (isset($bccAddress)) {
+            if (!is_array($bccAddress)) {
+                $bccAddresses = explode(',', $bccAddress);
+            } else {
+                $bccAddresses = $bccAddress;
+            }
+            foreach ($bccAddresses as $bcc) {
+                $mail->addBCC(trim($bcc));
+            }
+        }
 
-			$mail->Subject = $subject;
-			$mail->Body = $email_body;
+        $mail->Subject = $subject;
+        $mail->Body = $email_body;
 
-			if (DEVELOPMENT_MODE) {
-				if (!$mail->send()) {
-					echo $mail->ErrorInfo;
-					exit();
-				}
-			} else {
-				$mail->send();
-			}
-		} catch (Exception $e) {
-			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-			exit();
-		}
-	}
+        if (DEVELOPMENT_MODE == true) {
+            if (!$mail->send()) {
+                $emailIsNotDelivered = $mail->ErrorInfo;
+                echo $emailIsNotDelivered;
+                exit();
+            }
+        } else {
+            $mail->send();
+        }
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
 }
