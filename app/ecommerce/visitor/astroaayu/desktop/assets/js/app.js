@@ -233,19 +233,20 @@ console.log(`tets recaptcha`);
 // Check if a form exists
 if ($("form").length > 0) {
   $("form").on("submit", function (e) {
-    console.log(`recaptchaSiteKey`, recaptchaSiteKey);
-
     e.preventDefault(); // Prevent the default form submission
-
-    getRecaptchaToken()
-      .then(function (recaptchaSiteKey) {
-        // Do something with the token, like sending it to your server
-        console.log(`recaptchaSiteKey: `, recaptchaSiteKey);
-      })
-      .catch(function (error) {
-        console.error("Recaptcha error:", error);
-      });
+    grecaptcha.ready(function () {
+      grecaptcha
+        .execute(recaptchaSiteKey, { action: "submit" })
+        .then(function (token) {
+          // Add the token to the form
+          $("#recaptcha_token").val(token);
+          // Submit the form
+          e.target.submit();
+        })
+        .catch(function (error) {
+          console.log("Recaptcha error: ", error);
+          alert("Recaptcha verification failed. Please try again.");
+        });
+    });
   });
-} else {
-  console.log("Form not found");
 }
