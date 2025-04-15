@@ -2,7 +2,7 @@
 <div class="common_banner">
     <h1 class="banner_title">About Us</h1>
 </div>
-<!-- This is astro consultant section -->
+
 <section class="astro_consultant padding-top padding-bottom">
     <div class="container">
         <div class="row">
