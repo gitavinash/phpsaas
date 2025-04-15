@@ -7,6 +7,11 @@ require 'Exception.php';
 require 'PHPMailer.php';
 require 'SMTP.php';
 
+// Define EMAIL_ENABLE constant if not already defined
+if (!defined('EMAIL_ENABLE')) {
+    define('EMAIL_ENABLE', 1); // Set to 1 to enable email functionality
+}
+
 if (EMAIL_ENABLE == 1) {
 
     /** Include email configuration file */
@@ -60,15 +65,15 @@ if (EMAIL_ENABLE == 1) {
         $mail->Subject = $subject;
         $mail->Body = $email_body;
 
-        if (DEVELOPMENT_MODE == true) {
+        // if (DEVELOPMENT_MODE == true) {
             if (!$mail->send()) {
                 $emailIsNotDelivered = $mail->ErrorInfo;
                 echo $emailIsNotDelivered;
                 exit();
             }
-        } else {
-            $mail->send();
-        }
+        // } else {
+        //     $mail->send();
+        // }
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
