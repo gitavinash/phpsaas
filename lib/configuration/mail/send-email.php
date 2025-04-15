@@ -26,11 +26,7 @@ if (EMAIL_ENABLE == 1) {
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;  /* SMTP server */
         $mail->SMTPAuth = true;
-
-        if (SMTP_SSL == 'true') {
-            $mail->SMTPSecure = ((SMTP_HOST == 'smtp.gmail.com') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS);
-        }
-
+		$mail->SMTPSecure = SMTP_SSL;
         $mail->Port = SMTP_PORT;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
