@@ -26,7 +26,7 @@ if (EMAIL_ENABLE == 1) {
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;  /* SMTP server */
         $mail->SMTPAuth = true;
-		$mail->SMTPSecure = SMTP_SSL;
+		$mail->SMTPSecure = 'tls';
         $mail->Port = SMTP_PORT;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
