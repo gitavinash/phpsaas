@@ -35,7 +35,7 @@ define('TABLE_PREFIX', 'isw_');
 
 /* dafault timezone is asia calcutta for indian user if you want to change timezone please read http://php.net/manual/en/timezones.php */
 
-$time_zone = 'Asia/Calcutta';
+$time_zone = 'Asia/Kolkata';
 $time_zone_value = '+5:30';
 
 /** User IP Address */
