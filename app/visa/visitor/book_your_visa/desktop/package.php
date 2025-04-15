@@ -4,10 +4,10 @@
 
 ?>
 <main>
-    <div class="min-h-screen flex flex-col">
-        <div class="flex flex-1">
+    <div class="min-h-screen flex flex-col justify-between">
+        <div class="flex flex-col lg:flex-row">
             <!-- Sidebar Navigation -->
-            <div class="w-72 border-r border-gray-100 bg-white p-6">
+            <div class="hidden lg:block w-full lg:w-72 border-b lg:border-b-0 lg:border-r border-gray-100 bg-white p-6">
                 <h1 class="text-2xl font-bold mb-1">Switzerland Visa Application</h1>
                 <p class="text-gray-500 mb-8">Your Plan Summary is Here</p>
                 <nav class="space-y-4">
@@ -35,11 +35,11 @@
                 </nav>
             </div>
             <!-- Main Content -->
-            <div class="flex-1 flex flex-col h-screen">
-                <div class="flex-1 p-6 overflow-y-auto" id="visaMainContent">
+            <div class="flex-1 flex flex-col h-full lg:h-screen">
+                <div class="flex-1 p-4 lg:p-6 overflow-y-auto" id="visaMainContent">
                     <!-- Banner Image -->
                     <div class="rounded-lg overflow-hidden mb-5">
-                        <img src="https://readdy.ai/api/search-image?query=Beautiful%20panoramic%20view%20of%20Swiss%20Alps%20mountains%20with%20green%20meadows%2C%20blue%20sky%20and%20white%20clouds.%20Majestic%20landscape%20of%20Switzerland%20countryside%20in%20summer.%20Scenic%20nature%20background%20with%20high%20peaks&width=1200&height=300&seq=123&orientation=landscape"
+                        <img src="https://readdy.ai/api/search-image?query=Beautiful%2520panoramic%2520view%2520of%2520Swiss%2520Alps%2520mountains%2520with%2520green%2520meadows%252C%2520blue%2520sky%2520and%2520white%2520clouds.%2520Majestic%2520landscape%2520of%2520Switzerland%2520countryside%2520in%2520summer.%2520Scenic%2520nature%2520background%2520with%2520high%2520peaks&width=1200&height=300&seq=123&orientation=landscape"
                             alt="Switzerland Mountains" class="w-full h-48 object-cover object-top">
                     </div>
                     <!-- Notification Banner -->
@@ -51,21 +51,23 @@
                             full refund.</p>
                     </div>
                     <!-- Appointment Options -->
-                    <div class="flex items-center justify-between mb-8">
-                        <div class="flex items-center space-x-4">
+                    <div
+                        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 space-y-4 sm:space-y-0">
+                        <div
+                            class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                             <button
-                                class="bg-blue-50 text-blue-700 px-6 py-3 rounded-lg flex items-center !rounded-button whitespace-nowrap">
+                                class="bg-blue-50 text-blue-700 px-6 py-3 rounded-lg flex items-center !rounded-button whitespace-nowrap w-full sm:w-auto justify-center">
                                 <span>Get your appointment in <strong>72 hours</strong></span>
                             </button>
-                            <div class="flex space-x-3">
+                            <div class="flex space-x-3 w-full sm:w-auto">
                                 <button
                                     class="bg-white border border-gray-200 px-5 py-2 rounded-lg font-medium text-gray-800 shadow-sm !rounded-button whitespace-nowrap">Business</button>
                                 <button
                                     class="bg-gray-100 border border-gray-200 px-5 py-2 rounded-lg font-medium text-gray-500 !rounded-button whitespace-nowrap">Standard</button>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-bold flex items-center">
+                        <div class="text-left sm:text-right w-full sm:w-auto mt-4 sm:mt-0">
+                            <div class="text-2xl font-bold flex items-center justify-start sm:justify-end">
                                 ₹ 5,350
                                 <div class="w-6 h-6 flex items-center justify-center ml-1">
                                     <i class="ri-arrow-down-s-line"></i>
@@ -75,7 +77,7 @@
                     </div>
                     <!-- Visa Details Grid -->
                     <div class="border border-gray-100 rounded-lg p-6 mb-8">
-                        <div class="grid grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
                                 <p class="text-gray-500 mb-1">Visa Type</p>
                                 <p class="font-semibold">Business</p>
@@ -140,7 +142,7 @@
                     <div class="mb-8">
                         <h2 class="text-xl font-semibold mb-4">Visa Schedule</h2>
                         <div class="bg-white border border-gray-100 rounded-lg p-6">
-                            <div class="grid grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <h3 class="font-medium mb-3">Processing Time</h3>
                                     <ul class="space-y-2 text-gray-700">
@@ -182,7 +184,7 @@
                     <div class="mb-8">
                         <h2 class="text-xl font-semibold mb-4">Timings & Holidays</h2>
                         <div class="bg-white border border-gray-100 rounded-lg p-6">
-                            <div class="grid grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <h3 class="font-medium mb-3">Working Hours</h3>
                                     <ul class="space-y-2 text-gray-700">
@@ -302,16 +304,19 @@
                         </div>
                     </div>
                     <!-- Action Buttons -->
-                    <div class="sticky bottom-0 bg-white border-t border-gray-100 p-6 mt-auto">
-                        <div class="flex justify-between max-w-full">
+                    <div id="actionButtons"
+                        class="fixed lg:sticky bottom-0 left-0 right-0 lg:left-auto lg:right-auto bg-white border-t border-gray-100 p-6 mt-auto z-50">
+                        <div class="flex flex-row justify-between max-w-full space-x-4">
                             <button
-                                class="border border-gray-300 text-gray-700 px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap">Back</button>
+                                class="border border-gray-300 text-gray-700 px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap flex-1 sm:flex-none">Back</button>
                             <button
-                                class="bg-primary text-white px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap">Continue</button>
+                                class="bg-primary text-white px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap flex-1 sm:flex-none">Continue</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </main>
 <?php
 

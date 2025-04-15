@@ -130,27 +130,5 @@ $(document).ready(function (e) {
     });
 
     // Bottom sticky bar
-
-    // const $bottomBar = $("#bottomBar");
-    // const $content = $("#visaMainContent");
-
-    // $(window).on("scroll", function () {
-    //   const contentBottom = $content.offset().top + $content.outerHeight();
-    //   const scrollBottom = $(window).scrollTop() + $(window).height();
-
-    //   if (scrollBottom >= contentBottom) {
-    //     // Switch to absolute to stay within content
-    //     $bottomBar
-    //       .removeClass("fixed bottom-0")
-    //       .addClass("absolute")
-    //       .css({ bottom: "0" });
-    //   } else {
-    //     // Keep it fixed at bottom of screen
-    //     $bottomBar
-    //       .removeClass("absolute")
-    //       .addClass("fixed bottom-0")
-    //       .css({ bottom: "" }); // reset inline style
-    //   }
-    // });
   }
 });
