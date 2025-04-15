@@ -31,7 +31,12 @@ if (!defined(EMAIL_ENABLE)) {
 			$mail->Password = SMTP_PASSWORD;
 
 			$mail->setFrom(SMTP_EMAIL, SMTP_NAME);
+
+			if (!filter_var(REPLY_EMAIL, FILTER_VALIDATE_EMAIL)) {
+				throw new Exception("Invalid REPLY_EMAIL constant: " . REPLY_EMAIL);
+			}
 			$mail->addReplyTo(REPLY_EMAIL);
+			
 			$mail->isHTML(true);
 
 			$mail->addAddress($toAddress);
