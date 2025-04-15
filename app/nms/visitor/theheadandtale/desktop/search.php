@@ -25,7 +25,7 @@ require_once 'header.php';
 
 						$resultTags = implode(' OR link_relation_id=', $tagId);
 
-						if ($queryResults = mysqli_query($connection, "SELECT link_url, news_title, news_image, news_paid, link_published, meta_title, meta_description, link_published as publishedTime FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status=200 AND  (link_relation_id={$resultTags}) ORDER BY link_id DESC LIMIT 0, 100")) {
+						if ($queryResults = mysqli_query($connection, "SELECT link_url, news_title, news_image, news_paid, link_published, meta_title, meta_description, link_published as publishedTime FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status=200 AND  (link_relation_id={$resultTags}) ORDER BY link_published DESC LIMIT 0, 100")) {
 
 							if (mysqli_num_rows($queryResults) != 0) {
 

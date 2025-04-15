@@ -1,71 +1,69 @@
 <?php
 
+require_once 'PHPMailer.php';
+require_once 'SMTP.php';
+require_once 'Exception.php';
+require_once 'smtp-configuration.php'; // Include SMTP configuration file
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 if (!defined(EMAIL_ENABLE)) {
 
 	if (EMAIL_ENABLE == 1) {
 
 		/** Include email sonfiguration file */
 
-		require_once 'smtp-configuration.php';
+		$mail = new PHPMailer(true); // Enable exceptions
 
-		/** PHP SMTP Email Code */
+		try {
+			$mail->isSMTP();
+			$mail->Host = SMTP_HOST;  /* SMTP server */
+			$mail->SMTPAuth = true;
 
-		require_once 'phpmailer.php';
+			if (SMTP_SSL == 'true') {
+				$mail->SMTPSecure = ((SMTP_HOST == 'smtp.gmail.com') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS);
+			}
 
-		$mail = new PHPMailer();
+			$mail->Port = SMTP_PORT;
+			$mail->Username = SMTP_USERNAME;
+			$mail->Password = SMTP_PASSWORD;
 
-		$mail->IsSMTP();
-		$mail->Host = SMTP_HOST;  /* SMTP server */
+			$mail->setFrom(SMTP_EMAIL, SMTP_NAME);
+			$mail->addReplyTo(REPLY_EMAIL);
+			$mail->isHTML(true);
 
-		$mail->SMTPAuth = true;
+			$mail->addAddress($toAddress);
 
-		if (SMTP_SSL == 'true') {
-			$mail->SMTPSecure = ((SMTP_HOST == 'smtp.gmail.com') ? 'ssl' : 'tls');
-		}
+			if (isset($ccAddress)) {
+				$ccAddresses = is_array($ccAddress) ? $ccAddress : explode(',', $ccAddress);
+				foreach ($ccAddresses as $cc) {
+					$mail->addCC(trim($cc));
+				}
+			}
 
-		$mail->Port = SMTP_PORT;
-		$mail->Username = SMTP_USERNAME;
-		$mail->Password = SMTP_PASSWORD;
+			if (isset($bccAddress)) {
+				$bccAddresses = is_array($bccAddress) ? $bccAddress : explode(',', $bccAddress);
+				foreach ($bccAddresses as $bcc) {
+					$mail->addBCC(trim($bcc));
+				}
+			}
 
-		$mail->From = SMTP_EMAIL;
-		$mail->FromName = SMTP_NAME;
-		$mail->IsHTML(true);
-		$mail->AddReplyTo(REPLY_EMAIL);
+			$mail->Subject = $subject;
+			$mail->Body = $email_body;
 
-		$mail->AddAddress($toAddress);
-
-		if (isset($ccAddress)) {
-			if (!is_array($ccAddress)) {
-				$ccAddresses = explode(',', $ccAddress);
+			if (DEVELOPMENT_MODE) {
+				if (!$mail->send()) {
+					echo $mail->ErrorInfo;
+					exit();
+				}
 			} else {
-				$ccAddresses = $ccAddress;
+				$mail->send();
 			}
-			foreach ($ccAddresses as $cc) {
-				$mail->AddCC(trim($cc));
-			}
-		}
-		if (isset($bccAddress)) {
-			if (!is_array($bccAddress)) {
-				$bccAddresses = explode(',', $bccAddress);
-			} else {
-				$bccAddresses = $bccAddress;
-			}
-			foreach ($bccAddresses as $cc) {
-				$mail->AddBCC(trim($cc));
-			}
-		}
-
-		$mail->Subject = $subject;
-		$mail->Body = $email_body;
-
-		if (DEVELOPMENT_MODE == true) {
-			if (!$mail->Send()) {
-				$emailIsNotDelivered = $mail->ErrorInfo;
-				echo $emailIsNotDelivered;
-				exit();
-			}
-		} else {
-			$mail->Send();
+		} catch (Exception $e) {
+			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+			exit();
 		}
 	}
 }
