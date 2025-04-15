@@ -1,6 +1,6 @@
 <?php
 
-    date_default_timezone_set('Asia/Kolkata');
+    date_default_timezone_set('Asia/Calcutta');
     $strCurDate = date('d-m-Y');
 
     if( isset($_SERVER['HTTPS'] ) ) {
