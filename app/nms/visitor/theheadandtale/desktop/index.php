@@ -21,6 +21,8 @@ LIMIT 0, 100")) {
 
                 if (mysqli_num_rows($newsArticles) != 0) {
                     $latestNewsData = [];
+                    define('TOTAL_PAGE', round(mysqli_num_rows($newsArticles) / PER_PAGE_LIMIT));
+                    define('TOTAL_RESULT', mysqli_num_rows($newsArticles));
                     while ($newsData = mysqli_fetch_assoc($newsArticles)) {
                         $latestNewsData[] = $newsData;
                     }
