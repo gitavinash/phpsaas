@@ -83,8 +83,8 @@ require_once 'header.php';
 
                         <div class="col-12">
                             <div class="my-3">
-                                <input type="number" onwheel="this.blur()" name="mobile" class="form-control" id="uploadMobile"
-                                    placeholder="Enter Phone Number" required>
+                                <input type="number" onwheel="this.blur()" name="mobile" class="form-control"
+                                    id="uploadMobile" placeholder="Enter Phone Number" required>
                             </div>
                         </div>
 
@@ -165,39 +165,39 @@ require_once 'header.php';
 
                         extract($packageListInfo); ?>
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
-                            <div class="card package-cards my-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
+                <div class="card package-cards my-3">
 
-                                <!-- Package card -->
-                                <div class="card-body">
-                                    <div class="row cardHeading">
-                                        <div class="col-5">
-                                            <div class="packageBrand">
-                                                <img src="<?php echo $productBrandLogo ?>" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-7">
-                                            <h5 class="card-title isfont-24 is-color-blue my-3 is-font600">
-                                                <?php echo ucwords($product_title) ?>
-                                            </h5>
-                                        </div>
+                    <!-- Package card -->
+                    <div class="card-body">
+                        <div class="row cardHeading">
+                            <div class="col-5">
+                                <div class="packageBrand">
+                                    <img src="<?php echo $productBrandLogo ?>" alt="">
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <h5 class="card-title isfont-24 is-color-blue my-3 is-font600">
+                                    <?php echo ucwords($product_title) ?>
+                                </h5>
+                            </div>
+                        </div>
+                        <h5 class="is-font600"><?php echo $product_highlight ?></h5>
+                        <div class="popup knowMore">know more
+                            <span class="popuptext"><?php echo $product_description ?></span>
+                        </div>
+                        <div class="card-bottom">
+                            <div class="my-4 d-flex align-items-center cardHeading justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="packge-price me-3">
+                                        <h4 class="isfont-16 is-font600 m-0">
+                                            <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
+                                        <strike
+                                            class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
                                     </div>
-                                    <h5 class="is-font600"><?php echo $product_highlight ?></h5>
-                                    <div class="popup knowMore">know more
-                                        <span class="popuptext"><?php echo $product_description ?></span>
-                                    </div>
-                                    <div class="card-bottom">
-                                        <div class="my-4 d-flex align-items-center cardHeading justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <div class="packge-price me-3">
-                                                    <h4 class="isfont-16 is-font600 m-0">
-                                                        <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
-                                                    <strike
-                                                        class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
-                                                </div>
-                                                <div class="packge-price ms-3">
+                                    <div class="packge-price ms-3">
 
-                                                    <?php
+                                        <?php
                                                     if ($inventory_mrp != 0) {
 
                                                         if ($inventory_mrp != $inventory_price) {
@@ -207,18 +207,18 @@ require_once 'header.php';
                                                     }
 
                                                     ?>
-                                                </div>
-                                            </div>
-
-                                            <div class="ms-3">
-                                                <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('package') ?>"
-                                                    class="btn1 package-btn">Book Now</a>
-                                            </div>
-                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="ms-3">
+                                    <a href="/checkout/?test_id=<?php echo base64_encode($product_id) . '&checkout_type=' . base64_encode('package') ?>"
+                                        class="btn1 package-btn">Book Now</a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
             <?php
                         $i++;
                     }
@@ -245,26 +245,26 @@ require_once 'header.php';
 
                         extract($packageListInfo); ?>
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
-                            <div class="card tests-cards my-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 ">
+                <div class="card tests-cards my-3">
 
-                                <!-- Package card -->
-                                <div class="card-body smallCard">
-                                    <h5 class="card-title isfont-28 cardHeading is-color-blue is-font600">
-                                        <?php echo ucwords($product_title) ?>
-                                    </h5>
-                                    <div class="card-bottom">
-                                        <div class="my-4 d-flex cardHeading align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <div class="packge-price me-3">
-                                                    <h4 class="isfont-16 is-font600 m-0">
-                                                        <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
-                                                    <strike
-                                                        class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
-                                                </div>
-                                                <div class="packge-price ms-3">
+                    <!-- Package card -->
+                    <div class="card-body smallCard">
+                        <h5 class="card-title isfont-28 cardHeading is-color-blue is-font600">
+                            <?php echo ucwords($product_title) ?>
+                        </h5>
+                        <div class="card-bottom">
+                            <div class="my-4 d-flex cardHeading align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="packge-price me-3">
+                                        <h4 class="isfont-16 is-font600 m-0">
+                                            <?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></h4>
+                                        <strike
+                                            class="isfont-12"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></strike>
+                                    </div>
+                                    <div class="packge-price ms-3">
 
-                                                    <?php
+                                        <?php
                                                     if ($inventory_mrp != 0) {
 
                                                         if ($inventory_mrp != $inventory_price) {
@@ -277,21 +277,23 @@ require_once 'header.php';
                                                     }
 
                                                     ?>
-                                                </div>
-                                            </div>
-
-                                            <div class="ms-3">
-                                                <a href="/book-now/?test=<?php echo strtolower(urlencode($product_title)) ?>"
-                                                    class="btn1 tests-btn">Book Now</a>
-                                            </div>
-                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="ms-3">
+                                    <a href="/book-now/?test=<?php echo strtolower(urlencode($product_title)) ?>"
+                                        class="btn1 tests-btn">Book Now</a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
             <?php
                     }
                 }
+            } else {
+                echo ((DEVELOPMENT_MODE==true) ? mysqli_error($connection) : "");
             }
 
             ?>
