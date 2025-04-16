@@ -31,7 +31,7 @@ if (EMAIL_ENABLE == 1) {
         if (filter_var(REPLY_EMAIL, FILTER_VALIDATE_EMAIL)) {
             $mail->addReplyTo(REPLY_EMAIL);
         } else {
-            echo "Invalid reply email address.";
+            echo "Invalid reply email address. '".REPLY_EMAIL."'";
             exit();
         }
         if (empty($toAddress)) {
