@@ -18,8 +18,8 @@ if (EMAIL_ENABLE == 1) {
     $mail = new PHPMailer(true);
 
     try {
-		$mail->SMTPDebug = 2; // or use 3 for even more verbose output
-		$mail->Debugoutput = 'html';
+		// $mail->SMTPDebug = 0; // or use 3 for even more verbose output
+		// $mail->Debugoutput = 'html';
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
