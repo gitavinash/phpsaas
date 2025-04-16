@@ -11,7 +11,7 @@ if (EMAIL_SMTP_DEFAULT == 0) {
     define('SMTP_PASSWORD', EMAIL_SMTP_PASSWORD); // password of the email
     define('SMTP_EMAIL', EMAIL_SMTP_EMAIL); // Which email is display to receiver end like :- donotreply@isw.one
     define('SMTP_NAME', EMAIL_SMTP_NAME); // Show Name on email :- Blumox Technologies, Avinash Kumar
-    define('REPLY_EMAIL', EMAIL_SMTP_REPLY_EMAIL); // Reply email where user can send a reply mail like :- contact@isw.one
+    define('REPLY_EMAIL', EMAIL_SMTP_EMAIL); // Reply email where user can send a reply mail like :- contact@isw.one
     define('REPLY_EMAIL_NAME', EMAIL_SMTP_REPLY_NAME); // Reply email where user can send a reply mail like :- contact@isw.one
 
 } else {
