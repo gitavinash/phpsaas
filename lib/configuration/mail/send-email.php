@@ -29,10 +29,9 @@ if (EMAIL_ENABLE == 1) {
         $mail->Password = SMTP_PASSWORD;
         $mail->setFrom(SMTP_EMAIL, SMTP_NAME);
         if (filter_var(REPLY_EMAIL, FILTER_VALIDATE_EMAIL)) {
-            $mail->addReplyTo(REPLY_EMAIL);
+            $mail->addReplyTo(REPLY_EMAIL, REPLY_EMAIL_NAME);
         } else {
             echo "Invalid reply email address. '".REPLY_EMAIL."'";
-            exit();
         }
         if (empty($toAddress)) {
             throw new Exception('Recipient email address is missing.');
