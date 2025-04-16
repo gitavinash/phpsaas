@@ -3,9 +3,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once 'Exception.php';
-require_once 'PHPMailer.php';
-require_once 'SMTP.php';
+require_once 'exception.php';
+require_once 'php_mailer.php';
+require_once 'smtp.php';
 
 if (!defined('EMAIL_ENABLE')) {
     define('EMAIL_ENABLE', 1);
