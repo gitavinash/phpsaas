@@ -3,9 +3,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once '/var/www/isw-app/lib/configuration/mail/Exception.php';
-require_once '/var/www/isw-app/lib/configuration/mailPHPMailer.php';
-require_once '/var/www/isw-app/lib/configuration/mailSMTP.php';
+require_once 'Exception.php';
+require_once 'PHPMailer.php';
+require_once 'SMTP.php';
 
 if (!defined('EMAIL_ENABLE')) {
     define('EMAIL_ENABLE', 1);

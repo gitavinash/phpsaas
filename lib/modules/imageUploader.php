@@ -181,7 +181,7 @@
 	
 							imagedestroy($imageSize);
 	
-							if(move_uploaded_file($imageValue['tmp_name'], $originalUploadFile)) {
+							if(copy($imageValue['tmp_name'], $originalUploadFile)) {
 	
 								mysqli_query($connection, 'START TRANSACTION');
 	
