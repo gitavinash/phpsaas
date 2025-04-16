@@ -181,7 +181,7 @@
 	
 							imagedestroy($imageSize);
 	
-							if(copy($imageValue['tmp_name'], $originalUploadFile)) {
+							if(move_uploaded_file($imageValue['tmp_name'], $originalUploadFile)) {
 	
 								mysqli_query($connection, 'START TRANSACTION');
 	
@@ -203,7 +203,7 @@
 	
 							} else {
 	
-								echo 'Unable to move file';
+								$msg= 'Unable to move file';
 	
 							}
 	
