@@ -47,12 +47,12 @@ $visaPackagesStatus = (($visaPackagesStatus == 'all') ? '' : "AND product_status
         <tr style="height: 80px">
             <td>
                 <p><a
-                        href="product/?type=edit&editor=true&id=<?php echo base64_encode($visaPackages_id); ?>"><?php echo $visaPackages_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                        href="product/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><?php echo $product_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
                 </p>
                 <div class="hover">
-                    <a href="product/?type=edit&editor=true&id=<?php echo base64_encode($visaPackages_id); ?>"><i
+                    <a href="product/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><i
                             class="fas fa-pencil-alt"></i> Edit</a>
-                    <a href="#" id="<?php echo base64_encode($visaPackages_id) ?>_product" class="deleteBtn"><i
+                    <a href="#" id="<?php echo base64_encode($product_id) ?>_product" class="deleteBtn"><i
                             class="fas fa-trash"></i> Delete</a>
                     <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
                 </div>
