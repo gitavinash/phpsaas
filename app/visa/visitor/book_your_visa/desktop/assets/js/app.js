@@ -131,4 +131,15 @@ $(document).ready(function (e) {
 
     // Bottom sticky bar
   }
+
+  // Homepage from for start application
+
+  if ($("#startApplication").length) {
+    $("#startApplication").click(function (e) {
+      console.log(`startApplication is clicked`);
+      e.preventDefault();
+      const selectedCountry = $("#selectedCountry").val();
+      console.log(`selectedCountry`, selectedCountry);
+    });
+  }
 });

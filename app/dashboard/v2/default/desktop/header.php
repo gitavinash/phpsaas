@@ -53,6 +53,7 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>drag_and_drop/drag_and_drop.min.css">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
     <?php
     if (SITE_VERSION == 'mobile') {

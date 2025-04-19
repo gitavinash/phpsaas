@@ -113,7 +113,7 @@
             if(in_array($fileExtension, $validFileExtension)) {
                 if(in_array($filetype, $validFileType)) {
 
-                    $uploadPath=ROOT.'/upload/'.date('Y/m/');
+                    $uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
 
 					if(!is_dir($uploadPath)) {
 						mkdir($uploadPath, 0755, true);

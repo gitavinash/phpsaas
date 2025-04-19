@@ -27,8 +27,9 @@
 				<script src="<?php echo PLUGIN_LIBRARY ?>image-uploader/js/image-uploader.min.js" type="text/javascript"></script>
 				<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 				<script src="<?php echo PLUGIN_LIBRARY ?>drag_and_drop/drag_and_drop.min.js"></script>
-				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 				<script src="<?php echo JS_LIBRARY ?>tinymce/tinymce.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 				<script>
 if ($(".editor").length) {
     const editors = document.querySelectorAll('.editor');
@@ -60,7 +61,7 @@ const tempId = '<?php echo base64_encode(USER_ID) ?>';
 
 				?>
 				<script src="<?php echo ADMIN_JS ?>app.min.js"></script>
-				<script src="<?php echo ADMIN_JS . SITE_APP ?>.min.js"></script>
+				<script src="<?php echo ADMIN_JS . SITE_APP ?>.js"></script>
 				</body>
 
 				</html>

@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 
@@ -55,7 +55,7 @@
                                 <span class="font-medium">₹ 160</span>
                             </div>
                         </div>
-                        <a href="/start-application/?country=united%20states&purpose=tourist"
+                        <a href="/start-application/?country=united_states&purpose=tourist"
                             class="block text-center bg-white text-primary border border-primary hover:bg-gray-50 font-medium !rounded-button py-2 cursor-pointer whitespace-nowrap">View
                             Details</a>
                     </div>
@@ -82,7 +82,7 @@
                                 <span class="font-medium">₹ 140</span>
                             </div>
                         </div>
-                        <a href="/start-application/?country=united%20kingdom&purpose=tourist"
+                        <a href="/start-application/?country=united_kingdom&purpose=tourist"
                             class="block text-center bg-white text-primary border border-primary hover:bg-gray-50 font-medium !rounded-button py-2 cursor-pointer whitespace-nowrap">View
                             Details</a>
                     </div>
@@ -236,6 +236,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

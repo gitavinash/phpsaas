@@ -24,7 +24,7 @@
 				if(in_array($fileExtension, $validFileExtension)) {
 					if(in_array($filetype, $validFileType)) {
 						$status=200;
-						$uploadPath=ROOT.'/upload/'.date('Y/m/');
+						$uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
 
 						/* Check upload path is available is not */
 

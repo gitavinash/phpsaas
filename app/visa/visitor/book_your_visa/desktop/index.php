@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <main class="pt-20">
@@ -18,38 +18,18 @@
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Select Country</label>
                             <div class="relative">
-                                <select
+                                <select id="selectedCountry"
                                     class="selectJS selectDestination w-full border border-gray-300 rounded-button px-4 py-2.5 appearance-none bg-white pr-10">
                                     <option></option>
-                                    <option value="US" data-flag="https://flagcdn.com/w80/us.png">United States
-                                    </option>
-                                    <option value="CA" data-flag="https://flagcdn.com/w80/ca.png">Canada</option>
-                                    <option value="GB" data-flag="https://flagcdn.com/w80/gb.png">United Kingdom
-                                    </option>
-                                    <option value="AU" data-flag="https://flagcdn.com/w80/au.png">Australia</option>
-                                    <option value="AE" data-flag="https://flagcdn.com/w80/ae.png">United Arab
-                                        Emirates
-                                    </option>
-                                    <option value="DE" data-flag="https://flagcdn.com/w80/de.png">Germany</option>
-                                    <option value="NZ" data-flag="https://flagcdn.com/w80/nz.png">New Zealand
-                                    </option>
-                                    <option value="SG" data-flag="https://flagcdn.com/w80/sg.png">Singapore</option>
-                                    <option value="SA" data-flag="https://flagcdn.com/w80/sa.png">Saudi Arabia
-                                    </option>
-                                    <option value="QA" data-flag="https://flagcdn.com/w80/qa.png">Qatar</option>
-                                    <option value="MY" data-flag="https://flagcdn.com/w80/my.png">Malaysia</option>
-                                    <option value="TH" data-flag="https://flagcdn.com/w80/th.png">Thailand</option>
-                                    <option value="FR" data-flag="https://flagcdn.com/w80/fr.png">France</option>
-                                    <option value="IT" data-flag="https://flagcdn.com/w80/it.png">Italy</option>
-                                    <option value="NL" data-flag="https://flagcdn.com/w80/nl.png">Netherlands
-                                    </option>
-                                    <option value="JP" data-flag="https://flagcdn.com/w80/jp.png">Japan</option>
-                                    <option value="KR" data-flag="https://flagcdn.com/w80/kr.png">South Korea
-                                    </option>
-                                    <option value="PT" data-flag="https://flagcdn.com/w80/pt.png">Portugal</option>
-                                    <option value="ES" data-flag="https://flagcdn.com/w80/es.png">Spain</option>
-                                    <option value="ZA" data-flag="https://flagcdn.com/w80/za.png">South Africa
-                                    </option>
+                                    <?php
+
+                                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                                        while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
+                                            echo "<option value='{$checkCountryData['visa_country_code']}' data-flag='https://flagcdn.com/w80/{$checkCountryData['visa_country_code']}.png'>{$checkCountryData['visa_country_title']}</option>";
+                                        }
+                                    }
+
+                                    ?>
                                 </select>
                                 <i
                                     class="ri-arrow-down-s-line absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center"></i>
@@ -70,7 +50,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <a href="/start-application/" data-readdy="true"
+                    <a href="#" id="startApplication" data-readdy="true"
                         class="w-full bg-primary text-white font-medium py-3 !rounded-button hover:bg-primary/90 cursor-pointer block text-center">
                         Apply for Visa Now
                     </a>
@@ -456,6 +436,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

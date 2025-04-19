@@ -3534,3 +3534,29 @@ button:disabled {
   line-height: 100px;
   border-radius: 7px;
 }
+
+/* Override Summernote Default Toolbar Styles */
+.note-toolbar {
+  background-color: #01647b; /* Match form button background */
+  border: 1px solid #01647b; /* Border similar to the form button */
+  border-radius: 4px;
+}
+
+.note-toolbar .note-btn {
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 18px;
+  font-family: "Fira Sans", sans-serif;
+}
+
+.editableBox {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  min-height: 150px;
+  margin-top: 30px;
+  font-family: inherit;
+  font-size: 16px;
+  background-color: #fff;
+}

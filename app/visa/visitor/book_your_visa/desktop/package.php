@@ -3,33 +3,33 @@
     require_once 'header.php';
 
 ?>
-<main>
+<main style="margin-top: 80px;">
     <div class="min-h-screen flex flex-col justify-between">
-        <div class="flex flex-col lg:flex-row pt-20">
+        <div class="flex flex-col lg:flex-row">
             <!-- Sidebar Navigation -->
             <div class="hidden lg:block w-full lg:w-72 border-b lg:border-b-0 lg:border-r border-gray-100 bg-white p-6">
                 <h1 class="text-2xl font-bold mb-1">Switzerland Visa Application</h1>
                 <p class="text-gray-500 mb-8">Your Plan Summary is Here</p>
                 <nav class="space-y-4">
-                    <div class="flex items-center text-primary border-l-4 border-primary pl-3 py-1">
+                    <div class="flex items-center text-primary border-l-4 border-primary pl-3 cursor-pointer py-1">
                         <span class="font-medium">Plan Details</span>
                     </div>
-                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 py-1">
+                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 cursor-pointer py-1">
                         <span>Plan Disclaimer</span>
                     </div>
-                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 py-1">
+                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 cursor-pointer py-1">
                         <span>Visa Schedule</span>
                     </div>
-                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 py-1">
+                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 cursor-pointer py-1">
                         <span>Timings & Holidays</span>
                     </div>
-                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 py-1">
+                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 cursor-pointer py-1">
                         <span>Documents Required</span>
                     </div>
-                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 py-1">
+                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 cursor-pointer py-1">
                         <span>Important Information</span>
                     </div>
-                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 py-1">
+                    <div class="flex items-center text-gray-700 hover:text-primary pl-4 cursor-pointer py-1">
                         <span>Frequently Asked Questions</span>
                     </div>
                 </nav>

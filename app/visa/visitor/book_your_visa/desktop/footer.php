@@ -37,9 +37,9 @@
             <div>
                 <h4 class="text-lg font-medium mb-4">Popular Visas</h4>
                 <ul class="space-y-2">
-                    <li><a href="/start-application/?country=united%20states" data-readdy="true" data-readdy="true"
+                    <li><a href="/start-application/?country=united_states" data-readdy="true" data-readdy="true"
                             class="text-gray-400 hover:text-white">USA Visa</a></li>
-                    <li><a href="/start-application/?country=united%20ingdom" class="text-gray-400 hover:text-white">UK
+                    <li><a href="/start-application/?country=united_kingdom" class="text-gray-400 hover:text-white">UK
                             Visa</a></li>
                     <li><a href="/start-application/?country=canada" class="text-gray-400 hover:text-white">Canada
                             Visa</a></li>
@@ -62,7 +62,7 @@
         </div>
         <div class="border-t border-gray-800 pt-8">
             <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                <div class="text-gray-400 text-center md:text-left">© <?php echo date('Y ').SITE_NAME ?>. All rights
+                <div class="text-gray-400 text-center md:text-left">© <?php echo date('Y ') . SITE_NAME ?>. All rights
                     reserved. | Design and Developed by <a href="https://blumox.com" target="_blank">Blumox
                         Technologies</a></div>
                 <div class="flex flex-wrap justify-center md:justify-end gap-4 md:space-x-6">
@@ -85,7 +85,7 @@
         <i class="ri-arrow-up-line ri-lg"></i>
     </button>
 </div>
-<?php require_once NOTIFICATION.'index.php'; ?>
+<?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="<?php echo USER_JS ?>tailwind.config.js"></script>
