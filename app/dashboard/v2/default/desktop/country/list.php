@@ -3,13 +3,15 @@
 $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 
 $statusCondition = '';
-if (isset($leadStatus)) {
-    $statusCondition = "e.enquiry_status={$leadStatus} AND ";
+if (isset($listStatus)) {
+    $statusCondition = "visa_country_status={$listStatus} AND ";
+} else {
+    $statusCondition = "visa_country_status=1 AND ";
 }
 
-if ($countryInfoList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+if ($countryInfoList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}country WHERE {$statusCondition}  visa_country_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($countryInfoList) != 0) {
-        while($countryData=mysqli_fetch_assoc($countryInfoList)) {
+        while ($countryData = mysqli_fetch_assoc($countryInfoList)) {
             $countryListData[] = $countryData;
         }
     }
@@ -55,24 +57,24 @@ if ($countryInfoList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefi
                 </thead>
                 <tbody>
                     <?php
-                    $i=1;
+                    $i = 1;
                     foreach ($countryListData as $country) {
-                        $visaService=json_decode($country['visa_country_services'], true);
+                        $visaService = json_decode($country['visa_country_services'], true);
                         $visaService = implode(", ", $visaService);
                         echo "<tr>";
                         echo "<td>{$i}</td>";
                         echo "<td>{$country['visa_country_title']}</td>";
                         echo "<td>{$country['visa_country_code']}</td>";
-                        echo "<td>".ucwords($visaService)."</td>";
+                        echo "<td>" . ucwords($visaService) . "</td>";
                         echo "<td>" . ($country['visa_country_status'] == 1 ? 'Active' : 'Inactive') . "</td>";
                         echo "<td>
                             <div class='tableActionButton'>
-                                <a href='//".SITE_DOMAIN."/start-application/?country=".strtolower(str_replace(' ', '_', $country['visa_country_title']))."' class='tableActionIconBtn' title='View country' data-title='View country' target='_blank'><i class='fi fi-rr-eye bgLightGreen'></i></a>
+                                <a href='//" . SITE_DOMAIN . "/start-application/?country=" . strtolower(str_replace(' ', '_', $country['visa_country_title'])) . "' class='tableActionIconBtn' title='View country' data-title='View country' target='_blank'><i class='fi fi-rr-eye bgLightGreen'></i></a>
                                 <a href='/dashboard/country/update/?id=" . base64_encode($country['visa_country_id']) . "' class='tableActionIconBtn' title='Edit country' data-title='Edit country' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
                                 <a href='#' data-type='country' data-id='{$country['visa_country_id']}' title='Delete country' data-title='Delete country' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>
                             </div>
                         </td>";
-                        echo"</tr>";
+                        echo "</tr>";
                         $i++;
                     }
                     ?>

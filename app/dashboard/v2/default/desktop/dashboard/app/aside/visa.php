@@ -40,27 +40,27 @@
     <p>VISA Packages<span>Manage all visa packages.</span></p>
 </li>
 
-<li <?php echo ((strpos(ADMIN_BASE_URL, '/packages/visa/') !== false) ? 'class="active"' : '') ?>>
-    <a href="packages/visa/"><i class="fi fi-rr-passport"></i>Packages</a>
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/visa_packages/') !== false) ? 'class="active"' : '') ?>>
+    <a href="visa_packages/"><i class="fi fi-rr-passport"></i>Packages</a>
     <div class="side-menu">
         <ul>
-            <li><a href="packages/visa/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+            <li><a href="visa_packages/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
             </li>
-            <li><a href="packages/visa/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+            <li><a href="visa_packages/add/"><i class="fi fi-rr-add"></i> Add new package</a>
             </li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
+            <li><a href="package/domestic/list/"><i class="fi-rr-apps-sort"></i> All packages</a>
             </li>
-            <li><a href="packages/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
+            <li><a href="package/domestic/add/"><i class="fi fi-rr-add"></i> Add new package</a>
             </li>
         </ul>
     </div>
 </li>
 
-<li <?php echo ((strpos(ADMIN_BASE_URL, '/packages/domestic/') !== false) ? 'class="active"' : '') ?>>
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/package/domestic/') !== false) ? 'class="active"' : '') ?>>
     <a href="country/"><i class="fi fi-rr-flag"></i>Country</a>
     <div class="side-menu">
         <ul>
