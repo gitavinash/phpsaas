@@ -1,10 +1,8 @@
-<h2 class="heading"><?php echo 'Add New country' ?><span>Country that we are offer VISA services</span>
-</h2>
+<h2 class="heading"><?php echo 'Add New country' ?><span>Country that we are offering VISA services</span></h2>
 <div class="main-box">
     <section>
         <ul class="steps-tab">
             <li class="step-box active" id="step_1"><span>1</span>Country details</li>
-            <!-- <li class="step-box" id="step_2"><span>2</span>Domain validity</li> -->
         </ul>
         <div class="steps-box">
             <form action="#" method="POST" id="addNewForm">
@@ -20,26 +18,26 @@
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>
                             <input type="file" id="fileInput" name="featureImage[]" data-limit="1"
-                                accept=".jpg, .jpeg, .png" />
+                                accept=".jpg, .jpeg, .png" style="display: none;" />
                         </div>
                         <div class="form-group">
                             <input id="name" name="name" type="text" required />
-                            <label class="form-lable" id="Label">Name<sup>*</sup></label>
+                            <label class="form-lable">Name<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <input id="code" name="code" type="text" />
-                            <label class="form-lable" id="Label">Country code<sup>*</sup></label>
+                            <label class="form-lable">Country code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <label class="form-lable" id="Label">Documents Required</label>
+                            <label class="form-lable">Documents Required</label>
                             <div class="editableBox" id="requirements" contenteditable="true"></div>
                         </div>
                         <div class="form-group">
-                            <label class="form-lable" id="Label">Important Information</label>
+                            <label class="form-lable">Important Information</label>
                             <div class="editableBox" id="information" contenteditable="true"></div>
                         </div>
                         <div class="form-group">
-                            <label class="form-lable" id="Label">FAQ's</label>
+                            <label class="form-lable">FAQ's</label>
                             <div class="editableBox" id="faq" contenteditable="true"></div>
                         </div>
                         <div class="form-group-box">
@@ -85,11 +83,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group-box">
+                            <p>Mark featured<sup>*</sup></p>
+                            <div class="box-5 left p-right-10">
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <input type="radio" id="isFeatured1" name="isFeatured" value="1" />
+                                        <label class="radio-button" for="visasType1Label">Yes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-5 left p-right-10">
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <input type="radio" id="isFeatured2" name="isFeatured" value="0" checked />
+                                        <label class="radio-button" for="visasType2Label">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <a href="#" class="btn popUpBtn" id="addNewCountry"><i class="fi-rr-check"></i> Add
-                                    country</a>
-                                <!-- <input type="submit" class="btn btn-green" value="Add country"> -->
+                                <a href="#" class="btn popUpBtn" id="addNewCountry"><i class="fi-rr-check"></i> <span
+                                        id="btnText">Add country</span>
+                                    <span id="loadingSpinner" style="display:none;"> <i
+                                            class="fi-rr-spinner fi-spin"></i> </span></a>
                             </div>
                         </div>
                     </div>

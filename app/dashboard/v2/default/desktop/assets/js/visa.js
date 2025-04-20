@@ -30,7 +30,6 @@ $(document).ready(function () {
 
       // Validation
       if (
-        !countryId ||
         !countryName ||
         !countryCode ||
         !documentRequired ||
@@ -93,6 +92,7 @@ $(document).ready(function () {
         processData: false,
         contentType: false,
         data: formData,
+        encrypt: "multipart/form-data",
         success: function (successResponse) {
           popUpMessage("center", successResponse.msg, successResponse.status);
 

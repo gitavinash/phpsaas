@@ -1,18 +1,18 @@
 <?php
 ob_start();
-if(!isset($id)) { ?>
+if (!isset($id)) { ?>
 <script type="text/javascript">
 alert('Invalid request');
 window.location.href = '/dashboard/country/';
 </script>
 <?php
-exit();
+    exit();
 }
 
-$countryId=base64_decode($id);
+$countryId = base64_decode($id);
 
-if($checkCountry=mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}country WHERE visa_country_id='{$countryId}' AND visa_country_status='1' AND visa_country_site_id=".SITE_ID)) {
-    if(mysqli_num_rows($checkCountry) != 0) {
+if ($checkCountry = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}country WHERE visa_country_id='{$countryId}' AND visa_country_status='1' AND visa_country_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($checkCountry) != 0) {
         extract(mysqli_fetch_assoc($checkCountry));
     } else { ?>
 <script type="text/javascript">
@@ -81,24 +81,24 @@ window.location.href = '/dashboard/country/list/';
                             <?php echo $visa_country_documents ?>
                         </div>
                         <?php
-$selectedVisaTypes = json_decode($visa_country_services, true); // Decode JSON to PHP array
+                        $selectedVisaTypes = json_decode($visa_country_services, true); // Decode JSON to PHP array
 
-$allVisaTypes = [
-    'tourist' => 'Tourist',
-    'business' => 'Business',
-    'transit' => 'Transit',
-    'student' => 'Student',
-    'renewal' => 'Renewal',
-];
-?>
+                        $allVisaTypes = [
+                            'tourist' => 'Tourist',
+                            'business' => 'Business',
+                            'transit' => 'Transit',
+                            'student' => 'Student',
+                            'renewal' => 'Renewal',
+                        ];
+                        ?>
 
                         <div class="form-group-box">
                             <p>VISA service options<sup>*</sup></p>
                             <?php foreach ($allVisaTypes as $value => $label): ?>
                             <?php
-            $checkboxId = 'visasType_' . $value;
-            $isChecked = in_array($value, $selectedVisaTypes) ? 'checked' : '';
-        ?>
+                                $checkboxId = 'visasType_' . $value;
+                                $isChecked = in_array($value, $selectedVisaTypes) ? 'checked' : '';
+                                ?>
                             <div class="box-2 left p-right-10">
                                 <div class="form-group">
                                     <div class="input-box">
@@ -109,6 +109,28 @@ $allVisaTypes = [
                                 </div>
                             </div>
                             <?php endforeach; ?>
+                        </div>
+
+                        <div class="form-group-box">
+                            <p>Mark featured<sup>*</sup></p>
+                            <div class="box-5 left p-right-10">
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <input type="radio" id="isFeatured1" name="isFeatured" value="1"
+                                            <?php echo (($visa_country_is_featured == 1) ? 'checked' : '') ?> />
+                                        <label class="radio-button" for="visasType1Label">Yes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-5 left p-right-10">
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <input type="radio" id="isFeatured2" name="isFeatured" value="0"
+                                            <?php echo (($visa_country_is_featured != 1) ? 'checked' : '') ?> />
+                                        <label class="radio-button" for="visasType2Label">No</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="box-1">

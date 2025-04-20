@@ -60,7 +60,7 @@ if (isset($validRequest)) {
 
         if ($checkCountry = mysqli_query($connection, "SELECT visa_country_id FROM {$tableNamePrefix}country WHERE visa_country_code='{$code}' OR visa_country_title='{$name}' AND visa_country_site_id=" . SITE_ID)) {
             if (mysqli_num_rows($checkCountry) == 0) {
-                $insertBlock = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}country(visa_country_site_id, visa_country_published_by, visa_country_title, visa_country_code, visa_country_documents, visa_country_information, visa_country_image, visa_country_faq, visa_country_services, visa_country_status, visa_country_publish) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$code}', '{$requirements}', '{$information}', '{$featureImage}', '{$faqs}', '{$visaTypes}', 1, now())");
+                $insertBlock = mysqli_query($connection, "INSERT INTO {$tableNamePrefix}country(visa_country_site_id, visa_country_published_by, visa_country_title, visa_country_code, visa_country_documents, visa_country_information, visa_country_image, visa_country_faq, visa_country_services, visa_country_is_featured, visa_country_status, visa_country_publish) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$code}', '{$requirements}', '{$information}', '{$featureImage}', '{$faqs}', '{$visaTypes}', '{$isFeatured}', 1, now())");
                 $countryId = mysqli_insert_id($connection);
             } else {
                 $insertBlock = false;
