@@ -35,7 +35,7 @@ if ($name != '') {
 }
 
 if (isset($validRequest)) {
-    require_once MODULES . 'imageUploader.php';
+    // require_once MODULES . 'imageUploader.php';
 
     if (!isset($image['featureImage'])) {
         $featureImage = '';
