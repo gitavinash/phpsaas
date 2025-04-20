@@ -147,6 +147,11 @@ strong {
   text-align: center;
 }
 
+.logo img {
+  width: auto;
+  max-height: 80px;
+}
+
 @media screen and (max-width: 768px) {
   .applicationBox {
     padding: 2em 2em;

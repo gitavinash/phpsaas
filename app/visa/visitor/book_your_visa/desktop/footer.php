@@ -2,7 +2,9 @@
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div>
-                <a href="/" class="text-3xl font-['Pacifico'] text-white mb-6 block">logo</a>
+                <a href="/" class="text-3xl font-['Pacifico'] text-white mb-6 block logo">
+                    <img src="<?php echo USER_IMAGES ?>logo-white.png" alt="<?php echo SITE_NAME ?>">
+                </a>
                 <p class="text-gray-400 mb-6">Simplifying visa applications with expert assistance and fast
                     processing.</p>
                 <div class="flex space-x-4">

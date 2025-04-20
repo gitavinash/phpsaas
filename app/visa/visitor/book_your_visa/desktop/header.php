@@ -22,7 +22,8 @@
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-20">
                 <div class="flex items-center">
-                    <a href="/" class="text-2xl md:text-3xl font-['Pacifico'] text-primary">logo</a>
+                    <a href="/" class="text-2xl md:text-3xl font-['Pacifico'] text-primary logo"><img
+                            src='<?php echo USER_IMAGES ?>logo.png' alt="<?php echo SITE_NAME ?>"></a>
                     <nav class="hidden md:block ml-12">
                         <ul class="flex space-x-8">
                             <li class="dropdown relative">
