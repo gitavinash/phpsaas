@@ -58,14 +58,14 @@ if ($validateCountryId = mysqli_query($connection, "SELECT visa_country_id, visa
 
         mysqli_query($connection, "START TRANSACTION");
         if ($code != $visa_country_code) {
-            $checkCountryCode = "visa_country_code={$code}";
+            $checkCountryCode = "visa_country_code='{$code}'" . (($checkCountryCode != '') ? " OR " : " AND ");
         }
         if ($name != $visa_country_title) {
-            $checkCountryName = "visa_country_title='{$name}'";
+            $checkCountryName = "visa_country_title='{$name}' AND ";
         }
 
         if ($checkCountryCode != '' || $checkCountryName != '') {
-            if ($checkCountry = mysqli_query($connection, "SELECT visa_country_id FROM {$tableNamePrefix}country WHERE {$checkCountryCode} " . (($checkCountryCode != '') ? " OR {$checkCountryName}" : $checkCountryName) . " AND visa_country_site_id=" . SITE_ID)) {
+            if ($checkCountry = mysqli_query($connection, "SELECT visa_country_id FROM {$tableNamePrefix}country WHERE {$checkCountryCode} {$checkCountryName} visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
                 if (mysqli_num_rows($checkCountry) != 0) {
                     $validRequest = false;
                     $msg = 'Country name or code already exists';
