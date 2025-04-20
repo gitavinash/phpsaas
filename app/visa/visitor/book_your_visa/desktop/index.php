@@ -23,9 +23,9 @@ require_once 'header.php';
                                     <option></option>
                                     <?php
 
-                                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
                                         while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
-                                            echo "<option value='{$checkCountryData['visa_country_code']}' data-flag='https://flagcdn.com/w80/{$checkCountryData['visa_country_code']}.png'>{$checkCountryData['visa_country_title']}</option>";
+                                            echo "<option value='{$checkCountryData['visa_country_title']}' data-service='{$checkCountryData['visa_country_service']}' data-flag='https://flagcdn.com/w80/" . strtolower($checkCountryData['visa_country_code']) . ".png'>{$checkCountryData['visa_country_title']}</option>";
                                         }
                                     }
 
@@ -101,196 +101,33 @@ require_once 'header.php';
                     <div id="destinationSlider"
                         class="flex transition-transform duration-300 ease-in-out margin-bottom-50"
                         style="transform: translateX(0px);">
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="https://public.readdy.ai/ai/img_res/2adbb78ae9b4adaf452e0e695697df0f.jpg"
-                                alt="USA" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">United States</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 5-7 days</span>
-                                    <span>From $160</span>
-                                </div>
-                                <a href="/start-application/"
-                                    class="w-full float-left text-center bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</a>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="https://public.readdy.ai/ai/img_res/15e5b1cb313701eb6769351b7d409fd1.jpg" alt="UK"
-                                class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">United Kingdom</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 3-5 weeks</span>
-                                    <span>From $140</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="https://public.readdy.ai/ai/img_res/ea06b1fd81a39d7277c6e245ee760542.jpg"
-                                alt="Canada" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Canada</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 4-6 weeks</span>
-                                    <span>From $150</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="https://public.readdy.ai/ai/img_res/94b208d58fffd671872f71a9f6a3909a.jpg"
-                                alt="Australia" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Australia</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 2-4 weeks</span>
-                                    <span>From $170</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="api/search-image?query=Dubai%20skyline%20with%20Burj%20Khalifa%2C%20modern%20architecture%2C%20desert%20city%2C%20luxury%20travel%20destination%2C%20professional%20photography&width=400&height=250&seq=6&orientation=landscape"
-                                alt="Dubai" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Dubai</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 3-5 days</span>
-                                    <span>From $120</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="api/search-image?query=Singapore%20Marina%20Bay%20Sands%20and%20Gardens%20by%20the%20Bay%2C%20modern%20Asian%20cityscape%2C%20night%20view%2C%20professional%20travel%20photography&width=400&height=250&seq=7&orientation=landscape"
-                                alt="Singapore" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Singapore</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 4-6 days</span>
-                                    <span>From $130</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="api/search-image?query=Tokyo%20skyline%20with%20Mount%20Fuji%2C%20modern%20Japanese%20architecture%2C%20cherry%20blossoms%2C%20spring%20season%2C%20professional%20travel%20photography&width=400&height=250&seq=8&orientation=landscape"
-                                alt="Japan" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Japan</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 5-7 days</span>
-                                    <span>From $180</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="api/search-image?query=Paris%20Eiffel%20Tower%20and%20Seine%20River%2C%20romantic%20French%20architecture%2C%20sunset%20golden%20hour%2C%20professional%20travel%20photography&width=400&height=250&seq=9&orientation=landscape"
-                                alt="France" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">France</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 2-3 weeks</span>
-                                    <span>From $145</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="api/search-image?query=Rome%20Colosseum%20and%20Roman%20Forum%2C%20ancient%20Italian%20architecture%2C%20historic%20landmarks%2C%20professional%20travel%20photography&width=400&height=250&seq=10&orientation=landscape"
-                                alt="Italy" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Italy</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 2-3 weeks</span>
-                                    <span>From $155</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
-                        <div
-                            class="country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3">
-                            <img src="api/search-image?query=Swiss%20Alps%20and%20Lake%20Geneva%2C%20mountain%20landscape%2C%20luxury%20resorts%2C%20pristine%20nature%2C%20professional%20travel%20photography&width=400&height=250&seq=11&orientation=landscape"
-                                alt="Switzerland" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex items-center mb-3">
-                                    <i
-                                        class="ri-flag-line text-primary mr-2 w-5 h-5 flex items-center justify-center"></i>
-                                    <h3 class="font-medium">Switzerland</h3>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 mb-4">
-                                    <span>Processing: 2-3 weeks</span>
-                                    <span>From $165</span>
-                                </div>
-                                <button
-                                    class="w-full bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer">Apply
-                                    Now</button>
-                            </div>
-                        </div>
+                        <?php
+
+                        if ($featuredCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_image, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                            while ($featuredCountryData = mysqli_fetch_assoc($featuredCountry)) {
+                                echo "
+                                    <div
+                                        class='country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3'>
+                                        <img src='{$featuredCountryData['visa_country_image']}' alt='{$featuredCountryData['visa_country_title']}' class='w-full h-48 object-cover'
+                                         class='w-full h-48 object-cover'>
+                                        <div class='p-4'>
+                                            <div class='flex items-center mb-3'>
+                                                <h3 class='font-medium'>" . ucwords($featuredCountryData['visa_country_title']) . "</h3>
+                                            </div>
+                                            <div class='flex justify-between text-sm text-gray-600 mb-4'>
+                                                <span>Processing: </span>
+                                                <span>From </span>
+                                            </div>
+                                            <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $featuredCountryData['visa_country_title'])) . "'
+                                                class='w-full float-left text-center bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer'>Apply
+                                                Now</a>
+                                        </div>
+                                    </div>
+                                ";
+                            }
+                        }
+
+                        ?>
                     </div>
                 </div>
                 <button
@@ -353,8 +190,7 @@ require_once 'header.php';
                     <h3 class="text-xl font-medium mb-4">Document Assistance</h3>
                     <p class="text-gray-600 mb-6">Expert guidance on documentation requirements and verification
                         services</p>
-                    <button class="text-primary hover:text-primary/80 font-medium cursor-pointer">Learn
-                        More</button>
+                    <!-- <a class="text-primary hover:text-primary/80 font-medium cursor-pointer">Learn More</a> -->
                 </div>
                 <div class="bg-white p-8 rounded-lg shadow-lg text-center">
                     <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -363,8 +199,7 @@ require_once 'header.php';
                     <h3 class="text-xl font-medium mb-4">Fast Processing</h3>
                     <p class="text-gray-600 mb-6">Quick turnaround times with priority processing options available
                     </p>
-                    <button class="text-primary hover:text-primary/80 font-medium cursor-pointer">Learn
-                        More</button>
+                    <!-- <a class="text-primary hover:text-primary/80 font-medium cursor-pointer">Learn More</a> -->
                 </div>
                 <div class="bg-white p-8 rounded-lg shadow-lg text-center">
                     <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -373,8 +208,7 @@ require_once 'header.php';
                     <h3 class="text-xl font-medium mb-4">Expert Support</h3>
                     <p class="text-gray-600 mb-6">24/7 customer support and personalized assistance throughout the
                         process</p>
-                    <button class="text-primary hover:text-primary/80 font-medium cursor-pointer">Learn
-                        More</button>
+                    <!-- <a class="text-primary hover:text-primary/80 font-medium cursor-pointer">Learn More</a> -->
                 </div>
             </div>
         </div>

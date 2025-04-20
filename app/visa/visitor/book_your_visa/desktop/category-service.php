@@ -33,114 +33,63 @@ require_once 'header.php';
                 <p class="text-gray-600 max-w-2xl mx-auto">Explore our most requested tourist visa destinations with
                     competitive processing times and fees</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div
-                    class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://readdy.ai/api/search-image?query=United%2520States%2520landmarks%2520skyline%2520with%2520Statue%2520of%2520Liberty%2520and%2520skyscrapers%252C%2520professional%2520travel%2520photography%252C%2520bright%2520daylight%252C%2520clear%2520blue%2520sky%252C%2520high%2520quality&width=600&height=400&seq=usa-visa&orientation=landscape"
-                            alt="USA Tourist Visa" class="w-full h-full object-cover object-top">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="ri-flag-2-fill text-primary mr-2 w-6 h-6 flex items-center justify-center"></i>
-                            <h3 class="text-xl font-semibold">United States</h3>
-                        </div>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Processing Time:</span>
-                                <span class="font-medium">7-14 days</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Starting Fee:</span>
-                                <span class="font-medium">₹ 160</span>
-                            </div>
-                        </div>
-                        <a href="/start-application/?country=united_states&purpose=tourist"
-                            class="block text-center bg-white text-primary border border-primary hover:bg-gray-50 font-medium !rounded-button py-2 cursor-pointer whitespace-nowrap">View
-                            Details</a>
+            <div class="container mx-auto px-4">
+                <div class="flex justify-end items-center mb-8">
+                    <div class="flex space-x-2">
+                        <button id="scroll-left"
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
+                            <i class="ri-arrow-left-s-line text-gray-700"></i>
+                        </button>
+                        <button id="scroll-right"
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
+                            <i class="ri-arrow-right-s-line text-gray-700"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div
-                    class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://readdy.ai/api/search-image?query=UK%2520landmarks%2520with%2520London%2520Eye%2520and%2520Big%2520Ben%252C%2520professional%2520travel%2520photography%252C%2520bright%2520daylight%252C%2520clear%2520blue%2520sky%252C%2520high%2520quality&width=600&height=400&seq=uk-visa&orientation=landscape"
-                            alt="UK Tourist Visa" class="w-full h-full object-cover object-top">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="ri-flag-2-fill text-primary mr-2 w-6 h-6 flex items-center justify-center"></i>
-                            <h3 class="text-xl font-semibold">United Kingdom</h3>
-                        </div>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Processing Time:</span>
-                                <span class="font-medium">15-20 days</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Starting Fee:</span>
-                                <span class="font-medium">₹ 140</span>
-                            </div>
-                        </div>
-                        <a href="/start-application/?country=united_kingdom&purpose=tourist"
-                            class="block text-center bg-white text-primary border border-primary hover:bg-gray-50 font-medium !rounded-button py-2 cursor-pointer whitespace-nowrap">View
-                            Details</a>
+                <div class="scroll-container overflow-x-auto pb-4" id="countryScroll">
+                    <div class="flex space-x-6 min-w-max">
+                        <?php
+
+                        if ($popularCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_image, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                            while ($popularCountryData = mysqli_fetch_assoc($popularCountry)) {
+                                echo "
+                              <div class='visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72'>
+                                    <div class='flex items-center mb-4'>
+                                        <div class='w-10 h-10 flex items-center justify-center mr-3'>
+                                            <img src='https://flagcdn.com/h80/" . strtolower($popularCountryData['visa_country_code']) . ".png' alt='{$popularCountryData['visa_country_title']} Flag'
+                                                class='w-10 h-10 object-cover rounded-full'>
+                                        </div>
+                                        <div>
+                                            <h3 class='font-semibold text-gray-900'>{$popularCountryData['visa_country_title']}</h3>
+                                        </div>
+                                    </div>
+                                    <div class='flex justify-between text-sm text-gray-600 mb-4'>
+                                        <div>
+                                            <p class='font-medium'>Processing Time</p>
+                                            <p>14-21 days</p>
+                                        </div>
+                                        <div>
+                                            <p class='font-medium'>Type</p>
+                                            <p class='text-sm text-gray-500'>B-2 Visa</p>
+                                        </div>
+                                    </div>
+                                    <div class='bg-gray-50 rounded p-3 mb-4'>
+                                        <p class='text-gray-900 font-medium'>Starting from</p>
+                                        <p class='text-2xl font-bold text-primary'>₹12,499</p>
+                                    </div>
+                                    <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $popularCountryData['visa_country_title'])) . "'
+                                        class='w-full applyNowBtn bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium'>Apply
+                                        Now</a>
+                                </div>
+                                ";
+                            }
+                        }
+
+                        ?>
                     </div>
                 </div>
 
-                <div
-                    class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://readdy.ai/api/search-image?query=Schengen%2520Europe%2520landmarks%2520with%2520Eiffel%2520Tower%2520and%2520Colosseum%252C%2520professional%2520travel%2520photography%252C%2520bright%2520daylight%252C%2520clear%2520blue%2520sky%252C%2520high%2520quality&width=600&height=400&seq=schengen-visa&orientation=landscape"
-                            alt="Schengen Tourist Visa" class="w-full h-full object-cover object-top">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="ri-flag-2-fill text-primary mr-2 w-6 h-6 flex items-center justify-center"></i>
-                            <h3 class="text-xl font-semibold">Schengen Area</h3>
-                        </div>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Processing Time:</span>
-                                <span class="font-medium">10-15 days</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Starting Fee:</span>
-                                <span class="font-medium">₹ 80</span>
-                            </div>
-                        </div>
-                        <a href="/start-application/?country=schengen&purpose=tourist"
-                            class="block text-center bg-white text-primary border border-primary hover:bg-gray-50 font-medium !rounded-button py-2 cursor-pointer whitespace-nowrap">View
-                            Details</a>
-                    </div>
-                </div>
-
-                <div
-                    class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://readdy.ai/api/search-image?query=Australia%2520landmarks%2520with%2520Sydney%2520Opera%2520House%2520and%2520natural%2520landscapes%252C%2520professional%2520travel%2520photography%252C%2520bright%2520daylight%252C%2520clear%2520blue%2520sky%252C%2520high%2520quality&width=600&height=400&seq=australia-visa&orientation=landscape"
-                            alt="Australia Tourist Visa" class="w-full h-full object-cover object-top">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="ri-flag-2-fill text-primary mr-2 w-6 h-6 flex items-center justify-center"></i>
-                            <h3 class="text-xl font-semibold">Australia</h3>
-                        </div>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Processing Time:</span>
-                                <span class="font-medium">5-10 days</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Starting Fee:</span>
-                                <span class="font-medium">₹ 120</span>
-                            </div>
-                        </div>
-                        <a href="/start-application/?country=australia&purpose=tourist"
-                            class="block text-center bg-white text-primary border border-primary hover:bg-gray-50 font-medium !rounded-button py-2 cursor-pointer whitespace-nowrap">View
-                            Details</a>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

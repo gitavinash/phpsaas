@@ -135,11 +135,79 @@ $(document).ready(function (e) {
   // Homepage from for start application
 
   if ($("#startApplication").length) {
+    console.log(`startApplication found`);
+
     $("#startApplication").click(function (e) {
-      console.log(`startApplication is clicked`);
       e.preventDefault();
-      const selectedCountry = $("#selectedCountry").val();
-      console.log(`selectedCountry`, selectedCountry);
+      let selectedCountry = $("#selectedCountry").val();
+      if (selectedCountry) {
+        console.log("selectedCountry", selectedCountry);
+        selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "-");
+        window.location.href = `/start-application/?country=${selectedCountry}`;
+      }
+    });
+  }
+
+  if ($("#startApplicationDropDown").length) {
+    console.log(`startApplicationDropDown found`);
+    $("#startApplicationDropDown").change(function () {
+      let selectedCountry = $(this).val();
+      if (selectedCountry) {
+        selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "-");
+        window.location.href = `/start-application/?country=${selectedCountry}`;
+      }
+    });
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const country = urlParams.get("country");
+  const purpose = urlParams.get("purpose");
+  const type = urlParams.get("type"); // Optional, in case needed later
+
+  // Hide all by default
+  $("#selectCountry").hide();
+  $("#purposeOfVisa").hide();
+  $("#visaPackages").hide();
+
+  // Case: No country parameter
+  if (!country) {
+    $("#selectCountry").show();
+    return;
+  }
+
+  // Case: Country is present
+  $("#purposeOfVisa").show();
+
+  // Optional: fetch and populate purposeOfVisa data from API
+  $.ajax({
+    url: "/api/company/?id=5",
+    method: "GET",
+    success: function (data) {
+      $("#purposeOfVisa").html(data);
+    },
+    error: function () {
+      console.error("Error fetching purposeOfVisa data");
+    },
+  });
+
+  // Case: Country and Purpose are present and not empty
+  if (purpose && purpose.trim() !== "") {
+    $("#visaPackages").show();
+
+    // Optional: fetch visaPackages data from API
+    $.ajax({
+      url: "/api/visa/purpose/",
+      method: "GET",
+      data: {
+        country: country,
+        purpose: purpose,
+      },
+      success: function (data) {
+        $("#visaPackages").html(data);
+      },
+      error: function () {
+        console.error("Error fetching visaPackages");
+      },
     });
   }
 });

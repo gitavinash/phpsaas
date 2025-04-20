@@ -132,8 +132,19 @@ strong {
   border-radius: 10px;
 }
 
+.visa-card {
+  min-height: 300px;
+  max-height: 310px;
+  margin-bottom: 10px;
+}
+
 .visa-card img {
   border: 1px solid #d5d5d5;
+}
+
+.applyNowBtn {
+  float: left;
+  text-align: center;
 }
 
 @media screen and (max-width: 768px) {

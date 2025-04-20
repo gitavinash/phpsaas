@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <main class="flex-grow container mx-auto pt-[5em] pb-0 sm:py-[10em]">
@@ -18,120 +18,59 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <i class="ri-search-line text-gray-400 w-5 h-5 flex items-center justify-center"></i>
                 </div>
-                <select
+                <select id="startApplicationDropDown"
                     class="selectJS selectDestination w-full border border-gray-300 rounded-button px-4 py-2.5 appearance-none bg-white pr-10">
                     <option></option>
-                    <option value="US" data-flag="https://flagcdn.com/w80/us.png">United States
-                    </option>
-                    <option value="CA" data-flag="https://flagcdn.com/w80/ca.png">Canada</option>
-                    <option value="GB" data-flag="https://flagcdn.com/w80/gb.png">United Kingdom
-                    </option>
-                    <option value="AU" data-flag="https://flagcdn.com/w80/au.png">Australia</option>
-                    <option value="AE" data-flag="https://flagcdn.com/w80/ae.png">United Arab
-                        Emirates
-                    </option>
-                    <option value="DE" data-flag="https://flagcdn.com/w80/de.png">Germany</option>
-                    <option value="NZ" data-flag="https://flagcdn.com/w80/nz.png">New Zealand
-                    </option>
-                    <option value="SG" data-flag="https://flagcdn.com/w80/sg.png">Singapore</option>
-                    <option value="SA" data-flag="https://flagcdn.com/w80/sa.png">Saudi Arabia
-                    </option>
-                    <option value="QA" data-flag="https://flagcdn.com/w80/qa.png">Qatar</option>
-                    <option value="MY" data-flag="https://flagcdn.com/w80/my.png">Malaysia</option>
-                    <option value="TH" data-flag="https://flagcdn.com/w80/th.png">Thailand</option>
-                    <option value="FR" data-flag="https://flagcdn.com/w80/fr.png">France</option>
-                    <option value="IT" data-flag="https://flagcdn.com/w80/it.png">Italy</option>
-                    <option value="NL" data-flag="https://flagcdn.com/w80/nl.png">Netherlands
-                    </option>
-                    <option value="JP" data-flag="https://flagcdn.com/w80/jp.png">Japan</option>
-                    <option value="KR" data-flag="https://flagcdn.com/w80/kr.png">South Korea
-                    </option>
-                    <option value="PT" data-flag="https://flagcdn.com/w80/pt.png">Portugal</option>
-                    <option value="ES" data-flag="https://flagcdn.com/w80/es.png">Spain</option>
-                    <option value="ZA" data-flag="https://flagcdn.com/w80/za.png">South Africa
-                    </option>
+                    <?php
+
+                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                        while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
+                            echo "<option value='{$checkCountryData['visa_country_title']}' data-service='{$checkCountryData['visa_country_service']}' data-flag='https://flagcdn.com/w80/" . strtolower($checkCountryData['visa_country_code']) . ".png'>{$checkCountryData['visa_country_title']}</option>";
+                        }
+                    }
+
+                    ?>
                 </select>
             </div>
             <div class="mb-10">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Popular Destinations</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <!-- United States -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/us.png" alt="United States flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">United States</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">2-3 weeks</p>
-                    </div>
-                    <!-- United Kingdom -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/gb.png" alt="United Kingdom flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">United Kingdom</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">3-4 weeks</p>
-                    </div>
-                    <!-- Canada -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/ca.png" alt="Canada flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Canada</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">2-4 weeks</p>
-                    </div>
-                    <!-- Australia -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/au.png" alt="Australia flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Australia</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">2-4 weeks</p>
-                    </div>
-                    <!-- Schengen Area -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/eu.png" alt="Schengen Area flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Schengen Area</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">2-3 weeks</p>
-                    </div>
-                    <!-- Japan -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/jp.png" alt="Japan flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Japan</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">5-7 days</p>
-                    </div>
-                    <!-- UAE -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/ae.png" alt="UAE flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">UAE</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">3-5 days</p>
-                    </div>
-                    <!-- Singapore -->
-                    <div class="country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <img src="https://flagcdn.com/w40/sg.png" alt="Singapore flag"
-                                class="w-6 h-6 rounded-full mr-3 object-cover border border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Singapore</h3>
-                        </div>
-                        <p class="text-gray-600 text-sm">3-5 days</p>
-                    </div>
+                    <?php
+
+                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                        while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
+                            echo "
+                                <div class='country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm'>
+                                    <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $checkCountryData['visa_country_title'])) . "'>
+                                        <div class='flex items-center mb-3'>
+                                            <img src='https://flagcdn.com/w40/" . strtolower($checkCountryData['visa_country_code']) . ".png'  alt='{$checkCountryData['visa_country_title']} flag'
+                                                class='w-6 h-6 rounded-full mr-3 object-cover border border-gray-200'>
+                                            <h3 class='text-lg font-medium text-gray-900 startApplicationCountry' data-service='{$checkCountryData['visa_country_services']}'>{$checkCountryData['visa_country_title']}</h3>
+                                        </div>
+                                        <p class='text-gray-600 text-sm'><strong>VISA in </strong>2-3 weeks</p>
+                                    </a>
+                                </div>";
+                        }
+                    }
+
+                    ?>
                 </div>
             </div>
         </div>
     </div>
-    <div class="mx-auto applicationBox" id="purposeOfVisa" style="display: none;">
+    <div class="mx-auto applicationBox" id="purposeOfVisa">
+        <div class="text-center mb-8 sm:mb-16">
+            <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select Purpose of Visit to
+                <?php echo ucwords(str_replace('_', ' ', $country)) ?></h1>
+            <p class="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">Please select the
+                primary purpose of your visit to proceed with the visa application. We'll guide you through
+                every step of the process.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr" id="visaPurposeListBox">
+
+        </div>
+    </div>
+    <div class="mx-auto applicationBox" id="visaPackages">
         <div class="text-center mb-8 sm:mb-16">
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select Purpose of Visit to
                 Switzerland</h1>
@@ -241,6 +180,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

@@ -197,186 +197,41 @@ require_once 'header.php';
         </div>
         <div class="scroll-container overflow-x-auto pb-4" id="countryScroll">
             <div class="flex space-x-6 min-w-max">
-                <!-- USA Visa -->
-                <div class="visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72">
-                    <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 flex items-center justify-center mr-3">
-                            <img src="https://flagcdn.com/w40/us.png" alt="USA Flag"
-                                class="w-10 h-10 object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">United States</h3>
-                            <p class="text-sm text-gray-500">B-2 Visa</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-4">
-                        <div>
-                            <p class="font-medium">Processing Time</p>
-                            <p>14-21 days</p>
-                        </div>
-                        <div>
-                            <p class="font-medium">Success Rate</p>
-                            <p class="text-green-600">92%</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 rounded p-3 mb-4">
-                        <p class="text-gray-900 font-medium">Starting from</p>
-                        <p class="text-2xl font-bold text-primary">₹12,499</p>
-                    </div>
-                    <button
-                        class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium">Apply
-                        Now</button>
-                </div>
-                <!-- Schengen Visa -->
-                <div class="visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72">
-                    <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 flex items-center justify-center mr-3">
-                            <img src="https://flagcdn.com/w40/eu.png" alt="EU Flag"
-                                class="w-10 h-10 object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Schengen</h3>
-                            <p class="text-sm text-gray-500">Type C Visa</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-4">
-                        <div>
-                            <p class="font-medium">Processing Time</p>
-                            <p>10-15 days</p>
-                        </div>
-                        <div>
-                            <p class="font-medium">Success Rate</p>
-                            <p class="text-green-600">95%</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 rounded p-3 mb-4">
-                        <p class="text-gray-900 font-medium">Starting from</p>
-                        <p class="text-2xl font-bold text-primary">₹8,299</p>
-                    </div>
-                    <button
-                        class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium">Apply
-                        Now</button>
-                </div>
-                <!-- UK Visa -->
-                <div class="visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72">
-                    <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 flex items-center justify-center mr-3">
-                            <img src="https://flagcdn.com/w40/gb.png" alt="UK Flag"
-                                class="w-10 h-10 object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">United Kingdom</h3>
-                            <p class="text-sm text-gray-500">Standard Visitor</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-4">
-                        <div>
-                            <p class="font-medium">Processing Time</p>
-                            <p>15-20 days</p>
-                        </div>
-                        <div>
-                            <p class="font-medium">Success Rate</p>
-                            <p class="text-green-600">89%</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 rounded p-3 mb-4">
-                        <p class="text-gray-900 font-medium">Starting from</p>
-                        <p class="text-2xl font-bold text-primary">₹10,799</p>
-                    </div>
-                    <button
-                        class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium">Apply
-                        Now</button>
-                </div>
-                <!-- Canada Visa -->
-                <div class="visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72">
-                    <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 flex items-center justify-center mr-3">
-                            <img src="https://flagcdn.com/w40/ca.png" alt="Canada Flag"
-                                class="w-10 h-10 object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Canada</h3>
-                            <p class="text-sm text-gray-500">TRV</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-4">
-                        <div>
-                            <p class="font-medium">Processing Time</p>
-                            <p>20-30 days</p>
-                        </div>
-                        <div>
-                            <p class="font-medium">Success Rate</p>
-                            <p class="text-green-600">87%</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 rounded p-3 mb-4">
-                        <p class="text-gray-900 font-medium">Starting from</p>
-                        <p class="text-2xl font-bold text-primary">₹11,599</p>
-                    </div>
-                    <button
-                        class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium">Apply
-                        Now</button>
-                </div>
-                <!-- Australia Visa -->
-                <div class="visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72">
-                    <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 flex items-center justify-center mr-3">
-                            <img src="https://flagcdn.com/w40/au.png" alt="Australia Flag"
-                                class="w-10 h-10 object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Australia</h3>
-                            <p class="text-sm text-gray-500">Subclass 600</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-4">
-                        <div>
-                            <p class="font-medium">Processing Time</p>
-                            <p>15-25 days</p>
-                        </div>
-                        <div>
-                            <p class="font-medium">Success Rate</p>
-                            <p class="text-green-600">91%</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 rounded p-3 mb-4">
-                        <p class="text-gray-900 font-medium">Starting from</p>
-                        <p class="text-2xl font-bold text-primary">₹9,999</p>
-                    </div>
-                    <button
-                        class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium">Apply
-                        Now</button>
-                </div>
-                <!-- Dubai Visa -->
-                <div class="visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72">
-                    <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 flex items-center justify-center mr-3">
-                            <img src="https://flagcdn.com/w40/ae.png" alt="UAE Flag"
-                                class="w-10 h-10 object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Dubai</h3>
-                            <p class="text-sm text-gray-500">30-Day Visit</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-4">
-                        <div>
-                            <p class="font-medium">Processing Time</p>
-                            <p>3-5 days</p>
-                        </div>
-                        <div>
-                            <p class="font-medium">Success Rate</p>
-                            <p class="text-green-600">98%</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 rounded p-3 mb-4">
-                        <p class="text-gray-900 font-medium">Starting from</p>
-                        <p class="text-2xl font-bold text-primary">₹6,599</p>
-                    </div>
-                    <button
-                        class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium">Apply
-                        Now</button>
-                </div>
+                <?php
+
+                if ($popularCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_image, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                    while ($popularCountryData = mysqli_fetch_assoc($popularCountry)) {
+                        echo "
+                              <div class='visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72'>
+                                    <div class='flex items-center mb-4'>
+                                        <div class='w-10 h-10 flex items-center justify-center mr-3'>
+                                            <img src='https://flagcdn.com/h80/" . strtolower($popularCountryData['visa_country_code']) . ".png' alt='{$popularCountryData['visa_country_title']} Flag'
+                                                class='w-10 h-10 object-cover rounded-full'>
+                                        </div>
+                                        <div>
+                                            <h3 class='font-semibold text-gray-900'>{$popularCountryData['visa_country_title']}</h3>
+                                            <p class='text-sm text-gray-500'>B-2 Visa</p>
+                                        </div>
+                                    </div>
+                                    <div class='flex justify-between text-sm text-gray-600 mb-4'>
+                                        <div>
+                                            <p class='font-medium'>Processing Time</p>
+                                            <p>14-21 days</p>
+                                        </div>
+                                    </div>
+                                    <div class='bg-gray-50 rounded p-3 mb-4'>
+                                        <p class='text-gray-900 font-medium'>Starting from</p>
+                                        <p class='text-2xl font-bold text-primary'>₹12,499</p>
+                                    </div>
+                                    <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $popularCountryData['visa_country_title'])) . "'
+                                        class='w-full applyNowBtn bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium'>Apply
+                                        Now</a>
+                                </div>
+                                ";
+                    }
+                }
+
+                ?>
             </div>
         </div>
     </div>
