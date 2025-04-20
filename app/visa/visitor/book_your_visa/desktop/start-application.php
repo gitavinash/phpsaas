@@ -23,7 +23,7 @@ require_once 'header.php';
                     <option></option>
                     <?php
 
-                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID . " ORDER BY visa_country_title ASC")) {
                         while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
                             echo "<option value='{$checkCountryData['visa_country_title']}' data-service='{$checkCountryData['visa_country_service']}' data-flag='https://flagcdn.com/w80/" . strtolower($checkCountryData['visa_country_code']) . ".png'>{$checkCountryData['visa_country_title']}</option>";
                         }
@@ -37,7 +37,7 @@ require_once 'header.php';
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     <?php
 
-                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                    if ($checkCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID . "visa_country_is_featured DESC")) {
                         while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
                             echo "
                                 <div class='country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm'>

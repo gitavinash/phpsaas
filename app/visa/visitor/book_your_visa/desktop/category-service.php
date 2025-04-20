@@ -51,7 +51,7 @@ require_once 'header.php';
                     <div class="flex space-x-6 min-w-max">
                         <?php
 
-                        if ($popularCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_image, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID)) {
+                        if ($popularCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_image, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID . " ORDER BY visa_country_is_featured DESC LIMIT 10")) {
                             while ($popularCountryData = mysqli_fetch_assoc($popularCountry)) {
                                 echo "
                               <div class='visa-card bg-white rounded-lg shadow-md p-6 transition-all duration-300 w-72'>
