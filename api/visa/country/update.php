@@ -83,7 +83,7 @@ if ($validateCountryId = mysqli_query($connection, "SELECT visa_country_id, visa
 }
 
 if (isset($validRequest)) {
-    // require_once MODULES . 'imageUploader.php';
+    require_once MODULES . 'imageUploader.php';
 
     if (!isset($image['featureImage'])) {
         $featureImage = '';

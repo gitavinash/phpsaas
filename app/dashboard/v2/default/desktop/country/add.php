@@ -14,11 +14,13 @@
                         </div>
                         <div class="form-group">
                             <p><strong>Country feature image<sup>*</sup></strong></p>
-                            <div id="dropZone">
+                            <!-- <div id="dropZone">
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>
                             <input type="file" id="fileInput" name="featureImage[]" data-limit="1"
-                                accept=".jpg, .jpeg, .png" style="display: none;" />
+                                accept=".jpg, .jpeg, .png" style="display: none;" /> -->
+                            <div class="dropZone">Drop image(s) here</div>
+                            <div class="dropZonePreview"></div>
                         </div>
                         <div class="form-group">
                             <input id="name" name="name" type="text" required />
