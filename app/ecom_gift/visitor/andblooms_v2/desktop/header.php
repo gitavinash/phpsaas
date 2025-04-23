@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>home.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>navbar.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.css">
+    <?php require_once DEFAULT_META ?>
 </head>
 
 <body>
