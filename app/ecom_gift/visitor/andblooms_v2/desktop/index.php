@@ -24,7 +24,7 @@ require_once 'header.php';
     <section class="gallery_wrapper">
         <div class="container">
             <div class="main--heading">
-                <h1 class="main_font_family is-font-45 black-color">Lorem ipsum</h1>
+                <h1 class="main_font_family is-font-45 black-color">Featured products</h1>
                 <p class="grey-color ">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
 
@@ -75,118 +75,36 @@ require_once 'header.php';
         <div class="price_content">
             <div class="container">
                 <div class="row">
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg1.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg3.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg4.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flower-1.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg1.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg3.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg4.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flower-1.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+
+                    <?php
+
+                    if ($productList = mysqli_query($connection, "SELECT link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, category_title FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=product_category WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category != 170 AND product_category != 195 AND product_category!=77 AND product_category!=40 AND link_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, link_published DESC LIMIT 0, 8")) {
+
+                        if (mysqli_num_rows($productList) != 0) {
+
+                            while ($productData = mysqli_fetch_assoc($productList)) {
+
+                                extract($productData);
+
+                                echo "<div class='col-xl-3 col-md-4 col-6'>
+                                    <a href='{$link_url}'>
+                                        <div class='flower_img'>
+                                            <div class='img_card'>
+                                                <img src='{$product_image}' class='img-fluid' alt='{$product_title}'>
+                                            </div>
+                                            <div class='flower_content'>
+                                                <h6 class='is-font-20 dark-brown'>{$product_title}</h6>
+                                                <span class='is-font-18 grey-color'>{$category_title}</span>
+                                                <p class='dark-brown main_font_family is-font-26'>" . $inventory_currency_symbol . ' ' . (($inventory_price != 0) ? $inventory_price : $inventory_mrp) . "</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>";
+                            }
+                        }
+                    }
+
+                    ?>
                 </div>
             </div>
         </div>
@@ -229,38 +147,28 @@ require_once 'header.php';
         <div class="feature_content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-3 col-6">
-                        <div class="feature_box">
-                            <img src="assets/images/svg/feature1.svg" class="img-fluid" alt="">
-                            <div class="feature_heading">
-                                <h1 class="is-font-26 dark-brown">Valentine</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="feature_box">
-                            <img src="assets/images/svg/feature2.svg" class="img-fluid" alt="">
-                            <div class="feature_heading">
-                                <h1 class="is-font-26 dark-brown">Valentine</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="feature_box">
-                            <img src="assets/images/svg/feature3.svg" class="img-fluid" alt="">
-                            <div class="feature_heading">
-                                <h1 class="is-font-26 dark-brown">Valentine</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="feature_box">
-                            <img src="assets/images/svg/feature4.svg" class="img-fluid" alt="">
-                            <div class="feature_heading">
-                                <h1 class="is-font-26 dark-brown">Valentine</h1>
-                            </div>
-                        </div>
-                    </div>
+
+                    <?php
+
+                    if ($featureCategory = mysqli_query($connection, "SELECT category_title, category_image, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON category_id=link_relation_id WHERE link_type='category' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC LIMIT 4"))
+
+                        if (mysqli_num_rows($featureCategory) != 0) {
+                            while ($featureCategoryData = mysqli_fetch_assoc($featureCategory)) {
+                                echo " <div class='col-md-3 col-6'>
+                                    <a href='{$featureCategoryData['link_url']}'>
+                                        <div class='feature_box' title='{$featureCategoryData['category_image']}'>
+                                            <img src= '{$featureCategoryData['category_image']}' class='img-fluid' alt='{$featureCategoryData['category_title']}'>
+                                            <div class='feature_heading'>
+                                                <h1 class='is-font-26 dark-brown'>{$featureCategoryData['category_title']}</h1>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>";
+                            }
+                        }
+
+                    ?>
+
                 </div>
             </div>
         </div>
@@ -276,115 +184,38 @@ require_once 'header.php';
         </div>
         <div class="price_content">
             <div class="container">
+
                 <div class="row">
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg1.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg3.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg4.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <div class="flower_img">
-                            <div class="img_card">
-                                <img src="assets/images/svg/flower-1.svg" class="img-fluid" alt="">
-                            </div>
-                            <div class="flower_content">
-                                <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                <span class="is-font-18 grey-color">consectetur</span>
-                                <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg1.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg3.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <a href="/singeldetails.html">
-                            <div class="flower_img">
-                                <div class="img_card">
-                                    <img src="assets/images/svg/flowerimg4.svg" class="img-fluid" alt="">
-                                </div>
-                                <div class="flower_content">
-                                    <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                    <span class="is-font-18 grey-color">consectetur</span>
-                                    <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-6">
-                        <div class="flower_img">
-                            <div class="img_card">
-                                <img src="assets/images/svg/flower-1.svg" class="img-fluid" alt="">
-                            </div>
-                            <div class="flower_content">
-                                <h6 class="is-font-20 dark-brown">Lorem ipsum dol</h6>
-                                <span class="is-font-18 grey-color">consectetur</span>
-                                <p class="dark-brown main_font_family is-font-26">Rs 9000.0</p>
-                            </div>
-                        </div>
-                    </div>
+
+                    <?php
+
+                    if ($productList = mysqli_query($connection, "SELECT link_id, link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, category_title FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=product_category WHERE inventory_type='product' AND link_type='product' AND link_status=200 AND inventory_in_stock=1 AND product_category != 170 AND product_category != 195 AND product_category!=77 AND product_category!=40 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 8")) {
+
+                        if (mysqli_num_rows($productList) != 0) {
+
+                            while ($productData = mysqli_fetch_assoc($productList)) {
+
+                                extract($productData);
+
+                                echo "<div class='col-xl-3 col-md-4 col-6'>
+                                    <a href='{$link_url}'>
+                                        <div class='flower_img'>
+                                            <div class='img_card'>
+                                                <img src='{$product_image}' class='img-fluid' alt='{$product_title}'>
+                                            </div>
+                                            <div class='flower_content'>
+                                                <h6 class='is-font-20 dark-brown'>{$product_title}</h6>
+                                                <span class='is-font-18 grey-color'>{$category_title}</span>
+                                                <p class='dark-brown main_font_family is-font-26'>" . $inventory_currency_symbol . ' ' . (($inventory_price != 0) ? $inventory_price : $inventory_mrp) . "</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>";
+                            }
+                        }
+                    }
+
+                    ?>
                 </div>
             </div>
         </div>

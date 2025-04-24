@@ -28,17 +28,20 @@
                 <div class="container-fluid">
                     <div class="top_header">
                         <div class="header_logo">
-                            <a href="/"><img src="assets/images/svg/andbloom.svg" class="img-fluid" alt=""></a>
+                            <a href="/"><img src="<?php echo USER_IMAGES ?>svg/andbloom.svg" class="img-fluid"
+                                    alt=""></a>
                         </div>
                         <div class="header_right">
                             <div class="search">
                                 <input type="text" placeholder="Search">
                                 <div class="search_icon">
-                                    <button><img src="assets/images/svg/search.svg" class="img-fluid" alt=""></button>
+                                    <button><img src="<?php echo USER_IMAGES ?>svg/search.svg" class="img-fluid"
+                                            alt=""></button>
                                 </div>
                             </div>
                             <div class="mobile_search header_cart">
-                                <a href="#"><img src="assets/images/svg/search.svg" class="img-fluid" alt=""></a>
+                                <a href="#"><img src="<?php echo USER_IMAGES ?>svg/search.svg" class="img-fluid"
+                                        alt=""></a>
                             </div>
                             <div class="search_overlay">
                                 <div class="search_input">
@@ -55,15 +58,15 @@
                             </div>
 
                             <div class="header_cart cart_add">
-                                <a href="/cart.html" class="cart"><img src="assets/images/svg/lock.svg"
+                                <a href="/cart.html" class="cart"><img src="<?php echo USER_IMAGES ?>svg/lock.svg"
                                         class="img-fluid" alt=""></a>
                                 <div class="cart_no">
                                     <span>2</span>
                                 </div>
                             </div>
                             <div class="user header_cart">
-                                <a href="/contact.html"><img src="assets/images/svg/user.svg" class="img-fluid"
-                                        alt=""></a>
+                                <a href="/contact.html"><img src="<?php echo USER_IMAGES ?>svg/user.svg"
+                                        class="img-fluid" alt=""></a>
                             </div>
                             <div class="top_menu header_cart">
                                 <i class='bx bx-menu'></i>
