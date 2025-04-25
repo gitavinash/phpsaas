@@ -25,9 +25,9 @@ if (isset($_COOKIE['user_data'])) {
     // Check user active session
 
     if (!in_array($user_id, [9423, 9473])) {
-        if($checkUserSession=mysqli_query($connection, "SELECT us_active_device FROM ".TABLE_PREFIX."user_sessions WHERE us_status=1 AND us_user_id='{$user_id}' AND us_site_id=".SITE_ID)) {
-            if(mysqli_num_rows($checkUserSession)>2) {
-                $showLogoutBtn=0;
+        if ($checkUserSession = mysqli_query($connection, "SELECT us_active_device FROM " . TABLE_PREFIX . "user_sessions WHERE us_status=1 AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
+            if (mysqli_num_rows($checkUserSession) > 2) {
+                $showLogoutBtn = 0;
                 $excluded_paths = ['/manage-subscription/', '/terms-and-conditions/', '/about-us/', '/terms-and-conditions/', '/privacy-policy/', '/refund-policy/'];
                 $is_excluded = false;
                 foreach ($excluded_paths as $path) {
@@ -41,13 +41,11 @@ if (isset($_COOKIE['user_data'])) {
                     require_once 'user-suspend.php';
                     exit();
                 }
-
             } else {
-                $showLogoutBtn=1;
+                $showLogoutBtn = 1;
             }
         }
-}
-
+    }
 }
 
 ?>
@@ -154,10 +152,12 @@ if (isset($_COOKIE['user_data'])) {
                                     <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
                                     <a href="#"><?php echo PROFILE_EMAIL ?></a>
                                     <?php
-                                    
-                                    echo (($showLogoutBtn==1) ? '<a href="/logout/">Logout</a>' : '');
 
-                                    ?>
+                                        if (isset($showLogoutBtn)) {
+                                            echo (($showLogoutBtn == 1) ? '<a href="/logout/">Logout</a>' : '');
+                                        }
+
+                                        ?>
 
                                 </div>
                             </div>
