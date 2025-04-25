@@ -1,4 +1,16 @@
 $(document).ready(function (e) {
+  /** SweetAlert Pop Up Box */
+
+  function popUpMessage(msgPostion, msgTxt, msgType) {
+    Swal.fire({
+      position: msgPostion,
+      type: msgType,
+      title: msgTxt,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
   // Header, Menu and Scroll
 
   const $header = $(".sticky-header");
@@ -135,15 +147,19 @@ $(document).ready(function (e) {
   // Homepage from for start application
 
   if ($("#startApplication").length) {
-    console.log(`startApplication found`);
-
     $("#startApplication").click(function (e) {
       e.preventDefault();
       let selectedCountry = $("#selectedCountry").val();
       if (selectedCountry) {
         console.log("selectedCountry", selectedCountry);
-        selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "-");
+        selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "_");
         window.location.href = `/start-application/?country=${selectedCountry}`;
+      } else {
+        popUpMessage(
+          "center",
+          "Please select country to start application",
+          "warning"
+        );
       }
     });
   }
@@ -153,18 +169,19 @@ $(document).ready(function (e) {
     $("#startApplicationDropDown").change(function () {
       let selectedCountry = $(this).val();
       if (selectedCountry) {
-        selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "-");
+        selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "_");
         window.location.href = `/start-application/?country=${selectedCountry}`;
       }
     });
   }
+
+  // Start application process page
 
   const urlParams = new URLSearchParams(window.location.search);
   const country = urlParams.get("country");
   const purpose = urlParams.get("purpose");
   const type = urlParams.get("type"); // Optional, in case needed later
 
-  // Hide all by default
   $("#selectCountry").hide();
   $("#purposeOfVisa").hide();
   $("#visaPackages").hide();
@@ -175,39 +192,138 @@ $(document).ready(function (e) {
     return;
   }
 
-  // Case: Country is present
-  $("#purposeOfVisa").show();
+  // Show visa purpose
 
-  // Optional: fetch and populate purposeOfVisa data from API
-  $.ajax({
-    url: "/api/company/?id=5",
-    method: "GET",
-    success: function (data) {
-      $("#purposeOfVisa").html(data);
-    },
-    error: function () {
-      console.error("Error fetching purposeOfVisa data");
-    },
-  });
+  if (country && !purpose) {
+    $("#selectCountry").hide();
+    console.log(`Show visa purpose`);
+    const $visaContainer = $("#visaPurposeListBox");
+    if ($("#visaPurposeListBox").length) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const countryName = urlParams.get("country");
+      if (!countryName) {
+        $visaContainer.html(
+          '<p class="text-red-500">Missing country ID in the URL.</p>'
+        );
+        return;
+      }
+      $visaContainer.html('<p class="text-gray-500">Loading visa types...</p>');
+      $.ajax({
+        url: `/api/country/visas/?country=${countryName}`,
+        method: "GET",
+        success: function (res) {
+          console.log(`Success data found`, res);
+          $visaContainer.empty();
+          console.log(`Country data:`, res.countryList);
 
-  // Case: Country and Purpose are present and not empty
-  if (purpose && purpose.trim() !== "") {
+          if (Array.isArray(res.countryList)) {
+            res.countryList.forEach((type) => {
+              const formattedType =
+                type.charAt(0).toUpperCase() + type.slice(1); // Capitalize
+              const purposeUrl = formattedType.toLowerCase().replace(" ", "_");
+              console.log(`formattedType: `, formattedType);
+
+              const visaCard = `
+                            <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
+                               <a href='/start-application/?country=${countryName}&purpose=${purposeUrl}'>
+                                 <div class="flex items-center mb-3">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
+                                        <i class="ri-more-line text-gray-600 ri-xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-semibold text-gray-900">${formattedType}</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Visa information for ${formattedType.toLowerCase()} travel purposes.</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="ri-time-line mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                    <span>Processing time may vary</span>
+                                </div>
+                               </a>
+                            </div>
+                        `;
+              $visaContainer.append(visaCard);
+            });
+          } else {
+            $visaContainer.html(
+              '<p class="text-gray-500">No visa information found for this country.</p>'
+            );
+          }
+        },
+        error: function (error) {
+          console.log(`error: `, error);
+          popUpMessage("center", error.responseJSON.msg, "error");
+        },
+      });
+    }
+    $("#purposeOfVisa").show();
+    return;
+  }
+
+  // Show visa package
+
+  if (country && purpose) {
+    $("#purposeOfVisa").hide();
+    console.log(`Show visa package`);
+    const $visaContainer = $("#visaPackagesListBox");
+    if ($("#visaPackagesListBox").length) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const countryName = urlParams.get("country");
+      if (!countryName) {
+        $visaContainer.html(
+          '<p class="text-red-500">Missing country ID in the URL.</p>'
+        );
+        return;
+      }
+      $visaContainer.html(
+        '<p class="text-gray-500">Loading visa packages...</p>'
+      );
+      $.ajax({
+        url: `/api/visa_packages/list/?country=${countryName}&purpose=${purpose}`,
+        method: "GET",
+        success: function (res) {
+          $visaContainer.empty();
+          console.log(`Package data:`, res.packageList);
+
+          if (Array.isArray(res.packageList)) {
+            res.packageList.forEach((type) => {
+              const formattedType =
+                type.charAt(0).toUpperCase() + type.slice(1); // Capitalize
+              const purposeUrl = formattedType.toLowerCase().replace(" ", "_");
+              console.log(`formattedType: `, formattedType);
+
+              const visaCard = `
+                            <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
+                               <a href='/start-application/?country=${countryName}&purpose=${purposeUrl}'>
+                                 <div class="flex items-center mb-3">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
+                                        <i class="ri-more-line text-gray-600 ri-xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-semibold text-gray-900">${formattedType}</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Visa information for ${formattedType.toLowerCase()} travel purposes.</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="ri-time-line mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                    <span>Processing time may vary</span>
+                                </div>
+                               </a>
+                            </div>
+                        `;
+              $visaContainer.append(visaCard);
+            });
+          } else {
+            $visaContainer.html(
+              '<p class="text-gray-500">No visa information found for this country.</p>'
+            );
+          }
+        },
+        error: function (error) {
+          console.log(`error: `, error);
+          popUpMessage("center", error.responseJSON.msg, "error");
+        },
+      });
+    }
     $("#visaPackages").show();
-
-    // Optional: fetch visaPackages data from API
-    $.ajax({
-      url: "/api/visa/purpose/",
-      method: "GET",
-      data: {
-        country: country,
-        purpose: purpose,
-      },
-      success: function (data) {
-        $("#visaPackages").html(data);
-      },
-      error: function () {
-        console.error("Error fetching visaPackages");
-      },
-    });
+    return;
   }
 });

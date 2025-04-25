@@ -87,7 +87,7 @@ if ($packageInfoList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefi
                                 <td>{$i}</td>
                                 <td>{$singlePackageData['visa_package_title']}</td>
                                 <td>{$singlePackageData['visa_country_title']} ( {$singlePackageData['visa_country_code']} )</td>
-                                <td>" . ucwords($singlePackageData['visa_package_visa_type']) . " VISA</td>
+                                <td>" . ucwords($singlePackageData['visa_package_visa_type']) . "</td>
                                 <td>{$singlePackageData['visa_package_entry_type']}</td>
                                 <td>₹ {$singlePackageData['visa_package_mrp']}</td>
                                 <td>₹ {$singlePackageData['visa_package_price']}</td>
