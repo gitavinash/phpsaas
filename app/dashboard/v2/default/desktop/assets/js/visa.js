@@ -391,4 +391,182 @@ $(document).ready(function () {
       });
     });
   }
+  // Edit package
+
+  if ($("#editPackage").length > 0) {
+    $("#editPackage").on("click", function (e) {
+      e.preventDefault();
+
+      // Collecting field values
+      var packageId = $("#packageId").val().trim();
+      var countryId = $("#country").val().trim();
+      var title = $("#title").val().trim();
+      var promoText = $("#promoText").val().trim();
+      var appointment = $("#appointment").val().trim();
+      var visaType = $("#visaType").val().trim();
+      var stayUpto = $("#stayUpto").val().trim();
+      var validity = $("#validity").val().trim();
+      var entryType = $("#entryType").val().trim();
+      var priceMrp = $("#priceMrp").val().trim();
+      var price = $("#price").val().trim();
+      var planDisclaimer = $("#planDisclaimer").text().trim();
+      var visaProcessingTime = $("#visaProcessingTime").text().trim();
+      var visaApplicationCenters = $("#visaApplicationCenters").text().trim();
+
+      let isFeaturedValue = $('input[name="isFeatured"]:checked').val();
+
+      // Validation
+
+      if (!packageId) {
+        popUpMessage("center", "Please package id is missing.", "error");
+        $("#countryId").focus();
+        return;
+      }
+
+      if (!countryId) {
+        popUpMessage("center", "Please select a country.", "error");
+        $("#countryId").focus();
+        return;
+      }
+
+      if (!title) {
+        popUpMessage("center", "Please enter the title of package.", "error");
+        $("#promoText").focus();
+        return;
+      }
+
+      if (!promoText) {
+        popUpMessage("center", "Please enter the promo text.", "error");
+        $("#promoText").focus();
+        return;
+      }
+
+      if (!appointment) {
+        popUpMessage(
+          "center",
+          "Please specify if appointment is required.",
+          "error"
+        );
+        $("#appointment").focus();
+        return;
+      }
+
+      if (!visaType) {
+        popUpMessage(
+          "center",
+          "Please select at least one visa type.",
+          "error"
+        );
+        return;
+      }
+
+      if (!stayUpto) {
+        popUpMessage("center", "Please enter the stay duration.", "error");
+        $("#stayUpto").focus();
+        return;
+      }
+
+      if (!validity) {
+        popUpMessage(
+          "center",
+          "Please enter the visa validity period.",
+          "error"
+        );
+        $("#validity").focus();
+        return;
+      }
+
+      if (!entryType) {
+        popUpMessage("center", "Please select entry type.", "error");
+        $("#entryType").focus();
+        return;
+      }
+
+      if (!priceMrp) {
+        popUpMessage("center", "Please enter MRP price.", "error");
+        $("#priceMrp").focus();
+        return;
+      }
+
+      if (!price) {
+        popUpMessage("center", "Please enter offer price.", "error");
+        $("#price").focus();
+        return;
+      }
+
+      if (!planDisclaimer) {
+        popUpMessage("center", "Please add a disclaimer.", "error");
+        $("#planDisclaimer").focus();
+        return;
+      }
+
+      if (!visaProcessingTime) {
+        popUpMessage("center", "Please enter visa processing time.", "error");
+        $("#visaProcessingTime").focus();
+        return;
+      }
+
+      if (!visaApplicationCenters) {
+        popUpMessage(
+          "center",
+          "Please enter visa application center(s).",
+          "error"
+        );
+        $("#visaApplicationCenters").focus();
+        return;
+      }
+
+      // If all validations pass
+      $("#editPackage").hide();
+
+      // Prepare form data using `selectedFiles`
+      var formData = new FormData();
+      formData.append("packageId", packageId);
+      formData.append("countryId", countryId);
+      formData.append("title", title);
+      formData.append("promoText", promoText);
+      formData.append("appointment", appointment);
+      formData.append("visaType", visaType);
+      formData.append("stayUpto", stayUpto);
+      formData.append("validity", validity);
+      formData.append("entryType", entryType);
+      formData.append("priceMrp", priceMrp);
+      formData.append("price", price);
+      formData.append("planDisclaimer", planDisclaimer);
+      formData.append("visaProcessingTime", visaProcessingTime);
+      formData.append("visaApplicationCenters", visaApplicationCenters);
+      formData.append("isFeatured", isFeaturedValue);
+
+      // AJAX call
+      $.ajax({
+        type: "POST",
+        url: "/api/visa_packages/update/",
+        dataType: "JSON",
+        processData: false,
+        contentType: false,
+        data: formData,
+        encrypt: "multipart/form-data",
+        success: function (successResponse) {
+          popUpMessage("center", successResponse.msg, successResponse.status);
+          console.log(`successResponse:`, successResponse);
+
+          if (successResponse.status == "success") {
+            setTimeout(function () {
+              window.location.href = `/dashboard/visa_packages/update/?id=${packageId}`;
+            }, 1500);
+          } else {
+            $("#editPackage").show();
+          }
+        },
+        error: function (errorResponse) {
+          $("#editPackage").show();
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+        },
+      });
+    });
+  }
 });

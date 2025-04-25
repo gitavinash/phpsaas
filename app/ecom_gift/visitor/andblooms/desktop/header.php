@@ -33,39 +33,39 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-69G2SPCWHX"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'G-69G2SPCWHX');
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-69G2SPCWHX');
     </script>
 
     <!-- Global site tag (gtag.js) - Google Ads: 628904231 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-628904231"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
 
-        gtag('config', 'AW-628904231');
+    gtag('config', 'AW-628904231');
     </script>
 
     <script type="text/javascript">
-        (function(c, l, a, r, i, t, y) {
-            c[a] = c[a] || function() {
-                (c[a].q = c[a].q || []).push(arguments)
-            };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i;
-            y = l.getElementsByTagName(r)[0];
-            y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", "dw3u1ggui2");
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "dw3u1ggui2");
     </script>
 
     <?php
@@ -78,14 +78,14 @@
 
     ?>
 
-                <script>
-                    gtag('event', 'conversion', {
-                        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
-                        'value': 1,
-                        'currency': 'INR',
-                        'transaction_id': ''
-                    });
-                </script>
+    <script>
+    gtag('event', 'conversion', {
+        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
+        'value': 1,
+        'currency': 'INR',
+        'transaction_id': ''
+    });
+    </script>
     <?php
 
             }
@@ -96,26 +96,26 @@
 
     <!-- Meta Pixel Code -->
     <script>
-        ! function(f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function() {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '577779820444463');
-        fbq('track', 'PageView');
+    ! function(f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function() {
+            n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '577779820444463');
+    fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=577779820444463&ev=PageView&noscript=1" /></noscript>
@@ -123,20 +123,20 @@
 
     <!-- Google Tag Manager -->
     <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
+    (function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
     </script>
     <!-- End Google Tag Manager -->
 
@@ -365,10 +365,10 @@
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/">Blooms of
                                             <?php echo date('F') ?></a>
                                     </li>
-                                    <!-- <li class="nav-item " style="background: #F19EB5;">
-                                        <a class="nav-link" style="color: #fff" href="/tag/women/"><b>Women's
+                                    <li class="nav-item " style="background: #F19EB5;">
+                                        <a class="nav-link" style="color: #fff" href="/tag/mother/"><b>Mother's
                                                 Day</b></a>
-                                    </li> -->
+                                    </li>
                                     <!-- <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/christmas/"><b>Christmas</b></a>
                                     </li> -->
@@ -383,8 +383,12 @@
                                             <div class="mega1">
                                                 <div class="menu-titl"><a href="#">Under price<span
                                                             class="cart-bodr"></span></a></div>
-                                                <a class="dropdown-item" href="/filter/product/?filterType=price&min=0&max=1999">Under ₹ 1999</a>
-                                                <a class="dropdown-item" href="/filter/product/?filterType=price&min=0&max=2999">Under ₹ 2999</a>
+                                                <a class="dropdown-item"
+                                                    href="/filter/product/?filterType=price&min=0&max=1999">Under ₹
+                                                    1999</a>
+                                                <a class="dropdown-item"
+                                                    href="/filter/product/?filterType=price&min=0&max=2999">Under ₹
+                                                    2999</a>
                                             </div>
                                         </div>
                                     </li>

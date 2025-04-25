@@ -146,7 +146,7 @@ window.location.href = '/dashboard/country/list/';
                                 <div class="form-group">
                                     <div class="input-box">
                                         <input type="radio" id="isFeatured1" name="isFeatured" value="1"
-                                            <?php echo (($visa_packages_is_featured == 1) ? 'checked' : '') ?> />
+                                            <?php echo (($visa_package_is_featured == 1) ? 'checked' : '') ?> />
                                         <label class="radio-button" for="visasType1Label">Yes</label>
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@ window.location.href = '/dashboard/country/list/';
                                 <div class="form-group">
                                     <div class="input-box">
                                         <input type="radio" id="isFeatured2" name="isFeatured" value="0"
-                                            <?php echo (($visa_packages_is_featured == 0) ? 'checked' : '') ?> />
+                                            <?php echo (($visa_package_is_featured == 0) ? 'checked' : '') ?> />
                                         <label class="radio-button" for="visasType2Label">No</label>
                                     </div>
                                 </div>
@@ -171,8 +171,10 @@ window.location.href = '/dashboard/country/list/';
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <a href="#" class="btn popUpBtn" id="addNewPackage"><i class="fi-rr-check"></i> <span
-                                        id="btnText">Add package</span>
+                                <input type="hidden" value="<?php echo $visa_package_id ?>" id="packageId"
+                                    name="packageId">
+                                <a href="#" class="btn popUpBtn" id="editPackage"><i class="fi-rr-check"></i> <span
+                                        id="btnText">Edit package</span>
                                     <span id="loadingSpinner" style="display:none;"> <i
                                             class="fi-rr-spinner fi-spin"></i> </span></a>
                             </div>
