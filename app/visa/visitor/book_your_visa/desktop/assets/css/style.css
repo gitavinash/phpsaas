@@ -157,3 +157,7 @@ strong {
     padding: 2em 2em;
   }
 }
+
+.faqList:last-child {
+  border: none;
+}

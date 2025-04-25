@@ -78,7 +78,7 @@ window.location.href = '/dashboard/country/list/';
                             <label class="form-lable" id="Label">FAQ's</label>
                         </div>
                         <div class="form-group editableBox" id="faq" contenteditable="true">
-                            <?php echo $visa_country_documents ?>
+                            <?php echo $visa_country_faq ?>
                         </div>
                         <?php
                         $selectedVisaTypes = json_decode($visa_country_services, true); // Decode JSON to PHP array

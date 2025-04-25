@@ -1,6 +1,26 @@
 <?php
 
-    require_once 'header.php';
+if (isset($package_id)) {
+    $package_id = base64_decode($package_id);
+} else {
+    echo "Something went wrong go back. <a href='/start-application/'>Click here</a>";
+    exit();
+}
+
+if ($packageInfoList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}package INNER JOIN {$tableNamePrefix}country ON visa_package_country_id=visa_country_id WHERE visa_country_status=1 AND visa_package_id='{$package_id}' AND visa_country_site_id=" . SITE_ID . " AND visa_package_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($packageInfoList) != 0) {
+        $packageData = mysqli_fetch_assoc($packageInfoList);
+        extract($packageData);
+    } else {
+        echo "Something went wrong go back and re-start applying. <a href='/start-application/'>Click here</a>";
+        exit();
+    }
+} else {
+    echo "Something went wrong go back. <a href='/start-application/'>Click here</a>";
+    exit();
+}
+
+require_once 'header.php';
 
 ?>
 <main style="margin-top: 80px;">
@@ -8,7 +28,7 @@
         <div class="flex flex-col lg:flex-row">
             <!-- Sidebar Navigation -->
             <div class="hidden lg:block w-full lg:w-72 border-b lg:border-b-0 lg:border-r border-gray-100 bg-white p-6">
-                <h1 class="text-2xl font-bold mb-1">Switzerland Visa Application</h1>
+                <h1 class="text-2xl font-bold mb-1"><?php echo ucwords($visa_country_title) ?> Visa Application</h1>
                 <p class="text-gray-500 mb-8">Your Plan Summary is Here</p>
                 <nav class="space-y-4">
                     <div class="flex items-center text-primary border-l-4 border-primary pl-3 cursor-pointer py-1">
@@ -47,8 +67,7 @@
                         <div class="w-8 h-8 flex items-center justify-center text-amber-600 mr-3">
                             <i class="ri-calendar-check-line ri-lg"></i>
                         </div>
-                        <p class="text-amber-800">Get your visa appointment date picked within 3 working days or get a
-                            full refund.</p>
+                        <p class="text-amber-800"><?php echo $visa_package_promo_text ?></p>
                     </div>
                     <!-- Appointment Options -->
                     <div
@@ -57,18 +76,19 @@
                             class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                             <button
                                 class="bg-blue-50 text-blue-700 px-6 py-3 rounded-lg flex items-center !rounded-button whitespace-nowrap w-full sm:w-auto justify-center">
-                                <span>Get your appointment in <strong>72 hours</strong></span>
+                                <span>Get your appointment in <strong><?php echo $visa_package_appointment_time ?>
+                                        hours</strong></span>
                             </button>
-                            <div class="flex space-x-3 w-full sm:w-auto">
+                            <!-- <div class="flex space-x-3 w-full sm:w-auto">
                                 <button
                                     class="bg-white border border-gray-200 px-5 py-2 rounded-lg font-medium text-gray-800 shadow-sm !rounded-button whitespace-nowrap">Business</button>
                                 <button
                                     class="bg-gray-100 border border-gray-200 px-5 py-2 rounded-lg font-medium text-gray-500 !rounded-button whitespace-nowrap">Standard</button>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="text-left sm:text-right w-full sm:w-auto mt-4 sm:mt-0">
                             <div class="text-2xl font-bold flex items-center justify-start sm:justify-end">
-                                ₹ 5,350
+                                ₹ <?php echo $visa_package_price ?>
                                 <div class="w-6 h-6 flex items-center justify-center ml-1">
                                     <i class="ri-arrow-down-s-line"></i>
                                 </div>
@@ -80,19 +100,19 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
                                 <p class="text-gray-500 mb-1">Visa Type</p>
-                                <p class="font-semibold">Business</p>
+                                <p class="font-semibold"><?php echo ucwords($visa_package_visa_type) ?></p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
                                 <p class="text-gray-500 mb-1">Stay</p>
-                                <p class="font-semibold">Upto 30 Days</p>
+                                <p class="font-semibold">Upto <?php echo $visa_package_stay_duration ?> Days</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
                                 <p class="text-gray-500 mb-1">Validity</p>
-                                <p class="font-semibold">Upto 90 Days</p>
+                                <p class="font-semibold">Upto <?php echo $visa_package_validity_duration ?> Days</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
                                 <p class="text-gray-500 mb-1">Entry Type</p>
-                                <p class="font-semibold">Single Entry</p>
+                                <p class="font-semibold"><?php echo ucwords($visa_package_entry_type) ?> Entry</p>
                             </div>
                         </div>
                     </div>
@@ -101,40 +121,20 @@
                         <h2 class="text-xl font-semibold mb-4">Plan Disclaimer</h2>
                         <div class="bg-white border border-gray-100 rounded-lg p-6">
                             <ul class="space-y-3 text-gray-700">
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-checkbox-circle-line"></i>
-                                    </div>
-                                    <span>The visa fee mentioned is inclusive of all service charges and taxes.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-checkbox-circle-line"></i>
-                                    </div>
-                                    <span>Embassy/Consulate reserves the right to request additional documents or
-                                        personal appearance.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-checkbox-circle-line"></i>
-                                    </div>
-                                    <span>Visa approval is at the sole discretion of the Embassy/Consulate and cannot be
-                                        guaranteed.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-checkbox-circle-line"></i>
-                                    </div>
-                                    <span>Processing time may vary based on nationality and current application
-                                        volume.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-checkbox-circle-line"></i>
-                                    </div>
-                                    <span>Rescheduling of appointments is subject to availability and may incur
-                                        additional charges.</span>
-                                </li>
+                                <?php
+
+                                $disclaimerList = explode(',', $visa_package_disclaimer);
+
+                                foreach ($disclaimerList as $disclaimers) {
+                                    echo "<li class='flex items-start'>
+                                            <div class='w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2'>
+                                                <i class='ri-checkbox-circle-line'></i>
+                                            </div>
+                                            <span>$disclaimers</span>
+                                        </li>";
+                                }
+
+                                ?>
                             </ul>
                         </div>
                     </div>
@@ -146,35 +146,39 @@
                                 <div>
                                     <h3 class="font-medium mb-3">Processing Time</h3>
                                     <ul class="space-y-2 text-gray-700">
-                                        <li class="flex items-center">
-                                            <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                                                <i class="ri-time-line"></i>
+                                        <?php
+
+                                        $scheduleList = explode(',', $visa_package_schedule);
+
+                                        foreach ($scheduleList as $schedules) {
+                                            echo "<li class='flex items-start'>
+                                            <div class='w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2'>
+                                                <i class='ri-time-line'></i>
                                             </div>
-                                            <span>Standard Processing: 15 working days</span>
-                                        </li>
-                                        <li class="flex items-center">
-                                            <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                                                <i class="ri-time-line"></i>
-                                            </div>
-                                            <span>Express Processing: 5 working days</span>
-                                        </li>
+                                            <span>$schedules</span>
+                                        </li>";
+                                        }
+
+                                        ?>
                                     </ul>
                                 </div>
                                 <div>
                                     <h3 class="font-medium mb-3">Application Centers</h3>
                                     <ul class="space-y-2 text-gray-700">
-                                        <li class="flex items-center">
-                                            <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                                                <i class="ri-map-pin-line"></i>
+                                        <?php
+
+                                        $centerList = explode(',', $visa_package_center);
+
+                                        foreach ($centerList as $centers) {
+                                            echo "<li class='flex items-start'>
+                                            <div class='w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2'>
+                                                <i class='ri-map-pin-line'></i>
                                             </div>
-                                            <span>Mumbai, Delhi, Bangalore</span>
-                                        </li>
-                                        <li class="flex items-center">
-                                            <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                                                <i class="ri-map-pin-line"></i>
-                                            </div>
-                                            <span>Chennai, Kolkata, Hyderabad</span>
-                                        </li>
+                                            <span>$centers</span>
+                                        </li>";
+                                        }
+
+                                        ?>
                                     </ul>
                                 </div>
                             </div>
@@ -192,30 +196,13 @@
                                             <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
                                                 <i class="ri-calendar-line"></i>
                                             </div>
-                                            <span>Monday to Friday: 9:00 AM - 4:00 PM</span>
+                                            <span>Monday to Friday: 10:00 AM - 7:00 PM</span>
                                         </li>
                                         <li class="flex items-center">
                                             <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
                                                 <i class="ri-calendar-line"></i>
                                             </div>
                                             <span>Saturday & Sunday: Closed</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-3">Holiday Calendar 2025</h3>
-                                    <ul class="space-y-2 text-gray-700">
-                                        <li class="flex items-center">
-                                            <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                                                <i class="ri-calendar-event-line"></i>
-                                            </div>
-                                            <span>New Year's Day: January 1</span>
-                                        </li>
-                                        <li class="flex items-center">
-                                            <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                                                <i class="ri-calendar-event-line"></i>
-                                            </div>
-                                            <span>Good Friday: April 18</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -227,30 +214,20 @@
                         <h2 class="text-xl font-semibold mb-4">Documents Required</h2>
                         <div class="bg-white border border-gray-100 rounded-lg p-6">
                             <ul class="space-y-3 text-gray-700">
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-file-list-line"></i>
-                                    </div>
-                                    <span>Valid passport with minimum 6 months validity and 2 blank pages</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-file-list-line"></i>
-                                    </div>
-                                    <span>Completed visa application form with recent photograph</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-file-list-line"></i>
-                                    </div>
-                                    <span>Travel insurance covering the entire stay period</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-file-list-line"></i>
-                                    </div>
-                                    <span>Flight itinerary and hotel reservations</span>
-                                </li>
+                                <?php
+
+                                $documentList = explode(',', $visa_country_documents);
+
+                                foreach ($documentList as $documents) {
+                                    echo "<li class='flex items-start'>
+                                            <div class='w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2'>
+                                                <i class='ri-file-list-line'></i>
+                                            </div>
+                                            <span>$documents</span>
+                                        </li>";
+                                }
+
+                                ?>
                             </ul>
                         </div>
                     </div>
@@ -259,24 +236,20 @@
                         <h2 class="text-xl font-semibold mb-4">Important Information</h2>
                         <div class="bg-white border border-gray-100 rounded-lg p-6 w-full">
                             <ul class="space-y-3 text-gray-700">
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-information-line"></i>
-                                    </div>
-                                    <span>Biometric data collection is mandatory for all applicants</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-information-line"></i>
-                                    </div>
-                                    <span>Personal appearance may be required during the application process</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2">
-                                        <i class="ri-information-line"></i>
-                                    </div>
-                                    <span>Keep copies of all submitted documents for your reference</span>
-                                </li>
+                                <?php
+
+                                $informationList = explode(',', $visa_country_information);
+
+                                foreach ($informationList as $informations) {
+                                    echo "<li class='flex items-start'>
+                                            <div class='w-5 h-5 flex items-center justify-center text-primary mt-0.5 mr-2'>
+                                                <i class='ri-information-line'></i>
+                                            </div>
+                                            <span>$informations</span>
+                                        </li>";
+                                }
+
+                                ?>
                             </ul>
                         </div>
                     </div>
@@ -285,21 +258,26 @@
                         <h2 class="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
                         <div class="bg-white border border-gray-100 rounded-lg p-6">
                             <div class="space-y-4">
-                                <div class="border-b border-gray-100 pb-4">
-                                    <h3 class="font-medium mb-2">What is the processing time for a Swiss visa?</h3>
-                                    <p class="text-gray-700">Standard processing takes about 15 working days, while
-                                        express processing can be completed in 5 working days.</p>
-                                </div>
-                                <div class="border-b border-gray-100 pb-4">
-                                    <h3 class="font-medium mb-2">Can I track my visa application status?</h3>
-                                    <p class="text-gray-700">Yes, you can track your application status online using
-                                        your application reference number.</p>
-                                </div>
-                                <div class="pb-4">
-                                    <h3 class="font-medium mb-2">What happens if my visa is rejected?</h3>
-                                    <p class="text-gray-700">In case of rejection, you will receive a detailed
-                                        explanation and can appeal within 30 days of the decision.</p>
-                                </div>
+                                <?php
+
+                                $output = "";
+
+                                preg_match_all('/\*\*(.+?)\*\*\s*\*([^*]+)\*/', $visa_country_faq, $matches, PREG_SET_ORDER);
+
+                                foreach ($matches as $match) {
+                                    $title = htmlspecialchars(trim($match[1]));
+                                    $answer = htmlspecialchars(trim($match[2]));
+
+                                    $output .= '<div class="faqList border-b border-gray-100 pb-4">';
+                                    $output .= '<h3 class="font-medium mb-2">' . $title . '</h3>';
+                                    $output .= '<p class="text-gray-700">' . $answer . '</p>';
+                                    $output .= '</div>';
+                                }
+
+                                echo $output;
+
+
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -320,6 +298,6 @@
 </main>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
