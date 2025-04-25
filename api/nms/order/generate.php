@@ -32,7 +32,7 @@ function generate($connection, $data)
 
             /** Fetch product details  */
 
-            if ($productDetails = mysqli_query($connection, "SELECT GROUP_CONCAT({$order_product_type}_title) as product_title, GROUP_CONCAT({$order_product_type}_image) as productImage FROM " . TABLE_PREFIX . "_$order_product_type WHERE {$order_product_type}_type'='{$orderType}' AND {$productID}")) {
+            if ($productDetails = mysqli_query($connection, "SELECT GROUP_CONCAT({$order_product_type}_title) as product_title, GROUP_CONCAT({$order_product_type}_image) as productImage FROM " . TABLE_PREFIX . "$order_product_type WHERE {$order_product_type}_type='{$orderType}' AND {$productID}")) {
 
                 $product_title = '';
 
