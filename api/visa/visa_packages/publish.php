@@ -41,6 +41,8 @@ if (empty($errors)) {
 // Handle insert
 if (!empty($validRequest)) {
 
+    // require_once MODULES . 'imageUploader.php';
+
     // Default value for feature image if not provided
     $featuredImage = isset($image['featureImage']) ? $image['featureImage'] : '';
 

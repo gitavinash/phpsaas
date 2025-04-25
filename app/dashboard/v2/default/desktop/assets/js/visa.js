@@ -369,8 +369,6 @@ $(document).ready(function () {
         encrypt: "multipart/form-data",
         success: function (successResponse) {
           popUpMessage("center", successResponse.msg, successResponse.status);
-          console.log(`successResponse:`, successResponse);
-
           if (successResponse.status == "success") {
             setTimeout(function () {
               const packageId = btoa(successResponse.id);
@@ -548,10 +546,9 @@ $(document).ready(function () {
         encrypt: "multipart/form-data",
         success: function (successResponse) {
           popUpMessage("center", successResponse.msg, successResponse.status);
-          console.log(`successResponse:`, successResponse);
-
           if (successResponse.status == "success") {
             setTimeout(function () {
+              packageId = btoa(packageId);
               window.location.href = `/dashboard/visa_packages/update/?id=${packageId}`;
             }, 1500);
           } else {

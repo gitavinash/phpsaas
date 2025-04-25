@@ -17,7 +17,7 @@ if ($checkCountry = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}p
     } else { ?>
 <script type="text/javascript">
 alert('No package details found');
-window.location.href = '/dashboard/country/list/';
+window.location.href = '/dashboard/visa_packages/list/';
 </script>
 <?php
         exit();
