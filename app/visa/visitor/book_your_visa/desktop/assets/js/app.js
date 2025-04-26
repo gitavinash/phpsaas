@@ -264,56 +264,68 @@ $(document).ready(function (e) {
   if (country && purpose) {
     $("#purposeOfVisa").hide();
     console.log(`Show visa package`);
-    const $visaContainer = $("#visaPackagesListBox");
+    const $packageContainer = $("#visaPackagesListBox");
     if ($("#visaPackagesListBox").length) {
       const urlParams = new URLSearchParams(window.location.search);
       const countryName = urlParams.get("country");
       if (!countryName) {
-        $visaContainer.html(
+        $packageContainer.html(
           '<p class="text-red-500">Missing country ID in the URL.</p>'
         );
         return;
       }
-      $visaContainer.html(
+      $packageContainer.html(
         '<p class="text-gray-500">Loading visa packages...</p>'
       );
+
       $.ajax({
         url: `/api/visa_packages/list/?country=${countryName}&purpose=${purpose}`,
         method: "GET",
         success: function (res) {
-          $visaContainer.empty();
-          console.log(`Package data:`, res.packageList);
+          $packageContainer.empty();
+          console.log("Package data:", res);
 
-          if (Array.isArray(res.packageList)) {
-            res.packageList.forEach((type) => {
-              const formattedType =
-                type.charAt(0).toUpperCase() + type.slice(1); // Capitalize
-              const purposeUrl = formattedType.toLowerCase().replace(" ", "_");
-              console.log(`formattedType: `, formattedType);
+          if (Array.isArray(res.packageList) && res.packageList.length > 0) {
+            res.packageList.forEach((pkg) => {
+              const formattedTitle =
+                pkg.visa_package_title.charAt(0).toUpperCase() +
+                pkg.visa_package_title.slice(1);
+              const encodedId = btoa(pkg.visa_package_id);
 
-              const visaCard = `
-                            <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
-                               <a href='/start-application/?country=${countryName}&purpose=${purposeUrl}'>
-                                 <div class="flex items-center mb-3">
-                                    <div
-                                        class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
-                                        <i class="ri-more-line text-gray-600 ri-xl"></i>
-                                    </div>
-                                    <h3 class="text-2xl font-semibold text-gray-900">${formattedType}</h3>
-                                </div>
-                                <p class="text-gray-600 mb-4">Visa information for ${formattedType.toLowerCase()} travel purposes.</p>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <i class="ri-time-line mr-2 w-4 h-4 flex items-center justify-center"></i>
-                                    <span>Processing time may vary</span>
-                                </div>
-                               </a>
-                            </div>
-                        `;
-              $visaContainer.append(visaCard);
+              const mrp = parseFloat(pkg.visa_package_mrp);
+              const price = parseFloat(pkg.visa_package_price);
+              const discountAmount = mrp - price;
+              const discountPercent = Math.round((discountAmount / mrp) * 100);
+
+              const packageUrl = pkg.visa_package_title
+                .toLowerCase()
+                .replace(/\s+/g, "_");
+
+              const packageCard = `
+        <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
+          <a href='/package/?package_id=${encodedId}&package_name=${encodeURIComponent(
+                packageUrl
+              )}'>
+            <div class="flex items-center mb-3">
+              <div class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
+                <i class="ri-passport-line text-gray-600 ri-xl"></i>
+              </div>
+              <h3 class="text-2xl font-semibold text-gray-900">${formattedTitle}</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Stay Duration: ${
+              pkg.visa_package_stay_duration
+            } days, Validity: ${pkg.visa_package_validity_duration} days.</p>
+            <div class="text-gray-600 mb-2">Price: <del>₹${mrp}</del></div>
+            <div class="text-green-600 font-bold text-lg">Offer Price: ₹${price}</div>
+            <div class="text-red-600 text-sm mt-1">You save ₹${discountAmount} (${discountPercent}% off)</div>
+          </a>
+        </div>
+      `;
+              $packageContainer.append(packageCard);
             });
           } else {
-            $visaContainer.html(
-              '<p class="text-gray-500">No visa information found for this country.</p>'
+            $packageContainer.html(
+              '<p class="text-gray-500">No visa packages found.</p>'
             );
           }
         },

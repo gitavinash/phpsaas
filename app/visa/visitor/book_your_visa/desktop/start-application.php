@@ -78,7 +78,7 @@ require_once 'header.php';
                 package that best suits your purpose of travel. We’ll help you through each step of the application
                 process.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr"
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 auto-rows-fr"
             id="visaPackagesListBox">
             <!-- Purpose of visit -->
         </div>
