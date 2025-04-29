@@ -227,6 +227,8 @@ switch ($urlStructure[0]) {
 
 // Set up custom logging
 
+$domain = SITE_DOMAIN;
+
 if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'admin') !== false) {
 	$type = 'admin';
 } elseif (php_sapi_name() === 'cli') {
@@ -251,7 +253,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($domain) {
 
 $month = strtolower(date('F'));
 $date = date('d');
-$logDirectory = ROOT . "/logs/" . SITE_DOMAIN . "/{$type}/{$month}/{$date}";
+$logDirectory = ROOT . "/logs/{$domain}/{$type}/{$month}/{$date}";
 $logFile = "{$logDirectory}/logs.txt";
 
 // Create directories if they don't exist
@@ -259,6 +261,7 @@ if (!file_exists($logDirectory)) {
 	mkdir($logDirectory, 0777, true);
 }
 
+error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', $logFile);
 
