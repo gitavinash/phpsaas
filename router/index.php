@@ -225,46 +225,6 @@ switch ($urlStructure[0]) {
 		break;
 }
 
-// Set up custom logging
-
-$domain = SITE_DOMAIN;
-
-if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'admin') !== false) {
-	$type = 'admin';
-} elseif (php_sapi_name() === 'cli') {
-	$type = 'cli';
-} else {
-	$type = 'access'; // default for normal web access
-}
-
-set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($domain) {
-	$month = strtolower(date('F'));
-	$date = date('d');
-	$logDirectory = ROOT . "/logs/{$domain}/error/{$month}/{$date}";
-	$logFile = "{$logDirectory}/logs.txt";
-
-	if (!file_exists($logDirectory)) {
-		mkdir($logDirectory, 0777, true);
-	}
-
-	$message = "[" . date('Y-m-d H:i:s') . "] Error: {$errstr} in {$errfile} on line {$errline}\n";
-	error_log($message, 3, $logFile);
-});
-
-$month = strtolower(date('F'));
-$date = date('d');
-$logDirectory = ROOT . "/logs/{$domain}/{$type}/{$month}/{$date}";
-$logFile = "{$logDirectory}/logs.txt";
-
-// Create directories if they don't exist
-if (!file_exists($logDirectory)) {
-	mkdir($logDirectory, 0777, true);
-}
-
-error_reporting(E_ALL);
-ini_set('log_errors', 1);
-ini_set('error_log', $logFile);
-
 if (DEVELOPMENT_MODE == TRUE && $urlStructure[0] != 'api') {
 
 	// Display Script End time
