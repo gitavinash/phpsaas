@@ -93,7 +93,7 @@ switch ($urlStructure[0]) {
 		require_once 'homepage.php';
 		break;
 
-		// Service worker
+	// Service worker
 
 	case 'sw.js':
 		require_once 'service-worker.php';
@@ -103,7 +103,7 @@ switch ($urlStructure[0]) {
 		require_once 'service-worker.php';
 		break;
 
-		// CSS Configuration
+	// CSS Configuration
 
 	case 'config.min.css':
 		require_once 'css-theme.php';
@@ -113,7 +113,7 @@ switch ($urlStructure[0]) {
 		require_once 'website-setup.php';
 		break;
 
-		/** For Dashboard activity process */
+	/** For Dashboard activity process */
 
 	case 'dashboard':
 		require_once 'admin.php';
@@ -159,7 +159,7 @@ switch ($urlStructure[0]) {
 		require_once 'install.php';
 		break;
 
-		/** For all type of verification process */
+	/** For all type of verification process */
 
 	case 'verify':
 		require_once 'verify.php';
@@ -169,13 +169,13 @@ switch ($urlStructure[0]) {
 		require_once 'email.php';
 		break;
 
-		/** For all type of search process */
+	/** For all type of search process */
 
 	case 'search':
 		require_once 'search/index.php';
 		break;
 
-		/** For all type of filter process */
+	/** For all type of filter process */
 
 	case 'filter':
 		require_once 'filter/index.php';
@@ -201,7 +201,7 @@ switch ($urlStructure[0]) {
 		require_once 'sitemap.php';
 		break;
 
-		/** For all type of payment process */
+	/** For all type of payment process */
 
 	case 'payment':
 		require_once 'payment.php';
@@ -224,6 +224,43 @@ switch ($urlStructure[0]) {
 		require_once ROUTER . 'cache.php';
 		break;
 }
+
+// Set up custom logging
+
+if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'admin') !== false) {
+	$type = 'admin';
+} elseif (php_sapi_name() === 'cli') {
+	$type = 'cli';
+} else {
+	$type = 'access'; // default for normal web access
+}
+
+set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($domain) {
+	$month = strtolower(date('F'));
+	$date = date('d');
+	$logDirectory = ROOT . "/logs/{$domain}/error/{$month}/{$date}";
+	$logFile = "{$logDirectory}/logs.txt";
+
+	if (!file_exists($logDirectory)) {
+		mkdir($logDirectory, 0777, true);
+	}
+
+	$message = "[" . date('Y-m-d H:i:s') . "] Error: {$errstr} in {$errfile} on line {$errline}\n";
+	error_log($message, 3, $logFile);
+});
+
+$month = strtolower(date('F'));
+$date = date('d');
+$logDirectory = ROOT . "/logs/" . SITE_DOMAIN . "/{$type}/{$month}/{$date}";
+$logFile = "{$logDirectory}/logs.txt";
+
+// Create directories if they don't exist
+if (!file_exists($logDirectory)) {
+	mkdir($logDirectory, 0777, true);
+}
+
+ini_set('log_errors', 1);
+ini_set('error_log', $logFile);
 
 if (DEVELOPMENT_MODE == TRUE && $urlStructure[0] != 'api') {
 
