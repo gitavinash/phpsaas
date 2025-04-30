@@ -301,9 +301,6 @@
                                         <a class="nav-link dropdown-toggle" href="/tag/luxury/" id="navbardrop"
                                             data-toggle="dropdown">Luxury Collections
                                         </a>
-                                        <a class="nav-link dropdown-toggle" href="/tag/mother/" id="navbardrop"
-                                            data-toggle="dropdown">Mother's Day
-                                        </a>
                                         <div class="dropdown-menu mega-menu">
                                             <div class="mega1">
                                                 <div class="menu-titl"><a href="">New Arivals<span
