@@ -87,13 +87,13 @@
                         <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
                             <i class="ri-phone-line"></i>
                         </div>
-                        <span class="text-gray-400">+91 95606 14476</span>
+                        <span class="text-gray-400">+91 92112 87555</span>
                     </li>
                     <li class="flex items-center">
                         <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
                             <i class="ri-mail-line"></i>
                         </div>
-                        <span class="text-gray-400">contact@journeyfinders.in</span>
+                        <span class="text-gray-400">care@journeyfinders.in</span>
                     </li>
                     <li class="flex items-center">
                         <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
@@ -133,7 +133,7 @@
 </footer>
 <!-- Floating Elements -->
 <div class="fixed bottom-6 right-6 z-40 flex flex-col gap-4">
-    <a href="https://api.whatsapp.com/send?phone=919560614476&text=Hello%20JourneyFinders%2C%20I%20am%20interested%20in%20your%20services."
+    <a href="https://api.whatsapp.com/send?phone=919211287555&text=Hello%20JourneyFinders%2C%20I%20am%20interested%20in%20your%20services."
         target="_blank"
         class="w-12 h-12 flex items-center justify-center bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition">
         <i class="ri-whatsapp-line ri-lg"></i>
