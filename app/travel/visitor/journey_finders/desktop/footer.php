@@ -143,6 +143,8 @@
         <i class="ri-arrow-up-line ri-lg"></i>
     </button>
 </div>
+<?php require_once NOTIFICATION . 'index.php'; ?>
+<script src="<?php echo USER_JS ?>app.min.js"></script>
 <script src="<?php echo USER_JS ?>tailwind.config.min.js"></script>
 <script>
 // Back to top button

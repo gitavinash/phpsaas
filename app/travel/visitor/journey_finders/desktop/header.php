@@ -53,9 +53,25 @@
                     / Register</a>
             </div>
             <div class="block md:hidden">
-                <button class="w-10 h-10 flex items-center justify-center text-gray-700">
+                <button id="menuToggle" class="w-10 h-10 flex items-center justify-center text-gray-700">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
+            </div>
+            <!-- Mobile Menu (full-screen slide-in) -->
+            <div id="mobileMenu"
+                class="fixed top-0 left-0 w-full h-full bg-white z-40 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+                <div class="p-6 space-y-4 relative">
+                    <!-- Close Button -->
+                    <button id="menuClose" class="absolute top-4 right-4 text-2xl text-gray-700 hover:text-primary">
+                        <i class="ri-close-line"></i>
+                    </button>
+
+                    <a href="/" class="block text-gray-700 text-lg hover:text-primary">Home</a>
+                    <a href="/destinations/" class="block text-gray-700 text-lg hover:text-primary">Destinations</a>
+                    <a href="/about-us/" class="block text-gray-700 text-lg hover:text-primary">About Us</a>
+                    <a href="/contact-us/" class="block text-gray-700 text-lg hover:text-primary">Contact Us</a>
+                    <a href="#" class="block text-primary font-semibold text-lg">Login / Register</a>
+                </div>
             </div>
         </div>
     </header>
