@@ -19,8 +19,9 @@ require_once 'header.php';
                 JourneyFinders
             </p>
             <div class="bg-white p-4 rounded-lg hero-search-bar">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="relative">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Search Input - 2/3 width -->
+                    <div class="relative col-span-1 md:col-span-2">
                         <div
                             class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
                             <i class="ri-map-pin-line ri-lg"></i>
@@ -28,41 +29,19 @@ require_once 'header.php';
                         <input type="text" placeholder="Destination"
                             class="pl-12 pr-4 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
                     </div>
-                    <div class="relative">
-                        <div
-                            class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
-                            <i class="ri-calendar-line ri-lg"></i>
-                        </div>
-                        <input type="text" placeholder="Travel Date"
-                            class="pl-12 pr-4 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm date-input"
-                            onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" />
+
+                    <!-- Search Button - 1/3 width -->
+                    <div class="col-span-1">
+                        <a href="#home/5d980096-f6d6-4a18-b632-f4eaee7979c7/bf204a0d-8d2e-4112-bb67-ac835580264e"
+                            data-readdy="true"
+                            class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition flex items-center justify-center w-full h-full">
+                            <i class="ri-search-line mr-2"></i>
+                            Search Tours
+                        </a>
                     </div>
-                    <div class="relative">
-                        <div
-                            class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
-                            <i class="ri-user-line ri-lg"></i>
-                        </div>
-                        <select
-                            class="pl-12 pr-8 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm appearance-none bg-white">
-                            <option value="">Travelers</option>
-                            <option value="1">1 Traveler</option>
-                            <option value="2">2 Travelers</option>
-                            <option value="3">3 Travelers</option>
-                            <option value="4">4 Travelers</option>
-                            <option value="5+">5+ Travelers</option>
-                        </select>
-                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                            <i class="ri-arrow-down-s-line text-gray-500"></i>
-                        </div>
-                    </div>
-                    <a href="#home/5d980096-f6d6-4a18-b632-f4eaee7979c7/bf204a0d-8d2e-4112-bb67-ac835580264e"
-                        data-readdy="true"
-                        class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition flex items-center justify-center">
-                        <i class="ri-search-line mr-2"></i>
-                        Search Tours
-                    </a>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
