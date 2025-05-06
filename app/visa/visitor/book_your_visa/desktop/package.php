@@ -284,11 +284,11 @@ require_once 'header.php';
                     <!-- Action Buttons -->
                     <div id="actionButtons"
                         class="fixed lg:sticky bottom-0 left-0 right-0 lg:left-auto lg:right-auto bg-white border-t border-gray-100 p-6 mt-auto z-50">
-                        <div class="flex flex-row justify-between max-w-full space-x-4">
-                            <button
+                        <div class="flex flex-row stickyBtn justify-between max-w-full space-x-4">
+                            <button onclick="history.back()"
                                 class="border border-gray-300 text-gray-700 px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap flex-1 sm:flex-none">Back</button>
-                            <button
-                                class="bg-primary text-white px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap flex-1 sm:flex-none">Continue</button>
+                            <a href="/visa-application-form/?package_id=<?php echo base64_encode($package_id) ?>&step=1"
+                                class="bg-primary text-white px-10 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap flex-1 sm:flex-none">Continue</a>
                         </div>
                     </div>
                 </div>

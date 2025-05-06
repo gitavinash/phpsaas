@@ -1,3 +1,55 @@
+let currentStep = 1;
+
+function updateStepIndicators(step) {
+  for (let i = 1; i <= 4; i++) {
+    const $indicator = $(`#step${i}-indicator`);
+    const $divs = $indicator.find("div");
+
+    if (i < step) {
+      $divs
+        .eq(0)
+        .removeClass("bg-gray-200 text-gray-600")
+        .addClass("bg-primary text-white");
+      $divs.eq(1).removeClass("bg-gray-200").addClass("bg-primary");
+    } else if (i === step) {
+      $divs
+        .eq(0)
+        .removeClass("bg-gray-200 text-gray-600")
+        .addClass("bg-primary text-white");
+    } else {
+      $divs
+        .eq(0)
+        .removeClass("bg-primary text-white")
+        .addClass("bg-gray-200 text-gray-600");
+      if ($divs.eq(1)) {
+        $divs.eq(1).removeClass("bg-primary").addClass("bg-gray-200");
+      }
+    }
+  }
+}
+
+function showStep(step) {
+  $(".step-content").removeClass("active");
+  $(`#step${step}`).addClass("active");
+  updateStepIndicators(step);
+}
+
+function nextStep(step) {
+  currentStep = step;
+  showStep(step);
+  $(window).scrollTop(0);
+}
+
+function prevStep(step) {
+  currentStep = step;
+  showStep(step);
+  $(window).scrollTop(0);
+}
+
+function submitApplication() {
+  $("#successModal").css("display", "flex");
+}
+
 $(document).ready(function (e) {
   /** SweetAlert Pop Up Box */
 
@@ -337,5 +389,24 @@ $(document).ready(function (e) {
     }
     $("#visaPackages").show();
     return;
+  }
+
+  // Visa application form
+
+  showStep(1);
+
+  const $draftButtons = $("#saveAsDraft, #saveAsDraft2, #saveAsDraft3");
+  if ($draftButtons.length > 0) {
+    $draftButtons.on("click", function () {
+      const $savedModal = $("<div>")
+        .addClass(
+          "fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+        )
+        .text("Application saved as draft");
+      $("body").append($savedModal);
+      setTimeout(() => {
+        $savedModal.remove();
+      }, 3000);
+    });
   }
 });
