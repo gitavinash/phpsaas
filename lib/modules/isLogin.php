@@ -1,8 +1,11 @@
 <?php
 
+
+$isMobile = ((isset($redirectToMobileAuth)) ? 'authby=mobile' : '');
+
 if (!isset($_COOKIE['user_data'])) {
 
-	header("Location: /logout/?redirect_url=" . ACTIVE_URL);
+	header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}");
 	exit();
 } else {
 
@@ -16,7 +19,7 @@ if (!isset($_COOKIE['user_data'])) {
 
 			$encryptEmail = base64_encode($user_email);
 
-			if ($user_status != 1 && SITE_APP_ID!=3) {
+			if ($user_status != 1 && SITE_APP_ID != 3) {
 
 				header("Location: /verify-account/?email={$encryptEmail}");
 				exit();
@@ -101,7 +104,7 @@ if (!isset($_COOKIE['user_data'])) {
 			}
 		} else {
 
-			header("Location: /logout/");
+			header("Location: /logout/?{$isMobile}");
 			exit();
 		}
 	} else {

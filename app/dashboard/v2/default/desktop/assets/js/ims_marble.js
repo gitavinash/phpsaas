@@ -2202,7 +2202,7 @@ $(document).ready(function () {
       }
     });
   }
-  $("#newWarehouseId").selectJS({
-    width: "200px", // Add this to apply a custom width
-  });
+  // $("#newWarehouseId").selectJS({
+  //   width: "200px", // Add this to apply a custom width
+  // });
 });

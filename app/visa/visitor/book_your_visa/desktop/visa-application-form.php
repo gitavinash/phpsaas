@@ -1,5 +1,7 @@
 <?php
 
+$redirectToMobileAuth = true;
+require_once LOGIN_CHECK;
 require_once 'header.php';
 
 ?>
