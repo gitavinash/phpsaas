@@ -1,5 +1,6 @@
 :root {
   --theme-color: #01647b;
+  --theme-color-light: #d1f2eb;
 }
 
 body {
@@ -157,6 +158,12 @@ a {
 .theme-button {
   background-color: var(--theme-color);
   border: 1px solid var(--theme-color);
+}
+
+.info-button {
+  background-color: var(--theme-color-light);
+  border: 1px solid var(--theme-color-light);
+  color: var(--theme-color) !important;
 }
 
 /* CSS */

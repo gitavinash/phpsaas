@@ -1,124 +1,104 @@
 <?php
 
+header('Content-Type: application/json');
 
-$httpStatus = 500;
-$status = 'warning';
-$msg = 'Invalid request';
+// ==== Initialize Response ====
+$response = [
+    'status' => 'error',
+    'msg' => 'Invalid request',
+    'id' => 0
+];
+$httpStatus = 400;
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    mysqli_query($connection, "START TRANSACTION");
+// ==== Validate GET Request ====
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    if ($checkEmail = mysqli_query($connection, "SELECT user_email, user_id as userID, user_salt_key as saltKey, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id WHERE user_mobile='{$mobile}'")) {
+    $mobile = isset($_GET['mobile']) ? preg_replace('/\D/', '', $_GET['mobile']) : '';
 
-        if (mysqli_num_rows($checkEmail) == 0) {
+    // ✅ Generate 6-digit OTP
+    $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-            /** Check mobile number is available or not */
+    // ✅ Insert OTP into DB using mysqli
+    $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_code, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$otpCode}', 0, NOW())";
+    $insertOTP = mysqli_query($connection, $sql);
 
-            if ($checkMobile = mysqli_query($connection, "SELECT profile_mobile FROM " . TABLE_PREFIX . "profile WHERE profile_mobile='{$mobile}'")) {
+    if ($insertOTP) {
+        $response['status'] = 'success';
+        $response['msg'] = 'OTP stored successfully';
+        $response['id'] = mysqli_insert_id($connection);
+        $httpStatus = 200;
+        $response['otpRef'] = mysqli_insert_id($connection);
 
-                if (mysqli_num_rows($checkMobile) == 0) {
+        // ✅ Send OTP via MSG91
+        $sendResult = sendOTPviaMSG91($mobile, $otpCode);
 
-                    /** Start the user registration process */
-
-                    /* Encrypt password with salt key */
-
-                    $saltKey = hash('sha256', uniqid(mt_rand(), true) . $email . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
-                    $enc_password = hash('sha256', $saltKey . $password);
-
-                    $profile_display_name = $first_name . ' ' . $last_name;
-
-                    /** Checking Username is avilable or not */
-
-                    $username = strtolower(str_replace(' ', '', $first_name . $last_name));
-
-                    if ($checkUsername = mysqli_query($connection, "SELECT user_username FROM " . TABLE_PREFIX . "user WHERE user_username='{$username}'")) {
-                        if (mysqli_num_rows($checkUsername) != 0) {
-                            $username = strtolower($first_name) . time();
-                        }
-                    }
-
-                    $siteURL = $username . '.' . SITE_DOMAIN;
-                    $userType = ((isset($reg_type)) ? $reg_type : 'subscriber');
-                } else {
-
-                    $status = 'warning';
-                    $msg = 'This mobile number is already in use';
-                }
-
-                /* Insert data into user table */
-
-                $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', NOW(), '" . IP . "')");
-                $userID = mysqli_insert_id($connection);
-
-                if (isset($userType)) {
-                    $insertSite = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site(site_owner_id, site_url, site_status) VALUES('{$userID}', '{$siteURL}', 0)");
-                    $siteID = mysqli_insert_id($connection);
-
-                    $insertSiteApp = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_installation(site_installation_site_id, site_installation_parent_site_id, site_installation_user_id, site_installation_package_id, site_installation_status, site_installation_expiry_date) VALUES('{$siteID}', '{$siteID}', '{$userID}', 1, 1, '{$expiryDate}')");
-
-                    $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES('{$siteID}', '{$userID}', '{$userType}', 1)");
-
-                    $insertSiteSetting = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_setting(site_setting_site_id, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height, site_mainfest_json, site_robots_txt) VALUES('{$siteID}', 10, 10, 10, 60, 223, 96, '" . json_encode(DEFAULT_MAINFEST_JSON, true) . "', '" . DEFAULT_ROBOTS_TXT . "')");
-                } else {
-                    $insertSite = true;
-                    $insertSiteApp = true;
-                    $insertSiteSetting = true;
-                }
-
-                $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userID}', '{$first_name}', '{$last_name}', '{$mobile}', '{$profile_display_name}', '{$email}')");
-            }
-        } else {
-
-            extract(mysqli_fetch_assoc($checkEmail));
-
-            $insertUser = true;
-            $insertSite = true;
-            $insertSiteApp = true;
-            $insertProfile = true;
-            $insertSiteSetting = true;
+        if ($sendResult !== true) {
+            $response['status'] = 'warning';
+            $response['msg'] = 'OTP stored but failed to send SMS';
+            $response['error'] = $sendResult;
         }
 
-        $userType = ((isset($userType)) ? $userType : 'administrator');
-
-        $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(" . SITE_ID . ", '{$userID}', '{$userType}', 1)");
-
-        if ($insertUser && $insertSite && $insertSiteApp && $insertSiteAccess && $insertSiteSetting && $insertProfile) {
-
-            mysqli_query($connection, 'COMMIT');
-
-            /** Send User's Email Verification Mail */
-
-            $verifyURL = SITE_DOMAIN . '/verify/email/?user_id=' . $saltKey . '&email=' . base64_encode($email);
-
-            require_once EMAIL_TEMPLATE . 'add-new-user.php';
-
-            $status = 'success';
-            $msg = 'You are successfully registered';
-
-            if (isset($redirectUrl)) {
-                $url = $redirectUrl . '?setup_id=' . base64_encode($email);
-            } else {
-                $url = '/website-setup/?setup_id=' . base64_encode($email);
-            }
-            exit();
-        } else {
-
-            $status = 'error';
-            $msg = 'Something is wrong while trying to register';
-            mysqli_query($connection, 'ROLLBACK');
-        }
+        // ✅ For Testing: Show OTP (Remove in Production)
+        $response['otp'] = $otpCode;
     } else {
-        $msg = ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : 'Unable to run query');
+        $response['msg'] = 'Failed to insert OTP: ' . mysqli_error($connection);
+        $httpStatus = 500;
     }
 } else {
-    $msg = 'Invalid request method';
+    $response['msg'] = 'Invalid request method';
 }
 
-$result = array(
-    'status' => ((isset($status)) ? $status : 'error'),
-    'msg' => ((isset($msg)) ? $msg : 'Invalid response'),
-    'id' => ((isset($productId)) ? $productId : 0),
-);
+// ==== Output Response ====
+if (isset($showOutput)) {
+    if ($showOutput == true) {
+        http_response_code($httpStatus);
+        echo json_encode($response);
+    }
+}
 
-http_response_code($httpStatus);
-echo json_encode($result, TRUE);
+
+// ========================================
+// ✅ Function to Send OTP via MSG91 API
+function sendOTPviaMSG91($mobile, $otpCode)
+{
+    $url = "https://control.msg91.com/api/v5/flow/";
+
+    $payload = [
+        "template_id" => MSG91_TEMPLATE_ID,
+        "recipients" => [
+            [
+                "mobiles" => "91" . $mobile,
+                "var1" => $otpCode
+            ]
+        ]
+    ];
+
+    $headers = [
+        'accept: application/json',
+        'content-type: application/json',
+        'authkey: ' . MSG91_AUTH_KEY
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+
+    curl_close($ch);
+
+    if ($curlError) {
+        return 'cURL Error: ' . $curlError;
+    }
+
+    if ($httpCode != 200) {
+        return 'MSG91 API Error: ' . $result;
+    }
+
+    return true;
+}
