@@ -13,36 +13,40 @@ $httpStatus = 400;
 // ==== Validate GET Request ====
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    $mobile = isset($_GET['mobile']) ? preg_replace('/\D/', '', $_GET['mobile']) : '';
-
-    // ✅ Generate 6-digit OTP
-    $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-    // ✅ Insert OTP into DB using mysqli
-    $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_code, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$otpCode}', 0, NOW())";
-    $insertOTP = mysqli_query($connection, $sql);
-
-    if ($insertOTP) {
-        $response['status'] = 'success';
-        $response['msg'] = 'OTP stored successfully';
-        $response['id'] = mysqli_insert_id($connection);
-        $httpStatus = 200;
-        $response['otpRef'] = mysqli_insert_id($connection);
-
-        // ✅ Send OTP via MSG91
-        $sendResult = sendOTPviaMSG91($mobile, $otpCode);
-
-        if ($sendResult !== true) {
-            $response['status'] = 'warning';
-            $response['msg'] = 'OTP stored but failed to send SMS';
-            $response['error'] = $sendResult;
-        }
-
-        // ✅ For Testing: Show OTP (Remove in Production)
-        $response['otp'] = $otpCode;
+    // ✅ Mobile number validation
+    if (!preg_match('/^[6-9]\d{9}$/', $mobile)) {
+        $response['msg'] = 'Invalid mobile number. Must be 10 digits and start with 6-9.';
+        $httpStatus = 422; // Unprocessable Entity
     } else {
-        $response['msg'] = 'Failed to insert OTP: ' . mysqli_error($connection);
-        $httpStatus = 500;
+        // ✅ Generate 6-digit OTP
+        $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        // ✅ Insert OTP into DB using mysqli
+        $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_code, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$otpCode}', 0, NOW())";
+        $insertOTP = mysqli_query($connection, $sql);
+
+        if ($insertOTP) {
+            $response['status'] = 'success';
+            $response['msg'] = 'OTP stored successfully';
+            $response['id'] = mysqli_insert_id($connection);
+            $httpStatus = 200;
+            $response['otpRef'] = mysqli_insert_id($connection);
+
+            // ✅ Send OTP via MSG91
+            $sendResult = sendOTPviaMSG91($mobile, $otpCode);
+
+            if ($sendResult !== true) {
+                $response['status'] = 'warning';
+                $response['msg'] = 'OTP stored but failed to send SMS';
+                $response['error'] = $sendResult;
+            }
+
+            // ✅ For Testing: Show OTP (Remove in Production)
+            $response['otp'] = $otpCode;
+        } else {
+            $response['msg'] = 'Failed to insert OTP: ' . mysqli_error($connection);
+            $httpStatus = 500;
+        }
     }
 } else {
     $response['msg'] = 'Invalid request method';
@@ -55,7 +59,6 @@ if (isset($showOutput)) {
         echo json_encode($response);
     }
 }
-
 
 // ========================================
 // ✅ Function to Send OTP via MSG91 API
