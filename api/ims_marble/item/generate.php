@@ -28,8 +28,28 @@ if (isset($validRequest)) {
 
     mysqli_query($connection, "START TRANSACTION");
 
-    if ($checkBlock = mysqli_query($connection, "SELECT block_product_type,
-block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimension FROM {$tableNamePrefix}block LEFT JOIN {$tableNamePrefix}block_item ON block_item_parent_id=block_id WHERE block_id='{$blockId}' AND block_item_status IN (1, 3) AND block_status=1 AND block_item_parent_id={$blockId} AND block_site_id=" . SITE_ID)) {
+    $checkBlockQuery = "SELECT 
+    block_product_type,
+    block_total_item,
+    COUNT(block_item_id) AS total_existing_slabs,
+    block_size_dimension 
+FROM 
+    {$tableNamePrefix}block 
+LEFT JOIN 
+    {$tableNamePrefix}block_item 
+    ON block_item_parent_id = block_id 
+    AND block_item_status IN (1, 3) 
+    AND block_item_parent_id = {$blockId}
+WHERE 
+    block_id = '{$blockId}'
+    AND block_status = 1
+    AND block_site_id = " . SITE_ID . "
+GROUP BY 
+    block_product_type,
+    block_total_item,
+    block_size_dimension;";
+
+    if ($checkBlock = mysqli_query($connection, $checkBlockQuery)) {
         if (mysqli_num_rows($checkBlock) != 0) {
             extract(mysqli_fetch_assoc($checkBlock));
 
@@ -66,7 +86,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimen
 
                     switch ([$measurementType, $calculationType]) {
 
-                            // Centimeter
+                        // Centimeter
 
                         case ['cm', 'sq. mm.']:
                             $totalArea = $totalArea * 100;
@@ -81,7 +101,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimen
                             $totalArea = $totalArea * 0.0001;
                             break;
 
-                            // Millimeter
+                        // Millimeter
 
                         case ['mm', 'sq. cm.']:
                             $totalArea = $totalArea * 0.01;
@@ -96,7 +116,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimen
                             $totalArea = $totalArea * 0.000001;
                             break;
 
-                            // Inches
+                        // Inches
 
                         case ['in', 'sq. cm.']:
                             $totalArea = $totalArea * 6.4516;
@@ -111,7 +131,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimen
                             $totalArea = $totalArea * 0.00064516;
                             break;
 
-                            // Feet
+                        // Feet
 
                         case ['ft', 'sq. cm.']:
                             $totalArea = $totalArea * 929.0304;
@@ -126,7 +146,7 @@ block_total_item, COUNT(block_item_id) as total_existing_slabs, block_size_dimen
                             $totalArea = $totalArea * 0.09290304;
                             break;
 
-                            // Meter
+                        // Meter
 
                         case ['mt', 'sq. cm.']:
                             $totalArea = $totalArea * 10000;
