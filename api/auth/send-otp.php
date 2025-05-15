@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         // ✅ Insert OTP into DB using mysqli
-        $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_code, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$otpCode}', 0, NOW())";
+        $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$mobile}', '{$otpCode}', 0, NOW())";
         $insertOTP = mysqli_query($connection, $sql);
 
         if ($insertOTP) {

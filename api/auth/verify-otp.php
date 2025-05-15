@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // ✅ Validate OTP status & time
             $otpStatus = $otpData['otp_status'];
             $otpTime = strtotime($otpData['otp_time']);
-            $isExpired = (time() - $otpTime) > (5 * 60); // 5 min expiry
+            $isExpired = (time() - $otpTime) > (10 * 60); // 5 min expiry
 
             if ($otpStatus != 0) {
                 $response['msg'] = 'OTP has already been used or is invalid.';
@@ -54,8 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
                 $response['status'] = 'success';
                 $response['msg'] = 'OTP verified successfully';
-                $response['user_id'] = $otpData['otp_user_id'];
                 $httpStatus = 200;
+
+                $user_id = $otpData['otp_user_id'];
+
+                require_once 'generate-token-by-mobile.php';
+
+                echo $tokenStatus . ' -> ' . $tokenMsg;
             }
         } else {
             $response['msg'] = 'OTP record not found';

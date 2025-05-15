@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $otpCode = $otpData['otp_code'];
 
                 // Send OTP via MSG91
-                $sendStatus = sendOTPviaMSG91($mobile, $otpCode);
+                $sendStatus = sendOTPviaMSG91($otpData['otp_destination'], $otpCode);
 
                 if ($sendStatus === true) {
                     $response['status'] = 'success';

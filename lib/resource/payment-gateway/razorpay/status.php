@@ -34,9 +34,11 @@ if (isset($pay_id)) {
                 echo mysqli_error($connection);
             }
         } else {
-
             echo 'Invalid razorpay transaction id found';
         }
+    } else {
+        ((DEVELOPMENT_MODE == 1) ? die(mysqli_error($connection)) : header("Location: /payment-failed/?id={$id}", TRUE, 301));
+        exit();
     }
 } else {
 
