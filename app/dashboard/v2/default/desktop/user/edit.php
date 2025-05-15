@@ -8,10 +8,10 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
         extract(mysqli_fetch_assoc($checkUser));
         $siteAccessMeta = json_decode($site_access_meta, TRUE);
     } else { ?>
-        <script type="text/javascript">
-            alert('Invalid action found');
-            window.location.href = 'dashboard/user/?type=list&status=all';
-        </script>
+<script type="text/javascript">
+alert('Invalid action found');
+window.location.href = 'dashboard/user/?type=list&status=all';
+</script>
 <?php
     }
 }
@@ -59,10 +59,10 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                                 <?php
                                 if ($roleList = mysqli_query($connection, "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1")) {
                                     while ($roleData = mysqli_fetch_assoc($roleList)) { ?>
-                                        <option value="<?php echo $roleData['user_type_code']; ?>"
-                                            <?php echo ((strtolower($roleData['user_type_code']) == strtolower($site_access_type)) ? 'selected' : '') ?>>
-                                            <?php echo $roleData['user_type_name']; ?>
-                                        </option>
+                                <option value="<?php echo $roleData['user_type_code']; ?>"
+                                    <?php echo ((strtolower($roleData['user_type_code']) == strtolower($site_access_type)) ? 'selected' : '') ?>>
+                                    <?php echo $roleData['user_type_name']; ?>
+                                </option>
                                 <?php
                                     }
                                 }
@@ -73,11 +73,11 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
 
                         if (SITE_APP == 'ims_marble') { ?>
 
-                            <div class="form-group" id="companyDropDown">
-                                <p>Company<sup>*</sup></p>
-                                <select class="selectJS form-control" name="company" id="company">
-                                    <option value="">Select company</option>
-                                    <?php
+                        <div class="form-group" id="companyDropDown">
+                            <p>Company<sup>*</sup></p>
+                            <select class="selectJS form-control" name="company" id="company">
+                                <option value="">Select company</option>
+                                <?php
 
                                     if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_status=1 AND company_address_id!=0 AND company_site_id=" . SITE_ID)) {
                                         if (mysqli_num_rows($companyList) > 0) {
@@ -88,13 +88,13 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                                     }
 
                                     ?>
-                                </select>
-                            </div>
-                            <div class="form-group" id="warehouseBox">
-                                <p>Warehouse</p>
-                                <select class="selectJS form-control" name="warehouse" id="warehouse">
-                                    <option value="">Select warehouse</option>
-                                    <?php
+                            </select>
+                        </div>
+                        <div class="form-group" id="warehouseBox">
+                            <p>Warehouse</p>
+                            <select class="selectJS form-control" name="warehouse" id="warehouse">
+                                <option value="">Select warehouse</option>
+                                <?php
                                     if ($warehouseList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse WHERE warehouse_status=1 AND warehouse_company_id={$siteAccessMeta['company']} AND warehouse_site_id=" . SITE_ID)) {
                                         if (mysqli_num_rows($warehouseList) > 0) {
                                             while ($warehouse = mysqli_fetch_assoc($warehouseList)) {
@@ -104,8 +104,8 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                                     }
 
                                     ?>
-                                </select>
-                            </div>
+                            </select>
+                        </div>
                         <?php
                         }
 
@@ -114,7 +114,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                             <input type="hidden" name="id" value="<?php echo base64_encode($user_id) ?>">
                             <input type="hidden" name="type" value="user">
                             <input type="hidden" name="action" value="update">
-                            <input type="button" class="btn btn-green" value="Update user">
+                            <input type="submit" class="btn btn-green" value="Update user">
                         </div>
                         <section class="form">
                     </div>
