@@ -17,93 +17,93 @@ require_once LOGIN_CHECK;
     });
     </script> -->
     <style>
-        @page {
-            size: landscape;
-            margin: 1in;
-        }
+    @page {
+        size: landscape;
+        margin: 1in;
+    }
 
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        font-size: 0.8rem;
+    }
+
+    img {
+        max-height: 100px;
+    }
+
+    h1 {
+        font-size: 1.5rem !important;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        float: left;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 8px;
+        width: auto;
+        /* Each column will take up equal space */
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a {
+        background-color: #4CAF50;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        float: left;
+        width: 100%;
+        text-align: center;
+        padding: 1rem 1rem;
+        box-sizing: border-box;
+        border-radius: 7px;
+        border: none;
+        font-size: 1rem;
+        color: #fff;
+        letter-spacing: 1px;
+    }
+
+    @media print {
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            font-size: 0.8rem;
         }
 
-        img {
-            max-height: 100px;
+        .content {
+            page-break-after: always;
         }
 
-        h1 {
-            font-size: 1.5rem !important;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            float: left;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            text-align: center;
-            padding: 8px;
-            width: auto;
-            /* Each column will take up equal space */
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        a {
-            background-color: #4CAF50;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            float: left;
+        .footer {
+            position: fixed;
+            bottom: 0;
             width: 100%;
             text-align: center;
-            padding: 1rem 1rem;
-            box-sizing: border-box;
-            border-radius: 7px;
-            border: none;
-            font-size: 1rem;
-            color: #fff;
-            letter-spacing: 1px;
+            font-size: 12px;
         }
 
-        @media print {
-            body {
-                margin: 0;
-            }
-
-            .content {
-                page-break-after: always;
-            }
-
-            .footer {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                text-align: center;
-                font-size: 12px;
-            }
-
-            .footer::after {
-                content: "Developed by Blumox Technologies";
-            }
+        .footer::after {
+            content: "Developed by Blumox Technologies";
         }
+    }
     </style>
 </head>
 
@@ -134,7 +134,7 @@ require_once LOGIN_CHECK;
                         </tr>";
                         echo "
                         <tr>
-                            <th rowspan=2>S no.</th>
+                            <th rowspan=2>Slab no.</th>
                             <th rowspan=2>Width<br />({$block_item_dimension_type})</th>
                             <th rowspan=2>Height<br />({$block_item_dimension_type})</th>
                             <th rowspan=2>Net qty.<br/>({$calculationType})</th>
@@ -167,7 +167,7 @@ require_once LOGIN_CHECK;
 
                     switch ([$measurementType, $calculationType]) {
 
-                            // Centimeter
+                        // Centimeter
 
                         case ['cm', 'sq. mm.']:
                             $totalArea = $totalArea * 100;
@@ -182,7 +182,7 @@ require_once LOGIN_CHECK;
                             $totalArea = $totalArea * 0.0001;
                             break;
 
-                            // Millimeter
+                        // Millimeter
 
                         case ['mm', 'sq. cm.']:
                             $totalArea = $totalArea * 0.01;
@@ -197,7 +197,7 @@ require_once LOGIN_CHECK;
                             $totalArea = $totalArea * 0.000001;
                             break;
 
-                            // Inches
+                        // Inches
 
                         case ['in', 'sq. cm.']:
                             $totalArea = $totalArea * 6.4516;
@@ -212,7 +212,7 @@ require_once LOGIN_CHECK;
                             $totalArea = $totalArea * 0.00064516;
                             break;
 
-                            // Feet
+                        // Feet
 
                         case ['ft', 'sq. cm.']:
                             $totalArea = $totalArea * 929.0304;
@@ -227,7 +227,7 @@ require_once LOGIN_CHECK;
                             $totalArea = $totalArea * 0.09290304;
                             break;
 
-                            // Meter
+                        // Meter
 
                         case ['mt', 'sq. cm.']:
                             $totalArea = $totalArea * 10000;
@@ -265,7 +265,7 @@ require_once LOGIN_CHECK;
 
                                     switch ([$measurementType, $calculationType]) {
 
-                                            // Centimeter
+                                        // Centimeter
 
                                         case ['cm', 'sq. mm.']:
                                             $damageItemTotal = $damageItemTotal * 100;
@@ -280,7 +280,7 @@ require_once LOGIN_CHECK;
                                             $damageItemTotal = $damageItemTotal * 0.0001;
                                             break;
 
-                                            // Millimeter
+                                        // Millimeter
 
                                         case ['mm', 'sq. cm.']:
                                             $damageItemTotal = $damageItemTotal * 0.01;
@@ -295,7 +295,7 @@ require_once LOGIN_CHECK;
                                             $damageItemTotal = $damageItemTotal * 0.000001;
                                             break;
 
-                                            // Inches
+                                        // Inches
 
                                         case ['in', 'sq. cm.']:
                                             $damageItemTotal = $damageItemTotal * 6.4516;
@@ -310,7 +310,7 @@ require_once LOGIN_CHECK;
                                             $damageItemTotal = $damageItemTotal * 0.00064516;
                                             break;
 
-                                            // Feet
+                                        // Feet
 
                                         case ['ft', 'sq. cm.']:
                                             $damageItemTotal = $damageItemTotal * 929.0304;
@@ -325,7 +325,7 @@ require_once LOGIN_CHECK;
                                             $damageItemTotal = $damageItemTotal * 0.09290304;
                                             break;
 
-                                            // Meter
+                                        // Meter
 
                                         case ['mt', 'sq. cm.']:
                                             $damageItemTotal = $damageItemTotal * 10000;
@@ -429,10 +429,10 @@ require_once LOGIN_CHECK;
     }
     ?>
     <script>
-        document.getElementById('download').addEventListener('click', function() {
-            const element = document.getElementById('content');
-            html2pdf().from(element).save();
-        });
+    document.getElementById('download').addEventListener('click', function() {
+        const element = document.getElementById('content');
+        html2pdf().from(element).save();
+    });
     </script>
 </body>
 
