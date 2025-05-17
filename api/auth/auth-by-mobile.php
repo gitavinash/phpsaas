@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 $result = array(
     'status' => ((isset($status)) ? $status : 'error'),
-    'new_user' => ((isset($newUser)) ? $newUser : 'false'),
     'msg' => ((isset($msg)) ? $msg : 'Invalid response'),
     'otpRef' => ((isset($response['otpRef'])) ? base64_encode($response['otpRef']) : 0),
 );
