@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $sql = "SELECT * FROM " . TABLE_PREFIX . "otp 
                 WHERE otp_id = {$otpRefId} 
                   AND otp_mode = '" . mysqli_real_escape_string($connection, $otpMode) . "' 
+                  AND otp_status = 0
                 LIMIT 1";
 
         $result = mysqli_query($connection, $sql);

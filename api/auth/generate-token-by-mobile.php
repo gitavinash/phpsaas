@@ -16,19 +16,26 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
 
         $user_salt_key = hash('sha256', uniqid(mt_rand(), true) . $mobile . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
 
-        $addUserTableQuery = "INSERT INTO " . TABLE_PREFIX . "user (user_mobile, user_username, user_email, user_salt_key, user_status, user_reg_time, 
+        if ($checkUser = mysqli_query($connection, "SELECT user_id as newUserId FROM " . TABLE_PREFIX . "user WHERE user_mobile='{$mobile}'")) {
+            if (mysqli_num_rows($checkUser) == 0) {
+                $addUserTableQuery = "INSERT INTO " . TABLE_PREFIX . "user (user_mobile, user_username, user_email, user_salt_key, user_status, user_reg_time, 
         user_reg_ip) VALUES ('{$mobile}', '{$mobile}', '{$userEmail}', '{$user_salt_key}', 1, NOW(), '" . IP . "')";
 
-        $createNewUser = mysqli_query($connection, $addUserTableQuery);
-        $newUserId = mysqli_insert_id($connection);
+                $createNewUser = mysqli_query($connection, $addUserTableQuery);
+                $newUserId = mysqli_insert_id($connection);
 
+                $insertProfileQuery = "INSERT INTO " . TABLE_PREFIX . "profile (profile_user_id, profile_email) VALUES ('{$newUserId}', '{$userEmail}')";
+                $createNewUserProfile = mysqli_query($connection, $insertProfileQuery);
+            } else {
+                $createNewUser = true;
+                $createNewUserProfile = true;
+                extract(mysqli_fetch_assoc($checkUser));
+            }
+        }
         $site_access_meta = '';
         $user_type = 'customer';
         $insertSiteAccessQuery = "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES('" . SITE_ID . "', '{$newUserId}', '{$user_type}', 1, '')";
         $createNewSiteAccess = mysqli_query($connection, $insertSiteAccessQuery);
-
-        $insertProfileQuery = "INSERT INTO " . TABLE_PREFIX . "profile (profile_user_id, profile_email) VALUES ('{$newUserId}', '{$userEmail}')";
-        $createNewUserProfile = mysqli_query($connection, $insertProfileQuery);
 
         if ($createNewUser && $createNewSiteAccess && $createNewUserProfile) {
             mysqli_query($connection, "COMMIT");
@@ -54,6 +61,9 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
             setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
             ob_end_flush();
         }
+    } else {
+        echo "Genere";
+        exit();
     }
 } else {
     $tokenStatus = 'error';
