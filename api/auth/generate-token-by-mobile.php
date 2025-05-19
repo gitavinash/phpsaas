@@ -61,9 +61,6 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
             setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
             ob_end_flush();
         }
-    } else {
-        echo "Genere";
-        exit();
     }
 } else {
     $tokenStatus = 'error';
