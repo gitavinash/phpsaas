@@ -167,6 +167,7 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
                     /** Send Email */
 
                     require_once APP_EMAIL_TEMPLATE . 'order/prepaid.php';
+                    require_once APP_EMAIL_TEMPLATE . 'order/alert.php';
 
                     mysqli_query($connection, "COMMIT");
 

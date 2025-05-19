@@ -1,6 +1,6 @@
 <?php
 
-	$email_footer="	
+$email_footer = "	
 							</td>
 						</tr>				
 					</table>
@@ -11,7 +11,7 @@
 
 				<tr bgcolor='#fff'>
 
-				<td valign='top' class='footer' style='border-collapse: collapse;border: 0;margin: 0;padding: 0;-webkit-text-size-adjust: none;color: #555559;font-family: Arial, sans-serif;font-size: 16px;line-height: 26px;background: #fff;text-align: center; border-top: 4px solid ".SITE_THEME_COLOUR.";'>
+				<td valign='top' class='footer' style='border-collapse: collapse;border: 0;margin: 0;padding: 0;-webkit-text-size-adjust: none;color: #555559;font-family: Arial, sans-serif;font-size: 16px;line-height: 26px;background: #fff;text-align: center; border-top: 4px solid " . SITE_THEME_COLOUR . ";'>
 
 					<table style='font-weight: normal;border-collapse: collapse;border: 0;margin: 0;padding: 0;font-family: Arial, sans-serif;'>
 
@@ -21,7 +21,7 @@
 
 								<div id='address' class='mktEditable'>
 
-									<p><strong>".SITE_NAME."</strong></p>
+									<p><strong>" . SITE_NAME . "</strong></p>
 									
 								</div>
 
@@ -47,10 +47,10 @@
 
 		</html>";
 
-	$email_body = $email_header.$email_body.$email_footer;
+$email_body = $email_header . $email_body . $email_footer;
 
-	/* Send email */
+/* Send email */
 
-	$toAddress = ((isset($email)) ? $email : $profile_email ); // Email receiver id
-	
-	require_once SEND_EMAIL;
+$toAddress = ((isset($email)) ? $email : $profile_email); // Email receiver id
+
+require_once SEND_EMAIL;
