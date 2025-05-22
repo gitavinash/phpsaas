@@ -12,11 +12,24 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <?php require_once DEFAULT_META ?>
 </head>
 
 <body class="bg-white">
+    <?php
+
+    if (BASE_URL == '/visa-application-form/') { ?>
+    <div id="page-loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+    background:rgba(255,255,255,0.8); z-index:9999; text-align:center; padding-top:20%;">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+    <?php
+    }
+
+    ?>
     <header class="sticky-header fixed w-full top-0 bg-white shadow-sm z-50">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-20">
@@ -52,10 +65,21 @@
                     </nav>
                 </div>
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="/login/"
-                        class="text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer">Login</a>
-                    <a href="/register/"
-                        class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer">Register</a>
+                    <?php
+
+                    if (isset($_COOKIE['user_data'])) {
+                        echo "
+                    <a href='/dashboard/'
+                        class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>My Account</a>";
+                    } else {
+                        echo "
+                    <a href='/login/'
+                        class='text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer'>Login</a>
+                    <a href='/register/'
+                        class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>Register</a>";
+                    }
+
+                    ?>
                 </div>
                 <button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700" id="mobileMenuBtn">
                     <i class="ri-menu-line ri-2x"></i>

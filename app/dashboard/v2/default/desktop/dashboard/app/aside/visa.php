@@ -1,3 +1,6 @@
+<?php
+
+if ($site_access_type != 'customer') { ?>
 <li class="header-section-name">
     <p>Leads<span>Manage leads.</span></p>
 </li>
@@ -36,6 +39,7 @@
     </div>
 </li>
 
+
 <li class="header-section-name">
     <p>VISA Packages<span>Manage all visa packages.</span></p>
 </li>
@@ -72,6 +76,44 @@
     </div>
     <div class="bottom-menu">
         <ul>
+            <ul>
+                <li><a href="country/list/"><i class="fi-rr-apps-sort"></i> All countries</a>
+                </li>
+                <li><a href="country/add/"><i class="fi fi-rr-add"></i> Add new country</a>
+                </li>
+            </ul>
         </ul>
     </div>
 </li>
+
+<?php
+}
+
+if ($site_access_type == 'customer') { ?>
+<li class="header-section-name">
+    <p>Application<span>Track your VISA Applications.</span></p>
+</li>
+
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/visa_applications/') !== false) ? 'class="active"' : '') ?>>
+    <a href="visa_applications/"><i class="fi fi-rr-passport"></i>Applications</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Applications</a>
+            </li>
+            <li><a href="/start-application/" target="_blank"><i class="fi fi-rr-add"></i> Apply new application</a>
+            </li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Applications</a>
+            </li>
+            <li><a href="/start-application/" target="_blank"><i class="fi fi-rr-add"></i> Apply new application</a>
+            </li>
+        </ul>
+    </div>
+</li>
+<?php
+}
+
+?>

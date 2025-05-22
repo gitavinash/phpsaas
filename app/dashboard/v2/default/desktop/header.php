@@ -124,7 +124,9 @@ if (isset($daterange)) {
                     <ul>
                         <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
                         <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
-                        <li><a href="/logout/?redirect_url=<?php echo ACTIVE_URL ?>"><i class="fi-rr-power"></i> Log
+                        <li><a
+                                href="/logout/?redirect_url=<?php echo ACTIVE_URL . (($site_access_type == 'customer') ? '&authby=mobile' : '') ?>"><i
+                                    class="fi-rr-power"></i> Log
                                 Out</a>
                         </li>
                     </ul>
@@ -157,7 +159,7 @@ if (isset($daterange)) {
                 ?>
 
                 <li class="header-section-name">
-                    <p>Setting<span>Manage application.</span></p>
+                    <p>Setting<span>Manage profile setting.</span></p>
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'class="active"' : '') ?>>

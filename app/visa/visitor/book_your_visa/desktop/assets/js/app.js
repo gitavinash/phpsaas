@@ -1,65 +1,159 @@
-let currentStep = 1;
+/** SweetAlert Pop Up Box */
 
-function updateStepIndicators(step) {
-  for (let i = 1; i <= 4; i++) {
-    const $indicator = $(`#step${i}-indicator`);
-    const $divs = $indicator.find("div");
+function popUpMessage(msgPostion, msgTxt, msgType) {
+  Swal.fire({
+    position: msgPostion,
+    type: msgType,
+    title: msgTxt,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
 
-    if (i < step) {
-      $divs
-        .eq(0)
-        .removeClass("bg-gray-200 text-gray-600")
-        .addClass("bg-primary text-white");
-      $divs.eq(1).removeClass("bg-gray-200").addClass("bg-primary");
-    } else if (i === step) {
-      $divs
-        .eq(0)
-        .removeClass("bg-gray-200 text-gray-600")
-        .addClass("bg-primary text-white");
-    } else {
-      $divs
-        .eq(0)
-        .removeClass("bg-primary text-white")
-        .addClass("bg-gray-200 text-gray-600");
-      if ($divs.eq(1)) {
-        $divs.eq(1).removeClass("bg-primary").addClass("bg-gray-200");
+function formatDateToYMD(dateStr) {
+  const d = new Date(dateStr);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+$(document).ready(function () {
+  // Visa Application Process page
+
+  if ($("#visaApplicationProcess").length) {
+    // Show loader
+
+    console.log(`visaApplicationProcess start`);
+
+    $("#page-loader").show();
+
+    // Fetch user profile data from API and append into existing form
+
+    var decodedURIComponent = decodeURIComponent(getCookie("user_mobile"));
+    const authUserMobile = atob(decodedURIComponent);
+
+    $.ajax({
+      url: "/api/user/search/?type=mobile&mobile=" + authUserMobile,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        const userInfo = data.userData;
+        const userMetaInfo = data.userData.profileMeta;
+        if (data.isFound == 1) {
+          // 🔽 Populate form fields
+          $("#firstName").val(userInfo.firstName);
+          $("#lastName").val(userInfo.lastName);
+          if (userMetaInfo.date_of_birth) {
+            $("#dob").val(formatDateToYMD(userMetaInfo.date_of_birth));
+          }
+          if (userMetaInfo.passport_expiry) {
+            $("#passportExpiry").val(
+              formatDateToYMD(userMetaInfo.passport_expiry)
+            );
+          }
+          $("#passportNumber").val(
+            userMetaInfo.passport_number ? userMetaInfo.passport_number : ""
+          );
+          if (userMetaInfo.passport_expiry) {
+            const d = new Date(userMetaInfo.passport_expiry);
+            const dd = String(d.getDate()).padStart(2, "0");
+            const mm = String(d.getMonth() + 1).padStart(2, "0");
+            const yyyy = d.getFullYear();
+            $("#passportExpiry").val(`${dd}/${mm}/${yyyy}`);
+          } else {
+            $("#passportExpiry").val("");
+          }
+          $("#email").val(userInfo.email ? userInfo.email : "");
+          $("#mobile").val(userInfo.mobile ? userInfo.mobile : "");
+          $("#address").val(userMetaInfo.address ? userMetaInfo.address : "");
+
+          // for gender
+          $(
+            'input[name="gender"][value="' + (userInfo.gender || "") + '"]'
+          ).prop("checked", true);
+          $("#page-loader").hide();
+        } else {
+          console.log(`User information not found`);
+        }
+      },
+      error: function (xhr) {
+        $("#page-loader").hide();
+        console.error("Error fetching data:", xhr.responseText);
+      },
+    });
+
+    function goToStep(stepNumber) {
+      // Animate step visibility
+      for (let i = 1; i <= 4; i++) {
+        if (i === stepNumber) {
+          $(`#step${i}`).fadeIn(400);
+        } else {
+          $(`#step${i}`).fadeOut(200);
+        }
+      }
+
+      // Animate scroll to top
+      $("html, body").animate({ scrollTop: 0 }, 400);
+
+      // Update step indicators
+      for (let i = 1; i <= 4; i++) {
+        const $indicator = $(`#step${i}-indicator`);
+        const $circle = $indicator.find("div").first(); // circle
+        const $line = $indicator.find("div").last(); // horizontal line
+
+        if (i <= stepNumber) {
+          // Active step or previous
+          $circle
+            .removeClass("bg-gray-200 text-gray-600")
+            .addClass("bg-primary text-white");
+
+          $line.removeClass("bg-gray-200").addClass("bg-primary");
+        } else {
+          // Future steps
+          $circle
+            .removeClass("bg-primary text-white")
+            .addClass("bg-gray-200 text-gray-600");
+
+          $line.removeClass("bg-primary").addClass("bg-gray-200");
+        }
       }
     }
-  }
-}
 
-function showStep(step) {
-  $(".step-content").removeClass("active");
-  $(`#step${step}`).addClass("active");
-  updateStepIndicators(step);
-}
+    // Bind forward buttons
+    for (let i = 1; i <= 3; i++) {
+      $(`#step${i}Btn`).on("click", function (e) {
+        e.preventDefault();
+        goToStep(i + 1);
+      });
+    }
 
-function nextStep(step) {
-  currentStep = step;
-  showStep(step);
-  $(window).scrollTop(0);
-}
+    // Bind "go to" buttons
+    for (let i = 1; i <= 5; i++) {
+      $(`#goToStep${i}Btn`).on("click", function (e) {
+        e.preventDefault();
+        goToStep(i);
+      });
+    }
 
-function prevStep(step) {
-  currentStep = step;
-  showStep(step);
-  $(window).scrollTop(0);
-}
+    // Save draft button
 
-function submitApplication() {
-  $("#successModal").css("display", "flex");
-}
+    $(".saveAsDraft").on("click", function (e) {
+      e.preventDefault();
+      alert("Save as draft button clicked");
+    });
 
-$(document).ready(function (e) {
-  /** SweetAlert Pop Up Box */
+    // Submit visa application form
 
-  function popUpMessage(msgPostion, msgTxt, msgType) {
-    Swal.fire({
-      position: msgPostion,
-      type: msgType,
-      title: msgTxt,
-      showConfirmButton: false,
-      timer: 1500,
+    $("#submitVisaApplicationFormBtn").on("click", function (e) {
+      e.preventDefault();
+      alert("SavesubmitVisaApplicationFormBtnt button clicked");
     });
   }
 
@@ -91,7 +185,7 @@ $(document).ready(function (e) {
   });
 
   $backToTop.on("click", function () {
-    $("html, body").animate({ scrollTop: 0 }, "smooth");
+    $("html, body").animate({ scrollTop: 0 }, 400);
   });
 
   // Select JS
@@ -121,6 +215,8 @@ $(document).ready(function (e) {
     });
   }
 
+  // Other page code
+
   // Visa service page
 
   if ($("#countryScroll").length) {
@@ -135,7 +231,7 @@ $(document).ready(function (e) {
 
   // Visa details page
 
-  if ($("#visaMainContent")) {
+  if ($("#visaMainContent").length) {
     // Toggle between Business and Standard buttons
     const $buttons = $("button");
     const $businessBtn = $buttons.eq(2);
@@ -383,30 +479,12 @@ $(document).ready(function (e) {
         },
         error: function (error) {
           console.log(`error: `, error);
-          popUpMessage("center", error.responseJSON.msg, "error");
+          const errorMsg = error?.responseJSON?.msg || "Something went wrong!";
+          popUpMessage("center", errorMsg, "error");
         },
       });
     }
     $("#visaPackages").show();
     return;
-  }
-
-  // Visa application form
-
-  showStep(1);
-
-  const $draftButtons = $("#saveAsDraft, #saveAsDraft2, #saveAsDraft3");
-  if ($draftButtons.length > 0) {
-    $draftButtons.on("click", function () {
-      const $savedModal = $("<div>")
-        .addClass(
-          "fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50"
-        )
-        .text("Application saved as draft");
-      $("body").append($savedModal);
-      setTimeout(() => {
-        $savedModal.remove();
-      }, 3000);
-    });
   }
 });

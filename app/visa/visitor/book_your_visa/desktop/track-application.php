@@ -22,9 +22,9 @@ require_once 'header.php';
                                 placeholder="Enter your reference number">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address or Phone
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone
                                 Number</label>
-                            <input type="text" id="contactInfo"
+                            <input type="number" id="contactInfo"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                 placeholder="Enter email or phone number">
                         </div>
