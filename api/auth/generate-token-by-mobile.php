@@ -52,9 +52,9 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
     if (isset($genarateToken)) {
         if ($genarateToken == true) {
             ob_start();
-            setcookie('user_name', base64_encode(''), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+            setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
             setcookie('user_mobile', base64_encode($mobile), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('user_image', base64_encode(''), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+            setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
             setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
             setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
             setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
