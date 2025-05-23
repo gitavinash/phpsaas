@@ -239,6 +239,9 @@ if (isset($_COOKIE['user_data'])) {
         ?>
         <nav <?php echo $changeBackground ?>>
             <ul>
+                <?php
+
+                if (SITE_ID == 49) { ?>
                 <li><a href="/category/deep-tales/"
                         <?php echo ((BASE_URL == '/category/deep-tales/') ? 'class="active"' : '') ?>
                         title="Deep-Tales">Deep-Tales</a></li>
@@ -253,8 +256,10 @@ if (isset($_COOKIE['user_data'])) {
                 <li><a href="/category/report/" title="Report"
                         <?php echo ((BASE_URL == '/category/report/') ? 'class="active"' : '') ?>
                         class="disable">Report</a></li>
-                <li><a href="/category/partner-insights/" title="Partner Insights" class="partnerInsights">Partner
-                        Insights</a></li>
+                <?php
+                }
+
+                ?>
             </ul>
         </nav>
     </header>
