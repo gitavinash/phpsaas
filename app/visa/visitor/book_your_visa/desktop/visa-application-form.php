@@ -344,11 +344,11 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         </div>
                     </div>
                     <div class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-between sm:space-y-0 sm:space-x-4">
+                        <a id="goToStep3Btn"
+                            class="w-full sm:w-auto text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer text-center">Previous</a>
                         <a id="submitVisaApplicationFormBtn"
                             class="w-full sm:w-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer text-center">Proceed
                             to pay</a>
-                        <a id="goToStep3Btn"
-                            class="w-full sm:w-auto text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer text-center">Previous</a>
                     </div>
                 </div>
             </form>
