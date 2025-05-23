@@ -192,6 +192,9 @@ $(document).ready(function () {
         { name: "Address", id: "address" },
       ];
 
+      dateOfBirth = getValue("dob");
+      passportNumber = getValue("passportNumber");
+
       for (const field of fields) {
         const value = field.hasOwnProperty("value")
           ? field.value
