@@ -15,7 +15,7 @@ INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id
 WHERE link_type = 'news' 
 AND link_status = 200 
 AND news_category IN (201, 202)
-AND link_site_id = " . SITE_ID . " 
+AND link_site_id = " . SITE_ID . "
 ORDER BY link_is_featured DESC, link_published DESC
 LIMIT 0, 100")) {
 
@@ -26,9 +26,6 @@ LIMIT 0, 100")) {
                     while ($newsData = mysqli_fetch_assoc($newsArticles)) {
                         $latestNewsData[] = $newsData;
                     }
-                } else {
-
-                    echo "<p>No news found</p>";
                 }
             } else {
 

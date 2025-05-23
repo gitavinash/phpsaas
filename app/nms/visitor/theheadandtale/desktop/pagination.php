@@ -1,6 +1,10 @@
 <div class="pagination">
     <?php
 
+    if (!defined('TOTAL_PAGE')) {
+        define('TOTAL_PAGE', 10); // default value
+    }
+
     $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
 
     if (PAGE_NO != 0) {
