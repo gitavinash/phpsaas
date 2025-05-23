@@ -104,10 +104,21 @@
                             Registration</a>
                     </li>
                     <li class="pt-4 pb-4 border-t">
-                        <a href="/login/"
-                            class="w-full text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer mb-2">Login</a>
-                        <a href="/register/"
-                            class="w-full bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer">Register</a>
+                        <?php
+
+                        if (isset($_COOKIE['user_data'])) {
+                            echo "
+<a href='/dashboard/'
+    class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>My Account</a>";
+                        } else {
+                            echo "
+<a href='/login/'
+    class='text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer'>Login</a>
+<a href='/register/'
+    class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>Register</a>";
+                        }
+
+                        ?>
                     </li>
                 </ul>
             </nav>

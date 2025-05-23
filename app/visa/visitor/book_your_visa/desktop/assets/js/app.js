@@ -18,6 +18,23 @@ function formatDateToYMD(dateStr) {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+function toCapitalize(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function formatDateToDDMMYYYY(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date)) return ""; // invalid date fallback
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -25,6 +42,27 @@ function getCookie(name) {
 }
 
 $(document).ready(function () {
+  // Prefilled variables
+
+  var firstName = "";
+  var lastName = "";
+  var dateOfBirth = "";
+  var gender = "";
+  var passportNumber = "";
+  var passportExpiry = "";
+  var email = "";
+  var mobile = localStorage.getItem("mobile");
+  var address = "";
+  var arrivalDate = "";
+  var departureDate = "";
+  var purposeOfVisit = "";
+  var visaEntry = "";
+  var accommodation = "";
+  let passportCopy = "";
+  let profilePhoto = "";
+  let supportingDocuments = [];
+  let supportingDocumentsUploaded = false;
+
   // Visa Application Process page
 
   if ($("#visaApplicationProcess").length) {
@@ -46,38 +84,30 @@ $(document).ready(function () {
       success: function (data) {
         const userInfo = data.userData;
         const userMetaInfo = data.userData.profileMeta;
+        firstName = userInfo.firstName;
+        lastName = userInfo.lastName;
+        email = userInfo.email;
+        dateOfBirth = userMetaInfo?.date_of_birth || "";
+        passportNumber = userMetaInfo?.passport_number || "";
+        passportExpiry = userMetaInfo?.passport_expiry || "";
+        address = userMetaInfo?.address || "";
         if (data.isFound == 1) {
           // 🔽 Populate form fields
-          $("#firstName").val(userInfo.firstName);
-          $("#lastName").val(userInfo.lastName);
-          if (userMetaInfo.date_of_birth) {
-            $("#dob").val(formatDateToYMD(userMetaInfo.date_of_birth));
-          }
-          if (userMetaInfo.passport_expiry) {
-            $("#passportExpiry").val(
-              formatDateToYMD(userMetaInfo.passport_expiry)
-            );
-          }
-          $("#passportNumber").val(
-            userMetaInfo.passport_number ? userMetaInfo.passport_number : ""
-          );
-          if (userMetaInfo.passport_expiry) {
-            const d = new Date(userMetaInfo.passport_expiry);
-            const dd = String(d.getDate()).padStart(2, "0");
-            const mm = String(d.getMonth() + 1).padStart(2, "0");
-            const yyyy = d.getFullYear();
-            $("#passportExpiry").val(`${dd}/${mm}/${yyyy}`);
-          } else {
-            $("#passportExpiry").val("");
-          }
-          $("#email").val(userInfo.email ? userInfo.email : "");
-          $("#mobile").val(userInfo.mobile ? userInfo.mobile : "");
-          $("#address").val(userMetaInfo.address ? userMetaInfo.address : "");
+          $("#firstName").val(firstName);
+          $("#lastName").val(lastName);
+          $("#dob").val(formatDateToYMD(dateOfBirth));
+          $("#passportExpiry").val(formatDateToYMD(passportExpiry));
+          $("#passportNumber").val(passportNumber);
+          $("#passportExpiry").val(formatDateToYMD(passportExpiry));
+          $("#email").val(email);
+          $("#mobile").val(mobile);
+          $("#address").val(address);
 
           // for gender
-          $(
-            'input[name="gender"][value="' + (userInfo.gender || "") + '"]'
-          ).prop("checked", true);
+          $('input[name="gender"][value="' + (gender || "") + '"]').prop(
+            "checked",
+            true
+          );
           $("#page-loader").hide();
         } else {
           console.log(`User information not found`);
@@ -126,15 +156,7 @@ $(document).ready(function () {
       }
     }
 
-    // Bind forward buttons
-    for (let i = 1; i <= 3; i++) {
-      $(`#step${i}Btn`).on("click", function (e) {
-        e.preventDefault();
-        goToStep(i + 1);
-      });
-    }
-
-    // Bind "go to" buttons
+    // back step button
     for (let i = 1; i <= 5; i++) {
       $(`#goToStep${i}Btn`).on("click", function (e) {
         e.preventDefault();
@@ -142,12 +164,187 @@ $(document).ready(function () {
       });
     }
 
+    $("#step1Btn").on("click", function (e) {
+      e.preventDefault();
+
+      const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const isValidMobile = (mobile) => /^\d{10}$/.test(mobile);
+      const isValidDate = (date) => /^\d{4}-\d{2}-\d{2}$/.test(date);
+
+      const getValue = (id) => document.getElementById(id)?.value.trim() || "";
+
+      const fields = [
+        { name: "First Name", id: "firstName" },
+        { name: "Last Name", id: "lastName" },
+        { name: "Date of Birth", id: "dob", validator: isValidDate },
+        { name: "Passport Number", id: "passportNumber" },
+        {
+          name: "Passport Expiry",
+          id: "passportExpiry",
+          validator: isValidDate,
+        },
+        { name: "Email", id: "email", validator: isValidEmail },
+        {
+          name: "Mobile",
+          value: localStorage.getItem("mobile")?.trim() || "",
+          validator: isValidMobile,
+        },
+        { name: "Address", id: "address" },
+      ];
+
+      for (const field of fields) {
+        const value = field.hasOwnProperty("value")
+          ? field.value
+          : getValue(field.id);
+        const isValid = field.validator ? field.validator(value) : !!value;
+
+        if (!isValid) {
+          popUpMessage(
+            "center",
+            `${field.name} is required or invalid`,
+            "warning"
+          );
+          if (field.id) document.getElementById(field.id)?.focus();
+          return;
+        }
+      }
+
+      // All validations passed
+      goToStep(2);
+    });
+
+    $("#step2Btn").on("click", function (e) {
+      e.preventDefault();
+
+      // Utility to get trimmed value with jQuery (since you use jQuery)
+      const getValue = (id) =>
+        $("#" + id)
+          .val()
+          ?.trim() || "";
+
+      // Declare these with let or const
+      arrivalDate = getValue("arrivalDate");
+      departureDate = getValue("departureDate");
+      purposeOfVisit = getValue("purposeOfTravel");
+      visaEntry = getValue("visaEntry");
+      accommodation = getValue("accommodation");
+
+      // Fields to validate, you can add custom validators if needed
+      const fields = [
+        { name: "Arrival date", id: "arrivalDate" },
+        { name: "Departure date", id: "departureDate" },
+        { name: "Purpose of travel", id: "purposeOfTravel" },
+        { name: "VISA entry", id: "visaEntry" },
+        { name: "Accommodation", id: "accommodation" },
+      ];
+
+      for (const field of fields) {
+        const value = getValue(field.id);
+
+        // Simple presence check, can be replaced with more complex validators if needed
+        const isValid = field.validator
+          ? field.validator(value)
+          : value.length > 0;
+
+        if (!isValid) {
+          popUpMessage(
+            "center",
+            `${field.name} is required or invalid`,
+            "warning"
+          );
+          const inputEl = document.getElementById(field.id);
+          if (inputEl) inputEl.focus();
+          return;
+        }
+      }
+
+      // All validations passed
+      goToStep(3);
+    });
+
+    $("#step3Btn").on("click", function (e) {
+      e.preventDefault();
+
+      // Define required fields info
+      const fields = [
+        {
+          name: "Passport",
+          id: "passportCopy",
+          type: "single",
+          required: true,
+        },
+        {
+          name: "Profile photo",
+          id: "profilePhoto",
+          type: "single",
+          required: true,
+        },
+        {
+          name: "Supporting documents",
+          id: "supportingDocuments",
+          type: "multiple",
+          required: false,
+        },
+      ];
+
+      for (const field of fields) {
+        const input = document.getElementById(field.id);
+        const hasFile = input?.files?.length > 0;
+
+        // Check required fields
+        if (field.required && !hasFile) {
+          popUpMessage("center", `Please upload ${field.name}`, "warning");
+          input?.focus();
+          return; // Stop if required file missing
+        }
+
+        // Process files if present
+        if (hasFile) {
+          if (field.type === "single") {
+            const fileURL = URL.createObjectURL(input.files[0]);
+            if (field.id === "passportCopy") passportCopy = fileURL;
+            if (field.id === "profilePhoto") profilePhoto = fileURL;
+          } else if (field.type === "multiple") {
+            supportingDocuments = Array.from(input.files).map((file) =>
+              URL.createObjectURL(file)
+            );
+            supportingDocumentsUploaded = true; // Set flag true if supporting docs uploaded
+          }
+        }
+      }
+
+      const formattedArrival = formatDateToDDMMYYYY(arrivalDate);
+      const formattedDeparture = formatDateToDDMMYYYY(departureDate);
+
+      $("#reviewTravelDates").text(
+        `${formattedArrival} to ${formattedDeparture}`
+      );
+
+      // Set review values (assuming firstName, lastName, email, etc. are in scope)
+      $("#reviewFullName").text(`${firstName} ${lastName}`);
+      $("#reviewEmail").text(email);
+      $("#reviewPassport").text(passportNumber);
+      $("#reviewDateOfBirth").text(dateOfBirth);
+      $("#reviewTravelDates").text(
+        `${formattedArrival} to ${formattedDeparture}`
+      );
+      $("#reviewTourism").text(toCapitalize(purposeOfVisit));
+      $("#reviewEntry").text(toCapitalize(visaEntry) + " entry");
+      $("#reviewSupportingDocuments").text(
+        supportingDocumentsUploaded ? "Uploaded" : "Not Uploaded"
+      );
+
+      // Optionally, use the file URLs or supportingDocumentsUploaded flag for preview or other logic
+
+      goToStep(4);
+    });
+
     // Save draft button
 
-    $(".saveAsDraft").on("click", function (e) {
-      e.preventDefault();
-      alert("Save as draft button clicked");
-    });
+    // $(".saveAsDraft").on("click", function (e) {
+    //   e.preventDefault();
+    //   alert("Save as draft button clicked");
+    // });
 
     // Submit visa application form
 
@@ -156,6 +353,41 @@ $(document).ready(function () {
       alert("SavesubmitVisaApplicationFormBtnt button clicked");
     });
   }
+
+  // File upload
+
+  function handleUploadText(inputSelector) {
+    $(inputSelector).on("change", function () {
+      const files = this.files;
+      const $uploadBox = $(this).closest(".relative");
+      const $textDiv = $uploadBox.find("div.text-sm");
+
+      if (files.length > 0) {
+        const names = Array.from(files)
+          .map((file) => file.name)
+          .join(", ");
+        $textDiv
+          .text("Uploaded: " + names)
+          .removeClass("text-gray-600")
+          .addClass("text-green-600 font-medium");
+      } else {
+        const defaultText =
+          inputSelector === "#supportingDocuments"
+            ? "Drag and drop or click to upload multiple files"
+            : "Drag and drop or click to upload";
+
+        $textDiv
+          .text(defaultText)
+          .removeClass("text-green-600 font-medium")
+          .addClass("text-gray-600");
+      }
+    });
+  }
+
+  // Initialize for each input
+  handleUploadText("#passportCopy");
+  handleUploadText("#profilePhoto");
+  handleUploadText("#supportingDocuments");
 
   // Header, Menu and Scroll
 
