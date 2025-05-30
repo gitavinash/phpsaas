@@ -39,9 +39,6 @@ if (file_exists($checkPhysicalFile)) {
 			} else {
 				require_once 'pagination.php';
 			}
-		} else {
-
-			exit();
 		}
 	}
 }

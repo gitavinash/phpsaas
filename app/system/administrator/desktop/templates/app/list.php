@@ -9,9 +9,6 @@ if ($id != 0) {
 		if (mysqli_num_rows($appData) != 0) {
 
 			extract(mysqli_fetch_assoc($appData));
-		} else {
-
-			exit();
 		}
 	}
 } else {

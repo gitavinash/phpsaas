@@ -9,9 +9,6 @@ if ($id != 0) {
 		if (mysqli_num_rows($categoryData) != 0) {
 
 			extract(mysqli_fetch_assoc($categoryData));
-		} else {
-
-			exit();
 		}
 	}
 } else {
