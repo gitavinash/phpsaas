@@ -1,33 +1,48 @@
 <?php
 
-  include_once 'header.php';
+require_once 'header.php';
 
 ?>
-           <div class="form-box">
-               <form id="update" >
-                     <h1>Update your password.<span>Change password of <strong><?php echo base64_decode($_GET['email']); ?></strong></span></h1>
-                     <div class="beforeClick">
-                      <div class="form-group">
-                        <input type="password" class="form-control" id="password" placeholder="Enter new password" name="pass" required >
-                      </div>
-                      <div class="form-group">
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm passowrd" name="cnf_pass" required >
-                      </div>
-                      <div class="form-group">
-                        <input type="hidden" name="type" value="auth" >
-                        <input type="hidden" name="action" value="updatePassword" >
-                        <input type="hidden" name="transaction" value="<?php echo $_GET['transaction'] ?>" >
-                        <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>" >
-                        <input type="submit" id="updatePassword" class="btn btn-block btn-success" value="Change Password">
-                      </div>
-                    </div>
-                    <div class="afterClick" style='display: none;' >
-                      <p><span id="statusMsg"></span> <a href='/login/?email=<?php echo $_GET['email'] ?>'>click here to login</a></p>
-                    </div>
-               </form>
-           </div>
-<?php
+<div class="col d-none d-lg-block">
+    <div class="slider">
+        <div class="slide">
+            <div class="img">
+                <img src="/app/system/visitor/default/desktop/assets/images/icons/forgot_password.svg"
+                    alt="Update Password">
+            </div>
+            <div class="text">
+                <p><strong>Reset Your Password</strong>Secure your account with a new one!</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col form-bg">
+    <div class="form">
+        <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>
+        <div class="card-body">
+            <div class="form-heading"><strong>Update Your Password</strong>Enter and confirm your new password below
+            </div>
+            <form id="updatePasswordForm" autocomplete="off">
+                <div class="form-group">
+                    <input type="password" class="form-control input-with-label" name="new_password" id="new_password"
+                        placeholder="New Password">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control input-with-label" name="confirm_password"
+                        id="confirm_password" placeholder="Confirm New Password">
+                </div>
+                <input type="hidden" name="type" value="auth">
+                <input type="hidden" name="action" value="updatePassword">
+                <input type="hidden" name="transaction" value="<?php echo $_GET['transaction'] ?>">
+                <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>">
+                <button type="submit" id="updatePassword" class="button theme-button">Update Password</button>
+                <div class="form-group">
+                    <p>Remembered everything? <a href="/login/">Back to Log in</a></p>
+                </div>
+            </form>
+        </div>
+        <?php
 
-  include_once 'footer.php';
+    require_once 'footer.php';
 
-?>
+    ?>
