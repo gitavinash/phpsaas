@@ -24,12 +24,12 @@ require_once 'header.php';
             </div>
             <form id="updatePasswordForm" autocomplete="off">
                 <div class="form-group">
-                    <input type="password" class="form-control input-with-label" name="new_password" id="new_password"
+                    <input type="password" class="form-control input-with-label" name="pass" id="password"
                         placeholder="New Password">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control input-with-label" name="confirm_password"
-                        id="confirm_password" placeholder="Confirm New Password">
+                    <input type="password" class="form-control input-with-label" name="cnf_pass" id="confirmPassword"
+                        placeholder="Confirm New Password">
                 </div>
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="updatePassword">
@@ -43,6 +43,6 @@ require_once 'header.php';
         </div>
         <?php
 
-    require_once 'footer.php';
+        require_once 'footer.php';
 
-    ?>
+        ?>
