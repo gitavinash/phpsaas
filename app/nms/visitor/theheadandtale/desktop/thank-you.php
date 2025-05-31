@@ -33,7 +33,7 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
         }
 
         if ($orderType != 'news') {
-            if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription (
+            if (!mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription (
                 subscription_site_id, subscription_user_id, subscription_relation_id,
                 subscription_mode, subscription_type, subscription_time,
                 subscription_expiry, subscription_status
@@ -47,8 +47,6 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
                 subscription_type = VALUES(subscription_type),
                 subscription_expiry = VALUES(subscription_expiry),
                 subscription_status = VALUES(subscription_status)")) {
-                echo "Subscription updated successfully";
-            } else {
                 if (DEVELOPMENT_MODE == true) {
                     echo "Error updating subscription: " . mysqli_error($connection);
                 }
