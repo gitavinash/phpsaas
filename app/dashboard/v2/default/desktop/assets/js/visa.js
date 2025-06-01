@@ -63,6 +63,20 @@ $(document).ready(function () {
         return;
       }
 
+      // Check image file
+      var fileInput = document.getElementById("fileInput");
+      var selectedFiles = fileInput.files;
+
+      if (selectedFiles.length === 0) {
+        popUpMessage(
+          "center",
+          "Please upload a country feature image.",
+          "error"
+        );
+        fileInput.click();
+        return;
+      }
+
       // All validations passed
       $("#addNewCountry").hide();
 
@@ -75,6 +89,7 @@ $(document).ready(function () {
       formData.append("faqs", faqs);
       formData.append("visaTypes", JSON.stringify(visaTypes));
       formData.append("isFeatured", isFeaturedValue);
+      formData.append("featureImage", selectedFiles[0]); // Append image
 
       // AJAX call
       $.ajax({
@@ -173,6 +188,20 @@ $(document).ready(function () {
         return;
       }
 
+      // Check image file
+      var fileInput = document.getElementById("fileInput");
+      var selectedFiles = fileInput.files;
+
+      if (selectedFiles.length === 0) {
+        popUpMessage(
+          "center",
+          "Please upload a country feature image.",
+          "error"
+        );
+        fileInput.click();
+        return;
+      }
+
       // If all validations pass
       $("#editCountry").hide();
 
@@ -186,6 +215,7 @@ $(document).ready(function () {
       formData.append("visaTypes", JSON.stringify(visaTypes));
       formData.append("isFeatured", isFeaturedValue);
       formData.append("id", $("#countryId").val().trim());
+      formData.append("featureImage", selectedFiles[0]); // Append image
 
       // AJAX call
       $.ajax({
