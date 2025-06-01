@@ -59,8 +59,8 @@ require_once 'header.php';
                 <div class="flex-1 p-4 lg:p-6 overflow-y-auto" id="visaMainContent">
                     <!-- Banner Image -->
                     <div class="rounded-lg overflow-hidden mb-5">
-                        <img src="https://readdy.ai/api/search-image?query=Beautiful%2520panoramic%2520view%2520of%2520Swiss%2520Alps%2520mountains%2520with%2520green%2520meadows%252C%2520blue%2520sky%2520and%2520white%2520clouds.%2520Majestic%2520landscape%2520of%2520Switzerland%2520countryside%2520in%2520summer.%2520Scenic%2520nature%2520background%2520with%2520high%2520peaks&width=1200&height=300&seq=123&orientation=landscape"
-                            alt="Switzerland Mountains" class="w-full h-48 object-cover object-top">
+                        <img src="<?php echo $visa_country_image ?>" alt="Switzerland Mountains"
+                            class="w-full h-48 object-cover object-top">
                     </div>
                     <!-- Notification Banner -->
                     <div class="bg-amber-50 border border-amber-100 rounded-lg p-4 mb-6 flex items-center">
