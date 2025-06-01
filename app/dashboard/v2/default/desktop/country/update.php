@@ -41,7 +41,7 @@ window.location.href = '/dashboard/country/list/';
                 <section class="form">
                     <div class="step-open-box step_1_box">
                         <div class="form-header">
-                            <h1>Enter country details</h1>
+                            <h1>Update country details</h1>
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hosting.png" alt="Add new Hosting tld">
                         </div>
                         <div class="form-group">
