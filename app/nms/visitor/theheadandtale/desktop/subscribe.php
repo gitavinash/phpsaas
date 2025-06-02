@@ -41,7 +41,7 @@ window.location.href = '/manage-subscription/';
 
             $subscription_relation_id = ((isset($subscription_relation_id)) ? $subscription_relation_id : 0);
 
-            if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_category='" . ((strtolower($country) == 'india') ? '231' : '286') . "' AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
+            if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_category='" . ((strtolower($country) == 'india') ? '231' : '291') . "' AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
                 if (mysqli_num_rows($subsriptionPlan) != 0) {
                     while ($subsriptionPlanData = mysqli_fetch_assoc($subsriptionPlan)) {
                         extract($subsriptionPlanData);
