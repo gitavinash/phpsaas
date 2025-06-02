@@ -1,15 +1,20 @@
 <?php
 
-    require_once 'header.php';
+$fetchIPData = file_get_contents("http://ip-api.com/json/" . ((IP == '127.0.0.1') ? '110.235.235.20' : IP) . "?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
 
-    if($activeSubscription==true) {
-        if($subscription_mode=='year') { ?>
+extract(json_decode($fetchIPData, TRUE));
+
+
+require_once 'header.php';
+
+if ($activeSubscription == true) {
+    if ($subscription_mode == 'year') { ?>
 <script>
 window.location.href = '/manage-subscription/';
 </script>
 <?php
-        }
     }
+}
 
 ?>
 <section class="subscribe--wrapper">
@@ -33,20 +38,20 @@ window.location.href = '/manage-subscription/';
 
         <div class="subscription_card">
             <?php
-           
-           $subscription_relation_id=((isset($subscription_relation_id)) ? $subscription_relation_id : 0);
 
-            if($subsriptionPlan=mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_type='subscription' AND product_site_id=".SITE_ID)) {
-                if(mysqli_num_rows($subsriptionPlan)!=0) {
-                    while($subsriptionPlanData=mysqli_fetch_assoc($subsriptionPlan)) {
+            $subscription_relation_id = ((isset($subscription_relation_id)) ? $subscription_relation_id : 0);
+
+            if ($subsriptionPlan = mysqli_query($connection, "SELECT product_id, product_title, inventory_currency_symbol, inventory_mrp, inventory_price FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id WHERE product_status=1 AND product_category='" . ((strtolower($country) == 'india') ? '231' : '286') . "' AND product_type='subscription' AND product_site_id=" . SITE_ID)) {
+                if (mysqli_num_rows($subsriptionPlan) != 0) {
+                    while ($subsriptionPlanData = mysqli_fetch_assoc($subsriptionPlan)) {
                         extract($subsriptionPlanData);
-                            if($product_id!=$subscription_relation_id) { ?>
+                        if ($product_id != $subscription_relation_id) { ?>
             <div class="subscription_card__box">
                 <p><?php echo $product_title ?></p>
                 <h6><?php echo $inventory_currency_symbol ?> <?php echo $inventory_price ?></h6>
                 <div class="continue"> <?php
-                                                    
-                                                        if(isset($_COOKIE['user_data'])) {
+
+                                                        if (isset($_COOKIE['user_data'])) {
                                                             echo "
                                                                 <form action='/subscription/' method='post' >
                                                                     <input type='hidden' name='id' value='{$product_id}'>
@@ -57,15 +62,15 @@ window.location.href = '/manage-subscription/';
                                                             echo "<a href='/login/?duration=monthly' class='button'>continue</a>";
                                                         }
 
-                                                    ?>
+                                                        ?>
                 </div>
             </div>
             <?php
+                        }
                     }
                 }
             }
-        }
-           ?>
+            ?>
         </div>
     </div>
 </div>
@@ -132,6 +137,6 @@ window.location.href = '/manage-subscription/';
 </div>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

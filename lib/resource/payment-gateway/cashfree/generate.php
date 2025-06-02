@@ -1,3 +1,10 @@
+<?php
+
+$fetchIPData = file_get_contents("http://ip-api.com/json/" . ((IP == '127.0.0.1') ? '110.235.235.20' : IP) . "?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
+
+extract(json_decode($fetchIPData, TRUE));
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +41,7 @@
         ],
         "order_id" => $order_id,
         "order_amount" => strval($paymentAmount),
-        "order_currency" => "INR",
+        "order_currency" => ((strtolower($country) == 'india') ? 'INR' : 'USD'),
         "order_note" => $cartProduct,
         "order_meta" => array(
             "return_url" => ((!isset($customRedirection)) ? SITE_URL . '/payment/status/?orderId=' . base64_encode($order_id) . '&app=' . $siteApp . '&orderType=' . $pgRequestType : $customRedirection)
@@ -76,16 +83,16 @@
 
             if ($updateTransaction = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_reference_id='{$response['cf_order_id']}', transaction_payment_id='{$response['payment_session_id']}',transaction_status=2 WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID)) { ?>
 
-                <script>
-                    window.onload = function() {
-                        const cashfree = Cashfree({
-                            mode: "<?php echo ((DEVELOPMENT_MODE == true) ? 'sandbox' : 'production') ?>"
-                        });
-                        cashfree.checkout({
-                            paymentSessionId: "<?php echo $response['payment_session_id']; ?>"
-                        });
-                    }
-                </script>
+    <script>
+    window.onload = function() {
+        const cashfree = Cashfree({
+            mode: "<?php echo ((DEVELOPMENT_MODE == true) ? 'sandbox' : 'production') ?>"
+        });
+        cashfree.checkout({
+            paymentSessionId: "<?php echo $response['payment_session_id']; ?>"
+        });
+    }
+    </script>
     <?php
             } else {
 

@@ -119,7 +119,7 @@ require_once 'header.php';
                                                 <span>From </span>
                                             </div>
                                             <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $featuredCountryData['visa_country_title'])) . "'
-                                                class='w-full float-left text-center bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer'>Apply
+                                                class='w-full float-left text-center bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer mb-4'>Apply
                                                 Now</a>
                                         </div>
                                     </div>
