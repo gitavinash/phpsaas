@@ -96,6 +96,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             <label class="block text-sm font-medium text-gray-700 mb-2">Passport Expiry
                                 Date<sup>*</sup></label>
                             <input id="passportExpiry" name="passportExpiry" type="date"
+                                min="<?php echo date('Y-m-d', strtotime('+6 months')) ?>"
                                 max="<?php echo date('Y-m-d', strtotime('+15 years')) ?>"
                                 class=" w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
@@ -137,14 +138,14 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                     </div>
                     <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Arrival Date<sup>*</sup></label>
-                            <input type="date" id="arrivalDate" name="arrivalDate" min="<?php echo date('Y-m-d') ?>"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Departure
                                 Date<sup>*</sup></label>
                             <input type="date" id="departureDate" name="departureDate" min="<?php echo date('Y-m-d') ?>"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Arrival Date<sup>*</sup></label>
+                            <input type="date" id="arrivalDate" name="arrivalDate" min="<?php echo date('Y-m-d') ?>"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
                         <div>

@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <!-- Add the slick-theme.css if you want default styling -->
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <!-- Add the slick-theme.css if you want default styling -->
@@ -14,10 +13,7 @@
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>global.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>home.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>navbar.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css">
     <?php require_once DEFAULT_META ?>
 </head>
 
@@ -28,16 +24,18 @@
                 <div class="container-fluid">
                     <div class="top_header">
                         <div class="header_logo">
-                            <a href="/"><img src="<?php echo USER_IMAGES ?>svg/andbloom.svg" class="img-fluid"
-                                    alt=""></a>
+                            <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid"
+                                    alt="<?php echo SITE_NAME ?> logo"></a>
                         </div>
                         <div class="header_right">
                             <div class="search">
-                                <input type="text" placeholder="Search">
-                                <div class="search_icon">
-                                    <button><img src="<?php echo USER_IMAGES ?>svg/search.svg" class="img-fluid"
-                                            alt=""></button>
-                                </div>
+                                <form action="/search/" method="get">
+                                    <input type="text" name="q" placeholder="Search">
+                                    <div class="search_icon">
+                                        <button><img src="<?php echo USER_IMAGES ?>svg/search.svg" class="img-fluid"
+                                                alt=""></button>
+                                    </div>
+                                </form>
                             </div>
                             <div class="mobile_search header_cart">
                                 <a href="#"><img src="<?php echo USER_IMAGES ?>svg/search.svg" class="img-fluid"
@@ -46,8 +44,10 @@
                             <div class="search_overlay">
                                 <div class="search_input">
                                     <div class="mob--search">
-                                        <input type="text" placeholder="Search...">
-                                        <button><i class='bx bx-search'></i></button>
+                                        <form action="/search/" method="get">
+                                            <input type="text" name="q" placeholder="Search...">
+                                            <button><i class='bx bx-search'></i></button>
+                                        </form>
                                     </div>
 
                                     <div class="cancel_search__input">
@@ -57,15 +57,22 @@
 
                             </div>
 
+                            <?php
+                            if ($cartNumber = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON cart_relation_id=product_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=0 AND product_status=1 AND cart_site_id=" . SITE_ID)) {
+
+                                $cartItems = mysqli_num_rows($cartNumber);
+                            }
+                            ?>
+
                             <div class="header_cart cart_add">
-                                <a href="/cart.html" class="cart"><img src="<?php echo USER_IMAGES ?>svg/lock.svg"
+                                <a href="/checkout/" class="cart"><img src="<?php echo USER_IMAGES ?>svg/lock.svg"
                                         class="img-fluid" alt=""></a>
                                 <div class="cart_no">
-                                    <span>2</span>
+                                    <span><?php echo $cartItems ?></span>
                                 </div>
                             </div>
                             <div class="user header_cart">
-                                <a href="/contact.html"><img src="<?php echo USER_IMAGES ?>svg/user.svg"
+                                <a href="/login/?authby=mobile"><img src="<?php echo USER_IMAGES ?>svg/user.svg"
                                         class="img-fluid" alt=""></a>
                             </div>
                             <div class="top_menu header_cart">

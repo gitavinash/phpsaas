@@ -119,6 +119,40 @@ $(document).ready(function () {
       },
     });
 
+    function saveVisaApplicationDraft(formData, stepNumber) {
+      const packageId = urlParams.get("package_id");
+      try {
+        formData.append("packageId", packageId); // Attach package ID if available
+        // Attach application ID for steps after 1
+        if (stepNumber !== 1) {
+          const appId = localStorage.getItem("visaApplicationId");
+          formData.append("applicationId", appId);
+        }
+
+        $.ajax({
+          url: "/api/application/draft/",
+          method: "POST",
+          data: JSON.stringify(formData),
+          contentType: false, // Let browser set the correct multipart/form-data headers
+          processData: false, // Don't process data as a query string
+          success: function (res) {
+            console.log("✅ Draft saved successfully:", res);
+
+            // Save applicationId to localStorage only on Step 1
+            if (stepNumber === 1 && res.applicationId) {
+              localStorage.setItem("visaApplicationId", res.applicationId);
+            }
+          },
+          error: function (xhr, status, err) {
+            console.error("❌ Failed to save draft:", err);
+            console.debug("Server Response:", xhr.responseText);
+          },
+        });
+      } catch (e) {
+        console.error("❌ Unexpected error in saveVisaApplicationDraft:", e);
+      }
+    }
+
     function goToStep(stepNumber) {
       // Animate step visibility
       for (let i = 1; i <= 4; i++) {
@@ -194,6 +228,7 @@ $(document).ready(function () {
 
       dateOfBirth = getValue("dob");
       passportNumber = getValue("passportNumber");
+      const formData = {};
 
       for (const field of fields) {
         const value = field.hasOwnProperty("value")
@@ -210,9 +245,12 @@ $(document).ready(function () {
           if (field.id) document.getElementById(field.id)?.focus();
           return;
         }
+        formData[field.id || field.name.toLowerCase().replace(/\s+/g, "_")] =
+          value;
       }
 
       // All validations passed
+      saveVisaApplicationDraft(formData, 1);
       goToStep(2);
     });
 
@@ -240,7 +278,7 @@ $(document).ready(function () {
         { name: "VISA entry", id: "visaEntry" },
         { name: "Accommodation", id: "accommodation" },
       ];
-
+      const formData = {};
       for (const field of fields) {
         const value = getValue(field.id);
 
@@ -259,9 +297,13 @@ $(document).ready(function () {
           if (inputEl) inputEl.focus();
           return;
         }
+
+        formData[field.id || field.name.toLowerCase().replace(/\s+/g, "_")] =
+          value;
       }
 
       // All validations passed
+      saveVisaApplicationDraft(formData, 2);
       goToStep(3);
     });
 
@@ -290,28 +332,27 @@ $(document).ready(function () {
         },
       ];
 
+      const files = {};
+      let supportingDocumentsUploaded = false;
+
       for (const field of fields) {
         const input = document.getElementById(field.id);
-        const hasFile = input?.files?.length > 0;
+        const fileList = input?.files || [];
 
-        // Check required fields
-        if (field.required && !hasFile) {
+        // Validation for required fields
+        if (field.required && fileList.length === 0) {
           popUpMessage("center", `Please upload ${field.name}`, "warning");
           input?.focus();
-          return; // Stop if required file missing
+          return;
         }
 
-        // Process files if present
-        if (hasFile) {
+        // Store files
+        if (fileList.length > 0) {
           if (field.type === "single") {
-            const fileURL = URL.createObjectURL(input.files[0]);
-            if (field.id === "passportCopy") passportCopy = fileURL;
-            if (field.id === "profilePhoto") profilePhoto = fileURL;
+            files[field.id] = fileList[0]; // single File
           } else if (field.type === "multiple") {
-            supportingDocuments = Array.from(input.files).map((file) =>
-              URL.createObjectURL(file)
-            );
-            supportingDocumentsUploaded = true; // Set flag true if supporting docs uploaded
+            files[field.id] = Array.from(fileList); // array of Files
+            supportingDocumentsUploaded = true;
           }
         }
       }
@@ -338,7 +379,7 @@ $(document).ready(function () {
       );
 
       // Optionally, use the file URLs or supportingDocumentsUploaded flag for preview or other logic
-
+      saveVisaApplicationDraft(files, 3);
       goToStep(4);
     });
 
@@ -548,7 +589,6 @@ $(document).ready(function () {
   }
 
   if ($("#startApplicationDropDown").length) {
-    console.log(`startApplicationDropDown found`);
     $("#startApplicationDropDown").change(function () {
       let selectedCountry = $(this).val();
       if (selectedCountry) {
@@ -558,115 +598,99 @@ $(document).ready(function () {
     });
   }
 
-  // Start application process page
-
   const urlParams = new URLSearchParams(window.location.search);
   const country = urlParams.get("country");
   const purpose = urlParams.get("purpose");
-  const type = urlParams.get("type"); // Optional, in case needed later
+  const type = urlParams.get("type"); // Optional
 
-  $("#selectCountry").hide();
-  $("#purposeOfVisa").hide();
-  $("#visaPackages").hide();
+  // Hide all initially
+  $("#selectCountry, #purposeOfVisa, #visaPackages").hide();
 
-  // Case: No country parameter
+  // Case: No country selected
   if (!country) {
-    $("#selectCountry").show();
+    console.log("Country not selected");
+    $("#selectCountry").fadeIn(400);
     return;
   }
 
-  // Show visa purpose
-
+  // Case: Country selected but no purpose
   if (country && !purpose) {
-    $("#selectCountry").hide();
-    console.log(`Show visa purpose`);
+    console.log("Show visa purpose");
+
+    $("#selectCountry").fadeOut(200);
     const $visaContainer = $("#visaPurposeListBox");
+
     if ($("#visaPurposeListBox").length) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const countryName = urlParams.get("country");
-      if (!countryName) {
-        $visaContainer.html(
-          '<p class="text-red-500">Missing country ID in the URL.</p>'
-        );
-        return;
-      }
       $visaContainer.html('<p class="text-gray-500">Loading visa types...</p>');
+
       $.ajax({
-        url: `/api/country/visas/?country=${countryName}`,
+        url: `/api/country/visas/?country=${country}`,
         method: "GET",
         success: function (res) {
-          console.log(`Success data found`, res);
           $visaContainer.empty();
-          console.log(`Country data:`, res.countryList);
 
           if (Array.isArray(res.countryList)) {
             res.countryList.forEach((type) => {
               const formattedType =
-                type.charAt(0).toUpperCase() + type.slice(1); // Capitalize
+                type.charAt(0).toUpperCase() + type.slice(1);
               const purposeUrl = formattedType.toLowerCase().replace(" ", "_");
-              console.log(`formattedType: `, formattedType);
 
               const visaCard = `
-                            <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
-                               <a href='/start-application/?country=${countryName}&purpose=${purposeUrl}'>
-                                 <div class="flex items-center mb-3">
-                                    <div
-                                        class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
-                                        <i class="ri-more-line text-gray-600 ri-xl"></i>
-                                    </div>
-                                    <h3 class="text-2xl font-semibold text-gray-900">${formattedType}</h3>
-                                </div>
-                                <p class="text-gray-600 mb-4">Visa information for ${formattedType.toLowerCase()} travel purposes.</p>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <i class="ri-time-line mr-2 w-4 h-4 flex items-center justify-center"></i>
-                                    <span>Processing time may vary</span>
-                                </div>
-                               </a>
-                            </div>
-                        `;
+                <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
+                  <a href='/start-application/?country=${country}&purpose=${purposeUrl}'>
+                    <div class="flex items-center mb-3">
+                      <div class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
+                        <i class="ri-more-line text-gray-600 ri-xl"></i>
+                      </div>
+                      <h3 class="text-2xl font-semibold text-gray-900">${formattedType}</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Visa information for ${formattedType.toLowerCase()} travel purposes.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                      <i class="ri-time-line mr-2 w-4 h-4 flex items-center justify-center"></i>
+                      <span>Processing time may vary</span>
+                    </div>
+                  </a>
+                </div>`;
               $visaContainer.append(visaCard);
             });
           } else {
             $visaContainer.html(
-              '<p class="text-gray-500">No visa information found for this country.</p>'
+              '<p class="text-gray-500">No visa information found.</p>'
             );
           }
+
+          $("#purposeOfVisa").hide().fadeIn(400);
         },
         error: function (error) {
-          console.log(`error: `, error);
-          popUpMessage("center", error.responseJSON.msg, "error");
+          console.error("Visa type error:", error);
+          popUpMessage(
+            "center",
+            error?.responseJSON?.msg || "Something went wrong!",
+            "error"
+          );
         },
       });
     }
-    $("#purposeOfVisa").show();
     return;
   }
 
-  // Show visa package
-
+  // Case: Country and purpose selected
   if (country && purpose) {
-    $("#purposeOfVisa").hide();
-    console.log(`Show visa package`);
+    console.log("Show visa package");
+
+    $("#purposeOfVisa").fadeOut(200);
     const $packageContainer = $("#visaPackagesListBox");
+
     if ($("#visaPackagesListBox").length) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const countryName = urlParams.get("country");
-      if (!countryName) {
-        $packageContainer.html(
-          '<p class="text-red-500">Missing country ID in the URL.</p>'
-        );
-        return;
-      }
       $packageContainer.html(
         '<p class="text-gray-500">Loading visa packages...</p>'
       );
 
       $.ajax({
-        url: `/api/visa_packages/list/?country=${countryName}&purpose=${purpose}`,
+        url: `/api/visa_packages/list/?country=${country}&purpose=${purpose}`,
         method: "GET",
         success: function (res) {
           $packageContainer.empty();
-          console.log("Package data:", res);
 
           if (Array.isArray(res.packageList) && res.packageList.length > 0) {
             res.packageList.forEach((pkg) => {
@@ -674,36 +698,35 @@ $(document).ready(function () {
                 pkg.visa_package_title.charAt(0).toUpperCase() +
                 pkg.visa_package_title.slice(1);
               const encodedId = btoa(pkg.visa_package_id);
-
               const mrp = parseFloat(pkg.visa_package_mrp);
               const price = parseFloat(pkg.visa_package_price);
               const discountAmount = mrp - price;
               const discountPercent = Math.round((discountAmount / mrp) * 100);
-
               const packageUrl = pkg.visa_package_title
                 .toLowerCase()
                 .replace(/\s+/g, "_");
 
               const packageCard = `
-        <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
-          <a href='/package/?package_id=${encodedId}&package_name=${encodeURIComponent(
+                <div class="purpose-card bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl mb-4">
+                  <a href='/package/?package_id=${encodedId}&package_name=${encodeURIComponent(
                 packageUrl
               )}'>
-            <div class="flex items-center mb-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
-                <i class="ri-passport-line text-gray-600 ri-xl"></i>
-              </div>
-              <h3 class="text-2xl font-semibold text-gray-900">${formattedTitle}</h3>
-            </div>
-            <p class="text-gray-600 mb-4">Stay Duration: ${
-              pkg.visa_package_stay_duration
-            } days, Validity: ${pkg.visa_package_validity_duration} days.</p>
-            <div class="text-gray-600 mb-2">Price: <del>₹${mrp}</del></div>
-            <div class="text-green-600 font-bold text-lg">Offer Price: ₹${price}</div>
-            <div class="text-red-600 text-sm mt-1">You save ₹${discountAmount} (${discountPercent}% off)</div>
-          </a>
-        </div>
-      `;
+                    <div class="flex items-center mb-3">
+                      <div class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100/10 rounded-xl flex items-center justify-center mr-3 floating-icon shadow-lg shadow-gray-600/5">
+                        <i class="ri-passport-line text-gray-600 ri-xl"></i>
+                      </div>
+                      <h3 class="text-2xl font-semibold text-gray-900">${formattedTitle}</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Stay Duration: ${
+                      pkg.visa_package_stay_duration
+                    } days, Validity: ${
+                pkg.visa_package_validity_duration
+              } days.</p>
+                    <div class="text-gray-600 mb-2">Price: <del>₹${mrp}</del></div>
+                    <div class="text-green-600 font-bold text-lg">Offer Price: ₹${price}</div>
+                    <div class="text-red-600 text-sm mt-1">You save ₹${discountAmount} (${discountPercent}% off)</div>
+                  </a>
+                </div>`;
               $packageContainer.append(packageCard);
             });
           } else {
@@ -711,15 +734,19 @@ $(document).ready(function () {
               '<p class="text-gray-500">No visa packages found.</p>'
             );
           }
+
+          $("#visaPackages").hide().fadeIn(400);
         },
         error: function (error) {
-          console.log(`error: `, error);
-          const errorMsg = error?.responseJSON?.msg || "Something went wrong!";
-          popUpMessage("center", errorMsg, "error");
+          console.error("Visa package error:", error);
+          popUpMessage(
+            "center",
+            error?.responseJSON?.msg || "Something went wrong!",
+            "error"
+          );
         },
       });
     }
-    $("#visaPackages").show();
     return;
   }
 });

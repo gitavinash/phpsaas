@@ -5,7 +5,7 @@ require_once 'header.php';
 ?>
 <main class="flex-grow container mx-auto pt-[5em] pb-0 sm:py-[10em]">
 
-    <div class="mx-auto applicationBox" id="selectCountry">
+    <div class="mx-auto applicationBox" id="selectCountry" style="display: none;">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-8 sm:mb-12">
                 <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select Your Destination Country
@@ -58,7 +58,7 @@ require_once 'header.php';
             </div>
         </div>
     </div>
-    <div class="mx-auto applicationBox" id="purposeOfVisa">
+    <div class="mx-auto applicationBox" id="purposeOfVisa" style="display: none;">
         <div class="text-center mb-8 sm:mb-16">
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select Purpose of Visit to
                 <?php echo ucwords(str_replace('_', ' ', $country)) ?></h1>
@@ -70,7 +70,7 @@ require_once 'header.php';
 
         </div>
     </div>
-    <div class="mx-auto applicationBox" id="visaPackages">
+    <div class="mx-auto applicationBox" id="visaPackages" style="display: none;">
         <div class="text-center mb-8 sm:mb-16">
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select a Visa Package for
                 <?php echo ucwords(str_replace('_', ' ', $country)) ?></h1>

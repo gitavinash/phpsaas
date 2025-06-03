@@ -73,9 +73,9 @@
                         class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>My Account</a>";
                     } else {
                         echo "
-                    <a href='/login/'
+                    <a href='/login/?authby=mobile'
                         class='text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer'>Login</a>
-                    <a href='/register/'
+                    <a href='/login/?authby=mobile'
                         class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>Register</a>";
                     }
 

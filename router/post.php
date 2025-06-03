@@ -16,8 +16,9 @@ switch ($link_status) {
 
             if (mysqli_num_rows($postData) != 0) {
 
-                extract(mysqli_fetch_assoc($postData));
-
+                print_r(mysqli_fetch_assoc($postData));
+                // extract(mysqli_fetch_assoc($postData));
+                exit();
                 if (file_exists(ROUTER . $link_status . '.php')) {
 
                     /** Include status router file */

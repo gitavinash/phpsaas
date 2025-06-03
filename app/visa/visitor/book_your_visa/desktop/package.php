@@ -59,7 +59,8 @@ require_once 'header.php';
                 <div class="flex-1 p-4 lg:p-6 overflow-y-auto" id="visaMainContent">
                     <!-- Banner Image -->
                     <div class="rounded-lg overflow-hidden mb-5">
-                        <img src="<?php echo $visa_country_image ?>" alt="Switzerland Mountains"
+                        <img src="<?php echo $visa_country_image ?>"
+                            alt="<?php echo $visa_country_title ?> feature image"
                             class="w-full h-48 object-cover object-top">
                     </div>
                     <!-- Notification Banner -->
@@ -89,9 +90,12 @@ require_once 'header.php';
                         <div class="text-left sm:text-right w-full sm:w-auto mt-4 sm:mt-0">
                             <div class="text-2xl font-bold flex items-center justify-start sm:justify-end">
                                 ₹ <?php echo $visa_package_price ?>
-                                <div class="w-6 h-6 flex items-center justify-center ml-1">
+                                <?php if ($visa_package_price < $visa_package_mrp): ?>
+                                <strike><?php echo $visa_package_mrp; ?></strike>
+                                <?php endif; ?>
+                                <!-- <div class="w-6 h-6 flex items-center justify-center ml-1">
                                     <i class="ri-arrow-down-s-line"></i>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

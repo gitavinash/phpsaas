@@ -78,12 +78,7 @@ require_once 'header.php';
                                 <h3 class="main_font_family dark-brown is-font-26">₹6000 /-</h3>
                             </div>
                             <div class="flower_details">
-                                <p class="grey-color is-font-18">Lorem ipsum dolor sit amet elit. Integer nec
-                                    odio.Praes
-                                    amet elit. Integer nec Lorem
-                                    ipsum dolor sit amet elit. Integer nec odio.Praesent libero.Lorem ipsum dolor
-                                    sit
-                                    amet elit. Integer nec odio.Praes amet elit.</p>
+                                <p class="grey-color is-font-18"><?php echo $product_highlight ?></p>
                                 <p class="grey-color is-font-18 text-capitalize"><span class="dark-brown">Availability
                                         :</span> In
                                     Delhi,Gurugram,faridabad,noida only</p>
@@ -97,7 +92,12 @@ require_once 'header.php';
                                 </div>
                             </div>
                             <div class="flower_cart">
-                                <a href="./cart.html" class="global_btn is-font-18 dark-brown">add to cart</a>
+                                <a href="#" class="global_btn is-font-18 dark-brown">Add to cart</a>
+                                <?php
+                                $whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
+                                ?>
+                                <a href="<?php echo $whatsappUrl ?>" target="_blank"
+                                    class="global_btn is-font-18 dark-brown">Order on WhatsApp</a>
                             </div>
                         </div>
                     </div>
@@ -114,42 +114,26 @@ require_once 'header.php';
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-                            type="button" role="tab" aria-controls="home" aria-selected="true">Discription</button>
+                            type="button" role="tab" aria-controls="home" aria-selected="true">Description</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
-                            type="button" role="tab" aria-controls="profile" aria-selected="false">Review</button>
+                            type="button" role="tab" aria-controls="profile" aria-selected="false">Reviews</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact"
-                            type="button" role="tab" aria-controls="contact" aria-selected="false">delivery
+                            type="button" role="tab" aria-controls="contact" aria-selected="false">Delivery
                             information</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="description_content">
-                            <p class="is-font-18 grey-color">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit, sed do
-                                eiusmod
-                                tempor incididunt ut labore
-                                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris
-                                nisi
-                                ut
-                                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                velit
-                                esse
-                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</p>
-                            <div class="types">
-                                <p><img src="<?php echo USER_IMAGES ?>svg/check.svg" class="img-fluid" alt="">Tulips</p>
-                                <p><img src="<?php echo USER_IMAGES ?>svg/check.svg" class="img-fluid" alt="">Glass Vase
-                                </p>
-                                <p><img src="<?php echo USER_IMAGES ?>svg/check.svg" class="img-fluid" alt="">message
-                                    card</p>
-                                <p><img src="<?php echo USER_IMAGES ?>svg/check.svg" class="img-fluid" alt="">Care Card
-                                </p>
-                            </div>
+                            <?php
+
+                            echo $product_description;
+
+                            ?>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -308,137 +292,23 @@ require_once 'header.php';
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        <div class="description_content">
+
+                            <?php
+
+                            echo $delivery_information
+
+                            ?>
+
+                        </div>
+                    </div>
+
+
                 </div>
 
 
             </div>
-
-
-        </div>
-    </section>
-
-    <!-- testimonial section start -->
-    <section class="testimonial_wrapper">
-        <div class="container">
-            <div class="main--heading">
-                <h1 class="main_font_family is-font-45 black-color">our customer review</h1>
-            </div>
-        </div>
-        <div class="testimonial_content">
-            <div class="container">
-                <div class="testimonial_slider">
-                    <div class="testimonial_card">
-                        <div class="card_head">
-                            <div class="card_head__img">
-                                <img src="<?php echo USER_IMAGES ?>svg/user1.svg" class="img-fluid" alt="">
-                            </div>
-                            <div class="user_name">
-                                <h3 class="dark-brown main_font_family is-font-20">Rahul kumar</h3>
-                                <p class="is-font-18">lorem ipsum</p>
-                                <div class="rating">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_parra">
-                            <p class="silver-shade is-font-18">Lorem Ipsum is simply dummy text of the printing and
-                                typesetting
-                                industry. 1500s, Ipsum
-                                is typesetting industry.</p>
-                        </div>
-                        <div class="read_more">
-                            <a href="#" class="dark-brown is-font-18">Read more</a>
-                        </div>
-                    </div>
-                    <div class="testimonial_card">
-                        <div class="card_head">
-                            <div class="card_head__img">
-                                <img src="<?php echo USER_IMAGES ?>svg/userimg2.svg" class="img-fluid" alt="">
-                            </div>
-                            <div class="user_name">
-                                <h3 class="dark-brown main_font_family is-font-20">Gourav kumar</h3>
-                                <p class="is-font-18">lorem ipsum</p>
-                                <div class="rating">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_parra">
-                            <p class="silver-shade is-font-18">Lorem Ipsum is simply dummy text of the printing and
-                                typesetting
-                                industry. 1500s, Ipsum
-                                is typesetting industry.</p>
-                        </div>
-                        <div class="read_more">
-                            <a href="#" class="dark-brown is-font-18">Read more</a>
-                        </div>
-                    </div>
-                    <div class="testimonial_card">
-                        <div class="card_head">
-                            <div class="card_head__img">
-                                <img src="<?php echo USER_IMAGES ?>svg/userimg3.svg" class="img-fluid" alt="">
-                            </div>
-                            <div class="user_name">
-                                <h3 class="dark-brown main_font_family is-font-20">Ravi kumar</h3>
-                                <p class="is-font-18">lorem ipsum</p>
-                                <div class="rating">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_parra">
-                            <p class="silver-shade is-font-18">Lorem Ipsum is simply dummy text of the printing and
-                                typesetting
-                                industry. 1500s, Ipsum
-                                is typesetting industry.</p>
-                        </div>
-                        <div class="read_more">
-                            <a href="#" class="dark-brown is-font-18">Read more</a>
-                        </div>
-                    </div>
-                    <div class="testimonial_card">
-                        <div class="card_head">
-                            <div class="card_head__img">
-                                <img src="<?php echo USER_IMAGES ?>svg/user1.svg" class="img-fluid" alt="">
-                            </div>
-                            <div class="user_name">
-                                <h3 class="dark-brown main_font_family is-font-20">Rahul kumar</h3>
-                                <p class="is-font-18">lorem ipsum</p>
-                                <div class="rating">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                    <img src="<?php echo USER_IMAGES ?>svg/star.svg" class="img-fluid" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_parra">
-                            <p class="silver-shade is-font-18">Lorem Ipsum is simply dummy text of the printing and
-                                typesetting
-                                industry. 1500s, Ipsum
-                                is typesetting industry.</p>
-                        </div>
-                        <div class="read_more">
-                            <a href="#" class="dark-brown is-font-18">Read more</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
 
 </main>

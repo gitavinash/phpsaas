@@ -18,6 +18,12 @@ strong {
   font-family: "Cal Sans", sans-serif;
 }
 
+strike {
+  margin-left: 10px;
+  font-weight: 300;
+  color: #c1c1c1;
+}
+
 .margin-bottom-50 {
   margin-bottom: 50px !important;
 }
@@ -130,6 +136,7 @@ strong {
   background: #e7f0fb;
   padding: 5em 5em;
   border-radius: 10px;
+  min-height: 500px;
 }
 
 .visa-card {
