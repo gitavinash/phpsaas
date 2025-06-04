@@ -514,3 +514,46 @@ h2 span {
 .radio-group label:hover {
   background-color: #e6e6e6;
 }
+.empty-cart-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #e8f8f5;
+}
+
+.empty-cart-content {
+  text-align: center;
+}
+
+.empty-cart-content h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.go-home-btn {
+  width: auto !important; /* override full width */
+  display: inline-block; /* let it shrink to content */
+  padding: 0.8rem 2rem;
+  text-align: center;
+}
+
+.productText p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.productText p strong {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qty {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  margin: 5px 0px;
+  float: left;
+}

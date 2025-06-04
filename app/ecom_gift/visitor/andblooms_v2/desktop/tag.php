@@ -6,8 +6,9 @@ require_once 'header.php';
 <main>
     <section class="categories_banner">
         <div class="categories_content">
-            <h1 class="main_font_family dark-brown is-font-55 d-flex"><img src="assets/images/svg/left-arrow.svg"
-                    class="img-fluid" alt=""><?php echo ucwords($tag_title) ?></h1>
+            <h1 class="main_font_family dark-brown is-font-55 d-flex">
+                <?php echo ucwords($tag_title) ?>
+            </h1>
         </div>
     </section>
 

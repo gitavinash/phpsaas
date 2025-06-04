@@ -1,3 +1,6 @@
+main {
+  background: #f2eeec;
+}
 /* --- Start of about.css --- */
 .about_wrapper {
   padding-top: 30px;
@@ -1280,7 +1283,7 @@ input[type="range"]::-moz-range-thumb {
   --dark-brown: #3d1700;
   --white-color: #fff;
   --black-color: #000;
-  --grey-color: #9d9d9d;
+  --grey-color: #1f1f1f;
   --grey-shade: #4e4e4e;
   --silver: #a7a7a7;
   --silver-shade: #545454;
@@ -1689,7 +1692,7 @@ textarea:focus {
 }
 
 .testimonial_wrapper {
-  padding-bottom: 110px;
+  padding: 100px 0px;
 }
 
 .testimonial_card {
@@ -2704,5 +2707,44 @@ textarea:focus {
 
   .cart_no span {
     font-size: 10px;
+  }
+}
+
+strike {
+  text-decoration: line-through;
+  color: var(--grey-shade);
+  font-weight: 300;
+  font-size: 22px;
+  margin-right: 20px;
+}
+
+.discountPersentage {
+  color: var(--green-color);
+}
+
+@media (max-width: 768px) {
+  .stickOnBottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #fff; /* Optional: add background to avoid content overlap */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+    display: flex;
+    justify-content: space-between; /* Or use `center` with gap */
+    gap: 10px; /* Equal gap between buttons */
+    padding: 10px;
+  }
+  .stickOnBottom a {
+    /* flex: 1;  */
+    text-align: center;
+  }
+  #addToCart {
+    order: 2;
+  }
+
+  .stickOnBottom a:not(#addToCart) {
+    order: 1;
   }
 }

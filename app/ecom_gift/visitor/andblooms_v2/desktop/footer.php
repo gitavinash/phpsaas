@@ -192,6 +192,7 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="<?php echo USER_JS ?>range.js"></script>
 <script src="<?php echo USER_JS ?>mobilerange.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo USER_JS ?>app.min.js"></script>
 </body>
 

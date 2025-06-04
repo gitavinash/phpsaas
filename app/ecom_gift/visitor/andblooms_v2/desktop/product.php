@@ -33,7 +33,7 @@ require_once 'header.php';
             </nav>
             <div class="product_content">
                 <div class="row">
-                    <div class="col-xl-5 col-lg-6">
+                    <div class="col-xl-6 col-lg-6">
                         <div class="product_content__left">
                             <div class="small_page">
 
@@ -63,7 +63,7 @@ require_once 'header.php';
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-5 col-lg-6">
+                    <div class="col-xl-6 col-lg-6">
                         <div class="product_content__right">
                             <h3 class="is-font-26 main_font_family dark-brown"><?php echo $product_title ?></h3>
                             <div class="product_rating d-flex">
@@ -75,24 +75,39 @@ require_once 'header.php';
                                 <p class="is-font-18 grey-color">928 Reviews</p>
                             </div>
                             <div class="flower_price">
-                                <h3 class="main_font_family dark-brown is-font-26">₹6000 /-</h3>
+                                <h3 class="main_font_family dark-brown is-font-26">
+                                    <?php
+                                    echo $inventory_currency_symbol . ' ' . $inventory_price . '/-';
+                                    if ($inventory_mrp != 0 && $inventory_mrp != $inventory_price) {
+                                        $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100);
+                                        echo " <strike>{$inventory_currency_symbol} {$inventory_mrp}</strike> <span class='discountPersentage'>({$discountPersantage}% OFF)</span>";
+                                    }
+                                    ?>
+                                </h3>
                             </div>
                             <div class="flower_details">
+                                <p><strong>Description</strong></p>
                                 <p class="grey-color is-font-18"><?php echo $product_highlight ?></p>
-                                <p class="grey-color is-font-18 text-capitalize"><span class="dark-brown">Availability
-                                        :</span> In
-                                    Delhi,Gurugram,faridabad,noida only</p>
                             </div>
-                            <div class="quantity">
+                            <div class="flower_details">
+                                <p class="grey-color is-font-18 text-capitalize"><span
+                                        class="dark-brown"><strong>Availability
+                                            :</strong></span> In
+                                    Delhi,Gurugram, faridabad, noida only</p>
+                            </div>
+                            <!-- <div class="quantity">
                                 <h3 class="is-font-18">Quantity :</h3>
                                 <div class="quantity_no d-flex">
                                     <p id="minus-btn">-</p>
                                     <p id="count">1</p>
                                     <p id="plus-btn">+</p>
                                 </div>
-                            </div>
-                            <div class="flower_cart">
-                                <a href="#" class="global_btn is-font-18 dark-brown">Add to cart</a>
+                            </div> -->
+                            <div class="flower_cart stickOnBottom">
+                                <p style="display:none" id="productInfo"
+                                    value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
+                                </p>
+                                <a href="#" id='addToCart' class="global_btn is-font-18 dark-brown">Add to cart</a>
                                 <?php
                                 $whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
                                 ?>
