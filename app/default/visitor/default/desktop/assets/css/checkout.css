@@ -186,9 +186,9 @@ section {
   max-width: 100%;
 }
 
-.checkout-box {
+/* .checkout-box {
   padding: 2rem 0;
-}
+} */
 
 .shadow-box {
   float: left;
@@ -205,6 +205,7 @@ h2 {
   font-weight: 600;
   float: left;
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 h2 span {
@@ -262,6 +263,29 @@ h2 span {
   margin-top: 0.75rem;
 }
 
+.formGroup {
+  float: left;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding-right: 5%;
+  box-sizing: border-box;
+}
+.formGroup-full {
+  float: left;
+  width: 100%;
+
+  margin-bottom: 1rem;
+  padding-right: 2%;
+  box-sizing: border-box;
+}
+.formGroup label {
+  float: left;
+  width: 100%;
+  font-size: 0.9rem;
+  /* font-weight: 400; */
+  margin-bottom: 0.5rem;
+}
+
 .form-control {
   background: #fbfbfb;
   border: 1px solid #c7c7c7;
@@ -269,7 +293,14 @@ h2 span {
   font-size: 1rem;
   padding: 8px 5px;
   height: 40px;
+  width: 100%;
   box-sizing: border-box;
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 70px;
+  resize: vertical;
 }
 
 .shadow-box .totalBox p span {
@@ -362,7 +393,6 @@ h2 span {
   width: 100%;
   margin: 10px;
   display: block;
-  position: fixed;
   bottom: 0px;
 }
 
@@ -386,6 +416,14 @@ h2 span {
   }
   .only-mobile {
     display: block;
+  }
+
+  .formGroup {
+    padding-right: 0%;
+  }
+
+  .formGroup-full {
+    padding-right: 0%;
   }
 
   .m-col {
@@ -465,9 +503,9 @@ h2 span {
     height: auto;
   }
 
-  .checkout-box .row {
+  /* .checkout-box .row {
     padding: 0% !important;
-  }
+  } */
 
   .container {
     padding: 0% 2%;
@@ -477,6 +515,17 @@ h2 span {
     width: 30%;
     max-width: 70px;
     display: block;
+  }
+
+  .actionButton {
+    position: fixed;
+    bottom: 0;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    left: 0;
+    padding: 3% 5% 1% 5%;
   }
 }
 
@@ -556,4 +605,16 @@ h2 span {
   font-weight: 400 !important;
   margin: 5px 0px;
   float: left;
+}
+
+.removeItem {
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  margin: 5px 0px;
+  color: #c01f1f;
+}
+
+.removeItem:hover {
+  font-weight: 400 !important;
+  color: #a00f0f;
 }

@@ -39,4 +39,34 @@ $(document).ready(function () {
       },
     });
   });
+
+  // Remove item from cart
+
+  $(".removeFromCart").click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr("id");
+
+    /** Call remove from cart api */
+
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      data: {
+        type: "cart",
+        action: "remove",
+        id: id,
+      },
+      success: function (data) {
+        if (data.status == 200) {
+          location.reload();
+        } else {
+          popUpMessage("center", data.msg, "error");
+        }
+        $("#product_" + id).hide();
+      },
+      error: function (data) {
+        console.log(data);
+      },
+    });
+  });
 });

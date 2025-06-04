@@ -2,7 +2,78 @@
     <div class="container">
         <div class="col-7 m-col">
             <div class="row">
-                <div class="box white-bg">
+                <div class="box white-bg" id="shippingDetails">
+                    <div class="col">
+                        <h2>Contact details</h2>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>First name</label>
+                            <input type="text" class="form-control" name="firstName" id="firstName"
+                                placeholder="First name" required>
+                        </div>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>First name</label>
+                            <input type="text" class="form-control" name="lastName" id="lastName"
+                                placeholder="Last name" required>
+                        </div>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>Email</label>
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Email"
+                                required>
+                        </div>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>Mobile</label>
+                            <input type="number" class="form-control" name="mobile" id="mobile"
+                                placeholder="Mobile number without country code" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h2>Delivery details</h2>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>Full name</label>
+                            <input type="number" class="form-control" name="fullName" id="fullName"
+                                placeholder="Full Name" required>
+                        </div>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>Mobile no.</label>
+                            <input type="number" class="form-control" name="deliveryMobile" id="deliveryMobile"
+                                placeholder="Mobile number without country code" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="formGroup-full">
+                            <label>Address</label>
+                            <textarea name="address" id="address" placeholder="Delivery address"
+                                class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>State</label>
+                            <input type="number" class="form-control" name="deliveryMobile" id="deliveryMobile"
+                                placeholder="Mobile number without country code" required>
+                        </div>
+                    </div>
+                    <div class="col-5 m-col">
+                        <div class="formGroup">
+                            <label>Pin code</label>
+                            <input type="number" class="form-control" name="pinCode" id="pinCode" placeholder="Pin code"
+                                required>
+                        </div>
+                    </div>
+                </div>
+                <div class="box white-bg" id="cartDetails">
                     <div class="col">
                         <h2>Order summary</h2>
                     </div>
@@ -15,13 +86,22 @@
                         while ($cartData = mysqli_fetch_assoc($checkCart)) {
                             extract($cartData);
 
-                            $key = $cart_relation_type . '_' . $cart_relation_id;
+                            // Normalize keys: trim and lowercase to avoid mismatches
+                            $cartType = trim(strtolower($cart_relation_type));
+                            $cartId = trim(strtolower($cart_relation_id));
+                            $key = $cartType . '_' . $cartId;
 
+                            // Get dynamic variables safely
+                            $titleVar = $cartType . '_title';
+                            $highlightVar = $cartType . '_highlight';
+                            $imageVar = $cartType . '_image';
+
+                            // Initialize group or increment qty
                             if (!isset($groupedCart[$key])) {
                                 $groupedCart[$key] = [
-                                    'title' => ${$cart_relation_type . '_title'},
-                                    'highlight' => ${$cart_relation_type . '_highlight'},
-                                    'image' => ${$cart_relation_type . '_image'},
+                                    'title' => isset($$titleVar) ? $$titleVar : 'Unknown',
+                                    'highlight' => isset($$highlightVar) ? $$highlightVar : '',
+                                    'image' => isset($$imageVar) ? $$imageVar : '',
                                     'price' => $inventory_price,
                                     'qty' => 1,
                                 ];
@@ -29,35 +109,44 @@
                                 $groupedCart[$key]['qty']++;
                             }
 
+                            // Sum total price and total quantity
                             $subTotal += $inventory_price;
                             $totalQty++;
+
+                            // Debug (optional):
+                            // error_log("Key: {$key} - Qty: " . $groupedCart[$key]['qty']);
                         }
 
+                        // Display grouped cart items
                         foreach ($groupedCart as $item) {
                             $imgSrc = $item['image'] !== ''
                                 ? $item['image']
                                 : IMG_LIBRARY . "profile_icon/" . strtolower(trim($item['title'][0]) ?: 'unknown') . ".png";
 
                             echo "
-                            <div class='productBox'>
-                                <div class='productImage col-2 m-col-2 no-padding'>
-                                    <img src='{$imgSrc}' alt=''>
-                                </div>
-                                <div class='productText col-8 m-col-8'>
-                                    <div class='col-7 m-col-7'>
-                                        <p><strong>{$item['title']}</strong></p>
-                                        " . (!isset($order) ? "<p><span>{$item['highlight']}</span></p>" : "") . "
-                                        <p><span class='qty'>Quantity: {$item['qty']}</span></p>
-                                    </div>
-                                    <div class='col-3 m-col-3'>
-                                        <div class='price float-right'>
-                                            <p>{$inventory_currency_symbol} " . number_format($item['price'], 2) . "</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>";
+    <div class='productBox'>
+        <div class='productImage col-2 m-col-2 no-padding'>
+            <img src='{$imgSrc}' alt=''>
+        </div>
+        <div class='productText col-8 m-col-8'>
+            <div class='col-7 m-col-7'>
+                <p><strong>{$item['title']}</strong></p>
+                " . (!isset($order) ? "<p><span>{$item['highlight']}</span></p>" : "") . "
+                <p><span class='qty'>Quantity: {$item['qty']}</span></p>
+                <p class='removeItem' >
+                    <a href='#' id='{$cart_id}' class='removeFromCart delet product-removal'>Remove from cart</a>
+                </p>
+            </div>
+            <div class='col-3 m-col-3'>
+                <div class='price float-right'>
+                    <p>{$inventory_currency_symbol} " . number_format($item['price'], 2) . "</p>
+                </div>
+            </div>
+        </div>
+    </div>";
                         }
                         ?>
+
                     </div>
                 </div>
             </div>
@@ -103,7 +192,9 @@
                     value="<?php echo isset($order) ? $order : 'default' ?>">
                 <input type="hidden" name="paymentMode" id="paymentMode" value="online">
 
-                <a href="#" id="processToPayment" class="button">Continue</a>
+                <div class="actionButton">
+                    <a href="#" id="proccessToShipping" class="button">Continue</a>
+                </div>
             </div>
         </div>
     </div>
