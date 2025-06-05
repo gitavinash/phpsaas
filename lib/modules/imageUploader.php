@@ -71,7 +71,7 @@ if (isset($_FILES)) {
 							mkdir($thumbnailUploadDir, 0755, true);
 						}
 
-						echo $uploadPath;
+						echo 'Upload directory: ' . $uploadPath;
 
 						exit();
 
