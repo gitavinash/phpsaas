@@ -71,10 +71,6 @@ if (isset($_FILES)) {
 							mkdir($thumbnailUploadDir, 0755, true);
 						}
 
-						echo 'Upload directory: ' . $uploadPath;
-
-						exit();
-
 						/** Compressing Images Process Start Here */
 
 						switch ($filetype) {

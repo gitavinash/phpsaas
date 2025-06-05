@@ -18,6 +18,7 @@ if ($name != '') {
             $icon = '';
         }
 
+        print_r($_FILES);
         echo "Icon: " . $icon;
         exit();
 
