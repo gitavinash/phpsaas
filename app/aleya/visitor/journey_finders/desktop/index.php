@@ -405,7 +405,7 @@ require_once 'header.php';
                             </div>
                             <div>
                                 <h4 class="font-medium">Phone Number</h4>
-                                <p class="text-gray-600 text-sm">+91 (123) 456-7890</p>
+                                <p class="text-gray-600 text-sm">+91 92112 87555</p>
                             </div>
                         </div>
                         <div class="flex items-start">

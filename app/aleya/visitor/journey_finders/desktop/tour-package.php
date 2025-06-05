@@ -12,31 +12,35 @@ require_once 'header.php';
             <span class="mx-2">/</span>
             <a href="#" class="hover:text-primary">Holiday</a>
             <span class="mx-2">/</span>
-            <a href="#" class="hover:text-primary">Bali</a>
+            <a href="#" class="hover:text-primary"><?php echo $tour_package_country ?></a>
             <span class="mx-2">/</span>
-            <span class="text-gray-700 font-medium">Bali Cultural Explorer</span>
+            <a href="#" class="hover:text-primary"><?php echo $tour_package_city ?></a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-700 font-medium"><?php echo $tour_package_title ?></span>
         </div>
     </div>
     <!-- Hero Section -->
     <div class="relative rounded-xl overflow-hidden mb-8">
-        <img src="<?php echo USER_IMAGES ?>city/bali.jpg" alt="Bali Cultural Explorer"
-            class="w-full h-80 object-cover object-top" />
+        <img src="<?php echo USER_IMAGES ?>city/<?php echo strtolower(str_replace(' ', '_', $tour_package_city)) ?>.jpg"
+            alt="Bali Cultural Explorer" class="w-full h-80 object-cover object-top" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div class="absolute bottom-0 left-0 p-6 md:p-8">
             <div class="flex items-center mb-2">
-                <span class="bg-primary text-white text-xs font-semibold px-2 py-1 rounded-full mr-2">Featured</span>
-                <span class="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full">10
+                <span
+                    class="bg-primary text-white text-xs font-semibold px-2 py-1 rounded-full mr-2"><?php echo ucwords($tour_package_theme) ?></span>
+                <span
+                    class="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full"><?php echo $tour_package_duration + 1 ?>
                     Days</span>
             </div>
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">
-                Bali Cultural Explorer
+                <?php echo $tour_package_title ?>
             </h1>
             <div class="flex items-center text-white/90 mb-4">
                 <div class="flex items-center mr-4">
                     <div class="w-5 h-5 flex items-center justify-center mr-1">
                         <i class="ri-map-pin-line"></i>
                     </div>
-                    <span>Bali, Indonesia</span>
+                    <span><?php echo $tour_package_city . ', ' . $tour_package_country ?></span>
                 </div>
                 <div class="flex items-center mr-4">
                     <div class="w-5 h-5 flex items-center justify-center mr-1">
@@ -44,16 +48,10 @@ require_once 'header.php';
                     </div>
                     <span>Min 2 people</span>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1">
-                        <i class="ri-star-fill"></i>
-                    </div>
-                    <span>4.9 (128 reviews)</span>
-                </div>
             </div>
             <div class="flex items-center">
                 <div class="text-white mr-4">
-                    <span class="text-lg font-bold">₹ 15,899</span>
+                    <span class="text-lg font-bold">₹ <?php echo $tour_package_price_selling_adult ?></span>
                     <span class="text-white/80 text-sm">per person</span>
                 </div>
                 <a href="#enquiry-form"
@@ -82,40 +80,34 @@ require_once 'header.php';
                             <i class="ri-calendar-line ri-xl"></i>
                         </div>
                         <h3 class="text-sm font-medium text-gray-900">Duration</h3>
-                        <p class="text-gray-600">10 Days / 9 Nights</p>
+                        <p class="text-gray-600"><?php echo $tour_package_duration + 1 ?> Days /
+                            <?php echo $tour_package_duration ?> Nights</p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="w-10 h-10 flex items-center justify-center text-primary mb-2">
                             <i class="ri-group-line ri-xl"></i>
                         </div>
                         <h3 class="text-sm font-medium text-gray-900">Group Size</h3>
-                        <p class="text-gray-600">2-12 People</p>
+                        <p class="text-gray-600">2-100+ People</p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="w-10 h-10 flex items-center justify-center text-primary mb-2">
                             <i class="ri-hotel-line ri-xl"></i>
                         </div>
                         <h3 class="text-sm font-medium text-gray-900">Accommodation</h3>
-                        <p class="text-gray-600">4-Star Hotels</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="w-10 h-10 flex items-center justify-center text-primary mb-2">
-                            <i class="ri-translate-2 ri-xl"></i>
-                        </div>
-                        <h3 class="text-sm font-medium text-gray-900">Languages</h3>
-                        <p class="text-gray-600">English, Indonesian</p>
+                        <p class="text-gray-600"><?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?></p>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2">
+                <!-- <div class="flex flex-wrap gap-2">
                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded">Cultural</span>
                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded">Adventure</span>
                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded">Nature</span>
                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded">Beach</span>
                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded">Wellness</span>
-                </div>
+                </div> -->
             </section>
             <!-- Highlights Section -->
-            <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <!-- <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <h2 class="text-2xl font-bold mb-4">Tour Highlights</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="flex items-start">
@@ -205,226 +197,35 @@ require_once 'header.php';
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
             <!-- Itinerary Section -->
             <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-6">Day-by-Day Itinerary</h2>
+                <h2 class="text-2xl font-bold mb-6"><?php echo ucwords($tour_package_city) ?> Day-by-Day Itinerary</h2>
                 <div class="space-y-4">
-                    <!-- Day 1 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 flex-shrink-0">
-                                    <span class="text-sm font-medium">1</span>
-                                </div>
-                                <h3 class="font-medium">
-                                    Arrival in Denpasar & Transfer to Ubud
-                                </h3>
-                            </div>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700 mb-4">
-                                Welcome to Bali! Upon arrival at Ngurah Rai International
-                                Airport in Denpasar, you'll be greeted by your tour guide
-                                and transferred to your hotel in Ubud, Bali's cultural
-                                heart. After check-in, enjoy a welcome dinner featuring
-                                traditional Balinese cuisine while being entertained by a
-                                classical dance performance.
-                            </p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-hotel-line"></i>
-                                    </div>
-                                    <span>Accommodation: Alila Ubud or similar</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-restaurant-line"></i>
-                                    </div>
-                                    <span>Meals: Dinner</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Day 2 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 flex-shrink-0">
-                                    <span class="text-sm font-medium">2</span>
-                                </div>
-                                <h3 class="font-medium">Ubud Cultural Exploration</h3>
-                            </div>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700 mb-4">
-                                Spend the day exploring Ubud's cultural highlights. Visit
-                                the Sacred Monkey Forest Sanctuary, Ubud Palace, and the
-                                Ubud Art Market. In the afternoon, tour the Agung Rai Museum
-                                of Art (ARMA) to learn about Balinese painting traditions.
-                                End the day with a visit to a traditional Balinese compound
-                                to understand local architecture and family life.
-                            </p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-hotel-line"></i>
-                                    </div>
-                                    <span>Accommodation: Alila Ubud or similar</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-restaurant-line"></i>
-                                    </div>
-                                    <span>Meals: Breakfast, Lunch</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Day 3 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 flex-shrink-0">
-                                    <span class="text-sm font-medium">3</span>
-                                </div>
-                                <h3 class="font-medium">
-                                    Tegalalang Rice Terraces & Craft Villages
-                                </h3>
-                            </div>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700 mb-4">
-                                This morning, visit the stunning Tegalalang Rice Terraces
-                                for a guided walk through the emerald-green fields. Learn
-                                about the ancient Subak irrigation system that has sustained
-                                these terraces for centuries. In the afternoon, tour the
-                                surrounding craft villages, each specializing in different
-                                traditional arts: Mas for wood carving, Celuk for silver
-                                jewelry, and Batuan for traditional painting. Participate in
-                                a hands-on craft workshop of your choice.
-                            </p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-hotel-line"></i>
-                                    </div>
-                                    <span>Accommodation: Alila Ubud or similar</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-restaurant-line"></i>
-                                    </div>
-                                    <span>Meals: Breakfast, Lunch</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Day 4 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 flex-shrink-0">
-                                    <span class="text-sm font-medium">4</span>
-                                </div>
-                                <h3 class="font-medium">
-                                    Balinese Cooking Class & Tirta Empul Temple
-                                </h3>
-                            </div>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700 mb-4">
-                                Begin your day with a visit to a local market to select
-                                fresh ingredients for your cooking class. Learn to prepare
-                                authentic Balinese dishes under the guidance of an expert
-                                chef. After enjoying your culinary creations for lunch,
-                                visit the sacred Tirta Empul Temple, known for its holy
-                                spring water where Balinese Hindus perform purification
-                                rituals. End the day with a relaxing spa treatment featuring
-                                traditional Balinese techniques and natural ingredients.
-                            </p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-hotel-line"></i>
-                                    </div>
-                                    <span>Accommodation: Alila Ubud or similar</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-restaurant-line"></i>
-                                    </div>
-                                    <span>Meals: Breakfast, Lunch</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Day 5 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 flex-shrink-0">
-                                    <span class="text-sm font-medium">5</span>
-                                </div>
-                                <h3 class="font-medium">
-                                    Mount Batur Sunrise Trek & Hot Springs
-                                </h3>
-                            </div>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700 mb-4">
-                                Early morning departure (around 2:30 AM) for a guided trek
-                                up Mount Batur, an active volcano. Reach the summit (1,717m)
-                                in time to witness a spectacular sunrise over Mount Agung
-                                and the surrounding landscape. Enjoy a light breakfast at
-                                the top before descending. Afterward, soothe your muscles
-                                with a visit to natural hot springs overlooking Lake Batur.
-                                Return to your hotel for some rest before an evening visit
-                                to a local village to witness a traditional fire dance
-                                performance.
-                            </p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-hotel-line"></i>
-                                    </div>
-                                    <span>Accommodation: Alila Ubud or similar</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-5 h-5 flex items-center justify-center text-primary mr-1">
-                                        <i class="ri-restaurant-line"></i>
-                                    </div>
-                                    <span>Meals: Breakfast, Lunch</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                    $tour_package_itinerary = json_decode('[{"day":"Day 1 - Arrival in Manali","overview":"Your cultural journey begins as you board a Volvo from Delhi to Manali. Enjoy the scenic drive through the lush valleys and snow-capped mountains. Upon arrival, you will be transferred to your hotel. Later, explore the local markets and visit the Hadimba Devi Temple, a famous cultural site in Manali. Overnight stay at the hotel."},{"day":"Day 2 - Manali Sightseeing","overview":"After breakfast, embark on a full day of sightseeing in Manali. Visit the ancient Naggar Castle, known for its historical significance and stunning architecture. Explore the Naggar Art Gallery to admire traditional Himachali art. In the evening, witness a cultural show showcasing local dance and music traditions. Return to the hotel for dinner and overnight stay."},{"day":"Day 3 - Excursion to Solang Valley","overview":"Today, take a day trip to the picturesque Solang Valley, known for its breathtaking views and adventure activities. Enjoy activities like paragliding, zorbing, and horse riding amidst the stunning Himalayan landscape. In the evening, return to Manali for a relaxing overnight stay at the hotel."},{"day":"Day 4 - Cultural Villages Tour","overview":"Explore the cultural heritage of Manali with a tour of traditional villages like Vashisht and Old Manali. Visit the Vashisht Temple and hot springs to experience the local customs and traditions. Stroll through the quaint lanes of Old Manali and interact with the friendly locals. Enjoy a traditional Himachali dinner before heading back to the hotel."},{"day":"Day 5 - Departure to Delhi","overview":"After breakfast, bid farewell to the scenic beauty of Manali as you board the Volvo back to Delhi. Take with you memories of the Himalayan culture and warm hospitality. Our cultural tour package ends as you arrive in Delhi, marking the conclusion of your enriching journey."}]', true);
+
+                    foreach ($tour_package_itinerary as $index => $item) {
+                        $dayNumber = $index + 1;
+                        echo "
+    <div class=\"border border-gray-200 rounded-lg overflow-hidden mb-4\">
+        <div class=\"itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer\">
+            <div class=\"flex items-center\">
+                <div class=\"w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 flex-shrink-0\">
+                    <span class=\"text-sm font-medium\">$dayNumber</span>
+                </div>
+                <h3 class=\"font-medium\">{$item['day']}</h3>
+            </div>
+            <div class=\"w-6 h-6 flex items-center justify-center text-gray-500\">
+                <i class=\"ri-arrow-down-s-line ri-lg accordion-icon\"></i>
+            </div>
+        </div>
+        <div class=\"itinerary-accordion-content p-4 border-t border-gray-200\">
+            <p class=\"text-gray-700\">{$item['overview']}</p>
+        </div>
+    </div>";
+                    }
+                    ?>
                     <!-- Show More Button -->
                     <button id="show-more-itinerary"
                         class="w-full py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition flex items-center justify-center">
@@ -596,264 +397,6 @@ require_once 'header.php';
                     </div>
                 </div>
             </section>
-            <!-- Reviews Section -->
-            <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold">Customer Reviews</h2>
-                    <div class="flex items-center">
-                        <div class="star-rating flex mr-2">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-half-fill"></i>
-                        </div>
-                        <span class="font-medium">4.9</span>
-                        <span class="text-gray-500 ml-1">(128 reviews)</span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Review 1 -->
-                    <div class="review-card bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-medium mr-3">
-                                JD
-                            </div>
-                            <div>
-                                <h4 class="font-medium">James Davidson</h4>
-                                <div class="flex items-center">
-                                    <div class="star-rating flex text-sm mr-2">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-xs">April 2, 2025</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 text-sm">
-                            This tour exceeded all my expectations! Our guide Wayan was
-                            incredibly knowledgeable about Balinese culture and took us to
-                            some hidden gems that weren't on the original itinerary. The
-                            cooking class was a highlight - I still make the recipes at
-                            home. The accommodations were luxurious and the pace was
-                            perfect.
-                        </p>
-                    </div>
-                    <!-- Review 2 -->
-                    <div class="review-card bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-medium mr-3">
-                                SM
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Sarah Mitchell</h4>
-                                <div class="flex items-center">
-                                    <div class="star-rating flex text-sm mr-2">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-xs">March 15, 2025</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 text-sm">
-                            The Mount Batur sunrise trek was challenging but absolutely
-                            worth it! The views were breathtaking and our guide made sure
-                            everyone was comfortable with the pace. I appreciated the
-                            small group size which allowed for a more personalized
-                            experience. The hotels were all excellent and in perfect
-                            locations.
-                        </p>
-                    </div>
-                    <!-- Review 3 -->
-                    <div class="review-card bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-medium mr-3">
-                                RK
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Robert Kim</h4>
-                                <div class="flex items-center">
-                                    <div class="star-rating flex text-sm mr-2">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-xs">February 28, 2025</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 text-sm">
-                            A well-organized tour that really captures the essence of
-                            Bali. The cultural experiences were authentic and not
-                            touristy. I would have preferred more free time in Ubud to
-                            explore on my own, but overall it was an excellent experience.
-                            The spa treatment was divine and the food throughout was
-                            delicious.
-                        </p>
-                    </div>
-                    <!-- Review 4 -->
-                    <div class="review-card bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-medium mr-3">
-                                AP
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Amelia Patel</h4>
-                                <div class="flex items-center">
-                                    <div class="star-rating flex text-sm mr-2">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-xs">January 17, 2025</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 text-sm">
-                            This tour offers the perfect balance of cultural immersion and
-                            relaxation. I loved learning about Balinese traditions and
-                            spiritual practices. The temples were stunning and our guide
-                            provided fascinating insights. The final days in Nusa Dua were
-                            the perfect way to unwind after all the activities.
-                        </p>
-                    </div>
-                </div>
-                <a href="#" class="text-primary font-medium hover:underline flex items-center justify-center">
-                    <span>Read all 128 reviews</span>
-                    <i class="ri-arrow-right-line ml-1"></i>
-                </a>
-            </section>
-            <!-- FAQ Section -->
-            <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
-                <div class="space-y-4">
-                    <!-- FAQ Item 1 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <h3 class="font-medium">
-                                What is the best time to visit Bali?
-                            </h3>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700">
-                                The best time to visit Bali is during the dry season from
-                                April to October. This period offers sunny days with lower
-                                humidity, ideal for outdoor activities and exploring. The
-                                peak tourist season is July and August. The rainy season
-                                (November to March) brings afternoon showers but also fewer
-                                crowds and lush green landscapes.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 2 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <h3 class="font-medium">
-                                How physically demanding is this tour?
-                            </h3>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700">
-                                This tour has a moderate activity level. The Mount Batur
-                                trek is the most physically demanding activity, requiring a
-                                moderate fitness level for a 2-hour uphill hike in the dark.
-                                The rice terrace walks involve some uneven terrain and
-                                steps. Most other activities are not physically strenuous.
-                                Alternative activities can be arranged for those who prefer
-                                to skip the more demanding excursions.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 3 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <h3 class="font-medium">What should I pack for this trip?</h3>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700">
-                                Essential items include lightweight, breathable clothing, a
-                                light rain jacket, comfortable walking shoes, hiking shoes
-                                for Mount Batur, swimwear, sun protection (hat, sunglasses,
-                                sunscreen), insect repellent, a small daypack, and a
-                                refillable water bottle. For temple visits, bring clothes
-                                that cover shoulders and knees (sarongs are often provided
-                                at temples). A flashlight is useful for the pre-dawn Mount
-                                Batur trek.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 4 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <h3 class="font-medium">Is travel insurance required?</h3>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700">
-                                Yes, comprehensive travel insurance is mandatory for all
-                                participants. Your policy must cover medical expenses,
-                                emergency evacuation, trip cancellation, and activities
-                                included in the tour such as hiking. We recommend purchasing
-                                insurance that covers COVID-19 related issues. Proof of
-                                insurance must be provided before the tour begins.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 5 -->
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <div
-                            class="itinerary-accordion flex items-center justify-between bg-gray-50 p-4 cursor-pointer">
-                            <h3 class="font-medium">
-                                Can dietary restrictions be accommodated?
-                            </h3>
-                            <div class="w-6 h-6 flex items-center justify-center text-gray-500">
-                                <i class="ri-arrow-down-s-line ri-lg accordion-icon"></i>
-                            </div>
-                        </div>
-                        <div class="itinerary-accordion-content p-4 border-t border-gray-200">
-                            <p class="text-gray-700">
-                                Yes, we can accommodate most dietary restrictions including
-                                vegetarian, vegan, gluten-free, and food allergies. Please
-                                inform us of your requirements at the time of booking so we
-                                can make appropriate arrangements with restaurants and for
-                                the cooking class. Balinese cuisine naturally offers many
-                                vegetarian options, and our guides will help you navigate
-                                local food choices.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
         <!-- Right Column - Enquiry Form and Additional Info -->
         <div>
@@ -886,7 +429,7 @@ require_once 'header.php';
                     <div>
                         <label for="travel-date" class="block text-sm font-medium text-gray-700 mb-1">Preferred Travel
                             Date *</label>
-                        <input type="date" id="travel-date"
+                        <input type="date" id="travel-date" min="<?php echo date('Y-m-d') ?>"
                             class="form-input custom-date-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
                             required />
                     </div>
@@ -906,13 +449,6 @@ require_once 'header.php';
                                 <i class="ri-add-line"></i>
                             </button>
                         </div>
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Special
-                            Requirements/Message</label>
-                        <textarea id="message" rows="4"
-                            class="form-textarea w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
-                            placeholder="Tell us about any special requirements, questions, or preferences..."></textarea>
                     </div>
                     <div class="flex items-start">
                         <input type="checkbox" id="privacy-policy" class="custom-checkbox mt-1" required />
@@ -964,12 +500,12 @@ require_once 'header.php';
                     <p class="text-sm text-gray-600 mb-4">
                         Prefer to speak with our travel experts?
                     </p>
-                    <a href="tel:+911234567890"
+                    <a href="tel:+9192112-87555"
                         class="flex items-center text-gray-700 font-medium hover:text-primary mb-2">
                         <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
                             <i class="ri-phone-line"></i>
                         </div>
-                        <span>+91 (123) 456-7890</span>
+                        <span>+91 92112 87555</span>
                     </a>
                     <a href="mailto:info@journeyfinders.in"
                         class="flex items-center text-gray-700 font-medium hover:text-primary">
@@ -1112,95 +648,41 @@ require_once 'header.php';
             </section>
         </div>
     </div>
-    <!-- Travel Tips Section -->
-    <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-        <h2 class="text-2xl font-bold mb-6">Essential Travel Tips for Bali</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Tip 1 -->
-            <div class="bg-gray-50 rounded-lg p-5">
-                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full text-primary mb-4">
-                    <i class="ri-passport-line ri-lg"></i>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">
-                    Visa & Documentation
-                </h3>
-                <p class="text-gray-700 text-sm">
-                    Many nationalities receive a 30-day visa-free entry to Indonesia.
-                    For longer stays, a visa on arrival (extendable for 30 more days)
-                    or a pre-arranged visa is required. Ensure your passport is valid
-                    for at least 6 months beyond your departure date.
-                </p>
-            </div>
-            <!-- Tip 2 -->
-            <div class="bg-gray-50 rounded-lg p-5">
-                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full text-primary mb-4">
-                    <i class="ri-hand-coin-line ri-lg"></i>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Currency & Money</h3>
-                <p class="text-gray-700 text-sm">
-                    The Indonesian Rupiah (IDR) is the local currency. ATMs are widely
-                    available in tourist areas. Inform your bank of your travel plans
-                    to avoid card blocks. Many places accept credit cards, but smaller
-                    vendors and rural areas may be cash-only.
-                </p>
-            </div>
-            <!-- Tip 3 -->
-            <div class="bg-gray-50 rounded-lg p-5">
-                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full text-primary mb-4">
-                    <i class="ri-health-book-line ri-lg"></i>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Health & Safety</h3>
-                <p class="text-gray-700 text-sm">
-                    Drink only bottled water and be cautious with street food. Pack
-                    insect repellent, sunscreen, and basic medications. Medical
-                    facilities in tourist areas are adequate, but comprehensive travel
-                    insurance is essential for any serious medical issues.
-                </p>
-            </div>
-            <!-- Tip 4 -->
-            <div class="bg-gray-50 rounded-lg p-5">
-                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full text-primary mb-4">
-                    <i class="ri-plug-line ri-lg"></i>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">
-                    Electricity & Connectivity
-                </h3>
-                <p class="text-gray-700 text-sm">
-                    Indonesia uses 230V, 50Hz electricity with European-style round
-                    pin plugs (types C and F). Wi-Fi is widely available in hotels,
-                    cafes, and restaurants in tourist areas, but may be limited in
-                    more remote locations.
-                </p>
-            </div>
-            <!-- Tip 5 -->
-            <div class="bg-gray-50 rounded-lg p-5">
-                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full text-primary mb-4">
-                    <i class="ri-building-line ri-lg"></i>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Cultural Etiquette</h3>
-                <p class="text-gray-700 text-sm">
-                    Respect local customs by dressing modestly, especially at temples
-                    (shoulders and knees covered). Remove shoes before entering homes
-                    and some temples. Use your right hand for giving or receiving
-                    items. Ask permission before photographing locals.
-                </p>
-            </div>
-            <!-- Tip 6 -->
-            <div class="bg-gray-50 rounded-lg p-5">
-                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full text-primary mb-4">
-                    <i class="ri-taxi-line ri-lg"></i>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Getting Around</h3>
-                <p class="text-gray-700 text-sm">
-                    Taxis, ride-hailing apps (Grab, Gojek), and private drivers are
-                    convenient ways to get around. Renting a scooter is popular but
-                    requires an international driving permit and experience with local
-                    road conditions. Traffic can be chaotic in busy areas.
-                </p>
-            </div>
-        </div>
-    </section>
 </div>
+<script>
+// Itinerary accordions
+const accordions = document.querySelectorAll('.itinerary-accordion');
+accordions.forEach(accordion => {
+    accordion.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        content.classList.toggle('active');
+        const icon = this.querySelector('.accordion-icon');
+        if (content.classList.contains('active')) {
+            icon.classList.remove('ri-arrow-down-s-line');
+            icon.classList.add('ri-arrow-up-s-line');
+        } else {
+            icon.classList.remove('ri-arrow-up-s-line');
+            icon.classList.add('ri-arrow-down-s-line');
+        }
+    });
+});
+// Show first itinerary item by default
+const firstAccordion = document.querySelector('.itinerary-accordion');
+if (firstAccordion) {
+    firstAccordion.click();
+}
+// Show More Itinerary button
+const showMoreButton = document.getElementById('show-more-itinerary');
+if (showMoreButton) {
+    showMoreButton.addEventListener('click', function() {
+        const hiddenAccordions = document.querySelectorAll('.itinerary-accordion:not(.active)');
+        hiddenAccordions.forEach(accordion => {
+            accordion.click();
+        });
+        this.style.display = 'none';
+    });
+}
+</script>
 <?php
 
 require_once 'footer.php';
