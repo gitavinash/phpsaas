@@ -452,138 +452,15 @@ require_once 'header.php';
                     </a>
                 </div>
             </section>
-            <!-- Weather Information -->
-            <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 class="text-lg font-bold mb-4">Bali Weather Information</h2>
-                <div class="flex mb-4">
-                    <button
-                        class="weather-tab flex-1 py-2 px-1 text-center text-sm font-medium border-b-2 border-primary text-primary"
-                        data-tab="temperature">
-                        Temperature
-                    </button>
-                    <button
-                        class="weather-tab flex-1 py-2 px-1 text-center text-sm font-medium border-b-2 border-gray-200 text-gray-500"
-                        data-tab="rainfall">
-                        Rainfall
-                    </button>
-                </div>
-                <div class="tab-content active" id="temperature-tab">
-                    <div class="weather-chart" id="temperature-chart"></div>
-                    <p class="text-sm text-gray-600 mt-2">
-                        Bali enjoys a tropical climate with warm temperatures
-                        year-round. The average temperature ranges from 26-28°C
-                        (79-82°F). April to October is the dry season with lower
-                        humidity and more sunshine.
-                    </p>
-                </div>
-                <div class="tab-content" id="rainfall-tab">
-                    <div class="weather-chart" id="rainfall-chart"></div>
-                    <p class="text-sm text-gray-600 mt-2">
-                        The rainy season runs from November to March, with December and
-                        January seeing the highest rainfall. Even during this period,
-                        rain typically falls in short, heavy bursts in the afternoon or
-                        evening.
-                    </p>
-                </div>
-            </section>
-            <!-- Related Tours -->
-            <section class="bg-white rounded-xl shadow-sm p-6">
-                <h2 class="text-lg font-bold mb-4">You Might Also Like</h2>
-                <div class="space-y-4">
-                    <!-- Related Tour 1 -->
-                    <div class="flex border border-gray-200 rounded-lg overflow-hidden hover:border-primary transition">
-                        <div class="w-24 h-24 flex-shrink-0">
-                            <img src="#api/search-image?query=beautiful%2520Bali%2520beach%2520sunset%2520with%2520silhouette%2520of%2520palm%2520trees%252C%2520colorful%2520sky%252C%2520professional%2520travel%2520photography%2520with%2520vibrant%2520colors%2520and%2520excellent%2520composition&width=120&height=120&seq=1007&orientation=squarish"
-                                alt="Bali Beach Escape" class="w-full h-full object-cover object-top" />
-                        </div>
-                        <div class="p-3 flex-grow">
-                            <h3 class="font-medium text-gray-900 mb-1">
-                                Bali Beach Escape
-                            </h3>
-                            <div class="flex items-center text-sm text-gray-600 mb-1">
-                                <div class="w-4 h-4 flex items-center justify-center text-primary mr-1">
-                                    <i class="ri-calendar-line"></i>
-                                </div>
-                                <span>7 Days</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="text-primary font-medium text-sm">
-                                    From $1,299
-                                </div>
-                                <div class="star-rating flex text-xs">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-half-fill"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Related Tour 2 -->
-                    <div class="flex border border-gray-200 rounded-lg overflow-hidden hover:border-primary transition">
-                        <div class="w-24 h-24 flex-shrink-0">
-                            <img src="#api/search-image?query=beautiful%2520Lombok%2520Indonesia%2520with%2520pristine%2520beaches%252C%2520turquoise%2520water%252C%2520lush%2520mountains%252C%2520professional%2520travel%2520photography%2520with%2520vibrant%2520colors%2520and%2520excellent%2520composition&width=120&height=120&seq=1008&orientation=squarish"
-                                alt="Bali & Lombok Adventure" class="w-full h-full object-cover object-top" />
-                        </div>
-                        <div class="p-3 flex-grow">
-                            <h3 class="font-medium text-gray-900 mb-1">
-                                Bali & Lombok Adventure
-                            </h3>
-                            <div class="flex items-center text-sm text-gray-600 mb-1">
-                                <div class="w-4 h-4 flex items-center justify-center text-primary mr-1">
-                                    <i class="ri-calendar-line"></i>
-                                </div>
-                                <span>12 Days</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="text-primary font-medium text-sm">
-                                    From $2,199
-                                </div>
-                                <div class="star-rating flex text-xs">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Related Tour 3 -->
-                    <div class="flex border border-gray-200 rounded-lg overflow-hidden hover:border-primary transition">
-                        <div class="w-24 h-24 flex-shrink-0">
-                            <img src="#api/search-image?query=beautiful%2520Java%2520Indonesia%2520with%2520Borobudur%2520temple%252C%2520volcanic%2520landscapes%252C%2520traditional%2520villages%252C%2520professional%2520travel%2520photography%2520with%2520vibrant%2520colors%2520and%2520excellent%2520composition&width=120&height=120&seq=1009&orientation=squarish"
-                                alt="Java & Bali Explorer" class="w-full h-full object-cover object-top" />
-                        </div>
-                        <div class="p-3 flex-grow">
-                            <h3 class="font-medium text-gray-900 mb-1">
-                                Java & Bali Explorer
-                            </h3>
-                            <div class="flex items-center text-sm text-gray-600 mb-1">
-                                <div class="w-4 h-4 flex items-center justify-center text-primary mr-1">
-                                    <i class="ri-calendar-line"></i>
-                                </div>
-                                <span>14 Days</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="text-primary font-medium text-sm">
-                                    From $2,499
-                                </div>
-                                <div class="star-rating flex text-xs">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-line"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
     </div>
+</div>
+<div class="container mx-auto px-4 py-8">
+    <?php
+
+    require_once 'quick_links.php';
+
+    ?>
 </div>
 <script>
 // Itinerary accordions
