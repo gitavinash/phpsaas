@@ -38,20 +38,32 @@ if ($checkProducts = mysqli_query($connection, $mccProductQuery)) {
 	$output = fopen('php://output', 'w');
 
 	// Required column headers for Google Merchant Center
-	fputcsv($output, [
+	fputcsv($output, array_merge([
 		'id',
 		'title',
 		'description',
 		'link',
-		'image link',
-		'additional image link',
+		'image link'
+	], [
+		'additional_image_link_1',
+		'additional_image_link_2',
+		'additional_image_link_3',
+		'additional_image_link_4',
+		'additional_image_link_5',
+		'additional_image_link_6',
+		'additional_image_link_7',
+		'additional_image_link_8',
+		'additional_image_link_9',
+		'additional_image_link_10'
+	], [
 		'availability',
 		'price',
 		'brand',
 		'identifier exists',
 		'condition',
 		'sell on google quantity'
-	], ',', '"', '\\');
+	]), ',', '"', '\\');
+
 
 	while ($product = mysqli_fetch_assoc($checkProducts)) {
 		$priceValue = $product['inventory_price'] ?: $product['inventory_mrp'];
@@ -71,22 +83,26 @@ if ($checkProducts = mysqli_query($connection, $mccProductQuery)) {
 			}
 		}
 
-		$galleryCsvValue = implode(',', $galleryPaths);
+		$maxGalleryImages = 10;
+		$galleryCsvArray = array_slice($galleryPaths, 0, $maxGalleryImages);
 
-		fputcsv($output, [
+		// Fill remaining slots with empty strings to match column count
+		$galleryCsvArray = array_pad($galleryCsvArray, $maxGalleryImages, '');
+
+		fputcsv($output, array_merge([
 			$product['product_id'],
 			$product['product_title'],
 			$product['description'],
 			$product['link'],
 			$product['image_link'],
-			$galleryCsvValue,
+		], $galleryCsvArray, [
 			$product['availability'],
 			number_format($priceValue, 2, '.', '') . ' INR',
 			$product['brand'],
 			$product['identifier_exists'],
 			'new',
 			100
-		], ',', '"', '\\');
+		]), ',', '"', '\\');
 	}
 
 	fclose($output);
