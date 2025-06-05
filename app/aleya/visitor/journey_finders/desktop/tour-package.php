@@ -68,11 +68,7 @@ require_once 'header.php';
             <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <h2 class="text-2xl font-bold mb-4">Tour Overview</h2>
                 <p class="text-gray-700 mb-6">
-                    Experience the best of Bali's rich cultural heritage and natural
-                    beauty on this comprehensive 10-day journey. From ancient temples
-                    and traditional villages to stunning rice terraces and pristine
-                    beaches, this tour offers an authentic insight into the island's
-                    unique culture and breathtaking landscapes.
+                    <?php echo $tour_package_overview ?>
                 </p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-gray-50 rounded-lg p-4">
