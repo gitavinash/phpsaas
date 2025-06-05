@@ -34,8 +34,7 @@ LEFT JOIN " . TABLE_PREFIX . "tour_package_price tpp
     ON tpp.tour_package_price_parent_id = tp.tour_package_id
     AND tpp.tour_package_price_site_id = " . SITE_ID . "
     AND tpp.tour_package_price_selling_adult = tpp_min.tour_package_price_selling_adult
-WHERE l.link_id = '15860'
-  AND tp.tour_package_status != 3
+WHERE l.link_id = {$link_id}
   AND tp.tour_package_site_id = " . SITE_ID;
 
         if ($tourPackageData = mysqli_query($connection, $packageQuery)) {
