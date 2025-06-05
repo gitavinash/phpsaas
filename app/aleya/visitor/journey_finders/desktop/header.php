@@ -27,8 +27,8 @@
                 <div class="hidden lg:flex space-x-6">
                     <a href="/"
                         class="<?php echo ((ACTIVE_URL == '/') ? 'text-primary' : 'text-gray-700') ?> text-gray-700 hover:text-primary font-medium">Home</a>
-                    <a href="/destinations/"
-                        class="<?php echo ((ACTIVE_URL == '/destinations/') ? 'text-primary' : 'text-gray-700') ?> hover:text-primary font-medium">Destinations</a>
+                    <a href="/holiday/"
+                        class="<?php echo ((ACTIVE_URL == '/holiday/') ? 'text-primary' : 'text-gray-700') ?> hover:text-primary font-medium">Destinations</a>
                     <a href="/about-us/"
                         class="<?php echo ((ACTIVE_URL == '/about-us/') ? 'text-primary' : 'text-gray-700') ?> text-gray-700 hover:text-primary font-medium">About
                         Us</a>
@@ -44,13 +44,14 @@
                             class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
                             <i class="ri-search-line ri-lg"></i>
                         </div>
-                        <input type="text" name="q" placeholder="Search destinations..."
+                        <input type="text" name="q" value="<?php echo ((isset($q)) ? $q : '') ?>"
+                            placeholder="Search..."
                             class="pl-12 pr-4 py-2 w-64 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
                     </form>
                 </div>
-                <a href="#"
-                    class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap font-medium text-sm hover:bg-primary/90 transition">Login
-                    / Register</a>
+                <a href="/contact-us"
+                    class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap font-medium text-sm hover:bg-primary/90 transition">Contact
+                    us</a>
             </div>
             <div class="block md:hidden">
                 <button id="menuToggle" class="w-10 h-10 flex items-center justify-center text-gray-700">
@@ -67,10 +68,9 @@
                     </button>
 
                     <a href="/" class="block text-gray-700 text-lg hover:text-primary">Home</a>
-                    <a href="/destinations/" class="block text-gray-700 text-lg hover:text-primary">Destinations</a>
+                    <a href="/holiday/" class="block text-gray-700 text-lg hover:text-primary">Destinations</a>
                     <a href="/about-us/" class="block text-gray-700 text-lg hover:text-primary">About Us</a>
                     <a href="/contact-us/" class="block text-gray-700 text-lg hover:text-primary">Contact Us</a>
-                    <a href="#" class="block text-primary font-semibold text-lg">Login / Register</a>
                 </div>
             </div>
         </div>

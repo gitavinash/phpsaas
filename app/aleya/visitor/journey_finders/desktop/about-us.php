@@ -6,7 +6,7 @@ require_once 'header.php';
 <!-- Hero Section -->
 <section class="relative overflow-hidden">
     <div style="
-          background-image: url('#api/search-image?query=professional%2520travel%2520agency%2520office%2520with%2520modern%2520design%252C%2520team%2520of%2520diverse%2520travel%2520consultants%2520working%2520together%252C%2520world%2520maps%2520and%2520destination%2520photos%2520on%2520walls%252C%2520warm%2520lighting%252C%2520plants%252C%2520comfortable%2520meeting%2520area%252C%2520high-end%2520photography%2520with%2520soft%2520natural%2520lighting&width=1920&height=600&seq=2001&orientation=landscape');
+          background-image: url('<?php echo USER_IMAGES; ?>about-us-background.jpg');
         " class="w-full h-96 bg-cover bg-center"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
     <div class="container mx-auto px-4 relative">
@@ -71,8 +71,8 @@ require_once 'header.php';
                 </p>
             </div>
             <div class="relative">
-                <img src="#api/search-image?query=professional%2520photograph%2520of%2520travel%2520agency%2520founders%252C%2520three%2520diverse%2520business%2520people%2520in%2520smart%2520casual%2520attire%2520looking%2520at%2520world%2520map%252C%2520planning%2520travel%2520routes%252C%2520warm%2520office%2520environment%252C%2520natural%2520lighting%252C%2520professional%2520corporate%2520photography&width=600&height=500&seq=2002&orientation=landscape"
-                    alt="JourneyFinders Founders" class="w-full h-auto rounded-xl shadow-lg" />
+                <img src="<?php echo USER_IMAGES; ?>featured-about-us.jpg" alt="JourneyFinders Founders"
+                    class="w-full h-auto rounded-xl shadow-lg" />
                 <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-md hidden md:block">
                     <div class="flex items-center">
                         <div
@@ -205,8 +205,8 @@ require_once 'header.php';
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-                <img src="#api/search-image?query=happy%2520diverse%2520group%2520of%2520tourists%2520with%2520local%2520guide%2520exploring%2520ancient%2520temple%2520in%2520Bali%252C%2520guide%2520explaining%2520cultural%2520significance%252C%2520tourists%2520engaged%2520and%2520taking%2520photos%252C%2520lush%2520green%2520surroundings%252C%2520bright%2520natural%2520lighting%252C%2520professional%2520travel%2520photography&width=600&height=500&seq=2003&orientation=landscape"
-                    alt="Guided Tour Experience" class="w-full h-auto rounded-xl shadow-lg" />
+                <img src="<?php echo USER_IMAGES; ?>award-winning-team.jpg" alt="Guided Tour Experience"
+                    class="w-full h-auto rounded-xl shadow-lg" />
             </div>
             <div>
                 <div class="space-y-6">
@@ -275,163 +275,7 @@ require_once 'header.php';
         </div>
     </div>
 </section>
-<!-- Team Section -->
-<section id="meet-team" class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <div class="inline-block bg-primary/10 text-primary font-medium px-4 py-2 rounded-full text-sm mb-4">
-                Our People
-            </div>
-            <h2 class="text-3xl font-bold mb-6">Meet Our Team</h2>
-            <p class="text-gray-700">
-                Our diverse team of travel enthusiasts brings together expertise
-                from across the globe. With backgrounds in hospitality,
-                anthropology, sustainable development, and more, we're united by our
-                passion for creating meaningful travel experiences.
-            </p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Team Member 1 -->
-            <div class="team-card bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="relative">
-                    <img src="#api/search-image?query=professional%2520headshot%2520of%2520Indian%2520woman%2520in%2520her%252040s%252C%2520confident%2520business%2520leader%252C%2520smart%2520casual%2520attire%252C%2520warm%2520smile%252C%2520neutral%2520background%252C%2520professional%2520corporate%2520photography%2520with%2520soft%2520lighting&width=400&height=400&seq=2004&orientation=squarish"
-                        alt="Priya Sharma" class="w-full h-64 object-cover object-top" />
-                    <div
-                        class="team-social absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex justify-center space-x-3">
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-linkedin-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-twitter-x-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-mail-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-1">Priya Sharma</h3>
-                    <p class="text-primary mb-3">Founder & CEO</p>
-                    <p class="text-gray-700 text-sm">
-                        With 20+ years in the travel industry and a background in
-                        cultural anthropology, Priya founded JourneyFinders to create
-                        travel experiences that foster cross-cultural understanding.
-                    </p>
-                </div>
-            </div>
-            <!-- Team Member 2 -->
-            <div class="team-card bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="relative">
-                    <img src="#api/search-image?query=professional%2520headshot%2520of%2520Indian%2520man%2520in%2520his%252030s%252C%2520confident%2520business%2520professional%252C%2520smart%2520casual%2520attire%252C%2520friendly%2520expression%252C%2520neutral%2520background%252C%2520professional%2520corporate%2520photography%2520with%2520soft%2520lighting&width=400&height=400&seq=2005&orientation=squarish"
-                        alt="Rajiv Mehta" class="w-full h-64 object-cover object-top" />
-                    <div
-                        class="team-social absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex justify-center space-x-3">
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-linkedin-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-twitter-x-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-mail-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-1">Rajiv Mehta</h3>
-                    <p class="text-primary mb-3">Operations Director</p>
-                    <p class="text-gray-700 text-sm">
-                        Rajiv ensures our tours run smoothly from start to finish. His
-                        background in hospitality management and logistics helps create
-                        seamless travel experiences for our clients.
-                    </p>
-                </div>
-            </div>
-            <!-- Team Member 3 -->
-            <div class="team-card bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="relative">
-                    <img src="#api/search-image?query=professional%2520headshot%2520of%2520Southeast%2520Asian%2520woman%2520in%2520her%252030s%252C%2520confident%2520business%2520professional%252C%2520smart%2520casual%2520attire%252C%2520friendly%2520smile%252C%2520neutral%2520background%252C%2520professional%2520corporate%2520photography%2520with%2520soft%2520lighting&width=400&height=400&seq=2006&orientation=squarish"
-                        alt="Maya Lin" class="w-full h-64 object-cover object-top" />
-                    <div
-                        class="team-social absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex justify-center space-x-3">
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-linkedin-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-twitter-x-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-mail-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-1">Maya Lin</h3>
-                    <p class="text-primary mb-3">Destination Expert - Asia</p>
-                    <p class="text-gray-700 text-sm">
-                        Born in Singapore and having lived throughout Southeast Asia,
-                        Maya brings deep cultural knowledge and insider connections to
-                        our Asian itineraries.
-                    </p>
-                </div>
-            </div>
-            <!-- Team Member 4 -->
-            <div class="team-card bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="relative">
-                    <img src="#api/search-image?query=professional%2520headshot%2520of%2520African%2520man%2520in%2520his%252030s%252C%2520confident%2520business%2520professional%252C%2520smart%2520casual%2520attire%252C%2520friendly%2520expression%252C%2520neutral%2520background%252C%2520professional%2520corporate%2520photography%2520with%2520soft%2520lighting&width=400&height=400&seq=2007&orientation=squarish"
-                        alt="Daniel Okafor" class="w-full h-64 object-cover object-top" />
-                    <div
-                        class="team-social absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex justify-center space-x-3">
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-linkedin-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-twitter-x-fill"></i>
-                            </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-primary transition">
-                                <i class="ri-mail-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-1">Daniel Okafor</h3>
-                    <p class="text-primary mb-3">Sustainability Manager</p>
-                    <p class="text-gray-700 text-sm">
-                        With a background in environmental science, Daniel ensures our
-                        tours follow sustainable practices and create positive impacts
-                        on local communities and ecosystems.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="mt-12 text-center">
-            <a href="#" class="inline-flex items-center text-primary font-medium hover:underline">
-                <span>View All Team Members</span>
-                <i class="ri-arrow-right-line ml-1"></i>
-            </a>
-        </div>
-    </div>
-</section>
+
 <!-- Achievements Timeline -->
 <section class="py-16">
     <div class="container mx-auto px-4">
@@ -666,102 +510,16 @@ require_once 'header.php';
                 <p class="text-gray-500 text-sm">Traveled February 2025</p>
             </div>
         </div>
-        <div class="mt-12 text-center">
+        <!-- <div class="mt-12 text-center">
             <a href="#"
                 class="bg-white text-gray-800 px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-gray-100 transition inline-flex items-center">
                 <span>Read More Testimonials</span>
                 <i class="ri-arrow-right-line ml-2"></i>
             </a>
-        </div>
+        </div> -->
     </div>
 </section>
-<!-- Office Locations -->
-<section class="py-16">
-    <div class="container mx-auto px-4">
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <div class="inline-block bg-primary/10 text-primary font-medium px-4 py-2 rounded-full text-sm mb-4">
-                Visit Us
-            </div>
-            <h2 class="text-3xl font-bold mb-6">Our Offices</h2>
-            <p class="text-gray-700">
-                With offices across India and partner locations worldwide, we're
-                ready to assist you wherever you are. Feel free to visit us or get
-                in touch.
-            </p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <div class="h-[400px] rounded-xl overflow-hidden shadow-sm">
-                <img src="https://public.readdy.ai/gen_page/map_placeholder_1280x720.png" alt="Mumbai Office Location"
-                    class="w-full h-full object-cover" />
-            </div>
-            <div class="bg-white rounded-xl shadow-sm p-8">
-                <div class="space-y-8">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-2">Mumbai Headquarters</h3>
-                        <p class="text-gray-600">
-                            Our main office located in the heart of Mumbai's business
-                            district.
-                        </p>
-                    </div>
-                    <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4">
-                                <i class="ri-map-pin-line ri-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium mb-1">Address</h4>
-                                <p class="text-gray-600">
-                                    123 Seaward Tower, Marine Drive, Mumbai 400001, India
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4">
-                                <i class="ri-phone-line ri-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium mb-1">Phone</h4>
-                                <p class="text-gray-600">+91 (22) 2345-6789</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4">
-                                <i class="ri-mail-line ri-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium mb-1">Email</h4>
-                                <p class="text-gray-600">mumbai@journeyfinders.in</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4">
-                                <i class="ri-time-line ri-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium mb-1">Working Hours</h4>
-                                <p class="text-gray-600">
-                                    Monday - Friday: 9:00 AM - 6:00 PM
-                                </p>
-                                <p class="text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pt-6">
-                        <a href="#"
-                            class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition inline-flex items-center">
-                            <i class="ri-calendar-line mr-2"></i>
-                            <span>Schedule a Visit</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 <!-- CTA Section -->
 <section class="py-16 bg-primary/5">
     <div class="container mx-auto px-4">
@@ -777,18 +535,17 @@ require_once 'header.php';
                         craft the perfect experience for you.
                     </p>
                     <div class="space-y-4">
-                        <a href="#home/5d980096-f6d6-4a18-b632-f4eaee7979c7/6e473f7a-567a-4748-8f55-be9220efe06e"
-                            data-readdy="true"
+                        <a href="/tour-packages/" data-readdy="true"
                             class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition inline-block">Explore
                             Our Tours</a>
-                        <a href="#"
+                        <a href="/contact-us/"
                             class="bg-white text-gray-800 border border-gray-200 px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-gray-50 transition inline-block ml-0 md:ml-4 mt-4 md:mt-0">Contact
                             Us</a>
                     </div>
                 </div>
                 <div class="relative h-64 md:h-auto">
-                    <img src="#api/search-image?query=travel%2520consultant%2520meeting%2520with%2520clients%252C%2520discussing%2520travel%2520plans%2520with%2520maps%2520and%2520brochures%2520on%2520table%252C%2520warm%2520office%2520environment%252C%2520professional%2520looking%2520consultant%252C%2520happy%2520clients%252C%2520natural%2520lighting%252C%2520professional%2520business%2520photography&width=600&height=400&seq=2008&orientation=landscape"
-                        alt="Travel Consultation" class="absolute inset-0 w-full h-full object-cover object-top" />
+                    <img src="<?php echo USER_IMAGES; ?>ready-about-us.jpg" alt="Travel Consultation"
+                        class="absolute inset-0 w-full h-full object-cover object-top" />
                 </div>
             </div>
         </div>

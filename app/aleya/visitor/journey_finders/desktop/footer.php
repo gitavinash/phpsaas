@@ -31,27 +31,15 @@
             <div>
                 <h3 class="text-xl font-bold mb-4">Popular Destinations</h3>
                 <ul class="space-y-2">
-                    <li>
-                        <a href="/holiday/indonesia/bali/" class="text-gray-400 hover:text-white transition">Bali,
-                            Indonesia</a>
+                    <li><a href="/holiday/india/kerala/" class="text-gray-400 hover:text-white transition">Kerala</a>
                     </li>
-                    <li>
-                        <a href="/holiday/greece/santorini/"
-                            class="text-gray-400 hover:text-white transition">Santorini, Greece</a>
-                    </li>
-                    <li>
-                        <a href="/holiday/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a>
-                    </li>
-                    <li>
-                        <a href="/holiday/peru/" class="text-gray-400 hover:text-white transition">Peru</a>
-                    </li>
-                    <li>
-                        <a href="/holiday/japan/" class="text-gray-400 hover:text-white transition">Japan</a>
-                    </li>
-                    <li>
-                        <a href="/holiday/franch/paris/" class="text-gray-400 hover:text-white transition">Paris,
-                            France</a>
-                    </li>
+                    <li><a href="/holiday/india/himachal-pradesh/"
+                            class="text-gray-400 hover:text-white transition">Himachal pradesh</a></li>
+                    <li><a href="/holiday/india/goa/" class="text-gray-400 hover:text-white transition">Goa</a></li>
+                    <li><a href="/holiday/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a></li>
+                    <li><a href="/holiday/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a></li>
+                    <li><a href="/holiday/thailand/" class="text-gray-400 hover:text-white transition">Thailand</a></li>
+                    <li><a href="/holiday/dubai/" class="text-gray-400 hover:text-white transition">Dubai</a></li>
                 </ul>
             </div>
             <div>
@@ -64,10 +52,10 @@
                         <a href="/about-us/" class="text-gray-400 hover:text-white transition">About Us</a>
                     </li>
                     <li>
-                        <a href="/holiday-packages/" class="text-gray-400 hover:text-white transition">Tour Packages</a>
+                        <a href="/tour-packages/" class="text-gray-400 hover:text-white transition">Tour Packages</a>
                     </li>
                     <li>
-                        <a href="/destinations/" class="text-gray-400 hover:text-white transition">Destinations</a>
+                        <a href="/holiday/" class="text-gray-400 hover:text-white transition">Destinations</a>
                     </li>
                     <li>
                         <a href="/contact-us/" class="text-gray-400 hover:text-white transition">Contact Us</a>
@@ -99,7 +87,7 @@
                         <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
                             <i class="ri-time-line"></i>
                         </div>
-                        <span class="text-gray-400">Mon-Sat: 9:00 AM - 6:00 PM</span>
+                        <span class="text-gray-400">Mon-Sat: 9:00 AM - 7:00 PM</span>
                     </li>
                 </ul>
             </div>

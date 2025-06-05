@@ -26,14 +26,13 @@ require_once 'header.php';
                             class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
                             <i class="ri-map-pin-line ri-lg"></i>
                         </div>
-                        <input type="text" placeholder="Destination"
+                        <input type="text" id="destination" placeholder="Destination"
                             class="pl-12 pr-4 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
                     </div>
 
                     <!-- Search Button - 1/3 width -->
                     <div class="col-span-1">
-                        <a href="#home/5d980096-f6d6-4a18-b632-f4eaee7979c7/bf204a0d-8d2e-4112-bb67-ac835580264e"
-                            data-readdy="true"
+                        <a href="#" id="searchTours" data-readdy="true"
                             class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition flex items-center justify-center w-full h-full">
                             <i class="ri-search-line mr-2"></i>
                             Search Tours
@@ -56,176 +55,91 @@ require_once 'header.php';
             </p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg"
-                        alt="Bali Adventure" class="w-full h-full object-cover object-top" />
-                    <div class="absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full">
-                        Best Seller
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex items-center text-white mb-1">
-                            <i class="ri-map-pin-line mr-1"></i>
-                            <span class="text-sm">Bali, Indonesia</span>
-                        </div>
-                        <h3 class="text-white font-semibold">
-                            Bali Cultural Adventure
-                        </h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex items-center mb-3">
-                        <div class="flex text-yellow-400 mr-2">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-half-fill"></i>
-                        </div>
-                        <span class="text-gray-600 text-sm">4.8 (256 reviews)</span>
-                    </div>
-                    <div class="flex items-center text-gray-600 text-sm mb-3">
-                        <div class="flex items-center mr-4">
-                            <i class="ri-time-line mr-1"></i>
-                            <span>5 Days</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="ri-group-line mr-1"></i>
-                            <span>Max 12 people</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Explore Bali's rich culture with visits to ancient temples, rice
-                        terraces, and traditional villages.
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-gray-500 text-sm line-through">$899</span>
-                            <span class="text-primary font-semibold ml-1">$749</span>
-                            <span class="text-gray-600 text-xs">/ person</span>
-                        </div>
-                        <button
-                            class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition">
-                            Enquire Now
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg"
-                        alt="Santorini Escape" class="w-full h-full object-cover object-top" />
-                    <div
-                        class="absolute top-4 left-4 bg-green-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-                        20% Off
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex items-center text-white mb-1">
-                            <i class="ri-map-pin-line mr-1"></i>
-                            <span class="text-sm">Santorini, Greece</span>
-                        </div>
-                        <h3 class="text-white font-semibold">
-                            Santorini Island Escape
-                        </h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex items-center mb-3">
-                        <div class="flex text-yellow-400 mr-2">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                        </div>
-                        <span class="text-gray-600 text-sm">4.9 (318 reviews)</span>
-                    </div>
-                    <div class="flex items-center text-gray-600 text-sm mb-3">
-                        <div class="flex items-center mr-4">
-                            <i class="ri-time-line mr-1"></i>
-                            <span>7 Days</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="ri-group-line mr-1"></i>
-                            <span>Max 10 people</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Experience the magic of Santorini with stunning sunsets,
-                        blue-domed churches, and Mediterranean cuisine.
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-gray-500 text-sm line-through">$1,299</span>
-                            <span class="text-primary font-semibold ml-1">$999</span>
-                            <span class="text-gray-600 text-xs">/ person</span>
-                        </div>
-                        <button
-                            class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition">
-                            Enquire Now
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg"
-                        alt="Peru Adventure" class="w-full h-full object-cover object-top" />
-                    <div
-                        class="absolute top-4 left-4 bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-                        New Tour
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <div class="flex items-center text-white mb-1">
-                            <i class="ri-map-pin-line mr-1"></i>
-                            <span class="text-sm">Peru</span>
-                        </div>
-                        <h3 class="text-white font-semibold">
-                            Peru & Machu Picchu Explorer
-                        </h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex items-center mb-3">
-                        <div class="flex text-yellow-400 mr-2">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-line"></i>
-                        </div>
-                        <span class="text-gray-600 text-sm">4.7 (189 reviews)</span>
-                    </div>
-                    <div class="flex items-center text-gray-600 text-sm mb-3">
-                        <div class="flex items-center mr-4">
-                            <i class="ri-time-line mr-1"></i>
-                            <span>10 Days</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="ri-group-line mr-1"></i>
-                            <span>Max 15 people</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Discover the ancient wonders of Peru including Machu Picchu,
-                        Sacred Valley, and Cusco.
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-gray-500 text-sm line-through">$1,899</span>
-                            <span class="text-primary font-semibold ml-1">$1,649</span>
-                            <span class="text-gray-600 text-xs">/ person</span>
-                        </div>
-                        <button
-                            class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition">
-                            Enquire Now
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <?php
+
+            if ($checkPackage = mysqli_query($connection, "
+                SELECT
+                    *
+                FROM
+                    " . TABLE_PREFIX . "tour_package
+                INNER JOIN " . TABLE_PREFIX . "link ON
+                    link_relation_id = tour_package_id
+                    AND link_site_id = " . SITE_ID . "
+                    AND link_type = 'tour_package'
+                    AND link_status = 200
+                LEFT JOIN (
+                    SELECT *
+                    FROM " . TABLE_PREFIX . "tour_package_price
+                    WHERE tour_package_price_site_id = " . SITE_ID . "
+                    AND tour_package_price_net_adult = (
+                        SELECT MIN(" . TABLE_PREFIX . "tour_package_price_inner.tour_package_price_net_adult)
+                        FROM " . TABLE_PREFIX . "tour_package_price AS " . TABLE_PREFIX . "tour_package_price_inner
+                        WHERE 
+                            " . TABLE_PREFIX . "tour_package_price_inner.tour_package_price_site_id = " . TABLE_PREFIX . "tour_package_price.tour_package_price_site_id
+                            AND " . TABLE_PREFIX . "tour_package_price_inner.tour_package_price_parent_id = " . TABLE_PREFIX . "tour_package_price.tour_package_price_parent_id
+                    )
+                ) AS " . TABLE_PREFIX . "tour_package_price_filtered
+                ON " . TABLE_PREFIX . "tour_package_price_filtered.tour_package_price_parent_id = tour_package_id
+                WHERE
+                    tour_package_site_id = " . SITE_ID . " ORDER BY link_published DESC LIMIT 0,3")) {
+                if (mysqli_num_rows($checkPackage) > 0) {
+                    while ($packageData = mysqli_fetch_assoc($checkPackage)) {
+                        extract($packageData);
+                        echo "
+                            <div class='package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
+                                <div class='relative h-56 overflow-hidden'>
+                                    <img src='" . USER_IMAGES . '/city/' . strtolower(str_replace(' ', '_', $tour_package_city)) . ".jpg'
+                                        alt='Bali Adventure' class='w-full h-full object-cover object-top' />
+                                    <div class='absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>
+                                        Best Seller
+                                    </div>
+                                    <div class='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
+                                        <div class='flex items-center text-white mb-1'>
+                                            <i class='ri-map-pin-line mr-1'></i>
+                                            <span class='text-sm'>{$tour_package_state}, {$tour_package_country}</span>
+                                        </div>
+                                        <h3 class='text-white font-semibold'>
+                                            {$tour_package_title}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class='p-4'>
+                                    <div class='flex items-center text-gray-600 text-sm mb-3'>
+                                        <div class='flex items-center mr-4'>
+                                            <i class='ri-time-line mr-1'></i>
+                                            <span>" . ($tour_package_duration + 1) . " Days</span>
+                                        </div>
+                                        <div class='flex items-center'>
+                                            <i class='ri-group-line mr-1'></i>
+                                            <span>Min 2 people</span>
+                                        </div>
+                                    </div>
+                                    <p class='text-gray-600 text-sm mb-4 two-line-text'>
+                                        " . htmlspecialchars(strip_tags($tour_package_overview)) . "
+                                    </p>
+                                    <div class='justify-between items-center'>
+                                            <span class='text-gray-500 text-sm line-through'>₹ {$tour_package_price_mrp_adult}</span>
+                                            <span class='text-primary font-semibold ml-1'>₹ {$tour_package_price_selling_adult}</span>
+                                            <span class='text-gray-600 text-xs'>/ person</span>
+                                    </div>
+                                    <div class='justify-between items-center'>
+                                        <a href='{$link_url}' title='Explore {$tour_package_title}'
+                                        class='block w-full my-4 bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition text-center'>
+                                            Explore Now
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        ";
+                    }
+                }
+            }
+
+            ?>
         </div>
         <div class="text-center mt-10">
-            <a href="#" class="inline-flex items-center text-primary font-medium hover:underline">
+            <a href="/tour-packages/" class="inline-flex items-center text-primary font-medium hover:underline">
                 View all tour packages
                 <i class="ri-arrow-right-line ml-1"></i>
             </a>
@@ -243,126 +157,51 @@ require_once 'header.php';
             </p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="Bali"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">Bali, Indonesia</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">125 packages</span>
-                        <span class="text-primary font-medium">From $499</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="Santorini"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">Santorini, Greece</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">87 packages</span>
-                        <span class="text-primary font-medium">From $799</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="Maldives"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">Maldives</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">64 packages</span>
-                        <span class="text-primary font-medium">From $1,299</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="Peru"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">Peru</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">42 packages</span>
-                        <span class="text-primary font-medium">From $1,499</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="Japan"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">Japan</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">93 packages</span>
-                        <span class="text-primary font-medium">From $1,199</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="Paris"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">Paris, France</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">78 packages</span>
-                        <span class="text-primary font-medium">From $899</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg"
-                        alt="South Africa" class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">South Africa</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">56 packages</span>
-                        <span class="text-primary font-medium">From $1,099</span>
-                    </div>
-                </div>
-            </div>
-            <div class="destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="relative h-48 overflow-hidden">
-                    <img src="https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg" alt="New York"
-                        class="w-full h-full object-cover object-top" />
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-white font-semibold">New York, USA</h3>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600 text-sm">82 packages</span>
-                        <span class="text-primary font-medium">From $999</span>
-                    </div>
-                </div>
-            </div>
+            <?php
+
+            if ($destinationList = mysqli_query($connection, "
+                SELECT 
+                location_title,
+                location_thumbnail,
+                COUNT(tour_package_city) AS total_matching_tours,
+                MIN(tour_package_price_selling_adult) AS lowest_selling_price
+                FROM " . TABLE_PREFIX . "locations
+                LEFT JOIN " . TABLE_PREFIX . "tour_package
+                ON LOWER(CONVERT(tour_package_city USING utf8mb4)) COLLATE utf8mb4_unicode_ci
+                    LIKE CONCAT('%', LOWER(CONVERT(location_title USING utf8mb4)) COLLATE utf8mb4_unicode_ci, '%')
+                AND tour_package_site_id = " . SITE_ID . "
+                LEFT JOIN " . TABLE_PREFIX . "tour_package_price
+                ON tour_package_price_parent_id = tour_package_id
+                AND tour_package_price_site_id = " . SITE_ID . "
+                GROUP BY location_title, location_thumbnail
+                ORDER BY total_matching_tours DESC LIMIT 0, 8")) {
+                if (mysqli_num_rows($destinationList) > 0) {
+                    while ($destinationData = mysqli_fetch_assoc($destinationList)) {
+                        extract($destinationData);
+                        echo "<div class='destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
+                            <a href='/holiday/" . strtolower(str_replace(' ', '_', $location_title)) . "/'>
+                                <div class='relative h-48 overflow-hidden'>
+                                    <img src='{$location_thumbnail}' alt='{$location_title} tour packages'
+                                        class='w-full h-full object-cover object-top' />
+                                    <div class='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
+                                        <h3 class='text-white font-semibold'>{$location_title}</h3>
+                                    </div>
+                                </div>
+                                <div class='p-4'>
+                                    <div class='flex justify-between items-center'>
+                                        <span class='text-gray-600 text-sm'>{$total_matching_tours} packages</span>
+                                        " . (($total_matching_tours != 0) ? "<span class='text-primary font-medium'>From ₹ {$lowest_selling_price}</span>" : "") . "
+                                    </div>
+                                </div>
+                            </a>
+                        </div>";
+                    }
+                } else {
+                    echo "<p class='text-gray-600 text-center col-span-full'>No destinations found.</p>";
+                }
+            }
+
+            ?>
         </div>
     </div>
 </section>
@@ -441,7 +280,7 @@ require_once 'header.php';
     </div>
 </section>
 <!-- Enquiry Form -->
-<section class="py-16 bg-gray-50">
+<!-- <section class="py-16 bg-gray-50">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
             <div class="grid grid-cols-1 md:grid-cols-2">
@@ -612,7 +451,7 @@ require_once 'header.php';
             </div>
         </div>
     </div>
-</section>
+</section> -->
 <!-- Travel Styles -->
 <section class="py-16">
     <div class="container mx-auto px-4">
@@ -624,57 +463,65 @@ require_once 'header.php';
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <div class="relative h-48">
-                    <img src="#api/search-image?query=luxury%20resort%20infinity%20pool%20overlooking%20ocean%20at%20sunset%2C%20with%20comfortable%20loungers%20and%20butler%20service%2C%20high-end%20luxury%20travel%20experience%2C%20professional%20photography&width=400&height=300&seq=14&orientation=landscape"
-                        alt="Luxury Travel" class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute bottom-4 left-4">
-                        <h3 class="text-white text-lg font-semibold">Luxury Travel</h3>
-                        <p class="text-white/90 text-sm">
-                            Premium experiences & comfort
-                        </p>
+                <a href="/tag/luxury/" title="Luxury tour packages">
+                    <div class="relative h-48">
+                        <img src="<?php echo USER_IMAGES; ?>/travel_style/luxury.jpg" alt="Luxury Travel"
+                            class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-white text-lg font-semibold">Luxury Travel</h3>
+                            <p class="text-white/90 text-sm">
+                                Premium experiences & comfort
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </a>
+            </div>
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                <a href="/tag/adventure/" title="Adventure tour packages">
+                    <div class="relative h-48">
+                        <img src="<?php echo USER_IMAGES; ?>/travel_style/adventure.jpg" alt="Adventure Travel"
+                            class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-white text-lg font-semibold">
+                                Adventure Travel
+                            </h3>
+                            <p class="text-white/90 text-sm">
+                                Thrilling outdoor activities
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                <a href="/tag/cultural/" title="Cultural tour packages">
+                    <div class="relative h-48">
+                        <img src="<?php echo USER_IMAGES; ?>/travel_style/cultural.jpg" alt="Cultural Travel"
+                            class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-white text-lg font-semibold">
+                                Cultural Travel
+                            </h3>
+                            <p class="text-white/90 text-sm">Immersive local experiences</p>
+                        </div>
+                    </div>
+                </a>
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
                 <div class="relative h-48">
-                    <img src="#api/search-image?query=adventurous%20mountain%20hiking%20scene%20with%20backpackers%20on%20scenic%20trail%2C%20dramatic%20landscape%20with%20snow-capped%20peaks%2C%20adventure%20travel%20photography&width=400&height=300&seq=15&orientation=landscape"
-                        alt="Adventure Travel" class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute bottom-4 left-4">
-                        <h3 class="text-white text-lg font-semibold">
-                            Adventure Travel
-                        </h3>
-                        <p class="text-white/90 text-sm">
-                            Thrilling outdoor activities
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <div class="relative h-48">
-                    <img src="#api/search-image?query=cultural%20immersion%20scene%20with%20traditional%20festival%20celebration%2C%20colorful%20costumes%20and%20local%20customs%2C%20authentic%20cultural%20travel%20photography&width=400&height=300&seq=16&orientation=landscape"
-                        alt="Cultural Travel" class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute bottom-4 left-4">
-                        <h3 class="text-white text-lg font-semibold">
-                            Cultural Travel
-                        </h3>
-                        <p class="text-white/90 text-sm">Immersive local experiences</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <div class="relative h-48">
-                    <img src="#api/search-image?query=romantic%20couple%20enjoying%20private%20beach%20dinner%20at%20sunset%2C%20candlelit%20table%20with%20champagne%2C%20honeymoon%20travel%20photography&width=400&height=300&seq=17&orientation=landscape"
-                        alt="Romantic Getaways" class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute bottom-4 left-4">
-                        <h3 class="text-white text-lg font-semibold">
-                            Romantic Getaways
-                        </h3>
-                        <p class="text-white/90 text-sm">Perfect for couples</p>
-                    </div>
+                    <a href="/tag/romantic/" title="Romantic tour packages">
+                        <img src="<?php echo USER_IMAGES; ?>/travel_style/romantic.jpg" alt="Romantic Getaways"
+                            class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-white text-lg font-semibold">
+                                Romantic Getaways
+                            </h3>
+                            <p class="text-white/90 text-sm">Perfect for couples</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -692,49 +539,52 @@ require_once 'header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <img src="#api/search-image?query=pristine%20tropical%20beach%20with%20crystal%20clear%20turquoise%20water%2C%20white%20sand%2C%20and%20palm%20trees%2C%20perfect%20beach%20destination%2C%20professional%20travel%20photography&width=600&height=400&seq=18&orientation=landscape"
-                        alt="Beaches"
-                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <h3 class="text-white text-2xl font-semibold mb-2">Beaches</h3>
-                        <div class="flex items-center text-white/90">
+                    <a href="/tag/beaches/" title="Beaches tour packages">
+                        <img src="<?php echo USER_IMAGES; ?>/terrain/beaches.jpg" alt="Beaches"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="text-white text-2xl font-semibold mb-2">Beaches</h3>
+                            <!-- <div class="flex items-center text-white/90">
                             <span class="text-sm">42 destinations</span>
                             <i class="ri-arrow-right-line ml-2"></i>
+                        </div> -->
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <img src="#api/search-image?query=majestic%20mountain%20range%20with%20snow-capped%20peaks%2C%20alpine%20meadows%2C%20and%20clear%20mountain%20lake%2C%20dramatic%20mountain%20landscape%2C%20professional%20travel%20photography&width=600&height=400&seq=19&orientation=landscape"
-                        alt="Mountains"
-                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <h3 class="text-white text-2xl font-semibold mb-2">
-                            Mountains
-                        </h3>
-                        <div class="flex items-center text-white/90">
+                    <a href="/tag/mountains/" title="Mountains tour packages">
+                        <img src="<?php echo USER_IMAGES; ?>/terrain/mountains.jpg" alt="Mountains"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="text-white text-2xl font-semibold mb-2">
+                                Mountains
+                            </h3>
+                            <!-- <div class="flex items-center text-white/90">
                             <span class="text-sm">35 destinations</span>
                             <i class="ri-arrow-right-line ml-2"></i>
+                        </div> -->
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <img src="#api/search-image?query=vast%20desert%20landscape%20with%20golden%20sand%20dunes%20at%20sunset%2C%20camel%20caravan%20silhouette%2C%20dramatic%20desert%20scenery%2C%20professional%20travel%20photography&width=600&height=400&seq=20&orientation=landscape"
-                        alt="Deserts"
-                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <h3 class="text-white text-2xl font-semibold mb-2">Deserts</h3>
-                        <div class="flex items-center text-white/90">
+                    <a href="/tag/deserts/" title="Deserts tour packages">
+                        <img src="<?php echo USER_IMAGES; ?>/terrain/deserts.jpg" alt="Deserts"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="text-white text-2xl font-semibold mb-2">Deserts</h3>
+                            <!-- <div class="flex items-center text-white/90">
                             <span class="text-sm">28 destinations</span>
                             <i class="ri-arrow-right-line ml-2"></i>
+                        </div> -->
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
