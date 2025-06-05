@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: text/csv');
-header('Content-Disposition: attachment; filename="google-merchant-feed.csv"');
+header('Content-Disposition: attachment; filename="google-merchant-feed-' . strtolower(str_replace('.', '-', SITE_DOMAIN)) . '.csv"');
 
 $siteName = strtoupper(str_replace(' ', '-', strtolower(SITE_NAME)));
 
