@@ -141,7 +141,7 @@ require_once 'header.php';
             ?>
         </div>
         <div class="text-center mt-10">
-            <a href="/tour-packages/" class="inline-flex items-center text-primary font-medium hover:underline">
+            <a href="/holiday/" class="inline-flex items-center text-primary font-medium hover:underline">
                 View all tour packages
                 <i class="ri-arrow-right-line ml-1"></i>
             </a>

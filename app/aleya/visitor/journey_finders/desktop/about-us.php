@@ -535,7 +535,7 @@ require_once 'header.php';
                         craft the perfect experience for you.
                     </p>
                     <div class="space-y-4">
-                        <a href="/tour-packages/" data-readdy="true"
+                        <a href="/holiday/" data-readdy="true"
                             class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition inline-block">Explore
                             Our Tours</a>
                         <a href="/contact-us/"
