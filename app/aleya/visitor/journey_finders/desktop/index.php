@@ -19,26 +19,28 @@ require_once 'header.php';
                 JourneyFinders
             </p>
             <div class="bg-white p-4 rounded-lg hero-search-bar">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Search Input - 2/3 width -->
-                    <div class="relative col-span-1 md:col-span-2">
-                        <div
-                            class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
-                            <i class="ri-map-pin-line ri-lg"></i>
+                <form method="get" action="/search/">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Search Input - 2/3 width -->
+                        <div class="relative col-span-1 md:col-span-2">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
+                                <i class="ri-map-pin-line ri-lg"></i>
+                            </div>
+                            <input type="text" name="q" id="destination" placeholder="Destination"
+                                class="pl-12 pr-4 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
                         </div>
-                        <input type="text" id="destination" placeholder="Destination"
-                            class="pl-12 pr-4 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
-                    </div>
 
-                    <!-- Search Button - 1/3 width -->
-                    <div class="col-span-1">
-                        <a href="#" id="searchTours" data-readdy="true"
-                            class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition flex items-center justify-center w-full h-full">
-                            <i class="ri-search-line mr-2"></i>
-                            Search Tours
-                        </a>
+                        <!-- Search Button - 1/3 width -->
+                        <div class="col-span-1">
+                            <button type="submit" data-readdy="true"
+                                class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition flex items-center justify-center w-full h-full">
+                                <i class="ri-search-line mr-2"></i>
+                                Search Tours
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
 
         </div>

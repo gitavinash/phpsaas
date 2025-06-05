@@ -1,5 +1,35 @@
 <?php
 
+function renderItems($htmlString, $iconClass = 'ri-check-line', $iconColor = 'text-primary')
+{
+    libxml_use_internal_errors(true);
+    $doc = new DOMDocument();
+    $doc->loadHTML('<?xml encoding="utf-8" ?>' . $htmlString);
+$xpath = new DOMXPath($doc);
+
+$items = $xpath->query('//p');
+
+if ($items->length === 0 || trim($items[0]->textContent) === '') {
+$items = $xpath->query('//ol/li');
+}
+
+echo '<ul class="space-y-2">';
+    foreach ($items as $item) {
+    $text = trim($item->textContent);
+    if (!empty($text)) {
+    echo '
+    <li class="flex items-start">
+        <div class="w-5 h-5 flex items-center justify-center ' . $iconColor . ' mr-2 mt-0.5">
+            <i class="' . $iconClass . '"></i>
+        </div>
+        <span class="text-gray-700">' . htmlspecialchars($text) . '</span>
+    </li>';
+    }
+    }
+    echo '
+</ul>';
+}
+
 require_once 'header.php';
 
 ?>
@@ -91,7 +121,8 @@ require_once 'header.php';
                             <i class="ri-hotel-line ri-xl"></i>
                         </div>
                         <h3 class="text-sm font-medium text-gray-900">Accommodation</h3>
-                        <p class="text-gray-600"><?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?></p>
+                        <p class="text-gray-600">
+                            <?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?></p>
                     </div>
                 </div>
                 <!-- <div class="flex flex-wrap gap-2">
@@ -196,7 +227,8 @@ require_once 'header.php';
             </section> -->
             <!-- Itinerary Section -->
             <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-6"><?php echo ucwords($tour_package_city) ?> Day-by-Day Itinerary</h2>
+                <h2 class="text-2xl font-bold mb-6"><?php echo ucwords($tour_package_city) ?> Day-by-Day
+                    Itinerary</h2>
                 <div class="space-y-4">
                     <?php
                     $tour_package_itinerary = json_decode('[{"day":"Day 1 - Arrival in Manali","overview":"Your cultural journey begins as you board a Volvo from Delhi to Manali. Enjoy the scenic drive through the lush valleys and snow-capped mountains. Upon arrival, you will be transferred to your hotel. Later, explore the local markets and visit the Hadimba Devi Temple, a famous cultural site in Manali. Overnight stay at the hotel."},{"day":"Day 2 - Manali Sightseeing","overview":"After breakfast, embark on a full day of sightseeing in Manali. Visit the ancient Naggar Castle, known for its historical significance and stunning architecture. Explore the Naggar Art Gallery to admire traditional Himachali art. In the evening, witness a cultural show showcasing local dance and music traditions. Return to the hotel for dinner and overnight stay."},{"day":"Day 3 - Excursion to Solang Valley","overview":"Today, take a day trip to the picturesque Solang Valley, known for its breathtaking views and adventure activities. Enjoy activities like paragliding, zorbing, and horse riding amidst the stunning Himalayan landscape. In the evening, return to Manali for a relaxing overnight stay at the hotel."},{"day":"Day 4 - Cultural Villages Tour","overview":"Explore the cultural heritage of Manali with a tour of traditional villages like Vashisht and Old Manali. Visit the Vashisht Temple and hot springs to experience the local customs and traditions. Stroll through the quaint lanes of Old Manali and interact with the friendly locals. Enjoy a traditional Himachali dinner before heading back to the hotel."},{"day":"Day 5 - Departure to Delhi","overview":"After breakfast, bid farewell to the scenic beauty of Manali as you board the Volvo back to Delhi. Take with you memories of the Himalayan culture and warm hospitality. Our cultural tour package ends as you arrive in Delhi, marking the conclusion of your enriching journey."}]', true);
@@ -231,7 +263,7 @@ require_once 'header.php';
                 </div>
             </section>
             <!-- Photo Gallery -->
-            <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <!-- <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <h2 class="text-2xl font-bold mb-4">Photo Gallery</h2>
                 <div class="overflow-x-auto gallery-scrollbar pb-4">
                     <div class="flex space-x-4 min-w-max">
@@ -262,7 +294,7 @@ require_once 'header.php';
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
             <!-- Included/Not Included -->
             <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <h2 class="text-2xl font-bold mb-4">
@@ -271,67 +303,16 @@ require_once 'header.php';
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h3 class="text-lg font-semibold mb-3 flex items-center text-gray-900">
-                            <div class="w-6 h-6 flex items-center justify-center text-primary mr-2">
+                            <div class="w-6 h-6 flex items-center justify-center text-green-500 mr-2">
                                 <i class="ri-check-line"></i>
                             </div>
                             Included
                         </h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">Airport transfers in air-conditioned vehicles</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">9 nights accommodation in 4-star hotels</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">Daily breakfast, 7 lunches, and 3 dinners</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">English-speaking professional guide</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">All activities and entrance fees as per itinerary</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">Cooking class with market visit</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">Traditional spa treatment</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">Bottled water during tours</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2 mt-0.5">
-                                    <i class="ri-check-line"></i>
-                                </div>
-                                <span class="text-gray-700">All applicable taxes and fees</span>
-                            </li>
-                        </ul>
+                        <?php
+
+                        renderItems($tour_package_inclusions, 'ri-check-line', 'text-green-500');
+
+                        ?>
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold mb-3 flex items-center text-gray-900">
@@ -340,56 +321,11 @@ require_once 'header.php';
                             </div>
                             Not Included
                         </h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">International airfare to/from Bali</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Travel insurance (mandatory)</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Visa fees (if applicable)</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Meals not mentioned in the itinerary</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Personal expenses (laundry, phone calls, etc.)</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Alcoholic and specialty beverages</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Optional activities not mentioned in the itinerary</span>
-                            </li>
-                            <li class="flex items-start">
-                                <div class="w-5 h-5 flex items-center justify-center text-red-500 mr-2 mt-0.5">
-                                    <i class="ri-close-line"></i>
-                                </div>
-                                <span class="text-gray-700">Tips for guides, drivers, and hotel staff</span>
-                            </li>
-                        </ul>
+                        <?php
+
+                        renderItems($tour_package_exclusions, 'ri-close-line', 'text-red-500');
+
+                        ?>
                     </div>
                 </div>
             </section>
@@ -405,19 +341,22 @@ require_once 'header.php';
                 </p>
                 <form class="space-y-4">
                     <div>
-                        <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                        <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full
+                            Name *</label>
                         <input type="text" id="full-name"
                             class="form-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
                             placeholder="Enter your full name" required />
                     </div>
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email
+                            Address *</label>
                         <input type="email" id="email"
                             class="form-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
                             placeholder="Enter your email address" required />
                     </div>
                     <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number
+                            *</label>
                         <input type="tel" id="phone"
                             class="form-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
                             placeholder="Enter your phone number" required />
@@ -430,7 +369,8 @@ require_once 'header.php';
                             required />
                     </div>
                     <div>
-                        <label for="travelers" class="block text-sm font-medium text-gray-700 mb-1">Number of Travelers
+                        <label for="travelers" class="block text-sm font-medium text-gray-700 mb-1">Number
+                            of Travelers
                             *</label>
                         <div class="flex">
                             <button type="button"

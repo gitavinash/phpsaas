@@ -323,6 +323,13 @@ WHERE
         </div>
     </div>
 </div>
+<div class="container mx-auto px-4 py-8">
+    <?php
+
+    require_once 'quick_links.php';
+
+    ?>
+</div>
 <?php
 
 require_once 'footer.php';
