@@ -18,10 +18,6 @@ if ($name != '') {
             $icon = '';
         }
 
-        print_r($_FILES);
-        echo "Icon: " . $icon;
-        exit();
-
         if ($checkLocations = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "locations WHERE location_id='{$id}'")) {
             if (mysqli_num_rows($checkLocations) != 0) {
                 if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "locations SET location_thumbnail='{$icon}', location_title='{$name}', location_description='{$description}', location_state='{$state}', location_country='{$country}' WHERE location_id='{$id}'")) {
