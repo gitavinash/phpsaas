@@ -7,7 +7,7 @@
         <!-- Theme Card 1 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition">
             <div class="h-32 overflow-hidden relative">
-                <a href="/tag/adventure/" title="Adventure tour packages">
+                <a href="/theme/adventure/" title="Adventure tour packages">
                     <img src="<?php echo USER_IMAGES ?>travel_style/adventure.jpg" alt="Adventure"
                         class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -20,7 +20,7 @@
         <!-- Theme Card 2 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition">
             <div class="h-32 overflow-hidden relative">
-                <a href="/tag/beaches/" title="Beaches tour packages">
+                <a href="/theme/beaches/" title="Beaches tour packages">
                     <img src="<?php echo USER_IMAGES ?>travel_style/beaches.jpg" alt="Beach"
                         class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -33,7 +33,7 @@
         <!-- Theme Card 3 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition">
             <div class="h-32 overflow-hidden relative">
-                <a href="/tag/cultural/" title="Cultural tour packages">
+                <a href="/theme/cultural/" title="Cultural tour packages">
                     <img src="<?php echo USER_IMAGES ?>travel_style/cultural.jpg" alt="Cultural"
                         class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -46,7 +46,7 @@
         <!-- Theme Card 4 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition">
             <div class="h-32 overflow-hidden relative">
-                <a href="/tag/wildlife/" title="Wildlife tour packages">
+                <a href="/theme/wildlife/" title="Wildlife tour packages">
                     <img src="<?php echo USER_IMAGES ?>travel_style/wildlife.jpg" alt="Wildlife"
                         class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -59,7 +59,7 @@
         <!-- Theme Card 5 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition">
             <div class="h-32 overflow-hidden relative">
-                <a href="/tag/food-and-culinary/" title="Food & Culinary tour packages">
+                <a href="/theme/food-and-culinary/" title="Food & Culinary tour packages">
                     <img src="<?php echo USER_IMAGES ?>travel_style/food-and-culinary.jpg" alt="Food & Culinary"
                         class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -72,7 +72,7 @@
         <!-- Theme Card 6 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition">
             <div class="h-32 overflow-hidden relative">
-                <a href="/tag/wellness/" title="Wellness tour packages">
+                <a href="/theme/wellness/" title="Wellness tour packages">
                     <img src="<?php echo USER_IMAGES ?>travel_style/wellness.jpg" alt="Wellness"
                         class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

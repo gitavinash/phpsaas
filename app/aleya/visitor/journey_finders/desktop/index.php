@@ -468,7 +468,7 @@ require_once 'header.php';
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <a href="/tag/luxury/" title="Luxury tour packages">
+                <a href="/theme/luxury/" title="Luxury tour packages">
                     <div class="relative h-48">
                         <img src="<?php echo USER_IMAGES; ?>/travel_style/luxury.jpg" alt="Luxury Travel"
                             class="w-full h-full object-cover" />
@@ -483,7 +483,7 @@ require_once 'header.php';
                 </a>
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <a href="/tag/adventure/" title="Adventure tour packages">
+                <a href="/theme/adventure/" title="Adventure tour packages">
                     <div class="relative h-48">
                         <img src="<?php echo USER_IMAGES; ?>/travel_style/adventure.jpg" alt="Adventure Travel"
                             class="w-full h-full object-cover" />
@@ -500,7 +500,7 @@ require_once 'header.php';
                 </a>
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <a href="/tag/cultural/" title="Cultural tour packages">
+                <a href="/theme/cultural/" title="Cultural tour packages">
                     <div class="relative h-48">
                         <img src="<?php echo USER_IMAGES; ?>/travel_style/cultural.jpg" alt="Cultural Travel"
                             class="w-full h-full object-cover" />
@@ -516,7 +516,7 @@ require_once 'header.php';
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
                 <div class="relative h-48">
-                    <a href="/tag/romantic/" title="Romantic tour packages">
+                    <a href="/theme/romantic/" title="Romantic tour packages">
                         <img src="<?php echo USER_IMAGES; ?>/travel_style/romantic.jpg" alt="Romantic Getaways"
                             class="w-full h-full object-cover" />
                         <div class="absolute inset-0 bg-black/20"></div>
@@ -544,7 +544,7 @@ require_once 'header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <a href="/tag/beaches/" title="Beaches tour packages">
+                    <a href="/theme/beaches/" title="Beaches tour packages">
                         <img src="<?php echo USER_IMAGES; ?>/terrain/beaches.jpg" alt="Beaches"
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -560,7 +560,7 @@ require_once 'header.php';
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <a href="/tag/mountains/" title="Mountains tour packages">
+                    <a href="/theme/mountains/" title="Mountains tour packages">
                         <img src="<?php echo USER_IMAGES; ?>/terrain/mountains.jpg" alt="Mountains"
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -578,7 +578,7 @@ require_once 'header.php';
             </div>
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <a href="/tag/deserts/" title="Deserts tour packages">
+                    <a href="/theme/deserts/" title="Deserts tour packages">
                         <img src="<?php echo USER_IMAGES; ?>/terrain/deserts.jpg" alt="Deserts"
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
