@@ -163,9 +163,12 @@ require_once 'header.php';
                 SELECT 
                 location_title,
                 location_thumbnail,
+                country_name,
                 COUNT(tour_package_city) AS total_matching_tours,
                 MIN(tour_package_price_selling_adult) AS lowest_selling_price
                 FROM " . TABLE_PREFIX . "locations
+                INNER JOIN 
+                isw_country ON isw_locations.location_country = isw_country.country_id
                 LEFT JOIN " . TABLE_PREFIX . "tour_package
                 ON LOWER(CONVERT(tour_package_city USING utf8mb4)) COLLATE utf8mb4_unicode_ci
                     LIKE CONCAT('%', LOWER(CONVERT(location_title USING utf8mb4)) COLLATE utf8mb4_unicode_ci, '%')
@@ -179,7 +182,7 @@ require_once 'header.php';
                     while ($destinationData = mysqli_fetch_assoc($destinationList)) {
                         extract($destinationData);
                         echo "<div class='destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
-                            <a href='/holiday/" . strtolower(str_replace(' ', '_', $location_title)) . "/'>
+                            <a href='/packages/" . strtolower(str_replace(' ', '_', $country_name . '/' . $location_title)) . "/'>
                                 <div class='relative h-48 overflow-hidden'>
                                     <img src='{$location_thumbnail}' alt='{$location_title} tour packages'
                                         class='w-full h-full object-cover object-top' />
