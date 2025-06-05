@@ -169,7 +169,7 @@ require_once 'header.php';
             <div
                 class="bg-white rounded-lg shadow-sm p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="text-gray-700">
-                    <span class="font-medium">42 tours found</span> for <?php echo $destinationPage ?>
+                    <span class="font-medium"><?php echo $destinationPage ?> tour packages
                 </div>
                 <div class="flex items-center">
                     <span class="text-gray-600 text-sm mr-2">Sort by:</span>
@@ -192,14 +192,13 @@ require_once 'header.php';
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 <?php
 
-                $queryFilter = "tp.tour_package_theme IN ('adventure', 'cultural', 'beach', 'wildlife', 'food')";
                 switch (count($urlStructure)) {
                     case 2:
-                        $queryFilter = "LOWER(tp.tour_package_country) LIKE '%{$urlStructure[1]}' AND";
+                        $queryFilter = "LOWER(tp.tour_package_country) LIKE '%{" . str_replace('-', ' ', $urlStructure[1]) . "}' AND";
                         break;
                     default:
-                        $queryFilter = "(tp.tour_package_city LIKE '%$urlStructure[2]%'
-                                        OR tp.tour_package_state LIKE '%$urlStructure[2]%') AND ";
+                        $queryFilter = "(tp.tour_package_city LIKE '%" . str_replace('-', ' ', $urlStructure[2]) . "%'
+                                        OR tp.tour_package_state LIKE '%" . str_replace('-', ' ', $urlStructure[2]) . "%') AND ";
                         break;
                 }
 

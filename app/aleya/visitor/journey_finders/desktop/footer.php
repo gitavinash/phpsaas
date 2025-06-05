@@ -31,15 +31,18 @@
             <div>
                 <h3 class="text-xl font-bold mb-4">Popular Destinations</h3>
                 <ul class="space-y-2">
-                    <li><a href="/holiday/india/kerala/" class="text-gray-400 hover:text-white transition">Kerala</a>
+                    <li><a href="/packages/india/kerala/" class="text-gray-400 hover:text-white transition">Kerala</a>
                     </li>
-                    <li><a href="/holiday/india/himachal-pradesh/"
+                    <li><a href="/packages/india/himachal-pradesh/"
                             class="text-gray-400 hover:text-white transition">Himachal pradesh</a></li>
-                    <li><a href="/holiday/india/goa/" class="text-gray-400 hover:text-white transition">Goa</a></li>
-                    <li><a href="/holiday/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a></li>
-                    <li><a href="/holiday/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a></li>
-                    <li><a href="/holiday/thailand/" class="text-gray-400 hover:text-white transition">Thailand</a></li>
-                    <li><a href="/holiday/dubai/" class="text-gray-400 hover:text-white transition">Dubai</a></li>
+                    <li><a href="/packages/india/goa/" class="text-gray-400 hover:text-white transition">Goa</a></li>
+                    <li><a href="/packages/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a>
+                    </li>
+                    <li><a href="/packages/mauritius/" class="text-gray-400 hover:text-white transition">Mauritius</a>
+                    </li>
+                    <li><a href="/packages/thailand/" class="text-gray-400 hover:text-white transition">Thailand</a>
+                    </li>
+                    <li><a href="/packages/dubai/" class="text-gray-400 hover:text-white transition">Dubai</a></li>
                 </ul>
             </div>
             <div>
@@ -50,9 +53,6 @@
                     </li>
                     <li>
                         <a href="/about-us/" class="text-gray-400 hover:text-white transition">About Us</a>
-                    </li>
-                    <li>
-                        <a href="/tour-packages/" class="text-gray-400 hover:text-white transition">Tour Packages</a>
                     </li>
                     <li>
                         <a href="/holiday/" class="text-gray-400 hover:text-white transition">Destinations</a>
