@@ -12,6 +12,7 @@ SELECT
 	link_status,
 	product_title,
 	CONCAT('" . SITE_URL . "', product_image) as image_link,
+	product_gallery,
 	product_highlight AS description,
 	inventory_mrp,
 	inventory_price,
@@ -43,16 +44,34 @@ if ($checkProducts = mysqli_query($connection, $mccProductQuery)) {
 		'description',
 		'link',
 		'image link',
+		'additional image link',
 		'availability',
 		'price',
 		'brand',
 		'identifier exists',
 		'condition',
 		'sell on google quantity'
-	]);
+	], ',', '"', '\\');
 
 	while ($product = mysqli_fetch_assoc($checkProducts)) {
 		$priceValue = $product['inventory_price'] ?: $product['inventory_mrp'];
+
+		$galleryPaths = [];
+
+		$galleryJson = $product['product_gallery'];
+
+		if (!empty($galleryJson)) {
+			$decodedGallery = json_decode($galleryJson, true);
+			if (is_array($decodedGallery)) {
+				foreach ($decodedGallery as $img) {
+					if (isset($img['path']) && !empty($img['path'])) {
+						$galleryPaths[] = SITE_URL . $img['path'];
+					}
+				}
+			}
+		}
+
+		$galleryCsvValue = implode(',', $galleryPaths);
 
 		fputcsv($output, [
 			$product['product_id'],
@@ -60,13 +79,14 @@ if ($checkProducts = mysqli_query($connection, $mccProductQuery)) {
 			$product['description'],
 			$product['link'],
 			$product['image_link'],
+			$galleryCsvValue,
 			$product['availability'],
 			number_format($priceValue, 2, '.', '') . ' INR',
 			$product['brand'],
 			$product['identifier_exists'],
 			'new',
 			100
-		]);
+		], ',', '"', '\\');
 	}
 
 	fclose($output);
