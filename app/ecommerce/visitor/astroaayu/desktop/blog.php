@@ -11,7 +11,7 @@
 
             // Recent post
 
-            if ($recentPost = mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=post_category WHERE link_type='post' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 4")) {
+            if ($recentPost = mysqli_query($connection, "SELECT link_url, post_title, post_image, category_title, link_published FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=post_category WHERE link_status=200 AND link_type='post' AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 4")) {
 
                 if (mysqli_num_rows($recentPost) != 0) {
 
