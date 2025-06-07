@@ -11,7 +11,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Theme</th>
-                        <th>Destination</th>
+                        <th>Country</th>
                         <th>Duration</th>
                         <th>Hotel</th>
                         <th>Status</th>
@@ -21,7 +21,7 @@
                 <tbody>
                     <?php
 
-                    if ($packageData = mysqli_query($connection, "SELECT tour_package_id, tour_package_title, tour_package_type, tour_package_city, tour_package_theme, tour_package_duration, tour_package_hotel, tour_package_status, link_url FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE tour_package_status!=3 AND tour_package_type='international' AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
+                    if ($packageData = mysqli_query($connection, "SELECT tour_package_id, tour_package_title, tour_package_type, tour_package_country, tour_package_theme, tour_package_duration, tour_package_hotel, tour_package_status, link_url FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE tour_package_status!=3 AND tour_package_type='international' AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
                         if (mysqli_num_rows($packageData) != 0) {
                             $i = 1;
                             while ($packageDataInfo = mysqli_fetch_assoc($packageData)) {
@@ -44,7 +44,7 @@
                                     <tr>
                                         <td>{$tour_package_title}</td>
                                         <td>" . ucwords($tour_package_theme) . "</td>
-                                        <td>{$tour_package_city}</td>
+                                        <td>{$tour_package_country}</td>
                                         <td>{$tour_package_duration}N/" . ($tour_package_duration + 1) . "D</td>
                                         <td>" . ucwords(str_replace('_', ' ', $tour_package_hotel)) . "</td>
                                         <td>{$packageStatus}</td>
