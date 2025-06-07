@@ -27,7 +27,8 @@ if (isset($_FILES['gallery'])) {
 					/* Default upload path directory of image */
 
 					$uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
-					$uploadFile = $uploadPath . time() . '_' . strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename));
+					$unique = uniqid('', true);
+					$uploadFile = $uploadPath . time() . '_' . $unique . '_' . strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename));
 					$uploadMediaPath = str_replace(ROOT, '', $uploadFile);
 					$uploadMediaLink = '/attachment' . str_replace('.' . $fileExtension, '', $uploadMediaPath) . '/';
 					$uploadFileName = ucwords(preg_replace('/[_]+/', ' ', str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
