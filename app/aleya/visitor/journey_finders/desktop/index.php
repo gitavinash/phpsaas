@@ -6,7 +6,7 @@ require_once 'header.php';
 <!-- Hero Section -->
 <section class="relative h-[600px] overflow-hidden">
     <div style="
-          background-image: url('https://public.readdy.ai/ai/img_res/6fd34f201eda9995d1478d5c357d55bb.jpg');
+          background-image: url('<?php echo USER_IMAGES ?>background.jpg');
         " class="absolute inset-0 bg-cover bg-center"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
     <div class="relative container mx-auto px-4 h-full flex flex-col justify-center">
@@ -161,25 +161,35 @@ require_once 'header.php';
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <?php
 
-            if ($destinationList = mysqli_query($connection, "
-                SELECT 
-                location_title,
-                location_thumbnail,
-                country_name,
-                COUNT(tour_package_city) AS total_matching_tours,
-                MIN(tour_package_price_selling_adult) AS lowest_selling_price
-                FROM " . TABLE_PREFIX . "locations
-                INNER JOIN 
-                isw_country ON isw_locations.location_country = isw_country.country_id
-                LEFT JOIN " . TABLE_PREFIX . "tour_package
-                ON LOWER(CONVERT(tour_package_city USING utf8mb4)) COLLATE utf8mb4_unicode_ci
-                    LIKE CONCAT('%', LOWER(CONVERT(location_title USING utf8mb4)) COLLATE utf8mb4_unicode_ci, '%')
-                AND tour_package_site_id = " . SITE_ID . "
-                LEFT JOIN " . TABLE_PREFIX . "tour_package_price
-                ON tour_package_price_parent_id = tour_package_id
-                AND tour_package_price_site_id = " . SITE_ID . "
-                GROUP BY location_title, location_thumbnail
-                ORDER BY total_matching_tours DESC LIMIT 0, 8")) {
+            $destinationPackagesListQuery = "SELECT 
+    l.location_title,
+    l.location_thumbnail,
+    c.country_name,
+    COUNT(DISTINCT tp.tour_package_id) AS total_matching_tours,
+    MIN(tpp.tour_package_price_selling_adult) AS lowest_selling_price
+FROM " . TABLE_PREFIX . "locations l
+INNER JOIN " . TABLE_PREFIX . "country c
+    ON l.location_country = c.country_id
+LEFT JOIN " . TABLE_PREFIX . "tour_package tp
+    ON tp.tour_package_site_id = " . SITE_ID . "
+    AND (
+        LOWER(CONVERT(tp.tour_package_city USING utf8mb4)) COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', LOWER(CONVERT(l.location_title USING utf8mb4)) COLLATE utf8mb4_unicode_ci, '%')
+        OR LOWER(CONVERT(tp.tour_package_state USING utf8mb4)) COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', LOWER(CONVERT(l.location_title USING utf8mb4)) COLLATE utf8mb4_unicode_ci, '%')
+        OR LOWER(CONVERT(tp.tour_package_country USING utf8mb4)) COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', LOWER(CONVERT(l.location_title USING utf8mb4)) COLLATE utf8mb4_unicode_ci, '%')
+    )
+LEFT JOIN " . TABLE_PREFIX . "tour_package_price tpp
+    ON tpp.tour_package_price_parent_id = tp.tour_package_id
+    AND tpp.tour_package_price_site_id = " . SITE_ID . "
+GROUP BY
+    l.location_title,
+    l.location_thumbnail,
+    c.country_name
+ORDER BY
+    total_matching_tours DESC
+LIMIT 0, 8
+";
+
+            if ($destinationList = mysqli_query($connection, $destinationPackagesListQuery)) {
                 if (mysqli_num_rows($destinationList) > 0) {
                     while ($destinationData = mysqli_fetch_assoc($destinationList)) {
                         extract($destinationData);
