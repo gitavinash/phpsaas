@@ -1,7 +1,9 @@
 <?php $canonicalURL = str_replace('amp/', '', ((isset($meta_canonical)) ?  (($meta_canonical != '') ? $meta_canonical : HTTP_PROTOCOL . SITE_DOMAIN . BASE_URL) : HTTP_PROTOCOL . SITE_DOMAIN . BASE_URL)); ?>
 <!-- Site Default Configuration -->
 <link rel="icon" href="<?php echo SITE_ICON ?>">
-<title><?php echo $pageTitle ?></title>
+<title>
+    <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'}) : SITE_DESC . ' | ' . SITE_NAME) ?>
+</title>
 <!-- Canonical URL -->
 <link rel="canonical" href="<?php echo $canonicalURL; ?>" />
 <!-- PWA Start -->

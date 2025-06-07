@@ -63,7 +63,7 @@ let leadId = urlQuery.get("id");
 function initializeSelect2HereMaps(element) {
   $(element).select2({
     placeholder: "Select location",
-    minimumInputLength: 2,
+    minimumInputLength: 3,
     ajax: {
       url: "/api/maps/here/autocomplete/", // Replace with your API URL
       dataType: "json",
@@ -91,7 +91,7 @@ function initializeSelect2HereMaps(element) {
 function initializeSelect2HereMapsForInternational(element) {
   $(element).select2({
     placeholder: "Select location",
-    minimumInputLength: 2,
+    minimumInputLength: 3,
     ajax: {
       url: "/api/maps/here/autocomplete-international/", // Replace with your API URL
       dataType: "json",

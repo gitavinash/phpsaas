@@ -8,8 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($searchQuery)) {
 
         $curl = curl_init();
-
-        $countryId = ((isset($countryId)) ? $companyId : 'IND');
+        $searchQuery = urlencode($searchQuery);
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://autocomplete.search.hereapi.com/v1/autocomplete?q={$searchQuery}&apiKey=" . HERE_MAPS_KEY,

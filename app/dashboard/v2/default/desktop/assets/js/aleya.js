@@ -755,7 +755,7 @@ $(document).ready(function () {
       }
     });
 
-    // Clone add  new destination location
+    // Clone add new destination location
 
     $("#locationDurationContainer").on("click", ".addLocation", function () {
       // e.preventDefault();
@@ -810,7 +810,7 @@ $(document).ready(function () {
 
     $("#addDomesticPackageBtn").click(function (e) {
       e.preventDefault();
-      console.log(`addDomesticPackageBtn is clicked:`, addDomesticPackageBtn);
+      console.log(`addDomesticPackageBtn is clicked:`);
       $("#addDomesticPackageBtn").hide();
 
       // Collect and trim all the form values, ensuring they are not undefined
@@ -967,6 +967,103 @@ $(document).ready(function () {
           $("#updateTourPackageBtn").show();
         },
       });
+    });
+
+    $("#addInternationalPackageBtn").click(function (e) {
+      e.preventDefault();
+      console.log(`addInternationalPackageBtn is clicked:`);
+      $("#addInternationalPackageBtn").hide();
+
+      // Collect and trim all the form values, ensuring they are not undefined
+      var packageName = $("#name").val() ? $("#name").val().trim() : "";
+      var startingCity = $("#startingCity").val()
+        ? $("#startingCity").val().trim()
+        : "";
+      var endCity = $("#endCity").val() ? $("#endCity").val().trim() : "";
+      var travelStyle = $("#travelStyle").val()
+        ? $("#travelStyle").val().trim()
+        : "";
+      var outstationVehicle = $("#outstationVehicle").val()
+        ? $("#outstationVehicle").val().trim()
+        : "";
+      var localSighseeignVehicle = $("#localSighseeignVehicle").val()
+        ? $("#localSighseeignVehicle").val().trim()
+        : "";
+
+      // Check if any of the required fields are empty
+      if (
+        !packageName ||
+        !startingCity ||
+        !travelStyle ||
+        !outstationVehicle ||
+        !localSighseeignVehicle
+      ) {
+        $("#addInternationalPackageBtn").show();
+        popUpMessage(
+          "center",
+          "All fields are required to generate itinerary",
+          "warning"
+        );
+        return;
+      }
+
+      // Collect location and duration data
+      const locationsData = [];
+      let allLocationsFilled = true;
+
+      $(".locationDurationGroup").each(function () {
+        const destination = $(this).find(".internationalCityAutoComplete").val()
+          ? $(this).find(".internationalCityAutoComplete").val().trim()
+          : "";
+        const duration = $(this).find("input[name='duration[]']").val()
+          ? $(this).find("input[name='duration[]']").val().trim()
+          : "";
+
+        // Check if both destination and duration are filled
+        if (!destination || !duration) {
+          allLocationsFilled = false;
+        } else {
+          locationsData.push({
+            destination: destination,
+            duration: duration,
+          });
+        }
+      });
+
+      // Check if all locations are filled
+      if (!allLocationsFilled) {
+        $("#addInternationalPackageBtn").show();
+        popUpMessage(
+          "center",
+          "Please fill out all destination and duration fields",
+          "warning"
+        );
+        return;
+      }
+
+      // Encode URL parameters
+      packageName = encodeURIComponent(packageName);
+      startingCity = encodeURIComponent(startingCity);
+      endCity = encodeURIComponent(endCity);
+      travelStyle = encodeURIComponent(travelStyle);
+      outstationVehicle = encodeURIComponent(outstationVehicle);
+      localSighseeignVehicle = encodeURIComponent(localSighseeignVehicle);
+
+      var destinationCity = [];
+      var destinationDuration = [];
+
+      // Prepare parameters for each location
+      let locationParams = locationsData.map((data, index) => {
+        destinationCity.push(data.destination);
+        destinationDuration.push(data.duration);
+      });
+
+      destinationCity = destinationCity.join("_");
+      destinationDuration = destinationDuration.join("_");
+
+      const redirectUrl = `/dashboard/packages/international/preview/?packageName=${packageName}&destinationCity=${destinationCity}&tripDuration=${destinationDuration}&startingCity=${startingCity}&endCity=${endCity}&outstationVehicle=${outstationVehicle}&localSighseeignVehicle=${localSighseeignVehicle}&travelStyle=${travelStyle}`;
+
+      window.location.href = redirectUrl;
     });
 
     loadExternalJS(
