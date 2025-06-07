@@ -52,7 +52,7 @@ require_once 'header.php';
     <!-- Hero Section -->
     <div class="relative rounded-xl overflow-hidden mb-8">
         <img src="<?php echo USER_IMAGES ?>city/<?php echo strtolower(str_replace(' ', '_', $tour_package_city)) ?>.jpg"
-            alt="Bali Cultural Explorer" class="w-full h-80 object-cover object-top" />
+            alt="<?php echo $tour_package_title ?>" class="w-full h-80 object-cover object-top" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div class="absolute bottom-0 left-0 p-6 md:p-8">
             <div class="flex items-center mb-2">
@@ -231,7 +231,6 @@ require_once 'header.php';
                     Itinerary</h2>
                 <div class="space-y-4">
                     <?php
-                    $tour_package_itinerary = json_decode('[{"day":"Day 1 - Arrival in Manali","overview":"Your cultural journey begins as you board a Volvo from Delhi to Manali. Enjoy the scenic drive through the lush valleys and snow-capped mountains. Upon arrival, you will be transferred to your hotel. Later, explore the local markets and visit the Hadimba Devi Temple, a famous cultural site in Manali. Overnight stay at the hotel."},{"day":"Day 2 - Manali Sightseeing","overview":"After breakfast, embark on a full day of sightseeing in Manali. Visit the ancient Naggar Castle, known for its historical significance and stunning architecture. Explore the Naggar Art Gallery to admire traditional Himachali art. In the evening, witness a cultural show showcasing local dance and music traditions. Return to the hotel for dinner and overnight stay."},{"day":"Day 3 - Excursion to Solang Valley","overview":"Today, take a day trip to the picturesque Solang Valley, known for its breathtaking views and adventure activities. Enjoy activities like paragliding, zorbing, and horse riding amidst the stunning Himalayan landscape. In the evening, return to Manali for a relaxing overnight stay at the hotel."},{"day":"Day 4 - Cultural Villages Tour","overview":"Explore the cultural heritage of Manali with a tour of traditional villages like Vashisht and Old Manali. Visit the Vashisht Temple and hot springs to experience the local customs and traditions. Stroll through the quaint lanes of Old Manali and interact with the friendly locals. Enjoy a traditional Himachali dinner before heading back to the hotel."},{"day":"Day 5 - Departure to Delhi","overview":"After breakfast, bid farewell to the scenic beauty of Manali as you board the Volvo back to Delhi. Take with you memories of the Himalayan culture and warm hospitality. Our cultural tour package ends as you arrive in Delhi, marking the conclusion of your enriching journey."}]', true);
 
                     foreach ($tour_package_itinerary as $index => $item) {
                         $dayNumber = $index + 1;
