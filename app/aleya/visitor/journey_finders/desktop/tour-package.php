@@ -231,6 +231,7 @@ require_once 'header.php';
                     Itinerary</h2>
                 <div class="space-y-4">
                     <?php
+                    $tour_package_itinerary = json_decode($tour_package_itinerary, true);
 
                     foreach ($tour_package_itinerary as $index => $item) {
                         $dayNumber = $index + 1;
