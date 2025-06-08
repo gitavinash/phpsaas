@@ -17,13 +17,10 @@ switch ($link_status) {
 
                 extract(mysqli_fetch_assoc($productData));
 
-                if ($checkBrand = mysqli_query($connection, "SELECT category_title as brandName, link_url as brandURL FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE category_type='brand' AND link_status=200 AND link_site_id = " . APP_SITE_ID . " AND link_type='category' AND category_site_id=" . APP_SITE_ID)) {
+                if ($checkBrand = mysqli_query($connection, "SELECT category_title as brandName, link_url as brandURL FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE  link_status=200 AND link_site_id = " . APP_SITE_ID . " AND link_type='category' AND category_id='{$product_category}' AND category_site_id=" . APP_SITE_ID)) {
                     if (mysqli_num_rows(($checkBrand)) != 0) {
                         extract(mysqli_fetch_assoc($checkBrand));
                     }
-                } else {
-                    echo mysqli_error($connection);
-                    exit();
                 }
 
                 if (file_exists(ROUTER . $link_status . '.php')) {
