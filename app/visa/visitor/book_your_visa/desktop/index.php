@@ -131,7 +131,7 @@ require_once 'header.php';
                             while ($row = mysqli_fetch_assoc($featuredCountry)) {
                                 $countryTitle = ucwords($row['visa_country_title']);
                                 $countrySlug = strtolower(str_replace(' ', '_', $row['visa_country_title']));
-                                $countryImage = $row['visa_country_image'] ?: '/default-image.jpg';
+                                $countryImage = $row['visa_country_image'] ?: '';
                                 $price = number_format($row['visa_package_price']);
 
                                 echo "
