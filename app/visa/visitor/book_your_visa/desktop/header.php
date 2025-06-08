@@ -44,13 +44,13 @@
                                     <i class="ri-arrow-down-s-line ml-1 w-4 h-4 flex items-center justify-center"></i>
                                 </a>
                                 <div class="dropdown-content absolute top-full left-0 w-48 bg-white shadow-lg rounded">
-                                    <a href="/category-service/"
+                                    <a href="/tourist-visa-services/"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tourist
                                         Visa</a>
-                                    <a href="/services/business-visa/"
+                                    <a href="/business-visa-services/"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business
                                         Visa</a>
-                                    <a href="/services/student-visa/"
+                                    <a href="/student-visa-services/"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Student
                                         Visa</a>
                                 </div>
@@ -58,7 +58,7 @@
                             <li><a href="/track-application/" data-readdy="true"
                                     class="text-gray-700 hover:text-primary">Track
                                     Application</a></li>
-                            <li><a href="/travel-agent-registraton/" data-readdy="true"
+                            <li><a href="/travel-agent-registration/" data-readdy="true"
                                     class="text-gray-700 hover:text-primary">Travel Agent
                                     Registration</a></li>
                         </ul>

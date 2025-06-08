@@ -98,49 +98,75 @@ require_once 'header.php';
             <h2 class="text-3xl font-bold text-center mb-12">Popular Destinations</h2>
             <div class="relative">
                 <div class="overflow-hidden">
-                    <div id="destinationSlider"
-                        class="flex transition-transform duration-300 ease-in-out margin-bottom-50"
+                    <div id="destinationSlider" class="flex transition-transform duration-300 ease-in-out mb-12"
                         style="transform: translateX(0px);">
                         <?php
+                        $query = "
+                SELECT 
+                    vc.visa_country_code,
+                    vc.visa_country_image,
+                    vc.visa_country_title,
+                    vc.visa_country_services,
+                    vp.visa_package_mrp,
+                    vp.visa_package_price
+                FROM {$tableNamePrefix}country AS vc
+                JOIN (
+                    SELECT 
+                        visa_package_country_id,
+                        MIN(visa_package_price) AS min_price
+                    FROM {$tableNamePrefix}package
+                    GROUP BY visa_package_country_id
+                ) AS vp_min
+                    ON vp_min.visa_package_country_id = vc.visa_country_id
+                JOIN {$tableNamePrefix}package AS vp
+                    ON vp.visa_package_country_id = vc.visa_country_id
+                    AND vp.visa_package_price = vp_min.min_price
+                WHERE 
+                    vc.visa_country_status = 1
+                    AND vc.visa_country_site_id = " . SITE_ID . "
+                ORDER BY vc.visa_country_is_featured DESC, RAND()
+                LIMIT 10";
 
-                        if ($featuredCountry = mysqli_query($connection, "SELECT visa_country_code, visa_country_image, visa_country_title, visa_country_services FROM {$tableNamePrefix}country WHERE visa_country_status=1 AND visa_country_site_id=" . SITE_ID . " ORDER BY visa_country_is_featured DESC LIMIT 10")) {
-                            while ($featuredCountryData = mysqli_fetch_assoc($featuredCountry)) {
+                        if ($featuredCountry = mysqli_query($connection, $query)) {
+                            while ($row = mysqli_fetch_assoc($featuredCountry)) {
+                                $countryTitle = ucwords($row['visa_country_title']);
+                                $countrySlug = strtolower(str_replace(' ', '_', $row['visa_country_title']));
+                                $countryImage = $row['visa_country_image'] ?: '/default-image.jpg';
+                                $price = number_format($row['visa_package_price']);
+
                                 echo "
-                                    <div
-                                        class='country-card relative bg-white rounded-lg shadow-lg overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3'>
-                                        <img src='{$featuredCountryData['visa_country_image']}' alt='{$featuredCountryData['visa_country_title']}' class='w-full h-48 object-cover'
-                                         class='w-full h-48 object-cover'>
-                                        <div class='p-4'>
-                                            <div class='flex items-center mb-3'>
-                                                <h3 class='font-medium'>" . ucwords($featuredCountryData['visa_country_title']) . "</h3>
-                                            </div>
-                                            <div class='flex justify-between text-sm text-gray-600 mb-4'>
-                                                <span>Processing: </span>
-                                                <span>From </span>
-                                            </div>
-                                            <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $featuredCountryData['visa_country_title'])) . "'
-                                                class='w-full float-left text-center bg-primary text-white font-medium py-2 !rounded-button hover:bg-primary/90 cursor-pointer mb-4'>Apply
-                                                Now</a>
-                                        </div>
-                                    </div>
-                                ";
+                    <div class='country-card relative bg-white rounded-2xl shadow-md overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3'>
+                        <img src='{$countryImage}' alt='{$countryTitle}' class='w-full h-48 object-cover'>
+                        <div class='p-4'>
+                            <h3 class='font-semibold text-lg mb-2'>{$countryTitle}</h3>
+                            <div class='flex justify-between text-sm text-gray-600 mb-4'>
+                                <span></span>
+                                <span>From ₹{$price}</span>
+                            </div>
+                            <a href='/start-application/?country={$countrySlug}'
+                               class='block w-full text-center bg-primary text-white font-medium py-2 rounded-button hover:bg-primary/90 transition'>
+                               Apply Now
+                            </a>
+                        </div>
+                    </div>
+                    ";
                             }
                         }
-
                         ?>
                     </div>
                 </div>
-                <button
-                    class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50"
-                    id="prevBtn">
+
+                <!-- Slider Buttons -->
+                <button id="prevBtn"
+                    class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 z-10">
                     <i class="ri-arrow-left-s-line ri-xl"></i>
                 </button>
-                <button
-                    class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50"
-                    id="nextBtn">
+                <button id="nextBtn"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 z-10">
                     <i class="ri-arrow-right-s-line ri-xl"></i>
                 </button>
             </div>
+
         </div>
         <script>
         document.addEventListener('DOMContentLoaded', function() {

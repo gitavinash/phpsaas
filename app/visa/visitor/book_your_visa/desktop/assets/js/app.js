@@ -749,4 +749,160 @@ $(document).ready(function () {
     }
     return;
   }
+
+  // Travel Ageny Registration
+
+  // Form steps navigation
+  const steps = ["step1", "step2", "step3", "step4"];
+
+  function showStep(stepId) {
+    $(".form-step").addClass("hidden");
+    $("#" + stepId).removeClass("hidden");
+
+    const stepIndex = steps.indexOf(stepId);
+    const progress = (stepIndex / (steps.length - 1)) * 100;
+    $("#progressBar").css("width", progress + "%");
+    $("#currentStep").text(stepIndex + 1);
+  }
+
+  $("#nextToStep2").on("click", () => showStep("step2"));
+  $("#backToStep1").on("click", () => showStep("step1"));
+  $("#nextToStep3").on("click", () => showStep("step3"));
+  $("#backToStep2").on("click", () => showStep("step2"));
+  $("#nextToStep4").on("click", () => showStep("step4"));
+  $("#backToStep3").on("click", () => showStep("step3"));
+
+  // File input labels
+  $("#businessLicense").on("change", function () {
+    const fileName = this.files[0]
+      ? this.files[0].name
+      : "Upload license (PDF, JPG, PNG)";
+    $("#businessLicenseLabel").text(fileName);
+  });
+
+  $("#companyLogo").on("change", function () {
+    const fileName = this.files[0]
+      ? this.files[0].name
+      : "Upload logo (JPG, PNG)";
+    $("#companyLogoLabel").text(fileName);
+  });
+
+  // Password toggle
+  $("#togglePassword").on("click", function () {
+    const passwordInput = $("#password");
+    const type =
+      passwordInput.attr("type") === "password" ? "text" : "password";
+    passwordInput.attr("type", type);
+    $(this).html(
+      type === "password"
+        ? '<i class="ri-eye-line"></i>'
+        : '<i class="ri-eye-off-line"></i>'
+    );
+  });
+
+  $("#toggleConfirmPassword").on("click", function () {
+    const passwordInput = $("#confirmPassword");
+    const type =
+      passwordInput.attr("type") === "password" ? "text" : "password";
+    passwordInput.attr("type", type);
+    $(this).html(
+      type === "password"
+        ? '<i class="ri-eye-line"></i>'
+        : '<i class="ri-eye-off-line"></i>'
+    );
+  });
+
+  // Password strength meter
+  $("#password").on("input", function () {
+    const password = $(this).val();
+    let strength = 0;
+
+    if (password.length >= 8) strength += 25;
+    if (/[A-Z]/.test(password)) strength += 25;
+    if (/[0-9]/.test(password)) strength += 25;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+    $("#passwordStrengthBar").css("width", strength + "%");
+
+    if (strength <= 25) {
+      $("#passwordStrengthBar").css("background-color", "#ef4444");
+      $("#passwordStrengthText").text("Weak password");
+    } else if (strength <= 50) {
+      $("#passwordStrengthBar").css("background-color", "#f97316");
+      $("#passwordStrengthText").text("Fair password");
+    } else if (strength <= 75) {
+      $("#passwordStrengthBar").css("background-color", "#eab308");
+      $("#passwordStrengthText").text("Good password");
+    } else {
+      $("#passwordStrengthBar").css("background-color", "#22c55e");
+      $("#passwordStrengthText").text("Strong password");
+    }
+  });
+
+  // Password match check
+  $("#confirmPassword").on("input", function () {
+    if ($(this).val() === $("#password").val()) {
+      $("#passwordMatchText")
+        .text("Passwords match")
+        .attr("class", "text-xs text-green-600 mt-1");
+    } else {
+      $("#passwordMatchText")
+        .text("Passwords do not match")
+        .attr("class", "text-xs text-red-600 mt-1");
+    }
+  });
+
+  // Clear form
+  $("#clearForm").on("click", function () {
+    if (confirm("Are you sure you want to clear all form data?")) {
+      $("#agentRegistrationForm")[0].reset();
+      $("#businessLicenseLabel").text("Upload license (PDF, JPG, PNG)");
+      $("#companyLogoLabel").text("Upload logo (JPG, PNG)");
+      $("#passwordStrengthBar").css("width", "0%");
+      $("#passwordStrengthText").text("Password strength");
+      $("#passwordMatchText").text("");
+      showStep("step1");
+    }
+  });
+
+  // Form submission
+  $("#agentRegistrationForm").on("submit", function (e) {
+    e.preventDefault();
+
+    const submitBtn = $("#submitForm");
+    submitBtn
+      .prop("disabled", true)
+      .html('<i class="ri-loader-4-line animate-spin mr-2"></i> Processing...');
+
+    setTimeout(() => {
+      const refNumber = `TA-${Math.floor(Math.random() * 10000)
+        .toString()
+        .padStart(4, "0")}-${new Date().getFullYear()}`;
+      $(".bg-white.rounded-xl.shadow-lg").html(`
+                <div class="p-8 text-center">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="ri-check-line text-green-600 ri-3x"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Registration Successful!</h2>
+                    <p class="text-gray-600 mb-8">Thank you for registering as a travel agent. Your application has been submitted and is under review. You will receive a confirmation email shortly.</p>
+                    <p class="text-gray-600 mb-8">Application Reference: <span class="font-medium">${refNumber}</span></p>
+                    <a href="/" class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer inline-block whitespace-nowrap">Return to Homepage</a>
+                </div>
+            `);
+    }, 2000);
+  });
+
+  // FAQ toggles
+  $(".faq-toggle").on("click", function () {
+    const content = $(this).next();
+    content.toggleClass("hidden");
+
+    const icon = $(this).find("i");
+    icon.attr(
+      "class",
+      content.hasClass("hidden")
+        ? "ri-arrow-down-s-line w-5 h-5 flex items-center justify-center"
+        : "ri-arrow-up-s-line w-5 h-5 flex items-center justify-center"
+    );
+  });
 });

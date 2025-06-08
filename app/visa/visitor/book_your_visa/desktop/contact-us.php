@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <main class="pt-32 pb-20">
@@ -120,10 +120,10 @@
                             <div>
                                 <h3 class="font-medium text-gray-900 mb-1">Email Us</h3>
                                 <p class="text-gray-600">
-                                    <a href="mailto:info@Book Your VISA.com"
-                                        class="hover:text-primary">info@Book Your VISA.com</a><br>
-                                    <a href="mailto:support@Book Your VISA.com"
-                                        class="hover:text-primary">support@Book Your VISA.com</a>
+                                    <a href="mailto:info@bookyourvisa.com"
+                                        class="hover:text-primary">info@bookyourvisa.com</a><br>
+                                    <a href="mailto:support@bookyourvisa.com"
+                                        class="hover:text-primary">support@bookyourvisa.com</a>
                                 </p>
                             </div>
                         </div>
@@ -205,6 +205,6 @@
 </main>
 <?php
 
-    require_once 'footer.php'
+require_once 'footer.php'
 
 ?>
