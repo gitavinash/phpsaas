@@ -21,13 +21,6 @@ include_once 'header.php';
             </div>
 
             <div class="p-6 md:p-8">
-                <div class="flex items-center mb-6">
-                    <div class="w-full bg-gray-200 h-1 rounded-full">
-                        <div class="bg-primary h-1 rounded-full w-0" id="progressBar"></div>
-                    </div>
-                    <div class="ml-4 text-sm font-medium text-gray-500 whitespace-nowrap"><span
-                            id="currentStep">1</span>/4</div>
-                </div>
 
                 <form id="agentRegistrationForm">
                     <!-- Step 1: Basic Information -->
@@ -47,16 +40,15 @@ include_once 'header.php';
                                     *</label>
                                 <input type="text" id="companyName"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="Enter your company name" required>
+                                    placeholder="Enter your company name" name="company_name" required>
                             </div>
 
                             <div>
-                                <label for="businessRegNumber"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Business Registration
+                                <label for="gstNumber" class="block text-sm font-medium text-gray-700 mb-2">GST
                                     Number *</label>
-                                <input type="text" id="businessRegNumber"
+                                <input type="text" id="gstNumber"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="Enter registration number" required>
+                                    placeholder="Enter registration number" name="gst_no" required>
                             </div>
 
                             <div>
@@ -64,7 +56,7 @@ include_once 'header.php';
                                     in Operation
                                     *</label>
                                 <div class="relative">
-                                    <select id="yearsOperation"
+                                    <select id="yearsOperation" name="years_operation"
                                         class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700 appearance-none pr-10">
                                         <option value="">Select years</option>
                                         <option value="<1">Less than 1 year</option>
@@ -81,21 +73,12 @@ include_once 'header.php';
                             <div>
                                 <label for="websiteUrl" class="block text-sm font-medium text-gray-700 mb-2">Website
                                     URL (optional)</label>
-                                <input type="url" id="websiteUrl"
+                                <input type="url" id="websiteUrl" name="website_url"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
                                     placeholder="https://yourcompany.com">
                             </div>
                         </div>
 
-                        <div class="flex justify-end">
-                            <button type="button" id="nextToStep2"
-                                class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Continue
-                                to Contact Details</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Contact Details -->
-                    <div class="form-step hidden" id="step2">
                         <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
                             <div
                                 class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mr-3">
@@ -111,7 +94,7 @@ include_once 'header.php';
                                     *</label>
                                 <input type="text" id="contactName"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="Full name" required>
+                                    placeholder="Full name" name="full_name" required>
                             </div>
 
                             <div>
@@ -119,15 +102,15 @@ include_once 'header.php';
                                     Address *</label>
                                 <input type="email" id="contactEmail"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="email@example.com" required>
+                                    placeholder="email@example.com" name="email" required>
                             </div>
 
                             <div>
-                                <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-2">Phone
+                                <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-2">Mobile
                                     Number *</label>
                                 <input type="tel" id="contactPhone"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="+1 (555) 123-4567" required>
+                                    placeholder="+1 (555) 123-4567" name="mobile" required>
                             </div>
 
                             <div>
@@ -135,7 +118,7 @@ include_once 'header.php';
                                     class="block text-sm font-medium text-gray-700 mb-2">Business Address *</label>
                                 <input type="text" id="businessAddress"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="Street address" required>
+                                    placeholder="Street address" name="address" required>
                             </div>
 
                             <div>
@@ -143,250 +126,32 @@ include_once 'header.php';
                                     *</label>
                                 <input type="text" id="city"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="City" required>
+                                    placeholder="City" name="city" required>
                             </div>
 
                             <div>
-                                <label for="country" class="block text-sm font-medium text-gray-700 mb-2">Country
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-2">State
                                     *</label>
-                                <div class="relative">
-                                    <select id="country"
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700 appearance-none pr-10">
-                                        <option value="">Select country</option>
-                                        <option value="US">United States</option>
-                                        <option value="UK">United Kingdom</option>
-                                        <option value="CA">Canada</option>
-                                        <option value="AU">Australia</option>
-                                        <option value="IN">India</option>
-                                        <option value="SG">Singapore</option>
-                                        <option value="AE">United Arab Emirates</option>
-                                    </select>
-                                    <i
-                                        class="ri-arrow-down-s-line absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 flex items-center justify-center"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between">
-                            <button type="button" id="backToStep1"
-                                class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Back</button>
-                            <button type="button" id="nextToStep3"
-                                class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Continue
-                                to Business Credentials</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Business Credentials -->
-                    <div class="form-step hidden" id="step3">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                            <div
-                                class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mr-3">
-                                <i class="ri-verified-badge-line"></i>
-                            </div>
-                            Business Credentials
-                        </h2>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <label for="iataNumber" class="block text-sm font-medium text-gray-700 mb-2">IATA
-                                    Number (if applicable)</label>
-                                <input type="text" id="iataNumber"
+                                <input type="text" id="state"
                                     class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="Enter IATA number">
+                                    placeholder="City" name="state" required>
                             </div>
 
-                            <div>
-                                <label for="associations" class="block text-sm font-medium text-gray-700 mb-2">Travel
-                                    Association
-                                    Memberships</label>
-                                <div class="relative">
-                                    <select id="associations"
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700 appearance-none pr-10"
-                                        multiple>
-                                        <option value="ASTA">ASTA</option>
-                                        <option value="ABTA">ABTA</option>
-                                        <option value="USTOA">USTOA</option>
-                                        <option value="PATA">PATA</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <i
-                                        class="ri-arrow-down-s-line absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 flex items-center justify-center"></i>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
-                            </div>
-
-                            <div>
-                                <label for="businessLicense"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Business License Upload
-                                    *</label>
-                                <div class="relative">
-                                    <input type="file" id="businessLicense" class="hidden" accept=".pdf,.jpg,.jpeg,.png"
-                                        required>
-                                    <label for="businessLicense"
-                                        class="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-button text-gray-500 cursor-pointer hover:bg-gray-50">
-                                        <span class="file-input-label" id="businessLicenseLabel">Upload license
-                                            (PDF, JPG, PNG)</span>
-                                        <i
-                                            class="ri-upload-2-line text-primary w-5 h-5 flex items-center justify-center"></i>
-                                    </label>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Maximum file size: 5MB</p>
-                            </div>
-
-                            <div>
-                                <label for="companyLogo" class="block text-sm font-medium text-gray-700 mb-2">Company
-                                    Logo Upload</label>
-                                <div class="relative">
-                                    <input type="file" id="companyLogo" class="hidden" accept=".jpg,.jpeg,.png">
-                                    <label for="companyLogo"
-                                        class="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-button text-gray-500 cursor-pointer hover:bg-gray-50">
-                                        <span class="file-input-label" id="companyLogoLabel">Upload logo (JPG,
-                                            PNG)</span>
-                                        <i
-                                            class="ri-upload-2-line text-primary w-5 h-5 flex items-center justify-center"></i>
-                                    </label>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Recommended size: 300x300px</p>
-                            </div>
                         </div>
 
-                        <div class="flex justify-between">
-                            <button type="button" id="backToStep2"
-                                class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Back</button>
-                            <button type="button" id="nextToStep4"
-                                class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Continue
-                                to Account Security</button>
+                        <div class="flex justify-end">
+                            <input type="hidden" name="subject" value="New travel agent application">
+                            <input type="hidden" name="toAddress"
+                                value="<?php echo base64_encode("avinash@blumox.com") ?>">
+                            <input type="hidden" name="redirectURL" value="/travel-agent-thank-you/">
+                            <button type="submit" id="travelAgentRegistrationBtn"
+                                class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap"
+                                value="Submit Application">Submit Application</button>
                         </div>
+
                     </div>
 
-                    <!-- Step 4: Account Security -->
-                    <div class="form-step hidden" id="step4">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                            <div
-                                class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mr-3">
-                                <i class="ri-shield-keyhole-line"></i>
-                            </div>
-                            Account Security
-                        </h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Create
-                                    Password *</label>
-                                <div class="relative">
-                                    <input type="password" id="password"
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700 pr-10"
-                                        placeholder="Create a strong password" required>
-                                    <button type="button" id="togglePassword"
-                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 flex items-center justify-center">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                </div>
-                                <div class="password-strength-meter mt-2">
-                                    <div id="passwordStrengthBar"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1" id="passwordStrengthText">Password strength
-                                </p>
-                            </div>
-
-                            <div>
-                                <label for="confirmPassword"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Confirm Password *</label>
-                                <div class="relative">
-                                    <input type="password" id="confirmPassword"
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700 pr-10"
-                                        placeholder="Confirm your password" required>
-                                    <button type="button" id="toggleConfirmPassword"
-                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 flex items-center justify-center">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1" id="passwordMatchText"></p>
-                            </div>
-
-                            <div>
-                                <label for="securityQuestion"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Security Question *</label>
-                                <div class="relative">
-                                    <select id="securityQuestion"
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700 appearance-none pr-10"
-                                        required>
-                                        <option value="">Select a security question</option>
-                                        <option value="firstPet">What was the name of your first pet?</option>
-                                        <option value="motherMaiden">What is your mother's maiden name?</option>
-                                        <option value="birthCity">In which city were you born?</option>
-                                        <option value="schoolName">What was the name of your first school?</option>
-                                        <option value="favoriteTeacher">Who was your favorite teacher?</option>
-                                    </select>
-                                    <i
-                                        class="ri-arrow-down-s-line absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 flex items-center justify-center"></i>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="securityAnswer"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Security Answer *</label>
-                                <input type="text" id="securityAnswer"
-                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-button text-gray-700"
-                                    placeholder="Your answer" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-8">
-                            <div class="flex items-start mb-4">
-                                <div class="relative flex items-center h-5">
-                                    <input type="checkbox" id="termsConditions"
-                                        class="custom-checkbox opacity-0 absolute h-5 w-5" required>
-                                    <label for="termsConditions"
-                                        class="custom-checkbox-label flex items-center text-sm text-gray-700 relative">
-                                        I agree to the <a href="#" class="text-primary hover:underline ml-1 mr-1">Terms
-                                            & Conditions</a>
-                                        and <a href="#" class="text-primary hover:underline mr-1">Privacy Policy</a>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start">
-                                <div class="relative flex items-center h-5">
-                                    <input type="checkbox" id="marketingConsent"
-                                        class="custom-checkbox opacity-0 absolute h-5 w-5">
-                                    <label for="marketingConsent"
-                                        class="custom-checkbox-label flex items-center text-sm text-gray-700 relative">
-                                        I would like to receive marketing communications about products, services,
-                                        and promotions
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <i
-                                        class="ri-information-line text-primary w-5 h-5 flex items-center justify-center"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-gray-700">
-                                        Your application will be reviewed by our team within 1-2 business days.
-                                        You'll receive a confirmation email once your account is approved.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between">
-                            <button type="button" id="backToStep3"
-                                class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Back</button>
-                            <div class="flex space-x-4">
-                                <button type="button" id="clearForm"
-                                    class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Clear
-                                    Form</button>
-                                <button type="submit" id="submitForm"
-                                    class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap">Complete
-                                    Registration</button>
-                            </div>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>

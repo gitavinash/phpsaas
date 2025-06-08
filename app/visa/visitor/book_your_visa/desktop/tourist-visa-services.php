@@ -106,7 +106,7 @@ LIMIT 10";
                                         <p class='text-gray-900 font-medium'>Starting from</p>
                                         <p class='text-2xl font-bold text-primary'>₹ {$popularCountryData['visa_package_price']}</p>
                                     </div>
-                                    <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $popularCountryData['visa_country_title'])) . "'
+                                    <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $popularCountryData['visa_country_title'])) . "&purpose=tourist'
                                         class='w-full applyNowBtn bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium'>Apply
                                         Now</a>
                                 </div>

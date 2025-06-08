@@ -12,8 +12,8 @@ require_once 'header.php';
         </div>
         <div class="container mx-auto px-4 relative">
             <div class="max-w-3xl">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Tourist Visa Services</h1>
-                <p class="text-xl text-gray-700 mb-8">Explore the world with our hassle-free tourist visa services. We
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Student Visa Services</h1>
+                <p class="text-xl text-gray-700 mb-8">Explore the world with our hassle-free student visa services. We
                     provide expert assistance to ensure your travel dreams become reality with minimal paperwork and
                     maximum efficiency.</p>
                 <div class="flex flex-wrap gap-4">
@@ -30,7 +30,7 @@ require_once 'header.php';
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Popular Destinations</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Explore our most requested tourist visa destinations with
+                <p class="text-gray-600 max-w-2xl mx-auto">Explore our most requested student visa destinations with
                     competitive processing times and fees</p>
             </div>
             <div class="container mx-auto px-4">
@@ -99,14 +99,14 @@ LIMIT 10";
                                             </div>
                                             <div>
                                                 <p class='font-medium'>Type</p>
-                                                <p class='text-sm text-gray-500'>Tourist</p>
+                                                <p class='text-sm text-gray-500'>Student</p>
                                             </div>
                                         </div>
                                         <div class='bg-gray-50 rounded p-3 mb-4'>
                                             <p class='text-gray-900 font-medium'>Starting from</p>
                                             <p class='text-2xl font-bold text-primary'>₹ {$popularCountryData['visa_package_price']}</p>
                                         </div>
-                                        <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $popularCountryData['visa_country_title'])) . "'
+                                        <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $popularCountryData['visa_country_title'])) . "&purpose=student'
                                             class='w-full applyNowBtn bg-primary text-white py-2 !rounded-button whitespace-nowrap font-medium'>Apply
                                             Now</a>
                                     </div>
@@ -130,7 +130,7 @@ LIMIT 10";
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Application Process</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Follow these simple steps to apply for your tourist visa</p>
+                <p class="text-gray-600 max-w-2xl mx-auto">Follow these simple steps to apply for your student visa</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white rounded-lg shadow-md p-6 relative">
