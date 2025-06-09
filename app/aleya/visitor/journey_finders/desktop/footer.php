@@ -99,13 +99,13 @@
                     <a href="https://aleya.in" target="_blank" title="Travel ERP Software">Aleya</a>
                 </p>
                 <div class="flex flex-wrap justify-center gap-4">
-                    <div class="w-12 h-8 flex items-center justify-center rounded">
+                    <div class="h-8 flex items-center justify-center rounded">
                         <a href="/terms-and-conditions/" class="text-gray-400 hover:text-white">Terms and Conditions</a>
                     </div>
-                    <div class="w-12 h-8 flex items-center justify-center rounded">
+                    <div class="h-8 flex items-center justify-center rounded">
                         <a href="/privacy-policy/" class="text-gray-400 hover:text-white">Privacy policy</a>
                     </div>
-                    <div class="w-12 h-8 flex items-center justify-center rounded">
+                    <div class="h-8 flex items-center justify-center rounded">
                         <a href="/refund-policy/" class="text-gray-400 hover:text-white">Refund policy</a>
                     </div>
                 </div>
