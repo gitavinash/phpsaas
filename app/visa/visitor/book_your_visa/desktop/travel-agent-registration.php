@@ -142,7 +142,7 @@ include_once 'header.php';
                         <div class="flex justify-end">
                             <input type="hidden" name="subject" value="New travel agent application">
                             <input type="hidden" name="toAddress"
-                                value="<?php echo base64_encode("avinash@blumox.com") ?>">
+                                value="<?php echo base64_encode("avineshpaliwal33@gmail.com") ?>">
                             <input type="hidden" name="redirectURL" value="/travel-agent-thank-you/">
                             <button type="submit" id="travelAgentRegistrationBtn"
                                 class="bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-3 cursor-pointer whitespace-nowrap"
