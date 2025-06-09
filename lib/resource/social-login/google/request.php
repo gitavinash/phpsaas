@@ -60,7 +60,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
             // Check user is exist in database
 
-            if ($checkSiteAccess = mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_meta, site_access_status FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_email='{$_SESSION['google_email']}' LIMIT 1")) {
+            if ($checkSiteAccess = mysqli_query($connection, "SELECT user_id, user_mobile, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_meta, site_access_status FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_email='{$_SESSION['google_email']}' LIMIT 1")) {
                 if (mysqli_num_rows($checkSiteAccess) == 0) {
                     // Check user site access
                     if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user WHERE user_email='{$_SESSION['google_email']}'")) {
@@ -105,6 +105,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
                                 setcookie('user_name', base64_encode($_SESSION['google_name']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                                setcookie('user_mobile', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_image', base64_encode($_SESSION['google_picture']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_data', base64_encode($saltKey), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_meta', '', time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
@@ -159,32 +160,33 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
             }
 
             if (isset($_SESSION['base_url'])) { ?>
-                <!DOCTYPE html>
-                <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Redirect to new url.</title>
-                    <script>
-                        window.onload = function() {
-                            document.getElementById("autoSubmitForm").submit();
-                        };
-                    </script>
-                </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect to new url.</title>
+    <script>
+    window.onload = function() {
+        document.getElementById("autoSubmitForm").submit();
+    };
+    </script>
+</head>
 
-                <body>
-                    <form id="autoSubmitForm" action="<?php echo $_SESSION['base_url'] ?>" method="<?php echo $_SESSION['method'] ?>">
-                        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?>">
-                        <input type="hidden" name="redirect_url" value="<?php echo str_replace('?redirect_url=', '', $_SESSION['redirect_after_login']) ?>">
-                        <noscript>
-                            <p>JavaScript is disabled. Please click the submit button.</p>
-                            <button type="submit">Submit</button>
-                        </noscript>
-                    </form>
-                </body>
+<body>
+    <form id="autoSubmitForm" action="<?php echo $_SESSION['base_url'] ?>" method="<?php echo $_SESSION['method'] ?>">
+        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?>">
+        <input type="hidden" name="redirect_url"
+            value="<?php echo str_replace('?redirect_url=', '', $_SESSION['redirect_after_login']) ?>">
+        <noscript>
+            <p>JavaScript is disabled. Please click the submit button.</p>
+            <button type="submit">Submit</button>
+        </noscript>
+    </form>
+</body>
 
-                </html>
+</html>
 
 <?php
 
