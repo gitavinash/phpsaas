@@ -41,18 +41,20 @@ include_once 'header.php';
 
                     ?>
 
-                        <div class="ad-card">
-                            <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img src="<?php echo USER_IMAGES ?>delete.png" alt=""></a>
-                            <div class="cart-img">
-                                <img src="<?php echo $product_thumbnail ?>">
-                            </div>
-                            <div class="prodct-nme">
-                                <a href="<?php echo $link_url ?>">
-                                    <h2><?php echo $product_title ?></h2>
-                                </a>
-                                <h5><img src="<?php echo USER_IMAGES ?>pro-rupees-icon.svg"><?php echo $cart_price ?></h5>
-                            </div>
+                    <div class="ad-card">
+                        <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
+                                src="<?php echo USER_IMAGES ?>delete.png" alt="remove item from cart"
+                                style="padding: 10px;"></a>
+                        <div class="cart-img">
+                            <img src="<?php echo $product_thumbnail ?>">
                         </div>
+                        <div class="prodct-nme">
+                            <a href="#" onclick="event.preventDefault();">
+                                <h2><?php echo $product_title ?></h2>
+                            </a>
+                            <h5><img src="<?php echo USER_IMAGES ?>pro-rupees-icon.svg"><?php echo $cart_price ?></h5>
+                        </div>
+                    </div>
 
                     <?php
 
@@ -73,34 +75,47 @@ include_once 'header.php';
                             <form id="shippingForm" class="checkout-form">
                                 <ul class="tab-ul-password">
                                     <h2 class="inter-heading" style="margin-bottom: 20px">Contact Information</h2>
-                                    <li><span>First name*</span><input type="text" id="first_name" name="first_name" class="input" placeholder="First name" required></li>
-                                    <li><span>Last name*</span><input type="text" id="last_name" name="last_name" class="input" placeholder="Last name" required></li>
-                                    <li><span>Email*</span><input type="email" id="email" name="email" class="input" placeholder="Email" required></li>
-                                    <li><span>Contact No.*</span><input type="number" onwheel="this.blur()" id="mobile" name="mobile" class="input" placeholder="Contact no." required></li>
+                                    <li><span>First name*</span><input type="text" id="first_name" name="first_name"
+                                            class="input" placeholder="First name" required></li>
+                                    <li><span>Last name*</span><input type="text" id="last_name" name="last_name"
+                                            class="input" placeholder="Last name" required></li>
+                                    <li><span>Email*</span><input type="email" id="email" name="email" class="input"
+                                            placeholder="Email" required></li>
+                                    <li><span>Contact No.*</span><input type="number" onwheel="this.blur()" id="mobile"
+                                            name="mobile" class="input" placeholder="Contact no." required></li>
                                     <h2 class="inter-heading" style="margin-bottom: 20px">Enter Shipping Address</h2>
                                     <li>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="text" name="address_first_name" class="form-control" placeholder="First name*" style="margin-bottom: 5px" required>
+                                                <input type="text" name="address_first_name" class="form-control"
+                                                    placeholder="First name*" style="margin-bottom: 5px" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="text" name="address_last_name" class="form-control" placeholder="Last name*" required>
+                                                <input type="text" name="address_last_name" class="form-control"
+                                                    placeholder="Last name*" required>
                                             </div>
                                         </div>
                                     </li>
-                                    <li><input type="number" onwheel="this.blur()" id="addressMobile" name="address_mobile" class="form-control" placeholder="Contact no*." required></li>
-                                    <li><input type="text" name="house_no" placeholder="Flat, House no., Building, Company, Apartment*" class="form-control" required></li>
-                                    <li><input type="text" name="area" class="form-control" placeholder="Area, Colony, Street, Sector, Village"></li>
+                                    <li><input type="number" onwheel="this.blur()" id="addressMobile"
+                                            name="address_mobile" class="form-control" placeholder="Contact no*."
+                                            required></li>
+                                    <li><input type="text" name="house_no"
+                                            placeholder="Flat, House no., Building, Company, Apartment*"
+                                            class="form-control" required></li>
+                                    <li><input type="text" name="area" class="form-control"
+                                            placeholder="Area, Colony, Street, Sector, Village"></li>
                                     <li><input type="text" name="landmark" class="form-control" placeholder="Landmark">
                                     </li>
                                     </li>
                                     <li>
                                         <div class="row">
                                             <div class="col-12 col-md-6">
-                                                <input type="text" name="city" class="form-control" placeholder="City*" style="margin-bottom: 15px" required>
+                                                <input type="text" name="city" class="form-control" placeholder="City*"
+                                                    style="margin-bottom: 15px" required>
                                             </div>
                                             <div class="col-12 col-md-3">
-                                                <select id="inputState" name="state" class="form-control" required style="margin-bottom: 15px">
+                                                <select id="inputState" name="state" class="form-control" required
+                                                    style="margin-bottom: 15px">
                                                     <option selected>Choose State*</option>
                                                     <?php
 
@@ -120,7 +135,8 @@ include_once 'header.php';
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-3">
-                                                <input type="text" name="pincode" class="form-control" placeholder="Pin code*" required>
+                                                <input type="text" name="pincode" class="form-control"
+                                                    placeholder="Pin code*" required>
                                             </div>
                                         </div>
                                     </li>
@@ -153,10 +169,12 @@ include_once 'header.php';
 
                                     ?>
                                     <div class="col-md-4">
-                                        <a href="#" id="deliverByTomorrow" class="delivery-btn"><?php echo date('jS M, ', strtotime('+1 days')) ?>Tomorrow</a>
+                                        <a href="#" id="deliverByTomorrow"
+                                            class="delivery-btn"><?php echo date('jS M, ', strtotime('+1 days')) ?>Tomorrow</a>
                                     </div>
                                     <div class="col-md-4">
-                                        <a href="#" id="deliverByOther" class="delivery-btn"><img src="<?php echo IMG_LIBRARY ?>booking-calendar-sm.png" alt=""> Other
+                                        <a href="#" id="deliverByOther" class="delivery-btn"><img
+                                                src="<?php echo IMG_LIBRARY ?>booking-calendar-sm.png" alt=""> Other
                                             dates</a>
                                     </div>
                                 </div>
@@ -174,7 +192,8 @@ include_once 'header.php';
                 <div class="cart-purchase">
                     <h2>Cart Summary</h2>
                     <h4>Grand Total</h4>
-                    <h5 style="margin-bottom: 10px"><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $totalPrice ?></h5>
+                    <h5 style="margin-bottom: 10px"><img
+                            src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg"><?php echo $totalPrice ?></h5>
                     <!-- <p>Have a Coupon Code? You can apply the discount coupon in the Checkout Process</p> -->
                     <a href="#" id="placeOrder" class="btn-bloom purchase-btn">Place Order</a>
                     <a href="#" id="continueShipping" style="display: none" class="btn-bloom purchase-btn">Delivery date
@@ -208,32 +227,40 @@ include_once 'header.php';
                         <h3 class="heading-2">Select delivery type and slot<span class="closeCalender">x</span></h3>
                         <div class="form-group">
                             <div class="custom-control custom-radio" id="morningDeliveryBox">
-                                <input type="radio" class="deliverySlot custom-control-input" id="morningDelivery" name="deliveryType" value="morning_200">
-                                <label class="custom-control-label" for="morningDelivery"> Morning delivery at <i class="fas fa-rupee-sign"></i> 200</label>
+                                <input type="radio" class="deliverySlot custom-control-input" id="morningDelivery"
+                                    name="deliveryType" value="morning_200">
+                                <label class="custom-control-label" for="morningDelivery"> Morning delivery at <i
+                                        class="fas fa-rupee-sign"></i> 200</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-radio" id="standardDeliveryBox">
-                                <input type="radio" class="deliverySlot custom-control-input" id="standardDelivery" name="deliveryType" value="standard_0">
+                                <input type="radio" class="deliverySlot custom-control-input" id="standardDelivery"
+                                    name="deliveryType" value="standard_0">
                                 <label class="custom-control-label" for="standardDelivery"> Standard delivery for
                                     free</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-radio" id="fixedDeliveryBox">
-                                <input type="radio" class="deliverySlot custom-control-input" id="fixedDelivery" name="deliveryType" value="fixed_200">
-                                <label class="custom-control-label" for="fixedDelivery"> Fixed Time delivery at <i class="fas fa-rupee-sign"></i> 200</label>
+                                <input type="radio" class="deliverySlot custom-control-input" id="fixedDelivery"
+                                    name="deliveryType" value="fixed_200">
+                                <label class="custom-control-label" for="fixedDelivery"> Fixed Time delivery at <i
+                                        class="fas fa-rupee-sign"></i> 200</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-radio" id="midnightDeliveryBox">
-                                <input type="radio" class="deliverySlot custom-control-input" id="midnightDelivery" name="deliveryType" value="midnight_249">
-                                <label class="custom-control-label" for="midnightDelivery"> Midnight delivery at <i class="fas fa-rupee-sign"></i> 249</label>
+                                <input type="radio" class="deliverySlot custom-control-input" id="midnightDelivery"
+                                    name="deliveryType" value="midnight_249">
+                                <label class="custom-control-label" for="midnightDelivery"> Midnight delivery at <i
+                                        class="fas fa-rupee-sign"></i> 249</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <a href="#" class="showCalender btn btn-light btn-block"><i class="fas fa-arrow-left"></i> Go to calender</a>
+                                <a href="#" class="showCalender btn btn-light btn-block"><i
+                                        class="fas fa-arrow-left"></i> Go to calender</a>
                             </div>
                             <div class="col-6">
                                 <!-- <a href="#" class="showTimeSlots btn btn-success btn-block" >Delivery time <i class="fas fa-arrow-right"></i></a> -->
@@ -246,7 +273,8 @@ include_once 'header.php';
                         <div class="row morningDeliveryTimeSlots" style="display: none; margin-bottom: 20px">
                             <div class="col-6">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="morning07" name="deliveryTime" value="07:00 - 09:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="morning07"
+                                        name="deliveryTime" value="07:00 - 09:00">
                                     <label class="custom-control-label" for="morning07">07:00 - 09:00 hrs</label>
                                 </div>
                             </div>
@@ -254,25 +282,30 @@ include_once 'header.php';
                         <div class="row standardDeliveryTimeSlots" style="display: none; margin-bottom: 20px">
                             <div class="col-6">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard09" name="deliveryTime" value="09:00 - 12:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard09"
+                                        name="deliveryTime" value="09:00 - 12:00">
                                     <label class="custom-control-label" for="standard09">09:00 - 12:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard15" name="deliveryTime" value="15:00 - 18:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard15"
+                                        name="deliveryTime" value="15:00 - 18:00">
                                     <label class="custom-control-label" for="standard15">15:00 - 18:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard20" name="deliveryTime" value="20:00 - 22:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard20"
+                                        name="deliveryTime" value="20:00 - 22:00">
                                     <label class="custom-control-label" for="standard20">20:00 - 22:00 hrs</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard12" name="deliveryTime" value="12:00 - 15:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard12"
+                                        name="deliveryTime" value="12:00 - 15:00">
                                     <label class="custom-control-label" for="standard12">12:00 - 15:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard18" name="deliveryTime" value="18:00 - 21:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="standard18"
+                                        name="deliveryTime" value="18:00 - 21:00">
                                     <label class="custom-control-label" for="standard18">18:00 - 21:00 hrs</label>
                                 </div>
                             </div>
@@ -280,57 +313,70 @@ include_once 'header.php';
                         <div class="row fixedDeliveryTimeSlots" style="display: none; margin-bottom: 20px">
                             <div class="col-6">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed10" name="deliveryTime" value="10:00 - 11:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed10"
+                                        name="deliveryTime" value="10:00 - 11:00">
                                     <label class="custom-control-label" for="fixed10">10:00 - 11:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed12" name="deliveryTime" value="12:00 - 13:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed12"
+                                        name="deliveryTime" value="12:00 - 13:00">
                                     <label class="custom-control-label" for="fixed12">12:00 - 13:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed14" name="deliveryTime" value="14:00 - 15:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed14"
+                                        name="deliveryTime" value="14:00 - 15:00">
                                     <label class="custom-control-label" for="fixed14">14:00 - 15:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed16" name="deliveryTime" value="16:00 - 17:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed16"
+                                        name="deliveryTime" value="16:00 - 17:00">
                                     <label class="custom-control-label" for="fixed16">16:00 - 17:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed18" name="deliveryTime" value="18:00 - 19:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed18"
+                                        name="deliveryTime" value="18:00 - 19:00">
                                     <label class="custom-control-label" for="fixed18">18:00 - 19:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed20" name="deliveryTime" value="20:00 - 21:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed20"
+                                        name="deliveryTime" value="20:00 - 21:00">
                                     <label class="custom-control-label" for="fixed20">20:00 - 21:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed22" name="deliveryTime" value="22:00 - 23:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed22"
+                                        name="deliveryTime" value="22:00 - 23:00">
                                     <label class="custom-control-label" for="fixed22">22:00 - 23:00 hrs</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed11" name="deliveryTime" value="11:00 - 12:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed11"
+                                        name="deliveryTime" value="11:00 - 12:00">
                                     <label class="custom-control-label" for="fixed11">11:00 - 12:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed13" name="deliveryTime" value="13:00 - 14:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed13"
+                                        name="deliveryTime" value="13:00 - 14:00">
                                     <label class="custom-control-label" for="fixed13">13:00 - 14:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed15" name="deliveryTime" value="15:00 - 16:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed15"
+                                        name="deliveryTime" value="15:00 - 16:00">
                                     <label class="custom-control-label" for="fixed15">15:00 - 16:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed17" name="deliveryTime" value="17:00 - 18:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed17"
+                                        name="deliveryTime" value="17:00 - 18:00">
                                     <label class="custom-control-label" for="fixed17">17:00 - 18:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed19" name="deliveryTime" value="19:00 - 20:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed19"
+                                        name="deliveryTime" value="19:00 - 20:00">
                                     <label class="custom-control-label" for="fixed19">19:00 - 20:00 hrs</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed21" name="deliveryTime" value="21:00 - 22:00">
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="fixed21"
+                                        name="deliveryTime" value="21:00 - 22:00">
                                     <label class="custom-control-label" for="fixed21">21:00 - 22:00 hrs</label>
                                 </div>
                             </div>
@@ -338,8 +384,10 @@ include_once 'header.php';
                         <div class="row midnightDeliveryTimeSlots" style="display: none; margin-bottom: 20px">
                             <div class="col-12">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="midnight23" name="deliveryTime" value="23:00 - 01:00">
-                                    <label class="custom-control-label" for="midnight23">23:00 - 01:00 hrs<br /><span style="color: red;">We will deliver product on
+                                    <input type="radio" class="deliveryTimeSlot custom-control-input" id="midnight23"
+                                        name="deliveryTime" value="23:00 - 01:00">
+                                    <label class="custom-control-label" for="midnight23">23:00 - 01:00 hrs<br /><span
+                                            style="color: red;">We will deliver product on
                                             <?php echo (((int) date('H') < 20) ? date('jS F') : date('jS F')); ?>
                                             after 11:00PM.</span></label>
                                 </div>
@@ -347,10 +395,12 @@ include_once 'header.php';
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <a href="#" class="visibleShowTimeBox btn btn-light btn-block"><i class="fas fa-arrow-left"></i> Delivery slots</a>
+                                <a href="#" class="visibleShowTimeBox btn btn-light btn-block"><i
+                                        class="fas fa-arrow-left"></i> Delivery slots</a>
                             </div>
                             <div class="col-6">
-                                <a href="#" class="specialNotesBox btn btn-success btn-block">Special notes <i class="fas fa-arrow-right"></i></a>
+                                <a href="#" class="specialNotesBox btn btn-success btn-block">Special notes <i
+                                        class="fas fa-arrow-right"></i></a>
                             </div>
                         </div>
                     </div>
@@ -406,16 +456,19 @@ include_once 'header.php';
                                 </div>
                                 <div class="form-group">
                                     <label>Your message</label>
-                                    <textarea name="message" id="message" class="form-control" style="height: 150px"></textarea>
+                                    <textarea name="message" id="message" class="form-control"
+                                        style="height: 150px"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <a href="#" class="visibleShowTimeBox btn btn-light btn-block"><i class="fas fa-arrow-left"></i> Delivery slots</a>
+                                <a href="#" class="visibleShowTimeBox btn btn-light btn-block"><i
+                                        class="fas fa-arrow-left"></i> Delivery slots</a>
                             </div>
                             <div class="col-6">
-                                <a href="#" class="reviewBtn btn btn-success btn-block">Review <i class="fas fa-arrow-right"></i></a>
+                                <a href="#" class="reviewBtn btn btn-success btn-block">Review <i
+                                        class="fas fa-arrow-right"></i></a>
                             </div>
                         </div>
                     </div>
