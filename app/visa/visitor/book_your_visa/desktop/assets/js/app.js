@@ -394,7 +394,7 @@ $(document).ready(function () {
 
     $("#submitVisaApplicationFormBtn").on("click", function (e) {
       e.preventDefault();
-      alert("SavesubmitVisaApplicationFormBtnt button clicked");
+      $("#visaApplicationProcess").submit();
     });
   }
 

@@ -13,14 +13,13 @@ require_once 'header.php';
             <h3 class="text-xl font-bold mb-2">Application Submitted!</h3>
             <p class="text-gray-600 mb-6">Your visa application has been successfully submitted. You will receive a
                 confirmation email shortly.</p>
-            <div class="text-lg font-medium mb-6">Application ID: <span class="text-primary">VS-2025031501</span>
-            </div>
-            <a href="https://readdy.ai/home/da68aad3-a508-4219-bc9a-0f79e66cb4a4/46b5e02a-4f1b-4a1d-8fa9-204649e36205"
-                data-readdy="true"
-                class="block bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer w-full text-center">Back
-                to Home</a>
+            <!-- <div class="text-lg font-medium mb-6">Application ID: <span class="text-primary">VS-2025031501</span> -->
         </div>
+        <a href="/dashboard/" data-readdy="true"
+            class="block bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer w-full text-center">Continiue
+            to dashboard</a>
     </div>
+</div>
 </div>
 
 <?php

@@ -344,6 +344,12 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             </div>
                         </div>
                     </div>
+
+                    <input type="hidden" name="subject" value="New HT query">
+                    <input type="hidden" name="toAddress"
+                        value="<?php echo base64_encode("avineshpaliwal33@gmail.com") ?>">
+                    <input type="hidden" name="redirectURL" value="/thank-you/">
+
                     <div class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-between sm:space-y-0 sm:space-x-4">
                         <a id="goToStep3Btn"
                             class="w-full sm:w-auto text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer text-center">Previous</a>
