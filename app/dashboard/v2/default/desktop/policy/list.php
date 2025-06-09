@@ -7,10 +7,6 @@
     <section>
         <div class="filters">
             <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value="">Supplier Status</option>
-                </select>
             </div>
         </div>
         <div class="list-box">

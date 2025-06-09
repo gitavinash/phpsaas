@@ -220,3 +220,38 @@ strike {
     transform: rotate(360deg);
   }
 }
+
+.pageDescription {
+  font-size: 16px;
+  line-height: 24px;
+  color: #374151;
+  font-weight: 400;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+.pageDescription p {
+  font-size: 16px;
+  line-height: 24px;
+  color: #374151;
+  font-weight: 400;
+  font-family: "Kumbh Sans", sans-serif !important;
+  margin-bottom: 1.6em;
+}
+
+.pageDescription p strong {
+  font-weight: 500;
+}
+
+.pageDescription ol {
+  margin-bottom: 1.6em;
+  list-style: decimal;
+}
+
+.pageDescription ul {
+  margin-bottom: 1.6em;
+  list-style: bullet;
+}
+.pageDescription li {
+  margin-bottom: 0.5em;
+  margin-left: 2em;
+}
