@@ -59,7 +59,7 @@ $(document).ready(function () {
     var qty = productInfo.split("_");
     var id = qty[0];
     var price = qty[1];
-    var qty = qty[2];
+    var qty = parseInt(qty[2]) || 1; // Default to 1 if not specified
 
     $.ajax({
       type: "POST",
@@ -114,6 +114,9 @@ $(document).ready(function () {
             }
           });
 
+          var currentCartCount = parseInt($("#cartItems").text()) || 0;
+          $("#cartItems").text(currentCartCount + qty);
+
           $("#addToCart").html("Added to cart");
         } else {
           console.log(data.msg);
@@ -138,6 +141,7 @@ $(document).ready(function () {
   $(".removeFromCart").click(function (e) {
     e.preventDefault();
     var id = $(this).attr("id");
+    console.log("Product id: " + id);
 
     /** Call remove from cart api */
 
@@ -611,6 +615,8 @@ $(document).ready(function () {
 
     var [id, price, qty] = productInfo.split("_");
 
+    qty = parseInt(qty) || 1; // Default to 1 if not specified
+
     $.ajax({
       type: "POST",
       dataType: "json",
@@ -653,6 +659,9 @@ $(document).ready(function () {
               window.location.href = "/checkout/";
             }
           });
+
+          var currentCartCount = parseInt($("#cartItems").text()) || 0;
+          $("#cartItems").text(currentCartCount + qty);
 
           $btn.text("Added to Cart");
         } else {

@@ -193,6 +193,8 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
                 if ($cartNumber = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON cart_relation_id=product_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=0 AND product_status=1 AND cart_site_id=" . SITE_ID)) {
 
                     $cartItems = mysqli_num_rows($cartNumber);
+                } else {
+                    $cartItems = 0;
                 }
 
                 ?>
@@ -201,7 +203,7 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
                         class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition">
                         <i class="ri-shopping-bag-line text-xl"></i>
                     </a>
-                    <span
+                    <span id="cartItems"
                         class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"><?php echo $cartItems ?></span>
                 </div>
                 <button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700"
