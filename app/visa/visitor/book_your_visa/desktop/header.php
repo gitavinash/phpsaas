@@ -93,10 +93,15 @@
                     <li>
                         <a href="/services/" class="block py-2 text-gray-700">Visa Services</a>
                         <div class="pl-4 space-y-2">
-                            <a href="/services/tourist-visa/" class="block py-2 text-sm text-gray-700">Tourist Visa</a>
-                            <a href="/services/business-visa/" class="block py-2 text-sm text-gray-700">Business
+                            <a href="/tourist-visa-services/"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tourist
                                 Visa</a>
-                            <a href="/services/student-visa/" class="block py-2 text-sm text-gray-700">Student Visa</a>
+                            <a href="/business-visa-services/"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business
+                                Visa</a>
+                            <a href="/student-visa-services/"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Student
+                                Visa</a>
                         </div>
                     </li>
                     <li><a href="/track-application/" class="block py-2 text-gray-700">Track Application</a></li>
