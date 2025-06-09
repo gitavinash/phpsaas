@@ -508,3 +508,46 @@ input:checked + .filter-slider {
 input:checked + .filter-slider:before {
   transform: translateX(20px);
 }
+
+.editorPageDescription {
+  font-size: 16px;
+  line-height: 24px;
+  color: #374151;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+}
+
+.editorPageDescription p {
+  font-size: 16px;
+  line-height: 24px;
+  color: #374151;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 1.6em;
+}
+
+.editorPageDescription h3 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  color: #111827;
+  margin-bottom: 1.6em;
+}
+
+.editorPageDescription p strong {
+  font-weight: 500;
+}
+
+.editorPageDescription ol {
+  margin-bottom: 1.6em;
+  list-style: decimal;
+}
+
+.editorPageDescription ul {
+  margin-bottom: 1.6em;
+  list-style: bullet;
+}
+.editorPageDescription li {
+  margin-bottom: 0.5em;
+  margin-left: 2em;
+}

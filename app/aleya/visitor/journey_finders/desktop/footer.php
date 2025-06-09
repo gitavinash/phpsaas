@@ -96,25 +96,19 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-400 text-sm mb-4 md:mb-0">
                     &copy; <?php echo date('Y') . ' ' . SITE_NAME ?>. All rights reserved. | Powered by
-                    <a href="https://aleya.in" target="_blank">Aleya - Travel ERP Software</a>
+                    <a href="https://aleya.in" target="_blank" title="Travel ERP Software">Aleya</a>
                 </p>
-                <!-- <div class="flex flex-wrap justify-center gap-4">
-                    <div class="w-12 h-8 flex items-center justify-center bg-gray-800 rounded">
-                        <i class="ri-visa-fill ri-lg text-white"></i>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="w-12 h-8 flex items-center justify-center rounded">
+                        <a href="/terms-and-conditions/" class="text-gray-400 hover:text-white">Terms and Conditions</a>
                     </div>
-                    <div class="w-12 h-8 flex items-center justify-center bg-gray-800 rounded">
-                        <i class="ri-mastercard-fill ri-lg text-white"></i>
+                    <div class="w-12 h-8 flex items-center justify-center rounded">
+                        <a href="/privacy-policy/" class="text-gray-400 hover:text-white">Privacy policy</a>
                     </div>
-                    <div class="w-12 h-8 flex items-center justify-center bg-gray-800 rounded">
-                        <i class="ri-paypal-fill ri-lg text-white"></i>
+                    <div class="w-12 h-8 flex items-center justify-center rounded">
+                        <a href="/refund-policy/" class="text-gray-400 hover:text-white">Refund policy</a>
                     </div>
-                    <div class="w-12 h-8 flex items-center justify-center bg-gray-800 rounded">
-                        <i class="ri-amazon-pay-fill ri-lg text-white"></i>
-                    </div>
-                    <div class="w-12 h-8 flex items-center justify-center bg-gray-800 rounded">
-                        <i class="ri-google-pay-fill ri-lg text-white"></i>
-                    </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
