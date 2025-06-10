@@ -106,6 +106,10 @@
                         <a href="/privacy-policy/" class="text-gray-400 hover:text-white">Privacy policy</a>
                     </div>
                     <div class="h-8 flex items-center justify-center rounded">
+                        <a href="/shipping-and-delivery/" class="text-gray-400 hover:text-white">Shipping and
+                            Delivery</a>
+                    </div>
+                    <div class="h-8 flex items-center justify-center rounded">
                         <a href="/refund-policy/" class="text-gray-400 hover:text-white">Refund policy</a>
                     </div>
                 </div>
