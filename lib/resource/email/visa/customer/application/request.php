@@ -12,7 +12,7 @@ $email_body = "
             <tr>
                 <td style='text-align: center'>
                     <h1 style='color: {$themeColor}'>{$subject}</h1>
-                    <p>Dear {$visaData['firstName']}},</p>
+                    <p>Dear {$visaData['firstName']},</p>
                     <p>Thank you for submitting your visa application. Here are the details:</p>
                     
                     <table style='padding: 20px 0px; text-align: left; margin: 0 auto;'>
