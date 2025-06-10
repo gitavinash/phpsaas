@@ -12,7 +12,9 @@ $enquiryQuery = "SELECT * FROM " . TABLE_PREFIX . "enquiry LEFT JOIN " . TABLE_P
 if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
     if (mysqli_num_rows($checkEnquiry) != 0) {
         extract(mysqli_fetch_assoc($checkEnquiry));
-        extract(json_decode($enquiry_message, true));
+        if ($enquiry_message != '') {
+            extract(json_decode($enquiry_message, true));
+        }
     } else {
         echo "Invalid request";
         exit();
@@ -397,7 +399,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     ";
                                             if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
                                                 echo "<div class='timeline-action'>
-                                                        <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Edit upay' data-msg='".base64_encode($commentBox)."' class='btn dataTableBtn btn-blue upayEditButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-edit'></i> Edit upay</a>
+                                                        <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Edit upay' data-msg='" . base64_encode($commentBox) . "' class='btn dataTableBtn btn-blue upayEditButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-edit'></i> Edit upay</a>
                                                         <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>
                                                     </div>";
                                             }
