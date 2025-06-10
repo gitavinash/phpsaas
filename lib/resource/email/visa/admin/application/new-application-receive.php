@@ -2,7 +2,7 @@
 
 $subject = 'New Visa Application Request';
 
-require_once EMAIL_TEMPLATE . 'header.php';
+include_once EMAIL_TEMPLATE . 'header.php';
 
 $visaApplicationButton = SITE_URL . '/dashboard/leads/view/?id=' . base64_encode($applicationId);
 
@@ -40,4 +40,4 @@ $email_body = "
 
 $email = SITE_EMAIL_ALERT;
 
-require_once EMAIL_TEMPLATE . 'footer.php';
+include_once EMAIL_TEMPLATE . 'footer.php';

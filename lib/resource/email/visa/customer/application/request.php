@@ -47,4 +47,4 @@ $email_body = "
 
 $email = $visaData['email'];
 
-require_once EMAIL_TEMPLATE . 'footer.php';
+include_once EMAIL_TEMPLATE . 'footer.php';

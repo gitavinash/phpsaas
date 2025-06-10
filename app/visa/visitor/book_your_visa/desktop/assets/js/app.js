@@ -429,7 +429,7 @@ $(document).ready(function () {
 
           console.log("Application submit successfully");
           localStorage.removeItem(`visaApplicationId`);
-          popUpMessage("center", res.msg, res.status);
+          popUpMessage("center", successResponse.msg, successResponse.status);
           setTimeout(function () {
             window.location.href =
               "/thank-you/?application_id=" +
