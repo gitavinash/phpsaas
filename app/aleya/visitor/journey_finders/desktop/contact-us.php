@@ -65,10 +65,10 @@ require_once 'header.php';
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-3">Email Support</h3>
                 <p class="text-gray-600 mb-4">Send us your inquiries and we'll respond within 24 hours.</p>
-                <div class="font-medium text-lg text-primary mb-2">info@journeyfinders.com</div>
+                <div class="font-medium text-lg text-primary mb-2">care@journeyfinders.com</div>
                 <p class="text-sm text-gray-500">Response time: 24 hours</p>
                 <div class="mt-6">
-                    <a href="mailto:info@journeyfinders.com"
+                    <a href="mailto:care@journeyfinders.com"
                         class="bg-primary text-white px-4 py-2 !rounded-button text-sm font-medium hover:bg-indigo-600 transition whitespace-nowrap">
                         <i class="ri-mail-send-line mr-1"></i>Send Email
                     </a>
@@ -252,15 +252,6 @@ require_once 'header.php';
                 booking process, and travel policies.</p>
         </div>
         <div class="max-w-3xl mx-auto">
-            <div class="mb-8">
-                <div class="relative">
-                    <input type="text" placeholder="Search for questions..."
-                        class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 text-gray-900">
-                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                        <i class="ri-search-line text-xl"></i>
-                    </div>
-                </div>
-            </div>
             <div class="space-y-4" id="faq-container">
                 <!-- FAQ Item 1 -->
                 <div class="faq-item bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">

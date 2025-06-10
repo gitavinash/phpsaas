@@ -133,99 +133,7 @@ require_once 'header.php';
                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded">Wellness</span>
                 </div> -->
             </section>
-            <!-- Highlights Section -->
-            <!-- <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-4">Tour Highlights</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-start">
-                        <div
-                            class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-3 mt-0.5 flex-shrink-0">
-                            <i class="ri-check-line ri-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900">
-                                Ubud Cultural Immersion
-                            </h3>
-                            <p class="text-gray-600 text-sm">
-                                Explore Bali's cultural heart with visits to art galleries,
-                                craft villages, and traditional performances.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div
-                            class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-3 mt-0.5 flex-shrink-0">
-                            <i class="ri-check-line ri-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900">Sacred Temple Tour</h3>
-                            <p class="text-gray-600 text-sm">
-                                Visit Bali's most important temples including Besakih,
-                                Uluwatu, and Tanah Lot.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div
-                            class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-3 mt-0.5 flex-shrink-0">
-                            <i class="ri-check-line ri-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900">Rice Terrace Trek</h3>
-                            <p class="text-gray-600 text-sm">
-                                Walk through the stunning UNESCO-listed Tegalalang and
-                                Jatiluwih rice terraces.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div
-                            class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-3 mt-0.5 flex-shrink-0">
-                            <i class="ri-check-line ri-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900">
-                                Balinese Cooking Class
-                            </h3>
-                            <p class="text-gray-600 text-sm">
-                                Learn to prepare authentic Balinese dishes using traditional
-                                techniques and fresh local ingredients.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div
-                            class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-3 mt-0.5 flex-shrink-0">
-                            <i class="ri-check-line ri-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900">
-                                Mount Batur Sunrise Trek
-                            </h3>
-                            <p class="text-gray-600 text-sm">
-                                Early morning hike to witness a spectacular sunrise from an
-                                active volcano.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div
-                            class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-3 mt-0.5 flex-shrink-0">
-                            <i class="ri-check-line ri-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900">
-                                Relaxation in Nusa Dua
-                            </h3>
-                            <p class="text-gray-600 text-sm">
-                                Unwind on pristine beaches and enjoy luxury spa treatments
-                                in Bali's premier resort area.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section> -->
-            <!-- Itinerary Section -->
+
             <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <h2 class="text-2xl font-bold mb-6"><?php echo ucwords($tour_package_city) ?> Day-by-Day
                     Itinerary</h2>
@@ -390,7 +298,7 @@ require_once 'header.php';
                         <input type="checkbox" id="privacy-policy" class="custom-checkbox mt-1" required />
                         <label for="privacy-policy" class="ml-2 text-sm text-gray-600">
                             I agree to the
-                            <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                            <a href="/privacy-policy/" class="text-primary hover:underline">Privacy Policy</a>
                             and consent to being contacted regarding my enquiry.
                         </label>
                     </div>

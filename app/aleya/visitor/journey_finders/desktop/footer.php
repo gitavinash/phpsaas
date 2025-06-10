@@ -10,21 +10,14 @@
                     tailored to your preferences.
                 </p>
                 <div class="flex space-x-4">
-                    <a href="#"
+                    <a href="https://www.facebook.com/profile.php?id=61575311421582" target="_blank"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
                         <i class="ri-facebook-fill"></i>
                     </a>
-                    <a href="#"
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
-                        <i class="ri-twitter-x-fill"></i>
-                    </a>
-                    <a href="#"
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
+                    <a href="https://www.instagram.com/journeyfinders.in" target="_blank
+                        class=" w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary
+                        transition">
                         <i class="ri-instagram-fill"></i>
-                    </a>
-                    <a href="#"
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
-                        <i class="ri-youtube-fill"></i>
                     </a>
                 </div>
             </div>

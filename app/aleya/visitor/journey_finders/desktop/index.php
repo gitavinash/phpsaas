@@ -91,7 +91,7 @@ require_once 'header.php';
                             <div class='package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
                                 <div class='relative h-56 overflow-hidden'>
                                     <img src='" . USER_IMAGES . '/city/' . strtolower(str_replace(' ', '_', $tour_package_city)) . ".jpg'
-                                        alt='Bali Adventure' class='w-full h-full object-cover object-top' />
+                                        alt='{$tour_package_title}' class='w-full h-full object-cover object-top' />
                                     <div class='absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>
                                         Best Seller
                                     </div>
@@ -235,10 +235,9 @@ LIMIT 0, 8
                 <div class="w-16 h-16 flex items-center justify-center mx-auto bg-primary/10 rounded-full mb-4">
                     <i class="ri-award-line ri-xl text-primary"></i>
                 </div>
-                <h3 class="text-lg font-semibold mb-2">15+ Years Experience</h3>
+                <h3 class="text-lg font-semibold mb-2">Personalized Service</h3>
                 <p class="text-gray-600 text-sm">
-                    With over 15 years in the travel industry, we've built a
-                    reputation for excellence and reliability.
+                    We craft personalized travel plans that fit your family's needs, style, and budget perfectly.
                 </p>
             </div>
             <div class="text-center">
@@ -275,11 +274,11 @@ LIMIT 0, 8
         <div class="mt-16 bg-gray-50 rounded-lg p-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="text-center">
-                    <div class="text-3xl font-bold text-primary mb-2">50,000+</div>
+                    <div class="text-3xl font-bold text-primary mb-2">1,000+</div>
                     <p class="text-gray-600">Happy Travelers</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl font-bold text-primary mb-2">1,200+</div>
+                    <div class="text-3xl font-bold text-primary mb-2">200+</div>
                     <p class="text-gray-600">Tour Packages</p>
                 </div>
                 <div class="text-center">
@@ -294,179 +293,7 @@ LIMIT 0, 8
         </div>
     </div>
 </section>
-<!-- Enquiry Form -->
-<!-- <section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2">
-                <div class="p-8">
-                    <h2 class="text-2xl font-bold mb-6">Send Us an Enquiry</h2>
-                    <p class="text-gray-600 mb-6">
-                        Fill out the form below and our travel experts will get back to
-                        you within 24 hours.
-                    </p>
-                    <form>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full
-                                    Name*</label>
-                                <input type="text" id="name"
-                                    class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
-                                    required />
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email
-                                    Address*</label>
-                                <input type="email" id="email"
-                                    class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
-                                    required />
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone
-                                    Number*</label>
-                                <input type="tel" id="phone"
-                                    class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
-                                    required />
-                            </div>
-                            <div>
-                                <label for="destination" class="block text-sm font-medium text-gray-700 mb-1">Preferred
-                                    Destination</label>
-                                <select id="destination"
-                                    class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm appearance-none bg-white pr-8">
-                                    <option value="">Select Destination</option>
-                                    <option value="bali">Bali, Indonesia</option>
-                                    <option value="santorini">Santorini, Greece</option>
-                                    <option value="maldives">Maldives</option>
-                                    <option value="peru">Peru</option>
-                                    <option value="japan">Japan</option>
-                                    <option value="paris">Paris, France</option>
-                                    <option value="south-africa">South Africa</option>
-                                    <option value="new-york">New York, USA</option>
-                                    <option value="other">Other</option>
-                                </select>
-                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                    <i class="ri-arrow-down-s-line text-gray-500"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="travel-date" class="block text-sm font-medium text-gray-700 mb-1">Travel
-                                    Date</label>
-                                <input type="text" id="travel-date"
-                                    class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm date-input"
-                                    placeholder="Select date" onfocus="(this.type='date')"
-                                    onblur="if(!this.value)this.type='text'" />
-                            </div>
-                            <div>
-                                <label for="travelers" class="block text-sm font-medium text-gray-700 mb-1">Number
-                                    of Travelers</label>
-                                <select id="travelers"
-                                    class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm appearance-none bg-white pr-8">
-                                    <option value="">Select</option>
-                                    <option value="1">1 Traveler</option>
-                                    <option value="2">2 Travelers</option>
-                                    <option value="3">3 Travelers</option>
-                                    <option value="4">4 Travelers</option>
-                                    <option value="5+">5+ Travelers</option>
-                                </select>
-                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                    <i class="ri-arrow-down-s-line text-gray-500"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Special
-                                Requirements</label>
-                            <textarea id="message" rows="4"
-                                class="w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"></textarea>
-                        </div>
-                        <div class="flex items-center mb-6">
-                            <input type="checkbox" id="consent" class="custom-checkbox" required />
-                            <label for="consent" class="text-sm text-gray-600 ml-2">I agree to receive travel
-                                updates and promotional offers
-                                from JourneyFinders</label>
-                        </div>
-                        <button type="submit"
-                            class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition w-full">
-                            Submit Enquiry
-                        </button>
-                    </form>
-                </div>
-                <div class="bg-gray-100 p-8 flex flex-col justify-center">
-                    <h3 class="text-xl font-bold mb-4">Contact Information</h3>
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3 text-primary">
-                                <i class="ri-map-pin-line"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Office Address</h4>
-                                <p class="text-gray-600 text-sm">
-                                    123 Travel Street, Adventure City, AC 10001, India
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3 text-primary">
-                                <i class="ri-phone-line"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Phone Number</h4>
-                                <p class="text-gray-600 text-sm">+91 92112 87555</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3 text-primary">
-                                <i class="ri-mail-line"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Email Address</h4>
-                                <p class="text-gray-600 text-sm">info@journeyfinders.in</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3 text-primary">
-                                <i class="ri-time-line"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Working Hours</h4>
-                                <p class="text-gray-600 text-sm">
-                                    Monday - Saturday: 9:00 AM - 6:00 PM
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Follow Us</h3>
-                    <div class="flex space-x-3">
-                        <a href="#"
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 hover:bg-primary hover:text-white text-primary transition">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 hover:bg-primary hover:text-white text-primary transition">
-                            <i class="ri-twitter-x-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 hover:bg-primary hover:text-white text-primary transition">
-                            <i class="ri-instagram-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 hover:bg-primary hover:text-white text-primary transition">
-                            <i class="ri-youtube-fill"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> -->
+
 <!-- Travel Styles -->
 <section class="py-16">
     <div class="container mx-auto px-4">

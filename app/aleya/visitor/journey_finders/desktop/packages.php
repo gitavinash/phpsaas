@@ -244,7 +244,7 @@ WHERE
                                 <div class='tour-card bg-white rounded-lg overflow-hidden shadow-sm transition duration-300'>
                                     <div class='relative h-48 overflow-hidden'>
                                         <img src='" . USER_IMAGES . '/city/' . strtolower(str_replace(' ', '_', $tour_package_city)) . ".jpg'
-                                            alt='Bali Cultural Adventure' class='w-full h-full object-cover object-top' />
+                                            alt='{$tour_package_title}' class='w-full h-full object-cover object-top' />
                                         <div
                                             class='absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>
                                             " . ucwords($tour_package_theme) . "

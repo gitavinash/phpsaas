@@ -115,7 +115,7 @@
                 while ($destinationData = mysqli_fetch_assoc($destinationList)) {
                     extract($destinationData);
                     echo "<div class='destination-card bg-white rounded-lg overflow-hidden shadow-sm'>
-                        <a href='/holiday/" . strtolower(str_replace(' ', '_', $location_title)) . "/'>
+                        <a href='/search/?q=" . strtolower(str_replace(' ', '_', $location_title)) . "/'>
                                 <div class='relative h-64 overflow-hidden'>
                                     <img src='{$location_thumbnail}'
                                         alt='{$location_title}' class='w-full h-full object-cover object-top' />

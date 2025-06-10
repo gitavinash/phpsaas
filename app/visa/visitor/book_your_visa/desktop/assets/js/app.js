@@ -120,6 +120,7 @@ $(document).ready(function () {
     });
 
     function saveVisaApplicationDraft(formData, stepNumber) {
+      console.log(`Saving draft for step ${stepNumber}`, formData);
       const packageId = urlParams.get("package_id");
       try {
         formData.append("packageId", packageId); // Attach package ID if available
