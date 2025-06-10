@@ -35,96 +35,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
-    <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
-
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9fafb;
-    }
-
-    input[type="search"]::-webkit-search-decoration,
-    input[type="search"]::-webkit-search-cancel-button,
-    input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-        display: none;
-    }
-
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .custom-switch {
-        position: relative;
-        display: inline-block;
-        width: 3rem;
-        height: 1.5rem;
-    }
-
-    .custom-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .switch-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
-
-    .switch-slider:before {
-        position: absolute;
-        content: "";
-        height: 1.1rem;
-        width: 1.1rem;
-        left: 0.2rem;
-        bottom: 0.2rem;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    input:checked+.switch-slider {
-        background-color: #4F46E5;
-    }
-
-    input:checked+.switch-slider:before {
-        transform: translateX(1.5rem);
-    }
-
-    .category-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    .discussion-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    .specialist-card:hover {
-        transform: translateY(-4px);
-    }
-
-    .success-story-card:hover {
-        transform: scale(1.02);
-    }
-
-    .activity-item:hover {
-        background-color: #f3f4f6;
-    }
-    </style>
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
 </head>
 
 <body>
@@ -133,7 +44,7 @@
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <!-- Logo -->
             <div class="flex items-center">
-                <h1 class="text-2xl font-['Pacifico'] text-primary">logo</h1>
+                <h1 class="text-2xl font-['Pacifico'] text-primary">HairBud</h1>
             </div>
             <!-- Search Bar -->
             <div class="relative w-1/3">

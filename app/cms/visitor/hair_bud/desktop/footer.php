@@ -74,9 +74,7 @@
         </div>
     </div>
 </footer>
-<script>
-document.addEventListener('DOMContentLoaded', function() {});
-</script>
+<script src="<?php echo USER_JS ?>app.min.js"></script>
 </body>
 
 </html>
