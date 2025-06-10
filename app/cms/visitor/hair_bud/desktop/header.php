@@ -44,7 +44,9 @@
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <!-- Logo -->
             <div class="flex items-center">
-                <h1 class="text-2xl font-['Pacifico'] text-primary">HairBud</h1>
+                <a href="/" title="<?php echo SITE_NAME ?>">
+                    <h1 class="text-2xl font-['Pacifico'] text-primary">HairBud</h1>
+                </a>
             </div>
             <!-- Search Bar -->
             <div class="relative w-1/3">
@@ -60,17 +62,13 @@
             </div>
             <!-- User Actions -->
             <div class="flex items-center space-x-4">
-                <button
-                    class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-                    <i class="ri-notification-3-line ri-lg"></i>
-                </button>
                 <div class="relative">
                     <button
                         class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full !rounded-button whitespace-nowrap">
                         <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                             <span class="text-white font-medium text-sm">JD</span>
                         </div>
-                        <span class="font-medium text-sm">John Doe</span>
+                        <span class="font-medium text-sm">Avinash</span>
                         <i class="ri-arrow-down-s-line ri-lg"></i>
                     </button>
                 </div>
