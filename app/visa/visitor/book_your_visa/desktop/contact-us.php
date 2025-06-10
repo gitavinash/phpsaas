@@ -99,8 +99,10 @@ require_once 'header.php';
                             </div>
                             <div>
                                 <h3 class="font-medium text-gray-900 mb-1">Office Address</h3>
-                                <p class="text-gray-600">1234 Visa Avenue, Suite 500<br>New York, NY 10001<br>United
-                                    States</p>
+                                <p class="text-gray-600">BOOK YOUR VISA ( BYV ONLINE SERVICES PRIVATE LIMITED)<br />
+                                    477, 4th Floor, Aggarwal Millenium Tower,<br /> Netaji Subhash Place,
+                                    Pitampura<br />
+                                    New Delhi - 110034</p>
                             </div>
                         </div>
                         <div class="flex items-start">
@@ -109,8 +111,7 @@ require_once 'header.php';
                             </div>
                             <div>
                                 <h3 class="font-medium text-gray-900 mb-1">Business Hours</h3>
-                                <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 10:00 AM -
-                                    2:00 PM<br>Sunday: Closed</p>
+                                <p class="text-gray-600">Monday - Friday: 11:00 AM - 6:00 PM</p>
                             </div>
                         </div>
                         <div class="flex items-start">
@@ -134,9 +135,7 @@ require_once 'header.php';
                             <div>
                                 <h3 class="font-medium text-gray-900 mb-1">Call Us</h3>
                                 <p class="text-gray-600">
-                                    <a href="tel:+18001234567" class="hover:text-primary">+1 (800) 123-4567</a>
-                                    (Toll Free)<br>
-                                    <a href="tel:+12125551234" class="hover:text-primary">+1 (212) 555-1234</a>
+                                    <a href="tel:+917291874705" class="hover:text-primary">+91-7291874705</a>
                                     (Direct)
                                 </p>
                             </div>

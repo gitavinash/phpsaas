@@ -16,8 +16,11 @@ if (DEVELOPMENT_MODE == true) {
 	define('DB_NAME', 'isw_app');		// database name ex :- cms_db
 	define('MONGO_DB_CONNECTION_URL', 'mongodb://localhost:27017/');		// MongoDB Connection URL
 
-	error_reporting(E_ALL);
-	ini_set('display_errors', 1);
+	error_reporting(0);
+	ini_set('display_errors', 0);
+
+	// error_reporting(E_ALL);
+	// ini_set('display_errors', 1);
 } else {
 
 	define('DB_HOST', 'localhost');		// database hostname ex :- hostname

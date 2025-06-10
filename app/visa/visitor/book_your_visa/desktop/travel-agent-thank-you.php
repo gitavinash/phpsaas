@@ -6,8 +6,7 @@ require_once 'header.php';
 <main class="flex-grow pt-32 pb-20">
     <div class="container mx-auto px-4 max-w-4xl">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="relative h-48 bg-cover bg-center"
-                style="background-image: url('https://readdy.ai/api/search-image?query=modern%20office%20celebration%20scene%20with%20confetti%20and%20success%20symbols%2C%20professional%20business%20environment%2C%20soft%20natural%20lighting%2C%20clean%20and%20minimal%20design&width=1200&height=300&seq=13&orientation=landscape')">
+            <div class="relative h-48 bg-cover bg-center">
                 <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/50"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
                     <h1 class="text-4xl md:text-5xl font-bold text-white text-center">Registration Successful!</h1>

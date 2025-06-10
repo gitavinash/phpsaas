@@ -75,6 +75,7 @@ WHERE
     vc.visa_country_status = 1
     AND vc.visa_country_site_id = " . SITE_ID . "
     AND JSON_CONTAINS(vc.visa_country_services, '\"student\"')
+    GROUP BY vc.visa_country_title
 ORDER BY vc.visa_country_is_featured DESC, RAND()
 LIMIT 10";
 
@@ -89,7 +90,7 @@ LIMIT 10";
                                                     class='w-10 h-10 object-cover rounded-full'>
                                             </div>
                                             <div>
-                                                <h3 class='font-semibold text-gray-900'>{$popularCountryData['visa_country_title']}</h3>
+                                                <h3 class='font-semibold text-gray-900'>" . ucwords($popularCountryData['visa_country_title']) . "</h3>
                                             </div>
                                         </div>
                                         <div class='flex justify-between text-sm text-gray-600 mb-4'>

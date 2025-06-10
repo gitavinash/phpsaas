@@ -175,7 +175,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                     </div>
                     <div class="mt-8">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Accommodation
-                            Details<sup>*</sup></label>
+                            Details</label>
                         <textarea id="accommodation" name="accommodation"
                             class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary h-24"
                             placeholder="Hotel name, address or host details"></textarea>
@@ -209,7 +209,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                 <div class="text-sm text-gray-500">Max size: 5MB</div>
                             </div>
                             <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <input type="file" id="passportCopy" name="passportCopy" aria-invalid="false"
+                                <input type="file" id="passportCopy" name="files[passportCopy]" aria-invalid="false"
                                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                     accept="image/*,.pdf">
                                 <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
@@ -225,7 +225,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                 <div class="text-sm text-gray-500">Max size: 2MB</div>
                             </div>
                             <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <input type="file" id="profilePhoto" name="profilePhoto" aria-invalid="false"
+                                <input type="file" id="profilePhoto" name="files[profilePhoto]" aria-invalid="false"
                                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
                                 <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
                                 <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
@@ -241,7 +241,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                 <div class="text-sm text-gray-500">Max size: 10MB</div>
                             </div>
                             <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <input type="file" id="supportingDocuments" name="supportingDocuments"
+                                <input type="file" id="supportingDocuments" name="files[supportingDocuments]"
                                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" aria-invalid="false"
                                     accept="image/*,.pdf" multiple>
                                 <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
@@ -325,7 +325,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                     </div>
                                 </div>
                             </div>
-                            <div class="p-6">
+                            <!-- <div class="p-6">
                                 <h3 class="font-medium mb-4">Payment Summary</h3>
                                 <div class="grid grid-cols-2 gap-4 text-sm">
                                     <div>
@@ -341,21 +341,18 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                         <div class="font-medium" id="totalAmount"></div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
-
-                    <input type="hidden" name="subject" value="New HT query">
-                    <input type="hidden" name="toAddress"
-                        value="<?php echo base64_encode("avineshpaliwal33@gmail.com") ?>">
-                    <input type="hidden" name="redirectURL" value="/thank-you/">
-
                     <div class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-between sm:space-y-0 sm:space-x-4">
                         <a id="goToStep3Btn"
                             class="w-full sm:w-auto text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer text-center">Previous</a>
                         <a id="submitVisaApplicationFormBtn"
+                            class="w-full sm:w-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer text-center">Submit
+                            Application</a>
+                        <!-- <a id="submitVisaApplicationFormBtn"
                             class="w-full sm:w-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer text-center">Proceed
-                            to pay</a>
+                            to pay</a> -->
                     </div>
                 </div>
             </form>

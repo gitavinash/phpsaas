@@ -132,7 +132,7 @@ require_once 'header.php';
                                 $countryTitle = ucwords($row['visa_country_title']);
                                 $countrySlug = strtolower(str_replace(' ', '_', $row['visa_country_title']));
                                 $countryImage = $row['visa_country_image'] ?: '';
-                                $price = number_format($row['visa_package_price']);
+                                $price = number_format(str_replace(',', '', $row['visa_package_price']));
 
                                 echo "
                     <div class='country-card relative bg-white rounded-2xl shadow-md overflow-hidden group min-w-[calc(100%-1.2rem)] md:min-w-[calc(25%-1.2rem)] mx-3'>

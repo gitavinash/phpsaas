@@ -1,3 +1,6 @@
+localStorage.setItem(`newApplicationRequest`, true);
+localStorage.removeItem(`visaApplicationId`);
+
 /** SweetAlert Pop Up Box */
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
@@ -120,38 +123,52 @@ $(document).ready(function () {
     });
 
     function saveVisaApplicationDraft(formData, stepNumber) {
-      console.log(`Saving draft for step ${stepNumber}`, formData);
       const packageId = urlParams.get("package_id");
-      try {
-        formData.append("packageId", packageId); // Attach package ID if available
-        // Attach application ID for steps after 1
-        if (stepNumber !== 1) {
-          const appId = localStorage.getItem("visaApplicationId");
-          formData.append("applicationId", appId);
-        }
-
-        $.ajax({
-          url: "/api/application/draft/",
-          method: "POST",
-          data: JSON.stringify(formData),
-          contentType: false, // Let browser set the correct multipart/form-data headers
-          processData: false, // Don't process data as a query string
-          success: function (res) {
-            console.log("✅ Draft saved successfully:", res);
-
-            // Save applicationId to localStorage only on Step 1
-            if (stepNumber === 1 && res.applicationId) {
-              localStorage.setItem("visaApplicationId", res.applicationId);
-            }
-          },
-          error: function (xhr, status, err) {
-            console.error("Failed to save draft:", err);
-            console.debug("Server Response:", xhr.responseText);
-          },
-        });
-      } catch (e) {
-        console.error("Unexpected error in saveVisaApplicationDraft:", e);
+      formData.packageId = packageId;
+      const fd = new FormData();
+      fd.append("packageId", packageId);
+      if (stepNumber !== 1) {
+        fd.append(
+          "applicationId",
+          localStorage.getItem("visaApplicationId") || ""
+        );
       }
+
+      for (let key in formData) {
+        const value = formData[key];
+        if (Array.isArray(value)) {
+          value.forEach((file, index) => {
+            fd.append(`${key}[]`, file);
+          });
+        } else if (value instanceof File) {
+          fd.append(key, value);
+        } else {
+          fd.append(key, value); // e.g., packageId, applicationId
+        }
+      }
+
+      $.ajax({
+        url: "/api/application/draft/",
+        method: "POST",
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+          console.log("✅ Draft saved successfully:");
+          if (res.applicationId) {
+            localStorage.setItem("visaApplicationId", res.applicationId);
+            localStorage.setItem("newApplicationRequest", false);
+          }
+          if (stepNumber === 1 && res.applicationId) {
+            // Save applicationId to localStorage only on Step 1
+            localStorage.setItem("visaApplicationId", res.applicationId);
+          }
+        },
+        error: function (xhr, status, err) {
+          console.error("Failed to save draft:", err);
+          console.debug("Server Response:", xhr.responseText);
+        },
+      });
     }
 
     function goToStep(stepNumber) {
@@ -229,7 +246,7 @@ $(document).ready(function () {
 
       dateOfBirth = getValue("dob");
       passportNumber = getValue("passportNumber");
-      const formData = {};
+      const payloadData = {};
 
       for (const field of fields) {
         const value = field.hasOwnProperty("value")
@@ -246,12 +263,12 @@ $(document).ready(function () {
           if (field.id) document.getElementById(field.id)?.focus();
           return;
         }
-        formData[field.id || field.name.toLowerCase().replace(/\s+/g, "_")] =
+        payloadData[field.id || field.name.toLowerCase().replace(/\s+/g, "_")] =
           value;
       }
 
       // All validations passed
-      saveVisaApplicationDraft(formData, 1);
+      saveVisaApplicationDraft(payloadData, 1);
       goToStep(2);
     });
 
@@ -277,7 +294,6 @@ $(document).ready(function () {
         { name: "Departure date", id: "departureDate" },
         { name: "Purpose of travel", id: "purposeOfTravel" },
         { name: "VISA entry", id: "visaEntry" },
-        { name: "Accommodation", id: "accommodation" },
       ];
       const formData = {};
       for (const field of fields) {
@@ -302,6 +318,8 @@ $(document).ready(function () {
         formData[field.id || field.name.toLowerCase().replace(/\s+/g, "_")] =
           value;
       }
+
+      formData.accommodation = accommodation;
 
       // All validations passed
       saveVisaApplicationDraft(formData, 2);
@@ -395,7 +413,40 @@ $(document).ready(function () {
 
     $("#submitVisaApplicationFormBtn").on("click", function (e) {
       e.preventDefault();
-      $("#visaApplicationProcess").submit();
+
+      $("#submitVisaApplicationFormBtn").prop("disabled", true);
+
+      // Submit draft to cash on delivery
+
+      $.ajax({
+        url: "/api/application/publish/",
+        method: "POST",
+        data: {
+          applicationId: localStorage.getItem(`visaApplicationId`),
+        },
+        success: function (successResponse) {
+          console.log(`Respinse`, successResponse);
+
+          console.log("Application submit successfully");
+          localStorage.removeItem(`visaApplicationId`);
+          popUpMessage("center", res.msg, res.status);
+          setTimeout(function () {
+            window.location.href =
+              "/thank-you/?application_id=" +
+              btoa(localStorage.getItem(`visaApplicationId`));
+          }, 1500);
+          $("#submitVisaApplicationFormBtn").prop("disabled", false);
+        },
+        error: function (errorResponse) {
+          console.error("Failed to submit VISA application:", errorResponse);
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            errorResponse.responseJSON.status
+          );
+          $("#submitVisaApplicationFormBtn").prop("disabled", false);
+        },
+      });
     });
   }
 
