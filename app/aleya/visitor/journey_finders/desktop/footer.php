@@ -14,9 +14,8 @@
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
                         <i class="ri-facebook-fill"></i>
                     </a>
-                    <a href="https://www.instagram.com/journeyfinders.in" target="_blank
-                        class=" w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary
-                        transition">
+                    <a href="https://www.instagram.com/journeyfinders.in" target="_blank"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
                         <i class="ri-instagram-fill"></i>
                     </a>
                 </div>
@@ -29,13 +28,15 @@
                     <li><a href="/packages/india/himachal-pradesh/"
                             class="text-gray-400 hover:text-white transition">Himachal pradesh</a></li>
                     <li><a href="/packages/india/goa/" class="text-gray-400 hover:text-white transition">Goa</a></li>
-                    <li><a href="/packages/maldives/" class="text-gray-400 hover:text-white transition">Maldives</a>
+                    <li><a href="/packages/maldives/male" class="text-gray-400 hover:text-white transition">Maldives</a>
                     </li>
-                    <li><a href="/packages/mauritius/" class="text-gray-400 hover:text-white transition">Mauritius</a>
+                    <li><a href="/packages/mauritius/mauritius/"
+                            class="text-gray-400 hover:text-white transition">Mauritius</a>
                     </li>
-                    <li><a href="/packages/thailand/" class="text-gray-400 hover:text-white transition">Thailand</a>
+                    <li><a href="/search/?q=thailand" class="text-gray-400 hover:text-white transition">Thailand</a>
                     </li>
-                    <li><a href="/packages/dubai/" class="text-gray-400 hover:text-white transition">Dubai</a></li>
+                    <li><a href="/packages/united-arab-emirates/dubai/"
+                            class="text-gray-400 hover:text-white transition">Dubai</a></li>
                 </ul>
             </div>
             <div>
