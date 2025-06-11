@@ -194,8 +194,9 @@
                 <li><a href="/category/report/" title="Report"
                         <?php echo ((BASE_URL == '/category/report/') ? 'class="active"' : '') ?>
                         class="disable">Report</a></li>
-                <li><a href="/category/partner-insights/" title="Partner Insights" class="partnerInsights">Partner
-                        Insights</a></li>
+                <li><a href="/ai-emerging-tech/" title="Report"
+                        <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>
+                        class="disable">AI/Emerging Tech</a></li>
             </ul>
         </nav>
     </header>
