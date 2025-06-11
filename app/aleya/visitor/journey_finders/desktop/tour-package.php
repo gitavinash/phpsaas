@@ -247,11 +247,11 @@ require_once 'header.php';
                     Fill out the form below and our travel experts will get back to
                     you within 24 hours.
                 </p>
-                <form class="space-y-4">
+                <form class="space-y-4" method="POST" action="/enquiry/">
                     <div>
                         <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full
                             Name *</label>
-                        <input type="text" id="full-name"
+                        <input type="text" name="name" id="full-name"
                             class="form-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
                             placeholder="Enter your full name" required />
                     </div>
@@ -265,47 +265,33 @@ require_once 'header.php';
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number
                             *</label>
-                        <input type="tel" id="phone"
+                        <input type="tel" id="phone" name='mobile'
                             class="form-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
                             placeholder="Enter your phone number" required />
                     </div>
                     <div>
                         <label for="travel-date" class="block text-sm font-medium text-gray-700 mb-1">Preferred Travel
-                            Date *</label>
-                        <input type="date" id="travel-date" min="<?php echo date('Y-m-d') ?>"
-                            class="form-input custom-date-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm"
-                            required />
-                    </div>
-                    <div>
-                        <label for="travelers" class="block text-sm font-medium text-gray-700 mb-1">Number
-                            of Travelers
-                            *</label>
-                        <div class="flex">
-                            <button type="button"
-                                class="decrease-travelers px-3 py-2 bg-gray-100 border border-gray-300 rounded-l text-gray-700 hover:bg-gray-200 transition">
-                                <i class="ri-subtract-line"></i>
-                            </button>
-                            <input type="number" id="travelers"
-                                class="form-input custom-number-input w-full px-4 py-2 border-y border-gray-300 text-center text-gray-700 text-sm"
-                                value="2" min="1" max="12" required />
-                            <button type="button"
-                                class="increase-travelers px-3 py-2 bg-gray-100 border border-gray-300 rounded-r text-gray-700 hover:bg-gray-200 transition">
-                                <i class="ri-add-line"></i>
-                            </button>
-                        </div>
+                            Date</label>
+                        <input type="date" id="travel-date" name="travel_date" min="<?php echo date('Y-m-d') ?>"
+                            class="form-input custom-date-input w-full px-4 py-2 border border-gray-300 rounded text-gray-700 text-sm" />
                     </div>
                     <div class="flex items-start">
-                        <input type="checkbox" id="privacy-policy" class="custom-checkbox mt-1" required />
+                        <input type="checkbox" id="privacy-policy" required class="mt-1 w-[35px] h-[30px]" required>
                         <label for="privacy-policy" class="ml-2 text-sm text-gray-600">
                             I agree to the
                             <a href="/privacy-policy/" class="text-primary hover:underline">Privacy Policy</a>
                             and consent to being contacted regarding my enquiry.
                         </label>
                     </div>
-                    <button type="submit" id="submit-enquiry"
-                        class="w-full bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition">
-                        Submit Enquiry
-                    </button>
+                    <input type="hidden" id="recaptcha_token" name="recaptcha_token">
+                    <input type="hidden" name="type" value="enquiry">
+                    <input type="hidden" name="action" value="new">
+                    <input type="hidden" name="subject" value="<?php echo $tour_package_title ?>">
+                    <input type="hidden" name="sender" value="<?php echo SITE_EMAIL_ALERT ?>">
+                    <input type="hidden" name="redirect_url" value="https://journeyfinders.com/thank-you/">
+                    <input type="submit" id="submit-enquiry"
+                        class="w-full bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-primary/90 transition cursor-pointer"
+                        value="Submit Enquiry">
                     <!-- Confirmation Dialog -->
                     <div id="confirmation-dialog"
                         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">

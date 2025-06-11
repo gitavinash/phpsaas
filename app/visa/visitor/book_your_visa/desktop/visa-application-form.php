@@ -48,11 +48,11 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                 <div class="step-content" id="step1">
                     <div class="flex justify-between items-center mb-8">
                         <h2 class="text-2xl font-bold">Personal Information</h2>
-                        <!-- <a
+                        <a href="#" id="addNewPerson"
                             class="text-primary hover:text-primary/80 font-medium flex items-center cursor-pointer saveAsDraft">
                             <i class="ri-save-line mr-2 w-5 h-5 flex items-center justify-center"></i>
-                            Save as Draft
-                        </a> -->
+                            Add new person
+                        </a>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
