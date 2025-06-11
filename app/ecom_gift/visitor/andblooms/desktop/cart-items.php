@@ -43,13 +43,12 @@ include_once 'header.php';
 
                     <div class="ad-card">
                         <a href="#" id="<?php echo $cart_id ?>" class="removeFromCart delet product-removal"><img
-                                src="<?php echo USER_IMAGES ?>delete.png" alt="remove item from cart"
-                                style="padding: 10px;"></a>
+                                src="<?php echo USER_IMAGES ?>delete.png" alt="remove item from cart"></a>
                         <div class="cart-img">
                             <img src="<?php echo $product_thumbnail ?>">
                         </div>
                         <div class="prodct-nme">
-                            <a href="#" onclick="event.preventDefault();">
+                            <a href="<?php echo $link_url ?>" target="_blank" title="<?php echo $product_title ?>">
                                 <h2><?php echo $product_title ?></h2>
                             </a>
                             <h5><img src="<?php echo USER_IMAGES ?>pro-rupees-icon.svg"><?php echo $cart_price ?></h5>
