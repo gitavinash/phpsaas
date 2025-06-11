@@ -19,9 +19,21 @@ if (!isset($_COOKIE['user_data'])) {
 
 			$encryptEmail = base64_encode($user_email);
 
+			if (isset($_COOKIE['device_id'])) {
+				if ($checkSession = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_active_device='{$_COOKIE['device_id']}' AND us_site_id=" . SITE_ID)) {
+					if (mysqli_num_rows($checkSession) == 0) {
+						header("Location: /logout/?msg=invalid+session+token+or+expire", true, 301);
+						exit();
+					}
+				}
+			} else {
+				header("Location: /logout/?msg=session_token%20not%20found", true, 301);
+				exit();
+			}
+
 			if ($user_status != 1 && SITE_APP_ID != 3) {
 
-				header("Location: /verify-account/?email={$encryptEmail}");
+				header("Location: /verify-account/?email={$encryptEmail}", true, 301);
 				exit();
 			} else {
 

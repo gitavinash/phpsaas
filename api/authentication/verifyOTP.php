@@ -30,13 +30,14 @@ function verifyOTP($connection, $data)
                                     /** User Session Data */
 
                                     ob_start();
-
                                     setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/');
                                     setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/');
                                     setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/');
                                     setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/');
                                     setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/');
                                     setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/');
+                                    $_COOKIE['user_data'] = $user_salt_key;
+                                    require_once API_MODULES . 'analytics/session-record.php';
 
                                     ob_end_flush();
 

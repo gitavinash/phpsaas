@@ -20,7 +20,6 @@ function login($connection, $data)
                 if ($site_access_status == 1 && $user_status == 1) {
 
                     ob_start();
-
                     setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                     setcookie('user_email', base64_encode($email), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                     setcookie('user_mobile', base64_encode($user_mobile), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
@@ -29,6 +28,8 @@ function login($connection, $data)
                     setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                     setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                     setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                    $_COOKIE['user_data'] = $user_salt_key;
+                    require_once API_MODULES . 'analytics/session-record.php';
 
                     ob_end_flush();
                     $status = 'success';

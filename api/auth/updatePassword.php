@@ -31,12 +31,15 @@ function updatePassword($connection, $data)
 
                 if ($updatePassword = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_password='{$dbPassword}' WHERE user_id='{$user_id}' AND user_email='{$email}' AND user_salt_key='{$transaction}'")) {
 
-                    $status = 'success';
-                    $msg = "Password updated successfully";
+                    if ($destroySession = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
+                        $status = 'success';
+                        $msg = "Password updated successfully";
 
-                    $passwordResetURL = SITE_URL . '/verify/password/?transaction=' . $transaction . '&email=' . base64_encode($email);
-
-                    require_once EMAIL_TEMPLATE . 'update-password-notification.php';
+                        $passwordResetURL = SITE_URL . '/verify/password/?transaction=' . $transaction . '&email=' . base64_encode($email);
+                        require_once EMAIL_TEMPLATE . 'update-password-notification.php';
+                    } else {
+                        $msg = "Something went wrong while updating sessions";
+                    }
                 } else {
 
                     $msg = 'Something is wrong while updating your password. Kindly contact to Admin';

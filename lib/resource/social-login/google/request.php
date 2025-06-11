@@ -102,7 +102,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                 mysqli_query($connection, 'COMMIT');
 
                                 ob_start();
-
+                                require_once API_MODULES . 'analytics/session-record.php';
                                 setcookie('user_name', base64_encode($_SESSION['google_name']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_mobile', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
@@ -111,7 +111,8 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                 setcookie('user_meta', '', time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_type', base64_encode('subscriber'), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-
+                                $_COOKIE['user_data'] = $saltKey;
+                                require_once API_MODULES . 'analytics/session-record.php';
                                 ob_end_flush();
                             } else {
                                 echo $addUser . " && " . $createProfile . " && " . $userSiteAccess;
@@ -136,7 +137,6 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                     if ($site_access_status == 1) {
 
                         ob_start();
-
                         setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
@@ -144,6 +144,8 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                         setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                         setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                        $_COOKIE['user_data'] = $user_salt_key;
+                        require_once API_MODULES . 'analytics/session-record.php';
 
                         ob_end_flush();
                         $status = 'success';

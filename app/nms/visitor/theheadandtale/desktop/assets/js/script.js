@@ -124,8 +124,15 @@ $("#forgotPassword").on("click", function (event) {
         $("#forgotPassword").show();
       }
     },
-    error: function (data) {
-      console.log(data);
+    error: function (errorResponse) {
+      popUpMessage(
+        "center",
+        errorResponse.responseJSON.msg,
+        errorResponse.responseJSON.status
+      );
+      setTimeout(function () {
+        window.location.reload();
+      }, 1500);
       $("#forgotPassword").show();
     },
   });
@@ -166,8 +173,15 @@ $("#updatePassword").on("click", function (event) {
           popUpMessage("center", data.msg, data.status);
         }
       },
-      error: function (data) {
-        console.log(data);
+      error: function (errorResponse) {
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+        setTimeout(function () {
+          window.location.reload();
+        }, 1500);
         $("#updatePassword").show();
       },
     });
@@ -201,8 +215,15 @@ $("#submitNewsletter").on("click", function (e) {
           $("#submitNewsletter").show();
         }
       },
-      error: function (data) {
-        console.error(`error: `, data);
+      error: function (errorResponse) {
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+        setTimeout(function () {
+          window.location.reload();
+        }, 1500);
         $("#submitNewsletter").show();
       },
     });
