@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <?php require_once DEFAULT_META ?>
-    <script src="https://www.google.com/recaptcha/api.js?render=<?php GOOGLE_RECAPTCHA_SITE_KEY ?>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo GOOGLE_RECAPTCHA_SITE_KEY ?>"></script>
     <script>
     grecaptcha.ready(function() {
         grecaptcha.execute('<?php echo GOOGLE_RECAPTCHA_SITE_KEY ?>', {
