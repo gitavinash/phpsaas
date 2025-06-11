@@ -15,8 +15,7 @@ require_once 'header.php';
                 individuals on their hair restoration journey. Share experiences, get advice, and discover
                 solutions.</p>
             <div class="flex flex-wrap gap-4">
-                <a href="https://readdy.ai/home/0ed8e6fd-1b57-4961-9c40-f04471f53645/c4c79664-0b50-4ade-81af-96500f328509"
-                    data-readdy="true"
+                <a href="#" data-readdy="true"
                     class="px-6 py-3 bg-white text-primary font-medium rounded-md hover:bg-gray-100 shadow-lg !rounded-button whitespace-nowrap">
                     Start a Discussion
                 </a>
@@ -641,8 +640,7 @@ require_once 'header.php';
         <p class="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">Connect with specialists and others on similar
             journeys. Share experiences, get advice, and discover the latest hair restoration solutions.</p>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://readdy.ai/home/0ed8e6fd-1b57-4961-9c40-f04471f53645/c4c79664-0b50-4ade-81af-96500f328509"
-                data-readdy="true"
+            <a href="#" data-readdy="true"
                 class="px-6 py-3 bg-white text-primary font-medium rounded-md hover:bg-gray-100 shadow-lg !rounded-button whitespace-nowrap">
                 Start a Discussion
             </a>

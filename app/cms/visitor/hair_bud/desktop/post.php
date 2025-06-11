@@ -275,8 +275,7 @@ require_once 'header.php';
                     </div>
                 </div>
                 <div class="flex justify-center mt-4">
-                    <a href="https://readdy.ai/home/e25064bf-aebf-422f-a7a5-a205641c8e97/0bd7af16-2f8e-49f3-833c-0cbf89eb7687"
-                        data-readdy="true"
+                    <a href="#" data-readdy="true"
                         class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-blue-600 transition whitespace-nowrap flex items-center">
                         <i class="ri-image-line mr-2"></i> View Full Gallery
                     </a>
