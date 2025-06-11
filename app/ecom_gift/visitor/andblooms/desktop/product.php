@@ -248,7 +248,7 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
         <!-- Product Hero Section -->
         <div class="flex flex-col md:flex-row gap-8 mb-16">
             <!-- Product Images -->
-            <div class="md:w-3/5">
+            <div>
                 <div class="product-image-container mb-4 rounded-lg overflow-hidden position-relative">
                     <img src="<?php echo $product_image ?>" id="mainProductImage" alt="<?php echo $product_title ?>"
                         class="w-full h-full object-cover object-top">
@@ -287,7 +287,7 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
                 </div>
             </div>
             <!-- Product Details -->
-            <div class="md:w-2/5">
+            <div>
                 <h1 class="text-3xl font-semibold text-gray-800 mb-2"><?php echo $product_title ?></h1>
                 <div class="flex items-center mb-4">
                     <div class="flex text-yellow-400">
