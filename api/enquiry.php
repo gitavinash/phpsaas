@@ -2,6 +2,7 @@
 
 unset($_REQUEST['type']);
 unset($_REQUEST['action']);
+unset($_REQUEST['recaptcha_token']);
 
 // Define action parameter as form type
 
