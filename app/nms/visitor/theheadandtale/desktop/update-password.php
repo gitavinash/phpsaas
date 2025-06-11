@@ -3,13 +3,13 @@
 $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
 if (isset($responseMsg)) {
-  echo "<script>alert('{$responseMsg}')</script>";
+    echo "<script>alert('{$responseMsg}')</script>";
 }
 
 if (isset($_COOKIE['user_data'])) {
 
-  header("Location: {$redirect_url}");
-  exit();
+    header("Location: {$redirect_url}");
+    exit();
 }
 
 ?>
@@ -28,6 +28,9 @@ if (isset($_COOKIE['user_data'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
+    <?php
+    require_once GOOGLE_RECAPTCHA_GENERATOR;
+    ?>
 </head>
 
 <body>
@@ -62,6 +65,7 @@ if (isset($_COOKIE['user_data'])) {
                             <input type="hidden" name="action" value="updatePassword">
                             <input type="hidden" name="transaction" value="<?php echo $_GET['transaction'] ?>">
                             <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>">
+                            <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                             <input type="submit" id="updatePassword" class="button" value="Change Password">
                         </div>
                     </div>

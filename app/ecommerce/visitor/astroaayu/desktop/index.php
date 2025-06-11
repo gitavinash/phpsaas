@@ -283,7 +283,7 @@ require_once 'header.php';
                 <input type="hidden" name="action" value="new">
                 <input type="hidden" name="subject" value="Homepage Free-Prediction Form">
                 <input type="hidden" name="sender" value="bW9oaXRhZ2dhcndhbDExMTk0QGdtYWlsLmNvbQ==">
-                <input type="hidden" name="recaptcha_token" id="recaptcha_token">
+                <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                 <input type="hidden" name="redirect_url"
                     value="/thank-you/?form_type=true&msg=Thank+you+for+your+query%2Ffeedback.+It+is+important+for+us.">
                 <div class="col-12 text-center">

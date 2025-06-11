@@ -54,7 +54,32 @@ if ((isset($type))) {
 
 	/** For all type of form process */
 
-	require_once 'formManager.php';
+	if (isset($recaptcha_token)) {
+		$secretKey = GOOGLE_RECAPTCHA_SECRET_KEY;
+
+		$verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+		$response = file_get_contents($verifyUrl . '?secret=' . $secretKey . '&response=' . $recaptcha_token);
+		$responseKeys = json_decode($response, true);
+
+		if (intval($responseKeys["success"]) !== 1) {
+			http_response_code(400);
+			echo json_encode([
+				"status" => 'error',
+				"msg" => "reCAPTCHA verification failed."
+			]);
+			exit();
+		} else {
+			require_once 'formManager.php';
+		}
+	} else {
+		require_once 'formManager.php';
+		// http_response_code(400);
+		// echo json_encode([
+		// 	"status" => 'error',
+		// 	"msg" => "Something is wrong at reCAPTCHA verification."
+		// ]);
+		// exit();
+	}
 }
 
 /** Redirect all double slash url request to single slash */

@@ -112,8 +112,8 @@ if (!isset($validId)) {
 
                                             <!-- Input field for 'Other' value -->
                                             <div id="otherValueWrapper" style="display:none;">
-                                                <input type="number" onwheel="this.blur()" class="form-control" id="otherValue"
-                                                    placeholder="Enter amount">
+                                                <input type="number" onwheel="this.blur()" class="form-control"
+                                                    id="otherValue" placeholder="Enter amount">
                                             </div>
 
                                         </div>
@@ -193,6 +193,7 @@ if (!isset($validId)) {
                         <input type="hidden" name="productTypeId" value="148">
                         <input type="hidden" name="order" id="orderId" value="<?php echo $request_id ?>">
                         <input type="hidden" name="paymentMode" id="paymentMode" value="online">
+                        <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                         <a href="#" id="processToPaymentCustom" class="button">Proceed to payment</a>
                         <a href="/view-agreement/?id=<?php echo $request_id ?>&state=<?php echo $state ?>"
                             target="_blank" class="button blue-bg">Download draft</a>

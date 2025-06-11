@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <title><?php echo ucwords(str_replace('/', '', str_replace('-', ' ', BASE_URL))).' | '.SITE_NAME ?></title>
+    <title><?php echo ucwords(str_replace('/', '', str_replace('-', ' ', BASE_URL))) . ' | ' . SITE_NAME ?></title>
     <link rel="stylesheet" href="/config.min.css">
     <link rel="stylesheet" href="<?php echo DEFAULT_USER_STYLESHEET ?>checkout.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
         rel="stylesheet">
     <?php require_once DEFAULT_META ?>
+    <?php require_once GOOGLE_RECAPTCHA_GENERATOR ?>
 </head>
 
 <body>

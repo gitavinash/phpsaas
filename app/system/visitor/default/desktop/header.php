@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/app/system/visitor/default/desktop/assets/css/onboarding.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
         rel="stylesheet">
+    <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
 
 <body>

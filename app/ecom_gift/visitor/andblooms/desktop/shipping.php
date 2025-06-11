@@ -195,6 +195,7 @@ include_once 'header.php';
                     <form>
                         <input type="hidden" name="order" id="orderId" value=" <?php echo $id ?>">
                         <input type="hidden" name="paymentMode" value="online">
+                        <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                         <a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Proceed to payment</a>
                     </form>
                 </div>

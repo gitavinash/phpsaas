@@ -40,8 +40,8 @@ require_once 'header.php';
                         required />
                 </div>
                 <div class="form-group">
-                    <input type="number" onwheel="this.blur()" name="mobile" id="mobile" placeholder="Mobile no*" class="form-control"
-                        required />
+                    <input type="number" onwheel="this.blur()" name="mobile" id="mobile" placeholder="Mobile no*"
+                        class="form-control" required />
                 </div>
                 <div class="form-group">
                     <input type="email" class="form-control" id="email" placeholder="Email address*" name="email"
@@ -55,6 +55,7 @@ require_once 'header.php';
                     <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password*"
                         name="confirm_password" required />
                 </div>
+                <input type="hidden" id="recaptcha_token" name="recaptcha_token">
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="register">
                 <input type="hidden" name="userType"

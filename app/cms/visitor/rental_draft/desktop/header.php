@@ -15,6 +15,7 @@
         href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
+    <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
 
 <body>

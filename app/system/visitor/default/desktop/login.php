@@ -65,6 +65,7 @@ require_once 'header.php';
                 <div class="form-group">
                     <p>Forgot your password? <a href="/forgot-password/">Click Here</a></p>
                 </div>
+                <input type="hidden" id="recaptcha_token" name="recaptcha_token">
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="login">
                 <input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>">

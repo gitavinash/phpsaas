@@ -60,6 +60,7 @@ require_once 'header.php';
                             placeholder="Enter your mobile number"
                             value="<?php echo ((isset($mobile)) ? $mobile : '') ?>">
                     </div>
+                    <input type="hidden" class="recaptcha_token" name="recaptcha_token">
                     <button type="submit" id="mobileLoginContinueBtn" class="button theme-button">Continue</button>
                 </form>
             </div>
@@ -72,6 +73,7 @@ require_once 'header.php';
                         <input type="number" class="form-control input-with-label" name="otp" id="otpValue" required
                             placeholder="123456" value="<?php echo ((isset($mobile)) ? $mobile : '') ?>">
                     </div>
+                    <input type="hidden" class="recaptcha_token" name="recaptcha_token">
                     <a href="#" id="resendOTPBtn" class="disabled" style="pointer-events: none;">Resend OTP in 30s</a>
                     <button type="submit" id="verifyOTPBtn" class="button theme-button">Verify OTP</button>
                 </form>

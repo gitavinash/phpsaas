@@ -124,7 +124,7 @@ function update($connection, $data)
                         $redirect = '/dashboard/' . $postType . '/?type=edit&editor=true&id=' . base64_encode($id);
                     } else {
 
-                        echo 'i m here ->' . $addRedirect . ' && ' . $updateLink . ' && ' . $updatePost . ' && ' . $updateMeta . ' && ' . $tagData;
+                        echo $addRedirect . ' && ' . $updateLink . ' && ' . $updatePost . ' && ' . $updateMeta . ' && ' . $tagData;
                         mysqli_query($connection, 'ROLLBACK');
                     }
                 } else {

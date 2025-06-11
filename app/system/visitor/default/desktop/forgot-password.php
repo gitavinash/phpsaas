@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <div class="col d-none d-lg-block">
@@ -27,6 +27,7 @@
                     <input type="text" class="form-control input-with-label" name="email" id="email"
                         placeholder="Email">
                 </div>
+                <input type="hidden" id="recaptcha_token" name="recaptcha_token">
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="forgotPassword">
                 <button type="submit" id="forgotPassword" class="button theme-button">Recover password</button>
@@ -37,6 +38,6 @@
         </div>
         <?php
 
-    require_once 'footer.php';
+        require_once 'footer.php';
 
-?>
+        ?>

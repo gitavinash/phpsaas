@@ -27,6 +27,7 @@ if (isset($_COOKIE['user_data'])) {
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
 
 <body>
@@ -53,12 +54,14 @@ if (isset($_COOKIE['user_data'])) {
                         <input type="password" placeholder="Password" name="password" required>
                     </div>
                     <div class="sign--in_btn">
+                        <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                         <input type="hidden" name="mobile" value="<?php echo time() ?>">
                         <input type="hidden" name="userRole" value="subscriber">
                         <input type="hidden" name="type" value="user">
                         <input type="hidden" name="action" value="subscriber">
                         <!-- <input type="hidden" name="hardRedirectURL" value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/thankyou_signup/') ?>"> -->
-                        <input type="hidden" name="hardRedirectURL" value="/thankyou_signup/<?php echo ((isset($redirect_url)) ? '?refUrl=' . $redirect_url : '') ?>">
+                        <input type="hidden" name="hardRedirectURL"
+                            value="/thankyou_signup/<?php echo ((isset($redirect_url)) ? '?refUrl=' . $redirect_url : '') ?>">
                         <?php
 
                         if (isset($auth)) { ?>
@@ -72,11 +75,14 @@ if (isset($_COOKIE['user_data'])) {
                     <div class="or">
                         <p>or</p>
                     </div>
-                    <a href='/oauth/google/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>' class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png"
-                            class="img-fluid" alt="">Continue with Google</a>
+                    <a href='/oauth/google/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>'
+                        class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt="">Continue
+                        with Google</a>
                     <br />
                     <div class="login_input">
-                        <p><br />Already have an Account? <a href="/login/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>">Log in</a></p>
+                        <p><br />Already have an Account? <a
+                                href="/login/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url : '') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl : '') ?>">Log
+                                in</a></p>
                     </div>
                 </form>
 

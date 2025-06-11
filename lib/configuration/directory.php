@@ -12,6 +12,7 @@ define('PAYMENT_GATEWAY', RESOURCE . 'payment-gateway/');
 define('NOTIFICATION', RESOURCE . 'notification/');
 define('QR_CODE', RESOURCE . 'qrcode/');
 define('CONTLO', RESOURCE . 'contlo/');
+define('RECAPTCHA', RESOURCE . 'recaptcha/');
 define('CONTLO_API_URL', 'https://api.contlo.com/v1/track');
 
 /** Meta and Structure Data Resource */
@@ -244,3 +245,7 @@ define('SITE_LOGO', SITE_URL . '/' . ((isset($site_logo)) ? (($site_logo == '') 
 /** Editor */
 
 define('EDITOR_CONTENT_FILTER', MODULES . 'editor/content.php');
+
+// Google reCaptcha
+
+define('GOOGLE_RECAPTCHA_GENERATOR', RECAPTCHA . 'google/generate-recaptcha.php');

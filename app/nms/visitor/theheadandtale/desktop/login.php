@@ -27,6 +27,7 @@ if (isset($_COOKIE['user_data'])) {
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
 
 <body>
@@ -50,7 +51,8 @@ if (isset($_COOKIE['user_data'])) {
                     <div class="sign--in_btn">
                         <input type="hidden" name="type" value="auth">
                         <input type="hidden" name="action" value="login">
-                        <input type="hidden" name="redirect_url" value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/') ?>">
+                        <input type="hidden" name="redirect_url"
+                            value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/') ?>">
                         <input type="hidden" name="hardRedirect" value="true">
                         <input type="hidden" name="hardRedirectURL" value="/dashboard/">
                         <?php
@@ -62,16 +64,20 @@ if (isset($_COOKIE['user_data'])) {
                         }
 
                         ?>
+                        <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                         <input type="submit" class="button" value="Sign in">
                     </div>
                 </form>
                 <div class="or">
                     <p>or</p>
                 </div>
-                <a href='/oauth/google/?redirect_url=<?php echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl  : '') ?>' class="authBtn"><img
-                        src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt="">Continue with Google</a>
+                <a href='/oauth/google/?redirect_url=<?php echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl  : '') ?>'
+                    class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt="">Continue
+                    with Google</a>
                 <br />
-                <p>Don't have an account? <a href="/signup/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url . '&auth=true' : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl . '&auth=true' : '') ?>">Sign up</a></p>
+                <p>Don't have an account? <a
+                        href="/signup/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url . '&auth=true' : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl . '&auth=true' : '') ?>">Sign
+                        up</a></p>
                 <div class="form_bottom">
                     <p>By signing for The Head And Tale, you agree to the <a href="/terms-and-conditions/"
                             target="_blank"> Terms &

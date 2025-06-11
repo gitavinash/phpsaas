@@ -139,7 +139,7 @@
     })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
     </script>
     <!-- End Google Tag Manager -->
-
+    <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
 
 <body>

@@ -31,6 +31,7 @@ require_once 'header.php';
                     <input type="password" class="form-control input-with-label" name="cnf_pass" id="confirmPassword"
                         placeholder="Confirm New Password">
                 </div>
+                <input type="hidden" id="recaptcha_token" name="recaptcha_token">
                 <input type="hidden" name="type" value="auth">
                 <input type="hidden" name="action" value="updatePassword">
                 <input type="hidden" name="transaction" value="<?php echo $_GET['transaction'] ?>">

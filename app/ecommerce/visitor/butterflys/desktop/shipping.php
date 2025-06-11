@@ -47,44 +47,44 @@ include_once 'header.php';
 
                     ?>
 
-                            <div class="ad-card">
-                                <div class="paymnet-section">
-                                    <h3 class="heading-2">Contact information</h3>
-                                    <!-- Payment Gateway or Shipping Confirmation -->
+                    <div class="ad-card">
+                        <div class="paymnet-section">
+                            <h3 class="heading-2">Contact information</h3>
+                            <!-- Payment Gateway or Shipping Confirmation -->
 
-                                    <form class="shipping-box">
+                            <form class="shipping-box">
 
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                            </div>
-                                            <table class="table ship-table">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                    </div>
+                                    <table class="table ship-table">
 
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">Name</th>
-                                                        <td id='shippingName'><?php echo $profile_display_name ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Contact</th>
-                                                        <td id='shippingName'><?php echo $address_mobile ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Email</th>
-                                                        <td id='shippingName'><?php echo $profile_email ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Ship to</th>
-                                                        <td id='shippingAddress'>
-                                                            <?php echo $address_house_no . ', ' . $address_landmark . ', ' . $address_area . ',<br />' . $city_name . ', ' . $state_name . ' - ' . $address_pin_code; ?>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Name</th>
+                                                <td id='shippingName'><?php echo $profile_display_name ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Contact</th>
+                                                <td id='shippingName'><?php echo $address_mobile ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Email</th>
+                                                <td id='shippingName'><?php echo $profile_email ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Ship to</th>
+                                                <td id='shippingAddress'>
+                                                    <?php echo $address_house_no . ', ' . $address_landmark . ', ' . $address_area . ',<br />' . $city_name . ', ' . $state_name . ' - ' . $address_pin_code; ?>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                                        <h3 class="heading-2">Order summary</h3>
+                                <h3 class="heading-2">Order summary</h3>
 
-                                        <?php
+                                <?php
 
                                         $productNameList = explode(',', $product_title);
                                         $productImageList = explode(',', $product_image);
@@ -102,33 +102,35 @@ include_once 'header.php';
 
                                         ?>
 
-                                </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ad-card">
+                        <div class="paymnet-section">
+                            <h3 class="heading-2">Payment option</h3>
+                            <!-- Payment Gateway or Shipping Confirmation -->
+
+                            <div class="form-row">
+                                <table class="table ship-table">
+
+                                    <tbody>
+                                        <tr>
+                                            <div class="input-group">
+                                                <div id="radioBtn" class="btn-group">
+                                                    <a class="btn btn-primary btn-sm active" data-toggle="happy"
+                                                        data-title="onlinePayment">Online Payment</a>
+                                                    <a class="btn btn-primary btn-sm notActive" data-toggle="happy"
+                                                        data-title="cashOnDelivery">Cash on Delivery</a>
+                                                </div>
+                                                <input type="hidden" name="happy" id="paymentMethod">
+                                            </div>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-
-
-                            <div class="ad-card">
-                                <div class="paymnet-section">
-                                    <h3 class="heading-2">Payment option</h3>
-                                    <!-- Payment Gateway or Shipping Confirmation -->
-
-                                    <div class="form-row">
-                                        <table class="table ship-table">
-
-                                            <tbody>
-                                                <tr>
-                                                    <div class="input-group">
-                                                        <div id="radioBtn" class="btn-group">
-                                                            <a class="btn btn-primary btn-sm active" data-toggle="happy" data-title="onlinePayment">Online Payment</a>
-                                                            <a class="btn btn-primary btn-sm notActive" data-toggle="happy" data-title="cashOnDelivery">Cash on Delivery</a>
-                                                        </div>
-                                                        <input type="hidden" name="happy" id="paymentMethod">
-                                                    </div>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
 
                     <?php
                         } else {
@@ -164,6 +166,7 @@ include_once 'header.php';
                     <form>
                         <input type="hidden" name="order" value="<?php echo $id ?>">
                         <input type="hidden" name="paymentMode" value="online">
+                        <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                         <a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Proceed to payment</a>
                     </form>
                 </div>

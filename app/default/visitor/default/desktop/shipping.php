@@ -107,6 +107,7 @@ require_once 'header.php';
                 <input type="hidden" name="app" id="app" value=" <?php echo SITE_APP ?>">
                 <input type="hidden" name="orderType" id="orderType"
                     value=" <?php echo ((isset($order)) ? $order : 'default') ?>">
+                <input type="hidden" name="recaptcha_token" class="recaptcha_token">
                 <input type="hidden" name="paymentMode" id="paymentMode" value="online">
                 <a href="#" id="processToPayment" class="button">Proceed to payment</a>
             </div>

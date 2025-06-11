@@ -92,3 +92,11 @@ define('ENCRYPT_METHOD', 'AES-128-CTR');
 // Maps key
 
 define('HERE_MAPS_KEY', '6zO_obkSkxtx4j1O9u6QpVTMuKuI75J_ZsWcXaW11To');
+
+if (!defined('GOOGLE_RECAPTCHA_SITE_KEY')) {
+	define('GOOGLE_RECAPTCHA_SITE_KEY', '6LdKyVwrAAAAAOws6wV4B3BAR7-H_iv_VNZTSDMx');
+}
+
+if (!defined('GOOGLE_RECAPTCHA_SECRET_KEY')) {
+	define('GOOGLE_RECAPTCHA_SECRET_KEY', '6LdKyVwrAAAAAN1aeIoKZadN7TuOAiIZXEwrNIV_');
+}
