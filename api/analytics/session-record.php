@@ -86,9 +86,7 @@ if ($recordIPData && $recordAnalytics && $recordUserSession) {
     mysqli_query($connection, "ROLLBACK");
 }
 
-$result = array(
+$sessionResult = array(
     'status' => ((isset($status)) ? $status : 'error'),
     'msg' => ((isset($msg)) ? $msg : '')
 );
-
-echo json_encode($result, true);
