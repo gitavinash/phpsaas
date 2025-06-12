@@ -31,8 +31,7 @@
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <a href="/" class="mr-8">
-                    <img src="https://static.readdy.ai/image/e53293cd76d16da5ebc50b3bdf122b81/9d10c38df657779d6114b355aeab28cc.png"
-                        alt="JourneyFinders" class="h-10" />
+                    <img src="<?php echo USER_IMAGES ?>logo.png" alt="JourneyFinders" class="h-10" />
                 </a>
                 <div class="hidden lg:flex space-x-6">
                     <a href="/"

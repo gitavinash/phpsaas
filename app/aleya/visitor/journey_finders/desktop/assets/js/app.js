@@ -17,21 +17,4 @@ $(document).ready(function () {
       });
     });
   }
-
-  // Show modal
-  function openCallbackModal() {
-    $("#callbackModal").removeClass("hidden");
-  }
-
-  // Hide modal on close button click
-  $("#closeCallbackBtn").on("click", function () {
-    $("#callbackModal").addClass("hidden");
-  });
-
-  // Optional: Close when clicking outside the modal content
-  $("#callbackModal").on("click", function (e) {
-    if (e.target === this) {
-      $(this).addClass("hidden");
-    }
-  });
 });
