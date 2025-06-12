@@ -1,8 +1,12 @@
 <?php
 
-$fetchIPData = file_get_contents("http://ip-api.com/json/" . ((IP == '127.0.0.1') ? '110.235.235.20' : IP) . "?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
+if (DEVELOPMENT_MODE == false) {
+    $fetchIPData = file_get_contents("http://ip-api.com/json/" . ((IP == '127.0.0.1') ? '110.235.235.20' : IP) . "?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
 
-extract(json_decode($fetchIPData, TRUE));
+    extract(json_decode($fetchIPData, TRUE));
+} else {
+    $country = 'india';
+}
 
 ?>
 <!DOCTYPE html>
