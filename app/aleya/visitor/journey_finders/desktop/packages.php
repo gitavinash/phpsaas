@@ -90,79 +90,6 @@ require_once 'header.php';
 <!-- Main Content -->
 <div class="container mx-auto px-4 py-8">
     <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Sidebar Filters -->
-        <div class="w-full lg:w-72 shrink-0">
-            <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-                <div class="mb-6">
-                    <h3 class="font-semibold text-lg mb-4">Filter Results</h3>
-                    <a href="<?php echo ACTIVE_URL_NON_QUERY ?>"
-                        class="text-primary text-sm font-medium hover:underline">
-                        Clear All Filters
-                    </a>
-                </div>
-                <!-- Price Range -->
-                <!-- <div class="border-t border-gray-100 py-5">
-                    <h4 class="font-medium mb-4">Price Range</h4>
-                    <div class="mb-4">
-                        <input type="range" class="w-full" min="0" max="3000" value="1500" class="price-slider"
-                            id="priceRange" />
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600">₹ 0</span>
-                        <span class="text-sm font-medium">Up to ₹ <span id="priceValue">1500</span></span>
-                        <span class="text-sm text-gray-600">₹ 3000+</span>
-                    </div>
-                </div> -->
-                <!-- Duration -->
-                <div class="border-t border-gray-100 py-5">
-                    <h4 class="font-medium mb-4">Duration</h4>
-                    <div class="space-y-3">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" checked />
-                            <span class="ml-2 text-sm">1-3 Days (12)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" checked />
-                            <span class="ml-2 text-sm">4-7 Days (28)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" />
-                            <span class="ml-2 text-sm">8-14 Days (16)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" />
-                            <span class="ml-2 text-sm">15+ Days (8)</span>
-                        </label>
-                    </div>
-                </div>
-                <!-- Tour Type -->
-                <div class="border-t border-gray-100 py-5">
-                    <h4 class="font-medium mb-4">Tour Type</h4>
-                    <div class="space-y-3">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" checked />
-                            <span class="ml-2 text-sm">Adventure (23)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" />
-                            <span class="ml-2 text-sm">Cultural (19)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" checked />
-                            <span class="ml-2 text-sm">Beach & Relaxation (15)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" />
-                            <span class="ml-2 text-sm">Wildlife & Nature (12)</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox" />
-                            <span class="ml-2 text-sm">Food & Culinary (8)</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Results Content -->
         <div class="flex-1">
             <!-- Sort Controls -->
@@ -194,11 +121,13 @@ require_once 'header.php';
 
                 switch (count($urlStructure)) {
                     case 2:
-                        $queryFilter = "LOWER(tp.tour_package_country) LIKE '%{" . str_replace('-', ' ', $urlStructure[1]) . "}' AND";
+                        $filterValue = str_replace('-', ' ', $urlStructure[1]);
+                        $queryFilter = "LOWER(tp.tour_package_country) LIKE '%" . str_replace('-', ' ', $filterValue) . "%' AND";
                         break;
                     default:
+                        $filterValue = str_replace('-', ' ', $urlStructure[2]);
                         $queryFilter = "(tp.tour_package_city LIKE '%" . str_replace('-', ' ', $urlStructure[2]) . "%'
-                                        OR tp.tour_package_state LIKE '%" . str_replace('-', ' ', $urlStructure[2]) . "%') AND ";
+                                        OR tp.tour_package_state LIKE '%" . str_replace('-', ' ', $filterValue) . "%') AND ";
                         break;
                 }
 

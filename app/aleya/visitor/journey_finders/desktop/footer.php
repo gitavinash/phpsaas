@@ -33,7 +33,7 @@
                     <li><a href="/packages/mauritius/mauritius/"
                             class="text-gray-400 hover:text-white transition">Mauritius</a>
                     </li>
-                    <li><a href="/search/?q=thailand" class="text-gray-400 hover:text-white transition">Thailand</a>
+                    <li><a href="/packages/thailand/" class="text-gray-400 hover:text-white transition">Thailand</a>
                     </li>
                     <li><a href="/packages/united-arab-emirates/dubai/"
                             class="text-gray-400 hover:text-white transition">Dubai</a></li>
