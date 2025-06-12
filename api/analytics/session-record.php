@@ -81,8 +81,7 @@ if ($recordIPData && $recordAnalytics && $recordUserSession) {
     $status = 'success';
     mysqli_query($connection, "COMMIT");
 } else {
-    // echo "Something went wrong while capturing the analytics records";
-    echo $recordIPData . ' && ' . $recordAnalytics . ' && ' . $recordUserSession;
+    echo "Something went wrong while capturing the analytics records";
     $msg = ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : "Analytics not caputre");
     mysqli_query($connection, "ROLLBACK");
 }
