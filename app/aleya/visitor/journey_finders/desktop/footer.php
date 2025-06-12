@@ -118,7 +118,7 @@
     <?php
 
     if ($link_type == 'tour_package' && ACTIVE_URL != '/') {
-        $whatsappLink = "https://api.whatsapp.com/send?phone=919211287555&text=Hello%20JourneyFinders%2C%0AI%20am%20interested%20in" . urlencode($tour_package_title) . ".%0A" . urlencode(ACTIVE_URL_NON_QUERY);
+        $whatsappLink = "https://api.whatsapp.com/send?phone=919211287555&text=Hello%20JourneyFinders%2C%0AI%20am%20interested%20in%20" . urlencode($tour_package_title) . ".%0A" . urlencode(SITE_URL . ACTIVE_URL_NON_QUERY);
     } else {
         $whatsappLink = "https://api.whatsapp.com/send?phone=919211287555&text=Hello%20JourneyFinders%2C%20I%20am%20interested.";
     }
