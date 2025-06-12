@@ -102,7 +102,6 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                 mysqli_query($connection, 'COMMIT');
 
                                 ob_start();
-                                require_once API_MODULES . 'analytics/session-record.php';
                                 setcookie('user_name', base64_encode($_SESSION['google_name']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('user_mobile', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
