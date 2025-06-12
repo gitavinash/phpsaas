@@ -97,7 +97,7 @@ require_once 'header.php';
             <div
                 class="bg-white rounded-lg shadow-sm p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="text-gray-700">
-                    <span class="font-medium">42 tours found</span> for <?php echo $destinationPage ?>
+                    <span class="font-medium">Searched</span> for <?php echo $destinationPage ?>
                 </div>
                 <div class="flex items-center">
                     <span class="text-gray-600 text-sm mr-2">Sort by:</span>
