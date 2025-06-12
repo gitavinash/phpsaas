@@ -67,10 +67,10 @@
                                 <h4 class="font-semibold text-gray-900 mb-2">Top Destinations</h4>
                                 <ul class="space-y-1 text-sm text-gray-700">
                                     <li><a href="/packages/maldives/" class="hover:text-primary">Maldives</a></li>
-                                    <li><a href="/packages/united-arab-emirates/"
-                                            class="block hover:text-primary">United Arab Emirates</a></li>
+                                    <li><a href="/packages/united-arab-emirates/" class="hover:text-primary">United Arab
+                                            Emirates</a></li>
                                     <li><a href="/packages/thailand/" class="hover:text-primary">Thailand</a></li>
-                                    <li><a href="/packages/europe/" class="hover:text-primary">Europe</a></li>
+                                    <li><a href="/packages/mauritius/" class="hover:text-primary">Mauritius</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                     <a href="/packages/maldives/" class="block hover:text-primary">Maldives</a>
                     <a href="/packages/united-arab-emirates/" class="block hover:text-primary">United Arab Emirates</a>
                     <a href="/packages/thailand/" class="block hover:text-primary">Thailand</a>
-                    <a href="/packages/europe/" class="block hover:text-primary">Europe</a>
+                    <a href="/packages/mauritius/" class="block hover:text-primary">Mauritius</a>
                 </div>
             </div>
 
