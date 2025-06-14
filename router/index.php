@@ -73,12 +73,6 @@ if ((isset($type))) {
 		}
 	} else {
 		require_once 'formManager.php';
-		// http_response_code(400);
-		// echo json_encode([
-		// 	"status" => 'error',
-		// 	"msg" => "Something is wrong at reCAPTCHA verification."
-		// ]);
-		// exit();
 	}
 }
 
