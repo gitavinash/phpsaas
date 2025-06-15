@@ -70,7 +70,7 @@
                 <div class="flex flex-wrap justify-center md:justify-end gap-4 md:space-x-6">
                     <a href="/privacy-policy/" data-readdy="true" class="text-gray-400 hover:text-white">Privacy
                         Policy</a>
-                    <a href="/terms-of-services/" class="text-gray-400 hover:text-white">Terms of Service</a>
+                    <a href="/terms-and-conditions/" class="text-gray-400 hover:text-white">Terms and Conditions</a>
                     <a href="/refund-policy/" class="text-gray-400 hover:text-white">Refund Policy</a>
                 </div>
             </div>
