@@ -679,7 +679,7 @@ WHERE p.product_status = 1
                             alt="AndBlooms Logo" class="h-8 brightness-0 invert">
                     </a>
                     <p class="text-gray-400 mb-6">Delivering fresh, beautiful flowers for all your special moments since
-                        2010.</p>
+                        2019.</p>
                     <div class="flex space-x-4">
                         <a href="#"
                             class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
