@@ -18,7 +18,7 @@ if ($name != '') {
 
         if ($checkLocations = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "locations WHERE location_title='{$name}' AND location_state='{$state}' AND location_country='{$country}'")) {
             if (mysqli_num_rows($checkLocations) == 0) {
-                if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "locations(location_thumbnail, location_title, location_description, location_state, location_country) VALUES('{$icon}', '{$name}', '{$description}', '{$state}', '{$country}')")) {
+                if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "locations(location_thumbnail, location_title, location_description, location_state, location_country, location_best_from, location_best_to) VALUES('{$icon}', '{$name}', '{$description}', '{$state}', '{$country}', '{$fromMonth}', '{$toMonth}')")) {
                     $responseCode = 201;
                     $status = 'success';
                     $msg = 'Location added successfully';

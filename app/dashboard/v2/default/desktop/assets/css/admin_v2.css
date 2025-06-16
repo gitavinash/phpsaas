@@ -2212,6 +2212,8 @@ section.form
   box-sizing: border-box;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+  height: 100vh;
+  max-height: 600px;
 }
 
 .popUp .actionArea p {

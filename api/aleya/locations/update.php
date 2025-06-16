@@ -20,7 +20,7 @@ if ($name != '') {
 
         if ($checkLocations = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "locations WHERE location_id='{$id}'")) {
             if (mysqli_num_rows($checkLocations) != 0) {
-                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "locations SET location_thumbnail='{$icon}', location_title='{$name}', location_description='{$description}', location_state='{$state}', location_country='{$country}' WHERE location_id='{$id}'")) {
+                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "locations SET location_thumbnail='{$icon}', location_title='{$name}', location_description='{$description}', location_state='{$state}', location_country='{$country}', location_best_from='{$fromMonth}', location_best_to='{$toMonth}' WHERE location_id='{$id}'")) {
                     $responseCode = 200;
                     $status = 'success';
                     $msg = 'Locations update successfully';

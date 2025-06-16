@@ -2,7 +2,7 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country, state_name FROM " . TABLE_PREFIX . "locations INNER JOIN " . TABLE_PREFIX . "state ON location_state=state_id WHERE location_country=101")) {
+if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country, location_best_from, location_best_to, state_name FROM " . TABLE_PREFIX . "locations INNER JOIN " . TABLE_PREFIX . "state ON location_state=state_id WHERE location_country=101")) {
     $locationsList = array();
     if (mysqli_num_rows($locationsData) != 0) {
         while ($data = mysqli_fetch_assoc($locationsData)) {
@@ -29,7 +29,6 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
         echo ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : "Something went wrong");
         exit();
     }
-
 } else {
     echo ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : "Something went wrong");
     exit();
@@ -44,20 +43,20 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
             <section>
                 <?php
 
-if (count($locationsList) > 0) {
-    for ($i = 0; $i < sizeof($locationsList); $i++) {
-        echo "
+                if (count($locationsList) > 0) {
+                    for ($i = 0; $i < sizeof($locationsList); $i++) {
+                        echo "
                     <div class='featureList editLocations' id='{$locationsList[$i]['location_id']}' data_name='{$locationsList[$i]['location_title']}' data_image='" . (($locationsList[$i]['location_thumbnail'] != '') ?
-            $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$locationsList[$i]['location_description']}' data_type='{$locationsList[$i]['location_state']}' >
+                            $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='{$locationsList[$i]['location_description']}' data_type='{$locationsList[$i]['location_state']}' data_best_from='{$locationsList[$i]['location_best_from']}' data_best_to='{$locationsList[$i]['location_best_to']}' >
                         <img src='" . (($locationsList[$i]['location_thumbnail'] != '') ?
-            $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
+                            $locationsList[$i]['location_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
                         <p>{$locationsList[$i]['location_title']}<span>{$locationsList[$i]['state_name']}</span></p>
                     </div>
                     ";
-    }
-}
+                    }
+                }
 
-?>
+                ?>
             </section>
         </div>
     </div>
@@ -85,8 +84,51 @@ if (count($locationsList) > 0) {
                                     <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-lable">Icon ( size 100px x 100px )</label>
+                                    <label class="form-lable">Feature image ( size 1200px x 400px )</label>
                                     <input type="file" id="icon" name="icon" accept="image/*" />
+                                </div>
+
+                                <?php
+                                $months = [
+                                    'january',
+                                    'february',
+                                    'march',
+                                    'april',
+                                    'may',
+                                    'june',
+                                    'july',
+                                    'august',
+                                    'september',
+                                    'october',
+                                    'november',
+                                    'december'
+                                ];
+                                ?>
+
+                                <div class="form-group">
+                                    <p class="form-lable">Best time to Visit<sup>*</sup></p>
+
+                                    <div class="col-5">
+                                        <select name="fromMonth" class="selectJS form-control" id="fromMonth">
+                                            <option value="#">Start from</option>
+                                            <?php foreach ($months as $month) { ?>
+                                            <option value="<?php echo $month ?>">
+                                                <?php echo ucfirst($month) ?>
+                                            </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <select name="toMonth" class="selectJS form-control" id="toMonth">
+                                            <option value="#">Start from</option>
+                                            <?php foreach ($months as $month) { ?>
+                                            <option value="<?php echo $month ?>">
+                                                <?php echo ucfirst($month) ?>
+                                            </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <p>State</p>
@@ -129,8 +171,34 @@ if (count($locationsList) > 0) {
                                     <label class="form-lable" id="editDescriptionLabel">Description</label>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-lable">Icon ( size 100px x 100px )</label>
+                                    <label class="form-lable">Feature image ( size 1200px x 400px )</label>
                                     <input type="file" id="editIcon" name="icon" accept="image/*" />
+                                </div>
+
+                                <div class="form-group">
+                                    <p class="form-lable">Best time to Visit<sup>*</sup></p>
+
+                                    <div class="col-5">
+                                        <select name="fromMonth" class="selectJS form-control" id="editFromMonth">
+                                            <option value="#">Start from</option>
+                                            <?php foreach ($months as $month) { ?>
+                                            <option value="<?php echo $month ?>">
+                                                <?php echo ucfirst($month) ?>
+                                            </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <select name="toMonth" class="selectJS form-control" id="editToMonth">
+                                            <option value="#">Start from</option>
+                                            <?php foreach ($months as $month) { ?>
+                                            <option value="<?php echo $month ?>">
+                                                <?php echo ucfirst($month) ?>
+                                            </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <p>State</p>
@@ -148,7 +216,7 @@ if (count($locationsList) > 0) {
                         locations</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
-                    <p>Current icon</p>
+                    <p>Feature image</p>
                     <img src="" id="locationsIcon" alt="">
                 </div>
             </div>

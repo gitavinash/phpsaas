@@ -667,6 +667,8 @@ $(document).ready(function () {
       locationsDescription = $(this).attr("data_desc");
       locationsIcon = $(this).attr("data_image");
       locationsType = $(this).attr("data_type");
+      locationsBestFrom = $(this).attr("data_best_from");
+      locationsBestTo = $(this).attr("data_best_to");
       $("#updateLocations").show();
       $("#editName").val(locationsName);
       $("#editDescription").val(locationsDescription);
@@ -675,6 +677,8 @@ $(document).ready(function () {
       } else {
         $("#editType").val("basic_facilities").change();
       }
+      $("#editFromMonth").val(locationsBestFrom).trigger("change");
+      $("#editToMonth").val(locationsBestTo).trigger("change");
       $("#locationsIcon").attr("src", locationsIcon);
       document.querySelector(".editLocationsBox").style.display = "flex";
       $(".editLocationsBox").show();
