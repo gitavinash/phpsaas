@@ -17,6 +17,8 @@ require_once 'header.php';
             SELECT
             location_title,
             location_thumbnail,
+            location_best_from,
+            location_best_to,
             country_name,
             COUNT(tour_package_city) AS total_matching_tours,
             MIN(tour_package_price_selling_adult) AS lowest_selling_price
@@ -54,7 +56,7 @@ require_once 'header.php';
                 <div class='w-5 h-5 flex items-center justify-center text-primary mr-1'>
                     <i class='ri-calendar-line'></i>
                 </div>
-                <span class='text-sm text-gray-600'>Best time: April - October</span>
+                <span class='text-sm text-gray-600'>Best time: " . ucwords($location_best_from) . " - " . ucwords($location_best_to) . "</span>
             </div>
             <a href='/packages/" . str_replace(' ', '-', strtolower($country_name . '/' . $location_title)) . "/' data-readdy='true'
                 class='block w-full bg-primary text-white text-center px-4 py-2 !rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition'>View
