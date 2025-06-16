@@ -272,6 +272,48 @@ $(document).ready(function () {
   });
 
   // #########################################################
+  // Gallery
+  // #########################################################
+
+  $(".addNewGallery").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    document.querySelector(".galleryBox").style.display = "flex";
+    $(".galleryBox").show();
+  });
+
+  $("#addGallery").click(function (e) {
+    e.preventDefault();
+    $("#addGallery").hide();
+    var data = new FormData(document.getElementById("addGalleryForm"));
+    data.append("packageId", leadId);
+    $.ajax({
+      url: "/api/gallery/publish/",
+      type: "POST",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      encrypt: "multipart/form-data",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+        $("#addGallery").show();
+      },
+      error: function (error, response) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+        $("#addGallery").show();
+      },
+    });
+  });
+
+  // #########################################################
   // Vehicle
   // #########################################################
 
