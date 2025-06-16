@@ -125,7 +125,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 $mobile = str_replace('+91', '', str_replace(' ', '', $mobile));
 
-                                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
+                                // $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
+                                // $leadId = mysqli_insert_id($connection);
+
+                                // if ($addNewEnquiry) {
+                                //     mysqli_query($connection, "COMMIT");
+                                // } else {
+                                //     mysqli_query($connection, "ROLLBACK");
+                                // }
+
+                                // $email_body = "
+                                //     <h2>{$subject}</h2>
+                                //     <table>
+                                //         <tr>
+                                //             <td>Name: </td>
+                                //             <td>{$name}</td>
+                                //         </tr>
+                                //         <tr>
+                                //             <td>Email: </td>
+                                //             <td>{$email}</td>
+                                //         </tr>
+                                //         <tr>
+                                //             <td>Mobile: </td>
+                                //             <td>{$mobile}</td>
+                                //         </tr>
+                                //     </table>
+                                //     ";
+
+                                // $sender = $email;
+
+                                // if (isset($sender)) {
+                                //     if (!isset($doNotSendEmail)) {
+                                //         require SEND_EMAIL;
+                                //         require_once APP_EMAIL_TEMPLATE . 'enquiry-thank-you.php';
+                                //     }
+                                // }
+
+                                // echo json_encode(array(
+                                //     'status' => 200,
+                                //     'success' => true
+                                // ), TRUE);
+
+                                // exit();
+
+                                // Check for recent duplicate enquiry
+                                $checkDuplicateQuery = "
+SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry
+WHERE enquiry_mobile = '{$mobile}'
+  AND enquiry_subject = '{$subject}'
+  AND enquiry_source = '{$trafficSource}'
+  AND enquiry_time >= NOW() - INTERVAL 2 HOUR
+LIMIT 1
+";
+                                $checkDuplicate = mysqli_query($connection, $checkDuplicateQuery);
+
+                                if (mysqli_num_rows($checkDuplicate) > 0) {
+                                    // Duplicate found
+                                    echo json_encode(array(
+                                        'status' => 409,
+                                        'success' => false,
+                                        'message' => 'Similar enquiry already received within the last 2 hours.'
+                                    ), TRUE);
+                                    exit();
+                                }
+
+                                // Insert new enquiry
+                                $addNewEnquiry = mysqli_query($connection, "
+INSERT INTO " . TABLE_PREFIX . "enquiry(
+    enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email,
+    enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type,
+    enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time
+) VALUES (
+    '{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}',
+    '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}',
+    '{$trafficMedium}', '{$trafficCampaign}', 0, NOW()
+)
+");
+
                                 $leadId = mysqli_insert_id($connection);
 
                                 if ($addNewEnquiry) {
@@ -134,23 +210,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     mysqli_query($connection, "ROLLBACK");
                                 }
 
+                                // Email body
                                 $email_body = "
-                                    <h2>{$subject}</h2>
-                                    <table>
-                                        <tr>
-                                            <td>Name: </td>
-                                            <td>{$name}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Email: </td>
-                                            <td>{$email}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mobile: </td>
-                                            <td>{$mobile}</td>
-                                        </tr>
-                                    </table>
-                                    ";
+<h2>{$subject}</h2>
+<table>
+    <tr><td>Name: </td><td>{$name}</td></tr>
+    <tr><td>Email: </td><td>{$email}</td></tr>
+    <tr><td>Mobile: </td><td>{$mobile}</td></tr>
+</table>
+";
 
                                 $sender = $email;
 
@@ -165,7 +233,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     'status' => 200,
                                     'success' => true
                                 ), TRUE);
-
                                 exit();
                             }
                         }
