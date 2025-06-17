@@ -56,7 +56,7 @@
                 }
             }
 
-            if ($news_price != 0) { ?>
+            if ($news_price != 0 && $country == 'india') { ?>
             <div class="subscription_card__box">
                 <p>Unlock Article<span>( One time payment )</span></p>
                 <h6><?php echo $inventory_currency_symbol ?> <?php echo $news_price ?></h6>
