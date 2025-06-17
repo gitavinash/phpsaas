@@ -3,7 +3,7 @@
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
 $query = "
-    SELECT gallery_image_list
+    SELECT tour_package_title, gallery_image_list
     FROM " . TABLE_PREFIX . "tour_package AS tp
     LEFT JOIN " . TABLE_PREFIX . "gallery AS g
         ON g.gallery_category = tp.tour_package_id
@@ -16,12 +16,17 @@ $query = "
 if ($galleryData = mysqli_query($connection, $query)) {
     if (mysqli_num_rows($galleryData) != 0) {
         extract(mysqli_fetch_assoc($galleryData));
-        $galleryImagesList = json_decode($gallery_image_list, TRUE);
+        if ($gallery_image_list != '') {
+            $galleryImagesList = json_decode($gallery_image_list, TRUE);
+        } else {
+            $galleryImagesList = [];
+        }
     }
 }
 
 ?>
-<h2 class="heading">Gallery images<span>Tour package image gallery</span></h2>
+<h2 class="heading"><?php echo ucwords($tour_package_title) ?>'s Gallery<span>Tour package image gallery</span>
+</h2>
 <div class="box-1">
 
     <div class="widget box-1 no-padding">
