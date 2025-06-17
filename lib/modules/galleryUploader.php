@@ -72,8 +72,19 @@ if (isset($_FILES['gallery'])) {
 
 							/** Creating image thumbnail */
 
-							$imageSize = imagecreatetruecolor(IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight);
-							imagecopyresampled($imageSize, $compressImage, 0, 0, 0, 0, IMAGE_THUMBNAIL_WIDTH, $regenerateImageHeight, $imageWidth, $imageHeight);
+							$imageSize = imagecreatetruecolor((int)IMAGE_THUMBNAIL_WIDTH, (int)$regenerateImageHeight);
+							imagecopyresampled(
+								$imageSize,
+								$compressImage,
+								0,
+								0,
+								0,
+								0,
+								(int)IMAGE_THUMBNAIL_WIDTH,
+								(int)$regenerateImageHeight,
+								(int)$imageWidth,
+								(int)$imageHeight
+							);
 							imagepng($imageSize, $thumbnailUploadFile, 9);
 							break;
 

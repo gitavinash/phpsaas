@@ -2,18 +2,21 @@
 
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
-if ($galleryData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "gallery WHERE gallery_parent_id='" . base64_decode($id) . "' AND gallery_site_id=" . SITE_ID)) {
-    $galleryList = array();
-    if (mysqli_num_rows($galleryData) != 0) {
-        while ($data = mysqli_fetch_assoc($galleryData)) {
-            $galleryList[] = $data;
-        }
-    } else {
+$query = "
+    SELECT gallery_image_list
+    FROM " . TABLE_PREFIX . "tour_package AS tp
+    LEFT JOIN " . TABLE_PREFIX . "gallery AS g
+        ON g.gallery_category = tp.tour_package_id
+        AND g.gallery_site_id = " . SITE_ID . "
+        AND g.gallery_type = 'tour_package'
+        AND g.gallery_status = 1
+    WHERE tp.tour_package_id = '{$id}'
+    AND tp.tour_package_site_id = " . SITE_ID;
 
-        $gallery_title = '';
-        $gallery_description = '';
-        $gallery_parent_id = '';
-        $link_url = '';
+if ($galleryData = mysqli_query($connection, $query)) {
+    if (mysqli_num_rows($galleryData) != 0) {
+        extract(mysqli_fetch_assoc($galleryData));
+        $galleryImagesList = json_decode($gallery_image_list, TRUE);
     }
 }
 
@@ -26,17 +29,14 @@ if ($galleryData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
             <section>
                 <?php
 
-                if (count($galleryList) > 0) {
-                    for ($i = 0; $i < sizeof($galleryList); $i++) {
-                        echo "
-                    <div class='featureList editGallery' id='" . $galleryList[$i]['gallery_id'] . "' data_name='" . $galleryList[$i]['gallery_title'] . "' data_seating='{$galleryList[$i]['gallery_seating']}' data_image='" . (($galleryList[$i]['gallery_thumbnail'] != '') ?
-                            $galleryList[$i]['gallery_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' data_desc='" . $galleryList[$i]['gallery_description'] . "' data_type='" . $galleryList[$i]['gallery_type'] . "' >
-                        <img src='" . (($galleryList[$i]['gallery_thumbnail'] != '') ?
-                            $galleryList[$i]['gallery_thumbnail'] : ADMIN_IMAGES . 'default-picture.png') . "' >
-                        <p>{$galleryList[$i]['gallery_title']}</p>
+                foreach ($galleryImagesList as $galleyImages => $imageData) {
+                    extract($imageData);
+                    echo "
+                    <div class='editGallery galleryImageBox' >
+                        <img src='" . (($path != '') ?
+                        $path : ADMIN_IMAGES . 'default-picture.png') . "' >
                     </div>
                     ";
-                    }
                 }
 
                 ?>
