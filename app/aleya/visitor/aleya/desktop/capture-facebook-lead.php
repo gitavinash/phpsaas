@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 $mobile = str_replace('+91', '', str_replace(' ', '', $mobile));
 
-                                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
+                                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject} cap_fb_lead', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
                                 $leadId = mysqli_insert_id($connection);
 
                                 if ($addNewEnquiry) {
