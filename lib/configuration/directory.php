@@ -85,6 +85,12 @@ define('SMS_TEMPLATE', RESOURCE . 'sms/');
 define('APP_SMS_TEMPLATE', SMS_TEMPLATE . SITE_APP . '/default/');
 define('ADMIN_SMS_TEMPLATE', SMS_TEMPLATE . SITE_APP . '/admin/');
 
+/* WhatsApp Directory Configuration */
+
+define('WHATSAPP_TEMPLATE', RESOURCE . 'whatsapp/');
+define('WHATSAPP_TEMPLATE_ADMIN', WHATSAPP_TEMPLATE . SITE_APP . '/administrator/');
+define('WHATSAPP_TEMPLATE_VISITOR', WHATSAPP_TEMPLATE . SITE_APP . '/visitor/');
+
 /* Installation Directory  */
 
 define('INSTALLATION_PATH', ROOT . '/lib/install/');

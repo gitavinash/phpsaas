@@ -137,6 +137,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                                 }
                                                 if (isset($enable_whstapp_business_api)) {
+
+                                                    if (isset($site_mobile)) {
+                                                        if (!defined('SITE_MOBILE')) {
+                                                            define('SITE_MOBILE', $site_mobile);
+                                                        }
+                                                    }
+
+                                                    if (isset($site_email)) {
+                                                        if (!defined('SITE_EMAIL')) {
+                                                            define('SITE_EMAIL', $site_email);
+                                                        }
+                                                    }
+
                                                     require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
                                                     require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
                                                 }

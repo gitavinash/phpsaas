@@ -184,6 +184,11 @@ foreach ($enquiryMeta as $key => $value) {
 $messageDB = json_encode($enquiryMeta, TRUE);
 
 if ($mobile != '') {
+
+
+    $cleaned = str_replace(['+', '-'], '', $mobile);
+    $mobile = trim(preg_replace('/\s+/', ' ', $cleaned)); // remove extra spaces
+
     if (is_numeric($mobile)) {
 
         if ($checkUserEnquiry = mysqli_query($connection, "SELECT enquiry_time FROM " . TABLE_PREFIX . "enquiry WHERE
@@ -256,6 +261,7 @@ enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, 
 enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}',
 '{$email}', '{$mobile}', '{$alternate_mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}',
 '{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
+                $leadId = mysqli_insert_id($connection);
             } else {
                 $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id,
 enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_alt_mobile,
@@ -266,7 +272,6 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
                 $leadId = mysqli_insert_id($connection);
             }
 
-            $enquiryID = mysqli_insert_id($connection);
 
             if ($addNewEnquiry) {
                 mysqli_query($connection, "COMMIT");
@@ -295,6 +300,13 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
                     }
                 }
             }
+
+            if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
+                if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
+                    require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
+                    require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+                }
+            }
         }
 
         if (strpos($redirect_url, '/shipping/') !== false) {
@@ -306,7 +318,7 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
         } else {
 
             if (!isset($redirect_url)) {
-                $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($enquiryID);
+                $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($leadId);
             }
 
             header("Location: " . $redirect_url, TRUE, 301);

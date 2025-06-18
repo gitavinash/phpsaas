@@ -18,8 +18,8 @@ if (EMAIL_ENABLE == 1) {
     $mail = new PHPMailer(true);
 
     try {
-		// $mail->SMTPDebug = 0; // or use 3 for even more verbose output
-		// $mail->Debugoutput = 'html';
+        // $mail->SMTPDebug = 0; // or use 3 for even more verbose output
+        // $mail->Debugoutput = 'html';
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
@@ -31,7 +31,7 @@ if (EMAIL_ENABLE == 1) {
         if (filter_var(REPLY_EMAIL, FILTER_VALIDATE_EMAIL)) {
             $mail->addReplyTo(REPLY_EMAIL, REPLY_EMAIL_NAME);
         } else {
-            echo "Invalid reply email address. '".REPLY_EMAIL."'";
+            echo "Invalid reply email address. '" . REPLY_EMAIL . "'";
         }
         if (empty($toAddress)) {
             throw new Exception('Recipient email address is missing.');
@@ -60,7 +60,6 @@ if (EMAIL_ENABLE == 1) {
 
         if (!$mail->send()) {
             echo 'Mailer Error: ' . $mail->ErrorInfo;
-            exit();
         }
     } catch (Exception $e) {
         echo "Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}";
