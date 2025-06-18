@@ -116,29 +116,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 $mobile = str_replace('+91', '', str_replace(' ', '', $mobile));
 
-                                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
-                                $leadId = mysqli_insert_id($connection);
+                                if ($checkDuplicateLead = mysqli_query($connection, "SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry
+                                    WHERE enquiry_first_name = '{$name}'
+                                    AND enquiry_mobile = '{$mobile}'
+                                    AND enquiry_subject = '{$subject}'
+                                    AND enquiry_source = '{$trafficSource}'
+                                    AND enquiry_campaign = '{$trafficCampaign}'
+                                    AND enquiry_medium = '{$trafficMedium}'
+                                    AND enquiry_time >= NOW() - INTERVAL 3 HOUR
+                                    LIMIT 1")) {
+                                    if (mysqli_num_rows($checkDuplicateLead) == 0) {
 
-                                if ($addNewEnquiry) {
-                                    mysqli_query($connection, "COMMIT");
-                                } else {
-                                    mysqli_query($connection, "ROLLBACK");
-                                }
+                                        if ($addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())")) {
+                                            $leadId = mysqli_insert_id($connection);
 
-                                $sender = $email;
-                                if (isset($sender)) {
-                                    if (!isset($doNotSendEmail)) {
-                                        require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
-                                        require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
+                                            $sender = $email;
+                                            if (isset($sender)) {
+                                                if (!isset($doNotSendEmail)) {
+                                                    require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
+                                                    require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
+                                                }
+                                                if (isset($enable_whstapp_business_api)) {
+                                                    require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
+                                                    require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+                                                }
+                                            }
+
+                                            echo json_encode(array(
+                                                'status' => 200,
+                                                'success' => true
+                                            ), TRUE);
+
+                                            exit();
+                                        }
                                     }
                                 }
-
-                                echo json_encode(array(
-                                    'status' => 200,
-                                    'success' => true
-                                ), TRUE);
-
-                                exit();
                             }
                         } else {
                             custom_log("Site configurations is not found in Database", "WARNING");
