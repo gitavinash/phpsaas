@@ -367,10 +367,6 @@
                                             href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/">Blooms of
                                             <?php echo date('F') ?></a>
                                     </li>
-                                    <li class="nav-item " style="background: #F19EB5;">
-                                        <a class="nav-link" style="color: #fff" href="/tag/father/"><b>Father's
-                                                Day</b></a>
-                                    </li>
                                     <!-- <li class="nav-item " style="background: #F19EB5;">
                                         <a class="nav-link" style="color: #fff" href="/tag/christmas/"><b>Christmas</b></a>
                                     </li> -->
