@@ -197,7 +197,7 @@ INSERT INTO " . TABLE_PREFIX . "enquiry(
     enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time
 ) VALUES (
     '{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}',
-    '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}',
+    '{$leadResponseCurl}', '{$subject} fb def', 'enquiry', '{$trafficSource}',
     '{$trafficMedium}', '{$trafficCampaign}', 0, NOW()
 )
 ");
