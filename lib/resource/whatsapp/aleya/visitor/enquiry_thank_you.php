@@ -53,5 +53,7 @@ $fullUrl = "https://bhashsms.com/api/sendmsgutil.php?" . http_build_query([
     'Params'   => $variablesValues
 ]);
 
+$sendMessageTo = $mobile;
+
 // Optional: Send the request or include tracking/confirmation template
-require_once WHATSAPP_TEMPLATE . 'footer.php';
+require WHATSAPP_TEMPLATE . 'footer.php';
