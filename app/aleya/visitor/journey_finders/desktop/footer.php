@@ -14,7 +14,7 @@
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
                         <i class="ri-facebook-fill"></i>
                     </a>
-                    <a href="https://www.instagram.com/journeyfinders.in" target="_blank"
+                    <a href="https://www.instagram.com/journeyfinders.com" target="_blank"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition">
                         <i class="ri-instagram-fill"></i>
                     </a>
@@ -75,7 +75,7 @@
                         <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
                             <i class="ri-mail-line"></i>
                         </div>
-                        <span class="text-gray-400">care@journeyfinders.in</span>
+                        <span class="text-gray-400">care@journeyfinders.com</span>
                     </li>
                     <li class="flex items-center">
                         <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
@@ -138,30 +138,30 @@
 <script src="<?php echo USER_JS ?>app.min.js"></script>
 <script src="<?php echo USER_JS ?>tailwind.config.min.js"></script>
 <script>
-// Back to top button
-document.getElementById("back-to-top").addEventListener("click", () => {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+    // Back to top button
+    document.getElementById("back-to-top").addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     });
-});
-// Add event listeners to form elements
-document.addEventListener("DOMContentLoaded", function() {
-    // Destination select styling
-    const selects = document.querySelectorAll("select");
-    selects.forEach((select) => {
-        const parent = select.parentElement;
-        if (!parent.querySelector(".ri-arrow-down-s-line")) {
-            const icon = document.createElement("div");
-            icon.className =
-                "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none";
-            icon.innerHTML =
-                '<i class="ri-arrow-down-s-line text-gray-500"></i>';
-            parent.style.position = "relative";
-            parent.appendChild(icon);
-        }
+    // Add event listeners to form elements
+    document.addEventListener("DOMContentLoaded", function() {
+        // Destination select styling
+        const selects = document.querySelectorAll("select");
+        selects.forEach((select) => {
+            const parent = select.parentElement;
+            if (!parent.querySelector(".ri-arrow-down-s-line")) {
+                const icon = document.createElement("div");
+                icon.className =
+                    "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none";
+                icon.innerHTML =
+                    '<i class="ri-arrow-down-s-line text-gray-500"></i>';
+                parent.style.position = "relative";
+                parent.appendChild(icon);
+            }
+        });
     });
-});
 </script>
 </body>
 

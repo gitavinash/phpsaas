@@ -5,26 +5,26 @@ function renderItems($htmlString, $iconClass = 'ri-check-line', $iconColor = 'te
     libxml_use_internal_errors(true);
     $doc = new DOMDocument();
     $doc->loadHTML('<?xml encoding="utf-8" ?>' . $htmlString);
-$xpath = new DOMXPath($doc);
+    $xpath = new DOMXPath($doc);
 
-$items = $xpath->query('//p');
+    $items = $xpath->query('//p');
 
-if ($items->length === 0 || trim($items[0]->textContent) === '') {
-$items = $xpath->query('//ol/li');
-}
+    if ($items->length === 0 || trim($items[0]->textContent) === '') {
+        $items = $xpath->query('//ol/li');
+    }
 
-echo '<ul class="space-y-2">';
+    echo '<ul class="space-y-2">';
     foreach ($items as $item) {
-    $text = trim($item->textContent);
-    if (!empty($text)) {
-    echo '
+        $text = trim($item->textContent);
+        if (!empty($text)) {
+            echo '
     <li class="flex items-start">
         <div class="w-5 h-5 flex items-center justify-center ' . $iconColor . ' mr-2 mt-0.5">
             <i class="' . $iconClass . '"></i>
         </div>
         <span class="text-gray-700">' . htmlspecialchars($text) . '</span>
     </li>';
-    }
+        }
     }
     echo '
 </ul>';
@@ -304,12 +304,12 @@ require_once 'header.php';
                         </div>
                         <span>+91 92112 87555</span>
                     </a>
-                    <a href="mailto:info@journeyfinders.in"
+                    <a href="mailto:info@journeyfinders.com"
                         class="flex items-center text-gray-700 font-medium hover:text-primary">
                         <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
                             <i class="ri-mail-line"></i>
                         </div>
-                        <span>info@journeyfinders.in</span>
+                        <span>info@journeyfinders.com</span>
                     </a>
                 </div>
             </section>
@@ -324,38 +324,38 @@ require_once 'header.php';
     ?>
 </div>
 <script>
-// Itinerary accordions
-const accordions = document.querySelectorAll('.itinerary-accordion');
-accordions.forEach(accordion => {
-    accordion.addEventListener('click', function() {
-        const content = this.nextElementSibling;
-        content.classList.toggle('active');
-        const icon = this.querySelector('.accordion-icon');
-        if (content.classList.contains('active')) {
-            icon.classList.remove('ri-arrow-down-s-line');
-            icon.classList.add('ri-arrow-up-s-line');
-        } else {
-            icon.classList.remove('ri-arrow-up-s-line');
-            icon.classList.add('ri-arrow-down-s-line');
-        }
-    });
-});
-// Show first itinerary item by default
-const firstAccordion = document.querySelector('.itinerary-accordion');
-if (firstAccordion) {
-    firstAccordion.click();
-}
-// Show More Itinerary button
-const showMoreButton = document.getElementById('show-more-itinerary');
-if (showMoreButton) {
-    showMoreButton.addEventListener('click', function() {
-        const hiddenAccordions = document.querySelectorAll('.itinerary-accordion:not(.active)');
-        hiddenAccordions.forEach(accordion => {
-            accordion.click();
+    // Itinerary accordions
+    const accordions = document.querySelectorAll('.itinerary-accordion');
+    accordions.forEach(accordion => {
+        accordion.addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            content.classList.toggle('active');
+            const icon = this.querySelector('.accordion-icon');
+            if (content.classList.contains('active')) {
+                icon.classList.remove('ri-arrow-down-s-line');
+                icon.classList.add('ri-arrow-up-s-line');
+            } else {
+                icon.classList.remove('ri-arrow-up-s-line');
+                icon.classList.add('ri-arrow-down-s-line');
+            }
         });
-        this.style.display = 'none';
     });
-}
+    // Show first itinerary item by default
+    const firstAccordion = document.querySelector('.itinerary-accordion');
+    if (firstAccordion) {
+        firstAccordion.click();
+    }
+    // Show More Itinerary button
+    const showMoreButton = document.getElementById('show-more-itinerary');
+    if (showMoreButton) {
+        showMoreButton.addEventListener('click', function() {
+            const hiddenAccordions = document.querySelectorAll('.itinerary-accordion:not(.active)');
+            hiddenAccordions.forEach(accordion => {
+                accordion.click();
+            });
+            this.style.display = 'none';
+        });
+    }
 </script>
 <?php
 
