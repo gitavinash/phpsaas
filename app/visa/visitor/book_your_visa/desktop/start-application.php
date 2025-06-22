@@ -70,7 +70,14 @@ require_once 'header.php';
                 every step of the process.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr" id="visaPurposeListBox">
-
+            <div class="flex items-center justify-center py-10">
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <div class="text-gray-600 text-sm font-medium animate-pulse">
+                        Loading visa types...
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="flex justify-center">
             <button id="goToSelectCountry" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90">
@@ -91,7 +98,14 @@ require_once 'header.php';
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 auto-rows-fr"
             id="visaPackagesListBox">
-            <!-- Purpose of visit -->
+            <div class="flex items-center justify-center py-10">
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <div class="text-gray-600 text-sm font-medium animate-pulse">
+                        Loading visa packages...
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="flex justify-center">
             <button id="goToSelectVisaTypes" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90">

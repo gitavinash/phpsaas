@@ -44,8 +44,6 @@ $(document).ready(function () {
     const visaContainer = $("#visaPurposeListBox");
 
     if (visaContainer.length) {
-      visaContainer.html('<p class="text-gray-500">Loading visa types...</p>');
-
       $.ajax({
         url: `/api/country/visas/?country=${country}`,
         method: "GET",
@@ -104,16 +102,10 @@ $(document).ready(function () {
     $(".countryName").text(country.replaceAll("_", " "));
 
     if (packageContainer.length) {
-      packageContainer.html(
-        '<p class="text-gray-500">Loading visa packages...</p>'
-      );
-
       $.ajax({
         url: `/api/visa_packages/list/?country=${country}&purpose=${purpose}`,
         method: "GET",
         success: function (res) {
-          packageContainer.empty();
-
           if (Array.isArray(res.packageList) && res.packageList.length > 0) {
             res.packageList.forEach((pkg) => {
               const formattedTitle =
@@ -149,26 +141,28 @@ $(document).ready(function () {
                       <div class="text-red-600 text-sm mt-1">You save ₹${discountAmount} (${discountPercent}% off)</div>
                     </a>
                   </div>`;
-              packageContainer.append(packageCard);
+              packageContainer.empty();
+              setTimeout(() => {
+                packageContainer.append(packageCard);
+              }, 500);
             });
           } else {
-            packageContainer.html(
-              '<p class="text-gray-500">No visa packages found.</p>'
-            );
+            setTimeout(() => {
+              packageContainer.html(
+                '<p class="text-gray-500">No visa packages found.</p>'
+              );
+            }, 500);
           }
 
           $("#visaPackages").hide().fadeIn(400);
         },
         error: function (error) {
           console.error("Visa package error:", error);
-          popUpMessage(
-            "center",
-            error?.responseJSON?.msg || "Something went wrong!",
-            "error"
-          );
-          packageContainer.html(
-            '<p class="text-gray-500">No visa packages found.</p>'
-          );
+          setTimeout(() => {
+            packageContainer.html(
+              '<p class="text-gray-500">No visa packages found.</p>'
+            );
+          }, 500);
         },
       });
     }
