@@ -5,7 +5,8 @@ require_once 'header.php';
 ?>
 <main class="flex-grow container mx-auto pt-[5em] pb-0 sm:py-[10em]">
 
-    <div class="mx-auto applicationBox" id="selectCountry" style="display: none;">
+    <div class="mx-auto applicationBox transition-opacity duration-300 ease-in-out" id="selectCountry"
+        style="display: none;">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-8 sm:mb-12">
                 <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select Your Destination Country
@@ -41,7 +42,7 @@ require_once 'header.php';
                         while ($checkCountryData = mysqli_fetch_assoc($checkCountry)) {
                             echo "
                                 <div class='country-card bg-white border border-gray-200 rounded-xl p-5 shadow-sm'>
-                                    <a href='/start-application/?country=" . strtolower(str_replace(' ', '_', $checkCountryData['visa_country_title'])) . "'>
+                                    <a href='#' class='showVisaTypes' data-country='" . strtolower(str_replace(' ', '_', $checkCountryData['visa_country_title'])) . "'>
                                         <div class='flex items-center mb-3'>
                                             <img src='https://flagcdn.com/w40/" . strtolower($checkCountryData['visa_country_code']) . ".png'  alt='{$checkCountryData['visa_country_title']} flag'
                                                 class='w-6 h-6 rounded-full mr-3 object-cover border border-gray-200'>
@@ -58,10 +59,12 @@ require_once 'header.php';
             </div>
         </div>
     </div>
-    <div class="mx-auto applicationBox" id="purposeOfVisa" style="display: none;">
+    <div class="mx-auto applicationBox transition-opacity duration-300 ease-in-out" id="purposeOfVisa"
+        style="display: none;">
         <div class="text-center mb-8 sm:mb-16">
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select Purpose of Visit to
-                <?php echo ucwords(str_replace('_', ' ', $country)) ?></h1>
+                <span class="countryName"></span>
+            </h1>
             <p class="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">Please select the
                 primary purpose of your visit to proceed with the visa application. We'll guide you through
                 every step of the process.</p>
@@ -69,11 +72,19 @@ require_once 'header.php';
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr" id="visaPurposeListBox">
 
         </div>
+        <div class="flex justify-center">
+            <button id="goToSelectCountry" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90">
+                ← Back
+            </button>
+        </div>
+
     </div>
-    <div class="mx-auto applicationBox" id="visaPackages" style="display: none;">
+    <div class="mx-auto applicationBox transition-opacity duration-300 ease-in-out" id="visaPackages"
+        style="display: none;">
         <div class="text-center mb-8 sm:mb-16">
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Select a Visa Package for
-                <?php echo ucwords(str_replace('_', ' ', $country)) ?></h1>
+                <span class="countryName"></span>
+            </h1>
             <p class="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">Please choose the visa
                 package that best suits your purpose of travel. We’ll help you through each step of the application
                 process.</p>
@@ -81,6 +92,11 @@ require_once 'header.php';
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 auto-rows-fr"
             id="visaPackagesListBox">
             <!-- Purpose of visit -->
+        </div>
+        <div class="flex justify-center">
+            <button id="goToSelectVisaTypes" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90">
+                ← Back
+            </button>
         </div>
     </div>
 </main>

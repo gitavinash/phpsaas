@@ -92,8 +92,18 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="<?php echo USER_JS ?>tailwind.config.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/datepicker.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="<?php echo USER_JS ?>app.js"></script>
+<?php
+
+if (BASE_URL == '/visa-application-form/') {
+    echo "<script src='" . USER_JS . "visa-form.js'></script>";
+}
+if (BASE_URL == '/start-application/') {
+    echo "<script src='" . USER_JS . "start-application.js'></script>";
+}
+
+?>
 </body>
 
 </html>

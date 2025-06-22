@@ -54,25 +54,33 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             Add new person
                         </a>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">First Name<sup>*</sup></label>
                             <input type="text" name="firstName" id="firstName" placeholder="Avinash"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name<sup>*</sup></label>
-                            <input type="text" name="lastName" id="lastName" placeholder="Kumar"
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Middle Name</label>
+                            <input type="text" name="middleName" id="middleName" placeholder="Kumar"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of
-                                Birth<sup>*</sup></label>
-                            <input id="dob" name="dob" type="date" placeholder="1995-01-01"
-                                min="<?php echo date('Y-m-d', strtotime('-100 years')) ?>"
-                                max="<?php echo date('Y-m-d') ?>"
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name<sup>*</sup></label>
+                            <input type="text" name="lastName" id="lastName" placeholder="Sharma"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Date of Birth<sup>*</sup>
+                            </label>
+                            <input id="dob" name="dob" type="text" placeholder="1995-01-01"
+                                class="dateOfBirthDatePicker w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                autocomplete="off" />
+                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Gender<sup>*</sup></label>
                             <div class="flex space-x-4">
@@ -95,10 +103,10 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Passport Expiry
                                 Date<sup>*</sup></label>
-                            <input id="passportExpiry" name="passportExpiry" type="date"
-                                min="<?php echo date('Y-m-d', strtotime('+6 months')) ?>"
-                                max="<?php echo date('Y-m-d', strtotime('+15 years')) ?>"
-                                class=" w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
+                            <input id="passportExpiry" name="passportExpiry" type="text"
+                                placeholder="<?php echo date('Y-m-d', strtotime('+6 months')) ?>"
+                                class="passportExpiryDatePicker w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary"
+                                autocomplete="off">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Email
@@ -360,5 +368,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
     </div>
 </main>
 <?php
+
 require_once 'footer.php';
+
 ?>

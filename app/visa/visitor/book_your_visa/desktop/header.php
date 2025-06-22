@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <?php require_once DEFAULT_META ?>
 </head>
@@ -20,7 +20,7 @@
 <body class="bg-white">
     <?php
 
-    if (BASE_URL == '/visa-application-form/') { ?>
+    if (BASE_URL == '/visa-application-form/' || BASE_URL == '/start-application/') { ?>
     <div id="page-loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
     background:rgba(255,255,255,0.8); z-index:9999; text-align:center; padding-top:20%;">
         <div class="spinner"></div>

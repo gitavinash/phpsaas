@@ -136,7 +136,6 @@ strike {
   background: #e7f0fb;
   padding: 5em 5em;
   border-radius: 10px;
-  min-height: 500px;
 }
 
 .visa-card {
@@ -254,4 +253,7 @@ strike {
 .pageDescription li {
   margin-bottom: 0.5em;
   margin-left: 2em;
+}
+.countryName {
+  text-transform: capitalize;
 }
