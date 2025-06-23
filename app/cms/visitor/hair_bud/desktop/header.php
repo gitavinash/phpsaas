@@ -36,6 +36,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7JZRGW9HSZ"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-7JZRGW9HSZ');
+    </script>
+    <script type="text/javascript">
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "rysk59v4vz");
+    </script>
 </head>
 
 <body>
