@@ -50,6 +50,7 @@
                                         <td>{$packageStatus}</td>
                                         <td>
                                             <a href='/dashboard/packages/domestic/edit/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit package' data-title='Edit package'><i class='fi fi-rr-edit bgWhite'></i></a>
+                                            <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Package gallery' data-title='Package gallery'><i class='fi fi-rr-gallery bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/price/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit price' data-title='Edit price'><i class='fi fi-rr-indian-rupee-sign bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/price-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Price lists' data-title='Price list'><i class='fi fi-rr-menu-burger bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/hotel-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Hotel lists' data-title='Hotel list'><i class='fi fi-rr-hotel bgWhite'></i></a>
