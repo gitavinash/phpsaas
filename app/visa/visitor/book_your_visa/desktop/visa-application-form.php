@@ -217,54 +217,8 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         </a> -->
                     </div>
                     <div class="space-y-6">
-                        <div class="border border-gray-300 rounded-lg p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="font-medium">Passport</h3>
-                                    <p class="text-sm text-gray-500">Upload clear scan of passport bio page</p>
-                                </div>
-                                <div class="text-sm text-gray-500">Max size: 5MB</div>
-                            </div>
-                            <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <input type="file" id="passportCopy" name="files[passportCopy]" aria-invalid="false"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    accept="image/*,.pdf">
-                                <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
-                                <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
-                            </div>
-                        </div>
-                        <div class="border border-gray-300 rounded-lg p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="font-medium">Passport Size Photo</h3>
-                                    <p class="text-sm text-gray-500">Recent photo with white background</p>
-                                </div>
-                                <div class="text-sm text-gray-500">Max size: 2MB</div>
-                            </div>
-                            <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <input type="file" id="profilePhoto" name="files[profilePhoto]" aria-invalid="false"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
-                                <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
-                                <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
-                            </div>
-                        </div>
-                        <div class="border border-gray-300 rounded-lg p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="font-medium">Supporting Documents</h3>
-                                    <p class="text-sm text-gray-500">Bank statements, flight tickets, hotel bookings
-                                        etc.</p>
-                                </div>
-                                <div class="text-sm text-gray-500">Max size: 10MB</div>
-                            </div>
-                            <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <input type="file" id="supportingDocuments" name="files[supportingDocuments]"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" aria-invalid="false"
-                                    accept="image/*,.pdf" multiple>
-                                <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
-                                <div class="text-sm text-gray-600">Drag and drop or click to upload multiple files</div>
-                            </div>
-                        </div>
+                        <div id="personTabs" class="mb-4 flex gap-3 flex-wrap"></div>
+                        <div id="tabContentArea" class="space-y-6"></div>
                     </div>
                     <div class="mt-8 flex justify-between">
                         <a id="goToStep2Btn"
@@ -365,8 +319,8 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <a id="goToStep3Btn"
                             class="w-full sm:w-auto text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer text-center">Previous</a>
                         <a id="submitVisaApplicationFormBtn"
-                            class="w-full sm:w-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer text-center">Submit
-                            Application</a>
+                            class="w-full sm:w-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer text-center">Pay
+                            Now</a>
                         <!-- <a id="submitVisaApplicationFormBtn"
                             class="w-full sm:w-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer text-center">Proceed
                             to pay</a> -->

@@ -68,6 +68,100 @@ function renderAllPersonCards() {
   });
 }
 
+function renderDocumentUploadTabs() {
+  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+
+  let tabButtonsHTML = "";
+  let tabContentsHTML = "";
+
+  personsData.forEach((person, index) => {
+    const tabId = `personTab${index}`;
+    const activeClass =
+      index === 0 ? "bg-primary text-white" : "bg-white text-gray-800";
+    const contentStyle = index === 0 ? "" : "display: none;";
+
+    // Tab button with person name
+    tabButtonsHTML += `
+      <button type='button'
+        class="tab-btn px-4 py-2 rounded-md border ${activeClass}" 
+        data-tab="${tabId}">
+        ${person.first_name} ${person.last_name}
+      </button>
+    `;
+
+    // Tab content with file inputs
+    tabContentsHTML += `
+      <div id="${tabId}" class="tab-content" style="${contentStyle}">
+        <div class="border border-gray-300 rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-medium">Passport</h3>
+              <p class="text-sm text-gray-500">Upload clear scan of passport bio page</p>
+            </div>
+            <div class="text-sm text-gray-500">Max size: 5MB</div>
+          </div>
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input type="file" id="passportCopy_${index}" name="passportCopy_${index}" 
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
+            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
+            <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
+          </div>
+        </div>
+
+        <div class="border border-gray-300 rounded-lg p-6 mt-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-medium">Passport Size Photo</h3>
+              <p class="text-sm text-gray-500">Recent photo with white background</p>
+            </div>
+            <div class="text-sm text-gray-500">Max size: 2MB</div>
+          </div>
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input type="file" id="profilePhoto_${index}" name="profilePhoto_${index}" 
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
+            <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
+          </div>
+        </div>
+
+        <div class="border border-gray-300 rounded-lg p-6 mt-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-medium">Supporting Documents</h3>
+              <p class="text-sm text-gray-500">Bank statements, flight tickets, hotel bookings, etc.</p>
+            </div>
+            <div class="text-sm text-gray-500">Max size: 10MB</div>
+          </div>
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input type="file" id="supportingDocuments_${index}" 
+              name="supportingDocuments_${index}" multiple
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
+            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
+            <div class="text-sm text-gray-600">Drag and drop or click to upload multiple files</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  $("#personTabs").html(tabButtonsHTML);
+  $("#tabContentArea").html(tabContentsHTML);
+
+  // Switch between tabs
+  $(".tab-btn").click(function () {
+    $(".tab-btn")
+      .removeClass("bg-primary text-white")
+      .addClass("bg-white text-gray-800");
+    $(this)
+      .removeClass("bg-white text-gray-800")
+      .addClass("bg-primary text-white");
+
+    const tabId = $(this).data("tab");
+    $(".tab-content").hide();
+    $("#" + tabId).show();
+  });
+}
+
 function editPerson(index) {
   const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
   const person = personsData[index];
@@ -382,6 +476,7 @@ $("#step2Btn").on("click", function (e) {
   // All validations passed
   saveVisaApplicationDraft(formData, 2);
   goToStep(3);
+  renderDocumentUploadTabs();
 });
 
 $("#step3Btn").on("click", function (e) {
@@ -552,41 +647,73 @@ for (let i = 1; i <= 5; i++) {
 
 $("#submitVisaApplicationFormBtn").on("click", function (e) {
   e.preventDefault();
-
   $("#submitVisaApplicationFormBtn").prop("disabled", true);
 
-  // Submit draft to cash on delivery
+  const applicationId = localStorage.getItem("visaApplicationId");
+  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+
+  if (!applicationId || personsData.length === 0) {
+    popUpMessage("center", "Missing data to submit application", "error");
+    $("#submitVisaApplicationFormBtn").prop("disabled", false);
+    return;
+  }
+
+  const finalData = new FormData();
+  finalData.append("applicationId", applicationId);
+
+  personsData.forEach((person, index) => {
+    const passportInput = document.getElementById(`passportCopy_${index}`);
+    const photoInput = document.getElementById(`profilePhoto_${index}`);
+    const supportingInput = document.getElementById(
+      `supportingDocuments_${index}`
+    );
+
+    if (passportInput?.files?.[0]) {
+      finalData.append(`passportCopy[${index}]`, passportInput.files[0]);
+    }
+    if (photoInput?.files?.[0]) {
+      finalData.append(`profilePhoto[${index}]`, photoInput.files[0]);
+    }
+    if (supportingInput?.files?.length > 0) {
+      Array.from(supportingInput.files).forEach((file, i) => {
+        finalData.append(`supportingDocuments[${index}][${i}]`, file);
+      });
+    }
+  });
 
   $.ajax({
     url: "/api/application/publish/",
     method: "POST",
-    data: {
-      applicationId: localStorage.getItem(`visaApplicationId`),
-    },
-    success: function (successResponse) {
-      console.log(`Respinse`, successResponse);
+    data: finalData,
+    contentType: false,
+    processData: false,
+    success: function (res) {
+      console.log("✅ Application submitted successfully");
 
-      console.log("Application submit successfully");
-      localStorage.removeItem(`visaApplicationId`);
-      popUpMessage("center", successResponse.msg, successResponse.status);
+      localStorage.removeItem("visaApplicationId");
+      localStorage.removeItem("personsData");
+
+      popUpMessage("center", res.msg, res.status);
+
       setTimeout(function () {
         window.location.href =
           "/thank-you/?application_id=" +
-          btoa(localStorage.getItem(`visaApplicationId`));
+          btoa(res.applicationId || applicationId);
       }, 1500);
       $("#submitVisaApplicationFormBtn").prop("disabled", false);
     },
-    error: function (errorResponse) {
-      console.error("Failed to submit VISA application:", errorResponse);
+    error: function (xhr) {
+      console.error("❌ Submission failed:", xhr);
       popUpMessage(
         "center",
-        errorResponse.responseJSON.msg,
-        errorResponse.responseJSON.status
+        xhr.responseJSON?.msg || "Submission failed",
+        "error"
       );
       $("#submitVisaApplicationFormBtn").prop("disabled", false);
     },
   });
 });
+
 // File upload
 
 function handleUploadText(inputSelector) {
