@@ -162,6 +162,9 @@ strike {
   .applicationBox {
     padding: 2em 2em;
   }
+  #mobileMenu {
+    height: 100vh;
+  }
 }
 
 .faqList:last-child {

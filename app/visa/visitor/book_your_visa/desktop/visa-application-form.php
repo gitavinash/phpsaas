@@ -42,6 +42,8 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
         </div>
 
         <!-- Form -->
+        <div id="additionalPersonDetails">
+        </div>
 
         <div class="bg-white rounded-lg shadow-lg p-8">
             <form id="visaApplicationProcess" enctype="multipart/form-data">
