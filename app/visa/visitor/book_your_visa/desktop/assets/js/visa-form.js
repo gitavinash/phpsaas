@@ -279,3 +279,345 @@ $("#updateUser").click(function (e) {
 
   renderAllPersonCards();
 });
+
+$("#step1Btn").on("click", function (e) {
+  e.preventDefault();
+
+  if (totalNumberOfPassenger == 0) {
+    const fields = {
+      "First Name": $("#firstName").val().trim(),
+      "Middle Name": $("#middleName").val().trim(),
+      "Last Name": $("#lastName").val().trim(),
+      "Date of Birth": $("#dob").val().trim(),
+      Gender: $("input[name='gender']:checked").val(),
+      "Passport Number": $("#passportNumber").val().trim(),
+      "Passport Expiry Date": $("#passportExpiry").val().trim(),
+      Email: $("#email").val().trim(),
+      "Mobile Number": $("#mobile").val().trim(),
+      Address: $("#address").val().trim(),
+    };
+
+    // Check for missing required fields (excluding optional ones like Middle Name)
+    const requiredFields = Object.entries(fields).filter(
+      ([label]) => label !== "Middle Name"
+    );
+    const missingField = requiredFields.find(([_, value]) => !value);
+
+    if (missingField) {
+      popUpMessage("center", `${missingField[0]} is required.`, "warning");
+      return;
+    }
+
+    const updatedPerson = {
+      first_name: fields["First Name"],
+      middle_name: fields["Middle Name"],
+      last_name: fields["Last Name"],
+      date_of_birth: fields["Date of Birth"],
+      gender: fields["Gender"],
+      passport_number: fields["Passport Number"],
+      passport_expiry: fields["Passport Expiry Date"],
+      email: fields["Email"],
+      mobile: fields["Mobile Number"],
+      address: fields["Address"],
+    };
+
+    localStorage.setItem("personsData", JSON.stringify([updatedPerson]));
+  }
+
+  var payloadData = localStorage.getItem("personsData");
+
+  // All validations passed
+  const newApplicationRequest = localStorage.getItem("newApplicationRequest");
+
+  if (newApplicationRequest == "true") {
+    saveVisaApplicationDraft(payloadData, 1);
+  }
+
+  goToStep(2);
+  $("#additionalPersonDetails").hide();
+});
+
+$("#step2Btn").on("click", function (e) {
+  e.preventDefault();
+
+  // Utility to get trimmed value with jQuery (since you use jQuery)
+  const getValue = (id) =>
+    $("#" + id)
+      .val()
+      ?.trim() || "";
+
+  // Declare these with let or const
+  arrivalDate = getValue("arrivalDate");
+  departureDate = getValue("departureDate");
+  purposeOfVisit = getValue("purposeOfTravel");
+  visaEntry = getValue("visaEntry");
+  accommodation = getValue("accommodation");
+
+  // Fields to validate, you can add custom validators if needed
+  const fields = [
+    { name: "Arrival date", id: "arrivalDate" },
+    { name: "Departure date", id: "departureDate" },
+    { name: "Purpose of travel", id: "purposeOfTravel" },
+    { name: "VISA entry", id: "visaEntry" },
+  ];
+  const formData = {};
+  for (const field of fields) {
+    const value = getValue(field.id);
+
+    // Simple presence check, can be replaced with more complex validators if needed
+    const isValid = field.validator ? field.validator(value) : value.length > 0;
+
+    if (!isValid) {
+      popUpMessage("center", `${field.name} is required or invalid`, "warning");
+      const inputEl = document.getElementById(field.id);
+      if (inputEl) inputEl.focus();
+      return;
+    }
+
+    formData[field.id || field.name.toLowerCase().replace(/\s+/g, "_")] = value;
+  }
+
+  formData.accommodation = accommodation;
+
+  // All validations passed
+  saveVisaApplicationDraft(formData, 2);
+  goToStep(3);
+});
+
+$("#step3Btn").on("click", function (e) {
+  e.preventDefault();
+
+  // Define required fields info
+  const fields = [
+    {
+      name: "Passport",
+      id: "passportCopy",
+      type: "single",
+      required: true,
+    },
+    {
+      name: "Profile photo",
+      id: "profilePhoto",
+      type: "single",
+      required: true,
+    },
+    {
+      name: "Supporting documents",
+      id: "supportingDocuments",
+      type: "multiple",
+      required: false,
+    },
+  ];
+
+  const files = {};
+  let supportingDocumentsUploaded = false;
+
+  for (const field of fields) {
+    const input = document.getElementById(field.id);
+    const fileList = input?.files || [];
+
+    // Validation for required fields
+    if (field.required && fileList.length === 0) {
+      popUpMessage("center", `Please upload ${field.name}`, "warning");
+      input?.focus();
+      return;
+    }
+
+    // Store files
+    if (fileList.length > 0) {
+      if (field.type === "single") {
+        files[field.id] = fileList[0]; // single File
+      } else if (field.type === "multiple") {
+        files[field.id] = Array.from(fileList); // array of Files
+        supportingDocumentsUploaded = true;
+      }
+    }
+  }
+
+  const formattedArrival = formatDateToDDMMYYYY(arrivalDate);
+  const formattedDeparture = formatDateToDDMMYYYY(departureDate);
+
+  $("#reviewTravelDates").text(`${formattedArrival} to ${formattedDeparture}`);
+
+  // Set review values (assuming firstName, lastName, email, etc. are in scope)
+  $("#reviewFullName").text(`${firstName} ${lastName}`);
+  $("#reviewEmail").text(email);
+  $("#reviewPassport").text(passportNumber);
+  $("#reviewDateOfBirth").text(dateOfBirth);
+  $("#reviewTravelDates").text(`${formattedArrival} to ${formattedDeparture}`);
+  $("#reviewTourism").text(toCapitalize(purposeOfVisit));
+  $("#reviewEntry").text(toCapitalize(visaEntry) + " entry");
+  $("#reviewSupportingDocuments").text(
+    supportingDocumentsUploaded ? "Uploaded" : "Not Uploaded"
+  );
+
+  // Optionally, use the file URLs or supportingDocumentsUploaded flag for preview or other logic
+  saveVisaApplicationDraft(files, 3);
+  goToStep(4);
+});
+
+function saveVisaApplicationDraft(formData, stepNumber) {
+  const packageId = urlParams.get("package_id");
+  formData.packageId = packageId;
+  const fd = new FormData();
+  fd.append("packageId", packageId);
+  if (stepNumber !== 1) {
+    fd.append("applicationId", localStorage.getItem("visaApplicationId") || "");
+  }
+
+  for (let key in formData) {
+    const value = formData[key];
+    if (Array.isArray(value)) {
+      value.forEach((file, index) => {
+        fd.append(`${key}[]`, file);
+      });
+    } else if (value instanceof File) {
+      fd.append(key, value);
+    } else {
+      fd.append(key, value); // e.g., packageId, applicationId
+    }
+  }
+
+  $.ajax({
+    url: "/api/application/draft/",
+    method: "POST",
+    data: fd,
+    contentType: false,
+    processData: false,
+    success: function (res) {
+      console.log("âœ… Draft saved successfully:");
+      if (res.applicationId) {
+        localStorage.setItem("visaApplicationId", res.applicationId);
+        localStorage.setItem("newApplicationRequest", false);
+      }
+      if (stepNumber === 1 && res.applicationId) {
+        // Save applicationId to localStorage only on Step 1
+        localStorage.setItem("visaApplicationId", res.applicationId);
+      }
+    },
+    error: function (xhr, status, err) {
+      console.error("Failed to save draft:", err);
+      console.debug("Server Response:", xhr.responseText);
+    },
+  });
+}
+
+function goToStep(stepNumber) {
+  // Animate step visibility
+  for (let i = 1; i <= 4; i++) {
+    if (i === stepNumber) {
+      $(`#step${i}`).fadeIn(400);
+    } else {
+      $(`#step${i}`).fadeOut(200);
+    }
+  }
+
+  if (stepNumber == 1) {
+    $("#additionalPersonDetails").show();
+  }
+
+  // Animate scroll to top
+  $("html, body").animate({ scrollTop: 0 }, 400);
+
+  // Update step indicators
+  for (let i = 1; i <= 4; i++) {
+    const $indicator = $(`#step${i}-indicator`);
+    const $circle = $indicator.find("div").first(); // circle
+    const $line = $indicator.find("div").last(); // horizontal line
+
+    if (i <= stepNumber) {
+      // Active step or previous
+      $circle
+        .removeClass("bg-gray-200 text-gray-600")
+        .addClass("bg-primary text-white");
+
+      $line.removeClass("bg-gray-200").addClass("bg-primary");
+    } else {
+      // Future steps
+      $circle
+        .removeClass("bg-primary text-white")
+        .addClass("bg-gray-200 text-gray-600");
+
+      $line.removeClass("bg-primary").addClass("bg-gray-200");
+    }
+  }
+}
+
+for (let i = 1; i <= 5; i++) {
+  $(`#goToStep${i}Btn`).on("click", function (e) {
+    e.preventDefault();
+    goToStep(i);
+  });
+}
+
+$("#submitVisaApplicationFormBtn").on("click", function (e) {
+  e.preventDefault();
+
+  $("#submitVisaApplicationFormBtn").prop("disabled", true);
+
+  // Submit draft to cash on delivery
+
+  $.ajax({
+    url: "/api/application/publish/",
+    method: "POST",
+    data: {
+      applicationId: localStorage.getItem(`visaApplicationId`),
+    },
+    success: function (successResponse) {
+      console.log(`Respinse`, successResponse);
+
+      console.log("Application submit successfully");
+      localStorage.removeItem(`visaApplicationId`);
+      popUpMessage("center", successResponse.msg, successResponse.status);
+      setTimeout(function () {
+        window.location.href =
+          "/thank-you/?application_id=" +
+          btoa(localStorage.getItem(`visaApplicationId`));
+      }, 1500);
+      $("#submitVisaApplicationFormBtn").prop("disabled", false);
+    },
+    error: function (errorResponse) {
+      console.error("Failed to submit VISA application:", errorResponse);
+      popUpMessage(
+        "center",
+        errorResponse.responseJSON.msg,
+        errorResponse.responseJSON.status
+      );
+      $("#submitVisaApplicationFormBtn").prop("disabled", false);
+    },
+  });
+});
+// File upload
+
+function handleUploadText(inputSelector) {
+  $(inputSelector).on("change", function () {
+    const files = this.files;
+    const $uploadBox = $(this).closest(".relative");
+    const $textDiv = $uploadBox.find("div.text-sm");
+
+    if (files.length > 0) {
+      const names = Array.from(files)
+        .map((file) => file.name)
+        .join(", ");
+      $textDiv
+        .text("Uploaded: " + names)
+        .removeClass("text-gray-600")
+        .addClass("text-green-600 font-medium");
+    } else {
+      const defaultText =
+        inputSelector === "#supportingDocuments"
+          ? "Drag and drop or click to upload multiple files"
+          : "Drag and drop or click to upload";
+
+      $textDiv
+        .text(defaultText)
+        .removeClass("text-green-600 font-medium")
+        .addClass("text-gray-600");
+    }
+  });
+}
+
+// Initialize for each input
+handleUploadText("#passportCopy");
+handleUploadText("#profilePhoto");
+handleUploadText("#supportingDocuments");
