@@ -128,13 +128,18 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <textarea id="address" name="address" placeholder="House no, area, city, state, pin code"
                             class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary h-24"></textarea>
                     </div>
-                    <div class="mt-8 flex justify-end">
+                    <div class="mt-8 flex justify-between items-center">
+                        <input type="hidden" id="editIndex" value="">
+
                         <a id="updateUser"
-                            class="text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer hidden">Update
-                            Details</a>
+                            class="text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer hidden">
+                            Update details
+                        </a>
+
                         <a id="step1Btn"
-                            class="bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer">Next
-                            Step</a>
+                            class="ml-auto bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer">
+                            Next Step
+                        </a>
                     </div>
                 </div>
 

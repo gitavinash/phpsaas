@@ -68,6 +68,38 @@ function renderAllPersonCards() {
   });
 }
 
+function editPerson(index) {
+  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+  const person = personsData[index];
+  if (!person) return;
+
+  // Populate form
+  $("#firstName").val(person.first_name);
+  $("#middleName").val(person.middle_name);
+  $("#lastName").val(person.last_name);
+  $("#dob").val(person.date_of_birth);
+  $("#passportNumber").val(person.passport_number);
+  $("#passportExpiry").val(person.passport_expiry);
+  $("#email").val(person.email);
+  $("#mobile").val(person.mobile);
+  $("#address").val(person.address);
+  $('input[name="gender"][value="' + person.gender + '"]').prop(
+    "checked",
+    true
+  );
+
+  // Set edit index in hidden field
+  $("#editIndex").val(index);
+
+  // Show Update button, hide Add
+  $("#updateUser").removeClass("hidden");
+  $("#addNewPerson").addClass("hidden");
+
+  document
+    .getElementById("visaApplicationProcess")
+    .scrollIntoView({ behavior: "smooth" });
+}
+
 // Fetch profile data
 $.ajax({
   url: "/api/user/search/?type=mobile&mobile=" + authUserMobile,
@@ -179,6 +211,68 @@ $("#addNewPerson").click(function (e) {
   }
 
   $("#visaApplicationProcess")[0].reset();
+  $("#email").val(email);
+  $("#mobile").val(mobile);
+  $("#address").val(address);
+
+  renderAllPersonCards();
+});
+
+$("#updateUser").click(function (e) {
+  e.preventDefault();
+
+  const firstName = $("#firstName").val().trim();
+  const middleName = $("#middleName").val().trim();
+  const lastName = $("#lastName").val().trim();
+  const dob = $("#dob").val().trim();
+  const gender = $("input[name='gender']:checked").val();
+  const passportNumber = $("#passportNumber").val().trim();
+  const passportExpiry = $("#passportExpiry").val().trim();
+  const email = $("#email").val().trim();
+  const mobile = $("#mobile").val().trim();
+  const address = $("#address").val().trim();
+
+  if (
+    !firstName ||
+    !lastName ||
+    !dob ||
+    !gender ||
+    !passportNumber ||
+    !passportExpiry ||
+    !email ||
+    !mobile ||
+    !address
+  ) {
+    popUpMessage("center", "Please fill all required fields.", "warning");
+    return;
+  }
+
+  const newPerson = {
+    first_name: firstName,
+    middle_name: middleName,
+    last_name: lastName,
+    date_of_birth: dob,
+    gender: gender,
+    passport_number: passportNumber,
+    passport_expiry: passportExpiry,
+    email: email,
+    mobile: mobile,
+    address: address,
+  };
+
+  const index = parseInt($("#editIndex").val());
+  if (isNaN(index)) return;
+
+  let personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+  personsData[index] = newPerson;
+  localStorage.setItem("personsData", JSON.stringify(personsData));
+
+  // Reset form and state
+  $("#visaApplicationProcess")[0].reset();
+  $("#editIndex").val("");
+  $("#updateUser").addClass("hidden");
+  $("#addNewPerson").removeClass("hidden");
+
   $("#email").val(email);
   $("#mobile").val(mobile);
   $("#address").val(address);
