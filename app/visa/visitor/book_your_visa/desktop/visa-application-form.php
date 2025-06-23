@@ -120,8 +120,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             <label class="block text-sm font-medium text-gray-700 mb-2">Mobile
                                 Number<sup>*</sup></label>
                             <input type="tel" id="mobile" name="mobile" placeholder="9999999999"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary"
-                                readonly>
+                                class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
                     </div>
                     <div class="mt-8">
@@ -130,6 +129,9 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary h-24"></textarea>
                     </div>
                     <div class="mt-8 flex justify-end">
+                        <a id="updateUser"
+                            class="text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer hidden">Update
+                            Details</a>
                         <a id="step1Btn"
                             class="bg-primary text-white font-medium px-8 py-3 !rounded-button hover:bg-primary/90 cursor-pointer">Next
                             Step</a>
