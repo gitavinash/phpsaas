@@ -19,8 +19,6 @@ $(document).ready(function () {
   }
 
   if (queryPurpose != "") {
-    console.log(`i'm updating :`, purpose);
-
     localStorage.setItem("visaApplicationPurpose", queryPurpose);
   }
 
@@ -191,8 +189,10 @@ $(document).ready(function () {
 
   $(document).on("click", ".showVisaTypes", function (e) {
     e.preventDefault();
+    var selectedCountry = $(this).data("country");
+    localStorage.setItem("visaApplicationCountry", selectedCountry);
     $("#visaPurposeListBox").text("");
-    updateQueryParamInURL("country", country);
+    updateQueryParamInURL("country", selectedCountry);
     updateQueryParamInURL("purpose");
     transitionSections("#selectCountry", "#purposeOfVisa").then(() => {
       showVisaTypes();
