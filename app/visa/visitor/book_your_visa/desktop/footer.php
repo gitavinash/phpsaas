@@ -7,7 +7,7 @@
                 </a>
                 <p class="text-gray-400 mb-6">Simplifying visa applications with expert assistance and fast
                     processing.</p>
-                <div class="flex space-x-4">
+                <!-- <div class="flex space-x-4">
                     <a href="#" class="text-gray-400 hover:text-white">
                         <i class="ri-facebook-fill w-6 h-6 flex items-center justify-center"></i>
                     </a>
@@ -20,7 +20,7 @@
                     <a href="#" class="text-gray-400 hover:text-white">
                         <i class="ri-instagram-fill w-6 h-6 flex items-center justify-center"></i>
                     </a>
-                </div>
+                </div> -->
             </div>
             <div>
                 <h4 class="text-lg font-medium mb-4">Quick Links</h4>
