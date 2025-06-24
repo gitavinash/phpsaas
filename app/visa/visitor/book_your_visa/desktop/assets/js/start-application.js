@@ -223,7 +223,7 @@ $(document).ready(function () {
     e.preventDefault();
     updateQueryParamInURL("purpose", "");
     $("#visaPackages").fadeOut(200);
-    transitionSections("#purposeOfVisa", "#visaPackages").then(() => {
+    transitionSections("#visaPackages", "#purposeOfVisa").then(() => {
       showVisaTypes();
     });
   });
