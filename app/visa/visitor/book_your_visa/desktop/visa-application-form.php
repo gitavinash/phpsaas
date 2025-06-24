@@ -50,11 +50,6 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                 <div class="step-content" id="step1">
                     <div class="flex justify-between items-center mb-8">
                         <h2 class="text-2xl font-bold">Personal Information</h2>
-                        <a href="#" id="addNewPerson"
-                            class="text-primary hover:text-primary/80 font-medium flex items-center cursor-pointer saveAsDraft">
-                            <i class="ri-save-line mr-2 w-5 h-5 flex items-center justify-center"></i>
-                            Add new person
-                        </a>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
@@ -130,7 +125,10 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                     </div>
                     <div class="mt-8 flex justify-between items-center">
                         <input type="hidden" id="editIndex" value="">
-
+                        <a id="addNewPerson"
+                            class="text-white font-medium px-8 py-3 border bg-primary/80 border-primary-300 !rounded-button hover:bg-primary-50 cursor-pointer">
+                            Add new person
+                        </a>
                         <a id="updateUser"
                             class="text-gray-600 font-medium px-8 py-3 border border-gray-300 !rounded-button hover:bg-gray-50 cursor-pointer hidden">
                             Update details

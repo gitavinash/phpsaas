@@ -68,101 +68,8 @@ function renderAllPersonCards() {
   });
 }
 
-function renderDocumentUploadTabs() {
-  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
-
-  let tabButtonsHTML = "";
-  let tabContentsHTML = "";
-
-  personsData.forEach((person, index) => {
-    const tabId = `personTab${index}`;
-    const activeClass =
-      index === 0 ? "bg-primary text-white" : "bg-white text-gray-800";
-    const contentStyle = index === 0 ? "" : "display: none;";
-
-    // Tab button with person name
-    tabButtonsHTML += `
-      <button type='button'
-        class="tab-btn px-4 py-2 rounded-md border ${activeClass}" 
-        data-tab="${tabId}">
-        ${person.first_name} ${person.last_name}
-      </button>
-    `;
-
-    // Tab content with file inputs
-    tabContentsHTML += `
-      <div id="${tabId}" class="tab-content" style="${contentStyle}">
-        <div class="border border-gray-300 rounded-lg p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="font-medium">Passport</h3>
-              <p class="text-sm text-gray-500">Upload clear scan of passport bio page</p>
-            </div>
-            <div class="text-sm text-gray-500">Max size: 5MB</div>
-          </div>
-          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <input type="file" id="passportCopy_${index}" name="passportCopy_${index}" 
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
-            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
-            <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
-          </div>
-        </div>
-
-        <div class="border border-gray-300 rounded-lg p-6 mt-6">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="font-medium">Passport Size Photo</h3>
-              <p class="text-sm text-gray-500">Recent photo with white background</p>
-            </div>
-            <div class="text-sm text-gray-500">Max size: 2MB</div>
-          </div>
-          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <input type="file" id="profilePhoto_${index}" name="profilePhoto_${index}" 
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
-            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
-            <div class="text-sm text-gray-600">Drag and drop or click to upload</div>
-          </div>
-        </div>
-
-        <div class="border border-gray-300 rounded-lg p-6 mt-6">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="font-medium">Supporting Documents</h3>
-              <p class="text-sm text-gray-500">Bank statements, flight tickets, hotel bookings, etc.</p>
-            </div>
-            <div class="text-sm text-gray-500">Max size: 10MB</div>
-          </div>
-          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <input type="file" id="supportingDocuments_${index}" 
-              name="supportingDocuments_${index}" multiple
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
-            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
-            <div class="text-sm text-gray-600">Drag and drop or click to upload multiple files</div>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-
-  $("#personTabs").html(tabButtonsHTML);
-  $("#tabContentArea").html(tabContentsHTML);
-
-  // Switch between tabs
-  $(".tab-btn").click(function () {
-    $(".tab-btn")
-      .removeClass("bg-primary text-white")
-      .addClass("bg-white text-gray-800");
-    $(this)
-      .removeClass("bg-white text-gray-800")
-      .addClass("bg-primary text-white");
-
-    const tabId = $(this).data("tab");
-    $(".tab-content").hide();
-    $("#" + tabId).show();
-  });
-}
-
 function editPerson(index) {
+  $("#addNewPerson").hide();
   const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
   const person = personsData[index];
   if (!person) return;
@@ -308,8 +215,9 @@ $("#addNewPerson").click(function (e) {
   $("#email").val(email);
   $("#mobile").val(mobile);
   $("#address").val(address);
-
   renderAllPersonCards();
+  $("html, body").animate({ scrollTop: 0 }, 400);
+  popUpMessage("center", "Person details added successfully", "success");
 });
 
 $("#updateUser").click(function (e) {
@@ -372,63 +280,87 @@ $("#updateUser").click(function (e) {
   $("#address").val(address);
 
   renderAllPersonCards();
+  $("html, body").animate({ scrollTop: 0 }, 400);
+  popUpMessage("center", "Person details updated successfully", "success");
+  $("#addNewPerson").show();
 });
 
 $("#step1Btn").on("click", function (e) {
   e.preventDefault();
 
-  if (totalNumberOfPassenger == 0) {
-    const fields = {
-      "First Name": $("#firstName").val().trim(),
-      "Middle Name": $("#middleName").val().trim(),
-      "Last Name": $("#lastName").val().trim(),
-      "Date of Birth": $("#dob").val().trim(),
-      Gender: $("input[name='gender']:checked").val(),
-      "Passport Number": $("#passportNumber").val().trim(),
-      "Passport Expiry Date": $("#passportExpiry").val().trim(),
-      Email: $("#email").val().trim(),
-      "Mobile Number": $("#mobile").val().trim(),
-      Address: $("#address").val().trim(),
+  // Get current persons data from localStorage or empty array
+  let personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+
+  // Check if the form is touched: any field (including radio for gender) has value
+  const formFields = {
+    firstName: $("#firstName").val().trim(),
+    middleName: $("#middleName").val().trim(),
+    lastName: $("#lastName").val().trim(),
+    dob: $("#dob").val().trim(),
+    gender: $("input[name='gender']:checked").val() || "",
+    passportNumber: $("#passportNumber").val().trim(),
+    passportExpiry: $("#passportExpiry").val().trim(),
+    email: $("#email").val().trim(),
+    mobile: $("#mobile").val().trim(),
+    address: $("#address").val().trim(),
+  };
+
+  const isFormTouched = Object.values(formFields).some((value) => value !== "");
+
+  if (isFormTouched) {
+    // Form touched, validate required fields (excluding middleName, email, mobile, address)
+    const requiredFields = {
+      "First Name": formFields.firstName,
+      "Last Name": formFields.lastName,
+      "Date of Birth": formFields.dob,
+      Gender: formFields.gender,
+      "Passport Number": formFields.passportNumber,
+      "Passport Expiry Date": formFields.passportExpiry,
     };
 
-    // Check for missing required fields (excluding optional ones like Middle Name)
-    const requiredFields = Object.entries(fields).filter(
-      ([label]) => label !== "Middle Name"
+    // Find first missing required field
+    const missingField = Object.entries(requiredFields).find(
+      ([_, val]) => !val
     );
-    const missingField = requiredFields.find(([_, value]) => !value);
 
     if (missingField) {
       popUpMessage("center", `${missingField[0]} is required.`, "warning");
-      return;
+      return; // Stop and alert
     }
 
-    const updatedPerson = {
-      first_name: fields["First Name"],
-      middle_name: fields["Middle Name"],
-      last_name: fields["Last Name"],
-      date_of_birth: fields["Date of Birth"],
-      gender: fields["Gender"],
-      passport_number: fields["Passport Number"],
-      passport_expiry: fields["Passport Expiry Date"],
-      email: fields["Email"],
-      mobile: fields["Mobile Number"],
-      address: fields["Address"],
+    // All required fields valid, add/update this person in personsData
+    const newPerson = {
+      first_name: formFields.firstName,
+      middle_name: formFields.middleName,
+      last_name: formFields.lastName,
+      date_of_birth: formFields.dob,
+      gender: formFields.gender,
+      passport_number: formFields.passportNumber,
+      passport_expiry: formFields.passportExpiry,
+      email: formFields.email,
+      mobile: formFields.mobile,
+      address: formFields.address,
     };
 
-    localStorage.setItem("personsData", JSON.stringify([updatedPerson]));
+    // If you want to add new person to existing array (allow multiple persons)
+    personsData.push(newPerson);
+
+    // Save updated array back to localStorage
+    localStorage.setItem("personsData", JSON.stringify(personsData));
+  } else {
+    // Form not touched at all, just continue without saving anything new
+    // But ensure personsData exists in localStorage (do nothing here)
   }
 
-  var payloadData = localStorage.getItem("personsData");
-
-  // All validations passed
-  const newApplicationRequest = localStorage.getItem("newApplicationRequest");
-
-  if (newApplicationRequest == "true") {
-    saveVisaApplicationDraft(payloadData, 1);
-  }
-
+  // Proceed to next step and hide form section
   goToStep(2);
   $("#additionalPersonDetails").hide();
+
+  // Save draft if needed
+  const newApplicationRequest = localStorage.getItem("newApplicationRequest");
+  if (newApplicationRequest === "true") {
+    saveVisaApplicationDraft(JSON.stringify(personsData), 1);
+  }
 });
 
 $("#step2Btn").on("click", function (e) {
@@ -482,23 +414,23 @@ $("#step2Btn").on("click", function (e) {
 $("#step3Btn").on("click", function (e) {
   e.preventDefault();
 
-  // Define required fields info
-  const fields = [
+  const firstPersonIndex = 0;
+  const requiredFields = [
     {
       name: "Passport",
-      id: "passportCopy",
+      id: `passportCopy_${firstPersonIndex}`,
       type: "single",
       required: true,
     },
     {
       name: "Profile photo",
-      id: "profilePhoto",
+      id: `profilePhoto_${firstPersonIndex}`,
       type: "single",
       required: true,
     },
     {
       name: "Supporting documents",
-      id: "supportingDocuments",
+      id: `supportingDocuments_${firstPersonIndex}`,
       type: "multiple",
       required: false,
     },
@@ -507,7 +439,7 @@ $("#step3Btn").on("click", function (e) {
   const files = {};
   let supportingDocumentsUploaded = false;
 
-  for (const field of fields) {
+  for (const field of requiredFields) {
     const input = document.getElementById(field.id);
     const fileList = input?.files || [];
 
@@ -534,11 +466,14 @@ $("#step3Btn").on("click", function (e) {
 
   $("#reviewTravelDates").text(`${formattedArrival} to ${formattedDeparture}`);
 
-  // Set review values (assuming firstName, lastName, email, etc. are in scope)
-  $("#reviewFullName").text(`${firstName} ${lastName}`);
-  $("#reviewEmail").text(email);
-  $("#reviewPassport").text(passportNumber);
-  $("#reviewDateOfBirth").text(dateOfBirth);
+  // Set review values for the first person
+  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+  const person = personsData[0] || {};
+
+  $("#reviewFullName").text(`${person.first_name} ${person.last_name}`);
+  $("#reviewEmail").text(person.email);
+  $("#reviewPassport").text(person.passport_number);
+  $("#reviewDateOfBirth").text(person.date_of_birth);
   $("#reviewTravelDates").text(`${formattedArrival} to ${formattedDeparture}`);
   $("#reviewTourism").text(toCapitalize(purposeOfVisit));
   $("#reviewEntry").text(toCapitalize(visaEntry) + " entry");
@@ -546,10 +481,144 @@ $("#step3Btn").on("click", function (e) {
     supportingDocumentsUploaded ? "Uploaded" : "Not Uploaded"
   );
 
-  // Optionally, use the file URLs or supportingDocumentsUploaded flag for preview or other logic
   saveVisaApplicationDraft(files, 3);
   goToStep(4);
 });
+
+function renderDocumentUploadTabs() {
+  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+
+  let tabButtonsHTML = "";
+  let tabContentsHTML = "";
+
+  personsData.forEach((person, index) => {
+    const tabId = `personTab${index}`;
+    const activeClass =
+      index === 0 ? "bg-primary text-white" : "bg-white text-gray-800";
+    const contentStyle = index === 0 ? "" : "display: none;";
+
+    // Tab button with person name
+    tabButtonsHTML += `
+      <button type='button'
+        class="tab-btn px-4 py-2 rounded-md border ${activeClass}" 
+        data-tab="${tabId}">
+        ${person.first_name} ${person.last_name}
+      </button>
+    `;
+
+    // Tab content with file inputs and file name text containers
+    tabContentsHTML += `
+      <div id="${tabId}" class="tab-content" style="${contentStyle}">
+        <!-- Passport Upload -->
+        <div class="border border-gray-300 rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-medium">Passport</h3>
+              <p class="text-sm text-gray-500">Upload clear scan of passport bio page</p>
+            </div>
+            <div class="text-sm text-gray-500">Max size: 5MB</div>
+          </div>
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input type="file" id="passportCopy_${index}" name="passportCopy_${index}" 
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
+            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
+            <div id="passportCopyText_${index}" class="text-sm text-gray-600">Drag and drop or click to upload</div>
+          </div>
+        </div>
+
+        <!-- Photo Upload -->
+        <div class="border border-gray-300 rounded-lg p-6 mt-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-medium">Passport Size Photo</h3>
+              <p class="text-sm text-gray-500">Recent photo with white background</p>
+            </div>
+            <div class="text-sm text-gray-500">Max size: 2MB</div>
+          </div>
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input type="file" id="profilePhoto_${index}" name="profilePhoto_${index}" 
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
+            <div id="profilePhotoText_${index}" class="text-sm text-gray-600">Drag and drop or click to upload</div>
+          </div>
+        </div>
+
+        <!-- Supporting Documents Upload -->
+        <div class="border border-gray-300 rounded-lg p-6 mt-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-medium">Supporting Documents</h3>
+              <p class="text-sm text-gray-500">Bank statements, flight tickets, hotel bookings, etc.</p>
+            </div>
+            <div class="text-sm text-gray-500">Max size: 10MB</div>
+          </div>
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input type="file" id="supportingDocuments_${index}" 
+              name="supportingDocuments_${index}" multiple
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
+            <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
+            <div id="supportingDocumentsText_${index}" class="text-sm text-gray-600">Drag and drop or click to upload multiple files</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  $("#personTabs").html(tabButtonsHTML);
+  $("#tabContentArea").html(tabContentsHTML);
+
+  // Tab switching logic
+  $(".tab-btn").click(function () {
+    $(".tab-btn")
+      .removeClass("bg-primary text-white")
+      .addClass("bg-white text-gray-800");
+    $(this)
+      .removeClass("bg-white text-gray-800")
+      .addClass("bg-primary text-white");
+
+    const tabId = $(this).data("tab");
+    $(".tab-content").hide();
+    $("#" + tabId).show();
+  });
+
+  // File name preview logic
+  personsData.forEach((_, index) => {
+    const fileInputs = [
+      { inputId: `passportCopy_${index}`, textId: `passportCopyText_${index}` },
+      { inputId: `profilePhoto_${index}`, textId: `profilePhotoText_${index}` },
+      {
+        inputId: `supportingDocuments_${index}`,
+        textId: `supportingDocumentsText_${index}`,
+      },
+    ];
+
+    fileInputs.forEach(({ inputId, textId }) => {
+      $(`#${inputId}`).on("change", function () {
+        const files = this.files;
+        const $text = $(`#${textId}`);
+
+        if (files && files.length > 0) {
+          const names = Array.from(files)
+            .map((file) => file.name)
+            .join(", ");
+          $text
+            .text("Uploaded: " + names)
+            .removeClass("text-gray-600")
+            .addClass("text-green-600 font-medium");
+        } else {
+          // Reset if no file
+          const defaultText = inputId.includes("supporting")
+            ? "Drag and drop or click to upload multiple files"
+            : "Drag and drop or click to upload";
+          $text
+            .text(defaultText)
+            .removeClass("text-green-600 font-medium")
+            .addClass("text-gray-600");
+        }
+      });
+    });
+  });
+}
 
 function saveVisaApplicationDraft(formData, stepNumber) {
   const packageId = urlParams.get("package_id");
@@ -647,19 +716,22 @@ for (let i = 1; i <= 5; i++) {
 
 $("#submitVisaApplicationFormBtn").on("click", function (e) {
   e.preventDefault();
-  $("#submitVisaApplicationFormBtn").prop("disabled", true);
+  const $btn = $("#submitVisaApplicationFormBtn");
+  $btn.prop("disabled", true);
 
   const applicationId = localStorage.getItem("visaApplicationId");
   const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
 
   if (!applicationId || personsData.length === 0) {
     popUpMessage("center", "Missing data to submit application", "error");
-    $("#submitVisaApplicationFormBtn").prop("disabled", false);
+    $btn.prop("disabled", false);
     return;
   }
 
   const finalData = new FormData();
   finalData.append("applicationId", applicationId);
+
+  let missingRequired = false;
 
   personsData.forEach((person, index) => {
     const passportInput = document.getElementById(`passportCopy_${index}`);
@@ -668,18 +740,48 @@ $("#submitVisaApplicationFormBtn").on("click", function (e) {
       `supportingDocuments_${index}`
     );
 
+    // First person document is mandatory
+    if (index === 0) {
+      if (!passportInput?.files?.[0]) {
+        popUpMessage(
+          "center",
+          "First person's passport copy is required",
+          "warning"
+        );
+        passportInput?.focus();
+        missingRequired = true;
+        return;
+      }
+      if (!photoInput?.files?.[0]) {
+        popUpMessage("center", "First person's photo is required", "warning");
+        photoInput?.focus();
+        missingRequired = true;
+        return;
+      }
+    }
+
+    // Append passport file
     if (passportInput?.files?.[0]) {
       finalData.append(`passportCopy[${index}]`, passportInput.files[0]);
     }
+
+    // Append photo
     if (photoInput?.files?.[0]) {
       finalData.append(`profilePhoto[${index}]`, photoInput.files[0]);
     }
+
+    // Append supporting documents
     if (supportingInput?.files?.length > 0) {
       Array.from(supportingInput.files).forEach((file, i) => {
         finalData.append(`supportingDocuments[${index}][${i}]`, file);
       });
     }
   });
+
+  if (missingRequired) {
+    $btn.prop("disabled", false);
+    return;
+  }
 
   $.ajax({
     url: "/api/application/publish/",
@@ -700,16 +802,17 @@ $("#submitVisaApplicationFormBtn").on("click", function (e) {
           "/thank-you/?application_id=" +
           btoa(res.applicationId || applicationId);
       }, 1500);
-      $("#submitVisaApplicationFormBtn").prop("disabled", false);
+
+      $btn.prop("disabled", false);
     },
     error: function (xhr) {
       console.error("❌ Submission failed:", xhr);
       popUpMessage(
         "center",
-        xhr.responseJSON?.msg || "Submission failed",
+        xhr.responseJSON?.msg || "Submission failed. Please try again.",
         "error"
       );
-      $("#submitVisaApplicationFormBtn").prop("disabled", false);
+      $btn.prop("disabled", false);
     },
   });
 });
