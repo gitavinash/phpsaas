@@ -28,16 +28,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $oldData = [];
         }
-
-        if (isset($_FILES['passportCopy'])) {
+        if (!empty($_FILES)) {
             require_once MODULES . 'upload.php';
-            $passportPath = handleFileUpload($_FILES['passportCopy'],);
-            $photoPath = handleFileUpload($_FILES['profilePhoto']);
-            $supportingDocs = handleFileUpload($_FILES['supportingDocuments'], true);
 
-            $media = array('passport' => $passportPath, 'profilePhoto' => $photoPath, 'documents' => $supportingDocs);
+            $media = [
+                'passport' => [],
+                'profilePhoto' => [],
+                'documents' => [],
+            ];
 
-            $rawData = json_encode($media, true);
+            foreach ($_FILES as $field => $fileData) {
+                // Match field names like passportCopy_0, profilePhoto_0, supportingDocuments_0[0]
+                if (preg_match('/^(passportCopy|profilePhoto|supportingDocuments)_(\d+)(?:\[(\d+)\])?$/', $field, $matches)) {
+                    $type = $matches[1];          // passportCopy / profilePhoto / supportingDocuments
+                    $personIndex = $matches[2];   // 0, 1, 2...
+                    $fileIndex = $matches[3] ?? null;
+
+                    $path = handleFileUpload($fileData);
+
+                    if ($path) {
+                        if ($type === 'passportCopy') {
+                            $media['passport'][$personIndex] = $path;
+                        } elseif ($type === 'profilePhoto') {
+                            $media['profilePhoto'][$personIndex] = $path;
+                        } elseif ($type === 'supportingDocuments') {
+                            $media['documents'][$personIndex][] = $path;
+                        }
+                    }
+                }
+            }
+
+            // Combine with existing data
+            $rawData = json_encode($media, JSON_UNESCAPED_SLASHES);
         }
 
         // Decode new raw data (if it's JSON string)

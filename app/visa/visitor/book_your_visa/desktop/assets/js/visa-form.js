@@ -359,10 +359,11 @@ $("#step1Btn").on("click", function (e) {
   // Save draft if needed
   const newApplicationRequest = localStorage.getItem("newApplicationRequest");
   if (newApplicationRequest === "true") {
-    saveVisaApplicationDraft(JSON.stringify(personsData), 1);
+    const payLoadData = JSON.stringify(formFields);
+    saveVisaApplicationDraft(payLoadData, 1);
   }
 });
-
+``;
 $("#step2Btn").on("click", function (e) {
   e.preventDefault();
 
@@ -414,74 +415,57 @@ $("#step2Btn").on("click", function (e) {
 $("#step3Btn").on("click", function (e) {
   e.preventDefault();
 
-  const firstPersonIndex = 0;
+  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
+  const firstPerson = personsData[0];
+
+  if (!firstPerson) {
+    popUpMessage("center", "Person 1 is missing", "warning");
+    return;
+  }
+
+  // Validate first person file inputs only
   const requiredFields = [
     {
       name: "Passport",
-      id: `passportCopy_${firstPersonIndex}`,
-      type: "single",
+      id: `passportCopy_0`,
       required: true,
     },
     {
       name: "Profile photo",
-      id: `profilePhoto_${firstPersonIndex}`,
-      type: "single",
+      id: `profilePhoto_0`,
       required: true,
-    },
-    {
-      name: "Supporting documents",
-      id: `supportingDocuments_${firstPersonIndex}`,
-      type: "multiple",
-      required: false,
     },
   ];
 
-  const files = {};
-  let supportingDocumentsUploaded = false;
-
   for (const field of requiredFields) {
     const input = document.getElementById(field.id);
-    const fileList = input?.files || [];
-
-    // Validation for required fields
-    if (field.required && fileList.length === 0) {
+    if (field.required && (!input || input.files.length === 0)) {
       popUpMessage("center", `Please upload ${field.name}`, "warning");
       input?.focus();
       return;
     }
-
-    // Store files
-    if (fileList.length > 0) {
-      if (field.type === "single") {
-        files[field.id] = fileList[0]; // single File
-      } else if (field.type === "multiple") {
-        files[field.id] = Array.from(fileList); // array of Files
-        supportingDocumentsUploaded = true;
-      }
-    }
   }
 
+  // Update review preview
   const formattedArrival = formatDateToDDMMYYYY(arrivalDate);
   const formattedDeparture = formatDateToDDMMYYYY(departureDate);
-
-  $("#reviewTravelDates").text(`${formattedArrival} to ${formattedDeparture}`);
-
-  // Set review values for the first person
-  const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
-  const person = personsData[0] || {};
-
-  $("#reviewFullName").text(`${person.first_name} ${person.last_name}`);
-  $("#reviewEmail").text(person.email);
-  $("#reviewPassport").text(person.passport_number);
-  $("#reviewDateOfBirth").text(person.date_of_birth);
+  $("#reviewFullName").text(
+    `${firstPerson.first_name} ${firstPerson.last_name}`
+  );
+  $("#reviewEmail").text(firstPerson.email);
+  $("#reviewPassport").text(firstPerson.passport_number);
+  $("#reviewDateOfBirth").text(firstPerson.date_of_birth);
   $("#reviewTravelDates").text(`${formattedArrival} to ${formattedDeparture}`);
   $("#reviewTourism").text(toCapitalize(purposeOfVisit));
   $("#reviewEntry").text(toCapitalize(visaEntry) + " entry");
+
+  const docs = document.getElementById("supportingDocuments_0")?.files || [];
   $("#reviewSupportingDocuments").text(
-    supportingDocumentsUploaded ? "Uploaded" : "Not Uploaded"
+    docs.length > 0 ? "Uploaded" : "Not Uploaded"
   );
 
-  saveVisaApplicationDraft(files, 3);
+  // ✅ Call actual upload function
+  saveVisaApplicationDraft(null, 3);
   goToStep(4);
 });
 
@@ -620,26 +604,81 @@ function renderDocumentUploadTabs() {
   });
 }
 
-function saveVisaApplicationDraft(formData, stepNumber) {
+function saveVisaApplicationDraft(data, stepNumber) {
+  console.log(`step number:`, stepNumber);
+
   const packageId = urlParams.get("package_id");
-  formData.packageId = packageId;
+  const applicationId = localStorage.getItem("visaApplicationId") || "";
   const fd = new FormData();
+
   fd.append("packageId", packageId);
-  if (stepNumber !== 1) {
-    fd.append("applicationId", localStorage.getItem("visaApplicationId") || "");
+
+  if (stepNumber === 1) {
+    const rawData = localStorage.getItem("personsData");
+
+    if (rawData) {
+      let persons = JSON.parse(rawData);
+
+      const seen = new Set();
+      const filtered = [];
+
+      for (const person of persons) {
+        const uniqueKey = person.passport_number; // Or use person.email or combined fields
+        if (!seen.has(uniqueKey)) {
+          seen.add(uniqueKey);
+          filtered.push(person); // Keep only the first occurrence
+        }
+        // All subsequent duplicates will be ignored
+      }
+
+      localStorage.setItem("personsData", JSON.stringify(filtered));
+      console.log("✅ Duplicates removed, first occurrence kept.");
+    } else {
+      console.warn("⚠️ No personsData found in localStorage.");
+    }
+
+    fd.append(
+      "personsData",
+      JSON.stringify(localStorage.getItem("personsData"))
+    ); // data should be a JSON string
   }
 
-  for (let key in formData) {
-    const value = formData[key];
-    if (Array.isArray(value)) {
-      value.forEach((file, index) => {
-        fd.append(`${key}[]`, file);
-      });
-    } else if (value instanceof File) {
-      fd.append(key, value);
-    } else {
-      fd.append(key, value); // e.g., packageId, applicationId
-    }
+  if (stepNumber === 2) {
+    // Step 2: save travel meta
+    fd.append("arrivalDate", arrivalDate);
+    fd.append("departureDate", departureDate);
+    fd.append("purposeOfTravel", purposeOfVisit);
+    fd.append("visaEntry", visaEntry);
+    fd.append("accommodation", accommodation);
+    fd.append("applicationId", applicationId);
+  }
+
+  if (stepNumber === 3) {
+    fd.append("applicationId", applicationId);
+
+    const personsData = JSON.parse(localStorage.getItem("personsData") || "[]");
+
+    personsData.forEach((_, index) => {
+      const passportInput = document.getElementById(`passportCopy_${index}`);
+      const photoInput = document.getElementById(`profilePhoto_${index}`);
+      const supportingInput = document.getElementById(
+        `supportingDocuments_${index}`
+      );
+
+      if (passportInput?.files?.[0]) {
+        fd.append(`passportCopy_${index}`, passportInput.files[0]);
+      }
+
+      if (photoInput?.files?.[0]) {
+        fd.append(`profilePhoto_${index}`, photoInput.files[0]);
+      }
+
+      if (supportingInput?.files?.length > 0) {
+        Array.from(supportingInput.files).forEach((file, i) => {
+          fd.append(`supportingDocuments_${index}[${i}]`, file);
+        });
+      }
+    });
   }
 
   $.ajax({
@@ -649,19 +688,19 @@ function saveVisaApplicationDraft(formData, stepNumber) {
     contentType: false,
     processData: false,
     success: function (res) {
-      console.log("âœ… Draft saved successfully:");
+      console.log("✅ Draft saved successfully");
       if (res.applicationId) {
         localStorage.setItem("visaApplicationId", res.applicationId);
         localStorage.setItem("newApplicationRequest", false);
       }
-      if (stepNumber === 1 && res.applicationId) {
-        // Save applicationId to localStorage only on Step 1
-        localStorage.setItem("visaApplicationId", res.applicationId);
-      }
     },
-    error: function (xhr, status, err) {
-      console.error("Failed to save draft:", err);
-      console.debug("Server Response:", xhr.responseText);
+    error: function (xhr) {
+      console.error("❌ Failed to save draft:", xhr);
+      popUpMessage(
+        "center",
+        xhr.responseJSON?.msg || "Draft save failed",
+        "error"
+      );
     },
   });
 }
