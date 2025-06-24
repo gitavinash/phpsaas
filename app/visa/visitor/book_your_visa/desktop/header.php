@@ -105,7 +105,7 @@
                         </div>
                     </li>
                     <li><a href="/track-application/" class="block py-2 text-gray-700">Track Application</a></li>
-                    <li><a href="/travel-agent-registraton/" class="block py-2 text-gray-700">Travel Agent
+                    <li><a href="travel-agent-registration/" class="block py-2 text-gray-700">Travel Agent
                             Registration</a>
                     </li>
                     <li class="pt-4 pb-4 border-t">
