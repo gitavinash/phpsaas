@@ -45,6 +45,31 @@ function getSalesBlocks(prefixValue) {
 }
 
 $(document).ready(function () {
+  // Update invertory block slabs
+
+  // Store the original value of each input in data-original
+  $(".widthValues, .heightValues").each(function () {
+    $(this).data("original", $(this).val());
+  });
+
+  // On any input change, check for modifications
+  $(document).on("input change", ".widthValues, .heightValues", function () {
+    let changed = false;
+
+    $(".widthValues, .heightValues").each(function () {
+      if ($(this).val() != $(this).data("original")) {
+        changed = true;
+        return false; // Exit loop early
+      }
+    });
+
+    if (changed) {
+      $("#updateBlockItem").show();
+    } else {
+      $("#updateBlockItem").hide();
+    }
+  });
+
   // Main Box tabs
 
   if ($(".steps-tab").length) {
