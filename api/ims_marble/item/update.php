@@ -53,7 +53,7 @@ if (isset($validRequest)) {
 
         switch ([$measurementType, $calculationType]) {
 
-                // Centimeter
+            // Centimeter
 
             case ['cm', 'sq. mm.']:
                 $damageAreaSize = $damageAreaSize * 100;
@@ -68,7 +68,7 @@ if (isset($validRequest)) {
                 $damageAreaSize = $damageAreaSize * 0.0001;
                 break;
 
-                // Millimeter
+            // Millimeter
 
             case ['mm', 'sq. cm.']:
                 $damageAreaSize = $damageAreaSize * 0.01;
@@ -83,7 +83,7 @@ if (isset($validRequest)) {
                 $damageAreaSize = $damageAreaSize * 0.000001;
                 break;
 
-                // Inches
+            // Inches
 
             case ['in', 'sq. cm.']:
                 $damageAreaSize = $damageAreaSize * 6.4516;
@@ -98,7 +98,7 @@ if (isset($validRequest)) {
                 $damageAreaSize = $damageAreaSize * 0.00064516;
                 break;
 
-                // Feet
+            // Feet
 
             case ['ft', 'sq. cm.']:
                 $damageAreaSize = $damageAreaSize * 30.48;
@@ -113,7 +113,7 @@ if (isset($validRequest)) {
                 $damageAreaSize = $damageAreaSize * 30.48;
                 break;
 
-                // Meter
+            // Meter
 
             case ['mt', 'sq. cm.']:
                 $damageAreaSize = $damageAreaSize * 10000;
@@ -135,7 +135,7 @@ if (isset($validRequest)) {
 
         if ($sameJson == 'false') {
             $updateBlock = mysqli_query($connection, "UPDATE {$tableNamePrefix}block SET block_net_size=block_net_size-{$damageAreaSize}, block_damage_size=block_damage_size+{$damageAreaSize} WHERE block_id='{$block_item_parent_id}' AND block_site_id=" . SITE_ID);
-            $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_size=block_item_damage_size+{$damageAreaSize} WHERE block_item_id='{$blockItemId}' AND block_item_site_id=" . SITE_ID);
+            $updateBlockItem = mysqli_query($connection, "UPDATE {$tableNamePrefix}block_item SET block_item_damage_size=block_item_damage_size+{$damageAreaSize}, block_item_net_size=block_item_gross_size-{$damageAreaSize} WHERE block_item_id='{$blockItemId}' AND block_item_site_id=" . SITE_ID);
         } else {
             $updateBlock = true;
             $updateBlockItem = true;

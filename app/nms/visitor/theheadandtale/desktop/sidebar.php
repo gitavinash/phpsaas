@@ -1,6 +1,6 @@
 <div class="right-container">
     <div class="hightlightBox">
-        <h2>Fintech Hightlights</h2>
+        <h2>Fintech Highlights</h2>
         <?php
 
         if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_image, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=281 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 5")) {
