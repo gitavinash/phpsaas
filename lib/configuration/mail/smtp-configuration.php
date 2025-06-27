@@ -4,7 +4,7 @@
 
 if (defined('EMAIL_SMTP_DEFAULT')) {
 
-    if (EMAIl_SMTP_DEFAULT == 0) {
+    if (EMAIL_SMTP_DEFAULT == 0) {
 
         define('SMTP_HOST', EMAIL_SMTP_HOST);
         define('SMTP_SSL', EMAIL_SMTP_SSL); // is email server is using ssl if yes then change to true
