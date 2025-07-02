@@ -1440,7 +1440,7 @@
                             <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
                                 <i class="ri-mail-line"></i>
                             </div>
-                            <span class="text-gray-400">info@journeyfinders.in</span>
+                            <span class="text-gray-400">info@journeyfinders.com</span>
                         </li>
                         <li class="flex items-center">
                             <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">

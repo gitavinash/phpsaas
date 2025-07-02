@@ -5,7 +5,8 @@ $("#fetchItinerary").click(function (e) {
   $("#fetchItinerary").hide();
   $("#itineraryListBox").hide();
   $("#editorBox").hide();
-
+  $("#sendItinerary").hide();
+  $("#downloadItinerary").hide();
   var destination = $("#itineraryDestination").val();
   var theme = $("#itineraryStyle").val();
 
@@ -29,7 +30,7 @@ $("#fetchItinerary").click(function (e) {
         var itineraryResponse = response.itineraryList;
         var itineraryList = `<option value=''>Select</option>`;
         itineraryResponse.forEach((list) => {
-          itineraryList += `<option value='${list.tour_package_id}'>${list.tour_package_title}</option>`;
+          itineraryList += `<option value='${list.tour_package_id}'>${list.tour_package_title} ( at ₹ ${list.tour_package_price_selling_adult} per person )</option>`;
         });
         $("#itineraryList").append(itineraryList);
         $("#itineraryListBox").show();
@@ -140,6 +141,11 @@ $("#showItinerary").click(function (e) {
       menubar: true,
     });
     $("#editorBox").show();
+
+    // Show button
+
+    $("#sendItinerary").show();
+    $("#downloadItinerary").show();
   } else {
     popUpMessage(
       "center",
@@ -149,17 +155,116 @@ $("#showItinerary").click(function (e) {
   }
 });
 
+function parseItineraryHtml(html) {
+  const container = document.createElement("div");
+  container.innerHTML = html
+    .replace(/\+/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+
+  const json = {};
+
+  const h1 = container.querySelector("h1");
+  json.title = h1 ? h1.textContent.trim() : "";
+
+  const rows = container.querySelectorAll("table tr");
+  rows.forEach(function (row) {
+    const cells = row.querySelectorAll("td");
+    if (cells.length === 2) {
+      const key = cells[0].textContent
+        .trim()
+        .toLowerCase()
+        .replace(/ /g, "_")
+        .replace(/[^a-z_]/g, "");
+      const value = cells[1].textContent.trim();
+      json[key] = value;
+    }
+  });
+
+  var h2s = container.querySelectorAll("h2");
+  var overview = "",
+    inclusions = "",
+    exclusions = "",
+    itinerary = [];
+
+  for (var i = 0; i < h2s.length; i++) {
+    var text = h2s[i].textContent.toLowerCase();
+    if (text.includes("overview") && h2s[i].nextElementSibling) {
+      overview = h2s[i].nextElementSibling.textContent.trim();
+    } else if (text.includes("inclusions") && h2s[i].nextElementSibling) {
+      inclusions = h2s[i].nextElementSibling.textContent.trim();
+    } else if (text.includes("exclusions") && h2s[i].nextElementSibling) {
+      exclusions = h2s[i].nextElementSibling.textContent.trim();
+    } else if (text.includes("day wise itinerary")) {
+      const div = h2s[i].nextElementSibling;
+      if (div) {
+        const daySections = div.querySelectorAll("h3");
+        for (var j = 0; j < daySections.length; j++) {
+          var overviewText = "";
+          var next = daySections[j].nextElementSibling;
+          if (next && next.tagName.toLowerCase() === "p") {
+            overviewText = next.textContent.trim();
+          }
+          itinerary.push({
+            day: daySections[j].textContent.trim(),
+            overview: overviewText,
+          });
+        }
+      }
+    }
+  }
+
+  json.overview = overview;
+  json.itinerary = itinerary;
+  json.inclusions = inclusions;
+  json.exclusions = exclusions;
+
+  return json;
+}
+
+function sendItineraryToCustomer() {
+  $("#sendItinerary").hide();
+  $("#downloadItinerary").hide();
+  const itinenaryId = $("#itinenaryId").val();
+  const editorContent = tinymce.get("itineraryEditorBox").getContent();
+  const intinenaryObject = parseItineraryHtml(editorContent);
+  const payload = {
+    id: itinenaryId,
+    content: intinenaryObject,
+  };
+
+  $.ajax({
+    url: "/api/itinerary/publish/",
+    method: "POST",
+    contentType: "application/json",
+    processData: false,
+    data: JSON.stringify(payload),
+    success: function (response) {
+      console.log("Success:", response);
+      popUpMessage("center", "Itinerary sent successfully!", "success");
+      $("#sendItinerary").show();
+      $("#downloadItinerary").show();
+    },
+    error: function (xhr, status, error) {
+      console.error("Error:", error);
+      popUpMessage("center", "Failed to send itinerary!", "error");
+      $("#sendItinerary").show();
+      $("#downloadItinerary").show();
+    },
+  });
+}
+
 // Send itinerary
 
 $("#sendItinerary").click(function (e) {
   e.preventDefault();
-  const itinenaryId = $("#itinenaryId").val();
+  const itinenaryId = sendItineraryToCustomer();
 });
 
 // Download PDF itinerary
 
 $("#downloadItinerary").click(function (e) {
   e.preventDefault();
-  const itinenaryId = $("#itinenaryId").val();
-  // window.open("/view-itinenary/?id=" + itinenaryId, "_blank");
+  const itinenaryId = sendItineraryToCustomer();
+  console.log(`itinenaryId`, itinenaryId);
 });

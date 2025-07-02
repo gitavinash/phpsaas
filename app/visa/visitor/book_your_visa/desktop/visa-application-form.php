@@ -294,9 +294,13 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="p-6">
+                            <div class="p-6">
                                 <h3 class="font-medium mb-4">Payment Summary</h3>
                                 <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-500">No of Person</div>
+                                        <div class="font-medium" id="totalPerson"></div>
+                                    </div>
                                     <div>
                                         <div class="text-gray-500">Visa Processing Fee</div>
                                         <div class="font-medium" id="processingFee"></div>
@@ -310,7 +314,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                         <div class="font-medium" id="totalAmount"></div>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                     <div class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-between sm:space-y-0 sm:space-x-4">

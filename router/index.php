@@ -41,7 +41,6 @@ if (sizeof($_REQUEST) != 0) {
 			/** Convert string array to string  */
 
 			foreach ($value as $arrayKey => $arrayValue) {
-
 				$secure[$arrayKey] = mysqli_real_escape_string($connection, $arrayValue);
 			}
 		}

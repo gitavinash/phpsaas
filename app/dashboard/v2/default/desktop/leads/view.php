@@ -923,8 +923,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <h4 class="heading" style="margin-bottom: 2rem">Search Itinenary</h4>
                         <div class="box-1">
                             <div class="box-5">
-                                <h4>Select destination</h4>
-                                <select class="indianCityAutoComplete form-control" id="itineraryDestination">
+                                <h4>Select destination<sup>*</sup></h4>
+                                <select class="internationalCityAutoComplete form-control" id="itineraryDestination">
                                 </select>
                             </div>
                             <div class="box-5">
@@ -955,7 +955,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         </div>
                     </div>
                     <div class="form-group" id="itineraryListBox" style="display: none;">
-                        <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary</h4>
+                        <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary<sup>*</sup></h4>
                         <select class="selectJS form-control" id="itineraryList"></select>
                         <div class="box-1">
                             <a href="#" class="btn" id="showItinerary"
@@ -971,8 +971,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             <div class="widget box-2">
                 <div class="actionArea">
                     <input type="hidden" id="itinenaryId" value="">
-                    <a class="btn popUpBtn" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send itinerary</a>
-                    <a href="#" class="btn popUpBtn" id="downloadItinerary" target="_blank"><i
+                    <a class="btn popUpBtn hidden" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send
+                        itinerary</a>
+                    <a href="#" class="btn popUpBtn hidden" id="downloadItinerary" target="_blank"><i
                             class="fi-rr-file-pdf"></i> Download itinerary</a>
                     <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</a>

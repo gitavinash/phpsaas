@@ -18,6 +18,10 @@ body {
   overflow-x: hidden;
 }
 
+.hidden {
+  display: none;
+}
+
 a {
   cursor: pointer !important;
 }
@@ -2204,7 +2208,9 @@ section.form
   margin-bottom: 0px;
   margin-top: 0px;
 } */
-
+.popUp .fullScreenPopUpBox .actionArea {
+  padding-top: 15%;
+}
 .popUp .actionArea {
   min-height: 500px;
   background: #01647b;

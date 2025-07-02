@@ -76,9 +76,11 @@ function initializeSelect2HereMaps(element) {
       processResults: function (data) {
         return {
           results: $.map(data.locationList, function (item) {
+            console.log(`item`, item);
+
             return {
-              id: item,
-              text: item,
+              id: item.location,
+              text: item.location,
             };
           }),
         };
@@ -99,14 +101,17 @@ function initializeSelect2HereMapsForInternational(element) {
       data: function (params) {
         return {
           searchQuery: params.term,
+          country: $("#dropDownCountry").length
+            ? { country: $("#dropDownCountry").val() }
+            : {},
         };
       },
       processResults: function (data) {
         return {
           results: $.map(data.locationList, function (item) {
             return {
-              id: item,
-              text: item,
+              id: item.location,
+              text: item.location,
             };
           }),
         };

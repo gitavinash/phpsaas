@@ -36,8 +36,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             break;
     }
 
-    $finalInsertQuery = "SELECT * FROM " . TABLE_PREFIX . "tour_package INNER JOIN " . TABLE_PREFIX .
-        "tour_package_price ON tour_package_price_parent_id=tour_package_id WHERE {$itineraryQuery} AND TRIM(tour_package_price_type) IN ('double', 'single') AND tour_package_status=1 AND  tour_package_site_id=" . SITE_ID;
+    $finalInsertQuery = "
+    WITH ranked_prices AS (
+      SELECT *,
+        ROW_NUMBER() OVER (
+          PARTITION BY tour_package_id
+          ORDER BY 
+            CASE TRIM(tour_package_price_type)
+              WHEN 'double' THEN 1
+              WHEN 'single' THEN 2
+              ELSE 3
+            END
+        ) AS rn
+      FROM " . TABLE_PREFIX . "tour_package
+      INNER JOIN " . TABLE_PREFIX . "tour_package_price 
+        ON tour_package_price_parent_id = tour_package_id
+      WHERE {$itineraryQuery}
+        AND TRIM(tour_package_price_type) IN ('double', 'single')
+        AND tour_package_status = 1
+        AND tour_package_site_id = " . SITE_ID . "
+    )
+    SELECT * FROM ranked_prices WHERE rn = 1";
 
     if ($checkItinerary = mysqli_query($connection, $finalInsertQuery)) {
         if (mysqli_num_rows($checkItinerary) != 0) {

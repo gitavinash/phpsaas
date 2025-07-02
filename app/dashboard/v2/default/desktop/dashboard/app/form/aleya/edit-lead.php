@@ -1,17 +1,17 @@
 <tr>
     <td class="box-3"><strong>First name<sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="first_name"
-            id="firstName" value="<?php echo $enquiry_first_name ?>" required></td>
+    <td class="box-7"><input type="text" class="form-control" name="first_name" id="firstName"
+            value="<?php echo $enquiry_first_name ?>" required></td>
 </tr>
 <tr>
     <td class="box-3"><strong>Middle name</strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="middle_name"
-            id="middleName" value="<?php echo $enquiry_middle_name ?>"></td>
+    <td class="box-7"><input type="text" class="form-control" name="middle_name" id="middleName"
+            value="<?php echo $enquiry_middle_name ?>"></td>
 </tr>
 <tr>
     <td class="box-3"><strong>Last name</strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="last_name"
-            id="lastName" value="<?php echo $enquiry_last_name ?>"></td>
+    <td class="box-7"><input type="text" class="form-control" name="last_name" id="lastName"
+            value="<?php echo $enquiry_last_name ?>"></td>
 </tr>
 <tr>
     <td class="box-3"><strong>Email</strong></td>
@@ -31,6 +31,18 @@
         <select class="indianCityAutoComplete" style="float: left; width:100%" name="package" id="package">
             <option value="<?php echo $enquiry_subject ?>"><?php echo $enquiry_subject ?></option>
         </select>
+    </td>
+</tr>
+<tr>
+    <td class="box-3"><strong>Destination Type<sup>*</sup></strong></td>
+    <td class="box-7">
+        <div class="form-group">
+            <select class="selectJS form-control" name="destinationType" id="destinationType">
+                <option value="select">Select travel style</option>
+                <option value="domestic" selected>Domestic</option>
+                <option value="international">International</option>
+            </select>
+        </div>
     </td>
 </tr>
 <tr>
@@ -60,59 +72,54 @@
 </tr>
 <tr>
     <td class="box-3"><strong>Date of travel<sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="datepickerForFutureDate"
-            name="date_of_travel" id="date_of_travel"
+    <td class="box-7"><input type="text" class="datepickerForFutureDate" name="date_of_travel" id="date_of_travel"
             value="<?php echo date('d-m-Y', strtotime($date_of_travel)) ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Travel duration<span class="secondLine">( in Nights
                 )</span><sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="number_of_days"
-            id="number_of_days" placeholder="3" value="<?php echo $number_of_days ?>"
-            required>
+    <td class="box-7"><input type="text" class="form-control" name="number_of_days" id="number_of_days" placeholder="3"
+            value="<?php echo $number_of_days ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Number of adults<sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="number_of_adults"
-            id="number_of_adults" placeholder="0"
-            value="<?php echo $number_of_adults ?>" required>
+    <td class="box-7"><input type="text" class="form-control" name="number_of_adults" id="number_of_adults"
+            placeholder="0" value="<?php echo $number_of_adults ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Number of children<sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="number_of_childrens"
-            id="number_of_childrens" placeholder="0"
-            value="<?php echo $number_of_childrens ?>" required>
+    <td class="box-7"><input type="text" class="form-control" name="number_of_childrens" id="number_of_childrens"
+            placeholder="0" value="<?php echo $number_of_childrens ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Number of infants<span class="secondLine">( Below 5
                 years)</span><sup>*</sup></strong>
     </td>
-    <td class="box-7"><input type="text" class="form-control" name="number_of_infants"
-            id="number_of_infants" placeholder="0"
-            value="<?php echo $number_of_infants ?>" required>
+    <td class="box-7"><input type="text" class="form-control" name="number_of_infants" id="number_of_infants"
+            placeholder="0" value="<?php echo $number_of_infants ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Current location<sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="current_location"
-            id="current_location" value="<?php echo $current_location ?>" required>
+    <td class="box-7"><input type="text" class="form-control" name="current_location" id="current_location"
+            value="<?php echo $current_location ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Pickup location<sup>*</sup></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="pickup_location"
-            id="pickup_location" value="<?php echo $pickup_location ?>" required>
+    <td class="box-7"><input type="text" class="form-control" name="pickup_location" id="pickup_location"
+            value="<?php echo $pickup_location ?>" required>
     </td>
 </tr>
 <tr>
     <td class="box-3"><strong>Drop location<span class="secondLine">( ignore if same
                 )</span></strong></td>
-    <td class="box-7"><input type="text" class="form-control" name="drop_location"
-            id="drop_location" value="<?php echo $drop_location ?>">
+    <td class="box-7"><input type="text" class="form-control" name="drop_location" id="drop_location"
+            value="<?php echo $drop_location ?>">
     </td>
 </tr>
 <tr>
@@ -127,7 +134,6 @@
     </td>
     <td class="box-7">
         <input type="hidden" name="leadId" value="<?php echo $enquiry_id ?>">
-        <input type="button" id="updateEnquiry" class="btn btn-green"
-            value="Update lead">
+        <input type="button" id="updateEnquiry" class="btn btn-green" value="Update lead">
     </td>
 </tr>
