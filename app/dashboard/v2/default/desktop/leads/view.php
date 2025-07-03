@@ -971,6 +971,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             <div class="widget box-2">
                 <div class="actionArea">
                     <input type="hidden" id="itinenaryId" value="">
+                    <input type="hidden" id="itinenaryMrp" value="">
+                    <input type="hidden" id="itinenaryRefId" value="<?php echo $enquiry_id ?>">
+                    <input type="hidden" id="itinenaryRefType" value="enquiry">
+                    <input type="hidden" id="itinenaryType" value="tour_package">
                     <a class="btn popUpBtn hidden" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send
                         itinerary</a>
                     <a href="#" class="btn popUpBtn hidden" id="downloadItinerary" target="_blank"><i

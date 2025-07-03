@@ -30,7 +30,7 @@ $("#fetchItinerary").click(function (e) {
         var itineraryResponse = response.itineraryList;
         var itineraryList = `<option value=''>Select</option>`;
         itineraryResponse.forEach((list) => {
-          itineraryList += `<option value='${list.tour_package_id}'>${list.tour_package_title} ( at ₹ ${list.tour_package_price_selling_adult} per person )</option>`;
+          itineraryList += `<option value='${list.tour_package_id}_${list.tour_package_price_mrp_adult}'>${list.tour_package_title} ( at ₹ ${list.tour_package_price_selling_adult} per person )</option>`;
         });
         $("#itineraryList").append(itineraryList);
         $("#itineraryListBox").show();
@@ -56,11 +56,16 @@ $("#showItinerary").click(function (e) {
   $("#itineraryListBox").hide();
 
   var itineraryList = $("#itineraryList").val();
-  $("#itinenaryId").val(itineraryList);
+  var itineraryDetails = itineraryList.split("_");
+
+  $("#itinenaryId").val(itineraryDetails[0]);
+  $("#itinenaryMrp").val(itineraryDetails[1]);
+
+  var itinenaryPrice = itineraryDetails[0];
 
   var itineraryData = JSON.parse(localStorage.getItem("itineraryList"));
   var matchedItinerary = itineraryData.find(
-    (item) => item.tour_package_id == itineraryList
+    (item) => item.tour_package_id == itinenaryPrice
   );
 
   if (matchedItinerary) {
@@ -222,14 +227,22 @@ function parseItineraryHtml(html) {
   return json;
 }
 
-function sendItineraryToCustomer() {
+function sendItineraryToCustomer(isDownload = false) {
   $("#sendItinerary").hide();
   $("#downloadItinerary").hide();
   const itinenaryId = $("#itinenaryId").val();
+  const itinenaryType = $("#itinenaryType").val();
+  const itinenaryMrp = $("#itinenaryMrp").val();
+  const itinenaryRefId = $("#itinenaryRefId").val();
+  const itinenaryRefType = $("#itinenaryRefType").val();
   const editorContent = tinymce.get("itineraryEditorBox").getContent();
   const intinenaryObject = parseItineraryHtml(editorContent);
   const payload = {
     id: itinenaryId,
+    type: itinenaryType,
+    mrp: itinenaryMrp,
+    refId: itinenaryRefId,
+    refType: itinenaryRefType,
     content: intinenaryObject,
   };
 
@@ -240,10 +253,29 @@ function sendItineraryToCustomer() {
     processData: false,
     data: JSON.stringify(payload),
     success: function (response) {
-      console.log("Success:", response);
-      popUpMessage("center", "Itinerary sent successfully!", "success");
-      $("#sendItinerary").show();
-      $("#downloadItinerary").show();
+      // Show appropriate success message
+      const message = isDownload
+        ? "Itinerary download started successfully!"
+        : "Itinerary sent successfully!";
+
+      popUpMessage("center", message, "success");
+
+      // Trigger download in a new tab after short delay
+      if (isDownload && response.itineraryId) {
+        setTimeout(() => {
+          const encodedId = btoa(response.itineraryId);
+          const downloadUrl = `/download-itinerary/${encodedId}/`;
+          console.log(`downloadUrl`, downloadUrl);
+
+          window.open(downloadUrl, "_blank");
+        }, 1000);
+      } else {
+        // If not downloading, just log the itinerary ID
+        console.log("Itinerary ID:", response);
+      }
+
+      // Ensure buttons are visible
+      $("#sendItinerary, #downloadItinerary").show();
     },
     error: function (xhr, status, error) {
       console.error("Error:", error);
@@ -258,13 +290,12 @@ function sendItineraryToCustomer() {
 
 $("#sendItinerary").click(function (e) {
   e.preventDefault();
-  const itinenaryId = sendItineraryToCustomer();
+  const itinenaryId = sendItineraryToCustomer(false);
 });
 
 // Download PDF itinerary
 
 $("#downloadItinerary").click(function (e) {
   e.preventDefault();
-  const itinenaryId = sendItineraryToCustomer();
-  console.log(`itinenaryId`, itinenaryId);
+  const itinenaryId = sendItineraryToCustomer(true);
 });

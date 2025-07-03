@@ -31,6 +31,12 @@ Transaction status
 2 : Proceed to payment gateway
 3 : Failed
 
+Quotation status
+
+0 : Pending
+1 : Approved by client
+2 : Previous quotes
+
 Lead status
 
 0 : Initiate
