@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $searchQuery) {
     $searchQuery = urlencode(strtolower($searchQuery));
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://autocomplete.search.hereapi.com/v1/autocomplete?q={$searchQuery}&lang=en-IN&types=city&apiKey=" . HERE_MAPS_KEY,
+        CURLOPT_URL => "https://autocomplete.search.hereapi.com/v1/autocomplete?q={$searchQuery}&lang=en-IN&apiKey=" . HERE_MAPS_KEY,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
