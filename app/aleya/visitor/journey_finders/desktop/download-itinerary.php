@@ -143,8 +143,8 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         </div>
         <!-- Hero Section -->
         <div class="relative h-[400px] overflow-hidden">
-            <img src="https://readdy.ai/api/search-image?query=Beautiful%20Vietnam%20landscape%20with%20traditional%20boats%20in%20Ha%20Long%20Bay%2C%20dramatic%20limestone%20cliffs%2C%20emerald%20waters%2C%20sunset%20lighting%2C%20professional%20travel%20photography&width=1200&height=400&seq=9&orientation=landscape"
-                alt="Vietnam Trip" class="w-full h-full object-cover">
+            <img src="<?php echo $gallery_image ?>" alt="<?php echo $tour_package_title ?>"
+                class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
             <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
                 <div class="max-w-4xl mx-auto">
