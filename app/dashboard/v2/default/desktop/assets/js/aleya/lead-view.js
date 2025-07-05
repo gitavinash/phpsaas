@@ -257,9 +257,6 @@ function sendItineraryToCustomer(isDownload = false) {
       const message = isDownload
         ? "Itinerary download started successfully!"
         : "Itinerary sent successfully!";
-
-      popUpMessage("center", message, "success");
-
       // Trigger download in a new tab after short delay
       if (isDownload && response.itineraryId) {
         setTimeout(() => {
@@ -272,6 +269,7 @@ function sendItineraryToCustomer(isDownload = false) {
       } else {
         // If not downloading, just log the itinerary ID
         console.log("Itinerary ID:", response);
+        popUpMessage("center", message, "success");
       }
 
       // Ensure buttons are visible
