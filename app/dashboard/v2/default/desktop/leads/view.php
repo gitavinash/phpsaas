@@ -144,7 +144,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                             if ($date_of_travel != '1970-01-01' && $date_of_travel != '') {
                                 echo "<tr>
-                                <td class='box-3'><strong>Date of travel|{$date_of_travel}|</strong></td>
+                                <td class='box-3'><strong>Date of travel</strong></td>
                                 <td class='box-7'>{$date_of_travel}</td>
                             </tr>";
                             }
@@ -520,7 +520,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                 require_once $leadForm;
 
                                 ?>
-                                <tr>
+                                <!-- <tr>
                                     <td class="box-3">
                                     </td>
                                     <td class="box-7">
@@ -528,7 +528,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <input type="button" id="updateEnquiry" class="btn btn-green"
                                             value="Update lead">
                                     </td>
-                                </tr>
+                                </tr> -->
                             </form>
                         </table>
                     </div>

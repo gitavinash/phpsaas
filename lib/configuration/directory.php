@@ -66,6 +66,10 @@ define('IMAGE_UPLOADER', MODULES . 'imageUploader.php');
 define('LOGIN_CHECK', MODULES . 'isLogin.php');
 define('SITE_STATUS', MODULES . 'siteStatus.php');
 
+/** Font Directory */
+
+define('FONT_LIBRARY', RESOURCE . 'fonts/');
+
 /** API Directory */
 
 define('API_APP_MODULES', API_MODULES . SITE_APP . '/');	// Use for API router

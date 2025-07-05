@@ -302,7 +302,7 @@ $(document).ready(function () {
         }, 1500);
         $("#addGallery").show();
       },
-      error: function (error, response) {
+      error: function (error) {
         popUpMessage(
           "center",
           error.responseJSON.msg,

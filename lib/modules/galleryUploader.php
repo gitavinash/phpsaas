@@ -43,7 +43,7 @@ if (isset($_FILES['gallery'])) {
 					$thumbnailUploadFile = $thumbnailUploadDir . str_replace($uploadPath, '', $uploadFile);
 
 					$regenerateImageWidth = IMAGE_THUMBNAIL_WIDTH;
-					$regenerateImageHeight = ($imageWidth / $imageHeight) * IMAGE_THUMBNAIL_HEIGHT;
+					$regenerateImageHeight = (int) round(($imageWidth / $imageHeight) * IMAGE_THUMBNAIL_HEIGHT);
 
 
 					if (!is_dir($uploadPath)) {
