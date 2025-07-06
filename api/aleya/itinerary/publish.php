@@ -5,24 +5,23 @@ require_once LOGIN_CHECK;
 $httpStatus = 500;
 $status = 'warning';
 $msg = 'Invalid request';
+$quotationId = '';
 
+// Only handle POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Read raw POST data (JSON)
+    // Get raw POST data
     $json = file_get_contents('php://input');
+    $data = json_decode($json, true); // associative array
 
-    // Decode JSON into PHP array
-    $data = json_decode($json, true); // true = associative array
-
-    // Access the values
-    $id = isset($data['id']) ? $data['id'] : null;
+    // Extract and sanitize input
+    $id = isset($data['id']) ? intval($data['id']) : null;
     $content = isset($data['content']) ? $data['content'] : [];
 
-    preg_match('/\d+/', $content['price'], $matches);
+    // Extract price using regex
+    preg_match('/\d+/', isset($content['price']) ? $content['price'] : '', $matches);
+    $itineraryPrice = isset($matches[0]) ? intval($matches[0]) : null;
 
-    $itineraryPrice = isset($matches[0]) ? $matches[0] : null;
-
-    // Check if the required fields are present
-
+    // Required fields check
     $requiredFields = ['id', 'title', 'itinerary', 'itineraryPrice'];
     $missingFields = [];
 
@@ -37,51 +36,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $msg = "Missing required fields: " . implode(', ', $missingFields);
         $status = $msg;
     } else {
-        // check privious itinerary
+        // Escape user input
+        $refId = mysqli_real_escape_string($connection, $data['refId']);
+        $refType = mysqli_real_escape_string($connection, $data['refType']);
+        $itineraryDescription = mysqli_real_escape_string($connection, json_encode($content));
+        $mrp = isset($data['mrp']) ? floatval($data['mrp']) : 0;
 
-        if ($checkItinerary = mysqli_query($connection, "SELECT quotation_id as itineraryParentId FROM " . TABLE_PREFIX . "quotation WHERE quotation_ref_id='{$data['refId']}' AND quotation_ref_type='{$data['refType']}' AND quotation_type_id={$id} AND quotation_type='tour_package' AND quotation_site_id=" . SITE_ID . " ORDER BY quotation_id ASC LIMIT 1")) {
+        // Check previous itinerary
+        $query = "
+            SELECT quotation_id AS itineraryParentId 
+            FROM " . TABLE_PREFIX . "quotation 
+            WHERE quotation_ref_id = '{$refId}' 
+              AND quotation_ref_type = '{$refType}' 
+              AND quotation_type_id = {$id} 
+              AND quotation_type = 'tour_package' 
+              AND quotation_site_id = " . SITE_ID . " 
+            ORDER BY quotation_id ASC 
+            LIMIT 1
+        ";
+
+        $itineraryParentId = 0;
+        if ($checkItinerary = mysqli_query($connection, $query)) {
             if (mysqli_num_rows($checkItinerary) > 0) {
                 extract(mysqli_fetch_assoc($checkItinerary));
-            } else {
-                $itineraryParentId = 0;
             }
         }
 
-        $itineraryDescription = json_encode($content);
+        // Insert new itinerary
+        $insertQuery = "
+            INSERT INTO " . TABLE_PREFIX . "quotation (
+                quotation_parent_id, quotation_ref_id, quotation_ref_type,
+                quotation_type_id, quotation_type, quotation_site_id,
+                quotation_by, quotation_mrp, quotation_price, 
+                quotation_description, quotation_status, quotation_time
+            ) VALUES (
+                {$itineraryParentId}, '{$refId}', '{$refType}', {$id},
+                'tour_package', " . SITE_ID . ", " . USER_ID . ",
+                {$mrp}, {$itineraryPrice}, '{$itineraryDescription}', '0', NOW()
+            )
+        ";
 
-        if ($saveQuotation = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "quotation(quotation_parent_id, quotation_ref_id, quotation_ref_type, quotation_type_id, quotation_type, quotation_site_id, quotation_by, quotation_mrp, quotation_price, quotation_description, quotation_status, quotation_time) VALUES({$itineraryParentId}, '{$data['refId']}', '{$data['refType']}', {$id}, 'tour_package', " . SITE_ID . ", " . USER_ID . ", {$data['mrp']}, {$itineraryPrice}, '{$itineraryDescription}', '0', NOW())")) {
+        if ($saveQuotation = mysqli_query($connection, $insertQuery)) {
             $quotationId = mysqli_insert_id($connection);
 
-            if ($updateOldQuotation = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "quotation SET quotation_status='2' WHERE quotation_id!='{$quotationId}' AND quotation_ref_id='{$data['refId']}' AND quotation_ref_type='{$data['refType']}' AND quotation_type_id={$id} AND quotation_type='tour_package' AND quotation_site_id=" . SITE_ID)) {
+            // Deactivate old itineraries
+            $updateQuery = "
+                UPDATE " . TABLE_PREFIX . "quotation 
+                SET quotation_status = '2' 
+                WHERE quotation_id != '{$quotationId}' 
+                  AND quotation_ref_id = '{$refId}' 
+                  AND quotation_ref_type = '{$refType}' 
+                  AND quotation_type_id = {$id} 
+                  AND quotation_type = 'tour_package' 
+                  AND quotation_site_id = " . SITE_ID;
+
+            if ($updateOldQuotation = mysqli_query($connection, $updateQuery)) {
                 $httpStatus = 201;
                 $msg = "Itinerary published successfully";
                 $status = "success";
             } else {
                 $httpStatus = 500;
                 $msg = "Failed to update old itinerary";
-                $status = "Failed to update old itinerary";
+                $status = $msg;
             }
         } else {
             $httpStatus = 500;
             $msg = "Failed to save itinerary";
-            $status = "Failed to save itinerary";
+            $status = $msg;
         }
-    }
-
-    // Example: Validate and Save
-    if ($id && !empty($content)) {
-    } else {
-        $httpStatus = 400;
-        $msg = "Invalid data received";
-        $status = "Invalid data received";
     }
 }
 
+// Response
 $result = array(
     'status' => $status,
     'msg' => $msg,
-    'itineraryId' => isset($quotationId) ? $quotationId : '',
+    'itineraryId' => $quotationId,
 );
 
 http_response_code($httpStatus);
-echo json_encode($result, TRUE);
+echo json_encode($result, true);
