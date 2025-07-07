@@ -34,31 +34,38 @@
             <div class="mt-3 add_container">
                 <div class="row">
                     <?php
-                    if ($inventory_variation != '') {
-                        $varition = json_decode(base64_decode($inventory_variation), TRUE);
+                    if (!empty($inventory_variation)) {
+                        $decoded = base64_decode($inventory_variation);
+                        $variation = json_decode($decoded, true);
 
-                        for ($i = 0; $i < sizeof($varition); $i++) {
+                        if (is_array($variation)) {
+                            foreach ($variation as $item) {
+                                // Ensure expected keys exist
+                                $title = $item[1] ?? 'Untitled';
+                                $image = $item[2] ?? '';
+                                $link  = $item[3] ?? '#';
 
-                            echo "<div class='col-md-4 col-6' >
-                                <div class='row'>
-                                    <a href='{$varition[$i][3]}'>
-                                        <div class='col-12'>
-                                            <div class='card'>
-                                                <img src='{$varition[$i][2]}' class='card-img-top' />
-                                                    <div class='card-body'>
-                                                        <h5 class='card-title'>{$varition[$i][1]}</h5>
-                                                        <p class='card-text'>
-                                                        </p>
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                echo "<div class='col-md-4 col-6'>
+                    <div class='row'>
+                        <a href='{$link}'>
+                            <div class='col-12'>
+                                <div class='card'>
+                                    <img src='{$image}' class='card-img-top' />
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>{$title}</h5>
+                                        <p class='card-text'></p>
+                                    </div>
                                 </div>
-                        </div>";
+                            </div>
+                        </a>
+                    </div>
+                </div>";
+                            }
                         }
                     }
                     ?>
                 </div>
+
             </div>
             <div class="mt-3 add_container">
                 <p style="display:none" id="productInfo"
