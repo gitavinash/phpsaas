@@ -32,10 +32,10 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
             }
         }
     } else { ?>
-        <script type="text/javascript">
-            alert('Invalid action found');
-            window.location.href = 'dashboard/product/?type=list&status=all';
-        </script>
+<script type="text/javascript">
+alert('Invalid action found');
+window.location.href = 'dashboard/product/?type=list&status=all';
+</script>
 <?php
     }
 }
@@ -116,8 +116,8 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                     <div class="box-2">
                         <div class="form-group">
                             <label>Regular price (₹)</label>
-                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
-                                name="mrp" placeholder="Regular price">
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow"
+                                value="<?php echo $inventory_mrp ?>" name="mrp" placeholder="Regular price">
                         </div>
                     </div>
                     <div class="box-2">
@@ -149,8 +149,9 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                     <div class="box-2">
                         <div class="form-group">
                             <label>Tax rate ( in % )</label>
-                            <input type="number" onwheel="this.blur()" name="taxRate" value="<?php echo $inventory_tax_rate ?>"
-                                placeholder="Tax rate ( in % )" class="form-control inside-shadow">
+                            <input type="number" onwheel="this.blur()" name="taxRate"
+                                value="<?php echo $inventory_tax_rate ?>" placeholder="Tax rate ( in % )"
+                                class="form-control inside-shadow">
                         </div>
                     </div>
                 </div>
@@ -231,35 +232,48 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                                 $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
                                 $allProductOptionsDropDown = '';
 
-                                if ($inventory_variation != '') {
+                                $varientProductList = []; // initialize
 
-                                    $similarProductsList = json_decode(base64_decode($inventory_variation), TRUE);
+                                if (!empty($inventory_variation)) {
+                                    $decoded = base64_decode($inventory_variation, true);
+                                    $similarProductsList = json_decode($decoded, true);
 
-                                    for ($i = 0; $i < sizeof($similarProductsList); $i++) {
+                                    if (is_array($similarProductsList)) {
+                                        $selectedIds = [];
 
-                                        $selectedIds[] = $similarProductsList[$i][0];
-                                    }
+                                        foreach ($similarProductsList as $item) {
+                                            if (isset($item[0])) {
+                                                $selectedIds[] = $item[0];
+                                            }
+                                        }
 
-                                    while ($productData = mysqli_fetch_assoc($allProductList)) {
+                                        while ($productData = mysqli_fetch_assoc($allProductList)) {
+                                            extract($productData); // defines $varientProductId, $varientProductTitle, etc.
 
-                                        extract($productData);
+                                            $isSelected = in_array($varientProductId, $selectedIds) ? "selected" : "";
+                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
 
-                                        if (in_array($varientProductId, $selectedIds)) {
-                                            $varientProductList[] = "<option value='{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}' selected >{$varientProductTitle}</option>";
-                                        } else {
-                                            $varientProductList[] = "<option value='{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}'>{$varientProductTitle}</option>";
+                                            $varientProductList[] = "<option value='{$value}' {$isSelected}>{$varientProductTitle}</option>";
+                                        }
+
+                                        echo implode('', $varientProductList);
+                                    } else {
+                                        // fallback if decoding failed
+                                        while ($productData = mysqli_fetch_assoc($allProductList)) {
+                                            extract($productData);
+                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                            echo "<option value='{$value}'>{$varientProductTitle}</option>";
                                         }
                                     }
-
-                                    echo implode('', $varientProductList);
                                 } else {
-
+                                    // fallback if no variation set
                                     while ($productData = mysqli_fetch_assoc($allProductList)) {
-
                                         extract($productData);
-                                        echo "<option value='{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}'>{$varientProductTitle}</option>";
+                                        $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                        echo "<option value='{$value}'>{$varientProductTitle}</option>";
                                     }
                                 }
+
 
 
                                 ?>
@@ -393,23 +407,23 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
 
             if (SITE_ID == 32) { ?>
 
-                <h2>Brand</h2>
-                <div class="action-box height-200 inside-shadow">
+            <h2>Brand</h2>
+            <div class="action-box height-200 inside-shadow">
 
-                    <?php
+                <?php
 
                     if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
                         while ($brand = mysqli_fetch_assoc($brandList)) { ?>
-                            <div class="form-group">
-                                <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
-                                    <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
-                                <?php echo ucwords($brand['category_title']); ?>
-                            </div>
-                    <?php
+                <div class="form-group">
+                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
+                        <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
+                    <?php echo ucwords($brand['category_title']); ?>
+                </div>
+                <?php
                         }
                     }
                     ?>
-                </div>
+            </div>
             <?php
             }
 
@@ -421,12 +435,12 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
 
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND link_status=200 ORDER BY category_title ASC")) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="category"
-                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="category"
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
+                    <?php echo ucwords($category['category_title']); ?>
+                </div>
                 <?php
                     }
                 }
