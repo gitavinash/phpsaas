@@ -10,7 +10,28 @@ $msg = 'Invalid request';
 $isSuccessResponse = false;
 $errors = [];
 
-// Validation
+// Sanitize POST data
+$packageId = $_POST['packageId'] ?? null;
+$countryId = $_POST['countryId'] ?? null;
+$title = $_POST['title'] ?? null;
+$promoText = $_POST['promoText'] ?? null;
+$appointment = $_POST['appointment'] ?? null;
+$visaType = $_POST['visaType'] ?? null;
+$stayUpto = $_POST['stayUpto'] ?? null;
+$validity = $_POST['validity'] ?? null;
+$entryType = $_POST['entryType'] ?? null;
+$govermentFees = $_POST['govermentFees'] ?? null;
+$priceMrp = $_POST['priceMrp'] ?? null;
+$price = $_POST['price'] ?? null;
+$planDisclaimer = $_POST['planDisclaimer'] ?? null;
+$visaProcessingTime = $_POST['visaProcessingTime'] ?? null;
+$visaApplicationCenters = $_POST['visaApplicationCenters'] ?? null;
+$isFeatured = $_POST['isFeatured'] ?? 0;
+
+$image = $_POST['image'] ?? [];
+$featuredImage = $image['featureImage'] ?? '';
+
+// Validate fields
 $fieldsToValidate = [
     'packageId' => 'Package id is required',
     'countryId' => 'Please select a country.',
@@ -21,6 +42,7 @@ $fieldsToValidate = [
     'stayUpto' => 'Please enter the stay duration.',
     'validity' => 'Please enter the visa validity period.',
     'entryType' => 'Please select entry type.',
+    'govermentFees' => 'Please enter Government VISA fees.',
     'priceMrp' => 'Please enter without discount price.',
     'price' => 'Please enter offer price.',
     'planDisclaimer' => 'Please add a disclaimer.',
@@ -34,87 +56,80 @@ foreach ($fieldsToValidate as $field => $errorMessage) {
     }
 }
 
-// If valid
 if (empty($errors)) {
-    $validRequest = true;
-}
 
-// Handle insert
-if (!empty($validRequest)) {
-    if ($checkPackage = mysqli_query($connection, "SELECT visa_package_id FROM {$tableNamePrefix}package WHERE visa_package_id={$packageId} AND visa_package_status=1 AND visa_package_site_id=" . SITE_ID)) {
+    // Escape all inputs
+    $packageId = (int) $packageId;
+    $countryId = (int) $countryId;
+    $title = mysqli_real_escape_string($connection, $title);
+    $promoText = mysqli_real_escape_string($connection, $promoText);
+    $appointment = mysqli_real_escape_string($connection, $appointment);
+    $visaType = mysqli_real_escape_string($connection, $visaType);
+    $stayUpto = mysqli_real_escape_string($connection, $stayUpto);
+    $validity = mysqli_real_escape_string($connection, $validity);
+    $entryType = mysqli_real_escape_string($connection, $entryType);
+    $govermentFees = mysqli_real_escape_string($connection, $govermentFees);
+    $priceMrp = mysqli_real_escape_string($connection, $priceMrp);
+    $price = mysqli_real_escape_string($connection, $price);
+    $planDisclaimer = mysqli_real_escape_string($connection, $planDisclaimer);
+    $visaProcessingTime = mysqli_real_escape_string($connection, $visaProcessingTime);
+    $visaApplicationCenters = mysqli_real_escape_string($connection, $visaApplicationCenters);
+    $isFeatured = (int) $isFeatured;
+    $featuredImage = mysqli_real_escape_string($connection, $featuredImage);
 
-        if (mysqli_num_rows($checkPackage) != 0) {
+    $checkPackage = mysqli_query($connection, "SELECT visa_package_id FROM {$tableNamePrefix}package WHERE visa_package_id=$packageId AND visa_package_status=1 AND visa_package_site_id=" . SITE_ID);
 
-            // require_once MODULES . 'imageUploader.php';
+    if ($checkPackage && mysqli_num_rows($checkPackage) > 0) {
 
-            // Default value for feature image if not provided
-            $featuredImage = isset($image['featureImage']) ? $image['featureImage'] : '';
+        $checkCountry = mysqli_query($connection, "SELECT visa_country_id FROM {$tableNamePrefix}country WHERE visa_country_id = '$countryId' AND visa_country_status = 1 AND visa_country_site_id = " . SITE_ID);
 
-            // Check if country exists
-            $checkCountryQuery = "SELECT visa_country_id 
-                          FROM {$tableNamePrefix}country 
-                          WHERE visa_country_id = '{$countryId}' 
-                            AND visa_country_status = 1 
-                            AND visa_country_site_id = " . SITE_ID;
+        if ($checkCountry && mysqli_num_rows($checkCountry) > 0) {
 
-            $checkItemCode = mysqli_query($connection, $checkCountryQuery);
+            $updateQuery = "UPDATE {$tableNamePrefix}package SET
+                visa_package_country_id='$countryId',
+                visa_package_title='$title',
+                visa_package_promo_text='$promoText',
+                visa_package_appointment_time='$appointment',
+                visa_package_visa_type='$visaType',
+                visa_package_stay_duration='$stayUpto',
+                visa_package_validity_duration='$validity',
+                visa_package_entry_type='$entryType',
+                visa_package_disclaimer='$planDisclaimer',
+                visa_package_schedule='$visaProcessingTime',
+                visa_package_center='$visaApplicationCenters',
+                visa_package_goverment_fee='$govermentFees',
+                visa_package_mrp='$priceMrp',
+                visa_package_price='$price',
+                visa_package_is_featured='$isFeatured',
+                visa_package_feature_image='$featuredImage'
+                WHERE visa_package_id='$packageId' AND visa_package_site_id=" . SITE_ID;
 
-            if (mysqli_num_rows($checkItemCode) > 0) {
-
-                $updateQuery = "UPDATE {$tableNamePrefix}package SET
-            visa_package_country_id='{$countryId}',
-            visa_package_title='{$title}',
-            visa_package_promo_text='{$promoText}',
-            visa_package_appointment_time='{$appointment}',
-            visa_package_visa_type='{$visaType}',
-            visa_package_stay_duration='{$stayUpto}',
-            visa_package_validity_duration='{$validity}',
-            visa_package_entry_type='{$entryType}',
-            visa_package_disclaimer='{$planDisclaimer}',
-            visa_package_schedule='{$visaProcessingTime}',
-            visa_package_center='{$visaApplicationCenters}',
-            visa_package_mrp='{$priceMrp}',
-            visa_package_price='{$price}',
-            visa_package_is_featured='{$isFeatured}',
-            visa_package_feature_image='{$featuredImage}'
-            WHERE
-            visa_package_id='{$packageId}'
-            AND
-            visa_package_site_id=" . SITE_ID;
-
-                if (mysqli_query($connection, $updateQuery)) {
-                    $isSuccessResponse = true;
-                    $packageId = mysqli_insert_id($connection);
-                } else {
-                    $msg = 'Failed to update package record.';
-                }
-            } else {
-                $msg = 'Invalid country package request received.';
-            }
-
-            if ($isSuccessResponse) {
-                $httpStatus = 201;
-                $status = 'success';
-                $msg = 'Package details have been updated successfully.';
+            if (mysqli_query($connection, $updateQuery)) {
                 mysqli_query($connection, 'COMMIT');
+                $httpStatus = 200;
+                $status = 'success';
+                $msg = 'Package details updated successfully.';
+                $isSuccessResponse = true;
             } else {
-                $status = 'error';
-                $msg = $msg ?? 'Something went wrong while trying to updating package.';
                 mysqli_query($connection, 'ROLLBACK');
+                $msg = 'Failed to update package record.';
             }
         } else {
-            $msg = 'Invalid package request found';
+            $msg = 'Invalid country selected.';
         }
+    } else {
+        $msg = 'Invalid or inactive package.';
     }
 }
 
 // Final response
 $result = [
     'status' => $status,
-    'msg' => $msg ?? 'Unknown error occurred.',
-    'id' => $packageId ?? 0,
-    'errors' => $errors,
+    'msg' => $msg,
+    'id' => $packageId,
+    'errors' => $errors
 ];
 
 http_response_code($httpStatus);
+header('Content-Type: application/json');
 echo json_encode($result);

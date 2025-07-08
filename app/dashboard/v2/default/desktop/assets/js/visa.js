@@ -265,6 +265,7 @@ $(document).ready(function () {
       var stayUpto = $("#stayUpto").val().trim();
       var validity = $("#validity").val().trim();
       var entryType = $("#entryType").val().trim();
+      var govermentVisaFee = $("#govermentFees").val().trim();
       var priceMrp = $("#priceMrp").val().trim();
       var price = $("#price").val().trim();
       var planDisclaimer = $("#planDisclaimer").text().trim();
@@ -309,6 +310,16 @@ $(document).ready(function () {
           "Please select at least one visa type.",
           "error"
         );
+        return;
+      }
+
+      if (!govermentVisaFee) {
+        popUpMessage(
+          "center",
+          "Please enter the government visa fee.",
+          "error"
+        );
+        $("#governmentFees").focus();
         return;
       }
 
@@ -381,6 +392,7 @@ $(document).ready(function () {
       formData.append("stayUpto", stayUpto);
       formData.append("validity", validity);
       formData.append("entryType", entryType);
+      formData.append("govermentFees", govermentVisaFee);
       formData.append("priceMrp", priceMrp);
       formData.append("price", price);
       formData.append("planDisclaimer", planDisclaimer);
@@ -435,6 +447,7 @@ $(document).ready(function () {
       var stayUpto = $("#stayUpto").val().trim();
       var validity = $("#validity").val().trim();
       var entryType = $("#entryType").val().trim();
+      var govermentVisaFee = $("#govermentFees").val().trim();
       var priceMrp = $("#priceMrp").val().trim();
       var price = $("#price").val().trim();
       var planDisclaimer = $("#planDisclaimer").text().trim();
@@ -454,6 +467,16 @@ $(document).ready(function () {
       if (!countryId) {
         popUpMessage("center", "Please select a country.", "error");
         $("#countryId").focus();
+        return;
+      }
+
+      if (!govermentVisaFee) {
+        popUpMessage(
+          "center",
+          "Please enter the government visa fee.",
+          "error"
+        );
+        $("#governmentFees").focus();
         return;
       }
 
@@ -558,6 +581,7 @@ $(document).ready(function () {
       formData.append("stayUpto", stayUpto);
       formData.append("validity", validity);
       formData.append("entryType", entryType);
+      formData.append("govermentFees", govermentVisaFee);
       formData.append("priceMrp", priceMrp);
       formData.append("price", price);
       formData.append("planDisclaimer", planDisclaimer);

@@ -80,12 +80,16 @@
                             <div class="editableBox" id="visaApplicationCenters" contenteditable="true"></div>
                         </div>
                         <div class="form-group">
+                            <input id="govermentFees" name="goverment_fees" type="number" placeholder="90" />
+                            <label class="form-lable">Goverment VISA fees<sup>*</sup></label>
+                        </div>
+                        <div class="form-group">
                             <input id="priceMrp" name="price_mrp" type="number" placeholder="90" />
-                            <label class="form-lable">Price ( without Discount )<sup>*</sup></label>
+                            <label class="form-lable">Service Charge MRP ( without Discount )<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <input id="price" name="price" type="text" placeholder="90" />
-                            <label class="form-lable">Price ( with Discount )<sup>*</sup></label>
+                            <label class="form-lable">Service Charges Price ( with Discount )<sup>*</sup></label>
                         </div>
                         <div class="form-group-box">
                             <p>Mark featured<sup>*</sup></p>
