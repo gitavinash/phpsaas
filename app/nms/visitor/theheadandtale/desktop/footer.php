@@ -29,13 +29,14 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
                     <div class="footer_left">
                         <div class="footer_logo">
                             <a href="/"><img src="<?php echo SITE_LOGO ?>" alt="logo"></a>
-                            <p>Dive into the dynamic realm of fintech with firsthand insights and balanced
-                                journalism at The Head and Tale.</p>
+                            <p>Building the newsroom of record for Fintech and Emerging tech.</p>
                         </div>
                         <div class="social_links">
                             <h3>Follow us on</h3>
-                            <a href="https://twitter.com/theheadandtale"><img src="<?php echo USER_IMAGES ?>social_media/twitter.png" alt="twitter"></a>
-                            <a href="https://www.linkedin.com/company/theheadandtale/"><img src="<?php echo USER_IMAGES ?>social_media/linkedin.png" alt="linkden"></a>
+                            <a href="https://twitter.com/theheadandtale"><img
+                                    src="<?php echo USER_IMAGES ?>social_media/twitter.png" alt="twitter"></a>
+                            <a href="https://www.linkedin.com/company/theheadandtale/"><img
+                                    src="<?php echo USER_IMAGES ?>social_media/linkedin.png" alt="linkden"></a>
                         </div>
                     </div>
                 </div>
@@ -55,7 +56,8 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
             <div class="copyright">
                 <p>Copyright <?php echo date('Y') ?> @ <?php echo SITE_NAME ?></p>
-                <p class="right">Design and Developed by <a href="https://blumox.com" title="News website development company in new delhi">Blumox
+                <p class="right">Design and Developed by <a href="https://blumox.com"
+                        title="News website development company in new delhi">Blumox
                         Technologies</a></p>
             </div>
         </div>
@@ -66,43 +68,43 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo USER_JS ?>script.min.js"></script>
 <script>
-    const searchButton = document.getElementById('searchButton');
-    const closeButton = document.getElementById('closeButton');
-    const searchContainer = document.querySelector('.search-container');
-    const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
+const closeButton = document.getElementById('closeButton');
+const searchContainer = document.querySelector('.search-container');
+const searchInput = document.getElementById('searchInput');
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Check if the device is mobile
-        if (window.innerWidth <= 768) {
-            searchButton.click(); // Simulate a click on the search button
-        }
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if the device is mobile
+    if (window.innerWidth <= 768) {
+        searchButton.click(); // Simulate a click on the search button
+    }
+});
 
-    // Expand the search area and apply autofocus on mobile
-    searchButton.addEventListener('click', () => {
-        searchContainer.classList.add('expanded');
+// Expand the search area and apply autofocus on mobile
+searchButton.addEventListener('click', () => {
+    searchContainer.classList.add('expanded');
 
-        // Ensure the search input has enough time to expand
-        // setTimeout(() => {
-        //     if (window.innerWidth <= 768) {
-        //         searchInput.focus(); // Apply autofocus for mobile devices
-        //     }
-        // }, 200); // Wait a bit for the expansion animation to complete
-    });
+    // Ensure the search input has enough time to expand
+    // setTimeout(() => {
+    //     if (window.innerWidth <= 768) {
+    //         searchInput.focus(); // Apply autofocus for mobile devices
+    //     }
+    // }, 200); // Wait a bit for the expansion animation to complete
+});
 
-    // Close the search area
-    closeButton.addEventListener('click', () => {
-        searchContainer.classList.remove('expanded');
-        searchInput.value = ''; // Clear input
-    });
+// Close the search area
+closeButton.addEventListener('click', () => {
+    searchContainer.classList.remove('expanded');
+    searchInput.value = ''; // Clear input
+});
 
-    // Redirect to /search/?q={value} when the "Enter" key is pressed
-    searchInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && searchInput.value.trim() !== '') {
-            const query = encodeURIComponent(searchInput.value.toLowerCase());
-            window.location.href = `/search/?q=${query}`;
-        }
-    });
+// Redirect to /search/?q={value} when the "Enter" key is pressed
+searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && searchInput.value.trim() !== '') {
+        const query = encodeURIComponent(searchInput.value.toLowerCase());
+        window.location.href = `/search/?q=${query}`;
+    }
+});
 </script>
 </body>
 
