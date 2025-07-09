@@ -1,233 +1,148 @@
-<?php
+<?php include_once 'header.php'; ?>
 
-include_once 'header.php';
+<?php if (is_array($tagPost)):
+    $tagIds = array_map(fn($t) => $t['tag_relation_id'], $tagPost);
+    $resultTags = implode(',', $tagIds);
 
+    $sortBy = 'link_published DESC';
+    if (isset($_GET['sort'])) {
+        switch ($_GET['sort']) {
+            case 'price_low':
+                $sortBy = 'inventory_price ASC';
+                break;
+            case 'price_high':
+                $sortBy = 'inventory_price DESC';
+                break;
+        }
+    }
+
+    $tag_title = ucwords($tag_title);
 ?>
 
+<!-- Banner with Breadcrumb -->
+<div class="relative h-[280px] w-full mb-8 mt-16">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#e0b89c] to-[#d4946d]"></div>
+    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div class="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center relative z-10">
+        <div class="flex items-center text-sm text-white/80 mb-6">
+            <a href="/" class="hover:text-white">Home</a>
+            <span class="mx-2">/</span>
+            <span class="text-white"><?php echo  $tag_title ?></span>
+        </div>
+        <h1 class="font-serif text-4xl md:text-5xl text-white mb-4"><?php echo  $tag_title ?></h1>
+        <p class="text-white text-lg max-w-2xl"><?php echo  $tag_description ?></p>
+    </div>
+</div>
 
-<!-- section global platform start -->
-<section class="banner-section banner-bg">
-    <div class="overlay-bner"></div>
-    <div class="container">
-        <div class="row ">
-            <div class="col-md-12">
+<!-- Product Grid -->
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-end mb-6">
+        <form method="GET">
+            <select name="sort" onchange="this.form.submit()"
+                class="border border-gray-300 rounded px-4 py-2 shadow-sm">
+                <option value="#">Sort by</option>
+                <option value="latest" <?php echo  @$_GET['sort'] === 'latest' ? 'selected' : '' ?>>Latest</option>
+                <option value="price_low" <?php echo  @$_GET['sort'] === 'price_low' ? 'selected' : '' ?>>Price low to
+                    high
+                </option>
+                <option value="price_high" <?php echo  @$_GET['sort'] === 'price_high' ? 'selected' : '' ?>>Price high
+                    to low
+                </option>
+            </select>
+        </form>
+    </div>
 
-                <div class="bg-content">
-                    <h1><?php echo str_replace("39s", "'s", str_replace("\'", "'", ucwords(((isset($page_title)) ? $page_title : $tag_title)))) ?>
-                    </h1>
-                    <h3><?php echo $tag_description ?></h3>
-                </div>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <?php
+            $query = "SELECT link_url, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
+                  FROM " . TABLE_PREFIX . "link 
+                  INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id 
+                  INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id 
+                  WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
+                  AND link_type='product' AND link_status=200 
+                  GROUP BY link_url 
+                  ORDER BY $sortBy 
+                  LIMIT 0, 12";
 
-            <?php
+            $result = mysqli_query($connection, $query);
 
-            for ($i = 0; $i < sizeof($tagPost); $i++) {
-
-                $tagId[] = $tagPost[$i]['tag_relation_id'];
-            }
-
-            $resultTags = implode(', ', $tagId);
-
+            if (mysqli_num_rows($result) > 0):
+                while ($row = mysqli_fetch_assoc($result)):
+                    extract($row);
+                    $price = ($inventory_price != 0) ? $inventory_price : $inventory_mrp;
+                    $discount = ($inventory_price != 0 && $inventory_price < $inventory_mrp)
+                        ? round((($inventory_mrp - $inventory_price) / $inventory_mrp) * 100)
+                        : 0;
             ?>
-
-        </div>
-    </div>
-    </div>
-</section>
-<!-- section global platform end -->
-
-<section class="section-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-12">
-                <div class="brdcrum">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="<?php echo ACTIVE_URL ?>">Tag</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                <?php echo str_replace("\'", "'", ucwords(((isset($page_title)) ? $page_title : $tag_title))) ?>
-                            </li>
-                        </ol>
-                    </nav>
+        <div class="product-card group">
+            <a href="<?php echo  $link_url ?>">
+                <div class="relative overflow-hidden rounded-lg mb-4">
+                    <img src="<?php echo  $product_image ?>" alt="<?php echo  $product_title ?>"
+                        class="w-full h-[350px] object-cover group-hover:scale-105 transition-transform duration-300">
+                    <?php if ($inventory_in_stock == 0): ?>
+                    <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded">Out of Stock
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($discount > 0): ?>
+                    <div class="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded">
+                        <?php echo  $discount ?>% OFF</div>
+                    <?php endif; ?>
                 </div>
-            </div>
-            <div class="col-md-4 col-12">
-                <div class="float-right">
-                    <select name="sort" class="form-select sorting">
-                        <option value="#">Sort by</option>
-                        <option value="latest" <?php echo ((@$_GET['sort'] == 'latest') ? 'selected' : '') ?>>Latest
-                        </option>
-                        <option value="price_low" <?php echo ((@$_GET['sort'] == 'price_low') ? 'selected' : '') ?>>
-                            Price
-                            low to high</option>
-                        <option value="price_high" <?php echo ((@$_GET['sort'] == 'price_high') ? 'selected' : '') ?>>
-                            Price high to low</option>
-                    </select>
+            </a>
+            <h3 class="font-serif text-lg mb-2"><?php echo  $product_title ?></h3>
+            <div class="flex justify-between items-center">
+                <div>
+                    <span
+                        class="text-primary font-semibold"><?php echo  $inventory_currency_symbol . ' ' . $price ?></span>
+                    <?php if ($discount > 0): ?>
+                    <div class="text-gray-400 text-sm line-through">
+                        <?php echo  $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
+                    <?php endif; ?>
                 </div>
+                <button data-info='<?php echo $product_id . '_' . $inventory_price . '_1'; ?>'
+                    class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition">Add
+                    to
+                    Cart</button>
             </div>
         </div>
-        <div class="row">
+        <?php endwhile;
+            else: ?>
+        <div class="col-span-full text-center py-20">
+            <h2 class="text-xl font-semibold text-gray-600">No products found for this tag.</h2>
+        </div>
+        <?php endif; ?>
+    </div>
 
+    <!-- Pagination -->
+    <div class="container mx-auto px-4 py-8 flex justify-center">
+        <div class="flex items-center space-x-2">
             <?php
-
-            $sortBy = 'link_id DESC';
-
-            if (isset($_GET['sort'])) {
-
-                switch ($_GET['sort']) {
-
-                    case 'price_low':
-                        $sortBy = 'inventory_price ASC';
-                        break;
-
-                    case 'price_high':
-                        $sortBy = 'inventory_price DESC';
-                        break;
-
-                    default:
-                        $sortBy = 'link_id DESC';
-                        break;
+                $sort = (isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '';
+                if (PAGE_NO != 0) {
+                    echo '<a href="' . BASE_URL . '?pg=' . PREVIOUS_PAGE . $sort . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary">
+                        <i class="ri-arrow-left-s-line"></i>
+                      </a>';
                 }
-            }
-
-            if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_in_stock, inventory_mrp, link_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 AND link_relation_id IN ({$resultTags}) AND link_site_id=" . SITE_ID . " AND inventory_type='product' ORDER BY {$sortBy} LIMIT 0, 100")) {
-
-                if (mysqli_num_rows($tagResults) != 0) {
-
-                    $i = 0;
-
-                    while ($tagResultsData = mysqli_fetch_assoc($tagResults)) {
-
-                        extract($tagResultsData);
-
-
-                        if (($i / 4) == 3) {
-
-                            $i = 0;
-
-            ?>
-
-                            <section class="section-content cloth-card" style="padding: 0px 0px 20px 0px">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="main-card">
-
-                                            <a href="/tag/love/" class="card-link">
-                                                <div class="acce-card">
-                                                    <div class="img-acc">
-                                                        <img src="<?php echo USER_IMAGES ?>love.png">
-                                                    </div>
-                                                    <div class="acc-card-head">
-                                                        <h4>Love collection</h4>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                            <a href="/tag/anniversary/" class="card-link">
-                                                <div class="acce-card">
-                                                    <div class="img-acc">
-                                                        <img src="<?php echo USER_IMAGES ?>anniversary.jpg">
-                                                    </div>
-                                                    <div class="acc-card-head">
-                                                        <h4>Anniversary</h4>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                            <a href="/tag/birthday/" class="card-link">
-                                                <div class="acce-card">
-                                                    <div class="img-acc">
-                                                        <img src="<?php echo USER_IMAGES ?>birthday.jpg">
-                                                    </div>
-                                                    <div class="acc-card-head">
-                                                        <h4>Birthday</h4>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                            <a href="/tag/luxury/" class="card-link">
-                                                <div class="acce-card">
-                                                    <div class="img-acc">
-                                                        <img src="<?php echo USER_IMAGES ?>luxury.jpeg">
-                                                    </div>
-                                                    <div class="acc-card-head">
-                                                        <h4>Luxury</h4>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                            <a href="/category/cake/" class="card-link">
-                                                <div class="acce-card">
-                                                    <div class="img-acc">
-                                                        <img src="<?php echo USER_IMAGES ?>cake.jpg">
-                                                    </div>
-                                                    <div class="acc-card-head">
-                                                        <h4>Cake</h4>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-            <?php
-
-                        }
-
-                        echo "<div class='col-md-4 col-6'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-                                                        </div>
-                                                        " . (($inventory_in_stock == 0) ? "<div class='out-of-stock' ><img src='" . USER_IMAGES . "sold-out.png' ></div>" : "") . "
-														<h4>{$product_title}</h4>
-														<p class='rate'>" . $inventory_currency_symbol . ' ' . (($inventory_price != 0) ? $inventory_price : $inventory_mrp) . "</p>
-													</div>
-												</div>
-											</a>
-										</div>";
-
-                        $i++;
-                    }
+                for ($i = 1; $i <= TOTAL_PAGE; $i++) {
+                    $active = ($i == PAGE_NO + 1) ? 'bg-primary text-white' : 'border border-gray-200 hover:border-primary hover:text-primary';
+                    echo '<a href="' . BASE_URL . '?pg=' . ($i - 1) . $sort . '" class="w-10 h-10 flex items-center justify-center rounded ' . $active . '">' . $i . '</a>';
                 }
-            }
-
-            ?>
-
+                if (NEXT_PAGE <= TOTAL_PAGE) {
+                    echo '<a href="' . BASE_URL . '?pg=' . NEXT_PAGE . $sort . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary">
+                        <i class="ri-arrow-right-s-line"></i>
+                      </a>';
+                }
+                ?>
         </div>
     </div>
-</section>
 
-<section class="section-content">
-    <div class="container">
-        <div class="row">
-            <div class="center">
-                <div class="pagination">
-                    <?php
-
-                    $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
-
-                    if (PAGE_NO != 0) {
-                        echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
-                    }
-
-                    if (NEXT_PAGE <= TOTAL_PAGE) {
-                        echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$sort}'>Next page &raquo;</a>";
-                    }
-
-                    ?>
-                </div>
-            </div>
-        </div>
+    <?php else: ?>
+    <!-- No Product Found -->
+    <div class="text-center py-20">
+        <h1 class="text-xl font-semibold text-gray-800 mb-4">No product found</h1>
+        <a href="/" class="inline-block px-6 py-3 bg-primary text-white rounded hover:bg-opacity-90 transition">Go to
+            homepage</a>
     </div>
-</section>
-
-<?php
-
-include_once 'footer.php';
-
-?>
+    <?php endif; ?>
+</div>
+<?php include_once 'footer.php'; ?>

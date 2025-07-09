@@ -1,126 +1,94 @@
-<?php
+<?php include_once 'header.php'; ?>
 
-include_once 'header.php';
+<?php if (is_array($tagPost)):
 
+    $tagIds = array_map(fn($t) => $t['tag_relation_id'], $tagPost);
+    $resultTags = implode(',', $tagIds);
 
-if (is_array($tagPost)) {
+    $query = "
+        SELECT link_url, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock
+        FROM " . TABLE_PREFIX . "link
+        INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id
+        INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id
+        WHERE link_relation_id IN ({$resultTags})
+        AND link_site_id=" . SITE_ID . "
+        AND link_type='product' AND link_status=200
+        GROUP BY link_url
+        ORDER BY link_is_featured DESC, link_modified DESC
+        LIMIT 0, 30
+    ";
 
-    // List all tag items  
-
+    $result = mysqli_query($connection, $query);
 ?>
 
-    <!-- section global platform start -->
-    <section class="featured-banner">
-        <img src="<?php echo USER_IMAGES ?>valentine-day-banner.jpg" alt="">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="landing-page-heading">
-                        <h2>
-                            Valentine's Day Special
-                        </h2>
-                        <p>Special gift for your partner</p>
+<!-- Valentine’s Banner -->
+<section class="relative h-[400px] w-full bg-cover bg-center mb-8 mt-32"
+    style="background-image: url('<?php echo USER_IMAGES ?>valentine-day-banner.jpg');">
+    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div class="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center relative z-10">
+        <h2 class="text-white text-4xl md:text-5xl font-serif mb-3">Valentine's Day Special</h2>
+        <p class="text-white text-lg">Special gift for your partner</p>
+    </div>
+</section>
+
+<!-- Product Grid -->
+<div class="container mx-auto px-4 py-8">
+    <?php if (mysqli_num_rows($result) > 0): ?>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <?php while ($row = mysqli_fetch_assoc($result)):
+                    extract($row);
+                    $price = ($inventory_price != 0) ? $inventory_price : $inventory_mrp;
+                    $discount = ($inventory_price != 0 && $inventory_price < $inventory_mrp)
+                        ? round((($inventory_mrp - $inventory_price) / $inventory_mrp) * 100)
+                        : 0;
+                ?>
+        <div class="product-card group">
+            <a href="<?php echo $link_url ?>">
+                <div class="relative overflow-hidden rounded-lg mb-4">
+                    <img src="<?php echo $product_image ?>" alt="<?php echo $product_title ?>"
+                        class="w-full h-[350px] object-cover transition-transform duration-300 group-hover:scale-105">
+                    <?php if ($inventory_in_stock == 0): ?>
+                    <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded">Out of Stock
                     </div>
+                    <?php endif; ?>
+                    <?php if ($discount > 0): ?>
+                    <div class="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded">
+                        <?php echo $discount ?>% OFF</div>
+                    <?php endif; ?>
                 </div>
+            </a>
+            <h3 class="font-serif text-lg mb-2"><?php echo $product_title ?></h3>
+            <div class="flex justify-between items-center">
+                <div>
+                    <span
+                        class="text-primary font-semibold"><?php echo $inventory_currency_symbol . ' ' . $price ?></span>
+                    <?php if ($discount > 0): ?>
+                    <div class="text-gray-400 text-sm line-through">
+                        <?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
+                    <?php endif; ?>
+                </div>
+                <button
+                    class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-opacity-90 transition">Add
+                    to Cart</button>
             </div>
         </div>
-    </section>
-    <!-- section global platform end -->
+        <?php endwhile; ?>
+    </div>
+    <?php else: ?>
+    <div class="text-center py-20">
+        <h2 class="text-xl font-semibold text-gray-700">No products found</h2>
+        <a href="/" class="inline-block px-6 py-3 bg-primary text-white rounded hover:bg-opacity-90 transition">Go to
+            homepage</a>
+    </div>
+    <?php endif; ?>
+</div>
 
-    <!-- section global platform start -->
-    <section class="banner-section">
-        <div class="container">
-            <div class="row ">
+<?php else: ?>
+<div class="text-center py-20">
+    <h1 class="text-xl font-semibold text-gray-800 mb-4">No product found</h1>
+    <a href="/" class="inline-block px-6 py-3 bg-primary text-white rounded hover:bg-opacity-90 transition">Go to
+        homepage</a>
+</div>
+<?php endif; ?>
 
-                <?php
-
-                for ($i = 0; $i < sizeof($tagPost); $i++) {
-
-                    $tagId[] = $tagPost[$i]['tag_relation_id'];
-                }
-
-                $resultTags = implode(', ', $tagId);
-
-                ?>
-
-
-                <?php
-
-                if ($tagResults = mysqli_query($connection, "SELECT link_url, product_title, product_image, inventory_currency, inventory_currency_symbol, inventory_price, inventory_mrp FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id WHERE link_relation_id IN ({$resultTags}) AND link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200 GROUP BY link_url ORDER BY link_is_featured DESC, link_modified DESC")) {
-
-                    if (mysqli_num_rows($tagResults) != 0) {
-
-                        while ($tagResultsData = mysqli_fetch_assoc($tagResults)) {
-
-                            extract($tagResultsData);
-
-                            echo "<div class='col-md-4 col-6'>
-											<a href='{$link_url}'>
-												<div class='col-card-3'>
-													<div class='event-card'>
-														<div class='img-cd'>
-															<img src='{$product_image}'>
-														</div>
-														<h4>{$product_title}</h4>";
-                            if ($inventory_price == 0) {
-
-                                echo "<p class='rate'><img src='" . USER_IMAGES . "rupees.svg'> <span>{$inventory_mrp}</span></p>";
-                            } else { ?>
-
-                                <p class='rate'>
-                                    <span><?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></span>
-                                    </h2>
-                                    <?php
-                                    if ($inventory_mrp != 0) {
-
-                                        if ($inventory_mrp != $inventory_price) {
-
-                                            $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0);
-                                            echo '<span style="font-weight: 400;font-size: 16px; color: #898686;text-decoration: line-through;margin-right: 10px;"> ' . (($inventory_price != 0) ? $inventory_mrp : $inventory_mrp) . " </span><span style='color: #01bd01'>({$discountPersantage}% OFF)</span>";
-                                        }
-                                    }
-
-                                    ?>
-
-                                </p>
-
-                <?php
-                            }
-
-                            echo "
-													</div>
-												</div>
-											</a>
-										</div>";
-                        }
-                    } else {
-                    }
-                }
-
-                ?>
-
-            </div>
-        </div>
-    </section>
-
-<?php
-
-} else {
-
-    // show no result found
-
-?>
-
-    <section class=' continue-shopping'>
-        <h1><span>No product found</span></h1>
-        <a href="/" class="btn btn-success">Go to homepage</a>
-    </section>
-
-<?php
-
-}
-
-
-include_once 'footer.php';
-
-?>
+<?php include_once 'footer.php'; ?>

@@ -1,340 +1,332 @@
-<section class="section-content bg-covid">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="safety-head">
-                    <h3>Your Safety is our Priority!</h3>
-                    <p>Steps we are taking to keep you safe</p>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white pt-16 pb-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div>
+                <a href="/" class="inline-block mb-6">
+                    <img src="https://andblooms.com/upload/2020/10/1602753246_andblooms_logo_mobile_128x128.png"
+                        alt="AndBlooms Logo" class="h-8 brightness-0 invert">
+                </a>
+                <p class="text-gray-400 mb-6">Delivering fresh, beautiful flowers for all your special moments since
+                    2019.</p>
+                <div class="flex space-x-4">
+                    <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
+                        <i class="ri-facebook-fill"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
+                        <i class="ri-instagram-line"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
+                        <i class="ri-pinterest-line"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
+                        <i class="ri-twitter-x-line"></i>
+                    </a>
                 </div>
             </div>
-            <div class="col-md-6 testimonial-slider-box">
+            <div>
+                <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                <ul class="space-y-3">
+                    <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
+                    <li><a href="/about-us/" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                    <li><a href="/workshop/" class="text-gray-400 hover:text-white transition">Workshop</a></li>
+                    <li><a href="/franchise/" class="text-gray-400 hover:text-white transition">Franchise</a></li>
+                    <li><a href="/contact-us/" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    <li><a href="/subscription/" class="text-gray-400 hover:text-white transition">Subscription</a>
+                    </li>
 
-                <!-- Testimonial slider -->
-                <h2 class="testimonial-slider-title">Testimonials</h2>
-                <div class="testimonial-slider">
-                    <div class="slider">
-                        <p>Shalini has been a great friend in my school years and I can vouch for her amazing sense of
-                            aesthetics.She brings beauty to whatever she does. Whether it’s the way she dresses, keeps
-                            her house or runs her business.She brings value and commitment to each of these spheres. Her
-                            efforts have translated into a blooming flower business which brings joy to so many lives!
-                            ♥️</p>
-                        <span>Pooja Sinha</span>
-                    </div>
-                    <div class="slider">
-                        <p>The best ever flowers and arrangements you can buy. I have used there service many
-                            times....and every time they surprise me. Its like poetry and art with flowers. Truly the
-                            person running it loves flowers clearly evident from the selection. You cannot go wrong with
-                            them. Today I received my own Valentine day arrangement from my husband and so this review.
-                            It absolutely made my day.</p>
-                        <span>Nidhi Jain Seth</span>
-                    </div>
-                    <div class="slider">
-                        <p>I’ve ordered from & Blooms at various occasions including planning my Diwali gifts to a lot
-                            of clients! Stunning arrangements, extremely customised quick service and fresh exotic
-                            flowers are their backbone! Love the staff and the approach and the passion towards bespoke
-                            flower gifting! Very niche and very exclusive!</p>
-                        <span>Ankush Duggal</span>
-                    </div>
-                </div>
-
+                </ul>
             </div>
-            <div class="col-md-6">
-                <div class="you-tube">
-                    <iframe width="100%" height="280" src="https://www.youtube.com/embed/9-gPXnnKUS8" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-6">Product categories</h3>
+                <ul class="space-y-3">
+                    <li><a href="/tag/luxury/" class="text-gray-400 hover:text-white transition">Luxury
+                            Collections</a></li>
+                    <li><a href="/category/flower/" class="text-gray-400 hover:text-white transition">Fresh
+                            Flowers</a>
+                    <li><a href="/category/and-blooms-express/" class="text-gray-400 hover:text-white transition">&
+                            Blooms Express</a>
+                    <li><a href="/category/artistic-artificial/"
+                            class="text-gray-400 hover:text-white transition">Artistic artificial</a>
+                    <li><a href="/category/cake/" class="text-gray-400 hover:text-white transition">Cake</a>
+                    <li><a href="/category/infinity-everlasting-flowers/"
+                            class="text-gray-400 hover:text-white transition">Infinity Everlasting Flowers</a>
+                    <li><a href="/category/planters/" class="text-gray-400 hover:text-white transition">Planters</a>
+                    <li><a href="/category/vases-and-ceramics/" class="text-gray-400 hover:text-white transition">Vases
+                            & Ceramics</a>
+                </ul>
             </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- stay conect -->
-<section class="section-content bg-gr dn-s">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="h2-socl">Spread The Love</h2>
-
-                <div class="social-1">
-                    <a href="https://www.facebook.com/andblooms"><img src="<?php echo USER_IMAGES ?>facebook.png"></a>
-                    <a href="https://www.instagram.com/andblooms/"><img
-                            src="<?php echo USER_IMAGES ?>instagram.png"></a>
-                    <!-- <a href=""><img src="<?php echo USER_IMAGES ?>tweet.svg"></a>
-							<a href=""><img src="<?php echo USER_IMAGES ?>linkedin.svg"></a>
-							<a href=""><img src="<?php echo USER_IMAGES ?>pinterest.svg"></a> -->
-                    <!-- <a href=""><img src="<?php echo USER_IMAGES ?>insta.svg"></a> -->
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- stay conect end -->
-
-<footer>
-    <div class="top-section-footer bg-gr">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="fot-box">
-                        <ul class="dn-s">
-                            <li><a href="/about-us/">About Us</a></li>
-                            <li><a href="/category/workshop/">Workshop</a></li>
-                            <li><a href="/franchise/">Franchise</a></li>
-                            <!-- <li><a href="">Coupons & Deals</a></li> -->
-                            <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
-                            <!-- <li><a href="/career/">Career</a></li>
-				              <li><a href="/media/">Media</a></li> -->
-                            <!-- <li><a href="reviews/">Reviews</a></li>
-				              <li><a href="/blog/">Blog</a></li> -->
-                            <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
-                            <li><a href="/privacy-policy/">Privacy policy</a></li>
-                        </ul>
-                        <ul class="dn-l">
-                            <li><a href="/about-us/">About Us</a></li>
-                            <li><a href="/franchise/">Franchise</a></li>
-                            <!-- <li><a href="">Coupons & Deals</a></li> -->
-                            <li><a href="/cancellation---refund/">Cancellation & Refund</a></li>
-                            <!-- <li><a href="/career/">Career</a></li>
-				              <li><a href="/media/">Media</a></li> -->
-                            <!-- <li><a href="reviews/">Reviews</a></li>
-				              <li><a href="/blog/">Blog</a></li> -->
-                            <li><a href="/terms-and-conditions/">Terms &amp; conditions</a></li>
-                            <li><a href="/cancellation/">Cancellation</a></li>
-                            <li><a href="/privacy-policy/">Privacy policy</a></li>
-                        </ul>
+            <div>
+                <h3 class="text-lg font-semibold mb-6">Newsletter</h3>
+                <p class="text-gray-400 mb-4">Subscribe to receive updates, access to exclusive deals, and more.</p>
+                <div class="mb-4">
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address" d
+                            class="flex-1 py-3 px-4 bg-gray-800 border-none rounded-l-button text-white focus:outline-none text-sm">
+                        <button
+                            class="bg-primary hover:bg-opacity-90 text-white py-3 px-4 rounded-r-button font-medium transition whitespace-nowrap">Subscribe</button>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="acept-py">
-                        <span class="payout dn-s">We Accept <img
-                                src="<?php echo USER_IMAGES ?>desktop-payment-option.png"></span>
-                        <span class="payout dn-l">We Accept <img
-                                src="<?php echo USER_IMAGES ?>paymentFooter.png"></span>
+                <h3 class="text-lg font-semibold mb-4 mt-6">Payment Methods</h3>
+                <div class="flex space-x-3">
+                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
+                        <i class="ri-visa-fill text-xl"></i>
                     </div>
-                </div>
-            </div>
-            <div class="row center">
-                <div class="col-md-12 col-12">
-                    <div class="footer-btm">
-                        <p>© 2020-<?php echo date('Y') ?> <?php echo SITE_NAME; ?>. All Rights Reserved</p>
+                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
+                        <i class="ri-mastercard-fill text-xl"></i>
+                    </div>
+                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
+                        <i class="ri-paypal-fill text-xl"></i>
+                    </div>
+                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
+                        <i class="ri-apple-fill text-xl"></i>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="section-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-12">
-                    <div class="footer-btm">
-                        <p>Design &amp; Developed by <a href="https://blumox.com"
-                                title="Ecommerce development in delhi">Blumox Technologies</a></p>
-                    </div>
+        <div class="border-t border-gray-800 pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">© <?php echo date('Y') . ' ' . SITE_NAME ?>. All
+                    rights reserved. | Developed by <a href='https://blumox.com'
+                        class="text-gray-500 hover:text-white text-sm transition">Blumox Technologies</a></p>
+                <div class="flex space-x-6">
+                    <a href="/terms-and-conditions/" class="text-gray-500 hover:text-white text-sm transition">Terms
+                        and
+                        Conditions</a>
+                    <a href="/privacy-policy/" class="text-gray-500 hover:text-white text-sm transition">Privacy
+                        Policy</a>
+                    <a href="/cancellation---refund/"
+                        class="text-gray-500 hover:text-white text-sm transition">Cancellation & Refund</a>
+                    <a href="/shipping-policy/" class="text-gray-500 hover:text-white text-sm transition">Shipping
+                        policy</a>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="whatsapp">
-        <a
-            href="https://wa.me/919910744119?text=<?php echo ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello') ?>"><img
-                src="<?php echo IMG_LIBRARY ?>whatsapp.png" alt=""></a>
     </div>
 </footer>
-
-<!-- sections end -->
-<?php include_once NOTIFICATION . 'index.php' ?>
-
-<script type="text/javascript" src="<?php echo JS_LIBRARY ?>bootstrap/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo JS_LIBRARY ?>popper.min.js"></script>
-<script type="text/javascript" src="<?php echo JS_LIBRARY ?>flickity.min.js"></script>
-<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
-<script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>zoom-gallery/zoom.min.js"></script>
 <script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
-
-<!-- city search popup end -->
-
-<script type="text/javascript">
-    $(document).ready(function() {
-
-        $('.notes').select2();
-
-        $('.card-ban').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            dots: false,
-            arrows: false,
-        });
-
-        $('.testimonial-slider').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            dots: false,
-            arrows: false,
-        });
-
-        $('.product-slider').slick({
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            dots: false,
-            arrows: false,
-            adaptiveHeight: true,
-            responsive: [{
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 3,
-                        infinite: true,
-                        dots: true
-                    }
-                },
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 1
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 1
-                    }
-                }
-            ]
-        });
-
-        $('.product-main-slider').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrows: false,
-            dots: false,
-            fade: true,
-            asNavFor: '.product-main-slider-nav'
-        });
-
-        <?php
-
-        if (SITE_VERSION == 'desktop') { ?>
-
-            $('.product-main-slider-nav').slick({
-                slidesToShow: 5,
-                slidesToScroll: 2,
-                asNavFor: '.product-main-slider',
-                dots: false,
-                arrows: false,
-                focusOnSelect: true
-            });
-
-        <?php
-        } else { ?>
-
-            $('.product-main-slider-nav').slick({
-                slidesToShow: 3,
-                slidesToScroll: 2,
-                asNavFor: '.product-main-slider',
-                dots: false,
-                arrows: false,
-                focusOnSelect: true
-            });
-
-        <?php
-        }
-
-        ?>
-
+<script id="mobile-menu-script">
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
     });
+});
 </script>
-
-<!-- search in mobile div show -->
-
-<script type="text/javascript">
-    function divSearchPop(e) {
-
-        e.preventDefault();
-
-        var x = document.getElementById("search-mob-div");
-
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
+<script id="quantity-control-script">
+document.addEventListener('DOMContentLoaded', function() {
+    const decreaseButton = document.getElementById('decrease-quantity');
+    const increaseButton = document.getElementById('increase-quantity');
+    const quantityInput = document.getElementById('quantity');
+    decreaseButton.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
         }
+    });
+    increaseButton.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    });
+    quantityInput.addEventListener('change', function() {
+        if (parseInt(this.value) < 1 || isNaN(parseInt(this.value))) {
+            this.value = 1;
+        }
+    });
+});
+</script>
+<script id="tab-control-script">
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            // Update active tab button
+            tabButtons.forEach(btn => {
+                btn.classList.remove('border-primary', 'text-primary');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            this.classList.remove('border-transparent', 'text-gray-500');
+            this.classList.add('border-primary', 'text-primary');
+            // Show active tab content
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-content`).classList.add('active');
+        });
+    });
+});
+</script>
+<script id="checkbox-script">
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxLabels = document.querySelectorAll(
+        'label[for="chocolate"], label[for="card"], label[for="vase"]');
+    checkboxLabels.forEach(label => {
+        label.addEventListener('click', function(e) {
+            const checkbox = document.getElementById(this.getAttribute('for'));
+            const checkIcon = this.querySelector('.ri-check-line');
+            const customCheckbox = this.querySelector('.checkbox-custom');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                customCheckbox.classList.add('bg-primary', 'border-primary');
+                checkIcon.classList.remove('hidden');
+            } else {
+                customCheckbox.classList.remove('bg-primary', 'border-primary');
+                checkIcon.classList.add('hidden');
+            }
+            e.preventDefault();
+        });
+    });
+});
+</script>
+<script id="header-scroll">
+document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('header');
+    const menuButton = document.getElementById('menuButton');
+    const closeMenu = document.getElementById('closeMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileShopButton = document.getElementById('mobileShopButton');
+    const mobileShopContent = document.getElementById('mobileShopContent');
+    const slider = document.getElementById('heroSlider');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const prevBtn = document.querySelector('.slider-nav-btn.prev');
+    const nextBtn = document.querySelector('.slider-nav-btn.next');
+    let currentSlide = 0;
+    let slideInterval;
 
+    function updateSlides() {
+        slides.forEach((slide, index) => {
+            if (index === currentSlide) {
+                slide.style.transform = 'translateX(0)';
+            } else if (index < currentSlide) {
+                slide.style.transform = 'translateX(-100%)';
+            } else {
+                slide.style.transform = 'translateX(100%)';
+            }
+        });
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('bg-opacity-100', index === currentSlide);
+            dot.classList.toggle('bg-opacity-50', index !== currentSlide);
+        });
     }
 
-    $('#searchBtn').on('click', function(e) {
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlides();
+    }
 
-        e.preventDefault();
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlides();
+    }
 
+    function startSlideShow() {
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopSlideShow() {
+        clearInterval(slideInterval);
+    }
+    prevBtn.addEventListener('click', () => {
+        stopSlideShow();
+        prevSlide();
+        startSlideShow();
     });
-
-    $("#close").click(function() {
-        $("searchInput").hide();
+    nextBtn.addEventListener('click', () => {
+        stopSlideShow();
+        nextSlide();
+        startSlideShow();
     });
-</script>
-
-<?php
-
-if (SITE_VERSION == 'desktop') { ?>
-
-    <script>
-        // Height of product details dev
-
-        var productDetailsHeight = document.getElementById('productDetails').offsetHeight - 150;
-
-        function sticky_relocate() {
-
-            var window_top = $(window).scrollTop();
-
-            //var div_top = $('#sticky-anchor').offset().top;
-            if (window_top >= 300) {
-                // alert('i m ready');
-                $('#sticky').addClass('stick');
-            } else {
-
-                $('#sticky').removeClass('stick');
-
-            }
-
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            stopSlideShow();
+            currentSlide = index;
+            updateSlides();
+            startSlideShow();
+        });
+    });
+    slider.addEventListener('mouseenter', stopSlideShow);
+    slider.addEventListener('mouseleave', startSlideShow);
+    startSlideShow();
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            header.classList.remove('header-transparent');
+            header.classList.add('header-solid');
+        } else {
+            header.classList.add('header-transparent');
+            header.classList.remove('header-solid');
         }
+    });
 
-        // Product Zoom
+    function openMobileMenu() {
+        mobileMenu.classList.remove('translate-x-full');
+        mobileMenuOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
 
-        // $('.picZoomer').picZoomer();
+    function closeMobileMenu() {
+        mobileMenu.classList.add('translate-x-full');
+        mobileMenuOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    menuButton.addEventListener('click', openMobileMenu);
+    closeMenu.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    mobileShopButton.addEventListener('click', function() {
+        mobileShopContent.classList.toggle('hidden');
+        const icon = this.querySelector('i');
+        icon.style.transform = icon.style.transform === 'rotate(180deg)' ? '' : 'rotate(180deg)';
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    // Thumbnail click to update main image & border
+    $('.thumbnail img').on('click', function() {
+        var newSrc = $(this).attr('src');
+        $('#mainProductImage').attr('src', newSrc);
+        $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
 
+        $('.thumbnail img').parent().removeClass('border-primary');
+        $(this).parent().addClass('border-primary');
+    });
 
-        $(function() {
-            $(window).scroll(sticky_relocate);
-            sticky_relocate();
-        });
+    // Setup initial zoom overlay image
+    $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
 
-        $(function() {
-            $(window).scroll(function(e) {
-                if ($(this).scrollTop() > productDetailsHeight) {
-                    $('#sticky').removeClass('stick');
-                }
-            });
-        });
-    </script>
+    // Zoom on hover
+    $('.product-image-container').on('mouseenter', function() {
+        $('#zoomOverlay').addClass('active');
+    }).on('mouseleave', function() {
+        $('#zoomOverlay').removeClass('active');
+    }).on('mousemove', function(e) {
+        var $this = $(this);
+        var offset = $this.offset();
+        var x = e.pageX - offset.left;
+        var y = e.pageY - offset.top;
+        var width = $this.width();
+        var height = $this.height();
 
-<?php
-}
+        // Calculate background position % (reverse because background moves opposite direction)
+        var xPercent = (x / width) * 100;
+        var yPercent = (y / height) * 100;
 
-?>
-
+        $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
+    });
+});
+</script>
 </body>
 
 </html>
