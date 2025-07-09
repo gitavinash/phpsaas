@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <!-- about -->
@@ -16,14 +16,9 @@
 <section class="about_container">
     <div class="container">
         <div class="row about_flex">
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="about_parra">
                     <?php echo $page_description ?>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="client_img">
-                    <img src="<?php echo $page_image ?>" class="img-fluid" alt="">
                 </div>
             </div>
         </div>
@@ -32,6 +27,6 @@
 
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>
