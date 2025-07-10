@@ -278,7 +278,8 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                         $discount = $showDiscount ? round((($inventory_mrp - $inventory_price) / $inventory_mrp) * 100) : 0;
 
                         echo "<div class='product-card bg-white rounded shadow-sm overflow-hidden group'>
-                <div class='relative overflow-hidden'>
+                <a href='{$link_url}' title='{$product_title}'>
+                        <div class='relative overflow-hidden'>
                     <img src='{$product_image}' alt='{$product_title}' class='w-full h-72 object-cover transition-transform duration-500 ease-out group-hover:scale-105'>
 
                     <div class='add-to-cart absolute bottom-0 left-0 right-0 bg-primary bg-opacity-20 p-4 translate-y-full group-hover:translate-y-0 transition duration-300'>
@@ -299,6 +300,7 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                         }
                         echo "</div>
                 </div>
+                </a>
             </div>";
                     }
                 }
