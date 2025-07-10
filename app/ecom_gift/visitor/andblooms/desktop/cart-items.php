@@ -13,7 +13,7 @@ include_once 'header.php';
     <div class="container mx-auto px-4">
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Column -->
-            <div class="w-full lg:w-2/3 space-y-10">
+            <div class="w-full lg:w-2/3">
                 <!-- Cart -->
                 <div id="checkOut" class="bg-white rounded shadow p-6">
                     <h2 class="text-2xl font-semibold mb-2">My Cart</h2>
@@ -62,65 +62,139 @@ include_once 'header.php';
 
                     <form id="shippingForm" class="space-y-6 checkout-form">
                         <h4 class="text-lg font-semibold text-gray-700">Contact Information</h4>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="first_name" name="first_name" placeholder="First name*"
-                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                                required>
-                            <input type="text" id="last_name" name="last_name" placeholder="Last name*"
+                            <div>
+                                <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    First Name <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="first_name" name="first_name" placeholder="First name"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Last Name <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="last_name" name="last_name" placeholder="Last name"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" placeholder="Email"
                                 class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
                                 required>
                         </div>
-                        <input type="email" id="email" name="email" placeholder="Email*"
-                            class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                            required>
-                        <input type="number" id="mobile" name="mobile" onwheel="this.blur()" placeholder="Contact No.*"
-                            class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                            required>
+
+                        <div>
+                            <label for="mobile" class="block text-sm font-medium text-gray-700 mb-1">
+                                Contact No. <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="mobile" name="mobile" onwheel="this.blur()"
+                                placeholder="Contact No."
+                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                required>
+                        </div>
 
                         <h4 class="text-lg font-semibold text-gray-700">Shipping Address</h4>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="address_first_name" name="address_first_name"
-                                placeholder="First name*"
-                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                                required>
-                            <input type="text" id="address_last_name" name="address_last_name" placeholder="Last name*"
+                            <div>
+                                <label for="address_first_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    First Name <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="address_first_name" name="address_first_name"
+                                    placeholder="First name"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="address_last_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Last Name <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="address_last_name" name="address_last_name"
+                                    placeholder="Last name"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="address_mobile" class="block text-sm font-medium text-gray-700 mb-1">
+                                Contact No. <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="address_mobile" name="address_mobile" onwheel="this.blur()"
+                                placeholder="Contact No."
                                 class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
                                 required>
                         </div>
-                        <input type="number" id="address_mobile" name="address_mobile" onwheel="this.blur()"
-                            placeholder="Contact No.*"
-                            class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                            required>
-                        <input type="text" id="house_no" name="house_no" placeholder="Flat, House no., etc.*"
-                            class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                            required>
-                        <input type="text" id="area" name="area" placeholder="Area, Colony, etc."
-                            class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
-                        <input type="text" id="landmark" name="landmark" placeholder="Landmark (optional)"
-                            class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
+
+                        <div>
+                            <label for="house_no" class="block text-sm font-medium text-gray-700 mb-1">
+                                Flat, House no., etc. <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="house_no" name="house_no" placeholder="Flat, House no., etc."
+                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                required>
+                        </div>
+
+                        <div>
+                            <label for="area" class="block text-sm font-medium text-gray-700 mb-1">Area, Colony,
+                                etc.</label>
+                            <input type="text" id="area" name="area" placeholder="Area, Colony, etc."
+                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+
+                        <div>
+                            <label for="landmark" class="block text-sm font-medium text-gray-700 mb-1">Landmark
+                                (optional)</label>
+                            <input type="text" id="landmark" name="landmark" placeholder="Landmark (optional)"
+                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" id="city" name="city" placeholder="City*"
-                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                                required>
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">
+                                    City <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="city" name="city" placeholder="City"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                            </div>
 
-                            <select id="state" name="state"
-                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                                required>
-                                <option value="">Choose State*</option>
-                                <?php
-                                $checkState = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id='101'");
-                                while ($stateData = mysqli_fetch_assoc($checkState)) {
-                                    echo "<option value='{$stateData['state_id']}'>{$stateData['state_name']}</option>";
-                                }
-                                ?>
-                            </select>
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 mb-1">
+                                    State <span class="text-red-500">*</span>
+                                </label>
+                                <select id="state" name="state"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                                    <option value="">Choose State*</option>
+                                    <?php
+                                    $checkState = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id='101'");
+                                    while ($stateData = mysqli_fetch_assoc($checkState)) {
+                                        echo "<option value='{$stateData['state_id']}'>{$stateData['state_name']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
 
-                            <input type="text" id="pincode" name="pincode" placeholder="Pin Code*"
-                                class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                                required>
+                            <div>
+                                <label for="pincode" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Pin Code <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="pincode" name="pincode" placeholder="Pin Code"
+                                    class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                                    required>
+                            </div>
                         </div>
                     </form>
+
 
                 </div>
 

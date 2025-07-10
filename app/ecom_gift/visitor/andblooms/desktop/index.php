@@ -394,17 +394,16 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
             </div>
             <div class="md:w-1/2 md:pl-10">
                 <h2 class="serif text-3xl md:text-4xl mb-6">Our Story</h2>
-                <p class="text-gray-700 mb-6 leading-relaxed">Founded in 2018, AndBlooms
-                    was born from a passion for
-                    creating extraordinary floral experiences. Each arrangement is
-                    thoughtfully designed and
-                    handcrafted with the freshest blooms sourced from sustainable farms
-                    around the world.</p>
-                <p class="text-gray-700 mb-8 leading-relaxed">Our team of expert
-                    florists brings years of experience
-                    and artistic vision to every creation, ensuring that each bouquet
-                    tells a unique story and
-                    evokes genuine emotion.</p>
+                <p class="text-gray-700 mb-6 leading-relaxed">Founded in 2018, AndBlooms is a Chattarpur, New
+                    Delhi-based floral studio driven by a deep passion for creating unforgettable floral experiences.
+                    Every
+                    arrangement is thoughtfully designed and handcrafted using the freshest blooms, responsibly sourced
+                    from
+                    sustainable farms around the world.</p>
+                <p class="text-gray-700 mb-8 leading-relaxed">Our team of skilled florists combines years of experience
+                    with artistic vision to craft elegant, meaningful bouquets that tell a story and leave a lasting
+                    impression. At AndBlooms, we believe flowers are more than gifts. They’re emotions, memories, and
+                    moments beautifully expressed.</p>
                 <a href="#"
                     class="inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap">Learn
                     More</a>
