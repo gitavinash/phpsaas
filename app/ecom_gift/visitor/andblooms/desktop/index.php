@@ -388,31 +388,42 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 <section class="py-20 px-6">
     <div class="container mx-auto">
         <div class="flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/9-gPXnnKUS8?si=KSTxplQhkHqjEUho"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+            <!-- Responsive YouTube Video -->
+            <div class="w-full md:w-1/2 mb-10 md:mb-0 md:pr-10">
+                <div class="relative w-full" style="padding-top: 56.25%;">
+                    <iframe class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/9-gPXnnKUS8?si=KSTxplQhkHqjEUho" title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                </div>
             </div>
-            <div class="md:w-1/2 md:pl-10">
+
+            <!-- Text Section -->
+            <div class="w-full md:w-1/2 md:pl-10">
                 <h2 class="serif text-3xl md:text-4xl mb-6">Our Story</h2>
-                <p class="text-gray-700 mb-6 leading-relaxed">Founded in 2018, AndBlooms is a Chattarpur, New
-                    Delhi-based floral studio driven by a deep passion for creating unforgettable floral experiences.
-                    Every
-                    arrangement is thoughtfully designed and handcrafted using the freshest blooms, responsibly sourced
-                    from
-                    sustainable farms around the world.</p>
-                <p class="text-gray-700 mb-8 leading-relaxed">Our team of skilled florists combines years of experience
-                    with artistic vision to craft elegant, meaningful bouquets that tell a story and leave a lasting
-                    impression. At AndBlooms, we believe flowers are more than gifts. They’re emotions, memories, and
-                    moments beautifully expressed.</p>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Founded in 2018, AndBlooms is a Chattarpur, New Delhi-based floral studio driven by a deep passion
+                    for creating unforgettable floral experiences. Every arrangement is thoughtfully designed and
+                    handcrafted using the freshest blooms, responsibly sourced from sustainable farms around the world.
+                </p>
+                <p class="text-gray-700 mb-8 leading-relaxed">
+                    Our team of skilled florists combines years of experience with artistic vision to craft elegant,
+                    meaningful bouquets that tell a story and leave a lasting impression. At AndBlooms, we believe
+                    flowers are more than gifts. They’re emotions, memories, and moments beautifully expressed.
+                </p>
                 <a href="#"
-                    class="inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap">Learn
-                    More</a>
+                    class="inline-block bg-primary text-white px-8 py-3 rounded hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap">
+                    Learn More
+                </a>
             </div>
+
         </div>
     </div>
 </section>
+
 
 <!-- Newsletter Section -->
 <!-- <section class="py-20 newsletter-container">
