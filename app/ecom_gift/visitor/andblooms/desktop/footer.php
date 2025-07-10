@@ -33,7 +33,8 @@
                 <ul class="space-y-3">
                     <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
                     <li><a href="/about-us/" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                    <li><a href="/workshop/" class="text-gray-400 hover:text-white transition">Workshop</a></li>
+                    <li><a href="/category/workshop/" class="text-gray-400 hover:text-white transition">Workshop</a>
+                    </li>
                     <li><a href="/franchise/" class="text-gray-400 hover:text-white transition">Franchise</a></li>
                     <li><a href="/contact-us/" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
                     <li><a href="/subscription/" class="text-gray-400 hover:text-white transition">Subscription</a>

@@ -34,7 +34,7 @@ include_once 'header.php';
                                 Chhatarpur, New Delhi, Delhi 110030</p>
                             <p class="text-sm text-primary mb-4">Main Store</p>
                             <div class="flex flex-col gap-2">
-                                <a href="tel:+12125557890"
+                                <a href="tel:+919910744119"
                                     class="text-gray-600 hover:text-primary transition-colors flex items-center">
                                     <i class="ri-phone-line mr-2"></i>+91-9910744119
                                 </a>
@@ -67,7 +67,7 @@ include_once 'header.php';
                                 122002</p>
                             <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
                             <div class="flex flex-col gap-2">
-                                <a href="tel:+12125557891"
+                                <a href="tel:+919910744119"
                                     class="text-gray-600 hover:text-primary transition-colors flex items-center">
                                     <i class="ri-phone-line mr-2"></i>+91-9910744119
                                 </a>
@@ -100,7 +100,7 @@ include_once 'header.php';
                                 122022</p>
                             <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
                             <div class="flex flex-col gap-2">
-                                <a href="tel:+12125557891"
+                                <a href="tel:+919910744119"
                                     class="text-gray-600 hover:text-primary transition-colors flex items-center">
                                     <i class="ri-phone-line mr-2"></i>+91-9910744119
                                 </a>
@@ -133,7 +133,7 @@ include_once 'header.php';
                                 Gurugram, Haryana 122002</p>
                             <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
                             <div class="flex flex-col gap-2">
-                                <a href="tel:+12125557891"
+                                <a href="tel:+919910744119"
                                     class="text-gray-600 hover:text-primary transition-colors flex items-center">
                                     <i class="ri-phone-line mr-2"></i>+91-9910744119
                                 </a>
@@ -249,21 +249,13 @@ include_once 'header.php';
             <h3 class="font-serif text-xl mb-3">Social Media</h3>
             <p class="text-gray-600 mb-6">Connect with us on social media for updates and inspiration.</p>
             <div class="flex justify-center space-x-3">
-                <a href="#"
+                <a href="https://www.facebook.com/andblooms" target="_blank"
                     class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                     <i class="ri-facebook-fill"></i>
                 </a>
-                <a href="#"
+                <a href="https://www.instagram.com/andblooms" target="_blank"
                     class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                     <i class="ri-instagram-line"></i>
-                </a>
-                <a href="#"
-                    class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
-                    <i class="ri-pinterest-line"></i>
-                </a>
-                <a href="#"
-                    class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
-                    <i class="ri-twitter-x-line"></i>
                 </a>
             </div>
         </div>

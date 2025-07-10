@@ -40,6 +40,10 @@
         content: "\f3c2";
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         font-family: 'Montserrat', sans-serif;
     }
@@ -83,12 +87,6 @@
 
     .instagram-item:hover .instagram-overlay {
         opacity: 1;
-    }
-
-    .newsletter-container {
-        background-image: url('https://readdy.ai/api/search-image?query=subtle%2520light%2520beige%2520floral%2520pattern%2520background%2520with%2520minimal%2520design%252C%2520very%2520light%2520and%2520delicate%252C%2520almost%2520invisible%2520pattern%252C%2520elegant%2520and%2520sophisticated%252C%2520luxury%2520feel%252C%2520high-end%2520aesthetic%252C%2520soft%2520texture&width=1920&height=600&seq=newsletter-bg&orientation=landscape');
-        background-size: cover;
-        background-position: center;
     }
 
     input:focus {
@@ -288,8 +286,8 @@
                         class="text-gray-700 hover:text-primary transition">
                         Blooms of <?php echo date('F') ?>
                     </a>
-                    <a href="/tag/father/" class="hover:text-gray-700 text-primary transition font-semibold">Father's
-                        Day</a>
+                    <!-- <a href="/tag/father/" class="hover:text-gray-700 text-primary transition font-semibold">Father's
+                        Day</a> -->
                 </nav>
             </div>
 
