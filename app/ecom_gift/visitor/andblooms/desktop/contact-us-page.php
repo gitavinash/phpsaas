@@ -88,6 +88,72 @@ include_once 'header.php';
                         </div>
                     </div>
                 </div>
+                <div class="bg-white p-8 rounded-lg border border-gray-100 hover:border-primary/20 transition-colors">
+                    <div class="flex items-start mb-6">
+                        <div
+                            class="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4 flex-shrink-0">
+                            <i class="ri-map-pin-line text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-lg mb-2">DLF Phase 1 Branch</h3>
+                            <p class="text-gray-600 mb-2">J 8, Qutab Plz Rd, DLF Phase 1, Sector 26A, Gurugram, Haryana
+                                122022</p>
+                            <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
+                            <div class="flex flex-col gap-2">
+                                <a href="tel:+12125557891"
+                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
+                                    <i class="ri-phone-line mr-2"></i>+91-9910744119
+                                </a>
+                                <a href="mailto:sd@andblooms.com"
+                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
+                                    <i class="ri-mail-line mr-2"></i>sd@andblooms.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-container w-full max-h-[300px] rounded-lg overflow-hidden">
+                        <div class="relative w-full aspect-[16/9] rounded overflow-hidden shadow">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.2457647439255!2d77.1013266!3d28.4721444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19005b0f6ecf%3A0x3f508c7b91ffa677!2s%26%20Blooms!5e0!3m2!1sen!2sin!4v1752141553478!5m2!1sen!2sin"
+                                class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg border border-gray-100 hover:border-primary/20 transition-colors">
+                    <div class="flex items-start mb-6">
+                        <div
+                            class="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4 flex-shrink-0">
+                            <i class="ri-map-pin-line text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-lg mb-2">Sikanderpur Branch</h3>
+                            <p class="text-gray-600 mb-2">Marble market, opp. pilar number 22, Sikanderpur, Sector 26,
+                                Gurugram, Haryana 122002</p>
+                            <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
+                            <div class="flex flex-col gap-2">
+                                <a href="tel:+12125557891"
+                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
+                                    <i class="ri-phone-line mr-2"></i>+91-9910744119
+                                </a>
+                                <a href="mailto:sd@andblooms.com"
+                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
+                                    <i class="ri-mail-line mr-2"></i>sd@andblooms.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-container w-full max-h-[300px] rounded-lg overflow-hidden">
+                        <div class="relative w-full aspect-[16/9] rounded overflow-hidden shadow">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.913322059545!2d77.108662!3d28.4821569!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1f505887fd69%3A0xc7330605d92c9506!2s%26%20Blooms!5e0!3m2!1sen!2sin!4v1752141646952!5m2!1sen!2sin"
+                                class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
