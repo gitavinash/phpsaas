@@ -5,7 +5,7 @@ include_once 'header.php';
 ?>
 
 <!-- Hero Banner -->
-<div class="relative h-[380px] w-full mb-16">
+<div class="relative h-[380px] w-full mb-16 mt-16">
     <div style="background-image: url('<?php echo USER_IMAGES . 'about-us-banner.jpg' ?>');"
         class="absolute inset-0 bg-cover bg-center"></div>
     <div class="absolute inset-0 bg-black bg-opacity-40"></div>
