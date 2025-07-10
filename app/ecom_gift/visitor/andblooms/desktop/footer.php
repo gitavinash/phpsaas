@@ -37,8 +37,6 @@
                     </li>
                     <li><a href="/franchise/" class="text-gray-400 hover:text-white transition">Franchise</a></li>
                     <li><a href="/contact-us/" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
-                    <li><a href="/subscription/" class="text-gray-400 hover:text-white transition">Subscription</a>
-                    </li>
 
                 </ul>
             </div>
