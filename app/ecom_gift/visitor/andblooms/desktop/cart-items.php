@@ -27,7 +27,7 @@ include_once 'header.php';
                     <div id="product_<?php echo $cart_id ?>" data-price="<?php echo $inventory_price ?>"
                         data-mrp="<?php echo $inventory_mrp ?>"
                         class="cart-item flex items-start gap-4 border-b pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0">
-                        <img src="<?php echo $product_thumbnail ?>" class="w-24 h-24 object-cover rounded">
+                        <img src="<?php echo $product_image ?>" class="w-24 h-24 object-cover rounded">
                         <div class="flex-1">
                             <a href="<?php echo $link_url ?>" target="_blank">
                                 <h2 class="text-lg font-medium text-gray-800"><?php echo $product_title ?></h2>
