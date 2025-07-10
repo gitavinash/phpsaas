@@ -23,8 +23,8 @@ include_once 'header.php';
 <section class="container mx-auto px-4 py-16">
     <div class="flex flex-col md:flex-row items-center gap-12">
         <div class="w-full md:w-1/2 rounded-lg overflow-hidden">
-            <img src="https://readdy.ai/api/search-image?query=elegant%2520florist%2520arranging%2520beautiful%2520bouquet%2520in%2520a%2520bright%2520modern%2520flower%2520shop%252C%2520soft%2520natural%2520lighting%252C%2520professional%2520photography%2520with%2520shallow%2520depth%2520of%2520field%252C%2520warm%2520color%2520palette%2520with%2520pastel%2520flowers%2520and%2520greenery%252C%2520high-end%2520floral%2520design%2520studio%2520with%2520wooden%2520elements&width=800&height=600&seq=about-intro&orientation=landscape"
-                alt="Our Flower Shop" class="w-full h-auto object-cover object-top rounded-lg shadow-lg">
+            <img src="<?php echo USER_IMAGES . 'andblooms-store.jpg'; ?>" alt="Our Flower Shop"
+                class="w-full h-auto object-cover object-top rounded-lg shadow-lg">
         </div>
         <div class="w-full md:w-1/2">
             <h2 class="font-serif text-3xl md:text-4xl mb-6">Bringing Nature’s Elegance to Life’s Cherished Moments</h2>
@@ -127,42 +127,14 @@ include_once 'header.php';
                 <div class="p-6">
                     <h3 class="font-serif text-xl mb-1">Shalini Dugar</h3>
                     <p class="text-primary mb-3">Founder</p>
-                    <div class="flex space-x-3">
-                        <a href="#"
-                            class="social-icon w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="social-icon w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600">
-                            <i class="ri-linkedin-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="social-icon w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
             <div class="team-card bg-white rounded-lg overflow-hidden shadow-sm">
-                <img src="" alt="Ayush Dugar"
+                <img src="<?php echo USER_IMAGES ?>ayush_dugar.jpeg" alt="Ayush Dugar"
                     class="w-full min-h-[400px] max-h-[400px] object-cover object-center mx-auto">
                 <div class="p-6">
                     <h3 class="font-serif text-xl mb-1">Ayush Dugar</h3>
                     <p class="text-primary mb-3">Director</p>
-                    <div class="flex space-x-3">
-                        <a href="#"
-                            class="social-icon w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="social-icon w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600">
-                            <i class="ri-linkedin-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="social-icon w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
