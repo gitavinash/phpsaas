@@ -136,7 +136,6 @@ function initializeSelect2HereMapsWithCompleteAddress(element) {
           };
         },
         processResults: function (data) {
-          console.log(`data`, data);
           return {
             results: $.map(data.locationList, function (item) {
               return {
@@ -283,7 +282,6 @@ $(document).ready(function (e) {
             popUpMessage("center", response.msg, response.status);
             if (response.status == "success") {
               setTimeout(function () {
-                console.log(`disableRedirect`, disableRedirect);
                 if (disableRedirect) {
                   window.location.href = `/dashboard/${lastPart}/list/`;
                 } else {
