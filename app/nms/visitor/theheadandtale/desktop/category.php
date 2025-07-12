@@ -17,7 +17,7 @@ require_once 'header.php';
                         extract($categorySinglePost[$i]);
                         echo "<div class='news_box'><a href='{$link_url}'>
                                         <div class='feature_image'>
-                                            <img src='{$news_image}' alt='" . str_replace("'", "", $news_title) . "'>
+                                            <img src='{$news_image}' alt='" . str_replace("'", "", str_replace('"', '', $news_title)) . "'>
                                             " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
         </div>
         <div class='news_intro'>
