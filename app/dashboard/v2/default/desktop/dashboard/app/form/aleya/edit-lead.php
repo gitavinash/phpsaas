@@ -73,7 +73,7 @@
 <tr>
     <td class="box-3"><strong>Date of travel<sup>*</sup></strong></td>
     <td class="box-7"><input type="text" class="datepickerForFutureDate" name="date_of_travel" id="date_of_travel"
-            value="<?php echo date('d-m-Y', strtotime($date_of_travel)) ?>" required>
+            value="<?php echo (($date_of_travel != '' ? date('d-m-Y', strtotime($date_of_travel)) : '')) ?>" required>
     </td>
 </tr>
 <tr>
@@ -92,7 +92,7 @@
 <tr>
     <td class="box-3"><strong>Number of children<sup>*</sup></strong></td>
     <td class="box-7"><input type="text" class="form-control" name="number_of_childrens" id="number_of_childrens"
-            placeholder="0" value="<?php echo $number_of_childrens ?>" required>
+            placeholder="0" value="<?php echo (($number_of_childrens != '') ? $number_of_childrens : 0) ?>" required>
     </td>
 </tr>
 <tr>
@@ -100,7 +100,7 @@
                 years)</span><sup>*</sup></strong>
     </td>
     <td class="box-7"><input type="text" class="form-control" name="number_of_infants" id="number_of_infants"
-            placeholder="0" value="<?php echo $number_of_infants ?>" required>
+            placeholder="0" value="<?php echo (($number_of_infants != '') ? $number_of_infants : 0) ?>" required>
     </td>
 </tr>
 <tr>
@@ -126,9 +126,14 @@
     <td class="box-3"><strong>Any requirements</strong></td>
     <td class="box-7">
         <textarea name="requirements" class="form-control"
-            id="requirements"><?php echo (($requirements == '') ? $enquiry_message : $requirements) ?></textarea>
+            id="requirements"><?php echo (($requirements == '') ? $enquiry_message : $requirements); ?></textarea>
     </td>
 </tr>
+<?php
+
+echo 'Enq: ' . $enquiry_message;
+
+?>
 <tr>
     <td class="box-3">
     </td>

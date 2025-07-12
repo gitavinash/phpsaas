@@ -182,7 +182,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
             <h2 class="text-xl font-semibold mb-4">Tour Overview</h2>
             <p class="mb-8"><?php echo $tour_package_overview ?></p>
             <!-- Hotel List -->
-            <!-- <div class="mt-8">
+            <div class="mt-8">
                 <h3 class="text-lg font-semibold mb-4">Accommodation Details</h3>
                 <div class="space-y-4">
                     <div class="bg-gray-50 p-4 rounded-lg">
@@ -213,7 +213,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
             <div class="bg-blue-50 p-4 rounded-lg mb-4 mt-8">
                 <h3 class="font-medium mb-2">What's Included:</h3>
                 <ul class="grid grid-cols-2 gap-2 text-sm">
@@ -254,6 +254,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                 </ul>
             </div> -->
         </div>
+
         <section class="pdf-page">
             <!-- Itinerary Details -->
             <div class="p-6 border-b border-gray-200">
@@ -318,7 +319,10 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         $single_person_total = $base_price_per_person + ($base_price_per_person * $gst_percent / 100);
 
         $total_discount = $mrp_gst_total - $final_price;
-        $discount_percent = round(($total_discount / $mrp_gst_total) * 100);
+        $discount_percent = ($mrp_gst_total > 0)
+            ? round(($total_discount / $mrp_gst_total) * 100)
+            : 0;
+
         ?>
 
         <section class="pdf-page">
@@ -328,7 +332,9 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-5">
                     <div class="bg-primary/10 p-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-gray-800">Standard Package</h3>
+                            <h3 class="text-xl font-semibold text-gray-800"><?php echo $tour_package_title ?> -
+                                Quotation
+                            </h3>
                             <div class="px-3 py-1 bg-primary text-white rounded-full text-sm font-medium">Best Value
                             </div>
                         </div>
@@ -339,12 +345,18 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                         </p>
                     </div>
 
+                    <?php
+                    $isDiscount = $mrp_gst_total > $final_price;
+                    ?>
+
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-6">
                             <div class="space-y-1">
                                 <div class="text-3xl font-bold text-gray-900">
                                     ₹<?php echo number_format($final_price, 2); ?>
                                 </div>
+
+                                <?php if ($isDiscount): ?>
                                 <div class="flex items-center gap-2">
                                     <span class="text-lg text-gray-500 line-through">
                                         ₹<?php echo number_format($mrp_gst_total, 2); ?>
@@ -353,7 +365,9 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                         Save <?php echo $discount_percent; ?>%
                                     </span>
                                 </div>
+                                <?php endif; ?>
                             </div>
+
                             <div class="text-right">
                                 <div class="text-sm text-gray-500">Per Package</div>
                                 <div class="text-sm text-gray-500">
@@ -379,6 +393,8 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                 </div>
                                 <span class="font-medium">+ ₹<?php echo number_format($gst_amount, 2); ?></span>
                             </div>
+
+                            <?php if ($isDiscount): ?>
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center gap-2">
                                     <i class="ri-gift-line text-green-600"></i>
@@ -387,10 +403,11 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                 <span class="font-medium text-green-600">-
                                     ₹<?php echo number_format($total_discount, 2); ?></span>
                             </div>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Offer -->
-                        <div class="bg-orange-50 p-4 rounded-lg mb-6">
+                        <!-- <div class="bg-orange-50 p-4 rounded-lg mb-6">
                             <div class="flex items-start">
                                 <div
                                     class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shrink-0">
@@ -401,28 +418,23 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                     <p class="text-gray-600">Free airport transfers worth ₹5,000</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <button
-                            class="w-full bg-primary hover:bg-primary/90 text-white py-4 px-6 rounded-button font-medium text-lg whitespace-nowrap">
-                            Book Now & Save <?php echo $discount_percent; ?>%
-                        </button>
+                        <div class="w-full">
+                            <a href="#"
+                                class="block w-full bg-primary hover:bg-primary/90 text-white py-4 px-6 rounded-button font-medium text-lg text-center">
+                                Book Now
+                            </a>
+                        </div>
                     </div>
+
                 </div>
 
                 <!-- Notes -->
                 <div class="space-y-2">
                     <div class="flex items-start gap-2 text-sm text-gray-600">
                         <i class="ri-calendar-line mt-0.5"></i>
-                        <span>Prices valid until December 31, 2025</span>
-                    </div>
-                    <div class="flex items-start gap-2 text-sm text-gray-600">
-                        <i class="ri-user-star-line mt-0.5"></i>
-                        <span>Children aged 2–11 receive 25% discount when sharing room with adults</span>
-                    </div>
-                    <div class="flex items-start gap-2 text-sm text-gray-600">
-                        <i class="ri-group-line mt-0.5"></i>
-                        <span>Minimum 2 participants required for guaranteed departure</span>
+                        <span>Prices valid until <?php echo date('F j, Y', strtotime('+7 days')); ?></span>
                     </div>
                 </div>
             </div>
@@ -489,7 +501,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         </div>
     </div>
     </div> -->
-    <script>
+    <!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         const element = document.getElementById("pdf-content");
 
@@ -534,7 +546,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
             document.body.removeChild(wrapper);
         });
     });
-    </script>
+    </script> -->
 
 </body>
 

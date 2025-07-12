@@ -2,6 +2,28 @@
 
 require_once LOGIN_CHECK;
 
+function cleanHtmlToCommaText($html, $connection)
+{
+    // Remove tags and decode entities
+    $plainText = strip_tags($html);
+    $plainText = html_entity_decode($plainText);
+
+    // Split by newline or <p> (fallback) and trim each line
+    $lines = array_filter(array_map('trim', preg_split('/\r\n|\n|\r/', $plainText)));
+
+    // Remove empty or garbage entries
+    $lines = array_filter($lines, function ($line) {
+        return !empty(trim($line));
+    });
+
+    // Convert to comma-separated text
+    $text = implode(', ', $lines);
+
+    // Escape for DB
+    return mysqli_real_escape_string($connection, $text);
+}
+
+
 $httpStatus = 500;
 $status = 'warning';
 $msg = 'Invalid request';
@@ -63,11 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $duration = mysqli_real_escape_string($connection, $duration);
         $overview = mysqli_real_escape_string($connection, $overview);
         $tourItinerary = mysqli_real_escape_string($connection, $tourItinerary);
-        $inclusion = mysqli_real_escape_string($connection, $inclusion);
-        $exclusion = mysqli_real_escape_string($connection, $exclusion);
+        $inclusion = cleanHtmlToCommaText($inclusion, $connection);
+        $exclusion = cleanHtmlToCommaText($exclusion, $connection);
         $hotel = mysqli_real_escape_string($connection, $hotel);
-        $stateName = mysqli_real_escape_string($connection, $stateName);
-        $countryName = mysqli_real_escape_string($connection, $countryName);
+        $stateName = mysqli_real_escape_string($connection, trim($stateName));
+        $countryName = mysqli_real_escape_string($connection, trim($countryName));
         $packageType = mysqli_real_escape_string($connection, $packageType);
         $outstationVehicle = mysqli_real_escape_string($connection, strtolower($outstationVehicle));
         $localSighseeignVehicle = mysqli_real_escape_string($connection, strtolower($localSighseeignVehicle));

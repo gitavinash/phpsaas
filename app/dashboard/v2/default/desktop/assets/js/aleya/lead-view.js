@@ -259,13 +259,23 @@ function sendItineraryToCustomer(isDownload = false) {
         : "Itinerary sent successfully!";
       // Trigger download in a new tab after short delay
       if (isDownload && response.itineraryId) {
-        setTimeout(() => {
-          const encodedId = btoa(response.itineraryId);
-          const downloadUrl = `/download-itinerary/${encodedId}/`;
-          console.log(`downloadUrl`, downloadUrl);
+        const encodedId = btoa(response.itineraryId);
+        const downloadUrl = `/download-itinerary/${encodedId}/`;
+        const newWindow = window.open("about:blank", "_blank");
 
-          window.open(downloadUrl, "_blank");
-        }, 1000);
+        if (newWindow) {
+          // Show a loading message
+          newWindow.document.write(
+            "<p style='font-family: sans-serif;'>Preparing your itinerary PDF...</p>"
+          );
+          newWindow.document.close(); // Required for some browsers
+
+          setTimeout(() => {
+            newWindow.location.href = downloadUrl;
+          }, 300); // Optional delay for smoother feel
+        } else {
+          alert("Popup blocked! Please allow popups for this site.");
+        }
       } else {
         // If not downloading, just log the itinerary ID
         console.log("Itinerary ID:", response);
