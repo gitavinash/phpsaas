@@ -501,7 +501,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         </div>
     </div>
     </div> -->
-    <!-- <script>
+    <script>
     document.addEventListener("DOMContentLoaded", function() {
         const element = document.getElementById("pdf-content");
 
@@ -546,7 +546,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
             document.body.removeChild(wrapper);
         });
     });
-    </script> -->
+    </script>
 
 </body>
 

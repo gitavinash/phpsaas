@@ -139,7 +139,8 @@ require_once 'header.php';
 	tour_package_state,
 	tour_package_type,
 	tour_package_price_selling_adult,
-	tour_package_price_mrp_adult
+	tour_package_price_mrp_adult,
+    gallery_image
 FROM
     " . TABLE_PREFIX . "tour_package tp
 INNER JOIN
@@ -147,6 +148,10 @@ INNER JOIN
     l.link_relation_id = tp.tour_package_id
     AND l.link_site_id = " . SITE_ID . "
     AND l.link_type = 'tour_package'
+                LEFT JOIN " . TABLE_PREFIX . "gallery ON
+                    gallery_category = tour_package_id
+                    AND gallery_site_id = " . SITE_ID . "
+                    AND gallery_type = 'tour_package'
 LEFT JOIN (
     SELECT *
     FROM " . TABLE_PREFIX . "tour_package_price tpp1
@@ -169,7 +174,7 @@ WHERE
                             echo "
                                 <div class='tour-card bg-white rounded-lg overflow-hidden shadow-sm transition duration-300'>
                                     <div class='relative h-48 overflow-hidden'>
-                                        <img src='" . USER_IMAGES . '/city/' . strtolower(str_replace(' ', '_', $tour_package_city)) . ".jpg'
+                                        <img src='{$gallery_image}'
                                             alt='{$tour_package_title}' class='w-full h-full object-cover object-top' />
                                         <div
                                             class='absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>

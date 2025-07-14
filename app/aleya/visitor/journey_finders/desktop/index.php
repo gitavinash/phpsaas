@@ -69,6 +69,10 @@ require_once 'header.php';
                     AND link_site_id = " . SITE_ID . "
                     AND link_type = 'tour_package'
                     AND link_status = 200
+                LEFT JOIN " . TABLE_PREFIX . "gallery ON
+                    gallery_category = tour_package_id
+                    AND gallery_site_id = " . SITE_ID . "
+                    AND gallery_type = 'tour_package'
                 LEFT JOIN (
                     SELECT *
                     FROM " . TABLE_PREFIX . "tour_package_price
@@ -90,7 +94,7 @@ require_once 'header.php';
                         echo "
                             <div class='package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
                                 <div class='relative h-56 overflow-hidden'>
-                                    <img src='" . USER_IMAGES . '/city/' . strtolower(str_replace(' ', '_', $tour_package_city)) . ".jpg'
+                                    <img src='{$gallery_image}'
                                         alt='{$tour_package_title}' class='w-full h-full object-cover object-top' />
                                     <div class='absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>
                                         Best Seller

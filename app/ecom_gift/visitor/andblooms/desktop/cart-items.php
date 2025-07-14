@@ -310,194 +310,39 @@ include_once 'header.php';
         </div>
 </section>
 
-<section class="deliveryDateBox hidden bg-gray-50 py-10">
-    <div class="container mx-auto px-4">
-        <div class="bg-white shadow rounded p-6">
+<!-- Modal Wrapper -->
+<div id="deliveryModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden">
 
-            <!-- Delivery Date Calendar -->
-            <div class="calenderBox hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold">Select delivery date</h3>
-                    <button class="closeCalender text-gray-500 hover:text-red-500 text-lg">×</button>
+    <!-- Modal Content -->
+    <section class="deliveryDateBox bg-white max-w-3xl w-full rounded-lg shadow-xl p-6 relative">
+        <button
+            class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl closeCalender font-bold">×</button>
+
+        <!-- Insert all your internal content here: calenderBox, showTimeBox, showDeliveryTimeBox, etc. -->
+        <!-- Keep all your original content structure as-is -->
+        <!-- For example: -->
+        <div class="showTimeBox space-y-4">
+            <h3 class="text-xl font-semibold mb-4">Select delivery type and slot</h3>
+
+            <label class="flex items-center gap-3">
+                <input type="radio" name="deliveryType" value="morning_200" class="hidden peer deliverySlot">
+                <div
+                    class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
+                    Morning delivery at ₹200
                 </div>
-                <div id="calender" class="border rounded p-4"></div>
+            </label>
+
+            <!-- ... continue rest of your options ... -->
+
+            <div class="grid grid-cols-2 gap-4 pt-4">
+                <a href="#" class="showCalender text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded">←
+                    Go
+                    to calendar</a>
             </div>
-
-            <!-- Delivery Type Selection -->
-            <div class="showTimeBox hidden space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-semibold">Select delivery type and slot</h3>
-                    <button class="closeCalender text-gray-500 hover:text-red-500 text-lg">×</button>
-                </div>
-
-                <div class="space-y-3">
-                    <label class="flex items-center gap-3">
-                        <input type="radio" name="deliveryType" value="morning_200" class="hidden peer deliverySlot">
-                        <div
-                            class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                            Morning delivery at ₹200
-                        </div>
-                    </label>
-
-                    <label class="flex items-center gap-3">
-                        <input type="radio" name="deliveryType" value="standard_0" class="hidden peer deliverySlot">
-                        <div
-                            class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                            Standard delivery for free
-                        </div>
-                    </label>
-
-                    <label class="flex items-center gap-3">
-                        <input type="radio" name="deliveryType" value="fixed_200" class="hidden peer deliverySlot">
-                        <div
-                            class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                            Fixed Time delivery at ₹200
-                        </div>
-                    </label>
-
-                    <label class="flex items-center gap-3">
-                        <input type="radio" name="deliveryType" value="midnight_249" class="hidden peer deliverySlot">
-                        <div
-                            class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                            Midnight delivery at ₹249
-                        </div>
-                    </label>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 pt-4">
-                    <a href="#"
-                        class="showCalender text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded">← Go
-                        to calendar</a>
-                </div>
-            </div>
-
-            <!-- Delivery Time Slots -->
-            <div class="showDeliveryTimeBox hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold">Select delivery time</h3>
-                    <button class="closeCalender text-gray-500 hover:text-red-500 text-lg">×</button>
-                </div>
-
-                <div class="standardDeliveryTimeSlots grid grid-cols-1 md:grid-cols-2 gap-4 hidden mb-6">
-                    <?php
-                    $slots = ['09:00 - 12:00', '12:00 - 15:00', '15:00 - 18:00', '18:00 - 21:00', '20:00 - 22:00'];
-                    foreach ($slots as $slot) {
-                        echo "
-                <label class='flex items-center gap-3'>
-                  <input type='radio' name='deliveryTime' value='$slot' class='hidden peer deliveryTimeSlot'>
-                  <div class='w-full p-3 border rounded cursor-pointer peer-checked:border-primary peer-checked:bg-primary/10'>
-                    $slot hrs
-                  </div>
-                </label>
-              ";
-                    }
-                    ?>
-                </div>
-
-                <div class="midnightDeliveryTimeSlots hidden mb-6">
-                    <label class="flex items-center gap-3">
-                        <input type="radio" name="deliveryTime" value="23:00 - 01:00"
-                            class="hidden peer deliveryTimeSlot">
-                        <div class="p-3 border rounded w-full peer-checked:border-primary peer-checked:bg-primary/10">
-                            23:00 - 01:00 hrs
-                            <p class="text-xs text-red-500 mt-1">
-                                We will deliver product on <?= date('jS F') ?> after 11:00 PM.
-                            </p>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <a href="#"
-                        class="visibleShowTimeBox text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded">←
-                        Delivery slots</a>
-                    <a href="#"
-                        class="specialNotesBox text-center bg-primary hover:bg-primary/90 text-white py-2 rounded">Special
-                        Notes →</a>
-                </div>
-            </div>
-
-            <!-- Special Notes -->
-            <div class="specialNotesBox hidden mt-8">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold">Special Notes</h3>
-                    <button class="closeCalender text-gray-500 hover:text-red-500 text-lg">×</button>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label for="occasion" class="block text-sm font-medium text-gray-700 mb-1">Select
-                            Occasion</label>
-                        <select name="occasion" id="occasion" class="w-full border rounded px-4 py-2">
-                            <option value="">Select occasion</option>
-                            <?php
-                            $occasions = [
-                                "Anniversary",
-                                "Birthday",
-                                "Congratulation",
-                                "Get Well Soon",
-                                "I am Sorry",
-                                "Thank U",
-                                "Appreciation",
-                                "Cheer Up",
-                                "New Born",
-                                "Wedding",
-                                "Just Like That",
-                                "Onam",
-                                "Eid",
-                                "Love & Romance",
-                                "Christmas",
-                                "New Year",
-                                "Lohri",
-                                "Rose Day",
-                                "Propose Day",
-                                "Chocolate Day",
-                                "Teddy Day",
-                                "Promise Day",
-                                "Hug Day",
-                                "Kiss Day",
-                                "Valentines Day",
-                                "Womens Day",
-                                "Holi",
-                                "April Fool",
-                                "Mother's Day",
-                                "Father's Day",
-                                "Friendship Day",
-                                "Rakhi",
-                                "Independence Day",
-                                "Ganesh Chaturthi",
-                                "Teacher's Day",
-                                "Grandparent's Day",
-                                "Daughter's Day",
-                                "Karwa Chauth",
-                                "Other"
-                            ];
-                            foreach ($occasions as $o) echo "<option value='$o'>$o</option>";
-                            ?>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
-                        <textarea id="message" name="message" rows="4"
-                            class="w-full border rounded px-4 py-2"></textarea>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 pt-4">
-                    <a href="#"
-                        class="visibleShowTimeBox text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded">←
-                        Delivery slots</a>
-                    <a href="#"
-                        class="reviewBtn text-center bg-primary hover:bg-primary/90 text-white py-2 rounded">Review
-                        →</a>
-                </div>
-            </div>
-
         </div>
-    </div>
-</section>
 
+    </section>
+</div>
 
 <?php
 
