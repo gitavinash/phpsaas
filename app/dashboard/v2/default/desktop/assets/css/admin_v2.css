@@ -3608,3 +3608,18 @@ button:disabled {
   font-size: 16px;
   background-color: #fff;
 }
+
+.setAsFeaturedBox {
+  float: left;
+}
+.setAsFeaturedBox a {
+  display: none;
+}
+
+.setAsFeaturedBox:hover a {
+  display: block;
+  box-sizing: border-box;
+  margin: 0px 5%;
+  width: 90%;
+  margin-top: -40px;
+}

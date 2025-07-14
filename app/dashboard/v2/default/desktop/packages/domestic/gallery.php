@@ -3,7 +3,7 @@
 $id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
 $query = "
-    SELECT tour_package_title, gallery_image_list
+    SELECT tour_package_title, gallery_image_list, gallery_id
     FROM " . TABLE_PREFIX . "tour_package AS tp
     LEFT JOIN " . TABLE_PREFIX . "gallery AS g
         ON g.gallery_category = tp.tour_package_id
@@ -37,9 +37,10 @@ if ($galleryData = mysqli_query($connection, $query)) {
                 foreach ($galleryImagesList as $galleyImages => $imageData) {
                     extract($imageData);
                     echo "
-                    <div class='editGallery galleryImageBox' >
+                    <div class='editGallery galleryImageBox setAsFeaturedBox' >
                         <img src='" . (($path != '') ?
                         $path : ADMIN_IMAGES . 'default-picture.png') . "' >
+                        <a href='#' class='btn setGalleryFeatureImage' data-id='{$gallery_id}' data-category='{$id}' data-image='{$path}'>Set as Featured</a>
                     </div>
                     ";
                 }

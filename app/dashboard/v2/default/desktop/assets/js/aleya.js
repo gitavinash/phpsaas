@@ -1122,4 +1122,34 @@ $(document).ready(function () {
       "/app/dashboard/v2/default/desktop/assets/js/aleya/property.min.js"
     );
   });
+
+  $(".setGalleryFeatureImage").click(function (e) {
+    e.preventDefault();
+    const image = $(this).data("image");
+    const categoryId = $(this).data("category");
+    const galleryId = $(this).data("id");
+    $.ajax({
+      type: "POST",
+      url: "/api/gallery/set-featured-image/",
+      data: {
+        featureImage: image,
+        categoryId: categoryId,
+        galleryId: galleryId,
+      },
+      dataType: "json",
+      success: function (response) {
+        popUpMessage("center", response.msg, response.status);
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
+      },
+      error: function (error) {
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+      },
+    });
+  });
 });
