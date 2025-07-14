@@ -15,13 +15,18 @@ switch ($link_status) {
         $packageQuery = "SELECT 
     tp.*,
     l.*,
-    tpp.*
+    tpp.*,
+    g.*
 FROM " . TABLE_PREFIX . "tour_package tp
 LEFT JOIN " . TABLE_PREFIX . "link l 
     ON l.link_relation_id = tp.tour_package_id
     AND l.link_status = 200
     AND l.link_site_id = " . SITE_ID . "
     AND l.link_type = 'tour_package'
+                LEFT JOIN " . TABLE_PREFIX . "gallery g ON
+                    gallery_category = tour_package_id
+                    AND gallery_site_id = " . SITE_ID . "
+                    AND gallery_type = 'tour_package'
 LEFT JOIN (
     SELECT 
         tour_package_price_parent_id,
