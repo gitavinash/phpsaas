@@ -163,7 +163,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <i class="ri-calendar-line"></i>
-                                    <span><?php echo date('d F, Y', strtotime($travel_date)) ?></span>
+                                    <span><?php echo (($travel_date != '') ? date('d F, Y', strtotime($travel_date)) : '') ?></span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <i class="ri-time-line"></i>
