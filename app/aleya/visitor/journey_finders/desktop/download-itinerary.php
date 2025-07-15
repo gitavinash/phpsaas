@@ -172,7 +172,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
-                            <div class="text-3xl font-bold whitespace-nowrap">INR <?php echo $quotation_price ?></div>
+                            <div class="text-3xl font-bold whitespace-nowrap">₹ <?php echo $quotation_price ?></div>
                             <div class="text-sm text-white/75 whitespace-nowrap mb-2">per person</div>
                             <div class="text-sm text-white/75 whitespace-nowrap">Ref. id: <?php echo $quoteId ?>
                             </div>
