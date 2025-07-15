@@ -52,7 +52,7 @@ require_once 'header.php';
     <!-- Hero Section -->
     <div class="relative rounded-xl overflow-hidden mb-8">
         <img src="<?php echo $gallery_image ?>" alt="<?php echo $tour_package_title ?>"
-            class="w-full h-80 object-cover object-top" />
+            class="w-full h-80 object-cover object-center" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div class="absolute bottom-0 left-0 p-6 md:p-8">
             <div class="flex items-center mb-2">
