@@ -272,15 +272,13 @@
                             class="absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 hover:visible hover:opacity-100 transition-all duration-150 bg-white border w-64 shadow-lg z-50">
                             <ul class="p-4 space-y-2 text-sm text-gray-700">
                                 <li><a href="/category/flower/" class="block hover:text-primary">Fresh Flowers</a></li>
-                                <li><a href="/category/artistic-artificial/" class="block hover:text-primary">Artistic
-                                        Artificial</a></li>
                                 <li><a href="/tag/everlasting/" class="block hover:text-primary">Everlasting Flowers</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Planters</a>
+                    <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                     <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
                     <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
                         class="text-gray-700 hover:text-primary transition">
@@ -349,19 +347,16 @@
                     </summary>
                     <ul class="pl-4 mt-2 space-y-1 text-sm">
                         <li><a href="/category/flower/" class="block">Fresh Flowers</a></li>
-                        <li><a href="/category/artistic-artificial/" class="block">Artistic Artificial</a></li>
                         <li><a href="/tag/everlasting/" class="block">Everlasting</a></li>
                     </ul>
                 </details>
 
-                <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Planters</a>
+                <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                 <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
                 <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
                     class="text-gray-700 hover:text-primary transition">
                     Blooms of <?php echo date('F') ?>
                 </a>
-                <a href="/tag/father/" class="hover:text-gray-700 text-primary transition font-semibold">Father's
-                    Day</a>
             </nav>
         </div>
     </header>
