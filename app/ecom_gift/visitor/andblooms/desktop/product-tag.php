@@ -99,10 +99,14 @@
                         <?php echo  $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
                     <?php endif; ?>
                 </div>
+                <?php
+                            if ($inventory_in_stock > 0) { ?>
                 <button data-info='<?php echo $product_id . '_' . $inventory_price . '_1'; ?>'
-                    class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition">Add
-                    to
-                    Cart</button>
+                    class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">Add
+                    to Cart</button>
+                <?php
+                            }
+                            ?>
             </div>
         </div>
         <?php endwhile;
