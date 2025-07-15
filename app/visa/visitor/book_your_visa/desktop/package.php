@@ -87,17 +87,77 @@ require_once 'header.php';
                                     class="bg-gray-100 border border-gray-200 px-5 py-2 rounded-lg font-medium text-gray-500 !rounded-button whitespace-nowrap">Standard</button>
                             </div> -->
                         </div>
-                        <div class="text-left sm:text-right w-full sm:w-auto mt-4 sm:mt-0">
-                            <div class="text-2xl font-bold flex items-center justify-start sm:justify-end">
-                                ₹ <?php echo $visa_package_price ?>
+
+                        <div class="w-full sm:w-auto mt-4 sm:mt-0 text-right">
+                            <div class="text-2xl font-bold flex items-center justify-end">
+                                ₹ <?php echo $visa_package_price + $visa_package_goverment_fee; ?>
+
                                 <?php if ($visa_package_price < $visa_package_mrp): ?>
-                                <strike><?php echo $visa_package_mrp; ?></strike>
+                                <span class="ml-2 text-gray-500 text-base">
+                                    <strike>₹ <?php echo $visa_package_mrp + $visa_package_goverment_fee; ?></strike>
+                                </span>
+                                <span class="ml-2 text-green-600 text-sm font-semibold">
+                                    (You Save ₹<?php echo ($visa_package_mrp - $visa_package_price); ?>)
+                                </span>
                                 <?php endif; ?>
-                                <!-- <div class="w-6 h-6 flex items-center justify-center ml-1">
-                                    <i class="ri-arrow-down-s-line"></i>
-                                </div> -->
+
+                                <!-- Toggle Arrow with relative wrapper -->
+                                <div class="relative ml-2">
+                                    <button onclick="toggleFeeBreakdown()" id="arrowToggle"
+                                        class="text-gray-600 hover:text-black focus:outline-none z-10">
+                                        <i id="arrowIcon"
+                                            class="ri-arrow-down-s-line text-2xl transition-transform duration-200"></i>
+                                    </button>
+
+                                    <!-- Fee Breakdown Popover -->
+                                    <div id="feeBreakdown"
+                                        class="absolute font-normal right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-sm text-gray-700 transition-all duration-300 origin-top scale-95 opacity-0 invisible z-20">
+                                        <div class="flex justify-between mb-1">
+                                            <span>Visa Service Fee</span>
+                                            <span>₹ <?php echo $visa_package_price; ?></span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Government Fee</span>
+                                            <span>₹ <?php echo $visa_package_goverment_fee; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <script>
+                        function toggleFeeBreakdown() {
+                            const box = document.getElementById("feeBreakdown");
+                            const icon = document.getElementById("arrowIcon");
+                            const isVisible = !box.classList.contains("invisible");
+
+                            if (isVisible) {
+                                box.classList.add("opacity-0", "scale-95", "invisible");
+                                box.classList.remove("opacity-100", "scale-100", "visible");
+                                icon.classList.remove("ri-arrow-up-s-line");
+                                icon.classList.add("ri-arrow-down-s-line");
+                            } else {
+                                box.classList.remove("opacity-0", "scale-95", "invisible");
+                                box.classList.add("opacity-100", "scale-100", "visible");
+                                icon.classList.remove("ri-arrow-down-s-line");
+                                icon.classList.add("ri-arrow-up-s-line");
+                            }
+                        }
+
+                        document.addEventListener("click", function(e) {
+                            const toggle = document.getElementById("arrowToggle");
+                            const box = document.getElementById("feeBreakdown");
+                            const icon = document.getElementById("arrowIcon");
+                            if (!toggle.contains(e.target) && !box.contains(e.target)) {
+                                box.classList.add("opacity-0", "scale-95", "invisible");
+                                box.classList.remove("opacity-100", "scale-100", "visible");
+                                icon.classList.remove("ri-arrow-up-s-line");
+                                icon.classList.add("ri-arrow-down-s-line");
+                            }
+                        });
+                        </script>
+
+
                     </div>
                     <!-- Visa Details Grid -->
                     <div class="border border-gray-100 rounded-lg p-6 mb-8">
