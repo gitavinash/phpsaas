@@ -53,18 +53,15 @@
             </a>
             <h3 class="font-serif text-lg mb-2"><?php echo $product_title ?></h3>
             <div class="flex justify-between items-center">
-                <div class="flex flex-col">
-                    <span class="text-primary font-semibold text-base">
-                        <?php echo $inventory_currency_symbol . ' ' . $price ?>
-                    </span>
+                <?php
+                        if ($inventory_in_stock > 0) { ?><div>
+                    <span
+                        class="text-primary font-semibold"><?php echo  $inventory_currency_symbol . ' ' . $price ?></span>
                     <?php if ($discount > 0): ?>
-                    <span class="text-sm text-gray-400 line-through">
-                        <?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?>
-                    </span>
+                    <div class="text-gray-400 text-sm line-through">
+                        <?php echo  $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
                     <?php endif; ?>
                 </div>
-                <?php
-                        if ($inventory_in_stock > 0) { ?>
                 <button data-info='<?php echo $product_id . '_' . $inventory_price . '_1'; ?>'
                     class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">Add
                     to Cart</button>
