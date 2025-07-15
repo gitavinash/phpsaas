@@ -35,7 +35,9 @@ $query =
 if ($checkQuote = mysqli_query($connection, $query)) {
     if (mysqli_num_rows($checkQuote) > 0) {
         extract(mysqli_fetch_assoc($checkQuote));
-        extract(json_decode($enquiry_message, true));
+        if (!empty($enquiry_message)) {
+            extract(json_decode($enquiry_message, true));
+        }
     } else {
         die("Quotation not found or inactive.");
     }
