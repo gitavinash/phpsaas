@@ -129,11 +129,6 @@
             id="requirements"><?php echo (($requirements == '') ? $enquiry_message : $requirements); ?></textarea>
     </td>
 </tr>
-<?php
-
-echo 'Enq: ' . $enquiry_message;
-
-?>
 <tr>
     <td class="box-3">
     </td>
