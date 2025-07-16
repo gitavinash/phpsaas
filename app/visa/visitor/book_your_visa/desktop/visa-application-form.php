@@ -10,7 +10,7 @@ if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
 ?>
 <script>
 localStorage.setItem('serviceFees', '<?php echo $visa_package_price; ?>');
-localStorage.setItem('govermentFees', '<?php echo $visa_package_goverment_fee; ?>');
+localStorage.setItem('governmentFees', '<?php echo $visa_package_goverment_fee; ?>');
 </script>
 <?php
     }
@@ -159,15 +159,17 @@ localStorage.setItem('govermentFees', '<?php echo $visa_package_goverment_fee; ?
                     </div>
                     <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Departure
-                                Date<sup>*</sup></label>
-                            <input type="date" id="departureDate" name="departureDate" min="<?php echo date('Y-m-d') ?>"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Arrival Date<sup>*</sup></label>
+                            <input type="text" id="arrivalDate" name="arrivalDate"
+                                placeholder="<?php echo date('Y-m-d') ?>"
+                                class="arrivalDatePicker w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Arrival Date<sup>*</sup></label>
-                            <input type="date" id="arrivalDate" name="arrivalDate" min="<?php echo date('Y-m-d') ?>"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Departure
+                                Date<sup>*</sup></label>
+                            <input type="text" id="departureDate" name="departureDate"
+                                placeholder="<?php echo date('Y-m-d', strtotime('+1 day')) ?>"
+                                class="departureDatePicker w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:border-primary">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Purpose of
@@ -308,11 +310,11 @@ localStorage.setItem('govermentFees', '<?php echo $visa_package_goverment_fee; ?
                                         <div class="font-medium" id="totalPerson"></div>
                                     </div>
                                     <div>
-                                        <div class="text-gray-500">Visa Processing Fee</div>
-                                        <div class="font-medium" id="processingFee"></div>
+                                        <div class="text-gray-500">Government VISA Charges</div>
+                                        <div class="font-medium" id="governmentVisaCharges"></div>
                                     </div>
                                     <div>
-                                        <div class="text-gray-500">Service Fee</div>
+                                        <div class="text-gray-500">BMV Service Fee</div>
                                         <div class="font-medium" id="serviceFee"></div>
                                     </div>
                                     <div>

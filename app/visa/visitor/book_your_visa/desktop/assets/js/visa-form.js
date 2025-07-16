@@ -466,6 +466,23 @@ $("#step3Btn").on("click", function (e) {
 
   // ✅ Call actual upload function
   saveVisaApplicationDraft(null, 3);
+
+  // Show price
+
+  const totalPassengers = JSON.parse(
+    localStorage.getItem("personsData")
+  ).length;
+
+  const serviceCharge = totalPassengers * localStorage.getItem("serviceFees");
+  const governmentCharge =
+    totalPassengers * localStorage.getItem("governmentFees");
+  const totalPrice = serviceCharge + governmentCharge;
+
+  $("#totalPerson").text(totalPassengers);
+  $("#governmentVisaCharges").text("₹ " + governmentCharge);
+  $("#serviceFee").text("₹ " + serviceCharge);
+  $("#totalAmount").text("₹ " + totalPrice);
+
   goToStep(4);
 });
 

@@ -71,6 +71,23 @@ $(document).ready(function () {
     yearRange: new Date().getFullYear() + ":2099",
   });
 
+  $(".arrivalDatePicker").datepicker({
+    dateFormat: "yy-mm-dd",
+    changeMonth: true,
+    changeYear: true,
+    minDate: 0, // today
+    yearRange: new Date().getFullYear() + ":2099",
+  });
+
+  // 🛫 Departure Date Picker (tomorrow onward)
+  $(".departureDatePicker").datepicker({
+    dateFormat: "yy-mm-dd",
+    changeMonth: true,
+    changeYear: true,
+    minDate: 1, // tomorrow
+    yearRange: new Date().getFullYear() + ":2099",
+  });
+
   // Header, Menu and Scroll
 
   const $header = $(".sticky-header");
