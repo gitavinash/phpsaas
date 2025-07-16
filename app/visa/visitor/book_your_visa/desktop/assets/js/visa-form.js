@@ -133,21 +133,6 @@ $.ajax({
       $("#mobile").val(mobile);
       $("#address").val(address);
       $('input[name="gender"][value="' + gender + '"]').prop("checked", true);
-
-      const newPerson = {
-        first_name: firstName,
-        middle_name: middleName,
-        last_name: lastName,
-        email: email,
-        mobile: mobile,
-        address: address,
-        date_of_birth: dateOfBirth,
-        gender: gender,
-        passport_number: passportNumber,
-        passport_expiry: passportExpiry,
-      };
-
-      localStorage.setItem("personsData", JSON.stringify([newPerson]));
     } else {
       console.log("User information not found");
     }
@@ -473,14 +458,32 @@ $("#step3Btn").on("click", function (e) {
     localStorage.getItem("personsData")
   ).length;
 
-  const serviceCharge = totalPassengers * localStorage.getItem("serviceFees");
-  const governmentCharge =
-    totalPassengers * localStorage.getItem("governmentFees");
+  const serviceFeePerPerson =
+    parseFloat(localStorage.getItem("serviceFees")) || 0;
+  const governmentFeePerPerson =
+    parseFloat(localStorage.getItem("governmentFees")) || 0;
+
+  const serviceCharge = totalPassengers * serviceFeePerPerson;
+  const governmentCharge = totalPassengers * governmentFeePerPerson;
   const totalPrice = serviceCharge + governmentCharge;
 
   $("#totalPerson").text(totalPassengers);
-  $("#governmentVisaCharges").text("₹ " + governmentCharge);
-  $("#serviceFee").text("₹ " + serviceCharge);
+
+  // Government Fee Display
+  let govtText = "₹ " + governmentCharge;
+  if (totalPassengers > 1) {
+    govtText += ` (₹ ${governmentFeePerPerson} per person)`;
+  }
+  $("#governmentVisaCharges").text(govtText);
+
+  // Service Fee Display
+  let serviceText = "₹ " + serviceCharge;
+  if (totalPassengers > 1) {
+    serviceText += ` (₹ ${serviceFeePerPerson} per person)`;
+  }
+  $("#serviceFee").text(serviceText);
+
+  // Total
   $("#totalAmount").text("₹ " + totalPrice);
 
   goToStep(4);

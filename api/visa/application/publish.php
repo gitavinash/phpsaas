@@ -24,15 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         $visaData = json_decode($responseData['visa_application_data'], true);
 
-                        // Send email to user
+                        // Send email alerts
 
-                        include_once APP_EMAIL_TEMPLATE . 'application/request.php';
-
-                        // Send email to site owner
-
-                        include_once ADMIN_EMAIL_TEMPLATE . 'application/new-application-receive.php';
-
-                        // require_once EMAIL_TEMPLATE.'';
 
                     } else {
                         $msg = 'Something went wrong while updating status';
