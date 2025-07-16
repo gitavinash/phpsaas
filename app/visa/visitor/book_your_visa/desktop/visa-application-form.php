@@ -7,6 +7,12 @@ require_once 'header.php';
 if ($checkPackage = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "visa_package INNER JOIN " . TABLE_PREFIX . "visa_country ON visa_country_id=visa_package_country_id WHERE visa_package_id = '" . base64_decode($package_id) . "' AND visa_package_site_id = " . SITE_ID . " AND visa_country_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkPackage) > 0) {
         extract(mysqli_fetch_assoc($checkPackage));
+?>
+<script>
+localStorage.setItem('serviceFees', '<?php echo $visa_package_price; ?>');
+localStorage.setItem('govermentFees', '<?php echo $visa_package_goverment_fee; ?>');
+</script>
+<?php
     }
 }
 
