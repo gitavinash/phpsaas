@@ -11,7 +11,8 @@ require_once 'header.php';
             <div class="left-container">
                 <div class="mediaFile">
                     <h1><?php echo $media_title ?></h1>
-                    <img style="float: left; width: 100%; height: auto" src="<?php echo SITE_URL . $media_url; ?>" alt="">
+                    <img style="float: left; width: 100%; height: auto" src="<?php echo SITE_URL . $media_url; ?>"
+                        alt="">
                 </div>
             </div>
 
@@ -34,8 +35,8 @@ require_once 'header.php';
                             }
                             echo
                             "<li>
-                                        <a href='/category/news/' class='readMore'>
-                                            Read more highlights...
+                                        <a href='/fintech-news/' class='readMore'>
+                                            Read more newsghlights...
                                         </a>
                                 </li>";
                         } else {
