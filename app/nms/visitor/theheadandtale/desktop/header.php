@@ -242,7 +242,7 @@ if (isset($_COOKIE['user_data'])) {
                 <?php
 
                 if (SITE_ID == 49) { ?>
-                <li><a href="deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
+                <li><a href="/deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
                         title="Deep-Tales">Deepdives</a></li>
                 <li><a href="/to-the-point/" <?php echo ((BASE_URL == '/to-the-point/') ? 'class="active"' : '') ?>
                         title="To-The-Point">Explainer</a></li>
@@ -251,9 +251,9 @@ if (isset($_COOKIE['user_data'])) {
                 <li><a href="/ai-emerging-tech/" title="Report"
                         <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
                 </li>
-                <li><a href="money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
+                <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
                         title="Money-Trivia">Money Trivia</a></li>
-                <li><a href="report/" title="Report" <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>
+                <li><a href="/report/" title="Report" <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>
                         class="disable">Report</a></li>
                 <?php
                 }
