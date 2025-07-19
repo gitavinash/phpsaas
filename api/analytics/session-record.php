@@ -34,6 +34,7 @@ mysqli_query($connection, "START TRANSACTION");
 
 if (isset($_COOKIE['user_data'])) {
     $user_salt_key = base64_decode($_COOKIE['user_data']);
+    $user_salt_key = mysqli_real_escape_string($connection, $user_salt_key);
     if ($checkUserIsReal = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$user_salt_key}'")) {
         if (mysqli_num_rows($checkUserIsReal) != 0) {
             extract(mysqli_fetch_assoc($checkUserIsReal));

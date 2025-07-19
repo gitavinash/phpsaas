@@ -16,14 +16,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $roomId = $roomTypeExt[0];
                     $roomTypeName = $roomTypeExt[1];
 
-                    $insertQuery = "INSERT INTO " . TABLE_PREFIX . "tour_package_hotel(tph_hotel_id, tph_package_id, tph_room_type_id, tph_room_type, tph_night, tph_status, tph_site_id) VALUES('{$property_id}', '{$tour_id}', '{$roomId}', '{$roomTypeName}', '{$night}', 1, " . SITE_ID . ")";
+                    if ($checkRoomAlloted = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package_hotel WHERE tph_night='{$night}' AND tph_package_id='{$tour_id}' AND tph_site_id=" . SITE_ID)) {
+                        if (mysqli_num_rows($checkRoomAlloted) == 0) {
+                            $insertQuery = "INSERT INTO " . TABLE_PREFIX . "tour_package_hotel(tph_hotel_id, tph_package_id, tph_room_type_id, tph_room_type, tph_night, tph_status, tph_site_id) VALUES('{$property_id}', '{$tour_id}', '{$roomId}', '{$roomTypeName}', '{$night}', 1, " . SITE_ID . ")";
 
-                    if (mysqli_query($connection, $insertQuery)) {
-                        $httpStatus = 200;
-                        $status = 'success';
-                        $msg = 'Hotel assign to package';
-                    } else {
-                        $msg = 'Something went wrong';
+                            if (mysqli_query($connection, $insertQuery)) {
+                                $httpStatus = 200;
+                                $status = 'success';
+                                $msg = 'Hotel assign to package';
+                            } else {
+                                $msg = 'Something went wrong';
+                            }
+                        } else {
+                            $msg = 'Hotel is assinged for ' . $night . ' night';
+                        }
                     }
                 } else {
                     $msg = 'Invalid tour package not found';

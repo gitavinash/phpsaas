@@ -68,6 +68,7 @@ if (!empty($hotelList)) {
                             echo "
         <div class='editGallery galleryImageBox setAsFeaturedBox'>
             <img src='{$path}' alt='" . htmlspecialchars($hotel['property_title']) . "'>
+            <h2>{$hotel['property_title']}</h2>
             <div class='showOnHoverBox' style='margin-top: -120px'>
                 <select class='night' style='width:100%;padding: 5px 0px;margin-bottom: 10px;border-radius: 5px;border: none;' name='day'>
                     <option value='#'>Select night to stay</option>
