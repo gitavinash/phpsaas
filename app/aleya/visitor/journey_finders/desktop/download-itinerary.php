@@ -1,5 +1,28 @@
 <?php
 
+function renderStarIcons($hotel_type)
+{
+    // Extract numeric part (e.g., "3" from "3_star")
+    preg_match('/(\d+)/', $hotel_type, $matches);
+    $stars = isset($matches[1]) ? (int)$matches[1] : 0;
+
+    // Max stars = 5
+    $filledStars = min($stars, 5);
+    $emptyStars = 5 - $filledStars;
+
+    // Generate HTML
+    $output = '<div class="flex items-center">';
+    for ($i = 0; $i < $filledStars; $i++) {
+        $output .= '<i class="ri-star-fill text-yellow-400"></i>';
+    }
+    for ($i = 0; $i < $emptyStars; $i++) {
+        $output .= '<i class="ri-star-line text-yellow-400"></i>';
+    }
+    $output .= '</div>';
+
+    return $output;
+}
+
 function getInitials($name)
 {
     $words = preg_split("/\s+/", trim($name));
@@ -14,29 +37,98 @@ function getInitials($name)
 
 $quotationId = base64_decode(end($urlStructure));
 
-$query =
-    "SELECT * FROM " .
-    TABLE_PREFIX .
-    "quotation 
-    INNER JOIN " .
-    TABLE_PREFIX .
-    "tour_package ON quotation_type_id = tour_package_id
-    INNER JOIN " .
-    TABLE_PREFIX .
-    "enquiry ON enquiry_id = quotation_ref_id
-    LEFT JOIN " . TABLE_PREFIX . "gallery ON gallery_category = tour_package_id AND gallery_site_id = " . SITE_ID . "
-    LEFT JOIN " . TABLE_PREFIX . "enquiry_profile ON enquiry_profile_ref_id = enquiry_id AND status=1
-    WHERE quotation_id = '{$quotationId}' 
-    AND quotation_type = 'tour_package' 
-    AND quotation_status IN (0,1) 
-    AND quotation_site_id = " .
-    SITE_ID;
+$query = "
+    SELECT 
+        q.*, 
+        tp.*, 
+        e.*, 
+        g.*, 
+        ep.*,
+        GROUP_CONCAT(
+    CONCAT_WS(':',
+        TRIM(tph.tph_hotel_id),
+        TRIM(tph.tph_room_type_id),
+        TRIM(tph.tph_room_type),
+        TRIM(tph.tph_night)
+    )
+    ORDER BY tph.tph_night
+    SEPARATOR ','
+) AS hotel_list
+    FROM " . TABLE_PREFIX . "quotation q
+    INNER JOIN " . TABLE_PREFIX . "tour_package tp 
+        ON q.quotation_type_id = tp.tour_package_id
+    INNER JOIN " . TABLE_PREFIX . "enquiry e 
+        ON e.enquiry_id = q.quotation_ref_id
+    LEFT JOIN " . TABLE_PREFIX . "gallery g 
+        ON g.gallery_category = tp.tour_package_id 
+        AND g.gallery_site_id = " . SITE_ID . "
+    LEFT JOIN " . TABLE_PREFIX . "enquiry_profile ep 
+        ON ep.enquiry_profile_ref_id = e.enquiry_id 
+        AND ep.status = 1
+    LEFT JOIN " . TABLE_PREFIX . "tour_package_hotel tph 
+        ON tph.tph_package_id = tp.tour_package_id
+    WHERE q.quotation_id = '{$quotationId}' 
+        AND q.quotation_type = 'tour_package' 
+        AND q.quotation_status IN (0,1) 
+        AND q.quotation_site_id = " . SITE_ID . "
+    GROUP BY q.quotation_id
+";
 
 if ($checkQuote = mysqli_query($connection, $query)) {
     if (mysqli_num_rows($checkQuote) > 0) {
         extract(mysqli_fetch_assoc($checkQuote));
         if (!empty($enquiry_message)) {
             extract(json_decode($enquiry_message, true));
+        }
+
+        $hotelListData = explode(',', $hotel_list);
+        $hotelIds = [];
+        $roomIds = [];
+
+        foreach ($hotelListData as $data) {
+            $parts = explode(':', $data);
+            if (count($parts) >= 4) {
+                $hotelIds[] = $parts[0];
+                $roomIds[] = $parts[1];
+            }
+        }
+
+        // 2. Remove duplicates & sanitize
+        $hotelIds = array_unique(array_filter($hotelIds));
+        $roomIds = array_unique(array_filter($roomIds));
+
+        // 3. Convert to comma-separated strings for IN clause
+        $hotelIdsIn = implode(',', array_map('intval', $hotelIds));
+        $roomIdsIn = implode(',', array_map('intval', $roomIds));
+        // 4. Run optimized single query
+        $query = "
+    SELECT 
+        property_id,
+        property_title, 
+        property_thumbnail, 
+        property_city, 
+        property_state, 
+        property_country, 
+        property_type,
+        room_id,
+        room_feature_image, 
+        room_type 
+    FROM isw_tour_package_hotel 
+    INNER JOIN isw_property ON property_id = tph_hotel_id 
+    INNER JOIN isw_room ON room_id = tph_room_type_id
+    WHERE tph_hotel_id IN ($hotelIdsIn) 
+      AND tph_room_type_id IN ($roomIdsIn)
+";
+
+        // Execute query
+        $result = mysqli_query($connection, $query);
+        $hotelRoomMap = [];
+
+        $i = 0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $key = $i;
+            $hotelRoomMap[$key] = $row;
+            $i++;
         }
     } else {
         die("Quotation not found or inactive.");
@@ -185,39 +277,6 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         <div class="p-6 border-b border-gray-200">
             <h2 class="text-xl font-semibold mb-4">Tour Overview</h2>
             <p class="mb-8"><?php echo $tour_package_overview ?></p>
-            <!-- Hotel List -->
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold mb-4">Accommodation Details</h3>
-                <div class="space-y-4">
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <div class="flex items-start">
-                            <img src="https://readdy.ai/api/search-image?query=Luxury%20hotel%20room%20interior%20with%20modern%20design%2C%20king%20size%20bed%2C%20city%20view%2C%20warm%20lighting%2C%20professional%20hotel%20photography&width=300&height=200&seq=10&orientation=landscape"
-                                alt="Melia Vinpearl Da Nang" class="w-32 h-24 object-cover rounded mr-4">
-                            <div class="flex-1">
-                                <h4 class="font-medium">Melia Vinpearl Da Nang</h4>
-                                <div class="flex items-center text-sm text-gray-600 mt-1">
-                                    <div class="flex items-center">
-                                        <i class="ri-star-fill text-yellow-400"></i>
-                                        <i class="ri-star-fill text-yellow-400"></i>
-                                        <i class="ri-star-fill text-yellow-400"></i>
-                                        <i class="ri-star-fill text-yellow-400"></i>
-                                        <i class="ri-star-line text-yellow-400"></i>
-                                    </div>
-                                    <span class="mx-2">•</span>
-                                    <span>4 Nights</span>
-                                </div>
-                                <div class="text-sm text-gray-600 mt-1">
-                                    <div class="flex items-center gap-4">
-                                        <span><i class="ri-wifi-line mr-1"></i> Free WiFi</span>
-                                        <span><i class="ri-restaurant-line mr-1"></i> Restaurant</span>
-                                        <span><i class="ri-parking-line mr-1"></i> Parking</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="bg-blue-50 p-4 rounded-lg mb-4 mt-8">
                 <h3 class="font-medium mb-2">What's Included:</h3>
                 <ul class="grid grid-cols-2 gap-2 text-sm">
@@ -265,6 +324,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                 <h2 class="text-xl font-semibold mb-4">Detailed Itinerary</h2>
                 <?php
                 echo '<div class="space-y-6">';
+                $j = 0;
                 foreach ($itineraries as $day) {
                     // Extract title and remove "Day X - " prefix
                     $titleParts = explode(' - ', $day['day'], 2);
@@ -279,24 +339,44 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
             <h3 class="text-lg font-medium">' . htmlspecialchars($title) . '</h3>
         </div>
         <div class="pl-14">
-            <p class="mb-3">' . nl2br(htmlspecialchars($day['overview'])) . '</p>
-            <div class="text-sm text-gray-500 mb-3">
-                <div class="flex items-center">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1">
-                        <i class="ri-hotel-line"></i>
+            <p class="mb-3">' . nl2br(htmlspecialchars($day['overview'])) . '</p>';
+
+                    if (isset($hotelRoomMap[$j])) {
+                        echo '<div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4">Accommodation Details</h3>
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <img
+                        src="' . $hotelRoomMap[$j]['property_thumbnail'] . '"
+                        alt="Melia Vinpearl Da Nang"
+                        class="w-32 h-24 object-cover rounded mr-4"
+                        />
+                        <div class="flex-1">
+                        <h4 class="font-medium">' . $hotelRoomMap[$j]['property_title'] . '</h4>
+                        <div class="flex items-center text-sm text-gray-600 mt-1">
+                            <div class="flex items-center">';
+                        echo renderStarIcons($hotelRoomMap[$j]['property_type']);
+                        echo '</div>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            <div class="flex items-center gap-4">
+                            <span><i class="ri-wifi-line mr-1"></i> Free WiFi</span>
+                            <span><i class="ri-restaurant-line mr-1"></i> Restaurant</span>
+                            <span><i class="ri-parking-line mr-1"></i> Parking</span>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                    <span>Accommodation: Included</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1">
-                        <i class="ri-restaurant-line"></i>
                     </div>
-                    <span>Meals: Included</span>
                 </div>
-            </div>
-        </div>
+                </div>';
+                    }
+
+                    echo '</div>
     </div>';
                     $dayCount++;
+                    $j++;
                 }
                 echo '</div>';
                 ?>
@@ -513,6 +593,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
 
         const opt = {
             filename: '<?php echo $pdfFileName ?>',
+            margin: [0.5, 0.4, 0.5, 0.4],
             image: {
                 type: 'jpeg',
                 quality: 0.98

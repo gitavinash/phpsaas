@@ -94,7 +94,7 @@ if (!empty($hotelList)) {
 
                             echo "
                 </select>
-                <a href='#' class='btn addHotelToPackage' data-hotel-id='{$property_id}' data-tour-id='{$tourPackageId}'>Add to package</a>
+                <a href='#' class='btn addHotelToPackage' data-hotel-id='{$hotel['property_id']}' data-tour-id='{$tourPackageId}'>Add to package</a>
             </div>
         </div>
         ";
