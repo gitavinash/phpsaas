@@ -18,7 +18,7 @@
                 echo
                 "<li>
                                         <a href='/fintech-news/' class='readMore'>
-                                            Read more newsghlights...
+                                            Read more news...
                                         </a>
                                 </li>";
             } else {
@@ -49,7 +49,7 @@
                 echo
                 "<li>
                                         <a href='/ai-emerging-tech/' class='readMore'>
-                                            Read more newsghlights...
+                                            Read more news...
                                         </a>
                                 </li>";
             } else {

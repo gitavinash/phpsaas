@@ -36,7 +36,7 @@ require_once 'header.php';
                             echo
                             "<li>
                                         <a href='/fintech-news/' class='readMore'>
-                                            Read more newsghlights...
+                                            Read more news...
                                         </a>
                                 </li>";
                         } else {
