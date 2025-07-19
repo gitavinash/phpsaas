@@ -25,10 +25,8 @@ require_once 'social.php';
 
 /** Structure data json format */
 
-// $defaultSchemaData = SCHEMA_DATA . "{$link_type}.php";
+$defaultSchemaData = SCHEMA_DATA . "{$link_type}.php";
 
-// if (file_exists($defaultSchemaData)) {
-//     require_once $defaultSchemaData;
-// } else {
-//     require_once $defaultSchemaData = SCHEMA_DATA . "organization.php";
-// }
+if (file_exists($defaultSchemaData)) {
+    require_once $defaultSchemaData;
+}
