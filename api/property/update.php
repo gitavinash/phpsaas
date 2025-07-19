@@ -23,12 +23,15 @@ if ($name != '') {
 
                 $featureImage = '';
                 if (isset($_FILES['gallery'])) {
-
                     require_once MODULES . 'galleryUploader.php';
-                    $featureImage = $gallery[0]['path'];
-                    if ($gallery != '') {
-                        $isGalleryUpdate = TRUE;
+
+                    // Make sure $gallery is properly initialized and is an array
+                    if (isset($gallery) && is_array($gallery) && isset($gallery[0]['path'])) {
+                        $featureImage = $gallery[0]['path'];
+                        $isGalleryUpdate = true;
                     } else {
+                        $featureImage = '';
+                        $isGalleryUpdate = false;
                     }
                 }
 
