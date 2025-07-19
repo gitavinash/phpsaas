@@ -248,7 +248,7 @@ if (isset($_COOKIE['user_data'])) {
                 <li><a href="/category/to-the-point/"
                         <?php echo ((BASE_URL == '/category/to-the-point/') ? 'class="active"' : '') ?>
                         title="To-The-Point">To-The-Point</a></li>
-                <li><a href="/category/news/" <?php echo ((BASE_URL == '/category/news/') ? 'class="active"' : '') ?>
+                <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
                         title="News">News</a></li>
                 <li><a href="/category/money-trivia/"
                         <?php echo ((BASE_URL == '/category/money-trivia/') ? 'class="active"' : '') ?>
