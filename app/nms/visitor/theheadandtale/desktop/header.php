@@ -242,23 +242,19 @@ if (isset($_COOKIE['user_data'])) {
                 <?php
 
                 if (SITE_ID == 49) { ?>
-                <li><a href="/category/deep-tales/"
-                        <?php echo ((BASE_URL == '/category/deep-tales/') ? 'class="active"' : '') ?>
-                        title="Deep-Tales">Deep-Tales</a></li>
-                <li><a href="/category/to-the-point/"
-                        <?php echo ((BASE_URL == '/category/to-the-point/') ? 'class="active"' : '') ?>
-                        title="To-The-Point">To-The-Point</a></li>
+                <li><a href="deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
+                        title="Deep-Tales">Deepdives</a></li>
+                <li><a href="/to-the-point/" <?php echo ((BASE_URL == '/to-the-point/') ? 'class="active"' : '') ?>
+                        title="To-The-Point">Explainer</a></li>
                 <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
                         title="News">News</a></li>
-                <li><a href="/category/money-trivia/"
-                        <?php echo ((BASE_URL == '/category/money-trivia/') ? 'class="active"' : '') ?>
-                        title="Money-Trivia">Money-Trivia</a></li>
-                <li><a href="/category/report/" title="Report"
-                        <?php echo ((BASE_URL == '/category/report/') ? 'class="active"' : '') ?>
-                        class="disable">Report</a></li>
                 <li><a href="/ai-emerging-tech/" title="Report"
                         <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
                 </li>
+                <li><a href="money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
+                        title="Money-Trivia">Money Trivia</a></li>
+                <li><a href="report/" title="Report" <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>
+                        class="disable">Report</a></li>
                 <?php
                 }
 
