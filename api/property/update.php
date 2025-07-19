@@ -14,20 +14,21 @@ if ($name != '') {
         if ($checkProperty = mysqli_query($connection, "SELECT property_gallery FROM " . TABLE_PREFIX . "property WHERE property_id={$id} AND property_site_id=" . SITE_ID)) {
             if (mysqli_num_rows($checkProperty) != 0) {
                 extract(mysqli_fetch_assoc($checkProperty));
-                require_once MODULES . 'imageUploader.php';
+                // require_once MODULES . 'imageUploader.php';
 
-                if (!isset($featureImage)) {
-                    /** if feature image is not upload then set featureImage as blank */
-                    $featureImage = $oldFeatureImage;
-                }
+                // if (!isset($featureImage)) {
+                //     /** if feature image is not upload then set featureImage as blank */
+                //     $featureImage = $oldFeatureImage;
+                // }
 
+                $featureImage = '';
                 if (isset($_FILES['gallery'])) {
 
                     require_once MODULES . 'galleryUploader.php';
-
+                    $featureImage = $gallery[0]['path'];
                     if ($gallery != '') {
-
                         $isGalleryUpdate = TRUE;
+                    } else {
                     }
                 }
 
@@ -58,7 +59,14 @@ if ($name != '') {
 
                 if ($checkProperty = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property WHERE property_id='{$id}'")) {
                     if (mysqli_num_rows($checkProperty) != 0) {
-                        if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "property SET property_thumbnail='{$featureImage}', property_gallery='{$newPropertyGallery}', property_title='{$name}', property_email='{$email}', property_mobile='{$mobile}', property_description='{$description}', property_address='{$address}', property_city='{$city}', property_pincode='{$pinCode}', property_map_url='{$mapUrl}', property_type='{$type}', property_support_email='{$supportEmail}', property_support_mobile='{$supportMobile}' WHERE property_id='{$id}' AND property_site_id=" . SITE_ID)) {
+
+
+                        $propertyDetails = array_map('trim', explode(',', $city));
+                        $propertyCountry = end($propertyDetails);
+                        $propertyState = prev($propertyDetails);
+                        $propertyCity = $city;
+
+                        if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "property SET property_thumbnail='{$featureImage}', property_gallery='{$newPropertyGallery}', property_title='{$name}', property_email='{$email}', property_mobile='{$mobile}', property_description='{$description}', property_address='{$address}', property_city='{$propertyCity}', property_state='{$propertyState}', property_country='{$propertyCountry}', property_pincode='{$pinCode}', property_map_url='{$mapUrl}', property_type='{$type}', property_support_email='{$supportEmail}', property_support_mobile='{$supportMobile}' WHERE property_id='{$id}' AND property_site_id=" . SITE_ID)) {
                             $responseCode = 200;
                             $status = 'success';
                             $msg = 'Property update successfully';

@@ -1152,4 +1152,53 @@ $(document).ready(function () {
       },
     });
   });
+
+  $(document).on("click", ".addHotelToPackage", function (e) {
+    e.preventDefault();
+
+    const $btn = $(this);
+    const $container = $btn.closest(".showOnHoverBox");
+    const nightVal = $container.find(".night").val();
+    const roomTypeVal = $container.find(".roomType").val();
+    const hotelId = $btn.data("hotel-id");
+    const tourId = $btn.data("tour-id");
+
+    if (!nightVal || nightVal === "#") {
+      alert("⚠️ Please select a valid night category before adding.");
+      return;
+    }
+    if (!roomTypeVal || roomTypeVal === "#") {
+      alert("⚠️ Please select a valid room type before adding.");
+      return;
+    }
+
+    $btn.prop("disabled", true).text("Adding...");
+
+    $.ajax({
+      type: "POST",
+      url: "/api/property/add-hotel-to-package/",
+      data: {
+        property_id: hotelId,
+        tour_id: tourId,
+        roomType: roomTypeVal,
+        night: nightVal,
+      },
+      success: function (response) {
+        console.log(response);
+        popUpMessage("center", response.msg, response.status);
+      },
+      error: function (error) {
+        console.log(`error`, error);
+
+        popUpMessage(
+          "center",
+          error.responseJSON.msg,
+          error.responseJSON.status
+        );
+      },
+      complete: function () {
+        $btn.prop("disabled", false).text("Add to package");
+      },
+    });
+  });
 });

@@ -858,9 +858,8 @@ $("#submitVisaApplicationFormBtn").on("click", function (e) {
 
       setTimeout(function () {
         window.location.href =
-          "/shipping/?id=MTMxNTM=" +
-          btoa(res.applicationId || applicationId) +
-          "&redirect_url=/thank-you/";
+          "/generate-order/?id=MTMxNTM=" +
+          btoa(res.applicationId || applicationId);
       }, 1500);
 
       $btn.prop("disabled", false);

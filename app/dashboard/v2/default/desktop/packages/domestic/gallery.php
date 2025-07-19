@@ -40,7 +40,9 @@ if ($galleryData = mysqli_query($connection, $query)) {
                     <div class='editGallery galleryImageBox setAsFeaturedBox' >
                         <img src='" . (($path != '') ?
                         $path : ADMIN_IMAGES . 'default-picture.png') . "' >
-                        <a href='#' class='btn setGalleryFeatureImage' data-id='{$gallery_id}' data-category='{$id}' data-image='{$path}'>Set as Featured</a>
+                        <div class='showOnHoverBox'>
+                            <a href='#' class='btn setGalleryFeatureImage' data-id='{$gallery_id}' data-category='{$id}' data-image='{$path}'>Set as Featured</a>
+                        </div>
                     </div>
                     ";
                 }

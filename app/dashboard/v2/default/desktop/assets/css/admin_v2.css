@@ -3612,11 +3612,11 @@ button:disabled {
 .setAsFeaturedBox {
   float: left;
 }
-.setAsFeaturedBox a {
+.setAsFeaturedBox .showOnHoverBox {
   display: none;
 }
 
-.setAsFeaturedBox:hover a {
+.setAsFeaturedBox:hover .showOnHoverBox {
   display: block;
   box-sizing: border-box;
   margin: 0px 5%;
