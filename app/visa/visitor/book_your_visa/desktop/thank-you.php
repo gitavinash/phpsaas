@@ -2,7 +2,14 @@
 
 require_once 'header.php';
 
-if ($_GET['application_id']) { ?>
+if ($_GET['id']) {
+
+    $transaction_id = base64_decode($id);
+
+    if ($checkTransaction = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "transaction WHERE transaction_order_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID . " ORDER BY transaction_status ASC")) {
+        if (mysqli_num_rows($checkTransaction) != 0) {
+            extract(mysqli_fetch_assoc($checkTransaction));
+            if ($transaction_status == 1) { ?>
 <main class="flex-grow pt-32 pb-20">
     <div class="container mx-auto px-4 max-w-4xl">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -32,12 +39,12 @@ if ($_GET['application_id']) { ?>
                             <div class="flex justify-between py-2 border-b border-gray-200">
                                 <span class="text-gray-600">Application Id</span>
                                 <span class="font-medium text-gray-800"
-                                    id="applicationId">BYV00<?php echo base64_decode($_GET['application_id']) ?></span>
+                                    id="applicationId">BYV00<?php echo $transaction_order_id ?></span>
                             </div>
                             <div class="flex justify-between py-2 border-b border-gray-200">
                                 <span class="text-gray-600">Submission Date</span>
-                                <span class="font-medium text-gray-800" id="submissionDate"><?php echo date('F j, Y h:i A');
-                                                                                                ?></span>
+                                <span class="font-medium text-gray-800" id="submissionDate"><?php echo date('F j, Y h:i A', strtotime($transaction_time));
+                                                                                                            ?></span>
                             </div>
                             <div class="flex justify-between py-2 border-b border-gray-200">
                                 <span class="text-gray-600">Status</span>
@@ -53,17 +60,6 @@ if ($_GET['application_id']) { ?>
                     <div class="bg-blue-50 rounded-xl p-6 mb-8">
                         <h3 class="font-semibold text-gray-800 mb-4">Next Steps</h3>
                         <div class="space-y-4">
-                            <div class="flex items-start">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="ri-mail-line text-primary"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <h4 class="font-medium text-gray-800 mb-1">Check Your Email</h4>
-                                    <p class="text-gray-600">We've sent a confirmation email with important details
-                                        about your application.</p>
-                                </div>
-                            </div>
                             <div class="flex items-start">
                                 <div
                                     class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1">
@@ -105,7 +101,7 @@ if ($_GET['application_id']) { ?>
     </div>
 </main>
 <?php
-} else { ?>
+            } else { ?>
 
 <main class="flex-grow pt-32 pb-20">
     <div class="container mx-auto px-4 max-w-4xl">
@@ -146,10 +142,10 @@ if ($_GET['application_id']) { ?>
         </div>
     </div>
 </main>
-
 <?php
+            }
+        }
+    }
 }
 
 require_once 'footer.php';
-
-?>

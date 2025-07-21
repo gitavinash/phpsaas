@@ -4,11 +4,7 @@ require_once 'razorpay.php';
 
 use Razorpay\Api\Api;
 
-if (DEVELOPMENT_MODE == true) {
-    $api = new Api('rzp_test_SlTp7CvMID2Qpi', 'uAHUdlwZnnE8YaTUsYSHAcoR');
-} else {
-    $api = new Api(PG_KEY_ID, PG_KEY_SECRET);
-}
+$api = new Api(PG_KEY_ID, PG_KEY_SECRET);
 
 /** Start payment gateway code */
 

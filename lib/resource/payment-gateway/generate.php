@@ -51,7 +51,6 @@ if (isset($id)) {
                     INNER JOIN isw_visa_country ON visa_country_id=visa_package_country_id AND visa_country_site_id=" . SITE_ID . "
                     WHERE
                         transaction_id = {$id} AND transaction_site_id = " . SITE_ID;
-
             break;
 
         default:
