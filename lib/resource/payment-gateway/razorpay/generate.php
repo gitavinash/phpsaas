@@ -4,13 +4,17 @@ require_once 'razorpay.php';
 
 use Razorpay\Api\Api;
 
-$api = new Api(PG_KEY_ID, PG_KEY_SECRET);
+if (DEVELOPMENT_MODE == true) {
+    $api = new Api('rzp_test_SlTp7CvMID2Qpi', 'uAHUdlwZnnE8YaTUsYSHAcoR');
+} else {
+    $api = new Api(PG_KEY_ID, PG_KEY_SECRET);
+}
 
 /** Start payment gateway code */
 
 $orderData = [
     'receipt' => 'OD' . $order_id,
-    'amount' => $order_total_price * 100,
+    'amount' => (float)$order_total_price * 100,
     'currency' => $cart_currency,
     'payment_capture' => 1
 ];

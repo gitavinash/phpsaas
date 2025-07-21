@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $query = "UPDATE {$tableNamePrefix}application SET visa_application_data='" . mysqli_real_escape_string($connection, $combinedJson) . "' WHERE visa_application_id='{$application_id}' AND visa_application_user_id=" . USER_ID . " AND visa_application_site_id=" . SITE_ID;
     } else {
-        $query = "INSERT INTO {$tableNamePrefix}application (visa_application_site_id, visa_application_user_id, visa_application_package_id, visa_application_data, visa_application_status, visa_application_time) VALUES ('" . SITE_ID . "', '" . USER_ID . "', '{$package_id}', '" . mysqli_real_escape_string($connection, $rawData) . "', 0, NOW())";
+        $query = "INSERT INTO {$tableNamePrefix}application (visa_application_site_id, visa_application_user_id, visa_application_package_id, visa_application_persons, visa_application_data, visa_application_status, visa_application_time) VALUES ('" . SITE_ID . "', '" . USER_ID . "', '{$package_id}', '{$totalPersons}', '" . mysqli_real_escape_string($connection, $rawData) . "', 0, NOW())";
     }
 
     if (mysqli_query($connection, $query)) {

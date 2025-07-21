@@ -658,6 +658,11 @@ function saveVisaApplicationDraft(data, stepNumber) {
     }
 
     fd.append(
+      "totalPersons",
+      JSON.parse(localStorage.getItem("personsData")).length
+    );
+
+    fd.append(
       "personsData",
       JSON.stringify(localStorage.getItem("personsData"))
     ); // data should be a JSON string
@@ -857,9 +862,7 @@ $("#submitVisaApplicationFormBtn").on("click", function (e) {
       popUpMessage("center", res.msg, res.status);
 
       setTimeout(function () {
-        window.location.href =
-          "/generate-order/?id=MTMxNTM=" +
-          btoa(res.applicationId || applicationId);
+        window.location.href = "/generate-order/?id=" + applicationId;
       }, 1500);
 
       $btn.prop("disabled", false);
