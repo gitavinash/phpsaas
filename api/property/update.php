@@ -52,8 +52,7 @@ if ($name != '') {
 
                 /** Update old gallery */
 
-                if (isset($isGalleryUpdate)) {
-
+                if (isset($images)) {
                     $newPropertyGallery = array_merge($newPropertyGallery, $images);
                 }
 
