@@ -5,7 +5,7 @@ require_once LOGIN_CHECK;
 $applicationId = base64_decode($id);
 $orderType = 'visa_application';
 
-if ($checkApplication = mysqli_query($connection, "SELECT visa_country_title, visa_application_persons, visa_package_goverment_fee, visa_package_price, visa_package_mrp, visa_application_time, visa_application_update FROM " . TABLE_PREFIX . "visa_application INNER JOIN " . TABLE_PREFIX . "visa_package ON visa_package_id=visa_application_package_id INNER JOIN " . TABLE_PREFIX . "visa_country ON visa_country_id=visa_package_country_id WHERE visa_application_id={$applicationId} AND visa_application_user_id='" . USER_ID . "' AND visa_application_site_id=" . SITE_ID)) {
+if ($checkApplication = mysqli_query($connection, "SELECT visa_package_id, visa_country_title, visa_application_persons, visa_package_goverment_fee, visa_package_price, visa_package_mrp, visa_application_time, visa_application_update FROM " . TABLE_PREFIX . "visa_application INNER JOIN " . TABLE_PREFIX . "visa_package ON visa_package_id=visa_application_package_id INNER JOIN " . TABLE_PREFIX . "visa_country ON visa_country_id=visa_package_country_id WHERE visa_application_id={$applicationId} AND visa_application_user_id='" . USER_ID . "' AND visa_application_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkApplication) != 0) {
 
         extract(mysqli_fetch_assoc($checkApplication));
@@ -22,11 +22,11 @@ if ($checkApplication = mysqli_query($connection, "SELECT visa_country_title, vi
 
         if ($checkOrder = mysqli_query($connection, "SELECT order_id FROM " . TABLE_PREFIX . "order WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "' AND order_status!=1")) {
             if (mysqli_num_rows($checkOrder) == 0) {
-                $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_product_type, order_status, order_generate, order_payment_mode) VALUES(" . SITE_ID . ", " . USER_ID . ", '" . SESSION_ID . "', '{$totalPrice}', '{$orderType}', 0, NOW(), 'online')");
+                $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_product_id, order_product_type, order_status, order_generate, order_payment_mode) VALUES(" . SITE_ID . ", " . USER_ID . ", '" . SESSION_ID . "', '{$totalPrice}', '{$visa_package_id}', '{$orderType}', 0, NOW(), 'online')");
                 $order_id = mysqli_insert_id($connection);
             } else {
                 extract(mysqli_fetch_assoc($checkOrder));
-                $addNewOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_product_price='{$totalPrice}' WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "'");
+                $addNewOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_product_id='{$visa_package_id}', order_product_price='{$totalPrice}' WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "'");
             }
         }
 

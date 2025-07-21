@@ -34,6 +34,8 @@
                             class="text-gray-400 hover:text-white">Travel Agent Registration</a></li>
                     <li><a href="/contact-us/" data-readdy="true" class="text-gray-400 hover:text-white">Contact Us</a>
                     </li>
+                    <li><a href="/blog/" data-readdy="true" class="text-gray-400 hover:text-white">Blog</a>
+                    </li>
                 </ul>
             </div>
             <div>

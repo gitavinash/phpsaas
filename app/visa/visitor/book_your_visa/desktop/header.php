@@ -61,6 +61,8 @@
                             <li><a href="/travel-agent-registration/" data-readdy="true"
                                     class="text-gray-700 hover:text-primary">Travel Agent
                                     Registration</a></li>
+                            <li><a href="/blogs/" data-readdy="true" class="text-gray-700 hover:text-primary">Blog</a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
