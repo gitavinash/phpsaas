@@ -100,8 +100,12 @@ if ($checkQuote = mysqli_query($connection, $query)) {
         // 3. Convert to comma-separated strings for IN clause
         $hotelIdsIn = implode(',', array_map('intval', $hotelIds));
         $roomIdsIn = implode(',', array_map('intval', $roomIds));
+
+        $hotelRoomMap = [];
+
         // 4. Run optimized single query
-        $query = "
+        if ($hotelIdsIn != '') {
+            $query = "
     SELECT 
         property_id,
         property_title, 
@@ -119,16 +123,15 @@ if ($checkQuote = mysqli_query($connection, $query)) {
     WHERE tph_hotel_id IN ($hotelIdsIn) 
       AND tph_room_type_id IN ($roomIdsIn)
 ";
-
-        // Execute query
-        $result = mysqli_query($connection, $query);
-        $hotelRoomMap = [];
-
-        $i = 0;
-        while ($row = mysqli_fetch_assoc($result)) {
-            $key = $i;
-            $hotelRoomMap[$key] = $row;
-            $i++;
+            // Execute query
+            $result = mysqli_query($connection, $query);
+            $i = 0;
+            while ($row = mysqli_fetch_assoc($result)) {
+                $key = $i;
+                $hotelRoomMap[$key] = $row;
+                $i++;
+            }
+        } else {
         }
     } else {
         die("Quotation not found or inactive.");
