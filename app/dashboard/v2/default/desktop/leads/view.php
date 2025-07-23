@@ -74,10 +74,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                             echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
                             history</a>";
                         }
-                        ?>
-                        <a id="paymentDetailsBtn" class="btn detailsBtn"><i class="fi-rr-money-check"></i> Payment
-                            history</a>
-                        <?php
+                        if (USER_TYPE != 'receiption') {
+                            echo "<a id='paymentDetailsBtn' class='btn detailsBtn'><i class='fi-rr-money-check'></i> Payment
+                            history</a>";
+                        }
 
                         if ($enquiry_status != 5) { ?>
                         <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i
