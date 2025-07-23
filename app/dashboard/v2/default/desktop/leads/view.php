@@ -74,7 +74,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                             echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
                             history</a>";
                         }
-                        if (USER_TYPE != 'receiption') {
+                        if (USER_TYPE != 'acharya') {
                             echo "<a id='paymentDetailsBtn' class='btn detailsBtn'><i class='fi-rr-money-check'></i> Payment
                             history</a>";
                         }
