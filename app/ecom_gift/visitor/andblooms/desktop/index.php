@@ -2,15 +2,13 @@
 
 require_once 'header.php';
 
-?>
-
-<?php
-if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slide_site_id=" . SITE_ID . " ORDER BY slide_update DESC")) {
+if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slider_device='" . SITE_VERSION . "' AND slide_site_id=" . SITE_ID . " ORDER BY slide_update DESC")) {
 
     if (mysqli_num_rows($checkSlider) != 0) {
 ?>
 <!-- Hero Section -->
-<section class="relative h-screen w-full overflow-hidden z-[50]">
+<section
+    class="relative h-screen w-full overflow-hidden z-[50] max-h-[380px] md:max-h-[550px] float-left mt-[4.5em] mb-[2em]">
     <div class="slider-container relative w-full h-full transition-transform duration-500" id="heroSlider">
         <?php
                 $slideIndex = 0;
@@ -24,26 +22,28 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                     // Assign slide class
                     $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
                 ?>
-        <div class="slide absolute inset-0 bg-cover bg-center <?php echo $slideClass ?>"
-            style="background-image: url('<?php echo $bgImage ?>')">
-            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <div class="text-center px-6 w-full">
-                    <h1 class="text-4xl md:text-6xl text-white font-medium mb-6 leading-tight">
-                        <?php echo nl2br($title) ?>
-                    </h1>
-                    <p class="text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                        <?php echo nl2br($subtitle) ?>
-                    </p>
-                    <?php if (!empty($btnText) && !empty($btnUrl)): ?>
-                    <a href="<?php echo $btnUrl ?>"
-                        class="inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap">
-                        <?php echo $btnText ?>
-                    </a>
-                    <?php endif; ?>
+        <a href="<?php echo $btnUrl ?>" title="<?php echo $title ?>">
+            <div class="slide absolute inset-0 bg-cover bg-left bg-no-repeat <?php echo $slideClass ?>"
+                style="background-image: url('<?php echo $bgImage ?>')">
+                <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="text-center px-6 w-full">
+                        <h1 class="text-4xl md:text-6xl text-white font-medium mb-6 leading-tight">
+                            <?php echo nl2br($title) ?>
+                        </h1>
+                        <p class="text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+                            <?php echo nl2br($subtitle) ?>
+                        </p>
+                        <?php if (!empty($btnText) && !empty($btnUrl)): ?>
+                        <a href="<?php echo $btnUrl ?>"
+                            class="inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap">
+                            <?php echo $btnText ?>
+                        </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
         <?php
                     $slideIndex++;
                 }

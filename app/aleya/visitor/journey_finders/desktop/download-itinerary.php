@@ -352,7 +352,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                     <div class="flex items-start">
                         <img
                         src="' . $hotelRoomMap[$j]['property_thumbnail'] . '"
-                        alt="Melia Vinpearl Da Nang"
+                        alt="' . $hotelRoomMap[$j]['property_title'] . '"
                         class="w-32 h-24 object-cover rounded mr-4"
                         />
                         <div class="flex-1">
