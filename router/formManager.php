@@ -1,34 +1,29 @@
 <?php
 
-	// Call form manager only for visitor area
+// Call form manager only for visitor area
 
-	if((strpos(BASE_URL, '/dashboard/') !== FALSE)) {
+if ((strpos(BASE_URL, '/dashboard/') !== FALSE)) {
 
-		// Manage Dashboard v1 actions
+	// Manage Dashboard v1 actions
 
-		if(isset($action)) {
+	if (isset($action)) {
 
-			$requestFile=ROUTER.'request/'.strtolower($_SERVER['REQUEST_METHOD']).'.php';
-		
-			if(file_exists($requestFile)) {
+		$requestFile = ROUTER . 'request/' . strtolower($_SERVER['REQUEST_METHOD']) . '.php';
 
-				require_once $requestFile;
-
-			}
-			
-			exit();
-
-		}
-
-	} else {
-
-		$requestFile=ROUTER.'request/'.strtolower($_SERVER['REQUEST_METHOD']).'.php';
-		
-		if(file_exists($requestFile)) {
+		if (file_exists($requestFile)) {
 
 			require_once $requestFile;
-
 		}
-		exit();
 
+		exit();
 	}
+} else {
+
+	$requestFile = ROUTER . 'request/' . strtolower($_SERVER['REQUEST_METHOD']) . '.php';
+
+	if (file_exists($requestFile)) {
+
+		require_once $requestFile;
+	}
+	exit();
+}
