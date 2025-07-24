@@ -8,7 +8,7 @@ require_once 'header.php';
         <div class="container">
             <?php
 
-            if ($newsArticles = mysqli_query($connection, "SELECT link_is_featured, link_modified, news_title, news_image, news_description, news_paid, link_url, link_published, meta_description 
+            if ($newsArticles = mysqli_query($connection, "SELECT link_is_featured, link_modified, news_title, news_image, news_description, news_paid, link_url, news_time as link_published, meta_description 
 FROM " . TABLE_PREFIX . "news 
 INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id 
 INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
