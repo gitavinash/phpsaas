@@ -16,7 +16,7 @@ WHERE link_type = 'news'
 AND link_status = 200 
 AND news_category IN (201, 202)
 AND link_site_id = " . SITE_ID . "
-ORDER BY link_is_featured DESC, link_published DESC
+ORDER BY link_is_featured DESC, news_time DESC
 LIMIT 0, 100")) {
 
                 if (mysqli_num_rows($newsArticles) != 0) {
