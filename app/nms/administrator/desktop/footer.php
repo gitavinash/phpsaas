@@ -42,7 +42,7 @@ $(window).bind('beforeunload', function() {
 
 			if (isset($_GET['type'])) {
 
-				if (in_array($_GET['type'], ['list', 'sessions', 'subscriber'])) { ?>
+				if (in_array($_GET['type'], ['list', 'sessions', 'subscriber', 'all-subscriber'])) { ?>
 
 			<script type='text/javascript'>
 $(document).ready(function() {

@@ -101,6 +101,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
                             <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Manage
                                     Subscribers</a></li>
+                            <li><a href="subscription/?type=all-subscriber"><i class="fas fa-users"></i>Manage
+                                    All Subscribers</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -112,6 +114,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
                             <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Manage
                                     Subscribers</a></li>
+                            <li><a href="subscription/?type=all-subscriber"><i class="fas fa-users"></i>Manage
+                                    All Subscribers</a></li>
                         </ul>
                     </div>
                 </li>

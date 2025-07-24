@@ -15,6 +15,7 @@ function subscriptionactive1month($connection, $data)
             if (mysqli_num_rows($checkUser) != 0) {
 
                 if ($checkSubscription = mysqli_query($connection, "SELECT subscription_id FROM " . TABLE_PREFIX . "subscription WHERE subscription_user_id='{$id}' AND subscription_status=1 AND subscription_site_id=" . SITE_ID)) {
+                    $currentTime = time();
                     $subscriptionExpiry = date('Y-m-d 23:59:59', strtotime('+1 month'));
                     if (mysqli_num_rows($checkSubscription) != 0) {
                         extract(mysqli_fetch_assoc($checkSubscription));
@@ -27,12 +28,13 @@ function subscriptionactive1month($connection, $data)
                             mysqli_query($connection, "ROLLBACK");
                         }
                     } else {
-                        if ($deleteSubscription = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status, subscription_time, subscription_expiry) VALUES(" . SITE_ID . ", '{$id}', '{$subscriptionProductId}', 'month', 'product), 1, time(), '{$subscriptionExpiry}'")) {
+
+                        if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_site_id, subscription_user_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status, subscription_time, subscription_expiry) VALUES(" . SITE_ID . ", '{$id}', '{$subscriptionProductId}', 'month', 'product', 1, '{$currentTime}', '{$subscriptionExpiry}')")) {
                             $status = 200;
                             $msg = 'New subscription created successfully';
                             mysqli_query($connection, "COMMIT");
                         } else {
-                            $msg = 'Something is wrong while creating user subscription';
+                            $msg = ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : 'Something is wrong while creating user subscription');
                             mysqli_query($connection, "ROLLBACK");
                         }
                     }
@@ -55,6 +57,7 @@ function subscriptionactive1month($connection, $data)
 
     $result = array(
         'status' => (isset($status)) ? $status : 'error',
+        'label' => 'Confirm',
         'msg' => ((isset($msg)) ? $msg : 'Invalid response')
     );
 
