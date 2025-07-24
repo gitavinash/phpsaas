@@ -99,7 +99,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="subscription/?type=add&editor=true"><i class="fas fa-plus"></i>Add New
                                     Subscription</a></li>
                             <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Subscriber</a></li>
+                            <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Manage
+                                    Subscribers</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -109,7 +110,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="subscription/?type=add&editor=true"><i class="fas fa-plus"></i>Add New
                                     Subscription</a></li>
                             <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Subscriber</a></li>
+                            <li><a href="subscription/?type=subscriber"><i class="fas fa-users"></i>Manage
+                                    Subscribers</a></li>
                         </ul>
                     </div>
                 </li>
@@ -159,23 +161,25 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 
                 if ($site_access_type == 'administrator') { ?>
 
-                    <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
-                        <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
-                                </li>
-                                <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
-                                </li>
-                                <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
+                    <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                            <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                            <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <?php
                 }
 

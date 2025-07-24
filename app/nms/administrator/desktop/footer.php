@@ -42,7 +42,7 @@ $(window).bind('beforeunload', function() {
 
 			if (isset($_GET['type'])) {
 
-				if ($_GET['type'] == 'list') { ?>
+				if (in_array($_GET['type'], ['list', 'sessions', 'subscriber'])) { ?>
 
 			<script type='text/javascript'>
 $(document).ready(function() {
@@ -56,7 +56,12 @@ $(document).ready(function() {
             } else if (data[6] == "Cancel") {
                 $(row).css({
                     "background-color": "#C70039",
-                    "color": "#333"
+                    "color": "#fff"
+                })
+            } else if (data[2] == "No") {
+                $(row).css({
+                    "background-color": "#C70039",
+                    "color": "#fff"
                 })
             } else if (data[6] == "Delivered") {
                 $(row).css({
