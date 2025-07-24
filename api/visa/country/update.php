@@ -89,6 +89,10 @@ if (isset($validRequest)) {
         $featureImage = '';
     }
 
+    if ($featureImage == '') {
+        $featureImage = $oldFeatureImage;
+    }
+
     if ($updateCountry = mysqli_query($connection, "UPDATE {$tableNamePrefix}country SET visa_country_title='{$name}', visa_country_code='{$code}', visa_country_documents='{$requirements}', visa_country_information='{$information}', visa_country_image='{$featureImage}', visa_country_faq='{$faqs}', visa_country_services='{$visaTypes}', visa_country_is_featured='{$isFeatured}' WHERE visa_country_id='{$countryId}' AND visa_country_site_id=" . SITE_ID)) {
         $httpStatus = 201;
         $status = 'success';

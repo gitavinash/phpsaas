@@ -135,6 +135,7 @@ $(document).ready(function () {
       var documentRequired = $("#requirements").text().trim();
       var importantInformation = $("#information").text().trim();
       var faqs = $("#faq").text().trim();
+      const oldGallery = $("#oldGallery").text().trim();
 
       // Collect selected visa types
       var visaTypes = [];
@@ -191,7 +192,10 @@ $(document).ready(function () {
       var fileInput = document.getElementById("fileInput");
       var selectedFiles = fileInput.files;
 
-      if (selectedFiles.length === 0) {
+      console.log(`selectedFiles.length:`, selectedFiles.length);
+      console.log(`oldGallery:`, oldGallery);
+
+      if (selectedFiles.length === 0 && oldGallery == "") {
         popUpMessage(
           "center",
           "Please upload a country feature image.",
@@ -212,6 +216,7 @@ $(document).ready(function () {
       formData.append("faqs", faqs);
       formData.append("visaTypes", JSON.stringify(visaTypes));
       formData.append("isFeatured", isFeaturedValue);
+      formData.append("oldFeatureImage", oldGallery);
       formData.append("id", $("#countryId").val().trim());
       formData.append("featureImage", selectedFiles[0]); // Append image
 
