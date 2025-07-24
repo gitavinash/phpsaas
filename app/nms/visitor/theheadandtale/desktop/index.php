@@ -1,124 +1,104 @@
-<?php
+<?php require_once 'header.php'; ?>
 
-require_once 'header.php';
-
-?>
 <section>
     <div class="row">
         <div class="container">
+
             <?php
+            $latestNewsData = [];
 
-            if ($newsArticles = mysqli_query($connection, "SELECT link_is_featured, link_modified, news_title, news_image, news_description, news_paid, link_url, news_time, meta_description 
-FROM " . TABLE_PREFIX . "news 
-INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id 
-INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
-WHERE link_type = 'news' 
-AND link_status = 200 
-AND news_category IN (201, 202)
-AND link_site_id = " . SITE_ID . "
-ORDER BY link_is_featured DESC, news_time DESC
-LIMIT 0, 100")) {
+            // Optimized query
+            $query = "
+                SELECT 
+                    link_is_featured, 
+                    link_modified, 
+                    news_title, 
+                    news_image, 
+                    news_description, 
+                    news_paid, 
+                    link_url, 
+                    news_time, 
+                    meta_description 
+                FROM " . TABLE_PREFIX . "news 
+                INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id 
+                INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
+                WHERE 
+                    link_type = 'news' 
+                    AND link_status = 200 
+                    AND news_category IN (201, 202) 
+                    AND link_site_id = " . SITE_ID . "
+                ORDER BY 
+                    link_is_featured DESC, 
+                    news_time DESC
+                LIMIT 100";
 
-                if (mysqli_num_rows($newsArticles) != 0) {
-                    $latestNewsData = [];
-                    define('TOTAL_PAGE', round(mysqli_num_rows($newsArticles) / PER_PAGE_LIMIT));
-                    define('TOTAL_RESULT', mysqli_num_rows($newsArticles));
-                    while ($newsData = mysqli_fetch_assoc($newsArticles)) {
-                        $latestNewsData[] = $newsData;
-                    }
+            $result = mysqli_query($connection, $query);
+
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $latestNewsData[] = $row;
                 }
-            } else {
 
-                echo mysqli_error($connection);
-                exit();
+                define('TOTAL_RESULT', count($latestNewsData));
+                define('TOTAL_PAGE', ceil(TOTAL_RESULT / PER_PAGE_LIMIT));
+            } else {
+                echo "<p>Error loading news: " . mysqli_error($connection) . "</p>";
             }
 
+            // Helper function to render news card
+            function renderNewsCard($data)
+            {
+                $premiumBadge = $data['news_paid'] == 1
+                    ? "<img src='" . USER_IMAGES . "premium.png' alt='Premium' />"
+                    : '';
+
+                $formattedDate = date('d M Y, h:i A', strtotime($data['news_time']));
+                $newsImage = htmlspecialchars($data['news_image']);
+                $newsTitle = htmlspecialchars($data['news_title']);
+                $newsUrl = htmlspecialchars($data['link_url']);
+                $metaDescription = htmlspecialchars($data['meta_description']);
+
+                echo "
+                <div class='news_box'>
+                    <a href='{$newsUrl}' target='_blank'>
+                        <div class='feature_image'>
+                            <img src='{$newsImage}' alt='{$newsTitle}'>
+                            {$premiumBadge}
+                        </div>
+                        <div class='news_intro'>
+                            <h2>{$newsTitle}</h2>
+                            <p><span>{$formattedDate}</span></p>
+                            <p>{$metaDescription}</p>
+                        </div>
+                    </a>
+                </div>";
+            }
             ?>
+
+            <!-- Featured Article -->
             <div class="featureArticle">
-                <?php
-                for ($i = 0; $i < 1; $i++) {
-                    if (isset($latestNewsData[$i])) {
-                        extract($latestNewsData[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
-                                        <div class='feature_image'>
-                                            <img src='{$news_image}' alt='{$news_title}'>
-                                            " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
-        </div>
-        <div class='news_intro'>
-            <h2>{$news_title}</h2>
-            <p><span>
-                    " . date('d M Y, h:i A', strtotime($news_time)) . "
-            </span></p>
-            <p>{$meta_description}</p>
-        </div>
-        </a></div>";
-                    }
-                }
-                ?>
+                <?php if (!empty($latestNewsData[0])) renderNewsCard($latestNewsData[0]); ?>
             </div>
+
+            <!-- Left News Container -->
             <div class="left-container">
                 <?php
-
-                for ($i = 1; $i < 5; $i++) {
-                    if (isset($latestNewsData[$i])) {
-                        extract($latestNewsData[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
-                                        <div class='feature_image'>
-                                            <img src='{$news_image}' alt='{$news_title}'>
-                                            " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
-        </div>
-        <div class='news_intro'>
-            <h2>{$news_title}</h2>
-            <p><span>
-                    " . date('d M Y, h:i A', strtotime($news_time)) . "
-            </span></p>
-            <p>{$meta_description}</p>
-        </div>
-        </a></div>";
-                    }
+                // Show next 4 articles
+                for ($i = 1; $i < min(5, TOTAL_RESULT); $i++) {
+                    renderNewsCard($latestNewsData[$i]);
                 }
 
-                // Youtube section
-
-
-                // Rest 5-10 news articles
-
-                for ($i = 5; $i < 20; $i++) {
-                    if (isset($latestNewsData[$i])) {
-                        extract($latestNewsData[$i]);
-                        echo "<div class='news_box'><a href='{$link_url}' target='_blank'>
-                                        <div class='feature_image'>
-                                            <img src='{$news_image}' alt='{$news_title}'>
-                                            " . (($news_paid == 1) ? "<img src='" . USER_IMAGES . "premium.png' />" : "") . "
-        </div>
-        <div class='news_intro'>
-            <h2>{$news_title}</h2>
-            <p><span>
-                    " . date('d M Y, h:i A', strtotime($news_time)) . "
-            </span></p>
-            <p>{$meta_description}</p>
-        </div>
-        </a></div>";
-                    }
+                // Show remaining articles up to 20
+                for ($i = 5; $i < min(20, TOTAL_RESULT); $i++) {
+                    renderNewsCard($latestNewsData[$i]);
                 }
                 ?>
-                <!-- <?php
-
-                        require_once 'pagination.php';
-
-                        ?> -->
             </div>
-            <?php
 
-            require_once 'sidebar.php';
-
-            ?>
+            <!-- Sidebar -->
+            <?php require_once 'sidebar.php'; ?>
         </div>
     </div>
-    </div>
 </section>
-<?php
 
-require_once 'footer.php';
-
-?>
+<?php require_once 'footer.php'; ?>
