@@ -73,7 +73,6 @@ $(document).ready(function () {
           "Please upload a country feature image.",
           "error"
         );
-        fileInput.click();
         return;
       }
 
@@ -198,7 +197,6 @@ $(document).ready(function () {
           "Please upload a country feature image.",
           "error"
         );
-        fileInput.click();
         return;
       }
 

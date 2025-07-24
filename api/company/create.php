@@ -43,12 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($msg == "") {
 
+        require_once MODULES . 'imageUploader.php';
+
+        if (!isset($image['featureImage'])) {
+            $featureImage = '';
+        }
+
         mysqli_query($connection, "START TRANSACTION");
 
         $addAddress = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "address(address_site_id, address_user_id, address_name, address_area, address_city_id, address_state_id, address_country_id, address_pin_code, address_type, address_status) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$address}', '{$city}', '{$state}', '{$country}', '{$pinCode}', 'work', 1)");
         $addressId = mysqli_insert_id($connection);
 
-        $addCompany = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "company(company_code, company_site_id, company_user_id, company_address_id, company_title, company_description, company_gst, company_pan, company_cin, company_email, company_mobile, company_type, company_status) VALUES('{$companyCode}', " . SITE_ID . ", " . USER_ID . ", '{$addressId}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$companyType}', 1)");
+        $addCompany = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "company(company_code, company_site_id, company_user_id, company_address_id, company_logo, company_title, company_description, company_gst, company_pan, company_cin, company_email, company_mobile, company_type, company_status) VALUES('{$companyCode}', " . SITE_ID . ", " . USER_ID . ", '{$addressId}', '{$featureImage}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$companyType}', 1)");
         $companyId = mysqli_insert_id($connection);
 
         if ($addAddress && $addCompany) {

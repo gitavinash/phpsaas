@@ -27,6 +27,11 @@ function popUpMessage(msgPostion, msgTxt, msgType) {
   });
 }
 
+function showWarning(message, selector) {
+  popUpMessage("center", message, "warning");
+  $(selector).focus();
+}
+
 function toggleDisplay(showBox, showEditBtn) {
   $(".openBtnBox").hide(); // Hide all
   document.querySelector(showBox).style.display = "block";
@@ -190,26 +195,6 @@ function initializeSelect2(element) {
 }
 
 $(document).ready(function (e) {
-  // Aside
-
-  // var stickyDiv = $("#sidebar");
-  // var stickyDivOffset = stickyDiv.offset().top + stickyDiv.outerHeight();
-  // var windowHeight = $(window).height();
-
-  // $(window).scroll(function () {
-  //   var scrollTop = $(window).scrollTop();
-  //   var scrollBottom = scrollTop + windowHeight;
-  //   if (scrollBottom >= stickyDivOffset) {
-  //     $("aside").css({
-  //       position: "fixed",
-  //     });
-  //   } else {
-  //     $("aside").css({
-  //       position: "relative",
-  //     });
-  //   }
-  // });
-
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
     initializeSelect2HereMaps(".indianCityAutoComplete");
@@ -1380,167 +1365,144 @@ $(document).ready(function (e) {
 
   $("#addCompany").click(function (e) {
     e.preventDefault();
-    var name = $("#name").val();
-    var address = $("#address").val();
-    var state = $("#state").val();
-    var city = $("#city").val();
-    var pinCode = $("#pinCode").val();
-    var email = $("#email").val();
-    var mobile = $("#mobile").val();
 
-    if (state == "select") {
-      state = "";
-    }
+    const name = $("#name").val().trim();
+    const address = $("#address").val().trim();
+    const state = $("#state").val();
+    const city = $("#city").val();
+    const pinCode = $("#pinCode").val().trim();
+    const email = $("#email").val().trim();
+    const mobile = $("#mobile").val().trim();
+    const companyType = $("#companyType").val().trim();
+    const fileInput = document.getElementById("fileInput");
 
-    if (city == "select") {
-      city = "";
-    }
+    // Validation
+    if (!name) return showWarning("Kindly enter company name", "#name");
+    if (!address)
+      return showWarning("Kindly enter company address", "#address");
+    if (state === "select" || !state)
+      return showWarning("Kindly select company state", "#state");
+    if (city === "select" || !city)
+      return showWarning("Kindly select company city", "#city");
+    if (!pinCode) return showWarning("Kindly enter pin code", "#pinCode");
+    if (!email) return showWarning("Kindly enter company email", "#email");
+    if (!mobile) return showWarning("Kindly enter company mobile", "#mobile");
+    if (companyType === "select" || !companyType)
+      return showWarning("Kindly select company Type", "#companyType");
 
-    submitRequest = false;
-    msg = "Required input is missing";
+    // Build FormData
+    const formData = new FormData($("#addNewCompanyForm")[0]);
+    formData.append("featureImage", fileInput.files[0]);
 
-    if (name != "") {
-      if (address != "") {
-        if (state != "") {
-          if (city != "") {
-            if (pinCode != "") {
-              if (email != "") {
-                if (mobile != "") {
-                  submitRequest = true;
-                } else {
-                  msg = "Kindly enter company mobile";
-                }
-              } else {
-                msg = "Kindly enter company email";
-              }
-            } else {
-              msg = "Kindly enter company address pin code";
-            }
-          } else {
-            msg = "Kindly enter company address city";
-          }
-        } else {
-          msg = "Kindly select state of company address";
+    // Submit AJAX
+    $.ajax({
+      type: "POST",
+      url: "/api/company/create/",
+      dataType: "json",
+      processData: false,
+      contentType: false,
+      data: formData,
+      success: function (res) {
+        popUpMessage("center", res.msg, res.status);
+        if (res.status === "success") {
+          setTimeout(() => {
+            const companyId = btoa(res.companyId);
+            window.location.href = `/dashboard/company/update/?id=${companyId}`;
+          }, 1500);
         }
-      } else {
-        msg = "Kindly enter company address";
-      }
-    } else {
-      msg = "Kindly enter company name";
-    }
-
-    if (!submitRequest) {
-      popUpMessage("center", msg, "warning");
-    } else {
-      var formData = $("#addNewCompanyForm").serialize();
-
-      $.ajax({
-        type: "POST",
-        url: "/api/company/create/",
-        dataType: "JSON",
-        data: formData,
-        success: function (successResponse) {
-          popUpMessage("center", successResponse.msg, successResponse.status);
-          if (successResponse.status == "success") {
-            setTimeout(function () {
-              const companyId = btoa(successResponse.companyId);
-              window.location.href = `/dashboard/company/update/?id=${companyId}`;
-            }, 1500);
-          }
-        },
-        error: function (errorResponse) {
-          console.log(`Error:`, errorResponse);
-          popUpMessage(
-            "center",
-            errorResponse.responseJSON.msg,
-            errorResponse.responseJSON.status
-          );
-        },
-      });
-    }
+      },
+      error: function (err) {
+        console.error("❌ Error:", err);
+        const res = err.responseJSON || {
+          msg: "Unknown error",
+          status: "error",
+        };
+        popUpMessage("center", res.msg, res.status);
+      },
+    });
   });
-
-  // Update company
 
   $("#updateCompany").click(function (e) {
     e.preventDefault();
-    var name = $("#name").val();
-    var address = $("#address").val();
-    var state = $("#state").val();
-    var city = $("#city").val();
-    var pinCode = $("#pinCode").val();
-    var email = $("#email").val();
-    var mobile = $("#mobile").val();
 
-    if (state == "select") {
-      state = "";
+    const $btn = $(this);
+    const name = $("#name").val().trim();
+    const address = $("#address").val().trim();
+    const state = $("#state").val() === "select" ? "" : $("#state").val();
+    const city = $("#city").val() === "select" ? "" : $("#city").val();
+    const pinCode = $("#pinCode").val().trim();
+    const email = $("#email").val().trim();
+    const mobile = $("#mobile").val().trim();
+    const companyType = $("#companyType").val().trim();
+    const fileInput = document.getElementById("fileInput");
+    const oldGallery = $("#oldGallery").text().trim();
+
+    console.log(`oldGallery:`, oldGallery);
+
+    if (!name) return showWarning("Kindly enter company name", "#name");
+    if (!address)
+      return showWarning("Kindly enter company address", "#address");
+    if (!state)
+      return showWarning("Kindly select state of company address", "#state");
+    if (!city) return showWarning("Kindly enter company address city", "#city");
+    if (!pinCode)
+      return showWarning("Kindly enter company address pin code", "#pinCode");
+    if (!email) return showWarning("Kindly enter company email", "#email");
+    if (!mobile) return showWarning("Kindly enter company mobile", "#mobile");
+    if (!companyType)
+      return showWarning("Kindly enter company type", "#companyType");
+
+    if (!fileInput) {
+      popUpMessage(
+        "center",
+        "File input not found. Please reload the page.",
+        "error"
+      );
+      return;
     }
 
-    if (city == "select") {
-      city = "";
+    const selectedFile = fileInput.files[0];
+
+    if (!oldGallery && !selectedFile) {
+      popUpMessage("center", "Please upload a company feature image.", "error");
+      return;
     }
 
-    submitRequest = false;
-    msg = "Required input is missing";
+    const formData = new FormData($("#updateCompanyForm")[0]);
+    if (selectedFile) formData.append("featureImage", selectedFile);
+    formData.append("oldFeatureImage", oldGallery);
 
-    if (name != "") {
-      if (address != "") {
-        if (state != "") {
-          if (city != "") {
-            if (pinCode != "") {
-              if (email != "") {
-                if (mobile != "") {
-                  submitRequest = true;
-                } else {
-                  msg = "Kindly enter company mobile";
-                }
-              } else {
-                msg = "Kindly enter company email";
-              }
-            } else {
-              msg = "Kindly enter company address pin code";
-            }
-          } else {
-            msg = "Kindly enter company address city";
-          }
-        } else {
-          msg = "Kindly select state of company address";
+    $btn.prop("disabled", true).text("Updating...");
+
+    $.ajax({
+      type: "POST",
+      url: "/api/company/update/",
+      dataType: "json",
+      processData: false,
+      contentType: false,
+      data: formData,
+      success: function (res) {
+        popUpMessage("center", res.msg, res.status);
+        if (res.status === "success") {
+          setTimeout(() => {
+            window.location.href = `/dashboard/company/list/`;
+          }, 1500);
         }
-      } else {
-        msg = "Kindly enter company address";
-      }
-    } else {
-      msg = "Kindly enter company name";
-    }
-
-    if (!submitRequest) {
-      popUpMessage("center", msg, "warning");
-    } else {
-      var formData = $("#updateCompanyForm").serialize();
-      $.ajax({
-        type: "POST",
-        url: "/api/company/update/",
-        dataType: "JSON",
-        data: formData,
-        success: function (successResponse) {
-          popUpMessage("center", successResponse.msg, successResponse.status);
-          if (successResponse.status == "success") {
-            setTimeout(function () {
-              window.location.href = `/dashboard/company/list/`;
-            }, 1500);
-          }
-        },
-        error: function (errorResponse) {
-          console.log(`Error:`, errorResponse);
-          popUpMessage(
-            "center",
-            errorResponse.responseJSON.msg,
-            errorResponse.responseJSON.status
-          );
-        },
-      });
-    }
+      },
+      error: function (xhr) {
+        console.error("❌ Error:", xhr);
+        const errorMsg =
+          xhr.responseJSON && xhr.responseJSON.msg
+            ? xhr.responseJSON.msg
+            : "Something went wrong. Please try again.";
+        popUpMessage("center", errorMsg, "error");
+      },
+      complete: function () {
+        $btn.prop("disabled", false).text("Update Company");
+      },
+    });
   });
+
   $("#sendKYCRequest").click(function (e) {
     e.preventDefault();
     var requestId = $(this).attr("data-id");

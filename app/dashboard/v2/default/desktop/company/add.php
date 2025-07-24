@@ -77,7 +77,7 @@
                             <label class="form-lable" id="Label">Company Code or ID</label>
                         </div>
                         <div class="form-group">
-                            <p>Company type</p>
+                            <p>Company type<sup>*</sup></p>
                             <select class="selectJS form-control" name="companyType" id="companyType">
                                 <option value="select">Select registration type</option>
                                 <option value="private">Private Limited Company</option>
@@ -88,6 +88,14 @@
                                 <option value="proprietorship">Sole Proprietorship</option>
                                 <option value="section8">Section 8 Company</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <p><strong>Country feature image</strong></p>
+                            <div id="dropZone">
+                                <span class="defaultText">Drag & Drop files here or click to upload</span>
+                            </div>
+                            <input type="file" id="fileInput" name="featureImage[]" data-limit="1"
+                                accept=".jpg, .jpeg, .png" style="display: none;" />
                         </div>
                         <div class="box-1">
                             <div class="form-group">

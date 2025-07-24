@@ -1,14 +1,14 @@
 <?php
 
 if (!isset($id)) { ?>
-    <script>
-        window.location.href = '/dashboard/company/list/';
-    </script>
+<script>
+window.location.href = '/dashboard/company/list/';
+</script>
 <?php
 } else if ($id == '') { ?>
-    <script>
-        window.location.href = '/dashboard/company/list/';
-    </script>
+<script>
+window.location.href = '/dashboard/company/list/';
+</script>
 <?php
 }
 
@@ -85,7 +85,8 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             </select>
                         </div>
                         <div class="form-group">
-                            <input id="pinCode" name="pinCode" value="<?php echo $address_pin_code ?>" type="number" onwheel="this.blur()" />
+                            <input id="pinCode" name="pinCode" value="<?php echo $address_pin_code ?>" type="number"
+                                onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -93,7 +94,8 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                             <label class="form-lable" id="Label">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="mobile" name="mobile" value="<?php echo $company_mobile ?>" type="number" onwheel="this.blur()" />
+                            <input id="mobile" name="mobile" value="<?php echo $company_mobile ?>" type="number"
+                                onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -137,6 +139,15 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                     <?php echo (($company_type == 'section8') ? 'selected' : '') ?>>
                                     Section 8 Company</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="display: none;" id="oldGallery"><?php echo $company_logo ?></span>
+                            <p><strong>Country feature image</strong></p>
+                            <div id="dropZone">
+                                <span class="defaultText">Drag & Drop files here or click to upload</span>
+                            </div>
+                            <input type="file" id="fileInput" data-limit="1" name="featureImage[]"
+                                accept=".jpg, .jpeg, .png" />
                         </div>
                         <div class="box-1">
                             <div class="form-group">

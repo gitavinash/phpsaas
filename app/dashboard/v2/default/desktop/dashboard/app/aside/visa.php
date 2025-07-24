@@ -21,7 +21,7 @@ if ($site_access_type != 'customer') {
 
 <!-- Visa Packages -->
 <li class="header-section-name">
-    <p>VISA Packages<span>Manage visa packages & countries.</span></p>
+    <p>VISA Packages<span>Visa packages & countries.</span></p>
 </li>
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/visa_packages/') !== false) ? 'class="active"' : '') ?>>
     <a href="visa_packages/"><i class="fi fi-rr-passport"></i> Packages</a>
@@ -192,21 +192,23 @@ if ($site_access_type != 'customer') {
     </div>
 </li>
 
-<li <?php echo ((strpos(ADMIN_BASE_URL, '/news/') !== false) ? 'class="active"' : '') ?>>
+<!-- <li <?php echo ((strpos(ADMIN_BASE_URL, '/news/') !== false) ? 'class="active"' : '') ?>>
     <a href="news/"><i class="fi fi-rr-bullhorn"></i> News</a>
     <div class="side-menu">
         <ul>
             <li><a href="news/list/"><i class="fi-rr-apps-sort"></i> All news</a></li>
             <li><a href="news/add/"><i class="fi fi-rr-add"></i> Add news</a></li>
+            <li><a href="news/category/"><i class="fi fi-rr-filter-list"></i> Categories</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="news/list/"><i class="fi-rr-apps-sort"></i> All news</a></li>
             <li><a href="news/add/"><i class="fi fi-rr-add"></i> Add news</a></li>
+            <li><a href="news/category/"><i class="fi fi-rr-filter-list"></i> Categories</a></li>
         </ul>
     </div>
-</li>
+</li> -->
 
 <li class="header-section-name">
     <p>Business Hub<span>Control Your Business</span></p>
