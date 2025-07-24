@@ -1437,8 +1437,6 @@ $(document).ready(function (e) {
     const fileInput = document.getElementById("fileInput");
     const oldGallery = $("#oldGallery").text().trim();
 
-    console.log(`oldGallery:`, oldGallery);
-
     if (!name) return showWarning("Kindly enter company name", "#name");
     if (!address)
       return showWarning("Kindly enter company address", "#address");
