@@ -21,7 +21,7 @@ require_once 'header.php';
 
                     $resultTags = implode(',', $tagId);
 
-                    if ($postList = mysqli_query($connection, "SELECT link_url, news_title, news_image, news_paid, meta_description, profile_display_name, link_published as publishedTime FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id INNER JOIN " . TABLE_PREFIX . "profile ON news_owner_id=profile_user_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status=200 AND link_relation_id IN ({$resultTags}) ORDER BY link_published DESC LIMIT 0, 20")) {
+                    if ($postList = mysqli_query($connection, "SELECT link_url, news_title, news_image, news_paid, meta_description, profile_display_name, link_published as publishedTime, news_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id INNER JOIN " . TABLE_PREFIX . "profile ON news_owner_id=profile_user_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status=200 AND link_relation_id IN ({$resultTags}) ORDER BY news_published DESC LIMIT 0, 20")) {
 
                         if (mysqli_num_rows($postList) != 0) {
 
@@ -37,7 +37,7 @@ require_once 'header.php';
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('d M Y, H:i A', strtotime($publishedTime)) . "
+                    " . date('d M Y, H:i A', strtotime($news_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>

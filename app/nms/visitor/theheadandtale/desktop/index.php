@@ -17,7 +17,8 @@
                     news_description, 
                     news_paid, 
                     link_url, 
-                    link_published, 
+                    link_published,
+                    news_published,
                     meta_description 
                 FROM " . TABLE_PREFIX . "news 
                 INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = news_id 
@@ -29,7 +30,7 @@
                     AND link_site_id = " . SITE_ID . "
                 ORDER BY 
                     link_is_featured DESC, 
-                    link_published DESC
+                    news_published DESC
                 LIMIT 100";
 
             $result = mysqli_query($connection, $query);
@@ -52,7 +53,7 @@
                     ? "<img src='" . USER_IMAGES . "premium.png' alt='Premium news' />"
                     : '';
 
-                $formattedDate = date('d M Y, h:i A', strtotime($data['link_published']));
+                $formattedDate = date('d M Y, h:i A', strtotime($data['news_published']));
                 $newsImage = htmlspecialchars($data['news_image']);
                 $newsTitle = htmlspecialchars($data['news_title']);
                 $newsUrl = htmlspecialchars($data['link_url']);

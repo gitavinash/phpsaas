@@ -18,7 +18,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
             <div class="col-lg-5">
                 <div class="news_right">
                     <h3><?php echo $news_title ?></h3>
-                    <span><?php echo date('d M Y, h:i A', strtotime($link_published)) ?></span>
+                    <span><?php echo date('d M Y, h:i A', strtotime($news_published)) ?></span>
                     <p><?php echo $meta_description ?></p>
                 </div>
             </div>

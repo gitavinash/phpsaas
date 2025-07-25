@@ -4,14 +4,14 @@ require_once 'header.php';
 
 ?>
 <section>
-	<div class="row">
-		<div class="container">
-			<div class="left-container">
-				<div class="categoryHeading">
-					<h1><span>Search for: </span><?php echo ucwords($searchKeyword) ?></h1>
-				</div>
+    <div class="row">
+        <div class="container">
+            <div class="left-container">
+                <div class="categoryHeading">
+                    <h1><span>Search for: </span><?php echo ucwords($searchKeyword) ?></h1>
+                </div>
 
-				<?php
+                <?php
 
 				if (is_array($queryPost)) {
 
@@ -25,7 +25,7 @@ require_once 'header.php';
 
 						$resultTags = implode(' OR link_relation_id=', $tagId);
 
-						if ($queryResults = mysqli_query($connection, "SELECT link_url, news_title, news_image, news_paid, link_published, meta_title, meta_description, link_published as publishedTime FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status=200 AND  (link_relation_id={$resultTags}) ORDER BY link_published DESC LIMIT 0, 100")) {
+						if ($queryResults = mysqli_query($connection, "SELECT link_url, news_title, news_image, news_paid, link_published, meta_title, meta_description, link_published as publishedTime, news_published FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status=200 AND  (link_relation_id={$resultTags}) ORDER BY news_published DESC LIMIT 0, 100")) {
 
 							if (mysqli_num_rows($queryResults) != 0) {
 
@@ -43,7 +43,7 @@ require_once 'header.php';
         <div class='news_intro'>
             <h2>{$news_title}</h2>
             <p><span>
-                    " . date('d M Y, H:i A', strtotime($publishedTime)) . "
+                    " . date('d M Y, H:i A', strtotime($news_published)) . "
             </span></p>
             <p>{$meta_description}</p>
         </div>
@@ -75,31 +75,31 @@ require_once 'header.php';
 					}
 				} else { ?>
 
-					<!-- No Result found -->
+                <!-- No Result found -->
 
-					<section class='categoryHeading'>
-						<h1><span>No news found</span></h1>
-					</section>
+                <section class='categoryHeading'>
+                    <h1><span>No news found</span></h1>
+                </section>
 
-				<?php
+                <?php
 				}
 
 				?>
 
-				<?php
+                <?php
 
 				require_once 'pagination.php';
 
 				?>
-			</div>
-			<?php
+            </div>
+            <?php
 
 			require_once 'sidebar.php';
 
 			?>
-		</div>
-	</div>
-	</div>
+        </div>
+    </div>
+    </div>
 </section>
 <?php
 
