@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         case strpos($formData[$i]['name'], 'email') !== false:
                                             $email = $formData[$i]['values'][0];
                                             break;
-                                        case strpos($formData[$i]['name'], 'phone') !== false || strpos($formData[$i]['name'], 'whatsapp') !== false || strpos($formData[$i]['name'], 'mobile') !== false || strpos($formData[$i]['name'], 'whatsaap') !== false:
+                                        case preg_match('/phone|phonenumber|phone_number|mobile|whatsapp|whatsaap/i', $formData[$i]['name']):
                                             $mobile = $formData[$i]['values'][0];
                                             break;
                                         default:
