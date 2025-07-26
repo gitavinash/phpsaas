@@ -354,6 +354,9 @@ section {
   }
 }
 @media (max-width: 768px) {
+  .myHeader {
+    padding: 1rem 0rem 2.4rem 0;
+  }
   .input_btn {
     width: 80%;
   }
@@ -527,9 +530,6 @@ section {
   .header_right a {
     font-size: 14px;
     padding: 6px;
-  }
-  .myHeader {
-    padding: 1rem 0rem 2.4rem 0;
   }
   .header_right {
     gap: 7px;
