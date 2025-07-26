@@ -76,13 +76,12 @@
             }
             ?>
 
-            <!-- Featured Article -->
-            <div class="featureArticle">
-                <?php if (!empty($latestNewsData[0])) renderNewsCard($latestNewsData[0]); ?>
-            </div>
-
             <!-- Left News Container -->
             <div class="left-container">
+                <!-- Featured Article -->
+                <div class="featureArticle">
+                    <?php if (!empty($latestNewsData[0])) renderNewsCard($latestNewsData[0]); ?>
+                </div>
                 <?php
                 // Show next 4 articles
                 for ($i = 1; $i < min(5, TOTAL_RESULT); $i++) {
