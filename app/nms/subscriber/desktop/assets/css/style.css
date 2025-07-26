@@ -64,7 +64,7 @@ button:hover {
   align-items: center;
 }
 .myHeader {
-  padding: 2.4rem 0;
+  padding: 1rem 0rem 2.4rem 0;
   background-color: #f1f0f1;
 }
 .company-logo img {
@@ -438,8 +438,8 @@ section {
   }
 
   .news_intro h2 {
-    font-size: 32px;
-    line-height: 38px;
+    font-size: 18px;
+    line-height: 22px;
   }
 
   .news_intro p span {
@@ -454,8 +454,8 @@ section {
   }
 
   .news_intro p {
-    font-size: 16px;
-    line-height: 28px;
+    font-size: 14px;
+    line-height: 20px;
   }
 
   .blog_banner__left h3 {
@@ -504,10 +504,6 @@ section {
   }
   .newsletter h3 {
     font-size: 18px;
-  }
-  .news_intro h2 {
-    font-size: 23px;
-    line-height: 30px;
   }
   .newsletter {
     padding: 30px 0;
