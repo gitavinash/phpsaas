@@ -1,153 +1,101 @@
-<?php
-
-require_once 'header.php';
-
-?>
-
+<?php require_once 'header.php'; ?>
 
 <main class="pt-28 pb-16">
     <div class="container mx-auto px-4">
-        <div class="mb-6 px-4">
-            <h1 class="text-2xl font-semibold text-gray-800">
-                <span class="text-primary"><?php echo htmlspecialchars($category_title); ?></span>
-            </h1>
-        </div>
-
-        <div class="flex flex-col lg:flex-row">
-
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Blog Post Grid (3/4) -->
             <div class="lg:w-3/4">
+                <h1 class="text-2xl font-bold mb-6">
+                    Category: <span class="text-primary"><?php echo ucwords($category_title); ?></span>
+                </h1>
+                <?php
+                $latestPostData = [];
+
+                $query = "
+                    SELECT 
+                        post_title, 
+                        post_image, 
+                        post_description, 
+                        link_url, 
+                        link_published,
+                        meta_description,
+                        profile_display_name,
+                        profile_image
+                    FROM " . TABLE_PREFIX . "post 
+                    INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = post_id 
+                    INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id = link_id 
+                    INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = link_owner_id 
+                    WHERE 
+                        link_type = 'post'
+                        AND post_type='blog'
+                        AND post_category = $category_id
+                        AND link_status = 200 
+                        AND link_site_id = " . SITE_ID . "
+                    ORDER BY link_published DESC
+                    LIMIT 20";
+
+                $result = mysqli_query($connection, $query);
+
+                if ($result) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $latestPostData[] = $row;
+                    }
+                } else {
+                    echo "<p class='text-red-600'>Error loading posts: " . mysqli_error($connection) . "</p>";
+                }
+
+                function renderPostCardTailwind($data)
+                {
+                    $date = date('M d, Y', strtotime($data['link_published']));
+                    $image = htmlspecialchars($data['post_image']);
+                    $title = htmlspecialchars($data['post_title']);
+                    $url = htmlspecialchars($data['link_url']);
+                    $desc = htmlspecialchars($data['meta_description']);
+                    $authorImage = htmlspecialchars($data['profile_image']);
+                    $author = htmlspecialchars($data['profile_display_name']);
+
+                    echo "
+                    <article class='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100'>
+                        <a href='{$url}'>
+                            <img src='{$image}' alt='{$title}' class='w-full h-56 object-cover'>
+                            <div class='p-6'>
+                                <div class='flex items-center gap-2 mb-4'>
+                                    <span class='text-sm text-gray-500'>{$date}</span>
+                                </div>
+                                <h2 class='text-xl font-semibold mb-2 line-clamp-2'>{$title}</h2>
+                                <p class='text-gray-600 mb-4 line-clamp-3'>{$desc}</p>
+                                <div class='flex items-center justify-between'>
+                                    <div class='flex items-center gap-3'>
+                                        <div class='w-8 h-8 rounded-full bg-gray-200'>
+                                            <img src='{$authorImage}' alt='{$author}' class='w-full h-full object-cover rounded-full'>
+                                        </div>
+                                        <div>
+                                            <div class='text-sm font-medium'>{$author}</div>
+                                            <div class='text-xs text-gray-500'>{$date}</div>
+                                        </div>
+                                    </div>
+                                    <span class='text-primary hover:text-primary/80'>Read More</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>";
+                }
+                ?>
+
+                <?php if (!empty($latestPostData)) : ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <article class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-                        <img src="https://readdy.ai/api/search-image?query=modern%20airport%20terminal%20with%20diverse%20travelers%2C%20business%20people%20and%20families%20walking%20through%2C%20natural%20lighting%2C%20professional%20photography%20style%2C%20high-end%20travel%20atmosphere&width=600&height=400&seq=1&orientation=landscape"
-                            alt="Travel Tips" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span class="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full">Travel Tips</span>
-                                <span class="text-sm text-gray-500">5 min read</span>
-                            </div>
-                            <h2 class="text-xl font-semibold mb-2 line-clamp-2">Essential Travel Documents: A Complete
-                                Checklist for International Travel</h2>
-                            <p class="text-gray-600 mb-4 line-clamp-3">Planning an international trip? Make sure you
-                                have all the necessary documents ready. From passports to visas, here's your
-                                comprehensive guide to travel documentation.</p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div class="text-sm font-medium">Emily Richardson</div>
-                                        <div class="text-xs text-gray-500">July 19, 2025</div>
-                                    </div>
-                                </div>
-                                <button class="text-primary hover:text-primary/80">Read More</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-                        <img src="https://readdy.ai/api/search-image?query=professional%20visa%20application%20process%2C%20documents%20and%20passport%20on%20modern%20desk%2C%20official%20stamps%20and%20papers%2C%20clean%20business%20environment&width=600&height=400&seq=2&orientation=landscape"
-                            alt="Visa Guide" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span class="px-3 py-1 text-sm bg-green-50 text-green-600 rounded-full">Visa
-                                    Guide</span>
-                                <span class="text-sm text-gray-500">7 min read</span>
-                            </div>
-                            <h2 class="text-xl font-semibold mb-2 line-clamp-2">Understanding Different Types of Visas:
-                                Which One is Right for You?</h2>
-                            <p class="text-gray-600 mb-4 line-clamp-3">Navigate through the complexities of visa types.
-                                From tourist to business visas, learn about the requirements and application processes
-                                for each category.</p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div class="text-sm font-medium">Marcus Chen</div>
-                                        <div class="text-xs text-gray-500">July 18, 2025</div>
-                                    </div>
-                                </div>
-                                <button class="text-primary hover:text-primary/80">Read More</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-                        <img src="https://readdy.ai/api/search-image?query=luxury%20hotel%20lobby%20with%20modern%20design%2C%20elegant%20reception%20area%2C%20sophisticated%20travelers%20checking%20in%2C%20professional%20hospitality%20photography&width=600&height=400&seq=3&orientation=landscape"
-                            alt="Accommodation" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span
-                                    class="px-3 py-1 text-sm bg-purple-50 text-purple-600 rounded-full">Accommodation</span>
-                                <span class="text-sm text-gray-500">6 min read</span>
-                            </div>
-                            <h2 class="text-xl font-semibold mb-2 line-clamp-2">Top 10 Luxury Hotels in Europe: Where
-                                Comfort Meets Culture</h2>
-                            <p class="text-gray-600 mb-4 line-clamp-3">Discover the most exclusive hotels across Europe.
-                                From historic palaces to modern luxury resorts, find your perfect stay for an
-                                unforgettable experience.</p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div class="text-sm font-medium">Sophie Anderson</div>
-                                        <div class="text-xs text-gray-500">July 17, 2025</div>
-                                    </div>
-                                </div>
-                                <button class="text-primary hover:text-primary/80">Read More</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-                        <img src="https://readdy.ai/api/search-image?query=modern%20travel%20planning%20setup%20with%20digital%20devices%2C%20maps%20and%20travel%20accessories%20on%20wooden%20desk%2C%20professional%20flat%20lay%20photography&width=600&height=400&seq=4&orientation=landscape"
-                            alt="Planning" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span class="px-3 py-1 text-sm bg-red-50 text-red-600 rounded-full">Planning</span>
-                                <span class="text-sm text-gray-500">8 min read</span>
-                            </div>
-                            <h2 class="text-xl font-semibold mb-2 line-clamp-2">Digital Nomad's Guide: Working While
-                                Traveling the World</h2>
-                            <p class="text-gray-600 mb-4 line-clamp-3">Learn how to balance work and travel effectively.
-                                Tips on finding reliable internet, coworking spaces, and maintaining productivity while
-                                exploring new destinations.</p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div class="text-sm font-medium">Alexander Wright</div>
-                                        <div class="text-xs text-gray-500">July 16, 2025</div>
-                                    </div>
-                                </div>
-                                <button class="text-primary hover:text-primary/80">Read More</button>
-                            </div>
-                        </div>
-                    </article>
+                    <?php foreach ($latestPostData as $post) {
+                            renderPostCardTailwind($post);
+                        } ?>
                 </div>
-                <!-- <div class="mt-12 flex items-center justify-center">
-                    <nav class="flex items-center gap-1">
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
-                            <i class="ri-arrow-left-s-line"></i>
-                        </button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white">1</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100">2</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100">3</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </button>
-                    </nav>
-                </div> -->
+                <?php else : ?>
+                <p class="text-gray-600 text-center mt-10">No post articles available at the moment.</p>
+                <?php endif; ?>
             </div>
-            <?php
-            require_once 'sidebar.php';
-            ?>
+
+            <?php require_once 'sidebar.php'; ?>
         </div>
     </div>
 </main>
 
-<?php
-
-require_once 'footer.php';
-
-?>
+<?php require_once 'footer.php'; ?>
