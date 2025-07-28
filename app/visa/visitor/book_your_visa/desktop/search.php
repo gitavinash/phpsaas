@@ -52,13 +52,13 @@
                             $url = htmlspecialchars($post['link_url']);
                             $image = htmlspecialchars($post['post_image']);
                             $desc = htmlspecialchars($post['meta_description']);
-                            $date = date('M d, Y', strtotime($post['link_published']));
+                            $date = date('d M Y h:i:A', strtotime($post['link_published']));
                             $authorImage = htmlspecialchars($post['profile_image']);
                             $author = htmlspecialchars($post['profile_display_name']);
 
                             echo "
                             <article class='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100'>
-                                <a href='{$url}' target='_blank'>
+                                <a href='{$url}' title='{$title}'>
                                     <img src='{$image}' alt='{$title}' class='w-full h-56 object-cover'>
                                     <div class='p-6'>
                                         <div class='flex items-center gap-2 mb-4'>

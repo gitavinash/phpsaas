@@ -271,7 +271,7 @@ require_once 'header.php';
     ?>
     <?php
 
-    if ($blogPost = mysqli_query($connection, "SELECT link_url, post_title, post_thumbnail, post_image, meta_description FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND link_site_id=" . SITE_ID . " AND post_site_id=" . SITE_ID . " AND meta_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 3 ")) {
+    if ($blogPost = mysqli_query($connection, "SELECT link_url, post_title, post_thumbnail, post_image, meta_description, category_title, link_published FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=post_category AND category_site_id=" . SITE_ID . " WHERE link_type='post' AND post_type='blog' AND link_status=200 AND link_site_id=" . SITE_ID . " AND post_site_id=" . SITE_ID . " AND meta_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 3")) {
         if (mysqli_num_rows($blogPost) != 0) {
             echo "
     <section class='py-20'>
@@ -285,26 +285,25 @@ require_once 'header.php';
                 extract($blogPostData);
                 echo "
                                 <article class='bg-white rounded-lg shadow-lg overflow-hidden group'>
-                                    <img src='https://readdy.ai/api/search-image?query=professional%20travel%20photograph%20of%20modern%20airport%20terminal%20with%20passengers%20checking%20in%20at%20counters%2C%20bright%20contemporary%20architecture%2C%20high%20glass%20ceilings&width=400&height=250&seq=12&orientation=landscape'
-                                        alt='Travel Updates'
+                                    <a href='{$link_url}' title='{$post_title}'>
+                                        <img src='{$post_image}'
+                                        alt='{$post_title}'
                                         class='w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300'>
                                     <div class='p-6'>
                                         <div class='flex items-center justify-between mb-3'>
-                                            <span class='px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full'>Visa
-                                                Policy</span>
+                                            <span class='px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full'>{$category_title}</span>
                                             <div class='flex items-center text-sm text-gray-500'>
                                                 <i class='ri-calendar-line mr-2 w-4 h-4 flex items-center justify-center'></i>
-                                                July 21, 2025
+                                                " . date('d M Y h:i:A', strtotime($link_published)) . "
                                             </div>
                                         </div>
-                                        <h3 class='text-xl font-medium mb-3'>New Visa Policies for Digital Nomads</h3>
-                                        <p class='text-gray-600 mb-4 line-clamp-2'>Explore the latest visa policies designed for remote
-                                            workers and digital nomads across popular destinations.</p>
-                                        <a href='#' class='text-primary hover:text-primary/80 font-medium inline-flex items-center'>
+                                        <h3 class='text-xl font-medium mb-3'>{$post_title}</h3>
+                                        <a href='{$link_url}' title='{$post_title}' class='text-primary hover:text-primary/80 font-medium inline-flex items-center'>
                                             Read More
                                             <i class='ri-arrow-right-line ml-1'></i>
                                         </a>
                                     </div>
+                                    </a>
                                 </article>";
             }
             echo "

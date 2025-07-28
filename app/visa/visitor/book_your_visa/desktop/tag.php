@@ -57,11 +57,11 @@
                         $desc = htmlspecialchars($post['meta_description']);
                         $authorImage = htmlspecialchars($post['profile_image']);
                         $author = htmlspecialchars($post['profile_display_name']);
-                        $date = date('M d, Y', strtotime($post['link_published']));
+                        $date = date('d M Y h:i:A', strtotime($post['link_published']));
 
                         echo "
                         <article class='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100'>
-                            <a href='{$url}' target='_blank'>
+                            <a href='{$url}' title='{$title}'>
                                 <div class='relative'>
                                     <img src='{$image}' alt='{$title}' class='w-full h-56 object-cover'>
                                 </div>

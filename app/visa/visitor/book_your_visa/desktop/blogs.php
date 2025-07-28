@@ -44,7 +44,7 @@
         // Helper to render cards
         function renderPostCardTailwind($data, $isFeatured = false)
         {
-            $formattedDate = date('M d, Y', strtotime($data['link_published']));
+            $formattedDate = date('d M Y h:i:A', strtotime($data['link_published']));
             $postImage = htmlspecialchars($data['post_image']);
             $postTitle = htmlspecialchars($data['post_title']);
             $postUrl = htmlspecialchars($data['link_url']);
@@ -54,7 +54,7 @@
 
             if ($isFeatured) {
                 echo "
-                <a href='{$postUrl}'>
+                <a href='{$postUrl}' title='{$postTitle}'>
                     <article class='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 mb-12'>
                     <div class='relative'>
                         <img src='{$postImage}' alt='{$postTitle}' class='w-full h-[400px] object-cover'>
@@ -65,7 +65,7 @@
                             </div>
                             <h1 class='text-3xl font-bold mb-4'>{$postTitle}</h1>
                             <p class='text-lg mb-6 opacity-90'>{$metaDescription}</p>
-                            <a href='{$postUrl}' target='_blank'>
+                            <a href='{$postUrl}' title='{$postTitle}'>
                                 <button class='px-6 py-2 bg-white text-gray-900 font-medium !rounded-button hover:bg-gray-100'>
                                     Read Article
                                 </button>
@@ -77,7 +77,7 @@
             } else {
                 echo "
                 <article class='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100'>
-                <a href='{$postUrl}'>
+                <a href='{$postUrl}' title='{$postTitle}'>
                     <img src='{$postImage}' alt='{$postTitle}' class='w-full h-56 object-cover'>
                     <div class='p-6'>
                         <div class='flex items-center gap-2 mb-4'>
@@ -95,7 +95,7 @@
                                     <div class='text-xs text-gray-500'>{$formattedDate}</div>
                                 </div>
                             </div>
-                            <a href='{$postUrl}' target='_blank' class='text-primary hover:text-primary/80'>Read More</a>
+                            <a href='{$postUrl}' title='{$postTitle}' class='text-primary hover:text-primary/80'>Read More</a>
                         </div>
                     </div>
                     </a>

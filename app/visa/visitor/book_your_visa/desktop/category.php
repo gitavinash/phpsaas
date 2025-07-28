@@ -56,7 +56,7 @@
 
                     echo "
                     <article class='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100'>
-                        <a href='{$url}'>
+                        <a href='{$url}' title='{$title}'>
                             <img src='{$image}' alt='{$title}' class='w-full h-56 object-cover'>
                             <div class='p-6'>
                                 <div class='flex items-center gap-2 mb-4'>
