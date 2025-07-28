@@ -28,7 +28,7 @@ require_once 'header.php';
                                 class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                 placeholder="Enter email or phone number">
                         </div>
-                        <button type="submit"
+                        <button type="submit" id="getApplicationStatus"
                             class="w-full bg-primary text-white font-medium py-3 !rounded-button hover:bg-primary/90 cursor-pointer">Track
                             Application</button>
                     </form>

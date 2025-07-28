@@ -239,121 +239,82 @@ require_once 'header.php';
             </div>
         </div>
     </section>
-    <section class="py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-4">Trusted By Leading Brands</h2>
-            <p class="text-gray-600 text-center mb-12 max-w-2xl mx-auto">Partner with industry leaders to provide
+    <?php
+
+    if ($partnerList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company WHERE company_type='partnerships' AND company_site_id=" . SITE_ID)) {
+        if (mysqli_num_rows($partnerList) != 0) {
+            echo "
+    <section class='py-20 bg-gradient-to-b from-gray-50 to-white'>
+        <div class='container mx-auto px-4'>
+            <h2 class='text-3xl font-bold text-center mb-4'>Trusted By Leading Brands</h2>
+            <p class='text-gray-600 text-center mb-12 max-w-2xl mx-auto'>Partner with industry leaders to provide
                 seamless visa and travel solutions worldwide</p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 items-center">
-                <div class="group hover:-translate-y-1 transition-transform duration-300">
-                    <div
-                        class="w-full h-28 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-4 hover:shadow-xl transition-shadow duration-300">
-                        <i class="ri-visa-fill text-gray-400 group-hover:text-primary ri-3x mb-2"></i>
-                        <span class="text-sm text-gray-500 group-hover:text-primary font-medium">Visa Partner</span>
-                    </div>
-                </div>
-                <div class="group hover:-translate-y-1 transition-transform duration-300">
-                    <div
-                        class="w-full h-28 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-4 hover:shadow-xl transition-shadow duration-300">
-                        <i class="ri-mastercard-fill text-gray-400 group-hover:text-primary ri-3x mb-2"></i>
-                        <span class="text-sm text-gray-500 group-hover:text-primary font-medium">Mastercard
-                            Partner</span>
-                    </div>
-                </div>
-                <div class="group hover:-translate-y-1 transition-transform duration-300">
-                    <div
-                        class="w-full h-28 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-4 hover:shadow-xl transition-shadow duration-300">
-                        <i class="ri-apple-fill text-gray-400 group-hover:text-primary ri-3x mb-2"></i>
-                        <span class="text-sm text-gray-500 group-hover:text-primary font-medium">Apple Pay
-                            Partner</span>
-                    </div>
-                </div>
-                <div class="group hover:-translate-y-1 transition-transform duration-300">
-                    <div
-                        class="w-full h-28 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-4 hover:shadow-xl transition-shadow duration-300">
-                        <i class="ri-google-fill text-gray-400 group-hover:text-primary ri-3x mb-2"></i>
-                        <span class="text-sm text-gray-500 group-hover:text-primary font-medium">Google Partner</span>
-                    </div>
-                </div>
+            <div class='grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 items-center partnerSlider'>";
+            while ($partnerListData = mysqli_fetch_assoc($partnerList)) {
+                extract($partnerListData);
+                echo "
+                                <div class='group hover:-translate-y-1 transition-transform duration-300'>
+                                    <div
+                                        class='w-full h-38 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-4 hover:shadow-xl transition-shadow duration-300'>
+                                        <img src='{$company_logo}' alt='{$company_title} logo' class='pt-4 pb-4'>
+                                        <span class='text-sm text-gray-500 group-hover:text-primary font-medium'>{$company_title}</span>
+                                    </div>
+                                </div>
+                            ";
+            }
+            echo "
+    </div>
+    </div>
+    </section>";
+        }
+    }
+    ?>
+    <?php
+
+    if ($blogPost = mysqli_query($connection, "SELECT link_url, post_title, post_thumbnail, post_image, meta_description FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_type='post' AND link_status=200 AND link_site_id=" . SITE_ID . " AND post_site_id=" . SITE_ID . " AND meta_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 3 ")) {
+        if (mysqli_num_rows($blogPost) != 0) {
+            echo "
+    <section class='py-20'>
+        <div class='container mx-auto px-4'>
+            <div class='flex flex-col md:flex-row justify-between items-center mb-12'>
+                <h2 class='text-3xl font-bold'>Latest Travel Updates</h2>
+                <a href='/blogs/' class='text-primary hover:text-primary/80 font-medium'>View All Posts</a>
             </div>
-        </div>
-    </section>
-    <section class="py-20">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
-                <h2 class="text-3xl font-bold">Latest Travel Updates</h2>
-                <a href="#" class="text-primary hover:text-primary/80 font-medium">View All Posts</a>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden group">
-                    <img src="https://readdy.ai/api/search-image?query=professional%20travel%20photograph%20of%20modern%20airport%20terminal%20with%20passengers%20checking%20in%20at%20counters%2C%20bright%20contemporary%20architecture%2C%20high%20glass%20ceilings&width=400&height=250&seq=12&orientation=landscape"
-                        alt="Travel Updates"
-                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">Visa
-                                Policy</span>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="ri-calendar-line mr-2 w-4 h-4 flex items-center justify-center"></i>
-                                July 21, 2025
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-medium mb-3">New Visa Policies for Digital Nomads</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2">Explore the latest visa policies designed for remote
-                            workers and digital nomads across popular destinations.</p>
-                        <a href="#" class="text-primary hover:text-primary/80 font-medium inline-flex items-center">
-                            Read More
-                            <i class="ri-arrow-right-line ml-1"></i>
-                        </a>
-                    </div>
-                </article>
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden group">
-                    <img src="https://readdy.ai/api/search-image?query=professional%20travel%20photograph%20of%20people%20using%20biometric%20scanning%20at%20immigration%20checkpoint%2C%20modern%20security%20technology%2C%20clean%20environment&width=400&height=250&seq=13&orientation=landscape"
-                        alt="Travel Updates"
-                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-3">
-                            <span
-                                class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">Technology</span>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="ri-calendar-line mr-2 w-4 h-4 flex items-center justify-center"></i>
-                                July 20, 2025
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-medium mb-3">Biometric Processing Updates</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2">Learn about the latest biometric requirements and how
-                            they affect your visa application process.</p>
-                        <a href="#" class="text-primary hover:text-primary/80 font-medium inline-flex items-center">
-                            Read More
-                            <i class="ri-arrow-right-line ml-1"></i>
-                        </a>
-                    </div>
-                </article>
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden group">
-                    <img src="https://readdy.ai/api/search-image?query=professional%20travel%20photograph%20of%20tourists%20exploring%20european%20city%2C%20people%20enjoying%20vacation%2C%20urban%20tourism%2C%20sunny%20day&width=400&height=250&seq=14&orientation=landscape"
-                        alt="Travel Updates"
-                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">Travel
-                                Guide</span>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="ri-calendar-line mr-2 w-4 h-4 flex items-center justify-center"></i>
-                                July 19, 2025
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-medium mb-3">Summer Travel Guide 2025</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2">Your comprehensive guide to summer travel
-                            requirements and visa processing times across destinations.</p>
-                        <a href="#" class="text-primary hover:text-primary/80 font-medium inline-flex items-center">
-                            Read More
-                            <i class="ri-arrow-right-line ml-1"></i>
-                        </a>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+            <div class='grid grid-cols-1 md:grid-cols-3 gap-8'>";
+            while ($blogPostData = mysqli_fetch_assoc($blogPost)) {
+                extract($blogPostData);
+                echo "
+                                <article class='bg-white rounded-lg shadow-lg overflow-hidden group'>
+                                    <img src='https://readdy.ai/api/search-image?query=professional%20travel%20photograph%20of%20modern%20airport%20terminal%20with%20passengers%20checking%20in%20at%20counters%2C%20bright%20contemporary%20architecture%2C%20high%20glass%20ceilings&width=400&height=250&seq=12&orientation=landscape'
+                                        alt='Travel Updates'
+                                        class='w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300'>
+                                    <div class='p-6'>
+                                        <div class='flex items-center justify-between mb-3'>
+                                            <span class='px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full'>Visa
+                                                Policy</span>
+                                            <div class='flex items-center text-sm text-gray-500'>
+                                                <i class='ri-calendar-line mr-2 w-4 h-4 flex items-center justify-center'></i>
+                                                July 21, 2025
+                                            </div>
+                                        </div>
+                                        <h3 class='text-xl font-medium mb-3'>New Visa Policies for Digital Nomads</h3>
+                                        <p class='text-gray-600 mb-4 line-clamp-2'>Explore the latest visa policies designed for remote
+                                            workers and digital nomads across popular destinations.</p>
+                                        <a href='#' class='text-primary hover:text-primary/80 font-medium inline-flex items-center'>
+                                            Read More
+                                            <i class='ri-arrow-right-line ml-1'></i>
+                                        </a>
+                                    </div>
+                                </article>";
+            }
+            echo "
+    </div>
+    </div>
+    </section>";
+        }
+    }
+
+    ?>
     <section class="py-20">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">

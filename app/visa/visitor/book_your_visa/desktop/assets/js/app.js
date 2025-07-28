@@ -287,4 +287,18 @@ $(document).ready(function () {
       popUpMessage("center", msg.trim(), "warning");
     }
   });
+
+  // Get Application Status
+
+  $("#getApplicationStatus").click(function (e) {
+    e.preventDefault();
+    const $btn = $(this);
+    $btn
+      .prop("disabled", true)
+      .addClass("opacity-70 cursor-not-allowed")
+      .html(
+        `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Tracking...`
+      );
+    $("#applicationStatus").show();
+  });
 });
