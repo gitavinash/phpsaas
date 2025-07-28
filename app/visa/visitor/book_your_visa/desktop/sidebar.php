@@ -12,31 +12,20 @@
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
             <h3 class="text-lg font-semibold mb-4">Categories</h3>
             <div class="space-y-3">
-                <label class="flex items-center gap-3">
-                    <input type="checkbox"
-                        class="w-5 h-5 border-2 border-gray-300 rounded text-primary focus:ring-primary">
-                    <span class="text-gray-700">Travel Tips (24)</span>
-                </label>
-                <label class="flex items-center gap-3">
-                    <input type="checkbox"
-                        class="w-5 h-5 border-2 border-gray-300 rounded text-primary focus:ring-primary">
-                    <span class="text-gray-700">Visa Guide (18)</span>
-                </label>
-                <label class="flex items-center gap-3">
-                    <input type="checkbox"
-                        class="w-5 h-5 border-2 border-gray-300 rounded text-primary focus:ring-primary">
-                    <span class="text-gray-700">Destinations (32)</span>
-                </label>
-                <label class="flex items-center gap-3">
-                    <input type="checkbox"
-                        class="w-5 h-5 border-2 border-gray-300 rounded text-primary focus:ring-primary">
-                    <span class="text-gray-700">Accommodation (15)</span>
-                </label>
-                <label class="flex items-center gap-3">
-                    <input type="checkbox"
-                        class="w-5 h-5 border-2 border-gray-300 rounded text-primary focus:ring-primary">
-                    <span class="text-gray-700">Planning (21)</span>
-                </label>
+                <?php
+
+                if ($supplierList = mysqli_query($connection, "SELECT category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id WHERE link_status=200 AND link_type='category' AND category_type='post' AND category_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID)) {
+                    echo "<tbody>";
+                    if (mysqli_num_rows($supplierList) > 0) {
+                        while ($supplierData = mysqli_fetch_assoc($supplierList)) {
+                            extract($supplierData);
+                            echo "<a href='{$link_url}' class='flex items-center gap-3'><span class='text-gray-700'>{$category_title}</span></a>";
+                        }
+                    }
+                    echo "</tbody>";
+                }
+
+                ?>
             </div>
         </div>
     </div>

@@ -1522,5 +1522,99 @@ $(document).ready(function (e) {
     });
   });
 
+  // For category
+
+  if ($("#categoryFormV2").length) {
+    $("#title").on("input", function () {
+      let title = $(this).val().trim();
+
+      // Convert title to URL-friendly permalink
+      let permalink = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-") // Remove special characters
+        .replace(/\s+/g, "-") // Replace spaces with hyphens
+        .replace(/-+/g, "-"); // Collapse multiple hyphens
+
+      $("#permalink").val(permalink);
+    });
+
+    $("#submitCategoryV2").on("click", function (e) {
+      e.preventDefault();
+
+      console.log(`dfsdf`);
+
+      const $btn = $(this);
+      $btn.prop("disabled", true).text("Submitting...");
+
+      const title = $("#title").val().trim();
+      const permalink = $("#permalink").val().trim();
+      var description = $("#editor-0").val() || "";
+      console.log(`description`, description);
+      const parentCategory = $("#parentCategory").val().trim();
+      const action = $("#action").val().trim();
+
+      if (!title) {
+        popUpMessage("center", "Please enter a title.", "warning");
+        $btn.prop("disabled", false).text("Submit");
+        return;
+      }
+
+      if (!permalink) {
+        popUpMessage("center", "Please enter a permalink.", "warning");
+        $btn.prop("disabled", false).text("Submit");
+        return;
+      }
+
+      const formData = {
+        name: title,
+        url: permalink,
+        category: parentCategory,
+        description,
+        type: "category",
+        action,
+      };
+
+      const categoryId = $("#categoryID").val();
+      if (categoryId) {
+        formData.categoryID = categoryId; // Add to formData
+      }
+      const oldURL = $("#oldUrl").val();
+      if (oldURL) {
+        formData.oldURL = oldURL; // Add to formData
+      }
+      const postType = $("#postType").val();
+      if (postType) {
+        formData.postType = postType; // Add to formData
+      }
+
+      console.log(`formData`, formData);
+
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: formData,
+        success: function (data) {
+          if (data.status == 200) {
+            if (data.postType == "post") {
+              data.postType = "blog";
+            }
+            popUpMessage("center", data.msg, "success");
+            window.setTimeout(function () {
+              window.location.href =
+                "/dashboard/" + data.postType + "/categories/";
+            }, 1500);
+          } else {
+            popUpMessage("center", data.msg, "success");
+            $("#submitCategoryV2").show();
+          }
+        },
+        error: function (data) {
+          $("#submitCategoryV2").show();
+          popUpMessage("center", data.responseJSON.msg, "error");
+        },
+      });
+    });
+  }
+
   loadExternalJS("/app/dashboard/v2/default/desktop/assets/js/policy.min.js");
 });

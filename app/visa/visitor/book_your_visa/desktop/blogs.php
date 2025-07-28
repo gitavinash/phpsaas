@@ -146,7 +146,7 @@ require_once 'header.php';
                         </div>
                     </article>
                 </div>
-                <div class="mt-12 flex items-center justify-center">
+                <!-- <div class="mt-12 flex items-center justify-center">
                     <nav class="flex items-center gap-1">
                         <button
                             class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
@@ -163,7 +163,7 @@ require_once 'header.php';
                             <i class="ri-arrow-right-s-line"></i>
                         </button>
                     </nav>
-                </div>
+                </div> -->
             </div>
             <?php
             require_once 'sidebar.php';

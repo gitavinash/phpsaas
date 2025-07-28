@@ -180,14 +180,14 @@ if ($site_access_type != 'customer') {
         <ul>
             <li><a href="blog/list/"><i class="fi-rr-apps-sort"></i> All Blogs</a></li>
             <li><a href="blog/add/"><i class="fi fi-rr-add"></i> Add Blog</a></li>
-            <li><a href="blog/category/"><i class="fi fi-rr-filter-list"></i> Categories</a></li>
+            <li><a href="blog/categories/"><i class="fi fi-rr-filter-list"></i> Categories</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="blog/list/"><i class="fi-rr-apps-sort"></i> All Blogs</a></li>
             <li><a href="blog/add/"><i class="fi fi-rr-add"></i> Add Blog</a></li>
-            <li><a href="blog/category/"><i class="fi fi-rr-filter-list"></i> Categories</a></li>
+            <li><a href="blog/categories/"><i class="fi fi-rr-filter-list"></i> Categories</a></li>
         </ul>
     </div>
 </li>
