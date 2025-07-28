@@ -273,7 +273,7 @@
                             <ul class="p-4 space-y-2 text-sm text-gray-700">
                                 <li><a href="/category/flower/" class="block hover:text-primary">Fresh Flowers</a></li>
                                 <li><a href="/tag/everlasting/" class="block hover:text-primary">Everlasting Flowers</a>
-                                <li><a href="/tag/plants/" class="block hover:text-primary">Fresh plants</a>
+                                <li><a href="/category/fresh-plants/" class="block hover:text-primary">Fresh plants</a>
                                 </li>
                             </ul>
                         </div>
@@ -349,7 +349,7 @@
                     <ul class="pl-4 mt-2 space-y-1 text-sm">
                         <li><a href="/category/flower/" class="block">Fresh Flowers</a></li>
                         <li><a href="/tag/everlasting/" class="block">Everlasting</a></li>
-                        <li><a href="/tag/plants/" class="block">Fresh plants</a></li>
+                        <li><a href="/category/fresh-plants/" class="block">Fresh plants</a></li>
                     </ul>
                 </details>
 
