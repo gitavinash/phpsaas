@@ -18,7 +18,7 @@ function update($connection, $data)
 			$categoryURL = '/';
 		}
 
-		$url = preg_replace('~[^\p{M}\w-]+~u', '-', $url);
+		$url = '/' . trim(preg_replace('~[^\p{M}\w-]+~u', '-', $url), '-') . '/';
 
 		mysqli_query($connection, 'START TRANSACTION');
 

@@ -1549,7 +1549,6 @@ $(document).ready(function (e) {
       const title = $("#title").val().trim();
       const permalink = $("#permalink").val().trim();
       var description = $("#editor-0").val() || "";
-      console.log(`description`, description);
       const parentCategory = $("#parentCategory").val().trim();
       const action = $("#action").val().trim();
 
@@ -1604,13 +1603,77 @@ $(document).ready(function (e) {
                 "/dashboard/" + data.postType + "/categories/";
             }, 1500);
           } else {
-            popUpMessage("center", data.msg, "success");
+            popUpMessage("center", data.msg, "warning");
             $("#submitCategoryV2").show();
           }
         },
         error: function (data) {
           $("#submitCategoryV2").show();
           popUpMessage("center", data.responseJSON.msg, "error");
+        },
+      });
+    });
+  }
+
+  if ($("#blogFormV2").length) {
+    // Auto-generate permalink from title input
+    $("#title").on("input", function () {
+      let title = $(this).val().trim();
+
+      let permalink = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+      $("#permalink").val(permalink);
+    });
+
+    // Trigger file input on drop zone click
+    $("#dropZone").on("click", function () {
+      $("#fileInput").click();
+    });
+
+    // Submit blog form
+    $("#addBlogV2").click(function (e) {
+      e.preventDefault();
+
+      $("#addBlogV2").hide(); // Disable submit button
+
+      // Get description safely from textarea
+      var description = $("#editor-0").val() || "";
+      $("#editor-0").val(description.trim());
+
+      const fileInput = document.getElementById("fileInput");
+      const formData = new FormData(document.getElementById("blogFormV2"));
+      formData.append("action", "publish");
+
+      // Append image file if selected
+      if (fileInput.files.length > 0) {
+        formData.append("featureImage", fileInput.files[0]); // single file, not array
+      }
+
+      $.ajax({
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function (response) {
+          if (response.status == 200) {
+            popUpMessage("center", response.msg, "success");
+            setTimeout(function () {
+              window.location.href = "/dashboard/blog/list/";
+            }, 1600);
+          } else {
+            popUpMessage("center", response.msg, "warning");
+          }
+          $("#addBlogV2").show(); // Re-enable button
+        },
+        error: function (error) {
+          popUpMessage("center", error.responseJSON.msg, "error");
+          $("#addBlogV2").show();
         },
       });
     });
