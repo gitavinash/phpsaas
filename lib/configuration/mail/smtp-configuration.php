@@ -37,6 +37,5 @@ if (defined('EMAIL_SMTP_DEFAULT')) {
     define('SMTP_EMAIL', 'donotreply@blumox.com');
     define('SMTP_NAME', SITE_NAME);
     define('REPLY_EMAIL', 'donotreply@blumox.com');
-    define('REPLY_EMAIL_NAME', SITE_NAME);one
-
+    define('REPLY_EMAIL_NAME', SITE_NAME);
 }
