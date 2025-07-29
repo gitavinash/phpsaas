@@ -272,7 +272,6 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
                 $leadId = mysqli_insert_id($connection);
             }
 
-
             if ($addNewEnquiry) {
                 mysqli_query($connection, "COMMIT");
             } else {
