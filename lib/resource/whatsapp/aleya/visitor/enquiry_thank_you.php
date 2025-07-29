@@ -17,7 +17,6 @@ function sanitize_input($value, $default = '')
 $subjectRaw   = sanitize_input($subject ?? '');
 $cleaned      = str_replace(['tour', 'package'], '', $subjectRaw);
 $subject      = preg_replace('/\s+/', ' ', $cleaned);
-
 $name         = sanitize_input($name ?? 'User');
 $travelDate   = sanitize_input($travel_date ?? 'N/A');
 $mobile       = sanitize_input($mobile ?? 'N/A');
@@ -52,6 +51,8 @@ $fullUrl = "https://bhashsms.com/api/sendmsgutil.php?" . http_build_query([
     'stype'    => 'normal',
     'Params'   => $variablesValues
 ]);
+
+$sendMessageTo = $mobile;
 
 // Optional: Send the request or include tracking/confirmation template
 require WHATSAPP_TEMPLATE . 'footer.php';
