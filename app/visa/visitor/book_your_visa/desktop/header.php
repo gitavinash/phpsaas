@@ -110,6 +110,7 @@
                     <li><a href="travel-agent-registration/" class="block py-2 text-gray-700">Travel Agent
                             Registration</a>
                     </li>
+                    <li><a href="/blogs/" data-readdy="true" class="text-gray-700 hover:text-primary">Blog</a></li>
                     <li class="pt-4 pb-4 border-t">
                         <?php
 
