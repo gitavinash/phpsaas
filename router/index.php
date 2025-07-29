@@ -64,7 +64,8 @@ if ((isset($type))) {
 			http_response_code(400);
 			echo json_encode([
 				"status" => 'error',
-				"msg" => "reCAPTCHA verification failed."
+				"msg" => "reCAPTCHA verification failed.",
+				"recaptcha_token" => $recaptcha_token
 			]);
 			exit();
 		} else {
