@@ -18,7 +18,13 @@ $variablesValues = $subject . ',' . $travelDates . ',' . $name . ',' . $mobile .
 // Remove accidental trailing comma if any
 $variablesValues = rtrim($variablesValues, ',');
 
-$sendMessageTo = SITE_MOBILE;
+
+if (defined('SITE_MOBILE')) {
+    $sendMessageTo = SITE_MOBILE;
+} else {
+    $sendMessageTo = $site_mobile;
+}
+
 
 // Send to WhatsApp
 require WHATSAPP_TEMPLATE . 'footer.php';
