@@ -304,7 +304,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                     <?php if (!empty($exclusion)) { ?>
                     <li class="flex items-center">
                         <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                            <i class="ri-cross-line"></i>
+                            <i class="ri-close-line"></i>
                         </div>
                         <span><?php echo htmlspecialchars(ucfirst($exclusion)); ?></span>
                     </li>
