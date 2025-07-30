@@ -45,7 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (mysqli_num_rows($checkPage) != 0) {
                         extract(mysqli_fetch_assoc($checkPage));
 
-                        if ($checkEmail = mysqli_query($connection, "SELECT site_configuration_value as toAddress, site_name as companyName, site_domain FROM " . TABLE_PREFIX . "site_configuration INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_configuration_site_id WHERE site_configuration_site_id='{$fb_forms_site_id}' AND site_configuration_key='enquiry_email' AND site_configuration_status=1")) {
+                        $fbSiteQuery = "SELECT 
+    sc.site_configuration_key,
+    sc.site_configuration_value, 
+    s.site_name AS companyName, 
+    s.site_domain
+FROM 
+    " . TABLE_PREFIX . "site_configuration sc
+INNER JOIN 
+    " . TABLE_PREFIX . "site s ON s.site_id = sc.site_configuration_site_id
+WHERE 
+    sc.site_configuration_site_id = '{$fb_forms_site_id}'
+    AND sc.site_configuration_status = 1
+    AND sc.site_configuration_key IN ('site_email', 'site_mobile')";
+
+                        if ($checkEmail = mysqli_query($connection, $fbSiteQuery)) {
                             if (mysqli_num_rows($checkEmail) != 0) {
                                 extract(mysqli_fetch_assoc($checkEmail));
 
@@ -130,16 +144,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         if ($addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())")) {
                                             $leadId = mysqli_insert_id($connection);
 
-                                            $sender = $email;
-                                            if (isset($sender)) {
+                                            if (isset($site_configuration_key['site_email'])) {
+                                                $sender = $site_configuration_key['site_email'];
                                                 if (!isset($doNotSendEmail)) {
                                                     require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
                                                     require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                                 }
                                             }
 
-                                            if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
-                                                if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
+                                            if (isset($site_configuration_key['enable_whatsapp_business_api'])) {
+                                                if ($site_configuration_key['enable_whatsapp_business_api'] == 'yes') {
                                                     require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
                                                     require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
                                                 }
