@@ -296,6 +296,109 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                     <?php } ?>
                 </ul>
             </div>
+            <!-- Pricing Section -->
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-semibold mb-4">Tour Exclusions</h2>
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <h3 class="font-medium text-gray-900 mb-4">Not Included in Package:</h3>
+                        <ul class="grid grid-cols-2 gap-2 text-sm">
+                            <?php foreach ($exclusions as $exclusion) { ?>
+                            <?php $exclusion = trim($exclusion); ?>
+                            <?php if (!empty($exclusion)) { ?>
+                            <li class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
+                                    <i class="ri-lose-line"></i>
+                                </div>
+                                <span><?php echo htmlspecialchars(ucfirst($exclusion)); ?></span>
+                            </li>
+                            <?php } ?>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div>
+                <h2 class="text-xl font-semibold mb-4">Tour Pricing</h2>
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-5">
+                    <div class="bg-primary/10 p-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-semibold text-gray-800">Standard Package</h3>
+                            <div class="px-3 py-1 bg-primary text-white rounded-full text-sm font-medium">Best Value
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mt-1">2 Adults | 4-Star Accommodation | 5 Days, 4 Nights</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="space-y-1">
+                                <div class="text-3xl font-bold text-gray-900">INR 1,26,012</div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg text-gray-500 line-through">INR 1,50,000</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-sm font-medium">Save
+                                        20%</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">Per Package</div>
+                                <div class="text-sm text-gray-500">(INR 63,006 per person)</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 border-t border-b border-gray-200 py-4 mb-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <i class="ri-hotel-line text-primary"></i>
+                                    <span>Base Price (2 Adults)</span>
+                                </div>
+                                <span class="font-medium">INR 1,20,012</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <i class="ri-percent-line text-primary"></i>
+                                    <span>GST (5%)</span>
+                                </div>
+                                <span class="font-medium">+ INR 6,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <i class="ri-gift-line text-green-600"></i>
+                                    <span>Special Discount</span>
+                                </div>
+                                <span class="font-medium text-green-600">- INR 29,988</span>
+                            </div>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg mb-6">
+                            <div class="flex items-start">
+                                <div
+                                    class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shrink-0">
+                                    <i class="ri-gift-line"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="font-medium text-gray-900">Limited Time Offer!</p>
+                                    <p class="text-gray-600">Free airport transfers worth INR 5,000</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-primary hover:bg-primary/90 text-white py-4 px-6 rounded-button font-medium text-lg whitespace-nowrap">
+                            Book Now & Save 20%
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-2 text-sm text-gray-600">
+                        <i class="ri-calendar-line mt-0.5"></i>
+                        <span>Prices valid until December 31, 2025</span>
+                    </div>
+                    <div class="flex items-start gap-2 text-sm text-gray-600">
+                        <i class="ri-user-star-line mt-0.5"></i>
+                        <span>Children aged 2-11 receive 25% discount when sharing room with adults</span>
+                    </div>
+                    <div class="flex items-start gap-2 text-sm text-gray-600">
+                        <i class="ri-group-line mt-0.5"></i>
+                        <span>Minimum 2 participants required for guaranteed departure</span>
+                    </div>
+                </div>
+            </div>
             <!-- <div class="bg-amber-50 p-4 rounded-lg">
                 <h3 class="font-medium mb-2">Important Notes:</h3>
                 <ul class="space-y-2">
