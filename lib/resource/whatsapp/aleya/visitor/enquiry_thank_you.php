@@ -23,36 +23,43 @@ $mobile       = sanitize_input($mobile ?? 'N/A');
 $email        = sanitize_input($email ?? 'N/A');
 $requirements = sanitize_input($requirements ?? '');
 
-// Build final param string for WhatsApp API
-$variablesValues = implode(',', [
-    $name,
-    $subject,
-    $travelDate,
-    $mobile,
-    $email,
-    $requirements,
-    SITE_NAME,
-    SITE_URL,
-    SITE_MOBILE,
-    SITE_EMAIL
-]);
+if (defined('SITE_MOBILE')) {
+    $site_mobile = SITE_MOBILE;
+}
 
-// Optional safety trim (not needed with implode but kept just in case)
-$variablesValues = rtrim($variablesValues, ',');
+if (isset($site_mobile)) {
 
-// Build full WhatsApp API request URL
-$fullUrl = "https://bhashsms.com/api/sendmsgutil.php?" . http_build_query([
-    'user'     => 'Aleya_BWA',
-    'pass'     => '123456',
-    'sender'   => 'BUZWAP',
-    'phone'    => $mobile,
-    'text'     => 'aleya_bw_1',
-    'priority' => 'wa',
-    'stype'    => 'normal',
-    'Params'   => $variablesValues
-]);
+    // Build final param string for WhatsApp API
+    $variablesValues = implode(',', [
+        $name,
+        $subject,
+        $travelDate,
+        $mobile,
+        $email,
+        $requirements,
+        SITE_NAME,
+        SITE_URL,
+        $site_mobile,
+        SITE_EMAIL
+    ]);
 
-$sendMessageTo = $mobile;
+    // Optional safety trim (not needed with implode but kept just in case)
+    $variablesValues = rtrim($variablesValues, ',');
 
-// Optional: Send the request or include tracking/confirmation template
-require WHATSAPP_TEMPLATE . 'footer.php';
+    // Build full WhatsApp API request URL
+    $fullUrl = "https://bhashsms.com/api/sendmsgutil.php?" . http_build_query([
+        'user'     => 'Aleya_BWA',
+        'pass'     => '123456',
+        'sender'   => 'BUZWAP',
+        'phone'    => $mobile,
+        'text'     => 'aleya_bw_1',
+        'priority' => 'wa',
+        'stype'    => 'normal',
+        'Params'   => $variablesValues
+    ]);
+
+    $sendMessageTo = $mobile;
+
+    // Optional: Send the request or include tracking/confirmation template
+    require WHATSAPP_TEMPLATE . 'footer.php';
+}
