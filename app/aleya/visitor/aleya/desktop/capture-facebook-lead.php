@@ -57,11 +57,21 @@ INNER JOIN
 WHERE 
     sc.site_configuration_site_id = '{$fb_forms_site_id}'
     AND sc.site_configuration_status = 1
-    AND sc.site_configuration_key IN ('site_email', 'site_mobile')";
+    AND sc.site_configuration_key IN ('site_email', 'site_mobile', 'enable_whatsapp_business_api')";
 
                         if ($checkEmail = mysqli_query($connection, $fbSiteQuery)) {
                             if (mysqli_num_rows($checkEmail) != 0) {
-                                extract(mysqli_fetch_assoc($checkEmail));
+                                $siteData = [];
+                                $companyName = '';
+                                $site_domain = '';
+                                while ($siteInformation = mysqli_fetch_assoc($checkEmail)) {
+                                    // print_r($siteInformation);
+                                    $siteData[$siteInformation['site_configuration_key']] = $siteInformation['site_configuration_value'];
+                                    $companyName = $siteInformation['companyName'];
+                                    $site_domain = $siteInformation['site_domain'];
+                                };
+
+                                extract($siteData);
 
                                 // Fetch lead details from facebook
 
@@ -144,19 +154,24 @@ WHERE
                                         if ($addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())")) {
                                             $leadId = mysqli_insert_id($connection);
 
-                                            if (isset($site_configuration_key['site_email'])) {
-                                                $sender = $site_configuration_key['site_email'];
+                                            if (isset($site_email)) {
+                                                $sender = $site_email;
                                                 if (!isset($doNotSendEmail)) {
                                                     require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
                                                     require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
                                                 }
+                                            } else {
+                                                custom_log('No site_email found');
                                             }
 
-                                            if (isset($site_configuration_key['enable_whatsapp_business_api'])) {
-                                                if ($site_configuration_key['enable_whatsapp_business_api'] == 'yes') {
+                                            if (isset($enable_whatsapp_business_api)) {
+                                                if ($enable_whatsapp_business_api == 'yes') {
                                                     require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
                                                     require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+                                                    custom_log('Whatsapp alert sent');
                                                 }
+                                            } else {
+                                                custom_log('No enable_whatsapp_business_api found');
                                             }
 
                                             echo json_encode(array(
@@ -165,15 +180,21 @@ WHERE
                                             ), TRUE);
 
                                             exit();
+                                        } else {
+                                            custom_log("Something went wrong while inserting the enquiry");
                                         }
+                                    } else {
+                                        custom_log("Dublicate enquiry found");
                                     }
+                                } else {
+                                    custom_log('Something went wrong while executing find enquiry');
                                 }
                             }
                         } else {
-                            custom_log("Site configurations is not found in Database", "WARNING");
+                            custom_log("Site configurations is not found in Database  Page id: {$pageId} - Form id: {$formId}", "WARNING");
                         }
                     } else {
-                        custom_log("Facebook page is not found in Database", "WARNING");
+                        custom_log("Facebook page is not found in Database Page id: {$pageId} - Form id: {$formId}", "WARNING");
                     }
                 } else {
                     custom_log(`Aleya visitor Something went wrong while running the query {$rawData}`, 'ERROR');
@@ -187,8 +208,6 @@ WHERE
         custom_log(`Request body:` . $rawData, "WARNING");
     }
 } else {
-
-    custom_log("GET request received  {$rawData}", "WARNING");
 
     // Define your verification token (set in the Facebook app settings)
     $verificationToken = "EAANL49oYVsUBO6JuQz6tUkyiPbzZCGOei96dLTf3p3D18GPFA5eeq8cQPVAzwfqEabtre3s31njbO3z7KokfyUUWDuBPfeMCWCgLVkZA9BHYLZAZCZA3W2VjprlK0CKxuLH8hB6y7HR3xVRdNR8mzKZCmfvwmbwtplChgi5h25YGCqcp3KigmSk07E";
