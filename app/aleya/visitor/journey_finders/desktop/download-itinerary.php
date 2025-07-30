@@ -296,7 +296,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                     <?php } ?>
                 </ul>
             </div>
-            <div class="bg-blue-50 p-4 rounded-lg mb-4 mt-8">
+            <div class="bg-red-50 p-4 rounded-lg mb-4 mt-8">
                 <h3 class="font-medium mb-2">Not Included in Package:</h3>
                 <ul class="grid grid-cols-2 gap-2 text-sm">
                     <?php foreach ($exclusions as $exclusion) { ?>
@@ -304,7 +304,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                     <?php if (!empty($exclusion)) { ?>
                     <li class="flex items-center">
                         <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                            <i class="ri-check-line"></i>
+                            <i class="ri-cross-line"></i>
                         </div>
                         <span><?php echo htmlspecialchars(ucfirst($exclusion)); ?></span>
                     </li>
