@@ -40,7 +40,7 @@ if (isset($site_mobile)) {
         SITE_NAME,
         SITE_URL,
         $site_mobile,
-        SITE_EMAIL
+        ((defined('SITE_EMAIL')) ? SITE_EMAIL : $site_email)
     ]);
 
     // Optional safety trim (not needed with implode but kept just in case)
