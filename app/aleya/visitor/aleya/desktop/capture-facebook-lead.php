@@ -156,15 +156,15 @@ WHERE
                                         if ($addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id, enquiry_first_name, enquiry_email, enquiry_mobile, enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status, enquiry_time) VALUES('{$fb_forms_site_id}', '{$userId}', '{$name}', '{$email}', '{$mobile}', '{$leadResponseCurl}', '{$subject}', 'enquiry', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}', 0, NOW())")) {
                                             $leadId = mysqli_insert_id($connection);
 
-                                            if (isset($site_email)) {
-                                                $sender = $site_email;
-                                                if (!isset($doNotSendEmail)) {
-                                                    require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
-                                                    require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
-                                                }
-                                            } else {
-                                                custom_log('No site_email found');
-                                            }
+                                            // if (isset($site_email)) {
+                                            //     $sender = $site_email;
+                                            //     if (!isset($doNotSendEmail)) {
+                                            //         require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry.php';
+                                            //         require_once APP_EMAIL_TEMPLATE . 'facebook-enquiry-thank-you.php';
+                                            //     }
+                                            // } else {
+                                            //     custom_log('No site_email found');
+                                            // }
 
                                             if (isset($enable_whatsapp_business_api)) {
                                                 if ($enable_whatsapp_business_api == 'yes') {
