@@ -280,6 +280,8 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         <div class="p-6 border-b border-gray-200">
             <h2 class="text-xl font-semibold mb-4">Tour Overview</h2>
             <p class="mb-8"><?php echo $tour_package_overview ?></p>
+        </div>
+        <div class="p-6 border-b border-gray-200 pdf-page">
             <div class="bg-blue-50 p-4 rounded-lg mb-4 mt-8">
                 <h3 class="font-medium mb-2">What's Included:</h3>
                 <ul class="grid grid-cols-2 gap-2 text-sm">
