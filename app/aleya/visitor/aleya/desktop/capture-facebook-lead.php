@@ -19,6 +19,8 @@ function custom_log($message, $type = 'INFO')
     $formattedMessage .= "Message: " . $message . PHP_EOL;
     $formattedMessage .= "----------------------------------------" . PHP_EOL;
 
+    echo $message;
+
     file_put_contents(
         $logFile,
         $formattedMessage,
