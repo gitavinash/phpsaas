@@ -253,7 +253,6 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
             AND inventory_site_id = " . SITE_ID . "
             AND inventory_price > 0
         WHERE order_site_id = " . SITE_ID . "
-          AND order_update >= NOW() - INTERVAL 30 DAY
           AND order_product_id != ''
         GROUP BY order_product_id
         ORDER BY total_orders DESC
