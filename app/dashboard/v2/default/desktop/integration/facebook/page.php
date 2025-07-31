@@ -35,7 +35,7 @@
                         $curl = curl_init();
 
                         curl_setopt_array($curl, array(
-                            CURLOPT_URL => "https://graph.facebook.com/v19.0/{$pageId}/leadgen_forms?access_token={$fb_page_access_token}",
+                            CURLOPT_URL => "https://graph.facebook.com/v19.0/{$pageId}/leadgen_forms?access_token={$fb_page_access_token}&?limit=100",
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
