@@ -98,7 +98,7 @@ require_once 'header.php';
                                     <img src='{$gallery_image}'
                                         alt='{$tour_package_title}' class='w-full h-full object-cover object-top' />
                                     <div class='absolute top-4 left-4 bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>
-                                        Best Seller
+                                        " . ucwords($tour_package_theme) . "
                                     </div>
                                     <div class='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
                                         <div class='flex items-center text-white mb-1'>
