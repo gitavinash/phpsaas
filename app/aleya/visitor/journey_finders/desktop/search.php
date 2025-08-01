@@ -38,6 +38,7 @@ require_once 'quick_filters.php';
                         OR LOWER(tp.tour_package_title) LIKE '%$q%'
                         OR LOWER(tp.tour_package_state) LIKE '%$q%'
                         OR LOWER(tp.tour_package_country) LIKE '%{$q}' 
+                        OR LOWER(tp.tour_package_type) LIKE '%{$q}' 
                         OR LOWER(tp.tour_package_theme) LIKE '%{$q}%') AND ";
                 }
 
