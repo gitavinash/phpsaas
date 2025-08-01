@@ -66,6 +66,7 @@
                 <option value="cruise">Cruise Travel</option>
                 <option value="backpacking">Backpacking Travel</option>
                 <option value="religious">Religious Travel</option>
+                <option value="heritage">Heritage Travel</option>
             </select>
         </div>
     </td>

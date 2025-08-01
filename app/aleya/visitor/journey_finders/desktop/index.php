@@ -200,25 +200,34 @@ LIMIT 0, 8
                     while ($destinationData = mysqli_fetch_assoc($destinationList)) {
                         extract($destinationData);
                         echo "<div class='destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
-                            <a href='/packages/" . strtolower(str_replace(' ', '_', $country_name . '/' . $location_title)) . "/' title='Explore {$location_title} tour packages'>
-                                <div class='relative h-48 overflow-hidden'>
-                                    <img src='{$location_thumbnail}' alt='{$location_title} tour packages'
-                                        class='w-full h-full object-cover object-top' />
-                                    <div class='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
-                                        <h3 class='text-white font-semibold'>{$location_title}</h3>
-                                    </div>
-                                </div>
-                                <div class='p-4'>
-                                    <div class='flex justify-between items-center'>
-                                        <span class='text-gray-600 text-sm'>{$total_matching_tours} packages</span>
-                                        " . (($total_matching_tours != 0) ? "<span class='text-primary font-medium'>From ₹ {$lowest_selling_price}</span>" : "") . "
-                                    </div>
-                                </div>
-                            </a>
-                        </div>";
+    <a href='/packages/" . strtolower(str_replace(' ', '_', $country_name . '/' . $location_title)) . "/' title='Explore {$location_title} tour packages'>
+        <div class='relative h-48 overflow-hidden'>
+            <img src='{$location_thumbnail}' alt='{$location_title} tour packages'
+                class='w-full h-full object-cover object-top' />
+            <div class='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
+                <h3 class='text-white font-semibold'>{$location_title}</h3>
+            </div>
+        </div>
+        <div class='p-4'>
+            <div class='flex flex-col md:flex-row md:justify-between md:items-center gap-1'>
+                <span class='text-gray-600 text-sm'>{$total_matching_tours} packages</span>"
+                            . (($total_matching_tours != 0)
+                                ? "<span class='text-primary font-medium'>From ₹ {$lowest_selling_price}</span>"
+                                : "") . "
+            </div>
+        </div>
+    </a>
+</div>";
                     }
                 } else {
-                    echo "<p class='text-gray-600 text-center col-span-full'>No destinations found.</p>";
+                    echo "
+<div class='col-span-full text-center py-12 text-gray-600'>
+    <div class='flex flex-col items-center justify-center space-y-3'>
+        <i class='ri-map-pin-line text-4xl text-gray-400'></i>
+        <p class='text-lg font-medium'>No destinations found.</p>
+        <p class='text-sm text-gray-500'>Please try again later or explore other locations.</p>
+    </div>
+</div>";
                 }
             }
 
@@ -236,7 +245,7 @@ LIMIT 0, 8
                 memorable
             </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="text-center">
                 <div class="w-16 h-16 flex items-center justify-center mx-auto bg-primary/10 rounded-full mb-4">
                     <i class="ri-award-line ri-xl text-primary"></i>
@@ -278,7 +287,7 @@ LIMIT 0, 8
             </div>
         </div>
         <div class="mt-16 bg-gray-50 rounded-lg p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="text-center">
                     <div class="text-3xl font-bold text-primary mb-2">1,000+</div>
                     <p class="text-gray-600">Happy Travelers</p>
@@ -309,7 +318,7 @@ LIMIT 0, 8
                 Discover experiences that match your unique travel preferences
             </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
                 <a href="/theme/luxury/" title="Luxury tour packages">
                     <div class="relative h-48">
@@ -384,19 +393,19 @@ LIMIT 0, 8
                 Discover destinations based on your preferred natural landscapes
             </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
                 <div class="relative h-64">
-                    <a href="/theme/beaches/" title="Beaches tour packages">
-                        <img src="<?php echo USER_IMAGES; ?>/terrain/beaches.jpg" alt="Beaches"
+                    <a href="/theme/heritage/" title="Heritage tour packages">
+                        <img src="<?php echo USER_IMAGES; ?>/terrain/heritage.jpg" alt="Heritage"
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div class="absolute bottom-6 left-6">
-                            <h3 class="text-white text-2xl font-semibold mb-2">Beaches</h3>
-                            <!-- <div class="flex items-center text-white/90">
-                            <span class="text-sm">42 destinations</span>
-                            <i class="ri-arrow-right-line ml-2"></i>
-                        </div> -->
+                            <h3 class="text-white text-2xl font-semibold mb-2">Heritage</h3>
+                            <div class="flex items-center text-white/90">
+                                <span class="text-sm">Explore now</span>
+                                <i class="ri-arrow-right-line ml-2"></i>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -411,10 +420,10 @@ LIMIT 0, 8
                             <h3 class="text-white text-2xl font-semibold mb-2">
                                 Mountains
                             </h3>
-                            <!-- <div class="flex items-center text-white/90">
-                            <span class="text-sm">35 destinations</span>
-                            <i class="ri-arrow-right-line ml-2"></i>
-                        </div> -->
+                            <div class="flex items-center text-white/90">
+                                <span class="text-sm">Explore now</span>
+                                <i class="ri-arrow-right-line ml-2"></i>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -427,10 +436,26 @@ LIMIT 0, 8
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div class="absolute bottom-6 left-6">
                             <h3 class="text-white text-2xl font-semibold mb-2">Deserts</h3>
-                            <!-- <div class="flex items-center text-white/90">
-                            <span class="text-sm">28 destinations</span>
-                            <i class="ri-arrow-right-line ml-2"></i>
-                        </div> -->
+                            <div class="flex items-center text-white/90">
+                                <span class="text-sm">Explore now</span>
+                                <i class="ri-arrow-right-line ml-2"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
+                <div class="relative h-64">
+                    <a href="/theme/beaches/" title="Beaches tour packages">
+                        <img src="<?php echo USER_IMAGES; ?>/terrain/beaches.jpg" alt="Beaches"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="text-white text-2xl font-semibold mb-2">Beaches</h3>
+                            <div class="flex items-center text-white/90">
+                                <span class="text-sm">Explore now</span>
+                                <i class="ri-arrow-right-line ml-2"></i>
+                            </div>
                         </div>
                     </a>
                 </div>

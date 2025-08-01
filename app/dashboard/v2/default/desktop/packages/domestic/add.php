@@ -22,7 +22,8 @@
                             <div class="locationDurationGroup">
                                 <div class="form-group">
                                     <p>Destination<sup>*</sup></p>
-                                    <select class="indianCityAutoComplete form-control" name="destination[]" id="destination-1">
+                                    <select class="indianCityAutoComplete form-control" name="destination[]"
+                                        id="destination-1">
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -34,7 +35,8 @@
                                         <button type="button" class="btn btn-success addLocation">+</button>
                                     </div>
                                     <div class="box-2">
-                                        <button type="button" class="btn-red removeLocation" style="display:none;">Remove</button>
+                                        <button type="button" class="btn-red removeLocation"
+                                            style="display:none;">Remove</button>
                                     </div>
                                 </div>
                             </div>
@@ -88,6 +90,7 @@
                                 <option value="cruise">Cruise Travel</option>
                                 <option value="backpacking">Backpacking Travel</option>
                                 <option value="religious">Religious Travel</option>
+                                <option value="heritage">Heritage Travel</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -109,7 +112,8 @@
                         </div>
                         <div class="form-group">
                             <p>Local Sightseeing vehicle<sup>*</sup></p>
-                            <select class="selectJS form-control" name="localSighseeignVehicle" id="localSighseeignVehicle">
+                            <select class="selectJS form-control" name="localSighseeignVehicle"
+                                id="localSighseeignVehicle">
                                 <option value="select">Select vehicle</option>
                                 <?php
                                 if ($vehicles = mysqli_query($connection, "SELECT vehicle_title, vehicle_type FROM " . TABLE_PREFIX . "vehicles")) {
@@ -126,7 +130,8 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="button" class="btn btn-green" id="addDomesticPackageBtn" value="Generate package">
+                                <input type="button" class="btn btn-green" id="addDomesticPackageBtn"
+                                    value="Generate package">
                             </div>
                         </div>
                     </div>
