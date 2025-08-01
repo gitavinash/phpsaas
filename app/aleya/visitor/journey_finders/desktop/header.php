@@ -152,7 +152,7 @@ function buildFilterQuery($filter, $value, $connection)
                         class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
                         <i class="ri-search-line ri-lg"></i>
                     </div>
-                    <input type="text" name="q" value="<?php echo ((isset($q)) ? $q : '') ?>" placeholder="Search..."
+                    <input type="text" name="q" placeholder="Search..."
                         class="pl-12 pr-4 py-2 w-64 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
                 </form>
                 <a href="/contact-us"

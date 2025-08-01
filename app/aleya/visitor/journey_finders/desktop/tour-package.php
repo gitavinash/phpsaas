@@ -38,13 +38,17 @@ require_once 'header.php';
     <!-- Breadcrumbs -->
     <div class="mb-6">
         <div class="flex items-center text-sm text-gray-500">
-            <a href="#" class="hover:text-primary">Home</a>
+            <a href="/" title="Go to homepage" class="hover:text-primary">Home</a>
             <span class="mx-2">/</span>
-            <a href="#" class="hover:text-primary">Holiday</a>
+            <a href="/holiday/" title="Explore journey finders tour packages" class="hover:text-primary">Holiday</a>
             <span class="mx-2">/</span>
-            <a href="#" class="hover:text-primary"><?php echo $tour_package_country ?></a>
+            <a href="/packages/<?php echo $tour_package_country ?>/"
+                title="Explore <?php echo $tour_package_country ?> tour packages"
+                class="hover:text-primary"><?php echo $tour_package_country ?></a>
             <span class="mx-2">/</span>
-            <a href="#" class="hover:text-primary"><?php echo $tour_package_city ?></a>
+            <a href="/packages/<?php echo $tour_package_country ?>/<?php echo $tour_package_state ?>/"
+                title="Explore <?php echo $tour_package_state ?> tour packages"
+                class="hover:text-primary"><?php echo $tour_package_state ?></a>
             <span class="mx-2">/</span>
             <span class="text-gray-700 font-medium"><?php echo $tour_package_title ?></span>
         </div>

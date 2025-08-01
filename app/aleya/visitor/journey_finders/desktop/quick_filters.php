@@ -8,10 +8,12 @@
                     <i class="ri-search-line"></i>
                 </div>
                 <div>
-                    <p class="text-xs text-gray-500">Search for</p>
+                    <p class="text-xs text-gray-500">
+                        <?php echo ((isset($q)) ? 'Search for ' : 'Explore ') ?>
+                    </p>
                     <p class="font-medium">
                         <?php
-                        $destinationPage = ucwords(str_replace('-', ' ', $q ?? ''));
+                        $destinationPage = (isset($q)) ? ucwords(str_replace('-', ' ', $q)) : ucwords(str_replace('-', ' ', ((isset($urlStructure[2])) ? $urlStructure[2] : $urlStructure[1]) ?? ''));
                         echo $destinationPage;
                         ?>
                     </p>
