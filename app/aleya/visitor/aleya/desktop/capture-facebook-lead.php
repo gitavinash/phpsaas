@@ -19,7 +19,9 @@ function custom_log($message, $type = 'INFO')
     $formattedMessage .= "Message: " . $message . PHP_EOL;
     $formattedMessage .= "----------------------------------------" . PHP_EOL;
 
-    echo $message;
+    if (DEVELOPMENT_MODE == true) {
+        echo $message;
+    }
 
     file_put_contents(
         $logFile,
@@ -51,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     sc.site_configuration_key,
     sc.site_configuration_value, 
     s.site_name AS companyName, 
-    s.site_domain
+    s.site_domain as enquiryDomain
 FROM 
     " . TABLE_PREFIX . "site_configuration sc
 INNER JOIN 
@@ -70,7 +72,7 @@ WHERE
                                     // print_r($siteInformation);
                                     $siteData[$siteInformation['site_configuration_key']] = $siteInformation['site_configuration_value'];
                                     $companyName = $siteInformation['companyName'];
-                                    $site_domain = $siteInformation['site_domain'];
+                                    $site_domain = $siteInformation['enquiryDomain'];
                                 };
 
                                 extract($siteData);
@@ -168,8 +170,8 @@ WHERE
 
                                             if (isset($enable_whatsapp_business_api)) {
                                                 if ($enable_whatsapp_business_api == 'yes') {
-                                                    require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
-                                                    require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+                                                    require_once WHATSAPP_TEMPLATE_ADMIN . 'facebook_new_enquiry.php';
+                                                    require_once WHATSAPP_TEMPLATE_VISITOR . 'facebook_enquiry_thank_you.php';
                                                     custom_log('Whatsapp alert sent');
                                                 }
                                             } else {
@@ -190,6 +192,12 @@ WHERE
                                     }
                                 } else {
                                     custom_log('Something went wrong while executing find enquiry');
+                                }
+                            } else {
+                                custom_log("Site information not found for  Page id: {$pageId} - Form id: {$formId}");
+                                if (DEVELOPMENT_MODE == true) {
+                                    echo $fbSiteQuery;
+                                    exit();
                                 }
                             }
                         } else {

@@ -5,7 +5,7 @@ require_once 'header.php';
 $templateName = 'aleya_customer_enquiry_confirmation';
 
 // Helper to sanitize any input (convert array to string, trim strings)
-function sanitize_input($value, $default = '')
+function sanitize_input($value, $default = 'N/A')
 {
     if (is_array($value)) {
         return implode(' ', array_map('trim', $value));
