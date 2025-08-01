@@ -19,11 +19,9 @@ require_once 'quick_filters.php';
                     <span class="font-medium"><?php echo ucwords($themePage); ?> theme tour packages
                 </div>
                 <div class="flex items-center">
-                    <div class="relative">
-                        <?php
-                        require_once 'sort_by.php';
-                        ?>
-                    </div>
+                    <?php
+                    require_once 'sort_by.php';
+                    ?>
                 </div>
             </div>
             <!-- Tour Results Grid -->
