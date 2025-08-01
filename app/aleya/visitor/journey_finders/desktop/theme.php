@@ -19,7 +19,6 @@ require_once 'quick_filters.php';
                     <span class="font-medium"><?php echo ucwords($themePage); ?> theme tour packages
                 </div>
                 <div class="flex items-center">
-                    <span class="text-gray-600 text-sm mr-2">Sort by:</span>
                     <div class="relative">
                         <?php
                         require_once 'sort_by.php';
