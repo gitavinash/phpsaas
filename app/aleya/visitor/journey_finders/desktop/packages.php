@@ -1,46 +1,6 @@
 <?php
 require_once 'header.php';
-?>
-<!-- Search Parameters Bar -->
-<div class="bg-white border-b border-gray-200 shadow-sm">
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 flex items-center justify-center text-primary bg-primary/10 rounded-full mr-2">
-                        <i class="ri-map-pin-line"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500">Destination</p>
-                        <p class="font-medium">
-                            <?php
 
-                            $destinationPage = ucwords(str_replace('-', ' ', ((isset($urlStructure[2])) ? $urlStructure[2] . ', ' . $urlStructure[1] : $urlStructure[1])));
-
-                            echo $destinationPage;
-
-                            ?>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="flex gap-3">
-                <a href="/<?php echo (($urlStructure[count($urlStructure) - 2] != 'packages') ? 'packages/' . $urlStructure[count($urlStructure) - 2] : 'holiday') ?>/"
-                    data-readdy="true"
-                    class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-button whitespace-nowrap text-sm hover:bg-gray-50 transition">
-                    <i class="ri-arrow-left-line mr-1"></i>
-                    Back
-                </a>
-                <!-- <button
-                    class="flex items-center justify-center px-4 py-2 bg-primary/10 text-primary rounded-button whitespace-nowrap text-sm hover:bg-primary/20 transition">
-                    <i class="ri-edit-line mr-1"></i>
-                    Modify Search
-                </button> -->
-            </div>
-        </div>
-    </div>
-</div>
-<?php
 
 require_once 'quick_filters.php';
 
