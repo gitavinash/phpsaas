@@ -38,34 +38,41 @@ require_once 'header.php';
                     while ($destinationData = mysqli_fetch_assoc($destinationList)) {
                         extract($destinationData);
                         echo "
-                    <!-- Destination Card 1 -->
-                    <div class='destination-card bg-white rounded-lg overflow-hidden shadow-sm'>
+                    <div class='destination-card bg-white rounded-lg overflow-hidden shadow-sm flex flex-col'>
+    <a href='/packages/" . str_replace(' ', '-', strtolower($country_name . '/' . $location_title)) . "/' title='View {$location_title} Tours' class='block h-full'>
                         <div class='relative h-56 overflow-hidden'>
-                            <img src='{$location_thumbnail}' alt='{$location_title}' alt='Bali' class='w-full h-full object-cover object-top' />
-            <div
-                class='absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full text-gray-700 hover:text-primary cursor-pointer transition'>
-                <i class='ri-heart-line'></i>
-            </div>
-        </div>
-        <div class='p-4'>
-            <div class='flex items-center justify-between mb-2'>
-                <h3 class='font-semibold text-lg'>{$location_title}</h3>
-                <span class='text-sm text-gray-600'>{$country_name}</span>
-            </div>
-            <div class='flex items-center mb-4'>
+        <img src='{$location_thumbnail}' alt='{$location_title}' class='w-full h-full object-cover object-top' />
+    </div>
+    <div class='p-4 flex flex-col flex-grow'>
+        <div class='flex items-center justify-between mb-2'>
+            <h3 class='font-semibold text-lg'>{$location_title}</h3>
+            <span class='text-sm text-gray-600'>{$country_name}</span>
+        </div>";
+                        if ($location_best_from != '') {
+                            echo "<div class='flex items-center mb-4'>
                 <div class='w-5 h-5 flex items-center justify-center text-primary mr-1'>
                     <i class='ri-calendar-line'></i>
                 </div>
                 <span class='text-sm text-gray-600'>Best time: " . ucwords($location_best_from) . " - " . ucwords($location_best_to) . "</span>
-            </div>
-            <a href='/packages/" . str_replace(' ', '-', strtolower($country_name . '/' . $location_title)) . "/' data-readdy='true'
-                class='block w-full bg-primary text-white text-center px-4 py-2 !rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition'>View
-                Tours</a>
-        </div>
+            </div>";
+                        }
+                        // Spacer to push button to bottom
+                        echo "<div class='flex-grow'></div>
+        <a href='/packages/" . str_replace(' ', '-', strtolower($country_name . '/' . $location_title)) . "/' data-readdy='true'
+            class='block w-full bg-primary text-white text-center px-4 py-2 rounded-button whitespace-nowrap text-sm font-medium hover:bg-primary/90 transition mt-4'>
+            View Tours
+        </a>
+    </div>
+    </a>
 </div>";
                     }
                 } else {
-                    echo "<p class='text-gray-600 text-center col-span-full'>No destinations found.</p>";
+                    echo "
+<div class='col-span-full flex flex-col items-center justify-center text-center p-8 bg-white rounded-lg shadow-sm'>
+    <i class='ri-map-pin-line text-4xl text-gray-400 mb-3'></i>
+    <h2 class='text-lg font-semibold text-gray-700 mb-1'>No Destinations Found</h2>
+    <p class='text-gray-500 text-sm'>Try adjusting your search or filters to explore more places.</p>
+</div>";
                 }
             }
             ?>

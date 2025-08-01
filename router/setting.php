@@ -15,6 +15,14 @@ if (file_exists($settingPath)) {
         require_once $themeRouterFile;
         exit();
     } else {
+
+        $defaultFilePath = DEFAULT_USER_PATH . $urlStructure[0] . '.php';
+
+        if (file_exists($defaultFilePath)) {
+            require_once $defaultFilePath;
+            exit();
+        }
+
         http_response_code(404);
         require_once ERROR_404;
     }

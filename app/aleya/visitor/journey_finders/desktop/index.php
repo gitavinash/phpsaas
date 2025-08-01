@@ -93,6 +93,7 @@ require_once 'header.php';
                         extract($packageData);
                         echo "
                             <div class='package-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
+                                <a href='{$link_url}' title='Explore {$tour_package_title}'>
                                 <div class='relative h-56 overflow-hidden'>
                                     <img src='{$gallery_image}'
                                         alt='{$tour_package_title}' class='w-full h-full object-cover object-top' />
@@ -136,6 +137,7 @@ require_once 'header.php';
                                     </div>
 
                                 </div>
+                                </a>
                             </div>
                         ";
                     }
@@ -198,7 +200,7 @@ LIMIT 0, 8
                     while ($destinationData = mysqli_fetch_assoc($destinationList)) {
                         extract($destinationData);
                         echo "<div class='destination-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300'>
-                            <a href='/packages/" . strtolower(str_replace(' ', '_', $country_name . '/' . $location_title)) . "/'>
+                            <a href='/packages/" . strtolower(str_replace(' ', '_', $country_name . '/' . $location_title)) . "/' title='Explore {$location_title} tour packages'>
                                 <div class='relative h-48 overflow-hidden'>
                                     <img src='{$location_thumbnail}' alt='{$location_title} tour packages'
                                         class='w-full h-full object-cover object-top' />
@@ -286,7 +288,7 @@ LIMIT 0, 8
                     <p class="text-gray-600">Tour Packages</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl font-bold text-primary mb-2">100+</div>
+                    <div class="text-3xl font-bold text-primary mb-2">50+</div>
                     <p class="text-gray-600">Destinations</p>
                 </div>
                 <div class="text-center">

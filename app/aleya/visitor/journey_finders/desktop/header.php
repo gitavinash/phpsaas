@@ -1,3 +1,47 @@
+<?php
+
+function buildFilterQuery($filter, $value, $connection)
+{
+    $conditions = [];
+
+    $filter = strtolower(trim($filter));
+    $value = trim($value);
+
+    switch ($filter) {
+        case 'duration':
+            if (preg_match('/^(\d+)-(\d+)$/', $value, $matches)) {
+                $min = (int)$matches[1] - 1;
+                $max = (int)$matches[2] - 1;
+                $conditions[] = "tour_package_duration BETWEEN {$min} AND {$max}";
+            }
+            break;
+
+        case 'type':
+            $safeValue = mysqli_real_escape_string($connection, $value);
+            $conditions[] = "tour_package_theme = '{$safeValue}'";
+            break;
+
+        case 'price':
+            if (preg_match('/^(\d+)-(\d+)$/', $value, $matches)) {
+                $min = (int)$matches[1] - 1;
+                $max = (int)$matches[2] - 1;
+                $conditions[] = "tour_package_price_selling_adult BETWEEN {$min} AND {$max}";
+            }
+            break;
+
+        default:
+            // Unknown filter — ignore
+            break;
+    }
+
+    if (!empty($conditions)) {
+        return implode(" AND ", $conditions) . ' AND ';
+    } else {
+        return "";
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

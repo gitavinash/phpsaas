@@ -267,7 +267,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
-                            <div class="text-3xl font-bold whitespace-nowrap">₹ <?php echo $quotation_price ?></div>
+                            <div class="text-3xl font-bold whitespace-nowrap">₹ <?php echo $quotation_price ?> /-</div>
                             <div class="text-sm text-white/75 whitespace-nowrap mb-2">per person</div>
                             <div class="text-sm text-white/75 whitespace-nowrap">Ref. id: <?php echo $quoteId ?>
                             </div>
@@ -547,7 +547,8 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
 
         <!-- Powered By Section -->
         <div class="p-4 bg-gray-100 text-center text-sm text-gray-600">
-            Powered by <span class="font-medium">Aleya</span> - A Smart Travel ERP Software
+            <a href="https://aleya.in/?utm_source=itinerary">Powered by <span class="font-medium">Aleya</span> - A Smart
+                Travel ERP Software</a>
         </div>
 
     </div>
