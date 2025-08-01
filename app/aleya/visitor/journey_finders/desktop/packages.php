@@ -17,20 +17,9 @@ require_once 'quick_filters.php';
                     <span class="font-medium"><?php echo $destinationPage ?> tour packages
                 </div>
                 <div class="flex items-center">
-                    <span class="text-gray-600 text-sm mr-2">Sort by:</span>
-                    <div class="relative">
-                        <select
-                            class="pl-4 pr-8 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm appearance-none bg-white">
-                            <option value="recommended">Recommended</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
-                            <option value="rating">Rating</option>
-                            <option value="duration">Duration</option>
-                        </select>
-                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                            <i class="ri-arrow-down-s-line text-gray-500"></i>
-                        </div>
-                    </div>
+                    <?php
+                    require_once 'sort_by.php';
+                    ?>
                 </div>
             </div>
             <!-- Tour Results Grid -->
@@ -94,7 +83,7 @@ LEFT JOIN (
 WHERE
     {$queryFilter}
     {$filterQuery}
-    tp.tour_package_site_id = " . SITE_ID;
+    tp.tour_package_site_id = " . SITE_ID . " {$sort_order}";
 
                 if ($destinationPackages = mysqli_query($connection, $destinationPackagesQuery)) {
                     if (mysqli_num_rows($destinationPackages) > 0) {

@@ -30,7 +30,7 @@ $(document).ready(function () {
     // Set or update the filter and value parameters
     url.searchParams.set("filter", filter);
     url.searchParams.set("value", value);
-
+    $('select[name="sort"]').val("#");
     // Redirect with the updated URL
     window.location.href = url.toString();
   });
@@ -56,4 +56,22 @@ $(document).ready(function () {
         .addClass("bg-gray-100 text-gray-700 hover:bg-gray-200");
     }
   });
+
+  var $sortSelect = $('select[name="sort"], select');
+
+  if ($sortSelect.length) {
+    // Pre-select the dropdown if 'sort' exists in URL
+    var currentSort = new URLSearchParams(window.location.search).get("sort");
+    if (currentSort) {
+      $sortSelect.val(currentSort);
+    }
+
+    // Bind change event
+    $sortSelect.on("change", function () {
+      var sortValue = $(this).val();
+      var urlParams = new URLSearchParams(window.location.search);
+      urlParams.set("sort", sortValue); // Set or update 'sort' param
+      window.location.search = urlParams.toString(); // Reload with updated URL
+    });
+  }
 });

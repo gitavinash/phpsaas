@@ -45,6 +45,9 @@
                 data-filter="duration" data-value="8-30">
                 More than 1 week
             </button>
+            <?php
+            if ($urlStructure[0] != 'theme') { ?>
+
             <button type="button"
                 class="quick-filter px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-gray-200 transition"
                 data-filter="type" data-value="adventure">
@@ -60,6 +63,9 @@
                 data-filter="type" data-value="beach">
                 Beach
             </button>
+            <?php
+            }
+            ?>
             <button type="button"
                 class="quick-filter px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-gray-200 transition"
                 data-filter="price" data-value="0-20000">
