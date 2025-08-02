@@ -2,7 +2,10 @@
 header('Content-Type: application/javascript');
 
 $baseDir = USER_PATH . 'assets/';
-$baseUrl = USER_PATH . '/assets/';
+$baseUrl = USER_DIR . '/assets/';
+
+$baseDir = str_replace('//', '/', $baseDir);
+
 $assetFiles = [];
 
 // Recursively get only `.min.css` and `.min.js` files
@@ -26,7 +29,8 @@ $assetFiles[] = '/offline.html';
 $urlsToCache = json_encode($assetFiles, JSON_UNESCAPED_SLASHES);
 ?>
 
-const CACHE_NAME = "<?php echo str_replace('https://', '', str_replace('.', '-', SITE_DOMAIN)) ?>-cache-v1";
+const CACHE_NAME =
+"<?php echo str_replace('https://', '', str_replace('.', '-', SITE_DOMAIN)) ?>-cache-v1<?php echo time(); ?>";
 const urlsToCache = <?php echo $urlsToCache; ?>;
 
 self.addEventListener("install", event => {
@@ -52,11 +56,13 @@ console.error(`Failed to cache ${url}:`, error);
 );
 });
 
-self.addEventListener("fetch", event => {
+self.addEventListener('fetch', event => {
 event.respondWith(
-fetch(event.request).catch(() => {
-return caches.match(event.request).then(response => {
-return response || caches.match('/offline.html');
+caches.match(event.request).then(response => {
+return response || fetch(event.request).catch(() => {
+if (event.request.mode === 'navigate') {
+return caches.match('/offline.html');
+}
 });
 })
 );
