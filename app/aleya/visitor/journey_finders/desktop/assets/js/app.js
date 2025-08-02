@@ -115,9 +115,9 @@ $(document).ready(function () {
             suggestions.forEach((location) => {
               $results.append(`
         <li class="flex items-center gap-2 px-4 py-2 hover:bg-primary/10 cursor-pointer text-sm text-gray-700 transition rounded"
-            data-value="${location}">
+            data-value="${location.location}">
           <i class="ri-map-pin-line text-primary text-base"></i>
-          <span>${location}</span>
+          <span>${location.full_location}</span>
         </li>
       `);
             });

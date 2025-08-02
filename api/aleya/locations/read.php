@@ -31,7 +31,10 @@ if (isset($_GET['q'])) {
             while ($row = mysqli_fetch_assoc($checkLocation)) {
                 // Combine into single string
                 $fullLocation = $row['location_title'] . (($row['state_name'] != '') ? ', ' . $row['state_name'] : '') . ', ' . $row['country_name'];
-                $locations[] = $fullLocation;
+                $locations[] = array(
+                    'full_location' => $fullLocation,
+                    'location' => strtolower($row['location_title']),
+                );
             }
             $status = 'success';
             $message = 'Locations found.';
