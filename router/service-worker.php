@@ -2,7 +2,7 @@
 header('Content-Type: application/javascript');
 
 $baseDir = USER_PATH . 'assets/';
-$baseUrl = '/assets/';
+$baseUrl = USER_PATH . '/assets/';
 $assetFiles = [];
 
 // Recursively get only `.min.css` and `.min.js` files
