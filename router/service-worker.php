@@ -30,7 +30,7 @@ $urlsToCache = json_encode($assetFiles, JSON_UNESCAPED_SLASHES);
 ?>
 
 const CACHE_NAME =
-"<?php echo str_replace('https://', '', str_replace('.', '-', SITE_DOMAIN)) ?>-cache-v1<?php echo time(); ?>";
+"<?php echo str_replace('https://', '', str_replace('.', '-', SITE_DOMAIN)) ?>-cache-v1-<?php echo time(); ?>";
 const urlsToCache = <?php echo $urlsToCache; ?>;
 
 self.addEventListener("install", event => {
