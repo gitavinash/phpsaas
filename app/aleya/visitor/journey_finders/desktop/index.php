@@ -27,8 +27,11 @@ require_once 'header.php';
                                 class="w-10 h-10 flex items-center justify-center text-gray-500 absolute left-2 top-1/2 transform -translate-y-1/2">
                                 <i class="ri-map-pin-line ri-lg"></i>
                             </div>
-                            <input type="text" name="q" id="destination" placeholder="Destination"
+                            <input type="text" name="q" id="destination" placeholder="Destination" autocomplete="off"
                                 class="pl-12 pr-4 py-3 w-full border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm" />
+                            <ul id="autocomplete-results"
+                                class="absolute z-10 bg-white border border-gray-200 mt-1 w-full rounded shadow-md max-h-60 overflow-y-auto hidden">
+                            </ul>
                         </div>
 
                         <!-- Search Button - 1/3 width -->
