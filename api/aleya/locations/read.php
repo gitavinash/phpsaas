@@ -1,6 +1,5 @@
 <?php
 
-require_once LOGIN_CHECK;
 header('Content-Type: application/json');
 
 $responseCode = 400; // Default bad request
