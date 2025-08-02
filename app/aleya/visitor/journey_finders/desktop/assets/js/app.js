@@ -86,7 +86,7 @@ $(document).ready(function () {
       const query = $(this).val().trim();
 
       clearTimeout(debounceTimer);
-      if (query.length < 3) {
+      if (query.length < 2) {
         $results.empty().hide();
         return;
       }
@@ -99,29 +99,43 @@ $(document).ready(function () {
           success: function (data) {
             console.log("Autocomplete data received:", data);
 
-            const suggestions = data.locations || []; // Now directly getting from 'locations' key
+            const suggestions = data.locations || [];
             $results.empty();
 
             if (suggestions.length === 0) {
-              $results.hide();
+              $results.append(`
+        <li class="px-4 py-2 text-sm text-gray-500 italic text-center cursor-default">
+          No results found
+        </li>
+      `);
+              $results.show();
               return;
             }
 
             suggestions.forEach((location) => {
               $results.append(`
-  <li class="flex items-center gap-2 px-4 py-2 hover:bg-primary/10 cursor-pointer text-sm text-gray-700 transition rounded"
-      data-value="${location}">
-    <i class="ri-map-pin-line text-primary text-base"></i>
-    <span>${location}</span>
-  </li>
-`);
+        <li class="flex items-center gap-2 px-4 py-2 hover:bg-primary/10 cursor-pointer text-sm text-gray-700 transition rounded"
+            data-value="${location}">
+          <i class="ri-map-pin-line text-primary text-base"></i>
+          <span>${location}</span>
+        </li>
+      `);
             });
 
             $results.show();
           },
           error: function (xhr) {
             console.error("Autocomplete request failed:", xhr.responseText);
-            $results.empty().hide();
+            $results
+              .empty()
+              .append(
+                `
+      <li class="px-4 py-2 text-sm text-red-500 italic cursor-default">
+        Destination not found
+      </li>
+    `
+              )
+              .show();
           },
         });
       }, 300);
