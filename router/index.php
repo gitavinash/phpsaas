@@ -118,6 +118,10 @@ switch ($urlStructure[0]) {
 		require_once 'service-worker.php';
 		break;
 
+	case 'offline.html':
+		require_once 'offline.php';
+		break;
+
 	case 'firebase-messaging-sw.js':
 		require_once 'service-worker.php';
 		break;
