@@ -56,12 +56,19 @@ define('PER_PAGE_LIMIT', ((isset($site_pagination_limit)) ? $site_pagination_lim
 define('SITEMAP_LIMIT', ((isset($site_sitemap_limit)) ? $site_sitemap_limit : 1000)); // total links show on sitemap
 define('FEED_LIMIT', ((isset($site_feed_limit)) ? $site_feed_limit : 10)); // total links show on feeds
 
-// Pagination starting from
+// Pagination starting fromy
 
-define('PAGE_NO', ((isset($_GET['pg'])) ? mysqli_real_escape_string($connection, $_GET['pg']) - 1 : 0));
-define('PAGINATION', "LIMIT " . PAGE_NO * PER_PAGE_LIMIT . ", " . PER_PAGE_LIMIT);
-define('NEXT_PAGE', ((PAGE_NO == 0) ? 2 : PAGE_NO + 2));
-define('PREVIOUS_PAGE', PAGE_NO);
+// Get current page number from query, default to 1 if not set or invalid
+$pageNo = isset($_GET['pg']) && is_numeric($_GET['pg']) && (int)$_GET['pg'] > 0 ? (int)$_GET['pg'] : 1;
+define('PAGE_NO', $pageNo);
+
+// SQL LIMIT clause
+$offset = ($pageNo - 1) * PER_PAGE_LIMIT;
+define('PAGINATION', "LIMIT $offset, " . PER_PAGE_LIMIT);
+
+// Previous and next page numbers
+define('PREVIOUS_PAGE', ($pageNo > 1) ? $pageNo - 1 : 1);
+define('NEXT_PAGE', $pageNo + 1);
 
 /** Image Compression or Other Image Related Configuration */
 
@@ -76,9 +83,15 @@ define('IMAGE_THUMBNAIL_HEIGHT', ((isset($site_thumbnail_height)) ? $site_thumbn
 
 /** Notification Configuration */
 
-define('NOTIFICATION_KEY', 'AAAA022yuIE:APA91bGmpLAcWlFEJB731Z-pTMjYvQu0xPBLQTtElWwsK83HM5mS-Ua0dnYaykR2QIhlxqRfH1vhgX2KHnsNpVZ_lQUbyHk-f7K9CGXcgFPkfIufQ5zbqp7mQfoF1qHoapHxyllk1U76');
+define(
+	'NOTIFICATION_KEY',
+	'AAAA022yuIE:APA91bGmpLAcWlFEJB731Z-pTMjYvQu0xPBLQTtElWwsK83HM5mS-Ua0dnYaykR2QIhlxqRfH1vhgX2KHnsNpVZ_lQUbyHk-f7K9CGXcgFPkfIufQ5zbqp7mQfoF1qHoapHxyllk1U76'
+);
 define('NOTIFICATION_SENDER', '908078528641');
-define('NOTIFICATION_PUBLIC_KEY', 'BFkEn6a9UgVzM0eOG0T75xQMoatlFkPe7B24d-RlTF548AyvVIhJ8fLkQBdJOZl_m4DCiGKkCTs_A9r209DJT0c');
+define(
+	'NOTIFICATION_PUBLIC_KEY',
+	'BFkEn6a9UgVzM0eOG0T75xQMoatlFkPe7B24d-RlTF548AyvVIhJ8fLkQBdJOZl_m4DCiGKkCTs_A9r209DJT0c'
+);
 
 /** Site Settings Configuration */
 
