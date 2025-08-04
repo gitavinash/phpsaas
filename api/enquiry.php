@@ -304,6 +304,7 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
                 if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
                     require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
                     require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+                    exit();
                 }
             }
         }
