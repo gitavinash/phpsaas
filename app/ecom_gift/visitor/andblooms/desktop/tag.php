@@ -113,7 +113,7 @@
     <?php
 
         // Pagination
-        require_once 'pagination.php';
+        // require_once 'pagination.php';
 
         ?>
 

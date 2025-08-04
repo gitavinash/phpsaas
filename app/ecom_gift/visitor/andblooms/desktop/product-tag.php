@@ -117,28 +117,12 @@
         <?php endif; ?>
     </div>
 
-    <!-- Pagination -->
-    <div class="container mx-auto px-4 py-8 flex justify-center">
-        <div class="flex items-center space-x-2">
-            <?php
-                $sort = (isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '';
-                if (PAGE_NO != 0) {
-                    echo '<a href="' . BASE_URL . '?pg=' . PREVIOUS_PAGE . $sort . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary">
-                        <i class="ri-arrow-left-s-line"></i>
-                      </a>';
-                }
-                for ($i = 1; $i <= TOTAL_PAGE; $i++) {
-                    $active = ($i == PAGE_NO + 1) ? 'bg-primary text-white' : 'border border-gray-200 hover:border-primary hover:text-primary';
-                    echo '<a href="' . BASE_URL . '?pg=' . ($i - 1) . $sort . '" class="w-10 h-10 flex items-center justify-center rounded ' . $active . '">' . $i . '</a>';
-                }
-                if (NEXT_PAGE <= TOTAL_PAGE) {
-                    echo '<a href="' . BASE_URL . '?pg=' . NEXT_PAGE . $sort . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary">
-                        <i class="ri-arrow-right-s-line"></i>
-                      </a>';
-                }
-                ?>
-        </div>
-    </div>
+    <?php
+
+        // Pagination
+        require_once 'pagination.php';
+
+        ?>
 
     <?php else: ?>
     <!-- No Product Found -->
