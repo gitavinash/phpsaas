@@ -171,7 +171,7 @@ WHERE
                                             if (isset($enable_whatsapp_business_api)) {
                                                 if ($enable_whatsapp_business_api == 'yes') {
                                                     require_once WHATSAPP_TEMPLATE_ADMIN . 'facebook_new_enquiry.php';
-                                                    require_once WHATSAPP_TEMPLATE_VISITOR . 'facebook_enquiry_thank_you.php';
+                                                    require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
                                                     custom_log('Whatsapp alert sent');
                                                 }
                                             } else {
