@@ -6,8 +6,8 @@ if ($sendMessageTo != '') {
 
     // Encode all other values normally
     $query = http_build_query([
-        "user"     => "Aleya_BWA",
-        "pass"     => "123456",
+        "user"     => ((isset($whatsappAdmin)) ? $whatsappAdmin : "Aleya_BWA"),
+        "pass"     => ((isset($whatsappPassword)) ? $whatsappPassword : "123456"),
         "sender"   => "BUZWAP",
         "phone"    => $sendMessageTo,
         "text"     => $templateName,

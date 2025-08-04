@@ -27,8 +27,8 @@ $variablesValues = $subject . ',' . $travelDates . ',' . $name . ',' . $mobile .
 $variablesValues = rtrim($variablesValues, ',');
 
 
-if (defined('SITE_MOBILE')) {
-    $sendMessageTo = SITE_MOBILE;
+if (defined('ADMIN_WHATSAPP_NUMBER')) {
+    $sendMessageTo = ADMIN_WHATSAPP_NUMBER;
 } else {
     $sendMessageTo = $site_mobile;
 }
