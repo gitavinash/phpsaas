@@ -1,8 +1,8 @@
 <?php
 
-if (isset($company_whatsapp_enquiry_thank_you)) {
+if (defined('COMPANY_WHATSAPP_ENQUIRY_THANK_YOU')) {
 
-    $templateName = (($company_whatsapp_enquiry_thank_you != '') ? $company_whatsapp_enquiry_thank_you : 'aleya_customer_enquiry_confirmation');
+    $templateName = ((COMPANY_WHATSAPP_ENQUIRY_THANK_YOU != '') ? COMPANY_WHATSAPP_ENQUIRY_THANK_YOU : 'aleya_customer_enquiry_confirmation');
 
     // Helper to sanitize any input (convert array to string, trim strings)
     function sanitize_input($value, $default = 'N/A')
@@ -32,8 +32,8 @@ if (isset($company_whatsapp_enquiry_thank_you)) {
         $email . "," .
         $requirements . "," .
         SITE_NAME . "," .
-        ((defined('company_site_domain')) ? COMPANY_SITE_DOMAIN : SITE_URL) . "," .
-        ((defined('admin_whatsapp_number')) ? ADMIN_WHATSAPP_NUMBER : SITE_URL) . "," .
+        ((defined('COMPANY_SITE_DOMAIN')) ? COMPANY_SITE_DOMAIN : SITE_URL) . "," .
+        ((defined('ADMIN_WHATSAPP_NUMBER')) ? ADMIN_WHATSAPP_NUMBER : SITE_URL) . "," .
         ((defined('SITE_EMAIL')) ? SITE_EMAIL : $site_email);
 
     $variablesValues = rtrim($variablesValues, ',');
