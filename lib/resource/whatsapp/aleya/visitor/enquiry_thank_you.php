@@ -45,6 +45,4 @@ if (defined('COMPANY_WHATSAPP_ENQUIRY_THANK_YOU')) {
 
     // Optional: Send the request or include tracking/confirmation template
     require WHATSAPP_TEMPLATE . 'footer.php';
-
-    echo $fullUrl;
 }
