@@ -222,7 +222,8 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         <div class="p-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <img src="<?php echo SITE_LOGO ?>" style="height: 50px;" alt="<?php echo SITE_NAME ?>">
+                    <img src="<?php echo ((defined('WEBISTE_LOGO')) ? WEBSITE_LOGO : SITE_LOGO) ?>"
+                        style="height: 50px;" alt="<?php echo SITE_NAME ?>">
                 </div>
                 <div class="flex items-center gap-6 text-gray-600 text-sm">
                     <a href="mailto:info@logotravel.com" class="flex items-center gap-1 hover:text-primary">
