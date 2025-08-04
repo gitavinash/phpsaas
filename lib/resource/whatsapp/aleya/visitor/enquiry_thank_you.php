@@ -45,4 +45,5 @@ if (isset($company_whatsapp_enquiry_thank_you)) {
 
     // Optional: Send the request or include tracking/confirmation template
     require WHATSAPP_TEMPLATE . 'footer.php';
+    exit();
 }

@@ -62,4 +62,5 @@ if (isset($site_mobile)) {
 
     // Optional: Send the request or include tracking/confirmation template
     require WHATSAPP_TEMPLATE . 'footer.php';
+    exit();
 }
