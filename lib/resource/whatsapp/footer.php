@@ -27,6 +27,4 @@ if ($sendMessageTo != '') {
 
     // Perform GET request
     $response = file_get_contents($fullUrl);
-
-    echo $fullUrl;
 }
