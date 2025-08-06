@@ -23,20 +23,31 @@ include_once 'header.php';
 
                     <?php
                     $orderQuery = "
-    SELECT o.order_id, o.order_currency, SUM(o.order_delivery_charges) AS order_delivery_charges,
-           o.order_total_price, o.order_coupon, o.order_payment_mode,
-           c.cart_id, c.cart_relation_id, c.cart_relation_type,
-           GROUP_CONCAT(c.cart_qty) AS cart_qty, c.cart_currency, SUM(c.cart_price) AS cart_price,
-           c.cart_status, GROUP_CONCAT(p.product_image) AS product_image,
-           GROUP_CONCAT(p.product_title) AS product_title,
-           i.inventory_currency, i.inventory_price,
-           pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, pr.profile_mobile,
-           pr.profile_email, a.address_name, a.address_house_no, a.address_landmark, a.address_area,
-           ci.city_name, s.state_name, a.address_pin_code, a.address_mobile
+    SELECT 
+        o.order_id, o.order_currency, 
+        SUM(o.order_delivery_charges) AS order_delivery_charges,
+        o.order_total_price, o.order_coupon, o.order_payment_mode,
+        
+        c.cart_id, c.cart_relation_id, c.cart_relation_type,
+        GROUP_CONCAT(c.cart_qty) AS cart_qty, 
+        c.cart_currency, SUM(c.cart_price) AS cart_price,
+        c.cart_status, 
+        GROUP_CONCAT(p.product_image) AS product_image,
+        GROUP_CONCAT(p.product_title) AS product_title,
+        
+        i.inventory_currency, 
+        GROUP_CONCAT(i.inventory_price) AS productPrices,
+        GROUP_CONCAT(i.inventory_mrp) AS productMRPs,
+        
+        pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, 
+        pr.profile_mobile, pr.profile_email, 
+        
+        a.address_name, a.address_house_no, a.address_landmark, a.address_area,
+        ci.city_name, s.state_name, a.address_pin_code, a.address_mobile
 
     FROM " . TABLE_PREFIX . "order o
     INNER JOIN " . TABLE_PREFIX . "cart c 
-        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status = 0
+        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status=2
     INNER JOIN " . TABLE_PREFIX . "product p 
         ON p.product_id = c.cart_relation_id
     INNER JOIN " . TABLE_PREFIX . "inventory i 
@@ -56,7 +67,9 @@ include_once 'header.php';
       AND o.order_id = '{$id}'
       AND o.order_cart_session_id = '" . SESSION_ID . "'
       AND o.order_status = 0
-      AND c.cart_site_id = " . SITE_ID;
+      AND c.cart_site_id = " . SITE_ID . "
+    
+    GROUP BY o.order_id";
 
                     if ($checkOrder = mysqli_query($connection, $orderQuery)) {
                         if (mysqli_num_rows($checkOrder) != 0) {
@@ -78,28 +91,59 @@ include_once 'header.php';
                             $productNames = explode(',', $product_title);
                             $productImages = explode(',', $product_image);
                             $productQtys = explode(',', $cart_qty);
+                            $productPrices = explode(',', $productPrices);
+                            $productMRPs = explode(',', $productMRPs);
                     ?>
 
                     <!-- Order Summary -->
                     <h3 class="text-xl font-semibold text-gray-700 mb-4">Order Summary</h3>
                     <div class="grid gap-4">
-                        <?php for ($i = 0; $i < count($productNames); $i++) {
-                                    if (isset($productNames[$i])) { ?>
+                        <?php for ($i = 0; $i < count($productNames); $i++): ?>
+                        <?php
+                                    if (isset($productNames[$i])) {
+                                        $price = isset($productPrices[$i]) ? (float)$productPrices[$i] : 0;
+                                        $mrp = isset($productMRPs[$i]) ? (float)$productMRPs[$i] : 0;
+                                        $qty = isset($productQtys[$i]) ? (int)$productQtys[$i] : 0;
+                                        $discount = 0;
+                                        if ($mrp > $price && $mrp > 0) {
+                                            $discount = round((($mrp - $price) / $mrp) * 100);
+                                        }
+                                    ?>
                         <div class="flex items-center gap-4 bg-gray-50 p-4 rounded border">
-                            <img src="<?php echo $productImages[$i]; ?>" alt="Product"
+                            <img src="<?php echo htmlspecialchars($productImages[$i]); ?>" alt="Product"
                                 class="w-20 h-20 object-cover rounded">
-                            <div>
-                                <p class="font-medium text-gray-800"><?php echo $productNames[$i]; ?></p>
-                                <p class="text-sm text-gray-600">Qty:
-                                    <?php echo (isset($productQtys[$i]) ? $productQtys[$i] : 0); ?></p>
+
+                            <div class="flex flex-col justify-between h-full py-1">
+                                <!-- Product Name -->
+                                <p class="font-medium text-gray-800"><?php echo htmlspecialchars($productNames[$i]); ?>
+                                </p>
+
+                                <!-- Price, MRP, Discount -->
+                                <div class="mt-1 text-sm text-gray-700">
+                                    <span class="font-semibold text-green-600">
+                                        ₹<?php echo number_format($price, 2); ?>
+                                    </span>
+                                    <?php if ($mrp > $price): ?>
+                                    <span class="line-through text-gray-500 ml-2">
+                                        ₹<?php echo number_format($mrp, 2); ?>
+                                    </span>
+                                    <span class="ml-2 text-red-500 font-medium">
+                                        (<?php echo $discount; ?>% OFF)
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Quantity -->
+                                <p class="text-sm text-gray-600 mt-auto">
+                                    Qty: <?php echo $qty; ?>
+                                </p>
                             </div>
                         </div>
-                        <?php
-                                    }
-                                }
-
-                                ?>
+                        <?php } ?>
+                        <?php endfor; ?>
                     </div>
+
+
 
                     <!-- Contact & Delivery Info -->
                     <div class="mt-8">

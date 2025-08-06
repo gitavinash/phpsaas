@@ -148,7 +148,9 @@ $(document).ready(function () {
 
   $("#continueToPayment").click(function (e) {
     e.preventDefault();
+    const $btn = $(this);
     $("#continueToPayment").hide();
+    $btn.prop("disabled", true).text("Processing...");
 
     var couponCode = $("#couponCode").val();
 
@@ -159,8 +161,6 @@ $(document).ready(function () {
     formData.push({ name: "order", value: $("#orderId").val() });
     formData.push({ name: "paymentMode", value: "online" });
 
-    console.log(formData);
-
     $.ajax({
       type: "POST",
       dataType: "json",
@@ -169,13 +169,13 @@ $(document).ready(function () {
         if (data.status == 200) {
           window.location.href = data.url;
         } else {
-          console.log(data);
+          $("#continueToPayment").show();
+          $btn.prop("disabled", false).text("Process to payment");
         }
-        $("#continueToPayment").show();
       },
       error: function (data) {
-        console.log(data);
         $("#continueToPayment").show();
+        $btn.prop("disabled", false).text("Process to payment");
       },
     });
   });

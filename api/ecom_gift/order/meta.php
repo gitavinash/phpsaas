@@ -25,6 +25,8 @@ function meta($connection, $data)
             $deliveryFees = $deliverySlot[1];
             $deliverySlot = $deliverySlot[0];
 
+            $updateCart = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=2 WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=0 AND cart_site_id='" . SITE_ID . "'");
+
             /** Update order delivery charges */
 
             $deliverySlotOrderQuery = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_delivery_charges='{$deliveryFees}' WHERE order_id='{$order_id}' AND order_status=0");
@@ -32,12 +34,9 @@ function meta($connection, $data)
             /** Update delivery slot */
 
             $deliverySlotOrderMetaQuery = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order_meta(order_relation_id, order_site_id, order_meta_key, order_meta_value, order_meta_status) VALUES('{$order_id}', " . SITE_ID . ",'deliverySlot', '$deliverySlot', 1)");
-        } else {
-            $deliverySlotOrderQuery = true;
-            $deliverySlotOrderMetaQuery = true;
         }
 
-        if ($orderMetaQuery && $deliverySlotOrderQuery && $deliverySlotOrderMetaQuery) {
+        if ($orderMetaQuery && $updateCart && $deliverySlotOrderQuery && $deliverySlotOrderMetaQuery) {
             mysqli_query($connection, "COMMIT");
             $status = 200;
             $msg = 'Order meta data saved successfully';
