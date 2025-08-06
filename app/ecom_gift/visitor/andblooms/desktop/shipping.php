@@ -172,11 +172,17 @@ include_once 'header.php';
                     </div>
 
                     <?php } else {
+                            $hideSidebar = true;
                             echo '<p class="text-red-500 font-semibold">Order not found or expired. Please check your link or try again.</p>';
                         }
                     } ?>
                 </div>
             </div>
+
+            <?php
+
+            if (isset($hideSidebar)) { ?>
+
 
             <!-- Right Panel: Cart Summary -->
             <div class="relative">
@@ -184,13 +190,13 @@ include_once 'header.php';
                     <h2 class="text-xl font-semibold text-gray-800">Cart Summary</h2>
 
                     <?php
-                    $subtotal = (float)($cart_price ?? 0);
-                    $deliveryCharges = (float)($order_delivery_charges ?? 0);
-                    $grandTotal = $subtotal + $deliveryCharges;
-                    $totalMRP = array_sum(array_map('floatval', $productMRPs));  // Total MRP of all products
-                    $discountAmount = $totalMRP - $subtotal;
-                    $showDiscount = $totalMRP > $subtotal && $totalMRP > 0;
-                    ?>
+                        $subtotal = (float)($cart_price ?? 0);
+                        $deliveryCharges = (float)($order_delivery_charges ?? 0);
+                        $grandTotal = $subtotal + $deliveryCharges;
+                        $totalMRP = isset($productMRPs) ? array_sum(array_map('floatval', $productMRPs)) : 0.0;
+                        $discountAmount = $totalMRP - $subtotal;
+                        $showDiscount = $totalMRP > $subtotal && $totalMRP > 0;
+                        ?>
 
                     <div class="space-y-2 text-gray-700 text-sm">
                         <?php if ($showDiscount): ?>
@@ -275,6 +281,11 @@ include_once 'header.php';
                 </div>
 
             </div>
+
+            <?php
+            }
+
+            ?>
 
         </div>
     </div>

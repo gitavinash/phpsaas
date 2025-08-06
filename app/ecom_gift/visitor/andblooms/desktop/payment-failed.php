@@ -28,16 +28,16 @@ require_once 'header.php';
         <p class="text-gray-700 mb-6">Please review the details below and try again.</p>
 
         <!-- Error Details -->
-        <div class="bg-red-100 border border-red-200 rounded p-4 text-left mb-6 text-sm ">
+        <!-- <div class="bg-red-100 border border-red-200 rounded p-4 text-left mb-6 text-sm ">
             <p class="text-gray-700"><strong class="text-red-600">Reason:</strong> <?php echo $payment_error_reason; ?>
             </p>
             <p class="text-gray-700" class="mt-2 text-red-600"><strong class="text-red-600">Transaction ID:</strong>
                 <?php echo $transaction_id; ?></p>
-        </div>
+        </div> -->
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row justify-center gap-4 mb-6">
-            <a href="/checkout/"
+            <a href="/shipping/?id=<?php echo $_GET['id']; ?>"
                 class="bg-primary text-white px-6 py-3 rounded hover:bg-primary-700 transition text-sm">
                 Retry Payment
             </a>
