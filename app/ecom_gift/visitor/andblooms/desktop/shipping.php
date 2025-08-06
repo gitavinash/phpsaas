@@ -73,6 +73,7 @@ include_once 'header.php';
 
                     if ($checkOrder = mysqli_query($connection, $orderQuery)) {
                         if (mysqli_num_rows($checkOrder) != 0) {
+                            $showSiderbar = true;
                             extract(mysqli_fetch_assoc($checkOrder));
 
                             $orderMetas = [];
@@ -172,7 +173,6 @@ include_once 'header.php';
                     </div>
 
                     <?php } else {
-                            $hideSidebar = true;
                             echo '<p class="text-red-500 font-semibold">Order not found or expired. Please check your link or try again.</p>';
                         }
                     } ?>
@@ -181,7 +181,7 @@ include_once 'header.php';
 
             <?php
 
-            if (isset($hideSidebar)) { ?>
+            if (isset($showSiderbar)) { ?>
 
 
             <!-- Right Panel: Cart Summary -->

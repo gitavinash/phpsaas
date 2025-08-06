@@ -9,7 +9,9 @@ function meta($connection, $data)
     mysqli_query($connection, "START TRANSACTION");
 
     foreach ($data as $order_meta_key => $order_meta_value) {
-
+        $updateCart = false;
+        $deliverySlotOrderQuery = false;
+        $deliverySlotOrderMetaQuery = false;
         $meta_filter = array('order_id', 'type', 'action', 'deliverySlot');
 
         if (!in_array($order_meta_key, $meta_filter)) {
