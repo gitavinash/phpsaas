@@ -111,7 +111,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
+<?php
+
+if (ACTIVE_URL == '/checkout/') {
+    echo '<script type="text/javascript" src="' . USER_JS . 'checkout.min.js"></script>';
+}
+?>
 <script id="mobile-menu-script">
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');

@@ -1,30 +1,26 @@
-$(document).ready(function () {
-  /** SweetAlert Pop Up Box */
+/** SweetAlert Pop Up Box */
 
-  function popUpMessage(msgPostion, msgTxt, msgType) {
-    if (msgType == 200) {
-      msgType = "success";
-    }
+function popUpMessage(msgPostion, msgTxt, msgType) {
+  console.log("Pop Up Message:", {
+    position: msgPostion,
+    text: msgTxt,
+    type: msgType,
+  });
 
-    Swal.fire({
-      position: msgPostion,
-      type: msgType,
-      title: msgTxt,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+  if (msgType == 200) {
+    msgType = "success";
   }
 
-  /** Default variable for booking deliveries */
+  Swal.fire({
+    position: msgPostion || "center",
+    icon: msgType,
+    title: msgTxt,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
 
-  var todayDateCheck = "";
-  var deliveryDate = "";
-  var deliveryTime = "";
-  var currentTimeInHour = new Date().getHours(); //get hours of the day in 24Hr format (0-23)
-  var deliveryType = "";
-  var deliverySlot = "";
-  var orderID = "";
-
+$(document).ready(function () {
   // Cart stick
 
   var cartPurchase = $(".cart-purchase");
@@ -239,6 +235,9 @@ $(document).ready(function () {
 
   $("#continueShipping").click(function (e) {
     e.preventDefault();
+    const $btn = $(this);
+    $btn.prop("disabled", true).text("Processing...");
+
     $("#placeOrder").addClass("hidden");
 
     var mobile = $("#mobile").val();
@@ -291,6 +290,8 @@ $(document).ready(function () {
               $("#continueDelivery").show();
 
               orderID = data.order;
+              $("#continueShipping").addClass("hidden");
+              $("#continueCheckout").removeClass("hidden");
             } else {
               popUpMessage("center", data.msg, data.error);
               $("#continueShipping").removeClass("hidden");
@@ -364,162 +365,6 @@ $(document).ready(function () {
       error: function (data) {
         console.log(data);
         $("#continueToPayment").show();
-      },
-    });
-  });
-
-  function showDeliveryTimeSlots(date) {
-    switch (date) {
-      case "today":
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, "0");
-        var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-        var yyyy = today.getFullYear();
-        deliveryDate = mm + "/" + dd + "/" + yyyy;
-        todayDateCheck = mm + "/" + dd + "/" + yyyy;
-        break;
-
-      case "tomorrow":
-        var today = new Date(new Date().getTime() + +24 * 60 * 60 * 1000);
-        var dd = String(today.getDate()).padStart(2, "0");
-        var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-        var yyyy = today.getFullYear();
-        deliveryDate = mm + "/" + dd + "/" + yyyy;
-        break;
-
-      default:
-        $(".calenderBox").hide();
-        deliveryDate = date;
-        break;
-    }
-    $(".deliveryDateBox").show();
-    $(".deliverySchedule").show();
-
-    if (deliveryDate == todayDateCheck) {
-      if (currentTimeInHour >= "07") {
-        $("#morningDeliveryBox").hide();
-
-        if (currentTimeInHour > "19") {
-          $("#standardDeliveryBox").hide();
-        }
-      } else {
-        $("#morningDeliveryBox").show();
-        $("#standardDeliveryBox").show();
-      }
-    } else {
-      $("#morningDeliveryBox").show();
-      $("#standardDeliveryBox").show();
-    }
-
-    $(".showTimeBox").show();
-  }
-
-  $("#deliverByToday").click(function (e) {
-    e.preventDefault();
-    $(".calenderBox").hide();
-    showDeliveryTimeSlots("today");
-  });
-
-  $("#deliverByTomorrow").click(function (e) {
-    e.preventDefault();
-    $(".calenderBox").hide();
-    showDeliveryTimeSlots("tomorrow");
-  });
-
-  $("#deliverByOther").click(function (e) {
-    e.preventDefault();
-    $(".showTimeBox").hide();
-    $(".deliveryDateBox").show();
-    $(".calenderBox").show();
-  });
-
-  $(".showCalender").click(function (e) {
-    e.preventDefault();
-    $(".deliveryDateBox").show();
-    $(".calenderBox").show();
-    $(".showTimeBox").hide();
-  });
-
-  $(".closeCalender").click(function (e) {
-    e.preventDefault();
-    $(".deliveryDateBox").hide();
-    $(".showDeliveryTimeBox").hide();
-  });
-
-  $("#calender")
-    .datepicker({
-      todayHighlight: true,
-      startDate: "0",
-      maxViewMode: 0,
-    })
-    .on("changeDate", function (e) {
-      showDeliveryTimeSlots(e.format());
-    });
-
-  $(".deliverySlot").click(function (e) {
-    var deliverySlot = $(this).attr("id").replace("Slots", "");
-
-    $(".showTimeBox").hide();
-    $(".showDeliveryTimeBox").show();
-    $(".morningDeliveryTimeSlots").hide();
-    $(".standardDeliveryTimeSlots").hide();
-    $(".fixedDeliveryTimeSlots").hide();
-    $(".midnightDeliveryTimeSlots").hide();
-    $("." + deliverySlot + "TimeSlots").show();
-  });
-
-  $(".visibleShowTimeBox").click(function (e) {
-    e.preventDefault();
-
-    $(".showDeliveryTimeBox").hide();
-    $(".morningTimeSlots").hide();
-    $(".standardTimeSlots").hide();
-    $(".fixedTimeSlots").hide();
-    $(".midnightTimeSlots").hide();
-    $(".showTimeBox").show();
-
-    console.log("i m here");
-  });
-
-  /** Special notes */
-
-  $(".specialNotesBox").click(function (e) {
-    e.preventDefault();
-    deliveryType = $("input:radio[name='deliveryType']:checked").val();
-    deliveryTime = $("input:radio[name='deliveryTime']:checked").val();
-
-    $(".showDeliveryTimeBox").hide();
-    $(".specialNotesBox").show();
-  });
-
-  $(".reviewBtn").click(function (e) {
-    e.preventDefault();
-
-    var occasion = $("#occasion").val();
-    var message = $("#message").val();
-
-    $.ajax({
-      type: "POST",
-      dataType: "json",
-      data: {
-        type: "order",
-        action: "meta",
-        order_id: orderID,
-        occasion: occasion,
-        message: message,
-        deliveryDate: deliveryDate,
-        deliveryTime: deliveryTime,
-        deliverySlot: deliveryType,
-      },
-      success: function (data) {
-        if (data.status == 200) {
-          window.location.href = data.redirect;
-        } else {
-          popUpMessage("center", data.msg, data.status);
-        }
-      },
-      error: function (data) {
-        console.log(data);
       },
     });
   });
@@ -754,4 +599,13 @@ $(document).ready(function () {
       },
     });
   });
+  if ($(".selectJS").length) {
+    $(".selectJS").each(function () {
+      const placeholder = $(this).data("title") || "Select";
+      $(this).select2({
+        placeholder: placeholder,
+        width: "100%",
+      });
+    });
+  }
 });

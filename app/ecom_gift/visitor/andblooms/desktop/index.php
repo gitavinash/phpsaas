@@ -307,11 +307,11 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
             ?>
         </div>
 
-        <div class="text-center mt-12">
+        <!-- <div class="text-center mt-12">
             <a href="#"
                 class="inline-block border border-primary text-primary px-8 py-3 !rounded-button hover:bg-primary hover:text-white transition-all duration-300 whitespace-nowrap">View
                 All</a>
-        </div>
+        </div> -->
     </div>
 </section>
 

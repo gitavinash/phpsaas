@@ -35,105 +35,10 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
 
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    .serif {
-        font-family: 'Playfair Display', serif;
-    }
-
-    .header-transparent {
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(5px);
-        transition: all 0.3s ease;
-    }
-
-    .header-solid {
-        background-color: #fff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .product-card:hover .add-to-cart {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .product-card:hover img {
-        transform: scale(1.05);
-    }
-
-    .category-card:hover img {
-        transform: scale(1.05);
-    }
-
-    .category-card:hover .overlay {
-        opacity: 0.2;
-    }
-
-    .instagram-item:hover .instagram-overlay {
-        opacity: 1;
-    }
-
-    input:focus {
-        outline: none;
-        border-color: #D4946D;
-    }
-
-    .custom-checkbox {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .checkmark {
-        height: 20px;
-        width: 20px;
-        border: 1px solid #D4946D;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
-
-    .custom-checkbox input:checked~.checkmark {
-        background-color: #D4946D;
-    }
-
-    .checkmark:after {
-        content: "";
-        display: none;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
-
-    .custom-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
-    </style><?php require_once DEFAULT_META; ?>
+    <?php require_once DEFAULT_META; ?>
     <meta name="google-site-verification" content="HT7OlsigSJmSLCG9PCz7JmCbyRGmzUeJapljsV4KRIg" />
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
