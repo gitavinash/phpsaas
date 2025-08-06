@@ -25,7 +25,7 @@ include_once 'header.php';
                     $orderQuery = "
     SELECT 
         o.order_id, o.order_currency, 
-        SUM(o.order_delivery_charges) AS order_delivery_charges,
+        o.order_delivery_charges,
         o.order_total_price, o.order_coupon, o.order_payment_mode,
         
         c.cart_id, c.cart_relation_id, c.cart_relation_type,
@@ -179,21 +179,43 @@ include_once 'header.php';
             </div>
 
             <!-- Right Panel: Cart Summary -->
-            <div>
-                <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
+            <div class="relative">
+                <div class="sticky top-24 bg-white shadow-md rounded-lg p-6 space-y-6">
                     <h2 class="text-xl font-semibold text-gray-800">Cart Summary</h2>
+
+                    <?php
+                    $subtotal = (float)($cart_price ?? 0);
+                    $deliveryCharges = (float)($order_delivery_charges ?? 0);
+                    $grandTotal = $subtotal + $deliveryCharges;
+                    $totalMRP = array_sum(array_map('floatval', $productMRPs));  // Total MRP of all products
+                    $discountAmount = $totalMRP - $subtotal;
+                    $showDiscount = $totalMRP > $subtotal && $totalMRP > 0;
+                    ?>
+
                     <div class="space-y-2 text-gray-700 text-sm">
+                        <?php if ($showDiscount): ?>
+                        <div class="flex justify-between">
+                            <span>MRP</span>
+                            <span class="text-gray-500 line-through">₹<?php echo number_format($totalMRP, 2); ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Discount</span>
+                            <span
+                                class="text-green-600 font-medium">-₹<?php echo number_format($discountAmount, 2); ?></span>
+                        </div>
+                        <?php endif; ?>
+
                         <div class="flex justify-between">
                             <span>Subtotal</span>
-                            <span>₹<?php echo number_format($cart_price ?? 0); ?></span>
+                            <span>₹<?php echo number_format($subtotal, 2); ?></span>
                         </div>
                         <div class="flex justify-between">
                             <span>Delivery Charges</span>
-                            <span>₹<?php echo number_format($order_delivery_charges ?? 0); ?></span>
+                            <span>₹<?php echo number_format($deliveryCharges, 2); ?></span>
                         </div>
-                        <div class="border-t pt-3 flex justify-between font-semibold text-gray-900">
+                        <div class="border-t pt-3 flex justify-between font-semibold text-xl text-gray-900">
                             <span>Grand Total</span>
-                            <span>₹<?php echo number_format(($cart_price ?? 0) + ($order_delivery_charges ?? 0)); ?></span>
+                            <span>₹<?php echo number_format($grandTotal, 2); ?></span>
                         </div>
                     </div>
 
@@ -206,7 +228,7 @@ include_once 'header.php';
                                 class="flex-1 border rounded px-3 py-2 focus:ring-2 focus:ring-primary"
                                 placeholder="Enter coupon">
                             <button type="button"
-                                class="checkCoupon bg-primary text-white px-4 py-2 rounded hover:bg-green-600">Apply</button>
+                                class="checkCoupon bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition duration-200">Apply</button>
                         </div>
                         <span class="couponMsg text-xs text-red-500 mt-1 block"></span>
                     </div>
@@ -220,10 +242,7 @@ include_once 'header.php';
                             class="block w-full text-center bg-primary text-white py-3 rounded font-semibold hover:bg-primary/90">Proceed
                             to Payment</a>
                     </form>
-                </div>
-
-                <!-- Additional Benefits -->
-                <div class="bg-white shadow-md rounded-lg p-4 mt-6 space-y-3 text-sm text-gray-700">
+                    <!-- Additional Benefits -->
                     <ul class="mt-6 space-y-3 text-sm text-gray-600">
                         <li class="flex items-center gap-2">
                             <!-- Money Icon -->
@@ -254,7 +273,9 @@ include_once 'header.php';
                         </li>
                     </ul>
                 </div>
+
             </div>
+
         </div>
     </div>
 </section>
