@@ -1,210 +1,213 @@
 <?php
-
 $id = base64_decode($id);
 
 include_once 'header.php';
-
 ?>
 
+<section class="bg-gray-100 py-24">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Breadcrumb -->
+        <nav class="text-sm mb-6 text-gray-600" aria-label="breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li><a href="/" class="text-primary hover:underline">Home</a></li>
+                <li>/</li>
+                <li class="text-gray-800">Shipping</li>
+            </ol>
+        </nav>
 
-<!-- section global platform start -->
-<section class="banner-section pro-galery">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="brdcrum">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Shipping</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-
-            <div class="col-md-8">
-
-                <!-- Cart items -->
-
-                <div id="checkOut" class="cart-area">
-                    <h2 class="heading-1">My Cart</h2>
-                    <h3 class="heading-2">Express Delivery Products</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Left Panel: Shipping Info & Order Summary -->
+            <div class="md:col-span-2 space-y-8">
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Shipping Details</h2>
 
                     <?php
+                    $orderQuery = "
+    SELECT o.order_id, o.order_currency, SUM(o.order_delivery_charges) AS order_delivery_charges,
+           o.order_total_price, o.order_coupon, o.order_payment_mode,
+           c.cart_id, c.cart_relation_id, c.cart_relation_type,
+           GROUP_CONCAT(c.cart_qty) AS cart_qty, c.cart_currency, SUM(c.cart_price) AS cart_price,
+           c.cart_status, GROUP_CONCAT(p.product_image) AS product_image,
+           GROUP_CONCAT(p.product_title) AS product_title,
+           i.inventory_currency, i.inventory_price,
+           pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, pr.profile_mobile,
+           pr.profile_email, a.address_name, a.address_house_no, a.address_landmark, a.address_area,
+           ci.city_name, s.state_name, a.address_pin_code, a.address_mobile
 
-                    if ($checkOrder = mysqli_query($connection, "SELECT order_id, order_currency, SUM(order_delivery_charges) as order_delivery_charges, order_total_price, order_coupon, order_payment_mode, cart_id, cart_relation_id, cart_relation_type, GROUP_CONCAT(cart_qty) as cart_qty, cart_currency, SUM(cart_price) as cart_price, cart_status, GROUP_CONCAT(product_image) as product_image, GROUP_CONCAT(product_title) as product_title, inventory_currency, inventory_price, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_email, address_house_no, address_landmark, address_area, city_name, state_name, address_pin_code, address_mobile FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id INNER JOIN " . TABLE_PREFIX . "product ON product_id=cart_relation_id INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id INNER JOIN " . TABLE_PREFIX . "user ON order_user_id=user_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "address ON order_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON city_id=address_city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE inventory_type='product' AND order_id='{$id}' AND order_cart_session_id='" . SESSION_ID . "' AND order_status=0 AND cart_status=2 AND cart_site_id=" . SITE_ID)) {
+    FROM " . TABLE_PREFIX . "order o
+    INNER JOIN " . TABLE_PREFIX . "cart c 
+        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status = 0
+    INNER JOIN " . TABLE_PREFIX . "product p 
+        ON p.product_id = c.cart_relation_id
+    INNER JOIN " . TABLE_PREFIX . "inventory i 
+        ON i.inventory_relation_id = p.product_id
+    INNER JOIN " . TABLE_PREFIX . "user u 
+        ON o.order_user_id = u.user_id
+    INNER JOIN " . TABLE_PREFIX . "profile pr 
+        ON pr.profile_user_id = u.user_id
+    INNER JOIN " . TABLE_PREFIX . "address a 
+        ON o.order_address_id = a.address_id
+    INNER JOIN " . TABLE_PREFIX . "city ci 
+        ON ci.city_id = a.address_city_id
+    INNER JOIN " . TABLE_PREFIX . "state s 
+        ON s.state_id = a.address_state_id
 
+    WHERE i.inventory_type = 'product'
+      AND o.order_id = '{$id}'
+      AND o.order_cart_session_id = '" . SESSION_ID . "'
+      AND o.order_status = 0
+      AND c.cart_site_id = " . SITE_ID;
+
+                    if ($checkOrder = mysqli_query($connection, $orderQuery)) {
                         if (mysqli_num_rows($checkOrder) != 0) {
-
                             extract(mysqli_fetch_assoc($checkOrder));
 
-                            if ($checkOrderMeta = mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$order_id}' AND order_meta_status=1")) {
+                            $orderMetas = [];
+                            $metaQuery = "SELECT order_meta_key, order_meta_value 
+                                          FROM " . TABLE_PREFIX . "order_meta 
+                                          WHERE order_relation_id = '{$order_id}' AND order_meta_status = 1";
 
-                                if (mysqli_num_rows($checkOrderMeta) != 0) {
-
-                                    $orderMetas = array();
-
-                                    while ($orderMeta = mysqli_fetch_assoc($checkOrderMeta)) {
-
-                                        extract($orderMeta);
-
-                                        $orderMetas[$order_meta_key] = $order_meta_value;
-                                    }
+                            if ($checkOrderMeta = mysqli_query($connection, $metaQuery)) {
+                                while ($orderMeta = mysqli_fetch_assoc($checkOrderMeta)) {
+                                    $orderMetas[$orderMeta['order_meta_key']] = $orderMeta['order_meta_value'];
                                 }
                             }
 
                             extract($orderMetas);
 
+                            $productNames = explode(',', $product_title);
+                            $productImages = explode(',', $product_image);
+                            $productQtys = explode(',', $cart_qty);
                     ?>
 
-                    <div class="ad-card">
-                        <div class="paymnet-section">
-                            <h3 class="heading-2">Contact information</h3>
-                            <!-- Payment Gateway or Shipping Confirmation -->
+                    <!-- Order Summary -->
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Order Summary</h3>
+                    <div class="grid gap-4">
+                        <?php for ($i = 0; $i < count($productNames); $i++) {
+                                    if (isset($productNames[$i])) { ?>
+                        <div class="flex items-center gap-4 bg-gray-50 p-4 rounded border">
+                            <img src="<?php echo $productImages[$i]; ?>" alt="Product"
+                                class="w-20 h-20 object-cover rounded">
+                            <div>
+                                <p class="font-medium text-gray-800"><?php echo $productNames[$i]; ?></p>
+                                <p class="text-sm text-gray-600">Qty:
+                                    <?php echo (isset($productQtys[$i]) ? $productQtys[$i] : 0); ?></p>
+                            </div>
+                        </div>
+                        <?php
+                                    }
+                                }
 
-                            <form class="shipping-box">
+                                ?>
+                    </div>
 
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                    </div>
-                                    <table class="table ship-table">
-
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">Name</th>
-                                                <td id='shippingName'><?php echo $profile_display_name ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Contact</th>
-                                                <td id='shippingName'><?php echo $address_mobile ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Email</th>
-                                                <td id='shippingName'><?php echo $profile_email ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Delivery date</th>
-                                                <td id='shippingName'>
-                                                    <?php echo date('l, jS F Y', strtotime($deliveryDate)) ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Delivery time</th>
-                                                <td id='shippingName'>
-                                                    <?php echo ucwords($deliverySlot) . ' - ' . $deliveryTime ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Occasion</th>
-                                                <td id='shippingName'>
-                                                    <?php echo ucwords('<strong>' . $occasion . '</strong>') ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Message</th>
-                                                <td id='shippingName'>
-                                                    <?php echo ucwords($message) ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Ship to</th>
-                                                <td id='shippingAddress'>
-                                                    <?php echo $address_house_no . ', ' . $address_landmark . ', ' . $address_area . ',<br />' . $city_name . ', ' . $state_name . ' - ' . $address_pin_code; ?>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <h3 class="heading-2">Order summary</h3>
-
-                                <?php
-
-                                        $productNameList = explode(',', $product_title);
-                                        $productImageList = explode(',', $product_image);
-                                        $productQtyList = explode(',', $cart_qty);
-
-                                        for ($i = 0; $i < sizeof($productNameList); $i++) {
-
-                                            echo "<div class='row' style='margin-bottom: 30px' >
-														<div class='col-md-3 col-xs-12'>
-															<img src='{$productImageList[$i]}' width='100px' height='100px' alt=''>
-														</div>
-														<div class='col-md-9 col-xs-12'><strong>{$productNameList[$i]}</strong><br />Qty: {$productQtyList[$i]}</div>
-													</div>";
-                                        }
-
-
-
-                                        ?>
-
+                    <!-- Contact & Delivery Info -->
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-4">Contact & Delivery Info</h3>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2 text-sm text-gray-700">
+                            <p><strong>Name:</strong> <?php echo $profile_display_name; ?></p>
+                            <p><strong>Contact:</strong> <?php echo $profile_mobile; ?></p>
+                            <p><strong>Email:</strong> <?php echo $profile_email; ?></p>
+                            <?php if (!empty($deliveryDate)): ?>
+                            <p><strong>Delivery Date:</strong>
+                                <?php echo date('l, jS F Y', strtotime($deliveryDate)); ?></p>
+                            <?php endif; ?>
+                            <?php if (!empty($deliverySlot) || !empty($deliveryTime)): ?>
+                            <p><strong>Time:</strong> <?php echo ucwords($deliverySlot) . ' - ' . $deliveryTime; ?></p>
+                            <?php endif; ?>
+                            <?php if (!empty($occasion)): ?>
+                            <p><strong>Occasion:</strong> <?php echo ucwords($occasion); ?></p>
+                            <?php endif; ?>
+                            <?php if (!empty($message)): ?>
+                            <p><strong>Message:</strong> <?php echo ucfirst($message); ?></p>
+                            <?php endif; ?>
+                            <p><strong>Ship To:</strong><br>
+                                <?php echo "<strong>{$address_name}</strong>,<br /> <i>{$address_mobile}</i>,<br /> {$address_house_no}, {$address_landmark}, {$address_area},<br>{$city_name}, {$state_name} - {$address_pin_code}"; ?>
+                            </p>
                         </div>
                     </div>
 
-                    <?php
-
-                            // Send event to third party services
-
-                            if (defined('ENABLE_CONTLO')) {
-
-                                require_once CONTLO . 'cart-summary.php';
-                            }
-                        } else {
-
-                            echo '<h3 class="heading-2">Somthing is wrong</h3>';
+                    <?php } else {
+                            echo '<p class="text-red-500 font-semibold">Order not found or expired. Please check your link or try again.</p>';
                         }
-                    }
-
-                    ?>
-
+                    } ?>
                 </div>
-
             </div>
-            <div class="col-md-4">
 
-                <div class="cart-purchase">
-                    <h2>Cart summary</h2>
+            <!-- Right Panel: Cart Summary -->
+            <div>
+                <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
+                    <h2 class="text-xl font-semibold text-gray-800">Cart Summary</h2>
+                    <div class="space-y-2 text-gray-700 text-sm">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>₹<?php echo number_format($cart_price ?? 0); ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Delivery Charges</span>
+                            <span>₹<?php echo number_format($order_delivery_charges ?? 0); ?></span>
+                        </div>
+                        <div class="border-t pt-3 flex justify-between font-semibold text-gray-900">
+                            <span>Grand Total</span>
+                            <span>₹<?php echo number_format(($cart_price ?? 0) + ($order_delivery_charges ?? 0)); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Coupon Code -->
                     <div>
-                        <div class="row">
-                            <div class="col-8">Subtotal</div>
-                            <div class="col-4"><i class="fas fa-rupee-sign"></i>
-                                <span id="cartPrice"> <?php echo $cart_price ?></span>
-                            </div>
+                        <label for="couponCode" class="block text-sm font-medium text-gray-700 mb-1">Apply
+                            Coupon</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="couponCode"
+                                class="flex-1 border rounded px-3 py-2 focus:ring-2 focus:ring-primary"
+                                placeholder="Enter coupon">
+                            <button type="button"
+                                class="checkCoupon bg-primary text-white px-4 py-2 rounded hover:bg-green-600">Apply</button>
                         </div>
-                        <div class="row" style="margin-bottom: 10px">
-                            <div class="col-8">Delivery charges</div>
-                            <div class="col-4"><i class="fas fa-rupee-sign"></i> <?php echo $order_delivery_charges ?>
-                            </div>
-                        </div>
+                        <span class="couponMsg text-xs text-red-500 mt-1 block"></span>
                     </div>
-                    <strong>Have a Coupon Code?</strong>
-                    <div class="row">
-                        <form class="form-row">
-                            <div class="form-group col-12 cod-ap">
-                                <input type="text" class="form-control couponCode" id="couponCode"
-                                    placeholder="Discount Code">
-                            </div>
-                            <div class="form-group col-md-4 ap-btn">
-                                <button type="submit" class="btn btn-success checkCoupon btn">Apply</button>
-                            </div>
-                            <span class="couponMsg"></span>
-                        </form>
-                    </div>
-                    <h4>Grand Total</h4>
-                    <h5 style="margin-bottom: 10px"><img src="<?php echo USER_IMAGES ?>cart-rupees-icon.svg">
-                        <span id="finalPrice"><?php echo $cart_price + $order_delivery_charges ?></span>
-                    </h5>
-                    <form>
-                        <input type="hidden" name="order" id="orderId" value=" <?php echo $id ?>">
+
+                    <!-- Proceed to Payment -->
+                    <form class="mt-4">
+                        <input type="hidden" name="order" id="orderId" value="<?php echo $id; ?>">
                         <input type="hidden" name="paymentMode" value="online">
                         <input type="hidden" name="recaptcha_token" class="recaptcha_token">
-                        <a href='#' id="continueToPayment" class="btn-bloom purchase-btn">Proceed to payment</a>
+                        <a href="#" id="continueToPayment"
+                            class="block w-full text-center bg-primary text-white py-3 rounded font-semibold hover:bg-primary/90">Proceed
+                            to Payment</a>
                     </form>
                 </div>
 
-                <div class="site-feature">
-                    <ul>
-                        <li><span class="material-icons">money_off</span> No Hidden Charges</li>
-                        <li><span class="material-icons">security</span> 100% Secure payments</li>
-                        <li><span class="material-icons">tag_faces</span> 2 lakh Smiles Delivered</li>
+                <!-- Additional Benefits -->
+                <div class="bg-white shadow-md rounded-lg p-4 mt-6 space-y-3 text-sm text-gray-700">
+                    <ul class="mt-6 space-y-3 text-sm text-gray-600">
+                        <li class="flex items-center gap-2">
+                            <!-- Money Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.333 0-4 1-4 4s2.667 4 4 4 4-1 4-4-2.667-4-4-4zm0 0V4m0 12v4m8-4h2m-2 0a6 6 0 00-12 0h-2" />
+                            </svg>
+                            No Hidden Charges
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <!-- Shield Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 2l7 4v5c0 5-3 9-7 11-4-2-7-6-7-11V6l7-4zm0 10l3 3-5-5" />
+                            </svg>
+                            100% Secure Payments
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <!-- Smile Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            </svg>
+                            2 Lakh+ Smiles Delivered
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -212,8 +215,4 @@ include_once 'header.php';
     </div>
 </section>
 
-<?php
-
-include_once 'footer.php';
-
-?>
+<?php include_once 'footer.php'; ?>

@@ -54,7 +54,7 @@ Cart Status
 0 : Initiate
 1 : Success
 2 : Procced to next step of cart
-3 :
+3 : Cancel
 4 : Remove from cart
 
 Website status

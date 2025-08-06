@@ -9,7 +9,7 @@ include_once 'header.php';
 
 
 <!-- section global platform start -->
-<section class="mt-16 md:mt-24 bg-gray-50 py-10">
+<section class="mt-16 md:mt-24 bg-gray-50 py-24">
     <div class="container mx-auto px-4">
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Column -->
@@ -266,7 +266,7 @@ include_once 'header.php';
                     </button>
                     <button href="#" id="continueShipping"
                         class="w-full block text-center bg-primary text-white font-semibold py-3 rounded-md hover:bg-primary/90 transition hidden">
-                        Delivery Date & Time
+                        Continue to Delivery date & time
                     </button>
                     <button href="#" id="continueCheckout"
                         class="deliverByOther w-full block text-center bg-primary text-white font-semibold py-3 rounded-md hover:bg-primary/90 transition hidden">
@@ -476,7 +476,7 @@ include_once 'header.php';
                 </button>
                 <button
                     class="reviewBtn bg-primary text-white hover:bg-primary/90 py-2 px-4 rounded focus:outline-none">
-                    Review My Order
+                    Review Order
                 </button>
             </div>
         </div>
