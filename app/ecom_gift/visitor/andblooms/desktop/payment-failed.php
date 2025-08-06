@@ -7,12 +7,12 @@ require_once 'header.php';
 ?>
 
 <!-- Full Page Themed Payment Declined -->
-<section class="min-h-screen bg-primary flex flex-col justify-center items-center text-center py-12">
+<section class="min-h-screen bg-red-100 flex flex-col justify-center items-center text-center py-12">
 
     <!-- Banner -->
     <div class="w-full bg-primary-600 text-white py-10">
-        <h1 class="text-3xl font-bold">Payment Declined</h1>
-        <p class="text-base mt-2">Your payment could not be completed</p>
+        <h1 class="text-3xl text-red-600 font-bold">Payment Declined</h1>
+        <p class="text-base text-gray-700 mt-2">Your payment could not be completed</p>
     </div>
 
     <!-- Main Content -->
@@ -20,11 +20,7 @@ require_once 'header.php';
 
         <!-- Error Icon -->
         <div class="mb-6">
-            <svg class="w-20 h-20 mx-auto text-red-500" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-            </svg>
+            <i class="ri-close-line w-20 h-20 text-8xl mx-auto text-red-500"></i>
         </div>
 
         <!-- Error Message -->
@@ -32,9 +28,11 @@ require_once 'header.php';
         <p class="text-gray-700 mb-6">Please review the details below and try again.</p>
 
         <!-- Error Details -->
-        <div class="bg-red-100 border border-red-200 rounded p-4 text-left mb-6 text-sm text-red-800">
-            <p><strong>Reason:</strong> <?php echo $payment_error_reason; ?></p>
-            <p class="mt-2"><strong>Transaction ID:</strong> <?php echo $transaction_id; ?></p>
+        <div class="bg-red-100 border border-red-200 rounded p-4 text-left mb-6 text-sm ">
+            <p class="text-gray-700"><strong class="text-red-600">Reason:</strong> <?php echo $payment_error_reason; ?>
+            </p>
+            <p class="text-gray-700" class="mt-2 text-red-600"><strong class="text-red-600">Transaction ID:</strong>
+                <?php echo $transaction_id; ?></p>
         </div>
 
         <!-- Actions -->
