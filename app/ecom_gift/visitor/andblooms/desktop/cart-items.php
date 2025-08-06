@@ -9,8 +9,16 @@ include_once 'header.php';
 
 
 <!-- section global platform start -->
-<section class="mt-16 md:mt-24 bg-gray-50 py-24">
+<section class="mt-16 md:mt-18 bg-gray-100 py-10">
     <div class="container mx-auto px-4">
+        <!-- Breadcrumb -->
+        <nav class="text-sm mb-6 text-gray-600" aria-label="breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li><a href="/" class="text-primary hover:underline">Home</a></li>
+                <li>/</li>
+                <li class="text-gray-800">Checkout</li>
+            </ol>
+        </nav>
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Column -->
             <div class="w-full lg:w-2/3">
