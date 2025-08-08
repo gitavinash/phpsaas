@@ -169,13 +169,15 @@ require_once 'header.php';
             <div id="description-content" class="tab-content active">
                 <div class="max-w-3xl">
                     <h3 class="text-xl font-semibold mb-4">Product Description</h3>
-                    <?php echo $product_description ?>
+                    <div class="sameFont">
+                        <?php echo $product_description ?>
+                    </div>
                 </div>
             </div>
             <div id="delivery-content" class="tab-content">
                 <div class="max-w-3xl">
                     <h3 class="text-xl font-semibold mb-4">Delivery Information</h3>
-                    <div class="mb-6">
+                    <div class="mb-6 sameFont">
                         <?php
 
                         if (isset($delivery_information)) {
@@ -212,32 +214,34 @@ require_once 'header.php';
             <div id="care-content" class="tab-content">
                 <div class="max-w-3xl">
                     <h3 class="text-xl font-semibold mb-4">Care Instructions</h3>
-                    <?php
-                    if (isset($care_n_tips)) {
+                    <div class="sameFont">
+                        <?php
+                        if (isset($care_n_tips)) {
 
-                        if ($care_n_tips != '') {
+                            if ($care_n_tips != '') {
 
-                            echo '<ul><li>' . str_replace('<br />', '</li><li>', $care_n_tips) . '</li></ul>';
-                        } else {
-                            if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
-                    ?>
-                    <ul>
-                        <li>Start by removing the bouquet wrapper.</li>
-                        <li>Cut the stems by one or two inches from the bottom to ensure better water
-                            intake.
-                        </li>
-                        <li>Choose a vase and fill it with water.</li>
-                        <li>Remove the leaves below the water level to prevent bacterial growth.</li>
-                        <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-                        <li>Make sure to place the vase in indirect sunlight.</li>
-                    </ul>
+                                echo '<ul><li>' . str_replace('<br />', '</li><li>', $care_n_tips) . '</li></ul>';
+                            } else {
+                                if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
+                        ?>
+                        <ul>
+                            <li>Start by removing the bouquet wrapper.</li>
+                            <li>Cut the stems by one or two inches from the bottom to ensure better water
+                                intake.
+                            </li>
+                            <li>Choose a vase and fill it with water.</li>
+                            <li>Remove the leaves below the water level to prevent bacterial growth.</li>
+                            <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
+                            <li>Make sure to place the vase in indirect sunlight.</li>
+                        </ul>
 
-                    <?php
+                        <?php
+                                }
                             }
                         }
-                    }
 
-                    ?>
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>

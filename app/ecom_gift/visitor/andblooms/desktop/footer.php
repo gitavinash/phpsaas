@@ -119,122 +119,123 @@ if (ACTIVE_URL == '/checkout/') {
     echo '<script type="text/javascript" src="' . USER_JS . 'checkout.min.js"></script>';
 }
 ?>
-<script id="mobile-menu-script">
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-    });
-});
-</script>
-<script id="quantity-control-script">
-document.addEventListener('DOMContentLoaded', function() {
-    const decreaseButton = document.getElementById('decrease-quantity');
-    const increaseButton = document.getElementById('increase-quantity');
-    const quantityInput = document.getElementById('quantity');
-    decreaseButton.addEventListener('click', function() {
-        const currentValue = parseInt(quantityInput.value);
-        if (currentValue > 1) {
-            quantityInput.value = currentValue - 1;
-        }
-    });
-    increaseButton.addEventListener('click', function() {
-        const currentValue = parseInt(quantityInput.value);
-        quantityInput.value = currentValue + 1;
-    });
-    quantityInput.addEventListener('change', function() {
-        if (parseInt(this.value) < 1 || isNaN(parseInt(this.value))) {
-            this.value = 1;
-        }
-    });
-});
-</script>
-<script id="tab-control-script">
-document.addEventListener('DOMContentLoaded', function() {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const tabName = this.getAttribute('data-tab');
-            // Update active tab button
-            tabButtons.forEach(btn => {
-                btn.classList.remove('border-primary', 'text-primary');
-                btn.classList.add('border-transparent', 'text-gray-500');
-            });
-            this.classList.remove('border-transparent', 'text-gray-500');
-            this.classList.add('border-primary', 'text-primary');
-            // Show active tab content
-            tabContents.forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`${tabName}-content`).classList.add('active');
+<script>
+$(document).ready(function() {
+    // 1. Mobile Menu Toggle
+    if ($('#mobile-menu-button').length && $('#mobile-menu').length) {
+        $('#mobile-menu-button').on('click', function() {
+            $('#mobile-menu').toggleClass('hidden');
         });
-    });
-});
-</script>
-<script id="checkbox-script">
-document.addEventListener('DOMContentLoaded', function() {
-    const checkboxLabels = document.querySelectorAll(
-        'label[for="chocolate"], label[for="card"], label[for="vase"]');
-    checkboxLabels.forEach(label => {
-        label.addEventListener('click', function(e) {
-            const checkbox = document.getElementById(this.getAttribute('for'));
-            const checkIcon = this.querySelector('.ri-check-line');
-            const customCheckbox = this.querySelector('.checkbox-custom');
-            checkbox.checked = !checkbox.checked;
-            if (checkbox.checked) {
-                customCheckbox.classList.add('bg-primary', 'border-primary');
-                checkIcon.classList.remove('hidden');
-            } else {
-                customCheckbox.classList.remove('bg-primary', 'border-primary');
-                checkIcon.classList.add('hidden');
+    }
+
+    // 2. Quantity Control
+    const $decrease = $('#decrease-quantity');
+    const $increase = $('#increase-quantity');
+    const $quantityInput = $('#quantity');
+
+    if ($decrease.length && $increase.length && $quantityInput.length) {
+        $decrease.on('click', function() {
+            const val = parseInt($quantityInput.val());
+            if (val > 1) $quantityInput.val(val - 1);
+        });
+
+        $increase.on('click', function() {
+            const val = parseInt($quantityInput.val());
+            $quantityInput.val(val + 1);
+        });
+
+        $quantityInput.on('change', function() {
+            const val = parseInt($(this).val());
+            if (val < 1 || isNaN(val)) {
+                $(this).val(1);
             }
+        });
+    }
+
+    // 3. Checkbox Styling (chocolate, card, vase)
+    const $checkboxLabels = $('label[for="chocolate"], label[for="card"], label[for="vase"]');
+
+    $checkboxLabels.each(function() {
+        $(this).on('click', function(e) {
+            const forAttr = $(this).attr('for');
+            const $checkbox = $('#' + forAttr);
+            const $checkIcon = $(this).find('.ri-check-line');
+            const $customCheckbox = $(this).find('.checkbox-custom');
+
+            $checkbox.prop('checked', !$checkbox.prop('checked'));
+
+            if ($checkbox.prop('checked')) {
+                $customCheckbox.addClass('bg-primary border-primary');
+                $checkIcon.removeClass('hidden');
+            } else {
+                $customCheckbox.removeClass('bg-primary border-primary');
+                $checkIcon.addClass('hidden');
+            }
+
             e.preventDefault();
         });
     });
-});
-</script>
-<script id="header-scroll">
-document.addEventListener('DOMContentLoaded', function() {
-    const header = document.querySelector('header');
-    const menuButton = document.getElementById('menuButton');
-    const closeMenu = document.getElementById('closeMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    const mobileShopButton = document.getElementById('mobileShopButton');
-    const mobileShopContent = document.getElementById('mobileShopContent');
-    const slider = document.getElementById('heroSlider');
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.slider-dot');
-    const prevBtn = document.querySelector('.slider-nav-btn.prev');
-    const nextBtn = document.querySelector('.slider-nav-btn.next');
+
+    // 4. Tab Control
+    const $tabButtons = $('.tab-button');
+    const $tabContents = $('.tab-content');
+
+    if ($tabButtons.length) {
+        $tabButtons.on('click', function() {
+            const tabName = $(this).data('tab');
+
+            $tabButtons.removeClass('border-primary text-primary')
+                .addClass('border-transparent text-gray-500');
+
+            $(this).removeClass('border-transparent text-gray-500')
+                .addClass('border-primary text-primary');
+
+            $tabContents.removeClass('active');
+            $('#' + tabName + '-content').addClass('active');
+        });
+    }
+
+    // 5. Header Scroll + Mobile Slide Menu + Hero Slider
+    const $header = $('header');
+    const $menuButton = $('#menuButton');
+    const $closeMenu = $('#closeMenu');
+    const $mobileMenu = $('#mobileMenu');
+    const $mobileMenuOverlay = $('#mobileMenuOverlay');
+    const $mobileShopButton = $('#mobileShopButton');
+    const $mobileShopContent = $('#mobileShopContent');
+    const $slider = $('#heroSlider');
+    const $slides = $('.slide');
+    const $dots = $('.slider-dot');
+    const $prevBtn = $('.slider-nav-btn.prev');
+    const $nextBtn = $('.slider-nav-btn.next');
+
     let currentSlide = 0;
     let slideInterval;
 
     function updateSlides() {
-        slides.forEach((slide, index) => {
+        $slides.each(function(index) {
             if (index === currentSlide) {
-                slide.style.transform = 'translateX(0)';
+                $(this).css('transform', 'translateX(0)');
             } else if (index < currentSlide) {
-                slide.style.transform = 'translateX(-100%)';
+                $(this).css('transform', 'translateX(-100%)');
             } else {
-                slide.style.transform = 'translateX(100%)';
+                $(this).css('transform', 'translateX(100%)');
             }
         });
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('bg-opacity-100', index === currentSlide);
-            dot.classList.toggle('bg-opacity-50', index !== currentSlide);
+
+        $dots.each(function(index) {
+            $(this).toggleClass('bg-opacity-100', index === currentSlide)
+                .toggleClass('bg-opacity-50', index !== currentSlide);
         });
     }
 
     function nextSlide() {
-        currentSlide = (currentSlide + 1) % slides.length;
+        currentSlide = (currentSlide + 1) % $slides.length;
         updateSlides();
     }
 
     function prevSlide() {
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        currentSlide = (currentSlide - 1 + $slides.length) % $slides.length;
         updateSlides();
     }
 
@@ -245,63 +246,64 @@ document.addEventListener('DOMContentLoaded', function() {
     function stopSlideShow() {
         clearInterval(slideInterval);
     }
-    prevBtn.addEventListener('click', () => {
+
+    $prevBtn.on('click', function() {
         stopSlideShow();
         prevSlide();
         startSlideShow();
     });
-    nextBtn.addEventListener('click', () => {
+
+    $nextBtn.on('click', function() {
         stopSlideShow();
         nextSlide();
         startSlideShow();
     });
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            stopSlideShow();
-            currentSlide = index;
-            updateSlides();
-            startSlideShow();
-        });
+
+    $dots.on('click', function() {
+        stopSlideShow();
+        currentSlide = $(this).index();
+        updateSlides();
+        startSlideShow();
     });
-    slider.addEventListener('mouseenter', stopSlideShow);
-    slider.addEventListener('mouseleave', startSlideShow);
+
+    $slider.on('mouseenter', stopSlideShow).on('mouseleave', startSlideShow);
+
     startSlideShow();
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            header.classList.remove('header-transparent');
-            header.classList.add('header-solid');
+
+    $(window).on('scroll', function() {
+        if ($(this).scrollTop() > 50) {
+            $header.removeClass('header-transparent').addClass('header-solid');
         } else {
-            header.classList.add('header-transparent');
-            header.classList.remove('header-solid');
+            $header.addClass('header-transparent').removeClass('header-solid');
         }
     });
 
     function openMobileMenu() {
-        mobileMenu.classList.remove('translate-x-full');
-        mobileMenuOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+        $mobileMenu.removeClass('translate-x-full');
+        $mobileMenuOverlay.removeClass('hidden');
+        $('body').css('overflow', 'hidden');
     }
 
     function closeMobileMenu() {
-        mobileMenu.classList.add('translate-x-full');
-        mobileMenuOverlay.classList.add('hidden');
-        document.body.style.overflow = '';
+        $mobileMenu.addClass('translate-x-full');
+        $mobileMenuOverlay.addClass('hidden');
+        $('body').css('overflow', '');
     }
-    menuButton.addEventListener('click', openMobileMenu);
-    closeMenu.addEventListener('click', closeMobileMenu);
-    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-    mobileShopButton.addEventListener('click', function() {
-        mobileShopContent.classList.toggle('hidden');
-        const icon = this.querySelector('i');
-        icon.style.transform = icon.style.transform === 'rotate(180deg)' ? '' : 'rotate(180deg)';
+
+    $menuButton.on('click', openMobileMenu);
+    $closeMenu.on('click', closeMobileMenu);
+    $mobileMenuOverlay.on('click', closeMobileMenu);
+
+    $mobileShopButton.on('click', function() {
+        $mobileShopContent.toggleClass('hidden');
+        const $icon = $(this).find('i');
+        const isRotated = $icon.css('transform') === 'matrix(-1, 0, 0, -1, 0, 0)';
+        $icon.css('transform', isRotated ? '' : 'rotate(180deg)');
     });
-});
-</script>
-<script>
-$(document).ready(function() {
-    // Thumbnail click to update main image & border
+
+    // 6. Product Zoom and Thumbnail Switcher
     $('.thumbnail img').on('click', function() {
-        var newSrc = $(this).attr('src');
+        const newSrc = $(this).attr('src');
         $('#mainProductImage').attr('src', newSrc);
         $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
 
@@ -309,30 +311,28 @@ $(document).ready(function() {
         $(this).parent().addClass('border-primary');
     });
 
-    // Setup initial zoom overlay image
     $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
 
-    // Zoom on hover
     $('.product-image-container').on('mouseenter', function() {
         $('#zoomOverlay').addClass('active');
     }).on('mouseleave', function() {
         $('#zoomOverlay').removeClass('active');
     }).on('mousemove', function(e) {
-        var $this = $(this);
-        var offset = $this.offset();
-        var x = e.pageX - offset.left;
-        var y = e.pageY - offset.top;
-        var width = $this.width();
-        var height = $this.height();
+        const $this = $(this);
+        const offset = $this.offset();
+        const x = e.pageX - offset.left;
+        const y = e.pageY - offset.top;
+        const width = $this.width();
+        const height = $this.height();
 
-        // Calculate background position % (reverse because background moves opposite direction)
-        var xPercent = (x / width) * 100;
-        var yPercent = (y / height) * 100;
+        const xPercent = (x / width) * 100;
+        const yPercent = (y / height) * 100;
 
         $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
     });
 });
 </script>
+
 </body>
 
 </html>

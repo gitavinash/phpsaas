@@ -23,14 +23,13 @@ if ($site_dashboard_version == 1) {
 
 	// Latest dashboard directory 
 
-	$dashboardDirectory = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH);
+	$dashboardDirectory = str_replace('/default/', '/' . SITE_APP . '/' . USER_TYPE . '/', ADMIN_PATH);
 
-	if (!is_dir(ROOT . $dashboardDirectory)) {
+	if (!is_dir($dashboardDirectory)) {
 
 		$dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH);
 	}
 }
-
 
 // v2 Request url file path 
 

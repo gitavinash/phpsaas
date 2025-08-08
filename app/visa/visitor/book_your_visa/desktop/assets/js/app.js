@@ -292,13 +292,60 @@ $(document).ready(function () {
 
   $("#getApplicationStatus").click(function (e) {
     e.preventDefault();
+
     const $btn = $(this);
+    const referenceNumber = $("#referenceNumber").val().trim();
+    const contactInfo = $("#contactInfo").val().trim();
+    const submitForm = true;
+
+    if (!referenceNumber) {
+      popUpMessage("center", "Please enter reference number.", "warning");
+      submitForm = false;
+      return;
+    }
+
+    if (!contactInfo) {
+      popUpMessage("center", "Please enter your mobile number.", "warning");
+      submitForm = false;
+      return;
+    }
+
     $btn
       .prop("disabled", true)
       .addClass("opacity-70 cursor-not-allowed")
       .html(
         `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Tracking...`
       );
-    $("#applicationStatus").show();
+
+    if (submitForm === true) {
+      $.ajax({
+        url: "/api/application/status/",
+        method: "GET",
+        data: {
+          referenceNumber: referenceNumber,
+          contactInfo: contactInfo,
+        },
+        success: function (responseData) {
+          console.log(`responseData`, responseData);
+          $("#applicationStatus").show();
+          $btn
+            .prop("disabled", false)
+            .removeClass("opacity-70 cursor-not-allowed")
+            .html("Track Application");
+        },
+        error: function (responseError) {
+          popUpMessage("center", responseError.responseJSON.msg, "error");
+          $btn
+            .prop("disabled", false)
+            .removeClass("opacity-70 cursor-not-allowed")
+            .html("Track Application");
+        },
+      });
+    } else {
+      $btn
+        .prop("disabled", false)
+        .removeClass("opacity-70 cursor-not-allowed")
+        .html("Track Application");
+    }
   });
 });

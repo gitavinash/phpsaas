@@ -199,3 +199,55 @@ input:focus {
   line-height: 32px;
   margin-bottom: 0.5rem;
 }
+
+.tab-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.tab-content.active {
+  max-height: 500px;
+}
+.sameFont * {
+  all: unset;
+  display: revert;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+/* Restore layout for common block elements */
+.sameFont p,
+.sameFont div {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.sameFont ul,
+.sameFont ol {
+  display: block;
+  padding-left: 1.5rem;
+  list-style: disc outside;
+  margin-bottom: 1rem;
+}
+
+.sameFont li {
+  display: list-item;
+  margin-bottom: 0.5rem;
+}
+
+/* Restore inline behavior */
+.sameFont span,
+.sameFont strong,
+.sameFont em,
+.sameFont b,
+.sameFont i,
+.sameFont u {
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
