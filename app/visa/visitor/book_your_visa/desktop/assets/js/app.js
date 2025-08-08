@@ -207,7 +207,6 @@ $(document).ready(function () {
       e.preventDefault();
       let selectedCountry = $("#selectedCountry").val();
       if (selectedCountry) {
-        console.log("selectedCountry", selectedCountry);
         selectedCountry = selectedCountry.toLowerCase().replace(/\s+/g, "_");
         window.location.href = `/start-application/?country=${selectedCountry}`;
       } else {
@@ -326,7 +325,6 @@ $(document).ready(function () {
           mobileNumber: contactInfo,
         },
         success: function (responseData) {
-          console.log("responseData", responseData);
           const applicationData = responseData.msg;
 
           // Helper function
