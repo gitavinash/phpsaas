@@ -1,6 +1,7 @@
 <?php
 
 require_once 'header.php';
+require_once UTIL_FUNCTIONS . 'getInitials.php';
 
 if ($_GET['id']) {
 
@@ -39,7 +40,7 @@ if ($_GET['id']) {
                             <div class="flex justify-between py-2 border-b border-gray-200">
                                 <span class="text-gray-600">Application Id</span>
                                 <span class="font-medium text-gray-800"
-                                    id="applicationId">BYV00<?php echo $transaction_order_id ?></span>
+                                    id="applicationId"><?php echo getInitials(SITE_NAME) . '-00' . $transaction_order_id ?></span>
                             </div>
                             <div class="flex justify-between py-2 border-b border-gray-200">
                                 <span class="text-gray-600">Submission Date</span>

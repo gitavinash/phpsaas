@@ -4,6 +4,7 @@
 
 define('CONFIG', ROOT . '/lib/configuration/');
 define('MODULES', ROOT . '/lib/modules/');
+define('FUNCTIONS', ROOT . '/lib/functions/');
 define('API_MODULES', ROOT . '/api/');
 define('ROUTER', ROOT . '/router/');
 define('RESOURCE', ROOT . '/lib/resource/');
@@ -65,6 +66,10 @@ define('APP_MODULES', MODULES . SITE_APP . '/');
 define('IMAGE_UPLOADER', MODULES . 'imageUploader.php');
 define('LOGIN_CHECK', MODULES . 'isLogin.php');
 define('SITE_STATUS', MODULES . 'siteStatus.php');
+
+/** System default and usefull modules */
+
+define('UTIL_FUNCTIONS', FUNCTIONS . '/utils/');
 
 /** Font Directory */
 

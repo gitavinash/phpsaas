@@ -1,5 +1,5 @@
 <?php
-
+require_once UTIL_FUNCTIONS . 'getInitials.php';
 function renderStarIcons($hotel_type)
 {
     // Extract numeric part (e.g., "3" from "3_star")
@@ -21,18 +21,6 @@ function renderStarIcons($hotel_type)
     $output .= '</div>';
 
     return $output;
-}
-
-function getInitials($name)
-{
-    $words = preg_split("/\s+/", trim($name));
-    $initials = "";
-    foreach ($words as $word) {
-        if (!empty($word)) {
-            $initials .= strtoupper($word[0]);
-        }
-    }
-    return $initials;
 }
 
 $quotationId = base64_decode(end($urlStructure));
