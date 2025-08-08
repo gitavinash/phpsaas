@@ -38,7 +38,9 @@ if ($checkApplication = mysqli_query($connection, "SELECT visa_package_id, visa_
         $startTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction(transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_gateway, transaction_currency, transaction_amount, transaction_coupon, transaction_coupon_amount, transaction_type, transaction_status) VALUES(" . SITE_ID . ", '" . USER_ID . "', '{$order_id}', 'online', '" . PG_NAME . "', 'INR', '{$totalPrice}', '{$coupon}', '{$discountValue}', '{$orderType}', 0)");
         $transaction_id = base64_encode(mysqli_insert_id($connection));
 
-        if ($addToCart && $addNewOrder && $startTransaction) {
+        $updateApplicationOrderid = mysqli_query($connection, "UPDATE {$tableNamePrefix}application SET visa_application_order_id='{$order_id}' WHERE visa_application_id='{$applicationId}' AND visa_application_site_id=" . SITE_ID);
+
+        if ($addToCart && $addNewOrder && $startTransaction && $updateApplicationOrderid) {
             mysqli_query($connection, "COMMIT");
             $siteApp = ((isset($app)) ? $app : 'default');
             $pgRequestType = ((isset($pgRequestType)) ? $pgRequestType : 'default');
