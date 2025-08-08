@@ -1,6 +1,7 @@
 <?php
 
 require_once 'header.php';
+require_once UTIL_FUNCTIONS . 'getInitials.php';
 ?>
 
 <main class="flex-grow container mx-auto py-[10em]">
@@ -37,37 +38,37 @@ require_once 'header.php';
                     <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-xl font-bold text-gray-900">Application Status</h2>
-                            <span class="px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">In
-                                Progress</span>
+                            <span id="visaStatus"
+                                class="px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"></span>
                         </div>
                         <div class="grid grid-cols-2 gap-6 mb-6">
                             <div>
                                 <div class="text-sm text-gray-600 mb-1">Reference Number</div>
-                                <div class="font-medium">VF2025031001</div>
+                                <div class="font-medium">
+                                    <?php echo getInitials(SITE_NAME) . '-00' ?><span id="visaApplicationId"></span>
+                                </div>
                             </div>
                             <div>
                                 <div class="text-sm text-gray-600 mb-1">Application Date</div>
-                                <div class="font-medium">March 25, 2025</div>
+                                <div class="font-medium" id="visaAppliedDate"></div>
                             </div>
                             <div>
                                 <div class="text-sm text-gray-600 mb-1">Visa Type</div>
-                                <div class="font-medium">Tourist Visa</div>
+                                <div class="font-medium" id="visaType"></div>
                             </div>
                             <div>
                                 <div class="text-sm text-gray-600 mb-1">Destination Country</div>
-                                <div class="font-medium">United States</div>
+                                <div class="font-medium" id="visaCountry"></div>
                             </div>
                         </div>
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start">
+                        <div id="lastUpdateBox"
+                            class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start">
                             <i
                                 class="ri-information-line text-blue-500 mr-3 w-5 h-5 flex items-center justify-center"></i>
-                            <div class="text-sm text-blue-800">
-                                Your application is currently being processed. Estimated completion time is 5-7 business
-                                days.
-                            </div>
+                            <div class="text-sm text-blue-800">Last update on <span id="lastUpdateText"></span></div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg shadow-lg p-8">
+                    <!-- <div class="bg-white rounded-lg shadow-lg p-8">
                         <h2 class="text-xl font-bold text-gray-900 mb-6">Application Timeline</h2>
                         <div class="relative pl-8">
                             <div class="timeline-line"></div>
@@ -129,7 +130,7 @@ require_once 'header.php';
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

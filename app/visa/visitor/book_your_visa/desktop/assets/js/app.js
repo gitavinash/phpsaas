@@ -292,7 +292,7 @@ $(document).ready(function () {
 
   $("#getApplicationStatus").click(function (e) {
     e.preventDefault();
-
+    $("#applicationStatus").addClass("hidden");
     const $btn = $(this);
     const referenceNumber = $("#referenceNumber").val().trim();
     const contactInfo = $("#contactInfo").val().trim();
@@ -323,22 +323,78 @@ $(document).ready(function () {
         method: "GET",
         data: {
           referenceNumber: referenceNumber,
-          contactInfo: contactInfo,
+          mobileNumber: contactInfo,
         },
         success: function (responseData) {
-          console.log(`responseData`, responseData);
-          $("#applicationStatus").show();
+          console.log("responseData", responseData);
+          const applicationData = responseData.msg;
+
+          // Helper function
+          const setField = (selector, value) => {
+            $(selector).text(value || "-");
+          };
+
+          // Remove any old color classes and apply new ones
+          const statusText = applicationData.status_label;
+          const $statusEl = $("#visaStatus");
+
+          $statusEl
+            .removeClass() // remove all classes first
+            .addClass("px-4 py-1 rounded-full text-sm font-medium") // base classes
+            .text(statusText); // set text
+
+          switch (statusText.toLowerCase()) {
+            case "approved":
+              $statusEl.addClass("bg-green-100 text-green-700");
+              break;
+            case "payment pending":
+              $statusEl.addClass("bg-yellow-100 text-yellow-700");
+              break;
+            case "payment failed":
+              $statusEl.addClass("bg-red-100 text-red-700");
+              break;
+            case "draft":
+              $statusEl.addClass("bg-gray-100 text-gray-700");
+              break;
+            case "pending":
+              $statusEl.addClass("bg-blue-100 text-blue-700");
+              break;
+            case "rejected":
+              $statusEl.addClass("bg-red-100 text-red-700");
+              break;
+            default:
+              $statusEl.addClass("bg-gray-100 text-gray-700");
+          }
+
+          setField(
+            "#visaApplicationId",
+            applicationData.visa_application_order_id
+          );
+          setField("#visaAppliedDate", applicationData.visa_application_time);
+          setField("#visaType", applicationData.visa_package_visa_type);
+          setField("#visaCountry", applicationData.visa_country_title);
+          setField("#lastUpdateText", applicationData.visa_application_update);
+
+          // Show the entire status block
+          $("#applicationStatus").removeClass("hidden");
+          $("html, body").animate(
+            {
+              scrollTop: $("#applicationStatus").offset().top - 112, // 6rem offset
+            },
+            600 // smooth animation in ms
+          );
+          // Enable button again
           $btn
             .prop("disabled", false)
             .removeClass("opacity-70 cursor-not-allowed")
             .html("Track Application");
         },
         error: function (responseError) {
-          popUpMessage("center", responseError.responseJSON.msg, "error");
           $btn
             .prop("disabled", false)
             .removeClass("opacity-70 cursor-not-allowed")
             .html("Track Application");
+          popUpMessage("center", responseError.responseJSON.msg, "error");
         },
       });
     } else {

@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($checkApplication = mysqli_query($connection, "SELECT visa_application_user_id, visa_application_data, user_email, user_mobile FROM {$tableNamePrefix}application INNER JOIN " . TABLE_PREFIX . "user ON user_id=visa_application_user_id WHERE visa_application_id='{$applicationId}' AND visa_application_status=0 AND visa_application_user_id='" . USER_ID . "' AND visa_application_site_id=" . SITE_ID)) {
                 if (mysqli_num_rows($checkApplication) != 0) {
                     $responseData = (mysqli_fetch_assoc($checkApplication));
-                    if ($updateApplicationStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}application SET visa_application_status=1 WHERE visa_application_id='{$applicationId}' AND visa_application_site_id=" . SITE_ID)) {
+                    if ($updateApplicationStatus = mysqli_query($connection, "UPDATE {$tableNamePrefix}application SET visa_application_status=2 WHERE visa_application_id='{$applicationId}' AND visa_application_site_id=" . SITE_ID)) {
                         $httpStatus = 200;
                         $status = 'success';
                         $msg = 'Application submit successfully';
