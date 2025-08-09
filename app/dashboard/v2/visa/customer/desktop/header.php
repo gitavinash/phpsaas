@@ -95,7 +95,7 @@ if (isset($_COOKIE['user_meta'])) {
                             <div class="w-5 h-5 flex items-center justify-center mr-3">
                                 <i class="ri-dashboard-line text-lg"></i>
                             </div>
-                            Dashboard <?php echo ADMIN_BASE_URL ?>
+                            Dashboard
                         </a>
                     </li>
                     <li>
