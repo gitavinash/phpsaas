@@ -1,3 +1,5 @@
+</div>
+</main>
 <footer class="bg-gray-900 text-white py-16">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
@@ -79,16 +81,6 @@
         </div>
     </div>
 </footer>
-<div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 space-y-4">
-    <button id="chatButton"
-        class="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#22C55E] cursor-pointer">
-        <i class="ri-whatsapp-line ri-lg"></i>
-    </button>
-    <button id="backToTop"
-        class="back-to-top w-14 h-14 bg-white text-primary rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 cursor-pointer">
-        <i class="ri-arrow-up-line ri-lg"></i>
-    </button>
-</div>
 <?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

@@ -23,11 +23,11 @@ if ($site_dashboard_version == 1) {
 
 	// Latest dashboard directory 
 
-	$dashboardDirectory = str_replace('/default/', '/' . SITE_APP . '/' . USER_TYPE . '/', ADMIN_PATH);
-
+	$dashboardDirectory = strtolower(str_replace('/default/', '/' . SITE_APP . '/' . USER_TYPE . '/', ADMIN_PATH));
+	$userDashboardDirectory = $dashboardDirectory;
 	if (!is_dir($dashboardDirectory)) {
-
 		$dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH);
+		$userDashboardDirectory = '';
 	}
 }
 
@@ -38,11 +38,6 @@ $dashboardFilePath = ((isset($type)) ? 'templates' . ADMIN_BASE_URL . $type : ((
 $dashboardFile = $dashboardDirectory . $dashboardFilePath;
 
 if (!file_exists($dashboardFile)) {
-
-	// $dashboardFilePath = explode('/', $dashboardFilePath);
-	// array_shift($dashboardFilePath);
-	// print_r($dashboardFilePath);
-	// exit();
 
 	// When dashboard theme need to call file from the default theme directory ( v1 )
 

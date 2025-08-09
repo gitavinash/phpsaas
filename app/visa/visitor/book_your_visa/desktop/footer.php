@@ -80,10 +80,13 @@
     </div>
 </footer>
 <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 space-y-4">
-    <button id="chatButton"
+    <?php
+    $whatsappLink = "https://api.whatsapp.com/send?phone=917291874705&text=Hello%20" . urlencode(SITE_NAME) . "%2C%20I%20am%20interested.";
+    ?>
+    <a href="<?php echo $whatsappLink ?>" id="chatButton"
         class="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#22C55E] cursor-pointer">
         <i class="ri-whatsapp-line ri-lg"></i>
-    </button>
+    </a>
     <button id="backToTop"
         class="back-to-top w-14 h-14 bg-white text-primary rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 cursor-pointer">
         <i class="ri-arrow-up-line ri-lg"></i>

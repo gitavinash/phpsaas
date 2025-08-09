@@ -1,7 +1,23 @@
+<?php
+
+$appDashboardDirectory = ((isset($userDashboardDirectory)) ? (($userDashboardDirectory != '' ? $userDashboardDirectory : ADMIN_PATH)) : ADMIN_PATH)  . 'dashboard/app/';
+
+$postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
+$tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
+$siteAccessMeta = '';
+if (isset($_COOKIE['user_meta'])) {
+    if ($_COOKIE['user_meta'] != '') {
+        $siteAccessMeta = (json_decode(base64_decode($_COOKIE['user_meta']), true));
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <base href="/dashboard/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,99 +52,91 @@
                 <div class="flex items-center">
                     <a href="/" class="text-2xl md:text-3xl font-['Pacifico'] text-primary logo"><img
                             src='<?php echo USER_IMAGES ?>logo.png' alt="<?php echo SITE_NAME ?>"></a>
-                    <nav class="hidden md:block ml-12">
-                        <ul class="flex space-x-8">
-                            <li class="dropdown relative">
-                                <a href="/services/" class="flex items-center text-gray-700 hover:text-primary">
-                                    Visa Services
-                                    <i class="ri-arrow-down-s-line ml-1 w-4 h-4 flex items-center justify-center"></i>
-                                </a>
-                                <div class="dropdown-content absolute top-full left-0 w-48 bg-white shadow-lg rounded">
-                                    <a href="/tourist-visa-services/"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tourist
-                                        Visa</a>
-                                    <a href="/business-visa-services/"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business
-                                        Visa</a>
-                                    <a href="/student-visa-services/"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Student
-                                        Visa</a>
-                                </div>
-                            </li>
-                            <li><a href="/track-application/" data-readdy="true"
-                                    class="text-gray-700 hover:text-primary">Track
-                                    Application</a></li>
-                            <li><a href="/travel-agent-registration/" data-readdy="true"
-                                    class="text-gray-700 hover:text-primary">Travel Agent
-                                    Registration</a></li>
-                            <li><a href="/blogs/" data-readdy="true" class="text-gray-700 hover:text-primary">Blog</a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
                 <div class="hidden md:flex items-center space-x-4">
                     <?php
+                    // Common button class for consistent height & alignment
+                    $btnBase = "font-medium !rounded-button px-6 py-2 cursor-pointer flex items-center justify-center h-11 leading-none";
 
                     if (isset($_COOKIE['user_data'])) {
                         echo "
-                    <a href='/dashboard/'
-                        class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>My Account</a>";
+        <a href='/logout/?authby=mobile'
+            class='bg-red-600 text-white hover:bg-red-500 {$btnBase}'>
+            <i class='ri-logout-box-line text-lg mr-2'></i> Logout
+        </a>";
                     } else {
                         echo "
-                    <a href='/login/?authby=mobile'
-                        class='text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer'>Login</a>
-                    <a href='/login/?authby=mobile'
-                        class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>Register</a>";
+        <a href='/login/?authby=mobile'
+            class='text-primary hover:text-primary/80 {$btnBase}'>
+            Login
+        </a>
+        <a href='/login/?authby=mobile'
+            class='bg-primary text-white hover:bg-primary/90 {$btnBase}'>
+            Register
+        </a>";
                     }
-
                     ?>
                 </div>
+
                 <button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700" id="mobileMenuBtn">
                     <i class="ri-menu-line ri-2x"></i>
                 </button>
             </div>
         </div>
-        <!-- Mobile Menu -->
-        <div class="md:hidden hidden bg-white" id="mobileMenu">
-            <nav class="px-4 py-2">
+    </header>
+    <div class="flex mt-20">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-sm min-h-screen border-r border-gray-200">
+            <nav class="p-6">
                 <ul class="space-y-2">
                     <li>
-                        <a href="/services/" class="block py-2 text-gray-700">Visa Services</a>
-                        <div class="pl-4 space-y-2">
-                            <a href="/tourist-visa-services/"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tourist
-                                Visa</a>
-                            <a href="/business-visa-services/"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business
-                                Visa</a>
-                            <a href="/student-visa-services/"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Student
-                                Visa</a>
-                        </div>
+                        <a href="/dashboard/"
+                            class="flex items-center px-4 py-3 <?php echo ((ADMIN_BASE_URL == '/') ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> rounded-lg font-medium">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-dashboard-line text-lg"></i>
+                            </div>
+                            Dashboard <?php echo ADMIN_BASE_URL ?>
+                        </a>
                     </li>
-                    <li><a href="/track-application/" class="block py-2 text-gray-700">Track Application</a></li>
-                    <li><a href="travel-agent-registration/" class="block py-2 text-gray-700">Travel Agent
-                            Registration</a>
+                    <li>
+                        <a href="applications/list/"
+                            class="flex items-center px-4 py-3 <?php echo ((ADMIN_BASE_URL == '/applications/list/') ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> hover:bg-gray-50 rounded-lg">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-file-list-line text-lg"></i>
+                            </div>
+                            My Applications
+                        </a>
                     </li>
-                    <li><a href="/blogs/" data-readdy="true" class="text-gray-700 hover:text-primary">Blog</a></li>
-                    <li class="pt-4 pb-4 border-t">
-                        <?php
-
-                        if (isset($_COOKIE['user_data'])) {
-                            echo "
-<a href='/dashboard/'
-    class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>My Account</a>";
-                        } else {
-                            echo "
-<a href='/login/?authby=mobile'
-    class='text-primary hover:text-primary/80 font-medium !rounded-button px-6 py-2 cursor-pointer'>Login</a>
-<a href='/login/?authby=mobile'
-    class='bg-primary text-white hover:bg-primary/90 font-medium !rounded-button px-6 py-2 cursor-pointer'>Register</a>";
-                        }
-
-                        ?>
+                    <li>
+                        <a href="/track-application/" target="_blank"
+                            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-search-line text-lg"></i>
+                            </div>
+                            Track Application
+                        </a>
+                    </li>
+                    <li>
+                        <a href="setting/info/"
+                            class="flex items-center px-4 py-3 <?php echo ((ADMIN_BASE_URL == '/setting/info/') ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> hover:bg-gray-50 rounded-lg"
+                            id="settings-link">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-settings-line text-lg"></i>
+                            </div>
+                            Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/contact-us/" target="_blank"
+                            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-customer-service-line text-lg"></i>
+                            </div>
+                            Help & Support
+                        </a>
                     </li>
                 </ul>
             </nav>
-        </div>
-    </header>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 bg-gray-50">
