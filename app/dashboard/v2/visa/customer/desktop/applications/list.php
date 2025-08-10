@@ -63,8 +63,9 @@ $applicationStatusQuery = "SELECT JSON_OBJECT(
         ON c.visa_country_id = p.visa_package_country_id
       WHERE v.visa_application_user_id = " . USER_ID . "
         AND v.visa_application_site_id = " . SITE_ID . "
-      ORDER BY v.visa_application_status ASC, v.visa_application_time DESC
-    ) AS sub
+        ORDER BY visa_application_time DESC, visa_application_status ASC
+        LIMIT 1000
+    ) AS sub 
   )
 ) AS result";
 
@@ -72,6 +73,7 @@ if ($checkApplicationsInfo = mysqli_query($connection, $applicationStatusQuery))
 
   $row = mysqli_fetch_assoc($checkApplicationsInfo);
   $data = json_decode($row['result'], true);
+  extract($data['counts']);
 } else {
   echo (DEVELOPMENT_MODE === true)
     ? mysqli_error($connection)
