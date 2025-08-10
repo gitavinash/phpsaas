@@ -86,7 +86,7 @@ if (isset($_COOKIE['user_meta'])) {
     </header>
     <div class="flex mt-20">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-sm min-h-screen border-r border-gray-200">
+        <aside class="w-64 bg-white shadow-sm min-h-screen border-r border-gray-200 sticky top-20 h-fit self-start">
             <nav class="p-6">
                 <ul class="space-y-2">
                     <li>
@@ -100,7 +100,7 @@ if (isset($_COOKIE['user_meta'])) {
                     </li>
                     <li>
                         <a href="applications/list/"
-                            class="flex items-center px-4 py-3 <?php echo ((ADMIN_BASE_URL == '/applications/list/') ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> hover:bg-gray-50 rounded-lg">
+                            class="flex items-center px-4 py-3 <?php echo ((strpos(ADMIN_BASE_URL, '/applications/') !== false) ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> hover:bg-gray-50 rounded-lg">
                             <div class="w-5 h-5 flex items-center justify-center mr-3">
                                 <i class="ri-file-list-line text-lg"></i>
                             </div>
@@ -108,22 +108,23 @@ if (isset($_COOKIE['user_meta'])) {
                         </a>
                     </li>
                     <li>
-                        <a href="/track-application/" target="_blank"
-                            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-                            <div class="w-5 h-5 flex items-center justify-center mr-3">
-                                <i class="ri-search-line text-lg"></i>
-                            </div>
-                            Track Application
-                        </a>
-                    </li>
-                    <li>
                         <a href="setting/info/"
-                            class="flex items-center px-4 py-3 <?php echo ((ADMIN_BASE_URL == '/setting/info/') ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> hover:bg-gray-50 rounded-lg"
+                            class="flex items-center px-4 py-3 <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'text-primary bg-primary/10' : 'hover:bg-gray-50 text-gray-600') ?> hover:bg-gray-50 rounded-lg"
                             id="settings-link">
                             <div class="w-5 h-5 flex items-center justify-center mr-3">
                                 <i class="ri-settings-line text-lg"></i>
                             </div>
                             Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/services/" target="_blank"
+                            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-file-add-line text-lg"></i>
+                            </div>
+                            Start Visa Application
+                            <i class="ri-external-link-line ml-1 text-xs opacity-70"></i>
                         </a>
                     </li>
                     <li>
@@ -133,10 +134,11 @@ if (isset($_COOKIE['user_meta'])) {
                                 <i class="ri-customer-service-line text-lg"></i>
                             </div>
                             Help & Support
+                            <i class="ri-external-link-line ml-1 text-xs opacity-70"></i>
                         </a>
                     </li>
                 </ul>
             </nav>
         </aside>
         <!-- Main Content -->
-        <main class="flex-1 bg-gray-50">
+        <main class="flex-1 bg-gray-50 min-h-screen">
