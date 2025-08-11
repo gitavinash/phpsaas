@@ -83,10 +83,56 @@ if (isset($_COOKIE['user_meta'])) {
                 </button>
             </div>
         </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white" id="mobileMenu">
+            <nav class="px-4 py-2">
+                <ul class="space-y-2">
+                    <li><a href="/dashboard/" class="block py-2 text-gray-700"><i class="ri-dashboard-line text-lg"></i>
+                            Dashboard</a></li>
+                    <li><a href="applications/list/" class="block py-2 text-gray-700"><i
+                                class="ri-file-list-line text-lg"></i> My
+                            Applications</a></li>
+                    <li><a href="setting/info/" class="block py-2 text-gray-700"><i
+                                class="ri-settings-line text-lg"></i>
+                            Settings</a></li>
+                    <li><a href="/services/" class="block py-2 text-gray-700"><i class="ri-settings-line text-lg"></i>
+                            Start Visa
+                            Application <i class="ri-external-link-line ml-1 text-xs opacity-70"></i></a></li>
+                    <li><a href="/contact-us/" class="block py-2 text-gray-700"><i
+                                class="ri-customer-service-line text-lg"></i>
+                            Help & Support <i class="ri-external-link-line ml-1 text-xs opacity-70"></i></a></li>
+                    <li class="pt-4 pb-4 border-t">
+                        <?php
+                        // Common button class for consistent height & alignment
+                        $btnBase = "font-medium !rounded-button px-6 py-2 cursor-pointer flex items-center justify-center h-11 leading-none";
+
+                        if (isset($_COOKIE['user_data'])) {
+                            echo "
+        <a href='/logout/?authby=mobile'
+            class='bg-red-600 text-white hover:bg-red-500 {$btnBase}'>
+            <i class='ri-logout-box-line text-lg mr-2'></i> Logout
+        </a>";
+                        } else {
+                            echo "
+        <a href='/login/?authby=mobile'
+            class='text-primary hover:text-primary/80 {$btnBase}'>
+            Login
+        </a>
+        <a href='/login/?authby=mobile'
+            class='bg-primary text-white hover:bg-primary/90 {$btnBase}'>
+            Register
+        </a>";
+                        }
+                        ?>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </header>
     <div class="flex mt-20">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-sm min-h-screen border-r border-gray-200 sticky top-20 h-fit self-start">
+        <aside
+            class="hidden md:block w-64 bg-white shadow-sm min-h-screen border-r border-gray-200 sticky top-20 h-fit self-start">
             <nav class="p-6">
                 <ul class="space-y-2">
                     <li>

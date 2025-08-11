@@ -64,7 +64,7 @@
                     </div>
                     <div>
                         <button id="saveProfileInformation"
-                            class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect">
+                            class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect w-full sw:w-auto">
                             Save Changes
                         </button>
                     </div>
@@ -107,13 +107,11 @@
                             <input type="text" placeholder="India" id="countryName"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
                         </div>
+                        <button id="saveAddressInformation"
+                            class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect w-full sw:w-auto">
+                            Save Changes
+                        </button>
                     </div>
-                </div>
-                <div>
-                    <button id="saveAddressInformation"
-                        class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect">
-                        Save Changes
-                    </button>
                 </div>
             </div>
         </div>
@@ -144,10 +142,8 @@
                             <input type="password" id="confirmPassword" placeholder="Confirm your password"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
                         </div>
-                    </div>
-                    <div>
                         <button id="savePasswordInformation"
-                            class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect">
+                            class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect w-full sw:w-auto">
                             Save Changes
                         </button>
                     </div>

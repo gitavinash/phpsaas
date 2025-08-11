@@ -83,7 +83,15 @@ if ($checkApplicationsInfo = mysqli_query($connection, $applicationStatusQuery))
 }
 
 ?>
-<div class="max-w-7xl mx-auto px-8 py-12">
+<div class="max-w-7xl mx-auto px-8 pt-12">
+    <!-- Visa Applications List Header -->
+    <div id="visa-applications-content" class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Visa Applications</h1>
+        <p class="text-gray-600">View and manage your visa application statuses and details</p>
+    </div>
+    <!-- Applications list will go here -->
+</div>
+<div class="max-w-7xl mx-auto px-8 pb-12">
     <!-- Dashboard Content -->
     <div id="dashboard-content">
         <!-- Applications Grid -->
