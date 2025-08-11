@@ -55,7 +55,8 @@ $applicationStatusQuery = "SELECT JSON_OBJECT(
       FROM {$tableNamePrefix}application v
       LEFT JOIN " . TABLE_PREFIX . "order o 
         ON o.order_id = CAST(FROM_BASE64(v.visa_application_package_id) AS UNSIGNED)
-           OR o.order_id = v.visa_application_package_id
+           OR o.order_id = v.visa_application_order_id
+           AND o.order_site_id=" . SITE_ID . "
       LEFT JOIN {$tableNamePrefix}package p 
         ON p.visa_package_id = CAST(FROM_BASE64(v.visa_application_package_id) AS UNSIGNED)
            OR p.visa_package_id = v.visa_application_package_id
