@@ -33,13 +33,18 @@ $applicationStatusQuery = "SELECT JSON_OBJECT(
         'visa_country_code', sub.visa_country_code,
         'visa_country_title', sub.visa_country_title,
         'visa_application_status',
-          CASE sub.visa_application_status
-            WHEN 1 THEN 'Completed'
-            WHEN 4 THEN 'In Process'
-            WHEN 0 THEN 'Pending'
-            WHEN 3 THEN 'Cancel'
-            ELSE 'Unknown'
-          END
+          CASE visa_application_status
+                WHEN 0 THEN 'Initiated'
+                WHEN 1 THEN 'Success'
+                WHEN 2 THEN 'Pending'
+                WHEN 3 THEN 'Followup'
+                WHEN 4 THEN 'Failed'
+                WHEN 5 THEN 'Duplicate'
+                WHEN 6 THEN 'Payment'
+                WHEN 7 THEN 'Requested'
+                WHEN 8 THEN 'Completed'
+                ELSE 'Unknown'
+            END
       )
     )
     FROM (
@@ -119,7 +124,7 @@ if ($checkApplicationsInfo = mysqli_query($connection, $applicationStatusQuery))
             <div class='relative'>
                 <div class='flex items-start justify-between mb-6'>
                     <div class='flex items-center'>
-                        <div class='w-12 h-9 bg-gray-50 p-1 border border-gray-200 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300'>
+                        <div class='w-12 h-6 bg-gray-50 border border-gray-200 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300'>
                             <img src='https://flagcdn.com/" . strtolower($visa_country_code) . ".svg' flag icon clean simple design&width=32&height=24' 
                                 alt='{$visa_country_title}' class='w-full h-full object-contain'>
                         </div>

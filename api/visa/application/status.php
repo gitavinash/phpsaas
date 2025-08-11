@@ -34,15 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 CONCAT(UCASE(LEFT(visa_package_entry_type, 1)), LOWER(SUBSTRING(visa_package_entry_type, 2))) AS visa_package_entry_type,
                 visa_application_status, 
                 transaction_status,
-                CASE
-                    WHEN visa_application_status = 1 AND transaction_status = 1 THEN 'Approved'
-                    WHEN visa_application_status = 1 AND transaction_status = 2 THEN 'Payment Pending'
-                    WHEN visa_application_status = 1 AND transaction_status = 3 THEN 'Payment Failed'
-                    WHEN visa_application_status = 0 THEN 'Draft'
-                    WHEN visa_application_status = 2 THEN 'Pending'
-                    WHEN visa_application_status = 3 THEN 'Rejected'
-                    ELSE 'Unknown'
-                END AS status_label
+                CASE visa_application_status
+                        WHEN 0 THEN 'Initiated'
+                        WHEN 1 THEN 'Success'
+                        WHEN 2 THEN 'Pending'
+                        WHEN 3 THEN 'Followup'
+                        WHEN 4 THEN 'Failed'
+                        WHEN 5 THEN 'Duplicate'
+                        WHEN 6 THEN 'Payment'
+                        WHEN 7 THEN 'Requested'
+                        WHEN 8 THEN 'Completed'
+                        ELSE 'Unknown'
+                    END AS status_label
             FROM " . TABLE_PREFIX . "visa_application
             INNER JOIN " . TABLE_PREFIX . "transaction 
                 ON transaction_order_id = visa_application_order_id 

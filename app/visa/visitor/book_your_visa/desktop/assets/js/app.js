@@ -71,20 +71,28 @@ $(document).ready(function () {
     yearRange: new Date().getFullYear() + ":2099",
   });
 
+  // 🛬 Arrival Date Picker
   $(".arrivalDatePicker").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
     changeYear: true,
     minDate: 0, // today
     yearRange: new Date().getFullYear() + ":2099",
+    onSelect: function (selectedDate) {
+      // When arrival date changes, update departure minDate
+      var arrivalDate = $(this).datepicker("getDate");
+      if (arrivalDate) {
+        $(".departureDatePicker").datepicker("option", "minDate", arrivalDate);
+      }
+    },
   });
 
-  // 🛫 Departure Date Picker (tomorrow onward)
+  // 🛫 Departure Date Picker
   $(".departureDatePicker").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
     changeYear: true,
-    minDate: 1, // tomorrow
+    minDate: 1, // tomorrow by default
     yearRange: new Date().getFullYear() + ":2099",
   });
 
