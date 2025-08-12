@@ -125,6 +125,7 @@ $("#forgotPassword").on("click", function (event) {
       }
     },
     error: function (errorResponse) {
+      $("#forgotPassword").show();
       popUpMessage(
         "center",
         errorResponse.responseJSON.msg,
@@ -133,7 +134,6 @@ $("#forgotPassword").on("click", function (event) {
       setTimeout(function () {
         window.location.reload();
       }, 1500);
-      $("#forgotPassword").show();
     },
   });
 });
