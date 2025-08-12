@@ -120,8 +120,8 @@ $("#forgotPassword").on("click", function (event) {
         popUpMessage("center", data.msg, data.status);
         $("#forgotPassword").show();
       } else {
-        popUpMessage("center", data.msg, data.status);
         $("#forgotPassword").show();
+        popUpMessage("center", data.msg, data.status);
       }
     },
     error: function (errorResponse) {
