@@ -88,17 +88,6 @@
 <script src="<?php echo USER_JS ?>tailwind.config.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="<?php echo USER_JS ?>app.js"></script>
-<?php
-
-if (BASE_URL == '/visa-application-form/') {
-    echo "<script src='" . USER_JS . "visa-form.js'></script>";
-}
-if (BASE_URL == '/start-application/') {
-    echo "<script src='" . USER_JS . "start-application.js'></script>";
-}
-
-?>
-
 <script>
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
