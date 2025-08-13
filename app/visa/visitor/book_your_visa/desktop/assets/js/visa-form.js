@@ -19,7 +19,7 @@ let firstName = "",
   purposeOfVisit = "",
   visaEntry = "",
   accommodation = "",
-  passportCopy = "",
+  passportCopy = [],
   profilePhoto = "",
   supportingDocuments = [],
   supportingDocumentsUploaded = false;
@@ -523,7 +523,7 @@ function renderDocumentUploadTabs() {
             <div class="text-sm text-gray-500">Max size: 5MB</div>
           </div>
           <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <input type="file" id="passportCopy_${index}" name="passportCopy_${index}" 
+            <input type="file" id="passportCopy_${index}" name="passportCopy_${index}" multiple
               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf">
             <i class="ri-upload-cloud-line text-gray-400 text-3xl mb-2"></i>
             <div id="passportCopyText_${index}" class="text-sm text-gray-600">Drag and drop or click to upload</div>
@@ -825,7 +825,7 @@ $("#submitVisaApplicationFormBtn").on("click", function (e) {
     }
 
     // Append passport file
-    if (passportInput?.files?.[0]) {
+    if (passportInput?.files?.length > 0) {
       finalData.append(`passportCopy[${index}]`, passportInput.files[0]);
     }
 

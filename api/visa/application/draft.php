@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($application_id)) {
 
         $getOldJsonObject = mysqli_query($connection, "SELECT visa_application_data FROM {$tableNamePrefix}application WHERE visa_application_id='{$application_id}' AND visa_application_site_id=" . SITE_ID);
+
         if (mysqli_num_rows($getOldJsonObject) != 0) {
             $oldJsonObject = mysqli_fetch_assoc($getOldJsonObject);
             $oldData = json_decode($oldJsonObject['visa_application_data'], true);
@@ -32,35 +33,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_FILES)) {
             require_once MODULES . 'upload.php';
 
-            $media = [
-                'passport' => [],
-                'profilePhoto' => [],
-                'documents' => [],
-            ];
+            // Decode personsData from the original JSON
+            $personsDataObject = json_decode($oldData['personsData'], TRUE);
+
+            if (is_string($personsDataObject)) {
+                $personsDataObject = json_decode($personsDataObject, true);
+            }
 
             foreach ($_FILES as $field => $fileData) {
-                // Match field names like passportCopy_0, profilePhoto_0, supportingDocuments_0[0]
+                // Match input names like passportCopy_0, profilePhoto_1, supportingDocuments_0[1], etc.
                 if (preg_match('/^(passportCopy|profilePhoto|supportingDocuments)_(\d+)(?:\[(\d+)\])?$/', $field, $matches)) {
-                    $type = $matches[1];          // passportCopy / profilePhoto / supportingDocuments
-                    $personIndex = $matches[2];   // 0, 1, 2...
-                    $fileIndex = $matches[3] ?? null;
+                    $type = $matches[1];     // passportCopy, profilePhoto, supportingDocuments
+                    $personIndex = (int)$matches[2]; // Person index in the array
 
-                    $path = handleFileUpload($fileData);
+                    if (!isset($personsDataObject[$personIndex])) {
+                        continue; // Skip if person doesn't exist
+                    }
+
+                    $path = handleFileUpload($fileData); // Your upload function
 
                     if ($path) {
-                        if ($type === 'passportCopy') {
-                            $media['passport'][$personIndex] = $path;
-                        } elseif ($type === 'profilePhoto') {
-                            $media['profilePhoto'][$personIndex] = $path;
-                        } elseif ($type === 'supportingDocuments') {
-                            $media['documents'][$personIndex][] = $path;
+                        // Initialize 'media' key if not already set
+                        if (!isset($personsDataObject[$personIndex]) || !is_array($personsDataObject[$personIndex])) {
+                            continue; // Skip if the person data is missing or not an array
+                        }
+
+                        if (!isset($personsDataObject[$personIndex]['media']) || !is_array($personsDataObject[$personIndex]['media'])) {
+                            $personsDataObject[$personIndex]['media'] = [
+                                'passport' => null,
+                                'profilePhoto' => null,
+                                'documents' => []
+                            ];
+                        }
+
+                        // Attach the uploaded file path to the appropriate field
+                        switch ($type) {
+                            case 'passportCopy':
+                                $personsDataObject[$personIndex]['media']['passport'] = $path;
+                                break;
+
+                            case 'profilePhoto':
+                                $personsDataObject[$personIndex]['media']['profilePhoto'] = $path;
+                                break;
+
+                            case 'supportingDocuments':
+                                $personsDataObject[$personIndex]['media']['documents'][] = $path;
+                                break;
                         }
                     }
                 }
             }
 
-            // Combine with existing data
-            $rawData = json_encode($media, JSON_UNESCAPED_SLASHES);
+            // Re-encode the modified personsData back into oldData
+            $oldData['personsData'] = $personsDataObject;
+        } else {
+            $rawData = array(
+                'arrivalDate' => date('Y-d-m', strtotime($arrivalDate)),
+                'departureDate' => date('Y-d-m', strtotime($departureDate)),
+                'purposeOfTravel' => trim($purposeOfTravel),
+                'visaEntry' => trim($visaEntry),
+                'accommodation' => trim($accommodation)
+            );
         }
 
         // Decode new raw data (if it's JSON string)
@@ -69,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Merge old data with new data — new data overwrites old on key conflict
         $combinedData = array_merge($oldData, $newData);
         // Encode back to JSON if needed
+
         $combinedJson = json_encode($combinedData);
 
         $query = "UPDATE {$tableNamePrefix}application SET visa_application_data='" . mysqli_real_escape_string($connection, $combinedJson) . "' WHERE visa_application_id='{$application_id}' AND visa_application_user_id=" . USER_ID . " AND visa_application_site_id=" . SITE_ID;
