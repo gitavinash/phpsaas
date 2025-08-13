@@ -56,7 +56,7 @@ function processSingleFile($file)
     }
 
     $unique = uniqid('', true);
-    $safeName = time() . '_' . $unique . '_' . basename($file['name']);
+    $safeName = time() . '_' . $unique . '_' . preg_replace('/[^A-Za-z0-9\.\-]/', '_', basename($file['name']));
     $destination = rtrim($uploadPath, '/') . '/' . $safeName;
 
     if (move_uploaded_file($file['tmp_name'], $destination)) {

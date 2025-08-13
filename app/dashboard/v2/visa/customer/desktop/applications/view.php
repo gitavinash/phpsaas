@@ -86,9 +86,7 @@ if (!empty($id)) {
     extract(mysqli_fetch_assoc($checkApplication));
 
     $passangerDetails = json_decode($visa_application_data, TRUE);
-    $personsDataJSON = json_decode($passangerDetails['personsData'], TRUE);
-    $personsData = json_decode($personsDataJSON, TRUE);
-    print_r($passangerDetails);
+    extract($passangerDetails);
 } else {
     echo '
 <div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center px-6 py-12 relative text-center">
@@ -204,80 +202,86 @@ $style = $statusStyles[$statusKey] ?? $statusStyles['unknown'];
             <?php
             for ($i = 0; $i < sizeof($personsData); $i++) {
                 extract($personsData[$i]);
-                echo "<div class='border border-gray-200 rounded-xl p-6'>
-                <div class='flex items-center justify-between mb-6'>
-                    <div class='flex items-center'>
-                        <img src='" . ((isset($passangerDetails['profilePhoto'][$i][0])) ? $passangerDetails['profilePhoto'][$i][0] : '') . "'
-                            alt='{$first_name} {$middle_name} {$last_name}' class='w-12 h-12 rounded-full object-cover mr-4'>
-                        <div>
-                            <p class='font-medium text-gray-900'>{$first_name} {$middle_name} {$last_name}</p>
-                            <p class='text-sm text-gray-500'>" . (($i == 0) ? 'Primary' : 'Secondary') . " Applicant</p>
-                        </div>
-                    </div>
-                    <div class='flex items-center space-x-6'>
-                        <div>
-                            <p class='text-sm text-gray-500'>Passport Number</p>
-                            <p class='font-medium text-gray-900'>" . strtoupper($passport_number) . "</p>
-                        </div>
-                        <div>
-                            <p class='text-sm text-gray-500'>Passport Expiry</p>
-                            <p class='font-medium text-gray-900'>" . date('F d, Y', strtotime($passport_expiry)) . "</p>
-                        </div>
+                $personMedia = isset($personsData[$i]['media']) ? $personsData[$i]['media'] : [];
+
+                echo "<div class='border border-gray-200 rounded-xl p-6'>";
+
+                // Header with profile + applicant info
+                echo "<div class='flex items-center justify-between mb-6'>
+                <div class='flex items-center'>
+                    <a href='" . (!empty($personMedia['profilePhoto'][0]) ? $personMedia['profilePhoto'][0] : '/default-avatar.png') . "' target='_blank'><img src='" . (!empty($personMedia['profilePhoto'][0]) ? $personMedia['profilePhoto'][0] : '/default-avatar.png') . "'
+                        alt='{$first_name} {$middle_name} {$last_name}' 
+                        class='w-12 h-12 rounded-full object-cover mr-4 border border-gray-200'></a>
+                    <div>
+                        <p class='font-medium text-gray-900'>{$first_name} {$middle_name} {$last_name}</p>
+                        <p class='text-sm text-gray-500'>" . (($i == 0) ? 'Primary' : 'Secondary') . " Applicant</p>
                     </div>
                 </div>
-                <div class='grid grid-cols-1 md:grid-cols-2 gap-4'>                    
-                    <div class='flex p-4 bg-gray-50 rounded-lg items-start'>
-                        <div class='w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4'>
-                            <i class='ri-passport-line text-lg text-green-600'></i>
-                        </div>
-                        <div class='flex-1'>
-                            <p class='font-medium text-gray-900'>Passport Copy</p>
-                            <ul class='list-disc list-inside text-sm text-gray-500 mt-1'>
-                                <li>Driver's License</li>
-                                <li>Utility Bill</li>
-                                <li>Bank Statement</li>
-                                <li>Birth Certificate</li>
-                            </ul>
-                        </div>
-                        <span
-                            class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-                            <i class='ri-check-line text-xs mr-1'></i>
-                            Verified
-                        </span>
+                <div class='flex items-center space-x-6'>
+                    <div>
+                        <p class='text-sm text-gray-500'>Passport Number</p>
+                        <p class='font-medium text-gray-900'>" . strtoupper($passport_number) . "</p>
                     </div>
-                    <div class='flex items-center p-4 bg-gray-50 rounded-lg'>
-                        <div class='w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4'>
-                            <i class='ri-image-line text-lg text-purple-600'></i>
-                        </div>
-                        <div class='flex-1'>
-                            <p class='font-medium text-gray-900'>Passport Photos</p>
-                            <p class='text-sm text-gray-500'>2x2 inches, white background</p>
-                        </div>
-                        <span
-                            class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-                            <i class='ri-check-line text-xs mr-1'></i>
-                            Verified
-                        </span>
-                    </div>
-                    <div class='flex items-center p-4 bg-gray-50 rounded-lg'>
-                        <div class='w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-4'>
-                            <i class='ri-bank-card-line text-lg text-orange-600'></i>
-                        </div>
-                        <div class='flex-1'>
-                            <p class='font-medium text-gray-900'>Supporting Documents</p>
-                            <p class='text-sm text-gray-500'>Bank statements & tax returns</p>
-                        </div>
-                        <span
-                            class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-                            <i class='ri-check-line text-xs mr-1'></i>
-                            Verified
-                        </span>
+                    <div>
+                        <p class='text-sm text-gray-500'>Passport Expiry</p>
+                        <p class='font-medium text-gray-900'>" . date('F d, Y', strtotime($passport_expiry)) . "</p>
                     </div>
                 </div>
             </div>";
+
+                echo "<div class='grid grid-cols-1 md:grid-cols-2 gap-4'>";
+
+                // Passport section
+                if (!empty($personMedia['passport'])) {
+                    echo "<div class='flex p-4 bg-gray-50 rounded-lg items-start shadow-sm'>
+                    <div class='w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mr-4'>
+                        <i class='ri-passport-line text-2xl text-green-600'></i>
+                    </div>
+                    <div class='flex-1'>
+                        <p class='font-medium text-gray-900'>Passport</p>
+                        <ul class='list-disc list-inside text-sm text-gray-500 mt-1'>";
+
+                    foreach ($personMedia['passport'] as $file) {
+                        echo "<li><a href='{$file}' target='_blank' class='text-blue-600 hover:underline'>View file</a></li>";
+                    }
+
+                    echo "      </ul>
+                    </div>
+                    <span class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
+                        <i class='ri-check-line text-sm mr-1'></i>
+                        Verified
+                    </span>
+                </div>";
+                }
+
+                // Additional documents section
+                if (!empty($personMedia['documents'][0])) {
+                    echo "<div class='flex p-4 bg-gray-50 rounded-lg items-start shadow-sm'>
+                    <div class='w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mr-4'>
+                        <i class='ri-file-text-line text-2xl text-green-600'></i>
+                    </div>
+                    <div class='flex-1'>
+                        <p class='font-medium text-gray-900'>Additional documents</p>
+                        <ul class='list-disc list-inside text-sm text-gray-500 mt-1'>";
+
+                    foreach ($personMedia['documents'][0] as $file) {
+                        echo "<li><a href='{$file}' target='_blank' class='text-blue-600 hover:underline'>View file</a></li>";
+                    }
+
+                    echo "      </ul>
+                    </div>
+                    <span class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
+                        <i class='ri-check-line text-sm mr-1'></i>
+                        Verified
+                    </span>
+                </div>";
+                }
+
+                echo "</div></div>";
             }
             ?>
         </div>
+
     </div>
     <div class="grid grid-cols-1 gap-8 mb-8">
         <!-- Payment History -->
