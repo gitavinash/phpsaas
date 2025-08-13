@@ -7,7 +7,7 @@ $applicationStatusQuery = "SELECT JSON_OBJECT(
     SELECT JSON_OBJECT(
       'confirm', SUM(v.visa_application_status = 1),
       'in_process', SUM(v.visa_application_status = 4),
-      'pending', SUM(v.visa_application_status = 0),
+      'pending', SUM(v.visa_application_status IN (0,2)),
       'cancel', SUM(v.visa_application_status = 3)
     )
     FROM {$tableNamePrefix}application v
