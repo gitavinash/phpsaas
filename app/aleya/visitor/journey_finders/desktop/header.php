@@ -99,7 +99,7 @@ function buildFilterQuery($filter, $value, $connection)
             <!-- Logo + Desktop Menu -->
             <div class="flex items-center">
                 <a href="/" class="mr-8">
-                    <img src="<?php echo USER_IMAGES ?>logo.png" alt="JourneyFinders" class="h-10" />
+                    <img src="<?php echo SITE_LOGO ?>" alt="Journey Finders" class="h-10" />
                 </a>
 
                 <!-- Desktop Navigation -->
