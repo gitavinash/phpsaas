@@ -10,8 +10,11 @@
 <meta property="og:url"
     content="<?php echo ((isset($meta_canonical)) ?  (($meta_canonical != '') ? $meta_canonical : 'https://' . SITE_DOMAIN . BASE_URL) : 'https://' . SITE_DOMAIN . BASE_URL) ?>" />
 
-<meta property="og:image" content="<?php echo str_replace(SITE_URL, 'final', isset($fb_image) ? $fb_image : (isset(${$link_type . '_image'}) ? ${$link_type . '_image'} : SITE_LOGO));
-                                    ?>" />
+<?php
+$facebookImage = $image = isset($fb_image) ? $fb_image : (isset(${$link_type . '_image'}) ? ${$link_type . '_image'} : SITE_LOGO);
+$facebookImage = SITE_URL . str_replace(SITE_URL, '', $image);
+?>
+<meta property="og:image" content="<?php echo $facebookImage ?>" />
 
 <meta property="og:site_name" content="<?php echo SITE_NAME ?>" />
 <!-- <meta property="fb:admins" content="" />
