@@ -15,7 +15,6 @@ $facebookImage = $image = isset($fb_image) ? $fb_image : (isset(${$link_type . '
 $facebookImage = SITE_URL . str_replace(SITE_URL, '', $image);
 ?>
 <meta property="og:image" content="<?php echo $facebookImage ?>" />
-
 <meta property="og:site_name" content="<?php echo SITE_NAME ?>" />
 <!-- <meta property="fb:admins" content="" />
 <meta property="fb:app_id" content="" />
