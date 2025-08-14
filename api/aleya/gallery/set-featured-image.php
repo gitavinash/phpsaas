@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Set the featured image
             $updateQuery = "UPDATE " . TABLE_PREFIX . "gallery SET gallery_image = '{$featureImage}' WHERE gallery_id = '{$galleryId}' AND gallery_category='{$categoryId}' AND gallery_site_id = " . SITE_ID;
+
+            $updateTourPackageImage = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "tour_package SET tour_package_image='{$featureImage}' WHERE tour_package_id='{$categoryId}' AND tour_package_site_id=" . SITE_ID);
+
             if (mysqli_query($connection, $updateQuery)) {
                 $httpStatus = 200;
                 $status = 'success';
