@@ -40,10 +40,10 @@ if (isset($link_type)) {
 <meta name="twitter:description"
     content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($tw_desc)) ? (($tw_desc != '') ? $tw_desc : SITE_DESC) : SITE_DESC))))) ?>">
 <meta name="twitter:creator" content="@">
-<meta property="og:image" content="<?php echo SITE_URL;
-                                    if (isset($tw_image)) {
-                                        echo $tw_image;
-                                    } else {
-                                        echo ((isset(${$link_type . '_image'})) ? ${$link_type . '_image'} : SITE_LOGO);
-                                    } ?>" />
+
+<?php
+$twitterImage = $image = isset($tw_image) ? $tw_image : (isset(${$link_type . '_image'}) ? ${$link_type . '_image'} : SITE_LOGO);
+$twitterImage = SITE_URL . str_replace(SITE_URL, '', $image);
+?>
+<meta property="og:image" content="<?php echo $twitterImage ?>" />
 <meta name="twitter:url" content="<?php echo SITE_URL . BASE_URL ?>">
