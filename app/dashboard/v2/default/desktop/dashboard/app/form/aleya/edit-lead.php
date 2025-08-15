@@ -28,7 +28,7 @@
 <tr>
     <td class="box-3"><strong>Destination<sup>*</sup></strong></td>
     <td class="box-7">
-        <select class="indianCityAutoComplete" style="float: left; width:100%" name="package" id="package">
+        <select class="internationalCityAutoComplete" style="float: left; width:100%" name="package" id="package">
             <option value="<?php echo $enquiry_subject ?>"><?php echo $enquiry_subject ?></option>
         </select>
     </td>

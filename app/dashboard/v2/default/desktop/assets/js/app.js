@@ -1258,26 +1258,40 @@ $(document).ready(function (e) {
   });
 
   $(".duplicateLead").click(function (e) {
-    showPageLoader();
-    var id = $(this).attr("id");
-    $.ajax({
-      type: "GET",
-      url: "/api/leads/duplicate/?id=" + id,
-      dataType: "json",
-      success: function (response) {
-        popUpMessage("center", response.msg, response.status);
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
+    event.preventDefault();
+    var disableRedirect = false;
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, proceed",
+    }).then((result) => {
+      if (result.value) {
+        showPageLoader();
+        var id = $(this).attr("id");
+        $.ajax({
+          type: "GET",
+          url: "/api/leads/duplicate/?id=" + id,
+          dataType: "json",
+          success: function (response) {
+            popUpMessage("center", response.msg, response.status);
+            setTimeout(function () {
+              location.reload();
+            }, 1500);
+            hidePageLoader();
+          },
+          error: function (response) {
+            console.log(`Error : `, response);
+            hidePageLoader();
+          },
+        });
         hidePageLoader();
-      },
-      error: function (response) {
-        console.log(`Error : `, response);
-        hidePageLoader();
-      },
+        e.preventDefault();
+      }
     });
-    hidePageLoader();
-    e.preventDefault();
   });
 
   if ($("#fixedDiv").length) {
