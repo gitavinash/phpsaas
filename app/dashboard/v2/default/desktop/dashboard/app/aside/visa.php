@@ -1,20 +1,32 @@
 <?php
 if ($site_access_type != 'customer') {
 ?>
-<!-- Leads Section -->
+<!-- VISA Application Section -->
 <li class="header-section-name">
-    <p>Leads<span>Manage leads.</span></p>
+    <p>Visa Applications<span>Manage Visa Applications.</span></p>
 </li>
-<li <?php echo ((strpos(ADMIN_BASE_URL, '/leads/') !== false) ? 'class="active"' : '') ?>>
-    <a href="leads/"><i class="fi fi-rr-chart-network"></i> Leads</a>
+<li <?php echo ((strpos(ADMIN_BASE_URL, '/visa_applications/') !== false) ? 'class="active"' : '') ?>>
+    <a href="visa_applications/"><i class="fi fi-rr-passport"></i> Visa Applications</a>
     <div class="side-menu">
         <ul>
-            <li><a href="leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
-            <li><a href="leads/add/"><i class="fi fi-rr-add"></i> Add Lead</a></li>
-            <li><a href="leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed</a></li>
-            <li><a href="leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending</a></li>
-            <li><a href="leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow Ups</a></li>
-            <li><a href="leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled</a></li>
+            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Visa Application</a></li>
+            <li><a href="/services/" target="_blank"><i class="fi fi-rr-add"></i> Add Visa
+                    Application <i class="fi fi-rr-arrow-up-right-from-square openInNewTab"></i></a></li>
+            <li><a href="visa_applications/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed</a></li>
+            <li><a href="visa_applications/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending</a></li>
+            <li><a href="visa_applications/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow Ups</a></li>
+            <li><a href="visa_applications/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Visa Application</a></li>
+            <li><a href="/services/" target="_blank"><i class="fi fi-rr-add"></i> Add Visa
+                    Application <i class="fi fi-rr-arrow-up-right-from-square openInNewTab"></i></a></li>
+            <li><a href="visa_applications/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed</a></li>
+            <li><a href="visa_applications/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending</a></li>
+            <li><a href="visa_applications/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow Ups</a></li>
+            <li><a href="visa_applications/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled</a></li>
         </ul>
     </div>
 </li>

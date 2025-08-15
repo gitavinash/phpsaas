@@ -3636,3 +3636,10 @@ button:disabled {
   overflow-x: scroll;
   margin-bottom: 50px;
 }
+
+.openInNewTab {
+  font-size: 10px;
+  margin-top: -5px;
+  float: right;
+  margin-right: 0px !important;
+}

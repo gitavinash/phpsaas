@@ -1,7 +1,7 @@
 <?php
 $statusCondition = '';
 if (isset($leadStatus)) {
-    $statusCondition = "e.enquiry_status={$leadStatus} AND ";
+    $statusCondition = "va.visa_application_status={$leadStatus} AND ";
 }
 
 if (isset($daterange)) {
@@ -16,11 +16,11 @@ if (isset($daterange)) {
 $user_filter = '';
 
 if ($site_access_type == 'agent') {
-    $user_filter = " e.enquiry_agent='" . USER_ID . "' AND ";
+    $user_filter = " va.visa_application_agent='" . USER_ID . "' AND ";
 }
 
 if (isset($agentId)) {
-    $user_filter = " e.enquiry_agent='{$agentId}' AND ";
+    $user_filter = " va.visa_application_agent='{$agentId}' AND ";
 }
 
 $userList = array();
@@ -44,7 +44,7 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
 </h2>
 <div class="main-box">
     <div class="shortcut">
-        <a href="/start-application/" target="_blank"><i class="fi fi-rr-plus"></i></a>
+        <a href="/services/" target="_blank"><i class="fi fi-rr-plus"></i></a>
     </div>
     <section>
         <!-- <div class="filters">
@@ -93,50 +93,50 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                     <?php
 
                     if ($dataList = mysqli_query($connection, "SELECT
-    e.enquiry_id,
-    e.enquiry_time,
+    va.visa_application_id,
+    va.visa_application_time,
     CASE
-        WHEN e.enquiry_agent = 0 THEN NULL
+        WHEN va.visa_application_agent = 0 THEN NULL
         ELSE p.profile_display_name
     END AS agent_display_name,
-    e.enquiry_first_name,
-    e.enquiry_email,
-    e.enquiry_mobile,
-    e.enquiry_alt_mobile,
-    e.enquiry_subject,
-    e.enquiry_source,
-    e.enquiry_status,
-    n.enquiry_notes_meta_type,
-    n.enquiry_notes_meta_value
+    va.visa_application_first_name,
+    va.visa_application_email,
+    va.visa_application_mobile,
+    va.visa_application_alt_mobile,
+    va.visa_application_subject,
+    va.visa_application_source,
+    va.visa_application_status,
+    n.visa_application_notes_meta_type,
+    n.visa_application_notes_meta_value
 FROM
-    " . TABLE_PREFIX . "enquiry e
+    " . TABLE_PREFIX . "visa_application va
 LEFT JOIN
-    " . TABLE_PREFIX . "profile p ON e.enquiry_agent = p.profile_user_id
+    " . TABLE_PREFIX . "profile p ON va.visa_application_agent = p.profile_user_id
 LEFT JOIN
     (SELECT
-         enquiry_notes_ref_id,
-         MAX(enquiry_notes_update) AS latest_notes_time
+         visa_application_notes_ref_id,
+         MAX(visa_application_notes_update) AS latest_notes_time
      FROM
-         " . TABLE_PREFIX . "enquiry_notes
+         " . TABLE_PREFIX . "visa_application_notes
      GROUP BY
-         enquiry_notes_ref_id) latest_notes ON enquiry_id = latest_notes.enquiry_notes_ref_id
+         visa_application_notes_ref_id) latest_notes ON visa_application_id = latest_notes.visa_application_notes_ref_id
 LEFT JOIN
-    " . TABLE_PREFIX . "enquiry_notes n ON enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
+    " . TABLE_PREFIX . "visa_application_notes n ON visa_application_id = n.visa_application_notes_ref_id AND latest_notes.latest_notes_time = n.visa_application_notes_update
 WHERE
     {$user_filter}
     {$statusCondition}
-    e.enquiry_site_id = " . SITE_ID . "
-    AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}'
-    GROUP BY enquiry_id
+    va.visa_application_site_id = " . SITE_ID . "
+    AND visa_application_time BETWEEN '{$startDate}' AND '{$endDate}'
+    GROUP BY visa_application_id
 ORDER BY
-    e.enquiry_time DESC
+    va.visa_application_time DESC
 LIMIT
     0, 1000")) {
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data);
 
-                                switch ($enquiry_status) {
+                                switch ($visa_application_status) {
                                     case 1:
                                         $leadCurrentStatus = 'Success';
                                         break;
@@ -162,28 +162,28 @@ LIMIT
 
                     ?>
                     <tr>
-                        <td><?php echo ucwords($enquiry_first_name) ?></td>
-                        <!-- <td><?php echo $enquiry_email; ?></td> -->
-                        <td><?php echo $enquiry_mobile; ?></td>
+                        <td><?php echo ucwords($visa_application_first_name) ?></td>
+                        <!-- <td><?php echo $visa_application_email; ?></td> -->
+                        <td><?php echo $visa_application_mobile; ?></td>
                         <?php
 
                                     if (SITE_APP == 'astro_client') { ?>
-                        <td><?php echo $enquiry_alt_mobile; ?></td>
+                        <td><?php echo $visa_application_alt_mobile; ?></td>
                         <?php
                                     }
 
                                     ?>
-                        <td><?php echo $enquiry_subject; ?></td>
+                        <td><?php echo $visa_application_subject; ?></td>
                         <td>
-                            <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                            <?php echo date('d M Y, H:i A', strtotime($visa_application_time)); ?></td>
                         <?php
 
                                     if ($site_access_type != 'agent') { ?>
-                        <td><?php echo $enquiry_source ?></td>
+                        <td><?php echo $visa_application_source ?></td>
                         <td>
                             <form method="POST">
                                 <?php
-                                                if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
+                                                if ($site_access_type != 'agent' && $visa_application_status == 0 && $agent_display_name == null) { ?>
                                 <select class="selectJS form-control" name="userId" required>
                                     <option value="">Select user</option>
                                     <?php
@@ -194,7 +194,8 @@ LIMIT
 
                                                         ?>
                                 </select>
-                                <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
+                                <input type="hidden" name="leadId"
+                                    value="<?php echo base64_encode($visa_application_id) ?>">
                                 <input type="hidden" name="action" value="assign">
                                 <input type="hidden" name="type" value="leads">
                                 <input type="submit" value="Assign lead to user"
@@ -211,7 +212,7 @@ LIMIT
 
                                     if (SITE_APP != 'astro_client') { ?>
                         <td>
-                            <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
+                            <strong><?php echo $visa_application_notes_meta_type ?></strong><br /><?php echo $visa_application_notes_meta_value ?>
                         </td>
                         <?php
                                     }
@@ -220,16 +221,16 @@ LIMIT
                         </td>
                         <td><?php echo $leadCurrentStatus ?></td>
                         <td>
-                            <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn"
-                                target="_blank"><i class="fi-rr-eye"></i> View
+                            <a href="visa_applications/view/?id=<?php echo base64_encode($visa_application_id); ?>"
+                                class="btn dataTableBtn" target="_blank"><i class="fi-rr-eye"></i> View
                                 lead details</a>
                             <?php
 
-                                        if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
+                                        if ($visa_application_status == 0 && $site_access_type != 'agent') { ?>
 
 
                             <a href="#" class="btn dataTableBtn duplicateLead"
-                                id="<?php echo base64_encode($enquiry_id) ?>"><i class="fi-rr-ban"></i> Mark
+                                id="<?php echo base64_encode($visa_application_id) ?>"><i class="fi-rr-ban"></i> Mark
                                 as duplicate lead</a>
 
                             <?php

@@ -14,3 +14,15 @@
             </div>
         </a>
     </div>
+    <div class="widget box-2-5">
+        <a href="sales/add/">
+            <div class="widget-setting-info">
+                <div class="feature-icon">
+                    <i class="fi-rr-add"></i>
+                </div>
+                <div class="about-feature">
+                    <h3>Add new request</h3>
+                </div>
+            </div>
+        </a>
+    </div>
