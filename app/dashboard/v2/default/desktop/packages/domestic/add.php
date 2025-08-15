@@ -23,7 +23,7 @@
                                 <div class="form-group">
                                     <p>Destination<sup>*</sup></p>
                                     <select class="indianCityAutoComplete form-control" name="destination[]"
-                                        id="destination-1">
+                                        id="destination">
                                     </select>
                                 </div>
                                 <div class="form-group">

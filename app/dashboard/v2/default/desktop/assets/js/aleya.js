@@ -803,15 +803,15 @@ $(document).ready(function () {
 
     // Clone add new destination location
 
-    $("#locationDurationContainer").on("click", ".addLocation", function () {
-      // e.preventDefault();
+    $("#locationDurationContainer").on("click", ".addLocation", function (e) {
+      e.preventDefault();
       const $clone = $(".locationDurationGroup:first").clone();
 
       const newIndex =
         $("#locationDurationContainer .locationDurationGroup").length + 1;
       $clone
         .find(".indianCityAutoComplete")
-        .attr("id", "destination-" + newIndex)
+        .attr("id", "destination" + newIndex)
         .val("");
 
       $clone.find(".select2-container").remove();

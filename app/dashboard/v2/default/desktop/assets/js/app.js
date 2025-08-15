@@ -81,8 +81,6 @@ function initializeSelect2HereMaps(element) {
       processResults: function (data) {
         return {
           results: $.map(data.locationList, function (item) {
-            console.log(`item`, item);
-
             return {
               id: item.location,
               text: item.location,
@@ -167,6 +165,7 @@ function initializeSelect2HereMapsWithCompleteAddress(element) {
 }
 
 function initializeSelect2(element) {
+  console.log(`inside initializeSelect2`);
   $(element).select2({
     placeholder: "Select destination",
     minimumInputLength: 2,
@@ -183,8 +182,8 @@ function initializeSelect2(element) {
         return {
           results: $.map(data.locationList, function (item) {
             return {
-              id: item,
-              text: item,
+              id: item.location,
+              text: item.location,
             };
           }),
         };
