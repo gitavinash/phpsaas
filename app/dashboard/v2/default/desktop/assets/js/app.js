@@ -170,7 +170,7 @@ function initializeSelect2(element) {
     placeholder: "Select destination",
     minimumInputLength: 2,
     ajax: {
-      url: "/api/maps/here/autocomplete/",
+      url: "/api/maps/here/autocomplete-international/",
       dataType: "json",
       delay: 250,
       data: function (params) {

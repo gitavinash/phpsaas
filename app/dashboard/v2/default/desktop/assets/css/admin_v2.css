@@ -550,7 +550,7 @@ aside {
   left: 0;
   width: 240px; /* Keep same width */
   background: #fff;
-  z-index: 99;
+  z-index: 9;
   padding-bottom: 50px;
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
@@ -606,7 +606,6 @@ nav.side-nav ul li {
   float: left;
   width: 100%;
   position: relative;
-  z-index: 9999;
 }
 
 nav.side-nav ul li a {
@@ -763,7 +762,7 @@ nav .header-section-name p span {
   color: #333;
 }
 
-/* main {
+main {
   position: absolute;
   float: left;
   width: 100%;
@@ -771,12 +770,6 @@ nav .header-section-name p span {
   box-sizing: border-box;
   padding-left: 250px;
   padding-top: 70px;
-} */
-
-main {
-  margin-left: 240px; /* Same as aside width */
-  padding-left: 10px; /* Keep your spacing */
-  padding-top: 70px; /* Keep space for header */
 }
 
 .i-m-here-pagination {

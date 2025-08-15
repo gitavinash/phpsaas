@@ -22,7 +22,7 @@
                             <div class="locationDurationGroup">
                                 <div class="form-group">
                                     <p>Destination<sup>*</sup></p>
-                                    <select class="indianCityAutoComplete form-control" name="destination[]"
+                                    <select class="internationalCityAutoComplete form-control" name="destination[]"
                                         id="destination">
                                     </select>
                                 </div>

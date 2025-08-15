@@ -810,7 +810,7 @@ $(document).ready(function () {
       const newIndex =
         $("#locationDurationContainer .locationDurationGroup").length + 1;
       $clone
-        .find(".indianCityAutoComplete")
+        .find(".internationalCityAutoComplete")
         .attr("id", "destination" + newIndex)
         .val("");
 
@@ -824,9 +824,9 @@ $(document).ready(function () {
         $(".removeLocation").show();
       }
 
-      initializeSelect2($clone.find(".indianCityAutoComplete"));
+      initializeSelect2($clone.find(".internationalCityAutoComplete"));
 
-      $clone.find(".indianCityAutoComplete").show();
+      $clone.find(".internationalCityAutoComplete").show();
     });
 
     $("#locationDurationContainer").on("click", ".removeLocation", function () {
