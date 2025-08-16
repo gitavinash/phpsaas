@@ -240,7 +240,7 @@ if (isset($daterange)) {
                         for ($i = 0; $i < sizeof($urlStructure); $i++) {
 
                             $paginationURL = $paginationURL . '/' . strtolower($urlStructure[$i]);
-                            echo "<li><a href='{$paginationURL}/'>" . ucwords($urlStructure[$i]) . "</a></li>";
+                            echo "<li><a href='{$paginationURL}/'>" . ucwords(str_replace('_', ' ', $urlStructure[$i])) . "</a></li>";
                         }
 
                         ?>

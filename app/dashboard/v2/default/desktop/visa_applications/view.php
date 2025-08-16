@@ -4,17 +4,17 @@ $leadId = base64_decode($id);
 
 $accessFilter = '';
 if ($site_access_type == 'agent') {
-    $accessFilter = " AND enquiry_agent='" . USER_ID . "'";
+    $accessFilter = " AND visa_application_agent='" . USER_ID . "'";
 }
 
-$enquiryQuery = "SELECT * FROM " . TABLE_PREFIX . "enquiry LEFT JOIN " . TABLE_PREFIX . "enquiry_profile ON enquiry_profile_ref_id=enquiry_id WHERE enquiry_id='{$leadId}' {$accessFilter} AND enquiry_site_id=" . SITE_ID . " ORDER BY status DESC LIMIT 0, 1";
+$visa_applicationQuery = "SELECT * FROM " . TABLE_PREFIX . "visa_application WHERE visa_application_id='{$leadId}' {$accessFilter} AND visa_application_site_id=" . SITE_ID . " ORDER BY visa_application_status DESC LIMIT 0, 1";
 
-if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
-    if (mysqli_num_rows($checkEnquiry) != 0) {
-        extract(mysqli_fetch_assoc($checkEnquiry));
-        if ($enquiry_message != '') {
-            extract(json_decode($enquiry_message, true));
-        }
+if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
+    if (mysqli_num_rows($checkVisaApplication) != 0) {
+        extract(mysqli_fetch_assoc($checkVisaApplication));
+
+        $personsDataObject = json_decode($visa_application_data, TRUE);
+        extract($personsDataObject['personsData'][0]);
     } else {
         echo "Invalid request";
         exit();
@@ -34,13 +34,13 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <div class="widget no-padding box-1">
                     <div class="leadProfileCard">
                         <div class="img">
-                            <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($enquiry_first_name[0]) != '') ? $enquiry_first_name[0] : 'unknown')) ?>.png"
+                            <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($first_name[0]) != '') ? $first_name[0] : 'unknown')) ?>.png"
                                 alt="" srcset="">
                         </div>
                         <div class="info">
                             <h2 class="heading"
-                                <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
-                                <?php echo $customerFullName = ucwords($enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : ''))) ?>
+                                <?php echo (($visa_application_status == 4 || $visa_application_status == 5) ? "style='color:#f44336'" : "") ?>>
+                                <?php echo $customerFullName = ucwords($first_name . ' ' . $last_name . (($visa_application_status == 4) ? ' ( Closed ) ' : (($visa_application_status == 5) ? '( Duplicate )' : ''))) ?>
                             </h2>
                             <p>
                                 <?php
@@ -51,7 +51,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                                 ?>
                                 <span><strong>Last Update:
-                                    </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span>
+                                    </strong><?php echo date('d-m-Y h:i A', strtotime($visa_application_update)) ?></span>
                             </p>
                         </div>
                         <div class="verifications">
@@ -70,19 +70,11 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <a id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
                             history</a>
                         <?php
-                        if (SITE_APP == 'astro_client') {
-                            echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
-                            history</a>";
-                        }
-                        if (USER_TYPE != 'acharya') {
-                            echo "<a id='paymentDetailsBtn' class='btn detailsBtn'><i class='fi-rr-money-check'></i> Payment
-                            history</a>";
-                        }
 
-                        if ($enquiry_status != 5) { ?>
+                        if ($visa_application_status != 5) { ?>
                         <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i
                                 class="fi-rr-edit"></i> Edit
-                            lead</a>
+                            Application</a>
                         <?php
                         }
                         ?>
@@ -92,154 +84,39 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                     <div class="leadInfo">
                         <table>
                             <?php
-
-                            if ($enquiry_first_name != '') {
+                            if ($first_name != '') {
                                 echo "<tr>
                                 <td class='box-3'><strong>First name</strong></td>
-                                <td class='box-7'>{$enquiry_first_name}</td>
+                                <td class='box-7'>{$first_name}</td>
                             </tr>";
                             }
 
-                            if ($enquiry_middle_name != '') {
+                            if ($middle_name != '') {
                                 echo "<tr>
                                 <td class='box-3'><strong>Middle name</strong></td>
-                                <td class='box-7'>{$enquiry_middle_name}</td>
+                                <td class='box-7'>{$middle_name}</td>
                             </tr>";
                             }
 
-                            if ($enquiry_last_name != '') {
+                            if ($last_name != '') {
                                 echo "<tr>
                                 <td class='box-3'><strong>Last name</strong></td>
-                                <td class='box-7'>{$enquiry_last_name}</td>
+                                <td class='box-7'>{$last_name}</td>
                             </tr>";
                             }
 
-                            if ($enquiry_email != '') {
+                            if ($email != '') {
                                 echo "<tr>
                                 <td class='box-3'><strong>Email</strong></td>
-                                <td class='box-7'>{$enquiry_email}</td>
+                                <td class='box-7'>{$email}</td>
                             </tr>";
                             }
 
-                            if ($enquiry_mobile != '') {
+                            if ($mobile != '') {
                                 echo "<tr>
                                 <td class='box-3'><strong>Mobile</strong></td>
-                                <td class='box-7'>{$enquiry_mobile}</td>
+                                <td class='box-7'>{$mobile}</td>
                             </tr>";
-                            }
-
-                            if ($enquiry_alt_mobile != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Altenate Mobile</strong></td>
-                                <td class='box-7'>{$enquiry_alt_mobile}</td>
-                            </tr>";
-                            }
-
-                            if ($enquiry_subject != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>" . ((SITE_APP == 'aleay') ? 'Tour package' : 'Subject') . "</strong></td>
-                                <td class='box-7'>{$enquiry_subject}</td>
-                            </tr>";
-                            }
-
-                            if ($date_of_travel != '1970-01-01' && $date_of_travel != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Date of travel</strong></td>
-                                <td class='box-7'>{$date_of_travel}</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_days != 0) {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of days</strong></td>
-                                <td class='box-7'>{$number_of_days} Nights</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_adults != 0) {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of adults</strong></td>
-                                <td class='box-7'>{$number_of_adults}</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_childrens != 0) {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of childrens</strong></td>
-                                <td class='box-7'>{$number_of_childrens}</td>
-                            </tr>";
-                            }
-
-                            if ($number_of_infants != 0) {
-                                echo "<tr>
-                                <td class='box-3'><strong>Number of infants</strong></td>
-                                <td class='box-7'>{$number_of_infants}</td>
-                            </tr>";
-                            }
-
-                            if ($current_location != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Current location</strong></td>
-                                <td class='box-7'>{$current_location}</td>
-                            </tr>";
-                            }
-
-                            if ($pickup_location != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Pickup location</strong></td>
-                                <td class='box-7'>{$pickup_location}</td>
-                            </tr>";
-                            }
-
-                            if ($drop_location != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Drop location</strong></td>
-                                <td class='box-7'>{$drop_location}</td>
-                            </tr>";
-                            }
-
-                            if ($requirements != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Requirements</strong></td>
-                                <td class='box-7'>{$requirements}</td>
-                            </tr>";
-                            } else {
-
-                                if ($enquiry_source != 'facebook') {
-                                    $enquiryMessage = json_decode($enquiry_message, true);
-
-                                    if (is_array($enquiryMessage)) {
-                                        foreach ($enquiryMessage as $key => $value) {
-                                            echo "<tr>
-                                        <td class='box-3'><strong>" . str_replace('_', ' ', ucwords($key)) . "</strong></td>
-                                        <td class='box-7'>{$value}</td>
-                                    </tr>";
-                                        }
-                                    }
-                                }
-                            }
-
-                            if ($site_access_type != 'agent') {
-                                if ($enquiry_source != '') {
-                                    echo "<tr>
-                                    <td class='box-3'><strong>Enquiry source</strong></td>
-                                    <td class='box-7'>{$enquiry_source}</td>
-                                </tr>";
-                                }
-
-                                if ($enquiry_medium != '') {
-                                    echo "<tr>
-                                    <td class='box-3'><strong>Enquiry medium</strong></td>
-                                    <td class='box-7'>{$enquiry_medium}</td>
-                                </tr>";
-                                }
-
-                                if ($enquiry_campaign != '') {
-                                    echo "<tr>
-                                    <td class='box-3'><strong>Enquiry campaign</strong></td>
-                                    <td class='box-7'>{$enquiry_campaign}</td>
-                                </tr>";
-                                }
                             }
 
                             ?>
@@ -251,17 +128,17 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id, enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT visa_application_notes_id, visa_application_notes_meta_type, visa_application_notes_meta_value, profile_display_name, visa_application_notes_update FROM " . TABLE_PREFIX . "visa_application_notes INNER JOIN " . TABLE_PREFIX . "profile ON visa_application_notes_user_id=profile_user_id WHERE visa_application_notes_ref_id='{$leadId}' AND visa_application_notes_meta_type!='upay' AND  visa_application_notes_meta_type!='payment' ORDER BY visa_application_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
                                         extract($leadHistoryData);
                                         $commentBox = '';
 
-                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                        switch (strtolower($visa_application_notes_meta_type)) {
                                             case "assign":
                                                 $icon = 'link';
-                                                $msg = str_replace('Lead assign', '<a>Lead assign</a>', $enquiry_notes_meta_value);
+                                                $msg = str_replace('Lead assign', '<a>Lead assign</a>', $visa_application_notes_meta_value);
                                                 break;
 
                                             case "payment":
@@ -291,9 +168,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                                             default:
                                                 $icon = 'comment-alt';
-                                                $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
-                                                if ($enquiry_notes_meta_value != '') {
-                                                    $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                                $msg = "<a>{$visa_application_notes_meta_type}</a> updated by " . $profile_display_name;
+                                                if ($visa_application_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'><p>{$visa_application_notes_meta_value}</p></div>";
                                                 }
                                                 break;
                                         }
@@ -304,14 +181,14 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     </span>
                                                     <div class='timeline-item-description'>
                                                         <span>{$msg}
-                                                            on <time>" . date('d-m-Y h:i A', strtotime(($enquiry_notes_update))) . "</time></span>
+                                                            on <time>" . date('d-m-Y h:i A', strtotime(($visa_application_notes_update))) . "</time></span>
                                                     </div>
                                                     {$commentBox}
                                                     ";
                                         echo "
                                                 </li>";
                                         if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                            echo "<a href='#' style='float:left; margin-right: 75%;' data-type='leads/follow_up' data-id='{$enquiry_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
+                                            echo "<a href='#' style='float:left; margin-right: 75%;' data-type='leads/follow_up' data-id='{$visa_application_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
                                         }
                                     }
                                     echo "</ol>";
@@ -332,25 +209,25 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                                if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id,  enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
+                                if ($leadHistory = mysqli_query($connection, "SELECT visa_application_notes_id,  visa_application_notes_meta_type, visa_application_notes_meta_value, profile_display_name, visa_application_notes_update FROM " . TABLE_PREFIX . "visa_application_notes INNER JOIN " . TABLE_PREFIX . "profile ON visa_application_notes_user_id=profile_user_id WHERE visa_application_notes_ref_id='{$leadId}' AND visa_application_notes_meta_type='upay' ORDER BY visa_application_notes_update DESC")) {
                                     if (mysqli_num_rows($leadHistory) != 0) {
                                         echo "<ol class='timeline'>";
                                         while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
                                             extract($leadHistoryData);
                                             $commentBox = '';
 
-                                            switch (strtolower($enquiry_notes_meta_type)) {
+                                            switch (strtolower($visa_application_notes_meta_type)) {
                                                 case "upay":
-                                                    $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
-                                                    if (is_array($enquiry_notes_meta_value)) {
-                                                        extract($enquiry_notes_meta_value);
+                                                    $visa_application_notes_meta_value = json_decode($visa_application_notes_meta_value, true);
+                                                    if (is_array($visa_application_notes_meta_value)) {
+                                                        extract($visa_application_notes_meta_value);
                                                     } else {
                                                         $upayMsg = '';
                                                         $upayImages = '';
                                                     }
                                                     $icon = 'story-book';
-                                                    $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
-                                                    if ($enquiry_notes_meta_value != '') {
+                                                    $msg = "<a>{$visa_application_notes_meta_type}</a> added by " . $profile_display_name;
+                                                    if ($visa_application_notes_meta_value != '') {
                                                         $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
                                                         $upayImages = (json_decode($upayImages, true));
                                                         if (!empty($upayImages)) {
@@ -393,14 +270,14 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     </span>
                                                     <div class='timeline-item-description'>
                                                         <span>{$msg}
-                                                            on <time>" . date('d-m-Y h:i A', strtotime(($enquiry_notes_update))) . "</time></span>
+                                                            on <time>" . date('d-m-Y h:i A', strtotime(($visa_application_notes_update))) . "</time></span>
                                                     </div>
                                                     {$commentBox}
                                                     ";
                                             if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
                                                 echo "<div class='timeline-action'>
-                                                        <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Edit upay' data-msg='" . base64_encode($commentBox) . "' class='btn dataTableBtn btn-blue upayEditButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-edit'></i> Edit upay</a>
-                                                        <a href='#' data-type='leads/upay' data-id='{$enquiry_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>
+                                                        <a href='#' data-type='leads/upay' data-id='{$visa_application_notes_id}' title='Edit upay' data-msg='" . base64_encode($commentBox) . "' class='btn dataTableBtn btn-blue upayEditButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-edit'></i> Edit upay</a>
+                                                        <a href='#' data-type='leads/upay' data-id='{$visa_application_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>
                                                     </div>";
                                             }
 
@@ -425,18 +302,18 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <div class="historyBox">
                             <?php
 
-                            if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id, enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
+                            if ($leadHistory = mysqli_query($connection, "SELECT visa_application_notes_id, visa_application_notes_meta_type, visa_application_notes_meta_value, profile_display_name, visa_application_notes_update FROM " . TABLE_PREFIX . "visa_application_notes INNER JOIN " . TABLE_PREFIX . "profile ON visa_application_notes_user_id=profile_user_id WHERE visa_application_notes_ref_id='{$leadId}' AND visa_application_notes_meta_type='payment' ORDER BY visa_application_notes_update DESC")) {
                                 if (mysqli_num_rows($leadHistory) != 0) {
                                     echo "<ol class='timeline'>";
                                     while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
                                         extract($leadHistoryData);
                                         $commentBox = '';
 
-                                        switch (strtolower($enquiry_notes_meta_type)) {
+                                        switch (strtolower($visa_application_notes_meta_type)) {
                                             case "payment":
-                                                $enquiry_notes_meta_value = json_decode($enquiry_notes_meta_value, true);
-                                                if (is_array($enquiry_notes_meta_value)) {
-                                                    extract($enquiry_notes_meta_value);
+                                                $visa_application_notes_meta_value = json_decode($visa_application_notes_meta_value, true);
+                                                if (is_array($visa_application_notes_meta_value)) {
+                                                    extract($visa_application_notes_meta_value);
                                                 } else {
                                                     $paymentAmount = '';
                                                     $paymentImages = '';
@@ -451,10 +328,10 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 if ($paymentByCustomer == true) {
                                                     $msg = "<a>Payment</a> received by " . $customerFullName;
                                                 } else {
-                                                    $msg = "<a>{$enquiry_notes_meta_type}</a> added by " . $profile_display_name;
+                                                    $msg = "<a>{$visa_application_notes_meta_type}</a> added by " . $profile_display_name;
                                                 }
 
-                                                if ($enquiry_notes_meta_value != '') {
+                                                if ($visa_application_notes_meta_value != '') {
                                                     $commentBox = "<div class='comment'>
                                                         <p><strong>Amount:</strong> {$paymentAmount}</p>
                                                         <p><strong>Payment method:</strong> {$paymentMethod}</p>
@@ -484,12 +361,12 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                     </span>
                                                     <div class='timeline-item-description'>
                                                         <span>{$msg}
-                                                            on <time>" . date('d-m-Y h:i A', strtotime(($enquiry_notes_update))) . "</time></span>
+                                                            on <time>" . date('d-m-Y h:i A', strtotime(($visa_application_notes_update))) . "</time></span>
                                                     </div>
                                                     {$commentBox}
                                                 </li>";
                                         if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                            echo "<a href='#' data-type='leads/payment' data-id='{$enquiry_notes_id}' title='Delete payment record' data-title='Delete payment record' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete payment record</a>";
+                                            echo "<a href='#' data-type='leads/payment' data-id='{$visa_application_notes_id}' title='Delete payment record' data-title='Delete payment record' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete payment record</a>";
                                         }
                                     }
                                     echo "</ol>";
@@ -504,8 +381,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 </div>
                 <div class="widget openBtnBox no-padding box-1" id="leadEditBox">
                     <div class="leadInfo">
-                        <h3 class="heading">Update <?php echo ucfirst(strtolower($enquiry_subject)) ?> - lead details
-                        </h3>
+                        <h3 class="heading">Update application details</h3>
                         <table>
                             <form action="#" id="updateLeadForm" autocomplete="off">
                                 <?php
@@ -524,8 +400,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     <td class="box-3">
                                     </td>
                                     <td class="box-7">
-                                        <input type="hidden" name="leadId" value="<?php echo $enquiry_id ?>">
-                                        <input type="button" id="updateEnquiry" class="btn btn-green"
+                                        <input type="hidden" name="leadId" value="<?php echo $visa_application_id ?>">
+                                        <input type="button" id="updateVISAApplication" class="btn btn-green"
                                             value="Update lead">
                                     </td>
                                 </tr> -->
@@ -542,12 +418,12 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
             <section class="leadQuickLinks">
                 <?php
 
-                if ($enquiry_status != 5) {
-                    if ($enquiry_status != 4) {
-                        if (SITE_APP_ID == 22 && ($enquiry_status == 2 || $enquiry_status == 1)) {
-                            echo "<a href='/dashboard/sales/add/?ref=enquiry&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
+                if ($visa_application_status != 5) {
+                    if ($visa_application_status != 4) {
+                        if (SITE_APP_ID == 22 && ($visa_application_status == 2 || $visa_application_status == 1)) {
+                            echo "<a href='/dashboard/sales/add/?ref=visa_application&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
                         } else {
-                            echo (($enquiry_status != 1) ? "<a href='#' class='btn btn-natural-green' id='convertToSale' data-id='" . base64_encode($enquiry_id) . "'.><i class='fi-rr-octagon-check'></i> Convert to Sale</a>" : '');
+                            echo (($visa_application_status != 1) ? "<a href='#' class='btn btn-natural-green' id='convertToSale' data-id='" . base64_encode($visa_application_id) . "'.><i class='fi-rr-octagon-check'></i> Convert to Sale</a>" : '');
                         }
                 ?>
 
@@ -567,7 +443,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                     links</a>
                 <?php
 
-                            if ($enquiry_status != 1) {
+                            if ($visa_application_status != 1) {
                                 echo '<a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>';
                             }
 
@@ -579,7 +455,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                             ?><?php
 
-                                if ($enquiry_status != 1) {
+                                if ($visa_application_status != 1) {
                                     echo '<a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>';
                                 }
 
@@ -618,7 +494,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                         <option value="Not interested">Not Interested</option>
                                         <option value="Purchased Elsewhere">Purchased Elsewhere</option>
                                         <option value="Unqualified Lead">Unqualified Lead</option>
-                                        <option value="Fake Enquiry">Fake Enquiry</option>
+                                        <option value="Fake VISA Application">Fake VISA Application</option>
                                         <option value="Client is not Picking call">Client is not Picking call</option>
                                         <option value="other">Other</option>
                                     </select>
@@ -973,8 +849,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                 <div class="actionArea">
                     <input type="hidden" id="itinenaryId" value="">
                     <input type="hidden" id="itinenaryMrp" value="">
-                    <input type="hidden" id="itinenaryRefId" value="<?php echo $enquiry_id ?>">
-                    <input type="hidden" id="itinenaryRefType" value="enquiry">
+                    <input type="hidden" id="itinenaryRefId" value="<?php echo $visa_application_id ?>">
+                    <input type="hidden" id="itinenaryRefType" value="visa_application">
                     <input type="hidden" id="itinenaryType" value="tour_package">
                     <a class="btn popUpBtn hidden" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send
                         itinerary</a>
@@ -991,7 +867,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
         <div class="fullScreenPopUpBox">
             <div class="widget box-8">
                 <div class="contentArea">
-                    <h4 class="heading"><?php echo $enquiry_subject ?> Vouchers</span></h2>
+                    <h4 class="heading"><?php echo $visa_application_subject ?> Vouchers</span></h2>
                 </div>
             </div>
             <div class="widget box-2">

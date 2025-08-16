@@ -34,7 +34,7 @@
                 <tbody>
                     <?php
 
-                    if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, user_status, site_access_type, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
+                    if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, user_status, site_access_type, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_status=1 AND site_access_type NOT IN('customer', 'subscriber') AND site_access_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data) ?>

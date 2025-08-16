@@ -9,7 +9,7 @@ if ($site_access_type != 'customer') {
     <a href="visa_applications/"><i class="fi fi-rr-passport"></i> Visa Applications</a>
     <div class="side-menu">
         <ul>
-            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Visa Application</a></li>
+            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Visa Applications</a></li>
             <li><a href="/services/" target="_blank"><i class="fi fi-rr-add"></i> Add Visa
                     Application <i class="fi fi-rr-arrow-up-right-from-square openInNewTab"></i></a></li>
             <li><a href="visa_applications/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed</a></li>
@@ -20,7 +20,7 @@ if ($site_access_type != 'customer') {
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Visa Application</a></li>
+            <li><a href="visa_applications/list/"><i class="fi-rr-apps-sort"></i> All Visa Applications</a></li>
             <li><a href="/services/" target="_blank"><i class="fi fi-rr-add"></i> Add Visa
                     Application <i class="fi fi-rr-arrow-up-right-from-square openInNewTab"></i></a></li>
             <li><a href="visa_applications/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed</a></li>
