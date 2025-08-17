@@ -126,6 +126,7 @@
                                 <p>{$pageData['fb_forms_name']}</p>
                             </div>
                             <div class='widget box-3'>
+                                <a href='" . str_replace('/page/', '/forms/', BASE_URL) . "?id={$pageData['fb_forms_id']}' class='btn dataTableBtn' target='_blank'>View leads</a>
                                 <button class='btn dataTableBtn'>Subscribed</button>
                             </div>
                         </div>";
