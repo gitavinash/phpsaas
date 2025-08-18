@@ -852,11 +852,34 @@ $(document).ready(function () {
       }
     });
 
+    // Auto assign drop city
+
+    var $startingCity = $("#startingCity");
+    var $endCity = $("#endCity");
+
+    if ($startingCity.length && $endCity.length) {
+      $startingCity.on("select2:select", function (e) {
+        var startingVal = $(this).val();
+
+        // Only auto-fill if endCity is empty
+        if (startingVal && !$endCity.val()) {
+          // Check if the value exists in endCity options
+          if ($endCity.find(`option[value='${startingVal}']`).length) {
+            $endCity.val(startingVal).trigger("change"); // Select2 UI update
+          } else {
+            // Optionally, add it dynamically if not exists
+            $endCity
+              .append(new Option(startingVal, startingVal, true, true))
+              .trigger("change");
+          }
+        }
+      });
+    }
+
     // Generate domestic tour package
 
     $("#addDomesticPackageBtn").click(function (e) {
       e.preventDefault();
-      console.log(`addDomesticPackageBtn is clicked:`);
       $("#addDomesticPackageBtn").hide();
 
       // Collect and trim all the form values, ensuring they are not undefined
@@ -897,8 +920,8 @@ $(document).ready(function () {
       let allLocationsFilled = true;
 
       $(".locationDurationGroup").each(function () {
-        const destination = $(this).find(".indianCityAutoComplete").val()
-          ? $(this).find(".indianCityAutoComplete").val().trim()
+        const destination = $(this).find(".internationalCityAutoComplete").val()
+          ? $(this).find(".internationalCityAutoComplete").val().trim()
           : "";
         const duration = $(this).find("input[name='duration[]']").val()
           ? $(this).find("input[name='duration[]']").val().trim()
@@ -914,6 +937,8 @@ $(document).ready(function () {
           });
         }
       });
+
+      console.log(`allLocationsFilled:`, allLocationsFilled);
 
       // Check if all locations are filled
       if (!allLocationsFilled) {

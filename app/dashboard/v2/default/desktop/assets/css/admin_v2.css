@@ -2213,7 +2213,7 @@ section.form
   box-sizing: border-box;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  height: 100vh;
+  /* height: 100vh; */
   max-height: 600px;
 }
 
@@ -2520,7 +2520,7 @@ section.form
 .sendPaymentLinkBox {
   float: left;
   width: 100%;
-  padding: 10% 0%;
+  /* padding: 10% 0%; */
 }
 
 .sendPaymentLinkBox .box-1 {
@@ -3642,4 +3642,9 @@ button:disabled {
   margin-top: -5px;
   float: right;
   margin-right: 0px !important;
+}
+
+.disabled-button {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

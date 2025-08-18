@@ -551,7 +551,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         }
                 ?>
 
-                <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+                <a href="#" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
                 <?php
 
                         if (SITE_APP == 'astro_client') {
@@ -563,7 +563,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                         if (SITE_APP == 'aleya') { ?>
 
-                <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
+                <a href="#" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
                     links</a>
                 <?php
 
@@ -572,7 +572,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                             }
 
                             ?>
-                <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
+                <a href="#" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
 
                 <?php
                         }
@@ -650,19 +650,33 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                     <form method="POST" action="#">
                         <section class="form">
                             <div class="step-open-box step_1_box">
+                                <?php
+
+                                if ($checkQuote = mysqli_query($connection, "SELECT quotation_id, quotation_price FROM " . TABLE_PREFIX . "quotation WHERE quotation_ref_id='{$enquiry_id}' AND quotation_ref_type='enquiry' AND quotation_status=0 AND quotation_site_id=" . SITE_ID . " ORDER BY quotation_id DESC LIMIT 0, 1")) {
+                                    if (mysqli_num_rows($checkQuote) != 0) {
+                                        extract(mysqli_fetch_assoc($checkQuote));
+                                    } else {
+                                        $quotation_price = 0;
+                                        $quotation_id = 0;
+                                    }
+                                }
+
+                                ?>
                                 <div class="form-header">
                                     <h4 class="heading">Send payment link</h4>
                                 </div>
                                 <div class="sendPaymentLinkBox">
+                                    <input type="hidden" id="quotationId" name="quotation_id"
+                                        value="<?php echo $quotation_id ?>">
                                     <div class="form-group-box">
                                         <div class="box-1">
                                             <div class="form-group">
                                                 <div class="input-box">
                                                     <input type="radio" class="paymentLink" id="fullPaymentBtn"
-                                                        name="paymentLink" value="yes" />
+                                                        name="paymentLink" value="<?php echo $quotation_price ?>" />
                                                     <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
                                                         Full
-                                                        Payment</label>
+                                                        Payment - ₹ <?php echo $quotation_price ?></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -670,9 +684,13 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                             <div class="form-group">
                                                 <div class="input-box">
                                                     <input type="radio" class="paymentLink" id="minPaymentLink"
-                                                        name="paymentLink" value="yes" checked />
+                                                        name="paymentLink"
+                                                        value="<?php echo ($quotation_price * (defined('MINIMUM_PAYMENT') ? MINIMUM_PAYMENT : 30) / 100); ?>"
+                                                        checked />
                                                     <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
-                                                        Minimum payment</label>
+                                                        Minimum payment - ₹
+                                                        <?php echo number_format(($quotation_price * (defined('MINIMUM_PAYMENT') ? MINIMUM_PAYMENT : 30) / 100), 2); ?>
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>

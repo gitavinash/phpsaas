@@ -1,3 +1,13 @@
+function disableButtonWithCTA(selector, ctaText = "Processing...") {
+  $(selector).prop("disabled", true).text(ctaText).addClass("disabled-button");
+}
+function enableButtonWithCTA(selector, ctaText = "Processing...") {
+  $(selector)
+    .prop("disabled", true)
+    .html(ctaText)
+    .removeClass("disabled-button");
+}
+
 function closePopup(btn) {
   var popupContainer = btn.closest(".popUp");
   popupContainer.style.display = "none";
@@ -1329,25 +1339,55 @@ $(document).ready(function (e) {
   });
 
   $("#sendPaymentLink").click(function (e) {
+    hidePageLoader();
+    e.preventDefault();
+    disableButtonWithCTA("#sendPaymentLink", "Sending payment link...");
     var selectedValue = "";
     selectedValue = $('input[name="paymentLink"]:checked').val();
     if (selectedValue == 0) {
       selectedValue = $("#paymentValue").val();
     }
 
-    if (selectedValue != "") {
-      if (isNumeric(selectedValue)) {
-        popUpMessage("center", "Payment link sent to customer", "warning");
-      } else {
-        popUpMessage("center", "Please enter valid amount", "warning");
-      }
-    } else {
-      popUpMessage("center", "Please enter amount", "warning");
+    if (selectedValue == "") {
+      selectedValue = $("#quotationPrice").val();
     }
-    hidePageLoader();
-    e.preventDefault();
+    const amount = parseFloat(selectedValue);
+    if (!isNaN(amount) && isFinite(amount)) {
+      const quotationId = $("#quotationId").val();
+      $.ajax({
+        type: "GET",
+        url:
+          "/api/payment/request/?amount=" +
+          amount +
+          "&quotationId=" +
+          btoa(quotationId),
+        dataType: "json",
+        success: function (response) {
+          popUpMessage("center", "Payment link sent to customer", "warning");
+          enableButtonWithCTA(
+            "#sendPaymentLink",
+            "<i class='fi-rr-paper-plane'></i> Send payment link"
+          );
+        },
+        error: function (errorResponse) {
+          enableButtonWithCTA(
+            "#sendPaymentLink",
+            "<i class='fi-rr-paper-plane'></i> Send payment link"
+          );
+          popUpMessage("center", errorResponse.responseJSON.msg, "error");
+          console.log(`Error : `);
+        },
+      });
+    } else {
+      console.log(`selectedValue: `, selectedValue);
+
+      popUpMessage("center", "Please enter valid amount", "warning");
+      enableButtonWithCTA(
+        "#sendPaymentLink",
+        "<i class='fi-rr-paper-plane'></i> Send payment link"
+      );
+    }
   });
-  // });
 
   var stateDropDown = document.getElementById("stateDropDown");
 

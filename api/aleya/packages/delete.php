@@ -1,5 +1,7 @@
 <?php
 
+require_once LOGIN_CHECK;
+
 $httpStatus = 500;
 $status = 'warning';
 $msg = 'Invalid Request';
