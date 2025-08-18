@@ -10,7 +10,7 @@ include_once 'header.php';
         <div class="max-w-2xl mx-auto text-center fade-in">
             <div class="floating-animation mb-8">
                 <div class="w-32 h-32 mx-auto mb-6 flex items-center justify-center text-primary">
-                    <i class="ri-flower-line ri-10x"></i>
+                    <i class="ri-sofa-line ri-10x"></i>
                 </div>
             </div>
             <h1 class="text-8xl md:text-9xl font-bold text-primary mb-4">500</h1>
@@ -49,12 +49,15 @@ include_once 'header.php';
             <div class="mt-12 pt-8 border-t border-gray-200">
                 <p class="text-gray-500 mb-4">Looking for something specific? Try these popular options:</p>
                 <div class="flex flex-wrap justify-center gap-4">
-                    <a href="/category/flower/" class="text-primary hover:underline transition-colors">Fresh Flowers</a>
-                    <a href="/tag/luxury/" class="text-primary hover:underline transition-colors">Luxury Collections</a>
-                    <a href="/category/planters/" class="text-primary hover:underline transition-colors">Planters</a>
-                    <a href="/category/cake/" class="text-primary hover:underline transition-colors">Cake & Hampers</a>
-                    <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
-                        class="text-primary hover:underline transition-colors">Blooms of <?php echo date('F') ?></a>
+                    <a href="/category/wall-decor/" class="text-primary hover:underline transition-colors">Wall
+                        Décor</a>
+                    <a href="/category/furniture-and-accents/"
+                        class="text-primary hover:underline transition-colors">Furniture & Accents</a>
+                    <a href="/category/lighting/" class="text-primary hover:underline transition-colors">Lighting</a>
+                    <a href="/category/showpieces-and-idols/"
+                        class="text-primary hover:underline transition-colors">Showpieces & Idols</a>
+                    <a href="/category/water-fountains/" class="text-primary hover:underline transition-colors">Water
+                        Fountains</a>
                 </div>
             </div>
             <div class="mt-8">

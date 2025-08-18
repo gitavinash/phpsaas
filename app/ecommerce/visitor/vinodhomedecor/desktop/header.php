@@ -165,7 +165,40 @@
 
                 <!-- Desktop Menu -->
                 <nav class="hidden md:flex space-x-6">
-                    <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
+                    <a href="/" class="text-gray-700 hover:text-primary transition">Home</a><!-- Mega Menu -->
+                    <div class="relative group">
+                        <a href="/category/wall-decor/" class="text-gray-700 hover:text-primary transition">Wall
+                            Décor</a>
+                        <div
+                            class="absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 hover:visible hover:opacity-100 transition-all duration-150 bg-white border w-64 shadow-lg z-50">
+                            <!-- <ul class="p-4 space-y-2 text-sm text-gray-700">
+                                <li><a href="/category/paintings/" class="block hover:text-primary">Paintings</a></li>
+                                <li><a href="/category/showpieces-and-idols/"
+                                        class="block hover:text-primary">Showpieces & Idols</a></li>
+                            </ul> -->
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <a href="/category/furniture-and-accents/"
+                            class="text-gray-700 hover:text-primary transition">Furniture & Accents</a>
+                        <div
+                            class="absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 hover:visible hover:opacity-100 transition-all duration-150 bg-white border w-64 shadow-lg z-50">
+                            <!-- <ul class="p-4 space-y-2 text-sm text-gray-700">
+                                <li><a href="/category/sofa/" class="block hover:text-primary">Sofas</a></li>
+                                <li><a href="/category/clocks/" class="block hover:text-primary">Wall & Tripod
+                                        Clocks</a></li>
+                            </ul> -->
+                        </div>
+                    </div>
+
+                    <a href="/category/lighting/" class="text-gray-700 hover:text-primary transition">Lighting</a>
+                    <a href="/category/showpieces-and-idols/"
+                        class="text-gray-700 hover:text-primary transition">Showpieces
+                        & Idols </a>
+                    <a href="/category/water-fountains/" class="text-gray-700 hover:text-primary transition">Water
+                        Fountains</a>
+
                 </nav>
             </div>
 
@@ -220,6 +253,37 @@
             </div>
             <nav class="flex flex-col space-y-3">
                 <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
+
+                <!-- Collapsible Mega Menu: Wall Décor -->
+                <details>
+                    <summary class="cursor-pointer text-gray-700 hover:text-primary transition">
+                        Wall Décor
+                    </summary>
+                    <ul class="pl-4 mt-2 space-y-1 text-sm">
+                        <li><a href="/category/paintings/" class="block hover:text-primary">Paintings</a></li>
+                        <li><a href="/category/showpieces-and-idols/" class="block hover:text-primary">Showpieces &
+                                Idols</a></li>
+                    </ul>
+                </details>
+
+                <!-- Collapsible Mega Menu: Furniture -->
+                <details>
+                    <summary class="cursor-pointer text-gray-700 hover:text-primary transition">
+                        Furniture & Accents
+                    </summary>
+                    <ul class="pl-4 mt-2 space-y-1 text-sm">
+                        <li><a href="/category/sofa/" class="block hover:text-primary">Sofas</a></li>
+                        <li><a href="/category/clocks/" class="block hover:text-primary">Wall & Tripod Clocks</a></li>
+                    </ul>
+                </details>
+
+                <!-- Direct Links -->
+                <a href="/category/lighting/" class="text-gray-700 hover:text-primary transition">Lighting</a>
+                <a href="/category/showpieces-and-idols/" class="text-gray-700 hover:text-primary transition">Showpieces
+                    & Idols </a>
+                <a href="/category/water-fountains/" class="text-gray-700 hover:text-primary transition">Water
+                    Fountains</a>
             </nav>
+
         </div>
     </header>

@@ -40,17 +40,18 @@
             <div>
                 <h3 class="text-lg font-semibold mb-6">Product categories</h3>
                 <ul class="space-y-3">
-                    <li><a href="/category/wall-decor/" class="text-gray-400 hover:text-white transition">Wall Décor</a>
+                    <li><a href="/category/wall-decor/" class="text-white-400 hover:text-white transition">Wall
+                            Décor</a>
                     </li>
                     <li><a href="/category/furniture-and-accents/"
-                            class="text-gray-400 hover:text-white transition">Furniture & Accents</a></li>
-                    <li><a href="/category/lighting/" class="text-gray-400 hover:text-white transition">Lighting</a>
+                            class="text-white-400 hover:text-white transition">Furniture & Accents</a></li>
+                    <li><a href="/category/lighting/" class="text-white-400 hover:text-white transition">Lighting</a>
                     </li>
                     <li><a href="/category/showpieces-and-idols/"
-                            class="text-gray-400 hover:text-white transition">Showpieces & Idols</a></li>
-                    <li><a href="/category/paintings/" class="text-gray-400 hover:text-white transition">Paintings</a>
+                            class="text-white-400 hover:text-white transition">Showpieces & Idols</a></li>
+                    <li><a href="/category/paintings/" class="text-white-400 hover:text-white transition">Paintings</a>
                     </li>
-                    <li><a href="/category/water-fountains/" class="text-gray-400 hover:text-white transition">Water
+                    <li><a href="/category/water-fountains/" class="text-white-400 hover:text-white transition">Water
                             Fountains</a></li>
                 </ul>
             </div>

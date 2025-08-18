@@ -166,8 +166,6 @@
                 <!-- Desktop Menu -->
                 <nav class="hidden md:flex space-x-6">
                     <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
-
-                    <!-- Mega Menu -->
                     <!-- Mega Menu -->
                     <div class="relative group">
                         <a href="/tag/luxury/" class="text-gray-700 hover:text-primary transition">Luxury

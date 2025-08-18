@@ -21,7 +21,7 @@ include_once 'header.php';
     <div class="grid grid-cols-1 gap-12">
         <div>
             <h2 class="font-serif text-3xl mb-8">Our Branches</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 gap-8">
                 <div class="bg-white p-8 rounded-lg border border-gray-100 hover:border-primary/20 transition-colors">
                     <div class="flex items-start mb-6">
                         <div
@@ -30,124 +30,25 @@ include_once 'header.php';
                         </div>
                         <div>
                             <h3 class="font-serif text-lg mb-2">Chhatarpur Branch</h3>
-                            <p class="text-gray-600 mb-2">Shop No, A179/2, Mehrauli-Gurgaon Rd, Andheria Mor Village,
-                                Chhatarpur, New Delhi, Delhi 110030</p>
+                            <p class="text-gray-600 mb-2">House no 51, Shop No 1, Banjara Market, Sector 58, Ghata,
+                                Haryana 122011</p>
                             <p class="text-sm text-primary mb-4">Main Store</p>
                             <div class="flex flex-col gap-2">
-                                <a href="tel:+919910744119"
+                                <a href="tel:+919810494275"
                                     class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-phone-line mr-2"></i>+91-9910744119
+                                    <i class="ri-phone-line mr-2"></i>+91-9810494275
                                 </a>
-                                <a href="mailto:sd@andblooms.com"
+                                <a href="mailto:vinodhomedecor78@gmail.com"
                                     class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-mail-line mr-2"></i>sd@andblooms.com
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="map-container w-full max-h-[300px] rounded-lg overflow-hidden">
-                        <div class="relative w-full aspect-[16/9] rounded overflow-hidden shadow">
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d261800.09945971734!2d76.87707860663976!3d28.448943365668505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1fa00bcfb3e1%3A0xaee164484f4aea1f!2s%26%20BLOOMS!5e0!3m2!1sen!2sin!4v1752140847448!5m2!1sen!2sin"
-                                class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-8 rounded-lg border border-gray-100 hover:border-primary/20 transition-colors">
-                    <div class="flex items-start mb-6">
-                        <div
-                            class="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4 flex-shrink-0">
-                            <i class="ri-map-pin-line text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-serif text-lg mb-2">Golf Course Road Branch</h3>
-                            <p class="text-gray-600 mb-2">LG-K3, south point mall, Golf Course Rd, Gurugram, Haryana
-                                122002</p>
-                            <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
-                            <div class="flex flex-col gap-2">
-                                <a href="tel:+919910744119"
-                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-phone-line mr-2"></i>+91-9910744119
-                                </a>
-                                <a href="mailto:sd@andblooms.com"
-                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-mail-line mr-2"></i>sd@andblooms.com
+                                    <i class="ri-mail-line mr-2"></i>vinodhomedecor78@gmail.com
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div class="map-container w-full max-h-[300px] rounded-lg overflow-hidden">
+                    <div class="map-container w-full max-h-[500px] rounded-lg overflow-hidden">
                         <div class="relative w-full aspect-[16/9] rounded overflow-hidden shadow">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d261800.09945971734!2d76.87707860663976!3d28.448943365668505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19fdeea8bb45%3A0xef63eb649801b6f6!2s%26%20BLOOMS!5e0!3m2!1sen!2sin!4v1752140990991!5m2!1sen!2sin"
-                                class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-8 rounded-lg border border-gray-100 hover:border-primary/20 transition-colors">
-                    <div class="flex items-start mb-6">
-                        <div
-                            class="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4 flex-shrink-0">
-                            <i class="ri-map-pin-line text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-serif text-lg mb-2">DLF Phase 1 Branch</h3>
-                            <p class="text-gray-600 mb-2">J 8, Qutab Plz Rd, DLF Phase 1, Sector 26A, Gurugram, Haryana
-                                122022</p>
-                            <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
-                            <div class="flex flex-col gap-2">
-                                <a href="tel:+919910744119"
-                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-phone-line mr-2"></i>+91-9910744119
-                                </a>
-                                <a href="mailto:sd@andblooms.com"
-                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-mail-line mr-2"></i>sd@andblooms.com
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="map-container w-full max-h-[300px] rounded-lg overflow-hidden">
-                        <div class="relative w-full aspect-[16/9] rounded overflow-hidden shadow">
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.2457647439255!2d77.1013266!3d28.4721444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19005b0f6ecf%3A0x3f508c7b91ffa677!2s%26%20Blooms!5e0!3m2!1sen!2sin!4v1752141553478!5m2!1sen!2sin"
-                                class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-8 rounded-lg border border-gray-100 hover:border-primary/20 transition-colors">
-                    <div class="flex items-start mb-6">
-                        <div
-                            class="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary rounded-full mr-4 flex-shrink-0">
-                            <i class="ri-map-pin-line text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-serif text-lg mb-2">Sikanderpur Branch</h3>
-                            <p class="text-gray-600 mb-2">Marble market, opp. pilar number 22, Sikanderpur, Sector 26,
-                                Gurugram, Haryana 122002</p>
-                            <p class="text-sm text-primary mb-4">Corporate & Bulk Orders</p>
-                            <div class="flex flex-col gap-2">
-                                <a href="tel:+919910744119"
-                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-phone-line mr-2"></i>+91-9910744119
-                                </a>
-                                <a href="mailto:sd@andblooms.com"
-                                    class="text-gray-600 hover:text-primary transition-colors flex items-center">
-                                    <i class="ri-mail-line mr-2"></i>sd@andblooms.com
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="map-container w-full max-h-[300px] rounded-lg overflow-hidden">
-                        <div class="relative w-full aspect-[16/9] rounded overflow-hidden shadow">
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.913322059545!2d77.108662!3d28.4821569!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1f505887fd69%3A0xc7330605d92c9506!2s%26%20Blooms!5e0!3m2!1sen!2sin!4v1752141646952!5m2!1sen!2sin"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.975202387228!2d77.1174805!3d28.4200051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d194bba8aead3%3A0x9cc58b63970bba87!2sVinod%20Home%20decor%20Banjara%20Market%20sector%2058!5e0!3m2!1sen!2sin!4v1755553758975!5m2!1sen!2sin"
                                 class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade">
                             </iframe>
@@ -224,7 +125,7 @@ include_once 'header.php';
             </div>
             <h3 class="font-serif text-xl mb-3">WhatsApp</h3>
             <p class="text-gray-600 mb-6">Message us directly on WhatsApp for quick responses and updates.</p>
-            <a href="https://wa.me/919910744119" target="_blank"
+            <a href="https://wa.me/919810494275" target="_blank"
                 class="inline-block bg-[#25D366] text-white px-6 py-3 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">WhatsApp
                 Us</a>
         </div>
@@ -236,7 +137,7 @@ include_once 'header.php';
             </div>
             <h3 class="font-serif text-xl mb-3">Email Support</h3>
             <p class="text-gray-600 mb-6">Send us an email and we'll get back to you within 24 hours.</p>
-            <a href="mailto:sd@andblooms.com"
+            <a href="mailto:vinodhomedecor78@gmail.com"
                 class="inline-block border border-primary text-primary px-6 py-3 rounded-button whitespace-nowrap hover:bg-primary hover:text-white transition-colors">Email
                 Us</a>
         </div>
@@ -249,11 +150,11 @@ include_once 'header.php';
             <h3 class="font-serif text-xl mb-3">Social Media</h3>
             <p class="text-gray-600 mb-6">Connect with us on social media for updates and inspiration.</p>
             <div class="flex justify-center space-x-3">
-                <a href="https://www.facebook.com/andblooms" target="_blank"
+                <a href="https://www.facebook.com/profile.php?id=61560513337525" target="_blank"
                     class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                     <i class="ri-facebook-fill"></i>
                 </a>
-                <a href="https://www.instagram.com/andblooms" target="_blank"
+                <a href="https://www.instagram.com/vinodhomedecor/" target="_blank"
                     class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                     <i class="ri-instagram-line"></i>
                 </a>
