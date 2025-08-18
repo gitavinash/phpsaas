@@ -1,13 +1,13 @@
 <!-- Footer -->
-<footer class="bg-gray-900 text-white pt-16 pb-8">
+<footer class="bg-primary text-white pt-16 pb-8">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <div>
                 <a href="/" class="inline-block mb-6">
-                    <img src="https://andblooms.com/upload/2020/10/1602753246_andblooms_logo_mobile_128x128.png"
-                        alt="AndBlooms Logo" class="h-8 brightness-0 invert">
+                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo"
+                        class="h-8 brightness-0 invert">
                 </a>
-                <p class="text-gray-400 mb-6">Delivering fresh, beautiful flowers for all your special moments since
+                <p class="text-white-400 mb-6">Delivering fresh, beautiful flowers for all your special moments since
                     2019.</p>
                 <div class="flex space-x-4">
                     <a href="#"
@@ -31,76 +31,60 @@
             <div>
                 <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
                 <ul class="space-y-3">
-                    <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
-                    <li><a href="/about-us/" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                    <li><a href="/category/workshop/" class="text-gray-400 hover:text-white transition">Workshop</a>
-                    </li>
-                    <li><a href="/franchise/" class="text-gray-400 hover:text-white transition">Franchise</a></li>
-                    <li><a href="/contact-us/" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                    <li><a href="/" class="text-white-400 hover:text-white transition">Home</a></li>
 
                 </ul>
             </div>
             <div>
                 <h3 class="text-lg font-semibold mb-6">Product categories</h3>
                 <ul class="space-y-3">
-                    <li><a href="/tag/luxury/" class="text-gray-400 hover:text-white transition">Luxury
-                            Collections</a></li>
-                    <li><a href="/category/flower/" class="text-gray-400 hover:text-white transition">Fresh
-                            Flowers</a>
-                    <li><a href="/category/and-blooms-express/" class="text-gray-400 hover:text-white transition">&
-                            Blooms Express</a>
-                    <li><a href="/category/artistic-artificial/"
-                            class="text-gray-400 hover:text-white transition">Artistic artificial</a>
-                    <li><a href="/category/cake/" class="text-gray-400 hover:text-white transition">Cake</a>
-                    <li><a href="/category/infinity-everlasting-flowers/"
-                            class="text-gray-400 hover:text-white transition">Infinity Everlasting Flowers</a>
-                    <li><a href="/category/planters/" class="text-gray-400 hover:text-white transition">Planters</a>
-                    <li><a href="/category/vases-and-ceramics/" class="text-gray-400 hover:text-white transition">Vases
-                            & Ceramics</a>
                 </ul>
             </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-6">Newsletter</h3>
-                <p class="text-gray-400 mb-4">Subscribe to receive updates, access to exclusive deals, and more.</p>
-                <div class="mb-4">
-                    <div class="flex">
-                        <input type="email" placeholder="Your email address" d
-                            class="flex-1 py-3 px-4 bg-gray-800 border-none rounded-l-button text-white focus:outline-none text-sm">
-                        <button
-                            class="bg-primary hover:bg-opacity-90 text-white py-3 px-4 rounded-r-button font-medium transition whitespace-nowrap">Subscribe</button>
-                    </div>
+            <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                <h3 class="text-xl font-semibold text-gray-800 border-b pb-3">Contact Us</h3>
+
+                <!-- Address -->
+                <div>
+                    <p class="text-gray-600 font-medium mb-1">Address</p>
+                    <address class="not-italic text-gray-700 leading-relaxed">
+                        House No. 51, Shop No. 1, Banjara Market,<br />
+                        Sector 58, Ghata, Haryana 122011
+                    </address>
                 </div>
-                <h3 class="text-lg font-semibold mb-4 mt-6">Payment Methods</h3>
-                <div class="flex space-x-3">
-                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
-                        <i class="ri-visa-fill text-xl"></i>
-                    </div>
-                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
-                        <i class="ri-mastercard-fill text-xl"></i>
-                    </div>
-                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
-                        <i class="ri-paypal-fill text-xl"></i>
-                    </div>
-                    <div class="w-10 h-6 flex items-center justify-center text-gray-400">
-                        <i class="ri-apple-fill text-xl"></i>
-                    </div>
+
+                <!-- Phone -->
+                <div>
+                    <p class="text-gray-600 font-medium mb-1">Call</p>
+                    <a href="tel:+919810494275" class="text-blue-600 hover:underline">
+                        +91&nbsp;98104&nbsp;94275
+                    </a>
+                </div>
+
+                <!-- WhatsApp -->
+                <div>
+                    <p class="text-gray-600 font-medium mb-1">WhatsApp</p>
+                    <a href="https://wa.me/919810494275" target="_blank" rel="noopener"
+                        class="text-green-600 hover:underline">
+                        +91&nbsp;98104&nbsp;94275
+                    </a>
                 </div>
             </div>
+
         </div>
         <div class="border-t border-gray-800 pt-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-500 text-sm mb-4 md:mb-0">© <?php echo date('Y') . ' ' . SITE_NAME ?>. All
+                <p class="text-white-500 text-sm mb-4 md:mb-0">© <?php echo date('Y') . ' ' . SITE_NAME ?>. All
                     rights reserved. | Developed by <a href='https://blumox.com'
-                        class="text-gray-500 hover:text-white text-sm transition">Blumox Technologies</a></p>
+                        class="text-white-500 hover:text-white text-sm transition">Blumox Technologies</a></p>
                 <div class="flex space-x-6">
-                    <a href="/terms-and-conditions/" class="text-gray-500 hover:text-white text-sm transition">Terms
+                    <a href="/terms-and-conditions/" class="text-white-500 hover:text-white text-sm transition">Terms
                         and
                         Conditions</a>
-                    <a href="/privacy-policy/" class="text-gray-500 hover:text-white text-sm transition">Privacy
+                    <a href="/privacy-policy/" class="text-white-500 hover:text-white text-sm transition">Privacy
                         Policy</a>
                     <a href="/cancellation---refund/"
-                        class="text-gray-500 hover:text-white text-sm transition">Cancellation & Refund</a>
-                    <a href="/shipping-policy/" class="text-gray-500 hover:text-white text-sm transition">Shipping
+                        class="text-white-500 hover:text-white text-sm transition">Cancellation & Refund</a>
+                    <a href="/shipping-policy/" class="text-white-500 hover:text-white text-sm transition">Shipping
                         policy</a>
                 </div>
             </div>
