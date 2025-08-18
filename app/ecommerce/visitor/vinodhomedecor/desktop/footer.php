@@ -32,12 +32,26 @@
                 <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
                 <ul class="space-y-3">
                     <li><a href="/" class="text-white-400 hover:text-white transition">Home</a></li>
+                    <li><a href="/about-us/" class="text-white-400 hover:text-white transition">About us</a></li>
+                    <li><a href="/contact-us/" class="text-white-400 hover:text-white transition">Contact us</a></li>
 
                 </ul>
             </div>
             <div>
                 <h3 class="text-lg font-semibold mb-6">Product categories</h3>
                 <ul class="space-y-3">
+                    <li><a href="/category/wall-decor/" class="text-gray-400 hover:text-white transition">Wall Décor</a>
+                    </li>
+                    <li><a href="/category/furniture-and-accents/"
+                            class="text-gray-400 hover:text-white transition">Furniture & Accents</a></li>
+                    <li><a href="/category/lighting/" class="text-gray-400 hover:text-white transition">Lighting</a>
+                    </li>
+                    <li><a href="/category/showpieces-and-idols/"
+                            class="text-gray-400 hover:text-white transition">Showpieces & Idols</a></li>
+                    <li><a href="/category/paintings/" class="text-gray-400 hover:text-white transition">Paintings</a>
+                    </li>
+                    <li><a href="/category/water-fountains/" class="text-gray-400 hover:text-white transition">Water
+                            Fountains</a></li>
                 </ul>
             </div>
             <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
