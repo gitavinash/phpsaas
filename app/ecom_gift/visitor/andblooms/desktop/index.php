@@ -127,7 +127,7 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 
 <section class="py-20 px-6">
     <div class="container mx-auto">
-        <h2 class="serif text-3xl md:text-4xl text-center mb-12">Shop by Category</h2>
+        <h2 class="serif text-3xl md:text-4xl text-center mb-12">Shop by Occasion</h2>
         <!-- Option 1: Elegant Cards with Hover Effect -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <a href="/tag/birthday/" title="Birthday" class="group">

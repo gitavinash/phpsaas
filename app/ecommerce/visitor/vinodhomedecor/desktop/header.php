@@ -31,6 +31,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/x-icon" href="<?php echo SITE_ICON ?>">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -159,8 +160,7 @@
             <!-- Logo -->
             <div class="flex items-center space-x-8">
                 <a href="/" class="flex items-center">
-                    <img src="https://andblooms.com//upload/2020/10/1602753246_andblooms_logo_mobile_128x128.png"
-                        alt="AndBlooms Logo" class="h-8">
+                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo" class="h-8">
                 </a>
 
                 <!-- Desktop Menu -->
