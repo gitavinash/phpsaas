@@ -26,17 +26,17 @@ require_once 'header.php';
     <div class="flex items-center text-sm text-gray-500 mb-6">
         <a href="/" class="hover:text-primary">Home</a>
         <span class="mx-2">/</span>
-        <a href="<?php echo $brandURL ?>" class="hover:text-primary"><?php echo $category_title ?></a>
+        <a href="<?php echo $brandURL ?>" class="hover:text-primary"><?php echo ucwords($category_title) ?></a>
         <span class="mx-2">/</span>
-        <span class="text-gray-700"><?php echo $product_title ?></span>
+        <span class="text-gray-700"><?php echo ucwords($product_title) ?></span>
     </div>
     <!-- Product Hero Section -->
     <div class="flex flex-col md:flex-row gap-8 mb-16">
         <!-- Product Images -->
         <div class="md:w-1/2">
             <div class="product-image-container mb-4 rounded-lg overflow-hidden position-relative">
-                <img src="<?php echo $product_image ?>" id="mainProductImage" alt="<?php echo $product_title ?>"
-                    class="w-full h-full object-cover object-top">
+                <img src="<?php echo $product_image ?>" id="mainProductImage"
+                    alt="<?php echo ucwords($product_title) ?>" class="w-full h-full object-cover object-top">
                 <div id="zoomOverlay"></div>
             </div>
             <div class="grid thumbnail grid-cols-4 gap-2">
@@ -73,7 +73,7 @@ require_once 'header.php';
         </div>
         <!-- Product Details -->
         <div class="md:w-1/2">
-            <h1 class="text-3xl font-semibold text-gray-800 mb-2"><?php echo $product_title ?></h1>
+            <h1 class="text-3xl font-semibold text-gray-800 mb-2"><?php echo ucwords($product_title) ?></h1>
             <div class="flex items-center mb-4">
                 <div class="flex text-yellow-400">
                     <i class="ri-star-fill"></i>
@@ -125,16 +125,6 @@ require_once 'header.php';
                     </div>
                     <p class="text-sm text-gray-600">Same day delivery</p>
                 </div>
-                <?php
-                if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
-                    echo "<div class='flex items-center mb-3'>
-                            <div class='w-6 h-6 flex items-center justify-center text-green-500 mr-2'>
-                                <i class='ri-refresh-line'></i>
-                            </div>
-                            <p class='text-sm text-gray-600'>Fresh flower guarantee - 7 days</p>
-                        </div>";
-                }
-                ?>
                 <div class="flex items-center">
                     <div class="w-6 h-6 flex items-center justify-center text-green-500 mr-2">
                         <i class="ri-shield-check-line"></i>
