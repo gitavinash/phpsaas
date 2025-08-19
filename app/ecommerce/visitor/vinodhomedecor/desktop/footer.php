@@ -7,8 +7,7 @@
                     <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo"
                         class="h-8 brightness-0 invert">
                 </a>
-                <p class="text-white-400 mb-6">Delivering fresh, beautiful flowers for all your special moments since
-                    2019.</p>
+                <p class="text-white-400 mb-6">Crafting unique home décor pieces that tell your story since 2022.</p>
                 <div class="flex space-x-4">
                     <a href="#"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
