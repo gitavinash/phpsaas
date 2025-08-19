@@ -38,7 +38,7 @@ include_once 'header.php';
                         <img src="<?php echo $product_image ?>" class="w-24 h-24 object-cover rounded">
                         <div class="flex-1">
                             <a href="<?php echo $link_url ?>" target="_blank">
-                                <h2 class="text-lg font-medium text-gray-800"><?php echo $product_title ?></h2>
+                                <h2 class="text-lg font-medium text-gray-800"><?php echo ucwords($product_title) ?></h2>
                             </a>
                             <?php
                                 $priceToShow = $inventory_price;
@@ -206,32 +206,6 @@ include_once 'header.php';
 
                 </div>
 
-                <!-- Delivery Date -->
-                <div id="deliveryDetails" class="bg-white rounded shadow p-6 hidden">
-                    <h2 class="text-2xl font-semibold mb-2">Checkout</h2>
-                    <h3 class="text-lg text-gray-600 mb-6">Delivery Date & Time</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <?php if (date('H') < 21): ?>
-                        <button type="button" id="deliverByToday"
-                            class="delivery-btn active block w-full text-center border rounded py-3 hover:bg-gray-100 transition">
-                            <?= date('jS M,') ?> Today
-                        </button>
-                        <?php endif; ?>
-                        <button type="button" id="deliverByTomorrow"
-                            class="delivery-btn block w-full text-center border rounded py-3 hover:bg-gray-100 transition">
-                            <?= date('jS M,', strtotime('+1 day')) ?> Tomorrow
-                        </button>
-                        <button type="button"
-                            class="deliverByOther delivery-btn block w-full text-center border rounded py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            Other dates
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <!-- Right Column -->
@@ -274,11 +248,7 @@ include_once 'header.php';
                     </button>
                     <button href="#" id="continueShipping"
                         class="w-full block text-center bg-primary text-white font-semibold py-3 rounded-md hover:bg-primary/90 transition hidden">
-                        Continue to Delivery date & time
-                    </button>
-                    <button href="#" id="continueCheckout"
-                        class="deliverByOther w-full block text-center bg-primary text-white font-semibold py-3 rounded-md hover:bg-primary/90 transition hidden">
-                        Continue Checkout
+                        Review Your Order
                     </button>
 
                     <!-- Feature List -->
@@ -308,188 +278,14 @@ include_once 'header.php';
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
                             </svg>
-                            2 Lakh+ Smiles Delivered
+                            1000+ Smiles Delivered
                         </li>
                     </ul>
                 </div>
             </div>
 
-
         </div>
 </section>
-
-<!-- Delivery Modal HTML -->
-<div id="deliveryModal"
-    class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden px-4 py-6 sm:px-6">
-    <section class="deliveryDateBox bg-white max-w-3xl w-full rounded-lg shadow-xl p-6 relative overflow-hidden">
-        <!-- Close Button -->
-        <button aria-label="Close" type="button"
-            class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl closeCalender font-bold focus:outline-none">
-            &times;
-        </button>
-
-        <!-- Calendar Box -->
-        <div class="calenderBox space-y-4 mb-6">
-            <h3 class="text-xl font-semibold">Select a delivery date</h3>
-            <div id="inlineCalendar" class="border rounded p-2 w-full"></div>
-        </div>
-
-        <!-- Show Time Box -->
-        <div class="showTimeBox space-y-4 hidden">
-            <h3 class="text-xl font-semibold mb-4">Select delivery type and slot</h3>
-            <p class="text-sm text-gray-600 mb-4">
-                Delivery Date: <span id="selectedDeliveryDate" class="font-medium text-gray-800">Not selected</span>
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- Delivery Slot Options -->
-                <template id="deliverySlotTemplate">
-                    <label class="flex items-center gap-3">
-                        <input type="radio" name="deliveryType" value="" class="hidden peer deliverySlot">
-                        <div
-                            class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                        </div>
-                    </label>
-                </template>
-
-                <!-- Actual Options -->
-                <label class="flex items-center gap-3">
-                    <input type="radio" name="deliveryType" value="morning_0" class="hidden peer deliverySlot">
-                    <div
-                        class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                        Morning Delivery (Free)
-                    </div>
-                </label>
-
-                <label class="flex items-center gap-3">
-                    <input type="radio" name="deliveryType" value="afternoon_0" class="hidden peer deliverySlot">
-                    <div
-                        class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                        Afternoon Delivery (Free)
-                    </div>
-                </label>
-
-                <label class="flex items-center gap-3">
-                    <input type="radio" name="deliveryType" value="evening_0" class="hidden peer deliverySlot">
-                    <div
-                        class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                        Evening Delivery (Free)
-                    </div>
-                </label>
-
-                <label class="flex items-center gap-3">
-                    <input type="radio" name="deliveryType" value="fixed_200" class="hidden peer deliverySlot">
-                    <div
-                        class="peer-checked:border-primary peer-checked:bg-primary/10 w-full border rounded p-3 cursor-pointer">
-                        Fixed Time Delivery (&#8377;200)
-                    </div>
-                </label>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="grid grid-cols-2 gap-4 pt-4">
-                <button id="goToCalendar"
-                    class="text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded focus:outline-none">
-                    &larr; Go to calendar
-                </button>
-                <button id="confirmDelivery"
-                    class="bg-primary text-white hover:bg-primary/90 py-2 rounded text-center focus:outline-none">
-                    Confirm Delivery Slot
-                </button>
-            </div>
-        </div>
-
-        <!-- Show Delivery Time Slots -->
-        <div class="showDeliveryTimeBox space-y-4 hidden">
-            <h3 class="text-xl font-semibold mb-4">Select a Time Slot</h3>
-            <p class="text-sm text-gray-600 mb-4">
-                Delivery Date: <span id="selectedDeliveryDateConfirm" class="font-medium text-gray-800">Not
-                    selected</span>
-            </p>
-
-            <!-- Scrollable Time Slots Container -->
-            <div id="timeSlots"
-                class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto pr-1 sm:pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 rounded">
-                <!-- Time slots dynamically appended here -->
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 pt-4">
-                <button type="button"
-                    class="visibleShowTimeBox text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded focus:outline-none">
-                    &larr; Change delivery type
-                </button>
-                <button id="confirmTimeSlot"
-                    class="bg-primary text-white hover:bg-primary/90 py-2 rounded text-center focus:outline-none">
-                    Confirm Time Slot
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Special Notes Box (Wishing Message Dialog) -->
-    <div
-        class="specialNotesBox fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden px-4 py-6 sm:px-6">
-        <div class="bg-white max-w-lg w-full rounded-lg shadow-xl p-6 relative">
-            <!-- Close Button -->
-            <button aria-label="Close" type="button"
-                class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl closeNotes font-bold focus:outline-none">
-                &times;
-            </button>
-
-            <h3 class="text-xl font-semibold mb-4">Add a Special Message (Optional)</h3>
-
-            <!-- Event Dropdown -->
-            <label for="occasionSelect" class="block text-sm font-medium text-gray-700 mb-1">Occasion</label>
-            <select id="occasionSelect" data-title="Select an Occasion" class="selectJS w-full mb-4">
-                <option value="">-- Select an Occasion --</option>
-                <option value="Birthday">Birthday</option>
-                <option value="Anniversary">Anniversary</option>
-                <option value="Engagement">Engagement</option>
-                <option value="Wedding">Wedding</option>
-                <option value="Baby Shower">Baby Shower</option>
-                <option value="Housewarming">Housewarming</option>
-                <option value="Promotion">Promotion</option>
-                <option value="Retirement">Retirement</option>
-                <option value="Congratulations">Congratulations</option>
-                <option value="Get Well Soon">Get Well Soon</option>
-                <option value="Thank You">Thank You</option>
-                <option value="Best Wishes">Best Wishes</option>
-                <option value="Valentine's Day">Valentine's Day</option>
-                <option value="Mother's Day">Mother's Day</option>
-                <option value="Father's Day">Father's Day</option>
-                <option value="Friendship Day">Friendship Day</option>
-                <option value="Women's Day">Women's Day</option>
-                <option value="Diwali">Diwali</option>
-                <option value="Holi">Holi</option>
-                <option value="Raksha Bandhan">Raksha Bandhan</option>
-                <option value="Karwa Chauth">Karwa Chauth</option>
-                <option value="Eid">Eid</option>
-                <option value="Christmas">Christmas</option>
-                <option value="New Year">New Year</option>
-                <option value="Apology">Apology</option>
-                <option value="Just Because">Just Because</option>
-            </select>
-
-            <!-- Message Box -->
-            <label for="specialNoteInput" class="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
-            <textarea id="specialNoteInput" rows="4"
-                class="w-full border rounded p-2 text-sm focus:outline-none focus:ring focus:border-primary"
-                placeholder="Write a personal note..."></textarea>
-
-            <!-- Action Buttons -->
-            <div class="flex justify-between gap-4 pt-4">
-                <button
-                    class="backToDelivery bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded focus:outline-none">
-                    &larr; Back to Delivery Options
-                </button>
-                <button
-                    class="reviewBtn bg-primary text-white hover:bg-primary/90 py-2 px-4 rounded focus:outline-none">
-                    Review Order
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <?php
 
