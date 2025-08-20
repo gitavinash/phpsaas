@@ -29,7 +29,7 @@ include_once 'header.php';
                             <i class="ri-map-pin-line text-xl"></i>
                         </div>
                         <div>
-                            <h3 class="font-serif text-lg mb-2">Chhatarpur Branch</h3>
+                            <h3 class="font-serif text-lg mb-2">Gurugram Branch</h3>
                             <p class="text-gray-600 mb-2">House no 51, Shop No 1, Banjara Market, Sector 58, Ghata,
                                 Haryana 122011</p>
                             <p class="text-sm text-primary mb-4">Main Store</p>
