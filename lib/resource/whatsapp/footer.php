@@ -25,9 +25,6 @@ if ($sendMessageTo != '') {
     // Combine manually
     $fullUrl = $url . '?' . $query . '&Params=' . $safeParams;
 
-    echo $fullUrl;
-    exit();
-
     // Perform GET request
     $response = file_get_contents($fullUrl);
 }
