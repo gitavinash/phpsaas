@@ -116,311 +116,179 @@ require_once LOGIN_CHECK;
     if (isset($id)) {
         $blockId = base64_decode($id);
         if ($checkBlock = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block_item INNER JOIN {$tableNamePrefix}block ON block_item_parent_id=block_id WHERE block_item_parent_id={$blockId} AND block_item_status IN (1,3) AND block_item_site_id=" . SITE_ID . " ORDER BY block_item_id ASC")) {
+
             if (mysqli_num_rows($checkBlock) > 0) {
                 $i = 0;
                 $slabDamageCount = array();
-                while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
-                    extract($slabSize);
-                    if ($i == 0) {
 
-                        $measurementData = constant(strtoupper('measurement_' . $block_product_type));
-                        extract(json_decode($measurementData, TRUE));
-                        echo "<table>";
-                        echo "<tr>
-                        <td colspan=100><img src='" . SITE_LOGO . "'></td>
-                        </tr>";
-                        echo "<tr>
-                        <td colspan=100><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td>
-                        </tr>";
-                        echo "
-                        <tr>
-                            <th rowspan=2>Slab no.</th>
-                            <th rowspan=2>Width<br />({$block_item_dimension_type})</th>
-                            <th rowspan=2>Height<br />({$block_item_dimension_type})</th>
-                            <th rowspan=2>Net qty.<br/>({$calculationType})</th>
-                            <th colspan=100>Damage Area</th>
-                        </tr>
-                        <tr>
-                            <th>Width<br />({$block_item_dimension_type})</th>
-                            <th>Height<br />({$block_item_dimension_type})</th>
-                            <th>Net qty.<br/>({$calculationType})</th>
-                            <th>Width<br />({$block_item_dimension_type})</th>
-                            <th>Height<br />({$block_item_dimension_type})</th>
-                            <th>Net qty.<br/>({$calculationType})</th>
-                            <th>Width<br />({$block_item_dimension_type})</th>
-                            <th>Height<br />({$block_item_dimension_type})</th>
-                            <th>Net qty.<br/>({$calculationType})</th>
-                            <th>Width<br />({$block_item_dimension_type})</th>
-                            <th>Height<br />({$block_item_dimension_type})</th>
-                            <th>Net qty.<br/>({$calculationType})</th>
-                            <th>Width<br />({$block_item_dimension_type})</th>
-                            <th>Height<br />({$block_item_dimension_type})</th>
-                            <th>Net qty.<br/>({$calculationType})</th>
-                            <th>Width<br />({$block_item_dimension_type})</th>
-                            <th>Height<br />({$block_item_dimension_type})</th>
-                            <th>Net qty.<br/>({$calculationType})</th>
-                        </tr>
-                    ";
-                    }
-
-                    $totalArea = $block_item_width * $block_item_height;
-
+                // ✅ Helper: unit conversion
+                function convertArea($width, $height, $measurementType, $calculationType)
+                {
+                    $area = $width * $height;
                     switch ([$measurementType, $calculationType]) {
-
                         // Centimeter
-
                         case ['cm', 'sq. mm.']:
-                            $totalArea = $totalArea * 100;
+                            $area *= 100;
                             break;
                         case ['cm', 'sq. in.']:
-                            $totalArea = $totalArea * 0.15500031;
+                            $area *= 0.15500031;
                             break;
                         case ['cm', 'sq. ft.']:
-                            $totalArea = $totalArea * 0.001076391;
+                            $area *= 0.001076391;
                             break;
                         case ['cm', 'sq. mt.']:
-                            $totalArea = $totalArea * 0.0001;
+                            $area *= 0.0001;
                             break;
 
                         // Millimeter
-
                         case ['mm', 'sq. cm.']:
-                            $totalArea = $totalArea * 0.01;
+                            $area *= 0.01;
                             break;
                         case ['mm', 'sq. in.']:
-                            $totalArea = $totalArea * 0.0015500031;
+                            $area *= 0.0015500031;
                             break;
                         case ['mm', 'sq. ft.']:
-                            $totalArea = $totalArea * 0.00001076391;
+                            $area *= 0.00001076391;
                             break;
                         case ['mm', 'sq. mt.']:
-                            $totalArea = $totalArea * 0.000001;
+                            $area *= 0.000001;
                             break;
 
                         // Inches
-
                         case ['in', 'sq. cm.']:
-                            $totalArea = $totalArea * 6.4516;
+                            $area *= 6.4516;
                             break;
                         case ['in', 'sq. mm.']:
-                            $totalArea = $totalArea * 645.16;
+                            $area *= 645.16;
                             break;
                         case ['in', 'sq. ft.']:
-                            $totalArea = $totalArea * 0.00694444;
+                            $area *= 0.00694444;
                             break;
                         case ['in', 'sq. mt.']:
-                            $totalArea = $totalArea * 0.00064516;
+                            $area *= 0.00064516;
                             break;
 
                         // Feet
-
                         case ['ft', 'sq. cm.']:
-                            $totalArea = $totalArea * 929.0304;
+                            $area *= 929.0304;
                             break;
                         case ['ft', 'sq. mm.']:
-                            $totalArea = $totalArea * 92903.04;
+                            $area *= 92903.04;
                             break;
                         case ['ft', 'sq. in.']:
-                            $totalArea = $totalArea * 144;
+                            $area *= 144;
                             break;
                         case ['ft', 'sq. mt.']:
-                            $totalArea = $totalArea * 0.09290304;
+                            $area *= 0.09290304;
                             break;
 
                         // Meter
-
                         case ['mt', 'sq. cm.']:
-                            $totalArea = $totalArea * 10000;
+                            $area *= 10000;
                             break;
                         case ['mt', 'sq. mm.']:
-                            $totalArea = $totalArea * 1000000;
+                            $area *= 1000000;
                             break;
                         case ['mt', 'sq. in.']:
-                            $totalArea = $totalArea * 1550.0031;
+                            $area *= 1550.0031;
                             break;
                         case ['mt', 'sq. ft.']:
-                            $totalArea = $totalArea * 10.7639;
+                            $area *= 10.7639;
                             break;
                     }
-
-                    $totalArea = number_format((float)$totalArea, 2, '.', '');
-
-                    if ($block_item_status == 1) {
-                        echo "
-                    <tr>
-                        <td>" . ($i + 1) . "</td>
-                        <td>{$block_item_width}</td>
-                        <td>{$block_item_height}</td>
-                        <td><strong>{$totalArea}</strong></td>
-                    ";
-
-                        if ($block_item_damage_area != '') {
-                            $damageItems = json_decode($block_item_damage_area, TRUE);
-                            $slabTotalDamage = 0;
-                            for ($j = 0; $j < 6; $j++) {
-                                if (isset($damageItems[$j])) {
-                                    extract($damageItems[$j]);
-
-                                    $damageItemTotal = $damageAreaWidth * $damageAreaHeight;
-
-                                    switch ([$measurementType, $calculationType]) {
-
-                                        // Centimeter
-
-                                        case ['cm', 'sq. mm.']:
-                                            $damageItemTotal = $damageItemTotal * 100;
-                                            break;
-                                        case ['cm', 'sq. in.']:
-                                            $damageItemTotal = $damageItemTotal * 0.15500031;
-                                            break;
-                                        case ['cm', 'sq. ft.']:
-                                            $damageItemTotal = $damageItemTotal * 0.001076391;
-                                            break;
-                                        case ['cm', 'sq. mt.']:
-                                            $damageItemTotal = $damageItemTotal * 0.0001;
-                                            break;
-
-                                        // Millimeter
-
-                                        case ['mm', 'sq. cm.']:
-                                            $damageItemTotal = $damageItemTotal * 0.01;
-                                            break;
-                                        case ['mm', 'sq. in.']:
-                                            $damageItemTotal = $damageItemTotal * 0.0015500031;
-                                            break;
-                                        case ['mm', 'sq. ft.']:
-                                            $damageItemTotal = $damageItemTotal * 0.00001076391;
-                                            break;
-                                        case ['mm', 'sq. mt.']:
-                                            $damageItemTotal = $damageItemTotal * 0.000001;
-                                            break;
-
-                                        // Inches
-
-                                        case ['in', 'sq. cm.']:
-                                            $damageItemTotal = $damageItemTotal * 6.4516;
-                                            break;
-                                        case ['in', 'sq. mm.']:
-                                            $damageItemTotal = $damageItemTotal * 645.16;
-                                            break;
-                                        case ['in', 'sq. ft.']:
-                                            $damageItemTotal = $damageItemTotal * 0.00694444;
-                                            break;
-                                        case ['in', 'sq. mt.']:
-                                            $damageItemTotal = $damageItemTotal * 0.00064516;
-                                            break;
-
-                                        // Feet
-
-                                        case ['ft', 'sq. cm.']:
-                                            $damageItemTotal = $damageItemTotal * 929.0304;
-                                            break;
-                                        case ['ft', 'sq. mm.']:
-                                            $damageItemTotal = $damageItemTotal * 92903.04;
-                                            break;
-                                        case ['ft', 'sq. in.']:
-                                            $damageItemTotal = $damageItemTotal * 144;
-                                            break;
-                                        case ['ft', 'sq. mt.']:
-                                            $damageItemTotal = $damageItemTotal * 0.09290304;
-                                            break;
-
-                                        // Meter
-
-                                        case ['mt', 'sq. cm.']:
-                                            $damageItemTotal = $damageItemTotal * 10000;
-                                            break;
-                                        case ['mt', 'sq. mm.']:
-                                            $damageItemTotal = $damageItemTotal * 1000000;
-                                            break;
-                                        case ['mt', 'sq. in.']:
-                                            $damageItemTotal = $damageItemTotal * 1550.0031;
-                                            break;
-                                        case ['mt', 'sq. ft.']:
-                                            $damageItemTotal = $damageItemTotal * 10.7639;
-                                            break;
-                                    }
-
-                                    // $damageItemTotal = 
-
-                                    echo "<td>{$damageAreaWidth}</td>";
-                                    echo "<td>{$damageAreaHeight}</td>";
-                                    echo "<td><strong>" . number_format((float)$damageItemTotal, 2, '.', '') . "</strong></td>";
-
-                                    $slabDamageCount[$i][$j] = $damageItemTotal;
-                                } else {
-                                    $slabDamageCount[$i][$j] = 0;
-                                    echo "<td>0</td>";
-                                    echo "<td>0</td>";
-                                    echo "<td>0</td>";
-                                }
-                            }
-                        } else {
-                            echo "
-                            <td>0</td><td>0</td><td><strong>0</strong></td>
-                            <td>0</td><td>0</td><td><strong>0</strong></td>
-                            <td>0</td><td>0</td><td><strong>0</strong></td>
-                            <td>0</td><td>0</td><td><strong>0</strong></td>
-                            <td>0</td><td>0</td><td><strong>0</strong></td>
-                            <td>0</td><td>0</td><td><strong>0</strong></td>
-                            ";
-                        }
-                        echo "</tr>";
-                        $i++;
-                    } else {
-                        $i++;
-                    }
+                    return (float)$area;
                 }
 
+                while ($slabSize = mysqli_fetch_assoc($checkBlock)) {
+                    extract($slabSize);
+
+                    if ($i == 0) {
+                        $measurementData = constant(strtoupper('measurement_' . $block_product_type));
+                        extract(json_decode($measurementData, TRUE));
+
+                        echo "<table>";
+                        echo "<tr><td colspan=100><img src='" . SITE_LOGO . "'></td></tr>";
+                        echo "<tr><td colspan=100><h1>{$block_title} " . (($block_code != '') ? " - {$block_code}" : '') . "</h1></td></tr>";
+                        echo "<tr>
+                <th rowspan=2>Slab no.</th>
+                <th rowspan=2>Width<br />({$block_item_dimension_type})</th>
+                <th rowspan=2>Height<br />({$block_item_dimension_type})</th>
+                <th rowspan=2>Net qty.<br/>({$calculationType})</th>
+                <th colspan=100>Damage Area</th>
+            </tr>
+            <tr>";
+
+                        // 6 damage slots
+                        for ($k = 0; $k < 6; $k++) {
+                            echo "<th>Width<br />({$block_item_dimension_type})</th>
+                      <th>Height<br />({$block_item_dimension_type})</th>
+                      <th>Net qty.<br/>({$calculationType})</th>";
+                        }
+                        echo "</tr>";
+                    }
+
+                    $totalArea = convertArea($block_item_width, $block_item_height, $measurementType, $calculationType);
+
+                    if ($block_item_status == 1) {
+                        echo "<tr>
+                <td>" . ($i + 1) . "</td>
+                <td>{$block_item_width}</td>
+                <td>{$block_item_height}</td>
+                <td><strong>" . number_format($totalArea, 2, '.', '') . "</strong></td>";
+
+                        $damageItems = !empty($block_item_damage_area) ? json_decode($block_item_damage_area, TRUE) : [];
+                        $slabTotalDamage = 0;
+
+                        for ($j = 0; $j < 6; $j++) {
+                            if (isset($damageItems[$j])) {
+                                $damage = $damageItems[$j];
+                                $damageItemTotal = convertArea($damage['damageAreaWidth'], $damage['damageAreaHeight'], $measurementType, $calculationType);
+
+                                echo "<td>{$damage['damageAreaWidth']}</td>
+                          <td>{$damage['damageAreaHeight']}</td>
+                          <td><strong>" . number_format($damageItemTotal, 2, '.', '') . "</strong></td>";
+
+                                $slabDamageCount[$i][$j] = $damageItemTotal;
+                            } else {
+                                echo "<td>0</td><td>0</td><td>0</td>";
+                                $slabDamageCount[$i][$j] = 0;
+                            }
+                        }
+                        echo "</tr>";
+                    }
+                    $i++;
+                }
+
+                // Sum all damage columns
                 $numCols = ((isset($slabDamageCount[0])) ? count($slabDamageCount[0]) : 0);
                 $damageSumArray = array_fill(0, $numCols, 0);
                 foreach ($slabDamageCount as $row) {
                     foreach ($row as $index => $value) {
-                        if (isset($damageSumArray[$index])) {
-                            $damageSumArray[$index] += $value;
-                        }
+                        $damageSumArray[$index] += $value;
                     }
                 }
 
-                echo "
-                    <tr>
-                        <td colspan='3' style='text-align:right' ><strong>Gross Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>" . round($block_gross_size, 2) . "</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>" . number_format((float)((isset($damageSumArray[0])) ? $damageSumArray[0] : 0), 2, '.', '') . "</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>" . number_format((float)((isset($damageSumArray[1])) ? $damageSumArray[1] : 0), 2, '.', '') . "</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>" . number_format((float)((isset($damageSumArray[2])) ? $damageSumArray[2] : 0), 2, '.', '') . "</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>" . number_format((float)((isset($damageSumArray[3])) ? $damageSumArray[3] : 0), 2, '.', '') . "</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>" . number_format((float)((isset($damageSumArray[4])) ? $damageSumArray[4] : 0), 2, '.', '') . "</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>" . number_format((float)((isset($damageSumArray[5])) ? $damageSumArray[5] : 0), 2, '.', '') . "</strong></td>
-                    </tr>
-                    <tr>
-                        <td colspan='3' style='text-align:right' ><strong>Damage Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>" . round($block_damage_size, 2) . "</strong></td>
-                        <td colspan=100 ></td>
-                    </tr>
-                    <tr>
-                        <td colspan='3' style='text-align:right' ><strong>Net Qty. ( $calculationType )</strong></td>
-                        <td colspan='1' style='text-align:right' ><strong>" . round($block_gross_size - $block_damage_size, 2) . "</strong></td>
-                        <td colspan=100 ></td>
-                    </tr>
-                    ";
+                echo "<tr>
+        <td colspan='3' style='text-align:right'><strong>Gross Qty. ( $calculationType )</strong></td>
+        <td style='text-align:right'><strong>" . number_format($block_gross_size, 2, '.', '') . "</strong></td>";
+
+                for ($j = 0; $j < 6; $j++) {
+                    echo "<td></td><td></td><td><strong>" . number_format($damageSumArray[$j] ?? 0, 2, '.', '') . "</strong></td>";
+                }
+                echo "</tr>
+    <tr>
+        <td colspan='3' style='text-align:right'><strong>Damage Qty. ( $calculationType )</strong></td>
+        <td style='text-align:right'><strong>" . number_format($block_damage_size, 2, '.', '') . "</strong></td>
+        <td colspan=100 ></td>
+    </tr>
+    <tr>
+        <td colspan='3' style='text-align:right'><strong>Net Qty. ( $calculationType )</strong></td>
+        <td style='text-align:right'><strong>" . number_format(($block_gross_size - $block_damage_size), 2, '.', '') . "</strong></td>
+        <td colspan=100 ></td>
+    </tr>";
 
                 if ($i == 1) {
-                    echo "
-                    </table>
-                    ";
+                    echo "</table>";
                 }
             }
         }

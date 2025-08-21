@@ -17,17 +17,14 @@ if (defined('COMPANY_WHATSAPP_PAYMENT_REQUEST')) {
         // Clean and sanitize values
         $name   = sanitize_input($profile_display_name ?? '');
         $tourPackage      = str_replace(['tour', 'package'], '', $tour_package_title);
-        $paymentLink      = sanitize_input($paymentLink ?? '');
+        // $paymentLink      = sanitize_input($paymentLink ?? '');
+        $paymentLink      = 'https://d2h.in/56drt';
 
         // Build final param string for WhatsApp API
         $variablesValues =
             $name . "," .
             $tourPackage . "," .
-            $paymentLink . "," .
-            SITE_NAME . "," .
-            ((defined('COMPANY_SITE_DOMAIN')) ? COMPANY_SITE_DOMAIN : SITE_URL) . "," .
-            ((defined('ADMIN_WHATSAPP_NUMBER')) ? ADMIN_WHATSAPP_NUMBER : SITE_URL) . "," .
-            ((defined('SITE_EMAIL')) ? SITE_EMAIL : $site_email);
+            $paymentLink;
 
         $variablesValues = rtrim($variablesValues, ',');
 

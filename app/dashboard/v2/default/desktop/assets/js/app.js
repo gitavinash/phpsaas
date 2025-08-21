@@ -1363,7 +1363,11 @@ $(document).ready(function (e) {
           btoa(quotationId),
         dataType: "json",
         success: function (response) {
-          popUpMessage("center", "Payment link sent to customer", "warning");
+          popUpMessage(
+            "center",
+            "Payment link sent to customer",
+            response.status
+          );
           enableButtonWithCTA(
             "#sendPaymentLink",
             "<i class='fi-rr-paper-plane'></i> Send payment link"
@@ -1374,7 +1378,11 @@ $(document).ready(function (e) {
             "#sendPaymentLink",
             "<i class='fi-rr-paper-plane'></i> Send payment link"
           );
-          popUpMessage("center", errorResponse.responseJSON.msg, "error");
+          popUpMessage(
+            "center",
+            errorResponse.responseJSON.msg,
+            response.status
+          );
           console.log(`Error : `);
         },
       });
