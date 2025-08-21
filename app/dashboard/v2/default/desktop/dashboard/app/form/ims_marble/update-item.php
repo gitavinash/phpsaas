@@ -167,8 +167,21 @@ if (isset($validId)) {
     <div class="form-header">
         <h3 style="float:left; width:100%; margin-bottom: 2rem">
             <?php echo $block_code . ' - ' . $block_title ?>
-            <span><?php echo (($balanceSlabs != 0) ? 'Add slabs upto ( ' . $balanceSlabs . ' slabs )' : 'Manage block Slabs') ?></span>
-        </h3>
+            <span>
+                <?php
+                    if ($balanceSlabs != 0) {
+                        $slabText = ($balanceSlabs == 1) ? "slab" : "slabs";
+                        echo "Add up to {$balanceSlabs} {$slabText}";
+                    } else {
+                        $sold = $block_total_item - $block_available;
+
+                        echo "Manage Block Slabs | "
+                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Total: {$block_total_item} " . ($block_total_item == 1 ? "slab" : "slabs") . "</span> | "
+                            . "<span style='color:green;display:inline-block;width:auto;float:none;margin:0 8px;'>Available: {$block_available} " . ($block_available == 1 ? "slab" : "slabs") . "</span> | "
+                            . "<span style='color:red;display:inline-block;width:auto;float:none;margin:0 8px;'>Sold: {$sold} " . ($sold == 1 ? "slab" : "slabs") . "</span>";
+                    }
+                    ?>
+            </span>
         </h3>
     </div>
 </div>
