@@ -174,11 +174,20 @@ if (isset($validId)) {
                         echo "Add up to {$balanceSlabs} {$slabText}";
                     } else {
                         $sold = $block_total_item - $block_available;
+                        $block_gross_size = str_replace(',', '', number_format($block_gross_size, 2));
+                        $block_damage_size = str_replace(',', '', number_format($block_damage_size, 2));
+                        $block_net_size = str_replace(',', '', number_format($block_net_size, 2));
 
-                        echo "Manage Block Slabs | "
+                        $blockDimension = $block_size_dimension;
+
+                        echo "<strong>Availability:</strong> "
                             . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Total: {$block_total_item} " . ($block_total_item == 1 ? "slab" : "slabs") . "</span> | "
                             . "<span style='color:green;display:inline-block;width:auto;float:none;margin:0 8px;'>Available: {$block_available} " . ($block_available == 1 ? "slab" : "slabs") . "</span> | "
-                            . "<span style='color:red;display:inline-block;width:auto;float:none;margin:0 8px;'>Sold: {$sold} " . ($sold == 1 ? "slab" : "slabs") . "</span>";
+                            . "<span style='color:red;display:inline-block;width:auto;float:none;margin:0 8px;'>Sold: {$sold} " . ($sold == 1 ? "slab" : "slabs") . "</span>"
+                            . "<br><br><strong>Quantity:</strong> "
+                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Gross Qty.: {$block_gross_size} {$blockDimension}</span> | "
+                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Net Qty.: {$block_net_size} {$blockDimension}</span> | "
+                            . "<span style='color:orange;display:inline-block;width:auto;float:none;margin:0 8px;'>Less/Damage Qty.: {$block_damage_size} {$blockDimension}</span>";
                     }
                     ?>
             </span>
