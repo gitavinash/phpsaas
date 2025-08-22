@@ -118,6 +118,23 @@ ol {
   border: #e7f5e5 !important;
 }
 
+.btn-with-icon {
+  text-align: center;
+  font-weight: 600;
+}
+
+.btn-with-icon i {
+  margin: 0px !important;
+}
+
+.textWhite {
+  color: #fff !important;
+}
+
+.textGrey {
+  color: #555 !important;
+}
+
 #url {
   text-transform: lowercase;
 }
@@ -3396,39 +3413,39 @@ strong.stockInfoList {
   border-radius: 4px;
 }
 
-/* Tooltips */
-
-.tableActionIconBtn {
-  position: relative;
-  display: inline-block;
+/* Universal Tooltip Styling */
+[data-title] {
+  position: relative; /* anchor point */
+  cursor: pointer; /* optional: shows it's interactive */
 }
 
-.tableActionIconBtn:hover::after {
+/* Tooltips */
+
+[data-title]::after {
   content: attr(data-title);
   position: absolute;
-  bottom: 100%;
+  bottom: 100%; /* above the element */
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
   color: #fff;
-  padding: 5px 10px;
+  font-size: 13px;
+  padding: 5px 8px;
   border-radius: 5px;
   white-space: nowrap;
-  z-index: 9999;
-  opacity: 1;
-  transition: opacity 0.3s;
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  margin-bottom: 6px; /* space between element and tooltip */
+  visibility: hidden;
 }
 
-.tableActionIconBtn::after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  white-space: nowrap;
+/* Show tooltip only if data-title is present */
+[data-title]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+  visibility: visible;
 }
 
 .dataTables_scrollBody {
@@ -3460,6 +3477,7 @@ strong.stockInfoList {
 .tableFilter {
   float: left;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .tableFilter .filterBox {
