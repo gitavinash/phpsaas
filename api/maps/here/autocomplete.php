@@ -37,10 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $searchQuery) {
                 'city' => $item['address']['city'] ?? '',
                 'state' => $item['address']['state'] ?? '',
                 'country' => $item['address']['countryName'] ?? '',
+                'pincode' => $item['address']['postalCode'] ?? '',
                 'address' => implode(', ', array_filter([
                     $item['address']['city'] ?? '',
                     $item['address']['state'] ?? '',
                     $item['address']['countryName'] ?? '',
+                    $item['address']['postalCode'] ?? '',
                 ])),
             ];
         }

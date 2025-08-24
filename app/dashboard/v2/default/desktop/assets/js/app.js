@@ -140,7 +140,7 @@ function initializeSelect2HereMapsWithCompleteAddress(element) {
       placeholder: "Select location",
       minimumInputLength: 2,
       ajax: {
-        url: "/api/maps/here/autocomplete/?address=full", // Replace with your API URL
+        url: "/api/maps/here/autocomplete-full-address/?address=full",
         dataType: "json",
         delay: 250,
         data: function (params) {
@@ -153,7 +153,11 @@ function initializeSelect2HereMapsWithCompleteAddress(element) {
             results: $.map(data.locationList, function (item) {
               return {
                 id: item.address,
-                text: item.location,
+                address: item.address,
+                text: item.city,
+                city: item.city,
+                state: item.state,
+                country: item.country,
                 pinCode: item.pincode,
               };
             }),
@@ -165,9 +169,13 @@ function initializeSelect2HereMapsWithCompleteAddress(element) {
     .on("select2:select", function (e) {
       var selectedData = e.params.data;
 
+      console.log(`selectedData`, selectedData);
+
       // Update the #pinCode input field with the pinCode from the selected item
       if (selectedData && selectedData.pinCode) {
         $("#pinCode").val(selectedData.pinCode);
+        $("#stateName").val(selectedData.state);
+        $("#countryName").val(selectedData.country);
       } else {
         $("#pinCode").val(""); // Clear if no pinCode available
       }
@@ -203,6 +211,70 @@ function initializeSelect2(element) {
   });
 }
 
+function uploadCSV(inputId, uploadUrl, btnId) {
+  var fileInput = $("#" + inputId)[0];
+  var selectedFiles = fileInput.files;
+  var $btn = $("#" + btnId);
+  $("#loader").show();
+  $(".uploadBox").hide();
+  $($btn).hide();
+
+  if (selectedFiles.length === 0) {
+    popUpMessage("center", "Please upload a CSV file.", "error");
+    $("#loader").hide();
+    $(".uploadBox").show();
+    $($btn).show();
+    return;
+  }
+
+  // Validate extension
+  var fileName = selectedFiles[0].name.toLowerCase();
+  if (!fileName.endsWith(".csv")) {
+    popUpMessage("center", "Only .csv files are allowed.", "error");
+    $("#" + inputId).val(""); // reset input
+    $("#loader").hide();
+    $(".uploadBox").show();
+    $($btn).show();
+    return;
+  }
+
+  // Prepare FormData
+  var formData = new FormData();
+  formData.append("file", selectedFiles[0]);
+
+  var originalText = $btn.text();
+  $btn.text("Uploading...").prop("disabled", true);
+
+  // AJAX upload
+  $.ajax({
+    url: "/api/" + uploadUrl + "/import/",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    timeout: 600000,
+    success: function (response) {
+      $("#loader").hide();
+      $("#csvResult").show();
+      popUpMessage("center", "CSV uploaded successfully!", "success");
+      const uploadMetrix = response.summary.properties;
+
+      $("#importedCount").text(uploadMetrix.created);
+      $("#duplicateCount").text(uploadMetrix.updated);
+      $("#failedCount").text(uploadMetrix.failed);
+
+      $btn.text(originalText).prop("disabled", false);
+    },
+    error: function () {
+      $("#loader").hide();
+      $(".uploadBox").show();
+      $($btn).show();
+      popUpMessage("center", "Upload failed. Please try again.", "error");
+      $btn.text(originalText).prop("disabled", false);
+    },
+  });
+}
+
 $(document).ready(function (e) {
   if ($(".indianCityAutoComplete").length) {
     // Initialize select2 for the existing element
@@ -214,11 +286,9 @@ $(document).ready(function (e) {
     initializeSelect2HereMapsForInternational(".internationalCityAutoComplete");
   }
 
-  if ($(".indianCityAutoCompleteWithCompleteAddress").length) {
+  if ($(".addressAutoComplete").length) {
     // Initialize select2 for the existing element
-    initializeSelect2HereMapsWithCompleteAddress(
-      ".indianCityAutoCompleteWithCompleteAddress"
-    );
+    initializeSelect2HereMapsWithCompleteAddress(".addressAutoComplete");
   }
 
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
@@ -1737,6 +1807,13 @@ $(document).ready(function (e) {
           $("#addBlogV2").show();
         },
       });
+    });
+  }
+
+  if ($("#importData").length) {
+    $("#startImportProperty").on("click", function (e) {
+      e.preventDefault();
+      uploadCSV("fileInput", "property", "startImportProperty");
     });
   }
 

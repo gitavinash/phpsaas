@@ -43,7 +43,7 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <label class="form-lable" id="Label">Address<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <select class="indianCityAutoCompleteWithCompleteAddress form-control" name="city" id="city">
+                        <select class="addressAutoComplete form-control" name="city" id="city">
                             <option value="<?php echo $property_city ?>"><?php echo $property_city ?></option>
                         </select>
                         <label class="form-lable " id="Label">Property city<sup>*</sup></label>

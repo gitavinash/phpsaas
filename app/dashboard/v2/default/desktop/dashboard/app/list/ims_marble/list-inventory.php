@@ -85,14 +85,20 @@ if (isset($_GET['status'])) {
             <option value="3" <?php echo (($statusFilterValue == '3') ? 'selected' : '') ?>>Sold out</option>
             <option value="4" <?php echo (($statusFilterValue == '4') ? 'selected' : '') ?>>Return</option>
             <option value="2" <?php echo (($statusFilterValue == '2') ? 'selected' : '') ?>>Delete</option>
-            <option value="5" <?php echo (($statusFilterValue == '5') ? 'selected' : '') ?>>Transfer request pending</option>
+            <option value="5" <?php echo (($statusFilterValue == '5') ? 'selected' : '') ?>>Transfer request pending
+            </option>
             <option value="0" <?php echo (($statusFilterValue == '0') ? 'selected' : '') ?>>Pending</option>
         </select>
     </div>
     <div class="filterBox">
-        <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Fiter</a>
-        <a href="/print_stock/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Quick print">🖨️</a>
-        <a href="/print_stock_in_detailed/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>" class="btn btn-green date-btn bgYellow printBlockFilter" id="printInventoryBtn" target="_blank" title="Print Detailed Report">🖨️ Print Detailed Report</a>
+        <a href="#" class="btn btn-green date-btn" id="applyInventoryFilter">Apply Filter</a>
+        <a href="/print_stock/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>"
+            class="btn btn-green date-btn bgYellow btn-with-icon textGrey printBlockFilter" id="printInventoryBtn"
+            target="_blank" data-title="Quick print" title="Quick print"><i class="fi fi-rr-print"></i></a>
+        <a href="/print_stock_in_detailed/?productType=<?php echo $typeFilterValue ?>&warehouse=<?php echo $warehouseFilterValue ?>&status=<?php echo $statusFilterValue ?>"
+            class="btn btn-green date-btn bgYellow btn-with-icon textGrey printBlockFilter" id="printInventoryBtn"
+            target="_blank" data-title="Print Detailed Report" title="Print Detailed Report"><i
+                class="fi fi-rr-document"></i></a>
     </div>
 </div>
 <table class="showInventoryTableList display nowrap" style="width: 100%;">

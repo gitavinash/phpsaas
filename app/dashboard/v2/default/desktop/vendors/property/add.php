@@ -27,10 +27,18 @@
                             <label class="form-lable" id="Label">Address<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <select class="indianCityAutoCompleteWithCompleteAddress form-control" name="city" id="city">
+                            <select class="addressAutoComplete form-control" name="city" id="city">
                                 <option value=""></option>
                             </select>
                             <label class="form-lable " id="Label">Property city<sup>*</sup></label>
+                        </div>
+                        <div class="form-group">
+                            <input id="stateName" name="state" type="text" />
+                            <label class="form-lable" id="Label">State<sup>*</sup></label>
+                        </div>
+                        <div class="form-group">
+                            <input id="countryName" name="country" type="text" />
+                            <label class="form-lable" id="Label">Country<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <input id="pinCode" name="pinCode" type="number" onwheel="this.blur()" />
@@ -80,7 +88,8 @@
                             <label class="form-lable" id="Label">Google map url</label>
                         </div>
                         <div class="form-group">
-                            <input id="totalItem" name="featureImage" type="file" accept="image/x-png, image/gif, image/jpeg" />
+                            <input id="totalItem" name="featureImage" type="file"
+                                accept="image/x-png, image/gif, image/jpeg" />
                             <label class="form-lable" id="Label">Feature image</label>
                         </div>
                         <div class="form-group">

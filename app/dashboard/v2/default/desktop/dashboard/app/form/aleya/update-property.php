@@ -43,13 +43,22 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <label class="form-lable" id="Label">Address<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <select class="indianCityAutoCompleteWithCompleteAddress form-control" name="city" id="city">
+                        <select class="addressAutoComplete form-control" name="city" id="city">
                             <option value="<?php echo $property_city ?>"><?php echo $property_city ?></option>
                         </select>
                         <label class="form-lable " id="Label">Property city<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number" onwheel="this.blur()" />
+                        <input id="stateName" name="state" type="text" value="<?php echo $property_state ?>" />
+                        <label class="form-lable" id="Label">State<sup>*</sup></label>
+                    </div>
+                    <div class="form-group">
+                        <input id="countryName" name="country" type="text" value="<?php echo $property_country ?>" />
+                        <label class="form-lable" id="Label">Country<sup>*</sup></label>
+                    </div>
+                    <div class="form-group">
+                        <input id="pinCode" name="pinCode" value="<?php echo $property_pincode ?>" type="number"
+                            onwheel="this.blur()" />
                         <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                     </div>
                     <div class="form-group">
@@ -57,7 +66,8 @@ if ($propertyData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         <label class="form-lable" id="Label">Email<sup>*</sup></label>
                     </div>
                     <div class="form-group">
-                        <input id="mobile" name="mobile" value="<?php echo $property_mobile ?>" type="number" onwheel="this.blur()" />
+                        <input id="mobile" name="mobile" value="<?php echo $property_mobile ?>" type="number"
+                            onwheel="this.blur()" />
                         <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                     </div>
                     <div class="form-group">

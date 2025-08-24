@@ -205,6 +205,25 @@ if (isset($validId)) {
     <div class="col-4">
         <button id="selectAllBtn">Select All</button>
         <button id="unSelectAllBtn">Unselect All</button>
+        <a href='/download/?downloadUrl={$block_qr}' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
+            target='_blank' title='Show QR Code' data-title='Download QR code' target='_blank'><i
+                class='fi fi-rr-qr-scan bgWhite'></i></a>
+        <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block'
+            data-title='Print block inventory report' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
+            target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
+        <a href='/print_label/?id=" . base64_encode($block_id) . "&theme=2' title='Print block'
+            data-title='Print block label' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
+            target='_blank' target='_blank'><i class='fi fi-rr-print bgWhite'></i></a><a
+            href='/dashboard/inventory/logs/?id=" . base64_encode($block_id) . "' title='Print block'
+            data-title='Show Transfer history' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
+            target='_blank' target='_blank'><i class='fi fi-rr-notebook bgWhite'></i></a>
+        <a href='#' title='Mark as sold out' data-title='Mark as Sold Out'
+            class='btn btn-green date-btn bgYellow btn-with-icon textGrey markAsSold' data-type='block'
+            data-id='{$block_id}' target='_blank'><i class='fi fi-rr-sold-signal bgRed'></i></a>
+        " . (($block_status == 1) ? "
+        <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block'
+            class='btn btn-green date-btn bgYellow btn-with-icon textGrey deleteButton' data-reload='true'
+            data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>" : "") . "
     </div>
     <div class="col-3">
         <select class="selectJS warehouseTranfer form-control" style="width: 200px" name="newWarehouseId"
