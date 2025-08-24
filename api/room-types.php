@@ -9,7 +9,7 @@ $roomTypes = [
     "Family Room",
     "Executive Suite",
     "Junior Suite",
-    "Super Deluxe Room", // ✅ fixed typo
+    "Super Deluxe Room",
     "King Size"
 ];
 

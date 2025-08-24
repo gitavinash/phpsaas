@@ -8,28 +8,54 @@ SELECT
     p.property_title, 
     p.property_thumbnail, 
     p.property_address, 
-    p.property_city, 
-    p.property_state, 
-    p.property_country, 
+    TRIM(p.property_city)     AS property_city, 
+    TRIM(p.property_state)    AS property_state, 
+    TRIM(p.property_country)  AS property_country, 
     p.property_type,
     tp.tour_package_id,
     tp.tour_package_title, 
     tp.tour_package_duration,
-    GROUP_CONCAT(DISTINCT CONCAT(r.room_id, ':', r.room_type) ORDER BY r.room_id SEPARATOR ',') AS rooms
+    TRIM(tp.tour_package_city)  AS tour_package_city,
+    TRIM(tp.tour_package_state) AS tour_package_state,
+    /* 1 = city+hotel match, 2 = state+hotel match, 99 = no match (shouldn't happen due to ON) */
+    CASE 
+      WHEN TRIM(tp.tour_package_city) <> '' 
+           AND UPPER(TRIM(p.property_city)) = UPPER(TRIM(tp.tour_package_city))
+           AND UPPER(TRIM(p.property_type)) = UPPER(TRIM(tp.tour_package_hotel))
+        THEN 1
+      WHEN UPPER(TRIM(p.property_state)) = UPPER(TRIM(tp.tour_package_state))
+           AND UPPER(TRIM(p.property_type)) = UPPER(TRIM(tp.tour_package_hotel))
+        THEN 2
+      ELSE 99
+    END AS match_priority,
+    GROUP_CONCAT(
+      DISTINCT CONCAT(r.room_id, ':', r.room_type) 
+      ORDER BY r.room_id SEPARATOR ','
+    ) AS rooms
 FROM " . TABLE_PREFIX . "tour_package tp
 LEFT JOIN " . TABLE_PREFIX . "property p 
-    ON tp.tour_package_state = p.property_state 
-    AND tp.tour_package_hotel = p.property_type 
-    AND p.property_site_id = " . SITE_ID . " 
-    AND p.property_status = 1
+  ON p.property_site_id = " . SITE_ID . "
+ AND p.property_status = 1
+ AND (
+       (
+         TRIM(tp.tour_package_city) <> '' 
+         AND UPPER(TRIM(p.property_city)) = UPPER(TRIM(tp.tour_package_city))
+         AND UPPER(TRIM(p.property_type)) = UPPER(TRIM(tp.tour_package_hotel))
+       )
+       OR
+       (
+         UPPER(TRIM(p.property_state)) = UPPER(TRIM(tp.tour_package_state))
+         AND UPPER(TRIM(p.property_type)) = UPPER(TRIM(tp.tour_package_hotel))
+       )
+     )
 LEFT JOIN " . TABLE_PREFIX . "room r
-    ON r.room_property_id = p.property_id
-    AND r.room_site_id = " . SITE_ID . "
-WHERE tp.tour_package_id = {$tourPackageId}
+  ON r.room_property_id = p.property_id
+ AND r.room_site_id     = " . SITE_ID . "
+WHERE tp.tour_package_id      = {$tourPackageId}
   AND tp.tour_package_site_id = " . SITE_ID . "
 GROUP BY p.property_id
+ORDER BY match_priority ASC, p.property_title ASC
 ";
-
 
 $hotelList = array();
 
