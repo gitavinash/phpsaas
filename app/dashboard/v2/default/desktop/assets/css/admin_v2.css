@@ -779,7 +779,7 @@ nav .header-section-name p span {
   color: #333;
 }
 
-/* 
+
 main {
   position: absolute;
   float: left;
@@ -788,9 +788,9 @@ main {
   box-sizing: border-box;
   padding-left: 250px;
   padding-top: 70px;
-} */
+}
 
-main {
+/* main {
   position: absolute;
   top: 70px; /* offset from top (your header) */
   left: 230px; /* offset for sidebar */
@@ -805,7 +805,7 @@ main {
 
   overflow-y: auto; /* enable vertical scroll inside main */
   overflow-x: hidden; /* optional: disable horizontal scroll */
-}
+} */
 
 .i-m-here-pagination {
   float: right;
