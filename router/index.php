@@ -53,7 +53,7 @@ if ((isset($type))) {
 
 	/** For all type of form process */
 
-	if (isset($recaptcha_token) && SITE_ID != 49) {
+	if (isset($recaptcha_token)) {
 		$secretKey = GOOGLE_RECAPTCHA_SECRET_KEY;
 
 		$verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
