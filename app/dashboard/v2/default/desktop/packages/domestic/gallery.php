@@ -69,7 +69,7 @@ if ($galleryData = mysqli_query($connection, $query)) {
                                     <div id="dropZone" style="height: 500px;">
                                         <span class="defaultText">Drag & Drop files here or click to upload</span>
                                     </div>
-                                    <input type="file" id="fileInput" name="gallery[]" accept=".pdf, .jpg, .jpeg, .png"
+                                    <input type="file" id="fileInput" name="gallery[]" accept=".jpg, .jpeg, .png"
                                         multiple />
                                 </div>
                             </div>
