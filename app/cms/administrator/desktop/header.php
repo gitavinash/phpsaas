@@ -422,7 +422,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 
                 <!-- Success Store Menu -->
                 <li <?php echo (($postType == 'success_story') ? 'class="active"' : '') ?>>
-                    <a href="success_story/?type=list&status=all"><i class="fas fa-star"></i> Success Store</a>
+                    <a href="success_story/?type=list&status=all"><i class="fas fa-star"></i> Success Stories</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="success_story/?type=list&status=all"><i class="fas fa-list"></i> All Success
