@@ -1,6 +1,6 @@
 <?php
 
-$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
+$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 if ($vehicleData = mysqli_query($connection, "SELECT vehicle_id, vehicle_title, vehicle_seating, vehicle_description, vehicle_thumbnail, vehicle_is_deletable, vehicle_type FROM " . TABLE_PREFIX . "vehicles")) {
     $vehicleList = array();

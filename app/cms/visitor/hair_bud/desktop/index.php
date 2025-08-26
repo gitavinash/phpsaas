@@ -1,3 +1,6 @@
+<?php
+require_once HOMEPAGE_FUNCTIONS;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -352,60 +355,23 @@
             <div class="container mx-auto px-4">
                 <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Explore Categories</h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                    <!-- Category 1 -->
-                    <a href="/category/hair-loss/" data-readdy="true"
-                        class="bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-blue-100 flex items-center justify-center mb-4">
-                            <i class="ri-user-search-line ri-xl text-blue-600"></i>
+                    <?php
+
+                    $featureCategory = getCategoryWithTotalPost($connection, 'discussion', 6);
+
+                    foreach ($featureCategory as $categoryData) {
+                        extract($categoryData);
+                        echo "<a href='{$link_url}'
+                        class='bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card'>
+                        <div class='w-14 h-14 mx-auto rounded-full bg-indigo-100 flex items-center justify-center mb-4'>
+                            " . (($category_image != '') ? "<img src='{$category_image}' alt='{$category_title}' title='{$category_title}'>" : "<i class='ri-medicine-bottle-line ri-xl text-purple-600'></i>") . "
                         </div>
-                        <h3 class="font-medium text-gray-900 mb-1">Hair Loss</h3>
-                        <p class="text-sm text-gray-500">2,483 posts</p>
-                    </a>
-                    <!-- Category 2 -->
-                    <a href="#"
-                        class="bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-green-100 flex items-center justify-center mb-4">
-                            <i class="ri-scissors-line ri-xl text-green-600"></i>
-                        </div>
-                        <h3 class="font-medium text-gray-900 mb-1">Transplant Procedures</h3>
-                        <p class="text-sm text-gray-500">1,876 posts</p>
-                    </a>
-                    <!-- Category 3 -->
-                    <a href="#"
-                        class="bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-purple-100 flex items-center justify-center mb-4">
-                            <i class="ri-medicine-bottle-line ri-xl text-purple-600"></i>
-                        </div>
-                        <h3 class="font-medium text-gray-900 mb-1">Treatments & Products</h3>
-                        <p class="text-sm text-gray-500">3,142 posts</p>
-                    </a>
-                    <!-- Category 4 -->
-                    <a href="#"
-                        class="bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-yellow-100 flex items-center justify-center mb-4">
-                            <i class="ri-award-line ri-xl text-yellow-600"></i>
-                        </div>
-                        <h3 class="font-medium text-gray-900 mb-1">Success Stories</h3>
-                        <p class="text-sm text-gray-500">1,935 posts</p>
-                    </a>
-                    <!-- Category 5 -->
-                    <a href="#"
-                        class="bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-4">
-                            <i class="ri-hospital-line ri-xl text-red-600"></i>
-                        </div>
-                        <h3 class="font-medium text-gray-900 mb-1">Ask a Doctor</h3>
-                        <p class="text-sm text-gray-500">1,254 posts</p>
-                    </a>
-                    <!-- Category 6 -->
-                    <a href="#"
-                        class="bg-white rounded-lg shadow-sm p-6 text-center transition-all duration-300 category-card">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-                            <i class="ri-money-dollar-circle-line ri-xl text-indigo-600"></i>
-                        </div>
-                        <h3 class="font-medium text-gray-900 mb-1">Cost & Financing</h3>
-                        <p class="text-sm text-gray-500">986 posts</p>
-                    </a>
+                        <h3 class='font-medium text-gray-900 mb-1'>{$category_title}</h3>
+                        <p class='text-sm text-gray-500'>{$totalCount} posts</p>
+                    </a>";
+                    }
+
+                    ?>
                 </div>
             </div>
         </section>

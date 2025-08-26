@@ -70,6 +70,7 @@ define('SITE_STATUS', MODULES . 'siteStatus.php');
 /** System default and usefull modules */
 
 define('UTIL_FUNCTIONS', FUNCTIONS . '/utils/');
+define('HOMEPAGE_FUNCTIONS', FUNCTIONS . 'homepage.php');
 
 /** Font Directory */
 

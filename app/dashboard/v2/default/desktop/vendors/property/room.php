@@ -1,6 +1,6 @@
 <?php
 
-$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
+$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 
 if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {

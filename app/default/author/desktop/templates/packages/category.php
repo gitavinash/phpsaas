@@ -1,6 +1,6 @@
 <?php
 
-$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
+$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 if ($id != 0) {
 
@@ -43,7 +43,7 @@ if ($id != 0) {
                     <input type="text" name="url" id='url' class="form-control inside-shadow"
                         placeholder="Category url..."
                         value="<?php $categoryURL = explode('/', ltrim(rtrim($link_url, '/'), '/'));
-                                                                                                                                    echo end($categoryURL); ?>">
+                                echo end($categoryURL); ?>">
                 </div>
                 <div class="form-group">
                     <label>Parent Category</label>
@@ -52,10 +52,10 @@ if ($id != 0) {
                         <?php
                         if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . APP_SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$id}' AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "'")) {
                             while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <option
-                            value="<?php echo $category['category_id'] . '_' . str_replace(SITE_DOMAIN . '/category', '', $category['link_url']); ?>"
-                            <?php echo (($category['category_id'] == $category_parent_id) ? 'selected' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?></option>
+                                <option
+                                    value="<?php echo $category['category_id'] . '_' . str_replace(SITE_DOMAIN . '/category', '', $category['link_url']); ?>"
+                                    <?php echo (($category['category_id'] == $category_parent_id) ? 'selected' : '') ?>>
+                                    <?php echo ucwords($category['category_title']); ?></option>
                         <?php
                             }
                         }
@@ -102,25 +102,25 @@ if ($id != 0) {
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data) ?>
-                    <tr>
-                        <td>
-                            <p><a
-                                    href="<?php echo $postType ?>/?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category"><?php echo $category_title ?></a>
-                            </p>
-                            <div class="hover">
-                                <a
-                                    href="<?php echo $postType ?>/?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category"><i
-                                        class="fas fa-pencil-alt"></i> Advanced Edit</a>
-                                <a
-                                    href="<?php echo $postType ?>/?type=category&id=<?php echo base64_encode($category_id); ?>"><i
-                                        class="fas fa-pencil-alt"></i> Edit</a>
-                                <a href="#" id="<?php echo base64_encode($category_id) ?>_category_diagnostic"
-                                    class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
-                                <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
-                            </div>
-                        </td>
-                        <!-- <td><?php echo $category_total_count; ?></td> -->
-                    </tr>
+                                <tr>
+                                    <td>
+                                        <p><a
+                                                href="<?php echo $postType ?>/?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category"><?php echo $category_title ?></a>
+                                        </p>
+                                        <div class="hover">
+                                            <a
+                                                href="<?php echo $postType ?>/?type=taxonomy&editor=true&id=<?php echo base64_encode($category_id); ?>&taxonomy=category"><i
+                                                    class="fas fa-pencil-alt"></i> Advanced Edit</a>
+                                            <a
+                                                href="<?php echo $postType ?>/?type=category&id=<?php echo base64_encode($category_id); ?>"><i
+                                                    class="fas fa-pencil-alt"></i> Edit</a>
+                                            <a href="#" id="<?php echo base64_encode($category_id) ?>_category_diagnostic"
+                                                class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
+                                            <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
+                                        </div>
+                                    </td>
+                                    <!-- <td><?php echo $category_total_count; ?></td> -->
+                                </tr>
                     <?php
                             }
                         }

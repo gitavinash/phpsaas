@@ -375,7 +375,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
                             </li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions"><i
+                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions" target="_blank"><i
                                         class="fas fa-plus"></i>Add
                                     new
                                     Questions</a></li>
@@ -386,7 +386,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
                             </li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions"><i
+                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions" target="_blank"><i
                                         class="fas fa-plus"></i>Add
                                     new
                                     Questions</a></li>
@@ -402,7 +402,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="discussion/?type=list&status=all"><i class="fas fa-list"></i> All
                                     Discussions</a></li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=discussion">
+                            <li><a href="/start-a-discussion/?ref=dashboard&postType=discussion" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Discussion</a>
                             </li>
                             <li><a href="discussion/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
@@ -412,7 +412,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="discussion/?type=list&status=all"><i class="fas fa-list"></i> All
                                     Discussions</a></li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=discussion">
+                            <li><a href="/start-a-discussion/?ref=dashboard&postType=discussion" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Discussion</a>
                             </li>
                             <li><a href="discussion/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
@@ -427,7 +427,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="success_story/?type=list&status=all"><i class="fas fa-list"></i> All Success
                                     Stories</a></li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=success">
+                            <li><a href="/start-a-discussion/?ref=dashboard&postType=success_story" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Success Story</a>
                             </li>
                             <li><a href="success_story/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
@@ -437,7 +437,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="success_story/?type=list&status=all"><i class="fas fa-list"></i> All Success
                                     Stories</a></li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=success">
+                            <li><a href="/start-a-discussion/?ref=dashboard&postType=success_story" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Success Story</a>
                             </li>
                             <li><a href="success_story/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
@@ -452,7 +452,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="clinic/?type=list&status=all"><i class="fas fa-list"></i> All Clinics</a></li>
                             <li>
-                                <a href="/add-new-listing/?ref=dashboard&postType=clinic">
+                                <a href="/add-new-listing/?ref=dashboard&postType=clinic" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Clinic
                                 </a>
                             </li>
@@ -463,7 +463,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="clinic/?type=list&status=all"><i class="fas fa-list"></i> All Clinics</a></li>
                             <li>
-                                <a href="/add-new-listing/?ref=dashboard&postType=clinic">
+                                <a href="/add-new-listing/?ref=dashboard&postType=clinic" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Clinic
                                 </a>
                             </li>
@@ -479,7 +479,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="doctor/?type=list&status=all"><i class="fas fa-list"></i> All Doctors</a></li>
                             <li>
-                                <a href="/add-new-listing/?ref=dashboard&postType=doctor">
+                                <a href="/add-new-listing/?ref=dashboard&postType=doctor" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Doctor
                                 </a>
                             </li>
@@ -490,7 +490,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="doctor/?type=list&status=all"><i class="fas fa-list"></i> All Doctors</a></li>
                             <li>
-                                <a href="/add-new-listing/?ref=dashboard&postType=doctor">
+                                <a href="/add-new-listing/?ref=dashboard&postType=doctor" target="_blank">
                                     <i class="fas fa-plus"></i> Add New Doctor
                                 </a>
                             </li>

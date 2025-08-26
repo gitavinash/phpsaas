@@ -1,6 +1,6 @@
 <?php
 
-$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
+$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 if ($locationsData = mysqli_query($connection, "SELECT location_id, location_title, location_description, location_thumbnail, location_is_deletable, location_state, location_country, location_best_from, location_best_to, country_name FROM " . TABLE_PREFIX . "locations INNER JOIN " . TABLE_PREFIX . "country ON location_country=country_id WHERE location_country!=101")) {
     $locationsList = array();
@@ -112,9 +112,9 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
                                         <select name="fromMonth" class="selectJS form-control" id="fromMonth">
                                             <option value="#">Start from</option>
                                             <?php foreach ($months as $month) { ?>
-                                            <option value="<?php echo $month ?>">
-                                                <?php echo ucfirst($month) ?>
-                                            </option>
+                                                <option value="<?php echo $month ?>">
+                                                    <?php echo ucfirst($month) ?>
+                                                </option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -123,9 +123,9 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
                                         <select name="toMonth" class="selectJS form-control" id="toMonth">
                                             <option value="#">Start from</option>
                                             <?php foreach ($months as $month) { ?>
-                                            <option value="<?php echo $month ?>">
-                                                <?php echo ucfirst($month) ?>
-                                            </option>
+                                                <option value="<?php echo $month ?>">
+                                                    <?php echo ucfirst($month) ?>
+                                                </option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -181,9 +181,9 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
                                         <select name="fromMonth" class="selectJS form-control" id="editFromMonth">
                                             <option value="#">Start from</option>
                                             <?php foreach ($months as $month) { ?>
-                                            <option value="<?php echo $month ?>">
-                                                <?php echo ucfirst($month) ?>
-                                            </option>
+                                                <option value="<?php echo $month ?>">
+                                                    <?php echo ucfirst($month) ?>
+                                                </option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -192,9 +192,9 @@ if ($locationsData = mysqli_query($connection, "SELECT location_id, location_tit
                                         <select name="toMonth" class="selectJS form-control" id="editToMonth">
                                             <option value="#">Start from</option>
                                             <?php foreach ($months as $month) { ?>
-                                            <option value="<?php echo $month ?>">
-                                                <?php echo ucfirst($month) ?>
-                                            </option>
+                                                <option value="<?php echo $month ?>">
+                                                    <?php echo ucfirst($month) ?>
+                                                </option>
                                             <?php } ?>
                                         </select>
                                     </div>

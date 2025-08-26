@@ -1,6 +1,6 @@
 <?php
 
-$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
+$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 if ($amenitiesData = mysqli_query($connection, "SELECT amenitie_id, amenitie_title, amenitie_description, amenitie_thumbnail, amenitie_is_deletable, amenitie_type FROM " . TABLE_PREFIX . "amenities")) {
     $amenitiesList = array();

@@ -1,6 +1,9 @@
 <?php
 
 require_once LOGIN_CHECK;
+require_once HOMEPAGE_FUNCTIONS;
+
+$postType = ((isset($postType)) ? $postType : 'discussion');
 
 ?>
 <!DOCTYPE html>
@@ -9,7 +12,7 @@ require_once LOGIN_CHECK;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Discussion - HairBud Forum</title>
+    <title>Create New <?php echo ucwords(str_replace('_', ' ', $postType)) ?> - <?php echo SITE_NAME ?></title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
     tailwind.config = {
@@ -340,19 +343,15 @@ require_once LOGIN_CHECK;
                                     <i class="ri-arrow-down-s-line ri-lg text-gray-400"></i>
                                 </button>
                                 <div id="categoryDropdown" class="category-dropdown">
-                                    <div class="category-option" data-value="male-pattern-baldness">Male Pattern
-                                        Baldness</div>
-                                    <div class="category-option" data-value="female-hair-loss">Female Hair Loss</div>
-                                    <div class="category-option" data-value="early-stage-treatment">Early Stage
-                                        Treatment</div>
-                                    <div class="category-option" data-value="natural-remedies">Natural Remedies</div>
-                                    <div class="category-option" data-value="medical-treatments">Medical Treatments
-                                    </div>
-                                    <div class="category-option" data-value="post-transplant-care">Post-Transplant Care
-                                    </div>
-                                    <div class="category-option" data-value="nutrition-supplements">Nutrition &
-                                        Supplements</div>
-                                    <div class="category-option" data-value="lifestyle-factors">Lifestyle Factors</div>
+
+                                    <?php
+
+                                    $categoryList = getAllCategoryList($connection, 'discussion');
+                                    foreach ($categoryList as $category) {
+                                        echo "<div class='category-option' data-value='" . str_replace(' ', '_', $category['category_title']) . "'>{$category['category_title']}</div>";
+                                    }
+
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -362,21 +361,23 @@ require_once LOGIN_CHECK;
                             <div class="space-y-3">
                                 <label class="flex items-center cursor-pointer">
                                     <input type="radio" name="postType" value="discussion" class="radio-custom mr-3"
-                                        checked>
+                                        <?php echo (($postType == 'discussion') ? 'checked' : '') ?>>
                                     <div>
                                         <span class="font-medium text-gray-900 text-sm">Discussion</span>
                                         <p class="text-xs text-gray-500">Share experiences and start conversations</p>
                                     </div>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="postType" value="question" class="radio-custom mr-3">
+                                    <input type="radio" name="postType" value="questions" class="radio-custom mr-3"
+                                        <?php echo (($postType == 'questions') ? 'checked' : '') ?>>
                                     <div>
                                         <span class="font-medium text-gray-900 text-sm">Question</span>
                                         <p class="text-xs text-gray-500">Ask for advice or specific information</p>
                                     </div>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="postType" value="success-story" class="radio-custom mr-3">
+                                    <input type="radio" name="postType" value="success_story" class="radio-custom mr-3"
+                                        <?php echo (($postType == 'success_story') ? 'checked' : '') ?>>
                                     <div>
                                         <span class="font-medium text-gray-900 text-sm">Success Story</span>
                                         <p class="text-xs text-gray-500">Share your positive results and journey</p>
@@ -438,7 +439,8 @@ require_once LOGIN_CHECK;
                     </div>
 
                     <!-- Before/After Comparison (Success Story Only) -->
-                    <div id="beforeAfterSection" class="mb-6 hidden">
+                    <div id="beforeAfterSection"
+                        class="mb-6 <?php echo ($postType === 'success_story' ? '' : 'hidden'); ?>">
                         <label class="block text-sm font-medium text-gray-700 mb-4">Before & After Comparison</label>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Before Image -->
@@ -656,7 +658,7 @@ require_once LOGIN_CHECK;
         const postTypeRadios = document.querySelectorAll('input[name="postType"]');
         postTypeRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.value === 'success-story') {
+                if (this.value === 'success_story') {
                     beforeAfterSection.classList.remove('hidden');
                 } else {
                     beforeAfterSection.classList.add('hidden');
@@ -831,76 +833,6 @@ require_once LOGIN_CHECK;
             toggle.addEventListener('click', function() {
                 this.classList.toggle('active');
             });
-        });
-    });
-    </script>
-    <script id="previewScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const previewButton = document.getElementById('previewButton');
-        const previewPanel = document.getElementById('previewPanel');
-        const titleInput = document.getElementById('title');
-        const editor = document.getElementById('editor');
-        const postTypeRadios = document.querySelectorAll('input[name="postType"]');
-        previewButton.addEventListener('click', function() {
-            updatePreview();
-            previewPanel.classList.toggle('show');
-            if (previewPanel.classList.contains('show')) {
-                this.innerHTML = '<i class="ri-eye-off-line mr-2"></i>Hide Preview';
-            } else {
-                this.innerHTML = '<i class="ri-eye-line mr-2"></i>Preview Post';
-            }
-        });
-
-        function updatePreview() {
-            const title = titleInput.value || 'Your discussion title will appear here';
-            const content = editor.innerHTML || 'Your content will be previewed here...';
-            const selectedType = document.querySelector('input[name="postType"]:checked').value;
-            document.getElementById('previewTitle').textContent = title;
-            document.getElementById('previewContent').innerHTML = content;
-            const typeMap = {
-                'discussion': {
-                    text: 'Discussion',
-                    class: 'bg-blue-100 text-blue-800'
-                },
-                'question': {
-                    text: 'Question',
-                    class: 'bg-pink-100 text-pink-800'
-                },
-                'success-story': {
-                    text: 'Success Story',
-                    class: 'bg-yellow-100 text-yellow-800'
-                }
-            };
-            const previewType = document.getElementById('previewType');
-            previewType.textContent = typeMap[selectedType].text;
-            previewType.className =
-                `px-2.5 py-1 text-xs font-medium rounded-full ${typeMap[selectedType].class}`;
-        }
-    });
-    </script>
-    <script id="formSubmissionScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('discussionForm');
-        const publishButton = document.getElementById('publishButton');
-        const saveDraftButton = document.getElementById('saveDraftButton');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            publishButton.innerHTML = '<i class="ri-loader-4-line mr-2 animate-spin"></i>Publishing...';
-            publishButton.disabled = true;
-            setTimeout(() => {
-                alert('Discussion published successfully!');
-                window.location.href =
-                    'https://readdy.ai/home/0ed8e6fd-1b57-4961-9c40-f04471f53645/bed2abc6-7e4f-48c1-a176-ebec3e67b0a3';
-            }, 2000);
-        });
-        saveDraftButton.addEventListener('click', function() {
-            this.innerHTML = '<i class="ri-loader-4-line mr-2 animate-spin"></i>Saving...';
-            this.disabled = true;
-            setTimeout(() => {
-                alert('Draft saved successfully!');
-                this.innerHTML = '<i class="ri-save-line mr-2"></i>Save as Draft';
-                this.disabled = false;
-            }, 1500);
         });
     });
     </script>

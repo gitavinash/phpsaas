@@ -1,6 +1,6 @@
 <?php
 
-$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
+$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 if ($id != 0) {
 
 	if ($categoryData = mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_id=link_relation_id AND meta_relation_id=link_id AND category_id='{$id}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
