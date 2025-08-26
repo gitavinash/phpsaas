@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-                <h3 class="text-xl font-['Pacifico'] mb-4">logo</h3>
+                <a href="/">
+                    <h3 class="text-xl font-['Pacifico'] mb-4">HairBud</h3>
+                </a>
                 <p class="text-gray-300 text-sm">The leading online community for hair loss solutions and hair
                     transplant information. Connect with specialists and others on similar journeys.</p>
                 <div class="flex mt-4 space-x-3">
@@ -74,7 +76,4 @@
         </div>
     </div>
 </footer>
-<script src="<?php echo USER_JS ?>app.min.js"></script>
-</body>
-
-</html>
+<?php require_once NOTIFICATION . 'index.php'; ?>

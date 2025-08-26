@@ -97,7 +97,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'operations') {
                 </li> -->
 
 <li class="header-section-name">
-    <p>Packages<span>Manage all tour packages.</span></p>
+    <p>Tour Packages<span>Manage all tour packages.</span></p>
 </li>
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/packages/domestic/') !== false) ? 'class="active"' : '') ?>>

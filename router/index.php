@@ -53,21 +53,25 @@ if ((isset($type))) {
 
 	/** For all type of form process */
 
-	if (isset($recaptcha_token)) {
-		$secretKey = GOOGLE_RECAPTCHA_SECRET_KEY;
+	if (DEVELOPMENT_MODE != true) {
+		if (isset($recaptcha_token)) {
+			$secretKey = GOOGLE_RECAPTCHA_SECRET_KEY;
 
-		$verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-		$response = file_get_contents($verifyUrl . '?secret=' . $secretKey . '&response=' . $recaptcha_token);
-		$responseKeys = json_decode($response, true);
+			$verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+			$response = file_get_contents($verifyUrl . '?secret=' . $secretKey . '&response=' . $recaptcha_token);
+			$responseKeys = json_decode($response, true);
 
-		if (intval($responseKeys["success"]) !== 1) {
-			http_response_code(400);
-			echo json_encode([
-				"status" => 'error',
-				"msg" => "reCAPTCHA verification failed.",
-				"recaptcha_token" => $recaptcha_token
-			]);
-			exit();
+			if (intval($responseKeys["success"]) !== 1) {
+				http_response_code(400);
+				echo json_encode([
+					"status" => 'error',
+					"msg" => "reCAPTCHA verification failed.",
+					"recaptcha_token" => $recaptcha_token
+				]);
+				exit();
+			} else {
+				require_once 'formManager.php';
+			}
 		} else {
 			require_once 'formManager.php';
 		}
