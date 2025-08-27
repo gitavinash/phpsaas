@@ -566,6 +566,8 @@ aside {
   top: 0; /* Stick to top of viewport */
   left: 0;
   width: 240px; /* Keep same width */
+  min-height: 100vh;
+  box-sizing: border-box;
   background: #fff;
   z-index: 9;
   padding-bottom: 50px;
@@ -1326,8 +1328,8 @@ table.dataTable thead th {
 }
 
 .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
-  height: 520px !important;
-  max-height: 520px !important;
+  min-height: 400px !important;
+  max-height: 600px !important;
 }
 
 /* Date range picker */
