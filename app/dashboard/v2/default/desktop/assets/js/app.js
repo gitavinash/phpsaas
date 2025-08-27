@@ -325,7 +325,7 @@ $(document).ready(function (e) {
 
   $(document).on("click", ".deleteButton", function (event) {
     event.preventDefault();
-    var disableRedirect = false;
+    const redirectUrl = $(this).data("redirect");
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -346,8 +346,8 @@ $(document).ready(function (e) {
             popUpMessage("center", response.msg, response.status);
             if (response.status == "success") {
               setTimeout(function () {
-                if (disableRedirect) {
-                  window.location.href = `/dashboard/${lastPart}/list/`;
+                if (redirectUrl) {
+                  window.location.href = redirectUrl;
                 } else {
                   location.reload();
                 }

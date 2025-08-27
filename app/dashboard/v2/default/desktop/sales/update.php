@@ -17,11 +17,11 @@
                     if (file_exists($leadForm)) {
                         require_once $leadForm;
                     } else { ?>
-                        <div class="step-open-box step_1_box">
-                            <div class="form-header">
-                                <h1>Form is missing</h1>
-                                <img src="<?php echo IMG_LIBRARY ?>storyset/missing.png" alt="">
-                            </div>
+                    <div class="step-open-box step_1_box">
+                        <div class="form-header">
+                            <h1>Form is missing</h1>
+                            <img src="<?php echo IMG_LIBRARY ?>storyset/missing.png" alt="">
+                        </div>
                         <?php
                     }
 

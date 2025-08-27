@@ -24,10 +24,10 @@ FROM
 LEFT JOIN 
     {$tableNamePrefix}block_item 
     ON block_item_parent_id = block_id 
-    AND block_item_status IN (1, 3, 5) 
+    AND block_item_status IN (1, 3) 
     AND block_site_id = " . SITE_ID . "
 WHERE 
-    block_id = '{$blockId}' OR block_item_parent_id = {$blockId}
+    block_status=1 AND block_id = '{$blockId}' OR block_item_parent_id = {$blockId}
 GROUP BY 
     block_id";
 
@@ -185,9 +185,10 @@ if (isset($validId)) {
                             . "<span style='color:green;display:inline-block;width:auto;float:none;margin:0 8px;'>Available: {$block_available} " . ($block_available == 1 ? "slab" : "slabs") . "</span> | "
                             . "<span style='color:red;display:inline-block;width:auto;float:none;margin:0 8px;'>Sold: {$sold} " . ($sold == 1 ? "slab" : "slabs") . "</span>"
                             . "<br><br><strong>Quantity:</strong> "
-                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Gross Qty.: {$block_gross_size} {$blockDimension}</span> | "
-                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Net Qty.: {$block_net_size} {$blockDimension}</span> | "
-                            . "<span style='color:orange;display:inline-block;width:auto;float:none;margin:0 8px;'>Less/Damage Qty.: {$block_damage_size} {$blockDimension}</span>";
+                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Total Qty.: {$block_gross_size} {$blockDimension}</span> | "
+                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Avl. Gross Qty.: {$block_gross_size} {$blockDimension}</span> | "
+                            . "<span style='color:#555;display:inline-block;width:auto;float:none;margin:0 8px;'>Avl. Net Qty.: {$block_net_size} {$blockDimension}</span> | "
+                            . "<span style='color:orange;display:inline-block;width:auto;float:none;margin:0 8px;'>Avl. Less/Damage Qty.: {$block_damage_size} {$blockDimension}</span>";
                     }
                     ?>
             </span>
@@ -205,25 +206,35 @@ if (isset($validId)) {
     <div class="col-4">
         <button id="selectAllBtn">Select All</button>
         <button id="unSelectAllBtn">Unselect All</button>
-        <a href='/download/?downloadUrl={$block_qr}' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
-            target='_blank' title='Show QR Code' data-title='Download QR code' target='_blank'><i
-                class='fi fi-rr-qr-scan bgWhite'></i></a>
-        <a href='/view_report/?id=" . base64_encode($block_id) . "' title='Print block'
-            data-title='Print block inventory report' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
-            target='_blank' target='_blank'><i class='fi fi-rr-inventory-alt bgWhite'></i></a>
-        <a href='/print_label/?id=" . base64_encode($block_id) . "&theme=2' title='Print block'
-            data-title='Print block label' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
-            target='_blank' target='_blank'><i class='fi fi-rr-print bgWhite'></i></a><a
-            href='/dashboard/inventory/logs/?id=" . base64_encode($block_id) . "' title='Print block'
-            data-title='Show Transfer history' class='btn btn-green date-btn bgYellow btn-with-icon textGrey'
-            target='_blank' target='_blank'><i class='fi fi-rr-notebook bgWhite'></i></a>
-        <a href='#' title='Mark as sold out' data-title='Mark as Sold Out'
-            class='btn btn-green date-btn bgYellow btn-with-icon textGrey markAsSold' data-type='block'
-            data-id='{$block_id}' target='_blank'><i class='fi fi-rr-sold-signal bgRed'></i></a>
-        " . (($block_status == 1) ? "
-        <a href='#' data-type='ims_marble/block' data-id='{$block_id}' title='Delete block' data-title='Delete block'
-            class='btn btn-green date-btn bgYellow btn-with-icon textGrey deleteButton' data-reload='true'
-            data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>" : "") . "
+
+        <!-- Quick action button -->
+
+        <div style="float: left; padding: 8px 0px 0px 0px">
+
+            <?php
+
+                    if ($block_status != 3) { ?><a href='/download/?downloadUrl=<?php echo $block_qr ?>'
+                class='tableActionIconBtn' target='_blank' title='Show QR Code' data-title='Download QR code'
+                target='_blank'><i class='fi fi-rr-qr-scan bgWhite'></i></a>
+            <a href='/view_report/?id=<?php echo base64_encode($block_id) ?>' title='Print block'
+                data-title='Print block inventory report' class='tableActionIconBtn' target='_blank' target='_blank'><i
+                    class='fi fi-rr-inventory-alt bgWhite'></i></a>
+            <a href='/dashboard/inventory/logs/?id=<?php echo base64_encode($block_id) ?>' title='Print block'
+                data-title='Show Transfer history' class='tableActionIconBtn' target='_blank' target='_blank'><i
+                    class='fi fi-rr-notebook bgWhite'></i></a>
+            <a href='#' title='Mark as sold out' data-title='Mark as Sold Out' class='tableActionIconBtn markAsSold'
+                data-type='block' data-id='<?php echo $block_id ?>' target='_blank'><i
+                    class='fi fi-rr-sold-signal bgRed'></i></a>
+            <?php
+                    }
+
+                    ?>
+
+            <a href='#' data-type='ims_marble/block' data-id='<?php echo $block_id ?>' title='Delete block'
+                data-title='Delete block' class='tableActionIconBtn deleteButton'
+                data-redirect='/dashboard/inventory/list/'><i class='fi fi-rr-trash bgRed'></i></a>
+        </div>
+
     </div>
     <div class="col-3">
         <select class="selectJS warehouseTranfer form-control" style="width: 200px" name="newWarehouseId"
@@ -418,31 +429,34 @@ if (isset($validId)) {
                     </div>
                     <?php
                             } else { ?>
-                    <div class="box-3">
-                        <div class="form-group">
-                            <input type="number" onwheel="this.blur()" class="form-control" name="slabLenght"
-                                id="slabLenght" placeholder="200">
-                            <label class="form-label">Length ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                    <div style="float: left; width: 100%;">
+                        <div class="box-2">
+                            <div class="form-group">
+                                <input type="number" onwheel="this.blur()" class="form-control" name="slabLenght"
+                                    id="slabLenght" placeholder="200">
+                                <label class="form-label">Length ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="box-3">
-                        <div class="form-group">
-                            <input type="number" onwheel="this.blur()" class="form-control" name="slabHeight"
-                                id="slabHeight" placeholder="100">
-                            <label class="form-label">Height ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                        <div class="box-2">
+                            <div class="form-group">
+                                <input type="number" onwheel="this.blur()" class="form-control" name="slabHeight"
+                                    id="slabHeight" placeholder="100">
+                                <label class="form-label">Height ( <?php echo $measurementType ?> )<sup>*</sup></label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="box-4">
-                        <div class="form-group">
-                            <input type="number" onwheel="this.blur()" class="form-control" name="totalSlab"
-                                id="totalSlab" placeholder="5">
-                            <label class="form-label">Total slabs<sup>*</sup></label>
+                        <div class="box-3">
+                            <div class="form-group">
+                                <input type="number" onwheel="this.blur()" class="form-control" name="totalSlab"
+                                    id="totalSlab" placeholder="5">
+                                <label class="form-label">Total slabs<sup>*</sup></label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-1">
-                        <div class="form-group">
-                            <a href="#" class="btn cloneSlabForm" style="float:right"><i
-                                    class="fi fi-rr-multiple"></i></a>
+                        <div class="col-3">
+                            <a href="#" class="btn removeRow bgRed" title="Remove this row" data-title="Remove this row"
+                                style="display:none; margin-left: 20px; float: right; width: 40%; margin-left:5%;"><i
+                                    class="fi fi-rr-trash"></i></a>
+                            <a href="#" class="btn cloneSlabForm" title="Add new row" data-title="Add new row"
+                                style="float:right; width: 40%; margin-right:5%;"><i class="fi fi-rr-multiple"></i></a>
                         </div>
                     </div>
                     <?php

@@ -46,7 +46,7 @@ function getSalesBlocks(prefixValue) {
 
 $(document).ready(function () {
   // Update invertory block slabs
-
+  $("#updateBlockItem").hide();
   // Store the original value of each input in data-original
   $(".widthValues, .heightValues").each(function () {
     $(this).data("original", $(this).val());
@@ -1361,43 +1361,89 @@ $(document).ready(function () {
           .each(function () {
             if (!$.isNumeric($(this).val()) || $(this).val().trim() === "") {
               isValid = false;
-              return false; // Break out of the each loop
+              return false; // break inner each
             }
           });
-        if (!isValid) {
-          return false; // Break out of the each loop
-        }
+        if (!isValid) return false; // break outer each
       });
       return isValid;
     }
 
-    // Check if all inputs have numerical values
+    // require all rows valid before cloning
     if (!allInputsHaveValues()) {
       popUpMessage("center", "Please fill in all required fields", "warning");
-      return; // Exit the function if validation fails
+      return;
     }
 
-    // Clone the .generateBlockRow div
+    // clone the first row as template
     var $clone = $(".generateBlockRow").first().clone();
 
-    // Clear the input values in the cloned div
+    // clear inputs in the cloned row
     $clone.find("input").val("");
 
-    // Show the remove button in the cloned row
-    $clone.find(".removeRow").show();
-
-    // Append the cloned div to #generateBlockRowBox
+    // append the cloned row
     $("#generateBlockRowBox").append($clone);
 
-    // Hide the cloneSlabForm button in all rows and show it only in the last row
+    // --- controls visibility (keep your style & place) ---
+    // show "clone" only on the last row
     $(".generateBlockRow").find(".cloneSlabForm").hide();
     $(".generateBlockRow").last().find(".cloneSlabForm").show();
 
-    // Ensure only the last row's remove button is hidden
-    $(".generateBlockRow").find(".removeRow").show(); // Show remove buttons in all rows
-    $(".generateBlockRow").last().find(".removeRow").hide(); // Hide remove button in the last row
+    // show remove icon on all rows if more than 1 row; else hide
+    var rowCount = $(".generateBlockRow").length;
+    if (rowCount > 1) {
+      $(".generateBlockRow").find(".removeRow").show();
+    } else {
+      $(".generateBlockRow").find(".removeRow").hide();
+    }
 
-    // Attach event handler for the new remove button
+    // bind/remove handlers for new buttons
+    attachRemoveEvent();
+  });
+
+  // keep your attachRemoveEvent() name & pattern
+  function attachRemoveEvent() {
+    // use a namespaced delegated handler so repeated calls are safe
+    $(document)
+      .off("click.removeRow")
+      .on("click.removeRow", ".removeRow", function (e) {
+        e.preventDefault();
+
+        var $rows = $(".generateBlockRow");
+        if ($rows.length <= 1) {
+          // never remove the last remaining row
+          popUpMessage("center", "At least one row is required", "warning");
+          return;
+        }
+
+        // remove the specific row the user clicked
+        $(this).closest(".generateBlockRow").remove();
+
+        // update controls after removal (same style as above)
+        $(".generateBlockRow").find(".cloneSlabForm").hide();
+        $(".generateBlockRow").last().find(".cloneSlabForm").show();
+
+        var rowCount = $(".generateBlockRow").length;
+        if (rowCount > 1) {
+          $(".generateBlockRow").find(".removeRow").show();
+        } else {
+          $(".generateBlockRow").find(".removeRow").hide();
+        }
+      });
+  }
+
+  // call once on page load to set initial state + handler
+  $(function () {
+    // initial visibility: only last row shows clone; hide remove if single row
+    $(".generateBlockRow").find(".cloneSlabForm").hide();
+    $(".generateBlockRow").last().find(".cloneSlabForm").show();
+
+    if ($(".generateBlockRow").length > 1) {
+      $(".generateBlockRow").find(".removeRow").show();
+    } else {
+      $(".generateBlockRow").find(".removeRow").hide();
+    }
+
     attachRemoveEvent();
   });
 

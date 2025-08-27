@@ -86,7 +86,7 @@ Marble or IMS Inventory
 
 0 : Intial
 1 : live
-2 : Sold
+2 :
 3 : Sold out
 4 : Return
 5 : Delete

@@ -2795,7 +2795,7 @@ span.tableActionIconBtn {
 
 .actionBtn a {
   float: left;
-  width: 26%;
+  /* width: 26%; */
   /* padding: 13px 10px; */
   box-sizing: border-box;
   text-align: center;

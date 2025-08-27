@@ -1,18 +1,18 @@
 <?php
 
 if (!isset($id)) { ?>
-    <script>
-        alert('Sales request id is missing');
-        window.location.href = '/dashboard/sales_request/list/';
-    </script>
-    <?php
+<script>
+alert('Sales request id is missing');
+window.location.href = '/dashboard/sales_request/list/';
+</script>
+<?php
 } else {
     if ($id == '') { ?>
-        <script>
-            alert('Sales request id cannot be blank');
-            window.location.href = '/dashboard/sales_request/list/';
-        </script>
-    <?php
+<script>
+alert('Sales request id cannot be blank');
+window.location.href = '/dashboard/sales_request/list/';
+</script>
+<?php
     } else {
         $salesId = base64_decode($id);
     }
@@ -20,10 +20,10 @@ if (!isset($id)) { ?>
 
 if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}sales INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=sales_agent_id INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=sales_warehouse_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id WHERE sales_id='{$salesId}' AND sales_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkSalesRequest) == 0) { ?>
-        <script>
-            alert('Invalid Sales request id found');
-            window.location.href = '/dashboard/sales_request/list/';
-        </script>
+<script>
+alert('Invalid Sales request id found');
+window.location.href = '/dashboard/sales_request/list/';
+</script>
 <?php
     } else {
         extract(mysqli_fetch_assoc($checkSalesRequest));
@@ -183,18 +183,24 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     <td colspan="6"><strong>Adjust aerials</strong></td>
                                     <td>
                                         <select class="selectJS" id="aerialAdjustment" name="aerialAdjustment">
-                                            <option value="increase" <?php echo (($blockData['aerials']['operation'] == '+') ? 'selected' : '') ?>>Increase ( + )</option>
-                                            <option value="decrease" <?php echo (($blockData['aerials']['operation'] == '-') ? 'selected' : '') ?>>Decrease ( - )</option>
+                                            <option value="increase"
+                                                <?php echo (($blockData['aerials']['operation'] == '+') ? 'selected' : '') ?>>
+                                                Increase ( + )</option>
+                                            <option value="decrease"
+                                                <?php echo (($blockData['aerials']['operation'] == '-') ? 'selected' : '') ?>>
+                                                Decrease ( - )</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" id="aerialValue" name="aerialValue" class="form-control" value="<?php echo $blockData['aerials']['value'] ?>">
+                                        <input type="number" id="aerialValue" name="aerialValue" class="form-control"
+                                            value="<?php echo $blockData['aerials']['value'] ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4"><strong>Any comment</strong></td>
                                     <td colspan="4">
-                                        <textarea id="aerialComment" name="aerialComment"><?php echo $blockData['aerials']['comment'] ?></textarea>
+                                        <textarea id="aerialComment"
+                                            name="aerialComment"><?php echo $blockData['aerials']['comment'] ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -226,26 +232,26 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                 if ($sales_status == 0) {
 
                     if ($site_access_type != 'sales_executive') { ?>
-                        <a href="" class="btn btn-green" id="approveSalesRequest"
-                            data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
-                            data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
-                                class="fi-rr-check"></i> Approve
-                            request</a>
-                        <!-- <a href='#' target="_blank" class="btn btn-green"><i
+                <a href="" class="btn btn-green" id="approveSalesRequest"
+                    data-agent="<?php echo base64_encode($sales_agent_id) ?>" data-id="<?php echo $id ?>"
+                    data-refid="<?php echo $sales_ref_id ?>" data-reftype="<?php echo $sales_ref_type ?>"><i
+                        class="fi-rr-check"></i> Approve
+                    request</a>
+                <!-- <a href='#' target="_blank" class="btn btn-green"><i
                                 class="fi-rr-plus-minus" id="adjustAerials" data-id="<?php echo $id ?>"></i> Adjust aerials</a> -->
-                        <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
-                                class="fi-rr-print"></i> Print</a>
-                    <?php
+                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
+                        class="fi-rr-print"></i> Print</a>
+                <?php
                     }
                     ?>
-                    <a href="#" data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
-                        class='btn btn-red deleteButton' data-reload='false' data-redirect='true'
-                        data-url='/dashboard/sales_request/list/'><i class='fi fi-rr-trash bgRed'></i> Delete
-                        request</a>
+                <a href="#" data-type='sales' data-id='<?php echo $sales_id ?>' title='Delete sales'
+                    class='btn btn-red deleteButton' data-redirect='true' data-url='/dashboard/sales_request/list/'><i
+                        class='fi fi-rr-trash bgRed'></i> Delete
+                    request</a>
                 <?php
                 } else { ?>
-                    <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
-                            class="fi-rr-print"></i> Print</a>
+                <a href='/print_sales_request/?id=<?php echo $id ?>' target="_blank" class="btn btn-green"><i
+                        class="fi-rr-print"></i> Print</a>
                 <?php
                 }
                 ?>
