@@ -169,7 +169,7 @@ GROUP BY
                         $totalArea = number_format((float)$totalArea, 2, '.', '');
                     }
 
-                    $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size=block_gross_size+'{$totalArea}', block_net_size=block_net_size+'{$totalArea}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID;
+                    $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET  block_total_size=block_total_size+'{$totalArea}', block_gross_size=block_gross_size+'{$totalArea}', block_net_size=block_net_size+'{$totalArea}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID;
                     $updateBlock = mysqli_query($connection, $updateBlockQuery);
                     $createSlabs = mysqli_query($connection, $updateItemQuery);
 

@@ -140,6 +140,7 @@ if (isset($_GET['status'])) {
             while ($inventoryData = mysqli_fetch_assoc($inventoryList)) {
                 extract($inventoryData);
 
+                $block_total_size = str_replace(',', '', number_format($block_total_size, 2));
                 $block_gross_size = str_replace(',', '', number_format($block_gross_size, 2));
                 $block_damage_size = str_replace(',', '', number_format($block_damage_size, 2));
                 $block_net_size = str_replace(',', '', number_format($block_net_size, 2));
@@ -184,7 +185,7 @@ if (isset($_GET['status'])) {
                                 <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
                                 <td>{$block_available}</td>
-                                <td>" . (($block_gross_size == '') ? '0 ' : $block_gross_size) . ' ' . $blockDimension . "</td>
+                                <td>" . (($block_total_size == '') ? '0 ' : $block_total_size) . ' ' . $blockDimension . "</td>
                                 <td>" . (($block_gross_size == '') ? '0 ' : $block_gross_size) . ' ' . $blockDimension . "</td>
                                 <td>" . (($block_net_size == '') ? '0 ' : $block_gross_size - $block_damage_size) . ' ' . $blockDimension . "</td>
                                 <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $blockDimension . "</td>
@@ -209,7 +210,7 @@ if (isset($_GET['status'])) {
 
                 $totalNoOfSlabs[] = $block_total_item;
                 $totalNoOfAvailableSlabs[] = $block_available;
-                $totalQty[] = $block_gross_size;
+                $totalQty[] = $block_total_size;
                 $totalGrossQty[] = $block_gross_size;
                 $totalNetQty[] = $block_net_size;
                 $totalLessQty[] = $block_damage_size;
