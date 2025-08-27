@@ -747,7 +747,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                 </li>
                 <?php
 
-                if ($site_access_type = '') { ?>
+                if ($site_access_type = 'administrator') { ?>
                 <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
                     <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
                     <div class="side-menu">
