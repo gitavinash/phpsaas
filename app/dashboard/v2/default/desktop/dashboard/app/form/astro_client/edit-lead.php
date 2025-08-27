@@ -36,7 +36,8 @@
 <tr>
     <td class="box-3"><strong>Place of Birth<sup>*</sup></strong></td>
     <td>
-        <select class="indianCityAutoComplete" style="float: left; width:100%" name="place_of_birth" id="placeOfBirth">
+        <select class="internationalCityAutoComplete form-control" style="float: left; width:100%" name="place_of_birth"
+            id="placeOfBirth">
             <option value="<?php echo $place_of_birth ?>"><?php echo $place_of_birth ?></option>
         </select>
     </td>
@@ -65,5 +66,13 @@
             }
             ?>
         </select>
+    </td>
+</tr>
+<tr>
+    <td class="box-3">
+    </td>
+    <td class="box-7">
+        <input type="hidden" name="leadId" value="<?php echo $enquiry_id ?>">
+        <input type="button" id="updateEnquiry" class="btn btn-green" value="Update lead">
     </td>
 </tr>
