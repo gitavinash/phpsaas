@@ -878,64 +878,138 @@ $("#updateBlock").click(function (e) {
   }
 });
 
+// mark inputs as changed whenever user edits them
+$(document).on("input", ".widthValues, .heightValues", function () {
+  $(this).closest("tr").attr("data-changed", "1");
+});
+
 $("#updateBlockItem").click(function (e) {
   e.preventDefault();
   $("#updateBlockItem").hide();
+
   var allFilled = true;
 
-  $(".heightValues").each(function () {
-    if ($(this).val() === "") {
-      allFilled = false;
-      return false; // Breaks the .each() loop
+  // check only visible editable rows
+  $(".generateBlockRow, tr").each(function () {
+    if ($(this).attr("data-changed") === "1") {
+      $(this)
+        .find(".widthValues, .heightValues")
+        .each(function () {
+          if ($(this).val().trim() === "") {
+            allFilled = false;
+            return false; // break
+          }
+        });
     }
+    if (!allFilled) return false; // break outer loop
   });
 
-  if (allFilled) {
-    var allFilled = true;
+  if (!allFilled) {
+    popUpMessage("center", "Kindly fill all missing values", "warning");
+    $("#updateBlockItem").show();
+    return;
+  }
 
-    $(".widthValues").each(function () {
-      if ($(this).val() === "") {
-        allFilled = false;
-        return false; // Breaks the .each() loop
+  // build formData only for changed rows
+  var formData = {};
+  formData["blockId"] = $("#updateBlockId").val();
+
+  $(".generateBlockRow[data-changed='1'], tr[data-changed='1']").each(
+    function () {
+      $(this)
+        .find(".widthValues, .heightValues")
+        .each(function () {
+          var name = $(this).attr("name");
+          var val = $(this).val();
+          formData[name] = val;
+        });
+    }
+  );
+
+  $.ajax({
+    type: "POST",
+    url: "/api/item/publish/",
+    dataType: "JSON",
+    data: formData,
+    success: function (successResponse) {
+      popUpMessage("center", successResponse.msg, successResponse.status);
+      if (successResponse.status == "success") {
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
       }
-    });
-  } else {
-    popUpMessage("center", "Kinldy fill all missing items height", "warning");
-    $("#updateBlockItem").show();
-  }
-
-  if (allFilled) {
-    var formData = $("#updateInventoryForm").serialize();
-
-    $.ajax({
-      type: "POST",
-      url: "/api/item/publish/",
-      dataType: "JSON",
-      data: formData,
-      success: function (successResponse) {
-        popUpMessage("center", successResponse.msg, successResponse.status);
-        if (successResponse.status == "success") {
-          setTimeout(function () {
-            location.reload();
-          }, 1500);
-        }
-        $("#updateBlockItem").show();
-      },
-      error: function (errorResponse) {
-        $("#updateBlockItem").show();
-        console.log(`Error:`, errorResponse);
-        popUpMessage(
-          "center",
-          errorResponse.responseJSON.msg,
-          errorResponse.responseJSON.status
-        );
-      },
-    });
-  } else {
-    popUpMessage("center", "Kinldy fill all missing items width", "warning");
-    $("#updateBlockItem").show();
-  }
+      $("#updateBlockItem").show();
+    },
+    error: function (errorResponse) {
+      $("#updateBlockItem").show();
+      console.log(`Error:`, errorResponse);
+      popUpMessage(
+        "center",
+        errorResponse.responseJSON.msg,
+        errorResponse.responseJSON.status
+      );
+    },
+  });
 });
+
+// $("#updateBlockItem").click(function (e) {
+//   e.preventDefault();
+//   $("#updateBlockItem").hide();
+//   var allFilled = true;
+
+//   $(".heightValues").each(function () {
+//     if ($(this).val() === "") {
+//       allFilled = false;
+//       return false; // Breaks the .each() loop
+//     }
+//   });
+
+//   if (allFilled) {
+//     var allFilled = true;
+
+//     $(".widthValues").each(function () {
+//       if ($(this).val() === "") {
+//         allFilled = false;
+//         return false; // Breaks the .each() loop
+//       }
+//     });
+//   } else {
+//     popUpMessage("center", "Kinldy fill all missing items height", "warning");
+//     $("#updateBlockItem").show();
+//   }
+
+//   if (allFilled) {
+//     var formData = $("#updateInventoryForm").serialize();
+
+//     $.ajax({
+//       type: "POST",
+//       url: "/api/item/publish/",
+//       dataType: "JSON",
+//       data: formData,
+//       success: function (successResponse) {
+//         popUpMessage("center", successResponse.msg, successResponse.status);
+//         if (successResponse.status == "success") {
+//           setTimeout(function () {
+//             location.reload();
+//           }, 1500);
+//         }
+//         $("#updateBlockItem").show();
+//       },
+//       error: function (errorResponse) {
+//         $("#updateBlockItem").show();
+//         console.log(`Error:`, errorResponse);
+//         popUpMessage(
+//           "center",
+//           errorResponse.responseJSON.msg,
+//           errorResponse.responseJSON.status
+//         );
+//       },
+//     });
+//   } else {
+//     popUpMessage("center", "Kinldy fill all missing items width", "warning");
+//     $("#updateBlockItem").show();
+//   }
+// });
 
 // Manage damage box
 

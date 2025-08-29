@@ -110,8 +110,8 @@ if (isset($_GET['status'])) {
             <th>Warehouse</th>
             <th>Type</th>
             <th>Total slabs</th>
-            <th>Avl. slabs</th>
             <th>Total qty.</th>
+            <th>Avl. slabs</th>
             <th>Avl. Gross qty.</th>
             <th>Avl. Net Size</th>
             <th>Less qty.</th>
@@ -184,8 +184,8 @@ if (isset($_GET['status'])) {
                                 <td>{$warehouse_title}</td>
                                 <td>" . ucwords($block_product_type) . "</td>
                                 <td>{$block_total_item}</td>
-                                <td>{$block_available}</td>
                                 <td>" . (($block_total_size == '') ? '0 ' : $block_total_size) . ' ' . $blockDimension . "</td>
+                                <td>{$block_available}</td>
                                 <td>" . (($block_gross_size == '') ? '0 ' : $block_gross_size) . ' ' . $blockDimension . "</td>
                                 <td>" . (($block_net_size == '') ? '0 ' : $block_gross_size - $block_damage_size) . ' ' . $blockDimension . "</td>
                                 <td>" . (($block_damage_size == '') ? '0 ' : $block_damage_size) . ' ' . $blockDimension . "</td>

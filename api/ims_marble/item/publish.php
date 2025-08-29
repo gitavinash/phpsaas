@@ -9,7 +9,7 @@ $msg = 'Invalid request';
 if (isset($blockId)) {
     if ($blockId != '') {
         $validRequest = true;
-        $blockItemId = base64_decode($blockId);
+        $blockItemId = base64_decode($blockId); // keep your pattern
     } else {
         $msg = 'Block item id cannot be blank';
     }
@@ -21,175 +21,200 @@ if (isset($validRequest)) {
 
     mysqli_query($connection, "START TRANSACTION");
 
-    if ($checkBlock = mysqli_query($connection, "SELECT block_product_type, block_gross_size, block_damage_size, block_size_dimension FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+    // Lock block row
+    if ($checkBlock = mysqli_query(
+        $connection,
+        "SELECT block_product_type,
+                block_size_dimension,
+                block_total_size,
+                block_gross_size,
+                block_net_size,
+                block_damage_size
+         FROM {$tableNamePrefix}block
+         WHERE block_id='{$blockId}'
+           AND block_status=1
+           AND block_site_id=" . SITE_ID . " FOR UPDATE"
+    )) {
         if (mysqli_num_rows($checkBlock) != 0) {
 
             extract(mysqli_fetch_assoc($checkBlock));
-            $blockItemIndex = explode(",", $blockItemIndex);
-            $widthQuery = '';
-            $heightQuery = '';
-            $grossSizeQuery = '';
-            $netSizeQuery = '';
-            $width = [];
-            $height = [];
-            $singleItemArea = [];
 
-            foreach ($blockItemIndex as $index) {
-                if (isset($_POST["width"][$index]) && isset($_POST["height"][$index])) {
-                    $width[$index] = (float)$_POST["width"][$index];
-                    $height[$index] = (float)$_POST["height"][$index];
-                } else if (isset($_POST["width"][$index])) {
-                    $width[$index] = (float)$_POST["width"][$index];
-                    $height[$index] = 0;
-                } else {
-                    $width[$index] = 0;
-                    $height[$index] = 0;
-                }
+            $receivedWidth  = (isset($_POST['width'])  && is_array($_POST['width']))  ? $_POST['width']  : [];
+            $receivedHeight = (isset($_POST['height']) && is_array($_POST['height'])) ? $_POST['height'] : [];
 
-                // Calculate area
-                $area = $width[$index] * ($height[$index] ?: 1);
-                $singleItemArea[] = $area;
+            $changedIds = array_unique(array_merge(array_keys($receivedWidth), array_keys($receivedHeight)));
+            $changedIds = array_values(array_filter($changedIds, function ($v) {
+                return ctype_digit((string)$v);
+            }));
 
-                // Build CASE SQL strings
-                $widthQuery     .= "WHEN block_item_id='{$index}' THEN {$width[$index]} ";
-                $heightQuery    .= "WHEN block_item_id='{$index}' THEN {$height[$index]} ";
-                $grossSizeQuery .= "WHEN block_item_id='{$index}' THEN {$area} ";
-                $netSizeQuery   .= "WHEN block_item_id='{$index}' THEN {$area} ";
+            if (empty($changedIds)) {
+                echo json_encode(['status' => 'warning', 'msg' => 'No changes to save.'], TRUE);
+                exit;
             }
 
-            $totalArea = array_sum($singleItemArea);
+            // Fetch current item values
+            $idList = implode(',', array_map('intval', $changedIds));
+            $itemsSql = "
+                SELECT block_item_id, block_item_width, block_item_height, block_item_damage_size
+                FROM {$tableNamePrefix}block_item
+                WHERE block_item_parent_id={$blockId}
+                  AND block_item_status != 3
+                  AND block_item_site_id=" . SITE_ID . "
+                  AND block_item_id IN ({$idList})
+                FOR UPDATE";
+            $itemsRes = mysqli_query($connection, $itemsSql);
 
+            if (!$itemsRes) {
+                mysqli_query($connection, "ROLLBACK");
+                echo json_encode(['status' => 'error', 'msg' => mysqli_error($connection)], TRUE);
+                exit;
+            }
+
+            $current = [];
+            while ($r = mysqli_fetch_assoc($itemsRes)) {
+                $current[(int)$r['block_item_id']] = $r;
+            }
+
+            $changedIds = array_values(array_filter($changedIds, fn($id) => isset($current[(int)$id])));
+            if (empty($changedIds)) {
+                mysqli_query($connection, "ROLLBACK");
+                echo json_encode(['status' => 'warning', 'msg' => 'No valid items to update.'], TRUE);
+                exit;
+            }
+
+            // measurement config
             $measurementData = constant(strtoupper('measurement_' . $block_product_type));
             extract(json_decode($measurementData, TRUE));
 
-            switch ([$measurementType, $calculationType]) {
-                case ['cm', 'sq. mm.']:
-                    $totalArea *= 100;
-                    break;
-                case ['cm', 'sq. in.']:
-                    $totalArea *= 0.15500031;
-                    break;
-                case ['cm', 'sq. ft.']:
-                    $totalArea *= 0.001076391;
-                    break;
-                case ['cm', 'sq. mt.']:
-                    $totalArea *= 0.0001;
-                    break;
+            // converter
+            $convert = function (float $raw) use ($measurementType, $calculationType): float {
+                switch ([$measurementType, $calculationType]) {
+                    case ['cm', 'sq. mm.']:
+                        return $raw * 100;
+                    case ['cm', 'sq. in.']:
+                        return $raw * 0.15500031;
+                    case ['cm', 'sq. ft.']:
+                        return $raw * 0.001076391;
+                    case ['cm', 'sq. mt.']:
+                        return $raw * 0.0001;
+                    case ['mm', 'sq. cm.']:
+                        return $raw * 0.01;
+                    case ['mm', 'sq. in.']:
+                        return $raw * 0.0015500031;
+                    case ['mm', 'sq. ft.']:
+                        return $raw * 0.00001076391;
+                    case ['mm', 'sq. mt.']:
+                        return $raw * 0.000001;
+                    case ['in', 'sq. cm.']:
+                        return $raw * 6.4516;
+                    case ['in', 'sq. mm.']:
+                        return $raw * 645.16;
+                    case ['in', 'sq. ft.']:
+                        return $raw * 0.00694444;
+                    case ['in', 'sq. mt.']:
+                        return $raw * 0.00064516;
+                    case ['ft', 'sq. cm.']:
+                        return $raw * 929.0304;
+                    case ['ft', 'sq. mm.']:
+                        return $raw * 92903.04;
+                    case ['ft', 'sq. in.']:
+                        return $raw * 144;
+                    case ['ft', 'sq. mt.']:
+                        return $raw * 0.09290304;
+                    case ['mt', 'sq. cm.']:
+                        return $raw * 10000;
+                    case ['mt', 'sq. mm.']:
+                        return $raw * 1000000;
+                    case ['mt', 'sq. in.']:
+                        return $raw * 1550.0031;
+                    case ['mt', 'sq. ft.']:
+                        return $raw * 10.7639;
+                    default:
+                        return $raw;
+                }
+            };
 
-                case ['mm', 'sq. cm.']:
-                    $totalArea *= 0.01;
-                    break;
-                case ['mm', 'sq. in.']:
-                    $totalArea *= 0.0015500031;
-                    break;
-                case ['mm', 'sq. ft.']:
-                    $totalArea *= 0.00001076391;
-                    break;
-                case ['mm', 'sq. mt.']:
-                    $totalArea *= 0.000001;
-                    break;
+            $widthCase = $heightCase = $grossCase = $netCase = '';
+            $deltaSum = 0.0;
 
-                case ['in', 'sq. cm.']:
-                    $totalArea *= 6.4516;
-                    break;
-                case ['in', 'sq. mm.']:
-                    $totalArea *= 645.16;
-                    break;
-                case ['in', 'sq. ft.']:
-                    $totalArea *= 0.00694444;
-                    break;
-                case ['in', 'sq. mt.']:
-                    $totalArea *= 0.00064516;
-                    break;
+            foreach ($changedIds as $index) {
+                $idx = (int)$index;
+                $currW = (float)$current[$idx]['block_item_width'];
+                $currH = (float)$current[$idx]['block_item_height'];
 
-                case ['ft', 'sq. cm.']:
-                    $totalArea *= 929.0304;
-                    break;
-                case ['ft', 'sq. mm.']:
-                    $totalArea *= 92903.04;
-                    break;
-                case ['ft', 'sq. in.']:
-                    $totalArea *= 144;
-                    break;
-                case ['ft', 'sq. mt.']:
-                    $totalArea *= 0.09290304;
-                    break;
+                $newW = array_key_exists($index, $receivedWidth) ? (float)$receivedWidth[$index] : $currW;
+                $newH = array_key_exists($index, $receivedHeight) ? (float)$receivedHeight[$index] : $currH;
 
-                case ['mt', 'sq. cm.']:
-                    $totalArea *= 10000;
-                    break;
-                case ['mt', 'sq. mm.']:
-                    $totalArea *= 1000000;
-                    break;
-                case ['mt', 'sq. in.']:
-                    $totalArea *= 1550.0031;
-                    break;
-                case ['mt', 'sq. ft.']:
-                    $totalArea *= 10.7639;
-                    break;
+                if ($block_size_dimension == 'mt (t)') {
+                    $oldRaw = $currW;
+                    $newRaw = $newW;
+                    $itemDelta = $newRaw - $oldRaw;
+                } else {
+                    $oldRaw = $currW * ($currH ?: 1);
+                    $newRaw = $newW * ($newH ?: 1);
+                    $itemDelta = $convert($newRaw) - $convert($oldRaw);
+                }
+
+                $deltaSum += $itemDelta;
+
+                // save as INTs
+                $widthCase  .= "WHEN block_item_id='{$idx}' THEN " . intval(round($newW)) . " ";
+                $heightCase .= "WHEN block_item_id='{$idx}' THEN " . intval(round($newH)) . " ";
+
+                $itemGrossRaw = ($block_size_dimension == 'mt (t)') ? $newW : $newRaw;
+                $grossCase .= "WHEN block_item_id='{$idx}' THEN " . intval(round($itemGrossRaw)) . " ";
+                $netCase  .= "WHEN block_item_id='{$idx}' THEN " . intval(round($itemGrossRaw)) . " ";
             }
 
-            if ($block_size_dimension == 'mt (t)') {
-                $totalArea = array_sum($width);
-                $block_net_size = $totalArea;
-            } else {
-                $totalArea = number_format((float)$totalArea, 2, '.', '');
-                $block_net_size = $totalArea - $block_damage_size;
-            }
+            $new_total = (float)$block_total_size + $deltaSum;
+            $new_gross = (float)$block_gross_size + $deltaSum;
+            $new_net = $new_gross - (float)$block_damage_size;
 
-            $updateBlockQuery = "UPDATE {$tableNamePrefix}block SET block_gross_size='{$totalArea}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID;
-            $updateBlockNetSizeQuery = "UPDATE {$tableNamePrefix}block SET block_net_size='{$block_net_size}' WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID;
+            // round and cast to int before saving
+            $new_total = intval(round($new_total));
+            $new_gross = intval(round($new_gross));
+            $new_net = intval(round($new_net));
+
+            if ($new_total < 0 || $new_gross < 0 || $new_net < 0 || $new_net > $new_gross) {
+                mysqli_query($connection, "ROLLBACK");
+                echo json_encode(['status' => 'error', 'msg' => 'Validation failed'], TRUE);
+                exit;
+            }
 
             $updateItemQuery = "
                 UPDATE {$tableNamePrefix}block_item
                 SET
-                    block_item_status = 1,
-                    block_item_width = CASE
-                        {$widthQuery}
-                        ELSE block_item_width
-                    END,
-                    block_item_height = CASE
-                        {$heightQuery}
-                        ELSE block_item_height
-                    END,
-                    block_item_gross_size = CASE
-                        {$grossSizeQuery}
-                        ELSE block_item_width
-                    END,
-                    block_item_net_size = (
-                        CASE
-                            {$netSizeQuery}
-                            ELSE block_item_width
-                        END - block_item_damage_size
-                    )
-                WHERE 
-                    block_item_parent_id = {$blockId} AND 
-                    block_item_status != 3 AND 
-                    block_item_site_id = " . SITE_ID;
+                    block_item_status=1,
+                    block_item_width=CASE {$widthCase} ELSE block_item_width END,
+                    block_item_height=CASE {$heightCase} ELSE block_item_height END,
+                    block_item_gross_size=CASE {$grossCase} ELSE block_item_gross_size END,
+                    block_item_net_size=(CASE {$netCase} ELSE block_item_net_size END - block_item_damage_size)
+                WHERE block_item_parent_id={$blockId}
+                  AND block_item_status!=3
+                  AND block_item_site_id=" . SITE_ID . "
+                  AND block_item_id IN ({$idList})";
 
-            $updateBlock = mysqli_query($connection, $updateBlockQuery);
-            $updateBlockNetSize = mysqli_query($connection, $updateBlockNetSizeQuery);
-            $updateItem = mysqli_query($connection, $updateItemQuery);
+            $updateBlockTotalsQuery = "
+                UPDATE {$tableNamePrefix}block
+                SET block_total_size={$new_total},
+                    block_gross_size={$new_gross},
+                    block_net_size={$new_net}
+                WHERE block_id='{$blockId}' AND block_site_id=" . SITE_ID;
 
-            if ($updateBlock && $updateBlockNetSize && $updateItem) {
-                $httpStatus = 204;
-                $status = 'success';
-                $msg = 'Block item updated successfully.';
+            $okItems = mysqli_query($connection, $updateItemQuery);
+            $okBlock = mysqli_query($connection, $updateBlockTotalsQuery);
+
+            if ($okItems && $okBlock) {
                 mysqli_query($connection, "COMMIT");
+                $status = 'success';
+                $msg = 'Block updated successfully';
             } else {
-                $status = 'error';
-                $msg = (DEVELOPMENT_MODE === TRUE) ? mysqli_error($connection) : 'Something went wrong while trying to update block item';
                 mysqli_query($connection, "ROLLBACK");
+                $status = 'error';
+                $msg = DEVELOPMENT_MODE ? mysqli_error($connection) : 'Something went wrong';
             }
-        } else {
-            $msg = 'Invalid block request';
         }
     }
 }
 
-$result = array(
-    'status' => $status ?? 'error',
-    'msg' => $msg ?? 'Invalid response'
-);
-
-echo json_encode($result, TRUE);
+echo json_encode(['status' => $status, 'msg' => $msg], TRUE);
