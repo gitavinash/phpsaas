@@ -253,6 +253,9 @@ if (isset($_COOKIE['user_data'])) {
                 </li>
                 <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
                         title="Money Trivia">Money Trivia</a></li>
+                <li><a href="/money-and-machines/"
+                        <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
+                        title="Money & Machines">Money & Machines</a></li>
                 <li><a href="/report/" title="Report" <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>
                         class="disable">Report</a></li>
                 <?php
