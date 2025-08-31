@@ -1,6 +1,6 @@
 <?php
 
-function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $domain = 'aleya.in')
+function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in')
 {
     $url = "https://control.msg91.com/api/v5/flow/";
 
@@ -43,7 +43,7 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $domain = 'aleya.in'
     return true;
 }
 
-function sendOTPviaEmail($email, $otpCode, $name = 'User', $domain = 'aleya.in')
+function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.in')
 {
     $name = (($name != '') ? $name : 'User');
     $email = trim((string)$email);
@@ -81,7 +81,7 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $domain = 'aleya.in')
             ]
         ]],
         "merge_info" => [
-            "site_name" => $domain,
+            "site_name" => ucwords($site_name),
             "name"      => $name,
             "OTP"       => (string)$otpCode
         ]

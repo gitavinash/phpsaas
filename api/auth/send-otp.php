@@ -51,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (isset($mobile)) {
                 switch (SMS_GATEWAY) {
                     case 'msg91':
-                        $sendResult = sendOTPviaMSG91($mobile, $otpCode, $otpComment, $site_domain);
+                        $sendResult = sendOTPviaMSG91($mobile, $otpCode, $otpComment, $site_name);
                         break;
                 }
             } else {
-                $sendResult = sendOTPviaEmail($email, $otpCode, $otpComment, $site_domain);
+                $sendResult = sendOTPviaEmail($email, $otpCode, $otpComment, $site_name);
             }
 
             if ($sendResult !== true) {
