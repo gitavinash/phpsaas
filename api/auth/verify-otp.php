@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $response['msg'] = 'Incorrect OTP.';
             } else {
                 // ✅ OTP verified
-                $update = "UPDATE " . TABLE_PREFIX . "otp SET otp_status = 1 WHERE otp_id = {$otpRefId}";
+                $update = "DELETE FROM " . TABLE_PREFIX . "otp WHERE otp_id = {$otpRefId}";
                 mysqli_query($connection, $update);
 
                 $response['status'] = 'success';
