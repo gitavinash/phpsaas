@@ -1,5 +1,6 @@
 <?php
 
+require_once COMMUNICATION_FUNCTIONS;
 header('Content-Type: application/json');
 
 // ==== Initialize Response ====
@@ -19,9 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (mysqli_num_rows($findOTP) > 0) {
                 $otpData = mysqli_fetch_assoc($findOTP);
                 $otpCode = $otpData['otp_code'];
+                $otpComment = $otpData['otp_comment'];
 
-                // Send OTP via MSG91
-                $sendStatus = sendOTPviaMSG91($otpData['otp_destination'], $otpCode);
+                switch ($otp_mode) {
+                    case 'sms';
+                        switch (SMS_GATEWAY) {
+                            case 'msg91':
+                                $sendStatus = sendOTPviaMSG91($otpData['otp_destination'], $otpCode, $otpComment, $site_domain);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        $sendStatus = sendOTPviaEmail($otpData['otp_destination'], $otpCode, $otpComment, $site_domain);
+                        break;
+                }
 
                 if ($sendStatus === true) {
                     $response['status'] = 'success';
@@ -60,51 +74,4 @@ if (isset($showOutput)) {
 } else {
     http_response_code($httpStatus);
     echo json_encode($response);
-}
-
-
-// ========================================
-// ✅ Function to Send OTP via MSG91 API
-function sendOTPviaMSG91($mobile, $otpCode)
-{
-    $url = "https://control.msg91.com/api/v5/flow/";
-
-    $payload = [
-        "template_id" => MSG91_TEMPLATE_ID,
-        "recipients" => [
-            [
-                "mobiles" => "91" . $mobile,
-                "var1" => $otpCode
-            ]
-        ]
-    ];
-
-    $headers = [
-        'accept: application/json',
-        'content-type: application/json',
-        'authkey: ' . MSG91_AUTH_KEY
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-    $result = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError = curl_error($ch);
-
-    curl_close($ch);
-
-    if ($curlError) {
-        return 'cURL Error: ' . $curlError;
-    }
-
-    if ($httpCode != 200) {
-        return 'MSG91 API Error: ' . $result;
-    }
-
-    return true;
 }

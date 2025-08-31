@@ -1,7 +1,7 @@
 <?php
 
 require_once LOGIN_CHECK;
-require_once UTIL_FUNCTIONS . 'getInitials.php';
+require_once UTIL_FUNCTIONS;
 
 $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 

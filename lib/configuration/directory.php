@@ -10,7 +10,7 @@ define('ROUTER', ROOT . '/router/');
 define('RESOURCE', ROOT . '/lib/resource/');
 define('SOCIAL_LOGIN', RESOURCE . 'social-login/');
 define('PAYMENT_GATEWAY', RESOURCE . 'payment-gateway/');
-define('NOTIFICATION', RESOURCE . 'notification/');
+define('NOTIFICATION', value: RESOURCE . 'notification/');
 define('QR_CODE', RESOURCE . 'qrcode/');
 define('CONTLO', RESOURCE . 'contlo/');
 define('RECAPTCHA', RESOURCE . 'recaptcha/');
@@ -69,7 +69,8 @@ define('SITE_STATUS', MODULES . 'siteStatus.php');
 
 /** System default and usefull modules */
 
-define('UTIL_FUNCTIONS', FUNCTIONS . '/utils/');
+define('UTIL_FUNCTIONS', FUNCTIONS . '/utils.php');
+define('COMMUNICATION_FUNCTIONS', FUNCTIONS . 'communicatipn.php');
 define('HOMEPAGE_FUNCTIONS', FUNCTIONS . 'homepage.php');
 
 /** Font Directory */

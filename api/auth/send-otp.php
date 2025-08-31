@@ -1,5 +1,7 @@
 <?php
 
+require_once COMMUNICATION_FUNCTIONS;
+
 header('Content-Type: application/json');
 
 // ==== Initialize Response ====
@@ -8,21 +10,35 @@ $response = [
     'msg' => 'Invalid request',
     'id' => 0
 ];
-$httpStatus = 400;
 
-// ==== Validate GET Request ====
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    // ✅ Mobile number validation
-    if (!preg_match('/^[6-9]\d{9}$/', $mobile)) {
-        $response['msg'] = 'Invalid mobile number. Must be 10 digits and start with 6-9.';
-        $httpStatus = 422; // Unprocessable Entity
+    if (!empty($mobile)) {
+        if (!preg_match('/^[6-9]\d{9}$/', $mobile)) {
+            $response['msg'] = 'Invalid mobile number. Must be 10 digits and start with 6-9.';
+            $httpStatus = 400;
+            $invalidPayload = true;
+        }
+    } elseif (!empty($email)) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $response['msg'] = 'Invalid email address format.';
+            $httpStatus = 400;
+            $invalidPayload = true;
+        }
     } else {
-        // ✅ Generate 6-digit OTP
-        $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $response['msg'] = 'Mobile or Email is required.';
+        $httpStatus = 400;
+        $invalidPayload = true;
+    }
 
-        // ✅ Insert OTP into DB using mysqli
-        $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$mobile}', '{$otpCode}', 0, NOW())";
+    if (!isset($invalidPayload)) {
+
+        $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $otpMode = ((isset($otpMode)) ? $otpMode : 'sms');
+        $otpComment = ((isset($otpComment)) ? $otpComment : '');
+        $otpDestination = ((isset($mobile)) ? $mobile : $email);
+
+        $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_comment, otp_status, otp_time) VALUES ('{$user_id}', " . SITE_ID . ", '{$otpMode}', '{$otpDestination}', '{$otpCode}', '{$otpComment}', 0, NOW())";
         $insertOTP = mysqli_query($connection, $sql);
 
         if ($insertOTP) {
@@ -32,16 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $httpStatus = 200;
             $response['otpRef'] = mysqli_insert_id($connection);
 
-            // ✅ Send OTP via MSG91
-            $sendResult = sendOTPviaMSG91($mobile, $otpCode);
+            if (isset($mobile)) {
+                switch (SMS_GATEWAY) {
+                    case 'msg91':
+                        $sendResult = sendOTPviaMSG91($mobile, $otpCode, $otpComment, $site_domain);
+                        break;
+                }
+            } else {
+                $sendResult = sendOTPviaEmail($email, $otpCode, $otpComment, $site_domain);
+            }
 
             if ($sendResult !== true) {
                 $response['status'] = 'warning';
-                $response['msg'] = 'OTP stored but failed to send SMS';
+                $response['msg'] = 'OTP stored but failed to send';
                 $response['error'] = $sendResult;
             }
 
-            // ✅ For Testing: Show OTP (Remove in Production)
             $response['otp'] = $otpCode;
         } else {
             $response['msg'] = 'Failed to insert OTP: ' . mysqli_error($connection);
@@ -52,56 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $response['msg'] = 'Invalid request method';
 }
 
-// ==== Output Response ====
 if (isset($showOutput)) {
     if ($showOutput == true) {
         http_response_code($httpStatus);
         echo json_encode($response);
     }
-}
-
-// ========================================
-// ✅ Function to Send OTP via MSG91 API
-function sendOTPviaMSG91($mobile, $otpCode)
-{
-    $url = "https://control.msg91.com/api/v5/flow/";
-
-    $payload = [
-        "template_id" => MSG91_TEMPLATE_ID,
-        "recipients" => [
-            [
-                "mobiles" => "91" . $mobile,
-                "var1" => $otpCode
-            ]
-        ]
-    ];
-
-    $headers = [
-        'accept: application/json',
-        'content-type: application/json',
-        'authkey: ' . MSG91_AUTH_KEY
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-    $result = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError = curl_error($ch);
-
-    curl_close($ch);
-
-    if ($curlError) {
-        return 'cURL Error: ' . $curlError;
-    }
-
-    if ($httpCode != 200) {
-        return 'MSG91 API Error: ' . $result;
-    }
-
-    return true;
 }

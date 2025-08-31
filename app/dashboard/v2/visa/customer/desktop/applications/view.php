@@ -1,6 +1,6 @@
 <?php
 
-require_once UTIL_FUNCTIONS . 'getInitials.php';
+require_once UTIL_FUNCTIONS;
 
 if (!empty($id)) {
     // Sanitize $id as integer to avoid injection risks (very important!)

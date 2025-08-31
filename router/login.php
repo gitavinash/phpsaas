@@ -6,7 +6,7 @@ $themeLoginFile = USER_PATH . $urlStructure[0] . '.php';
 
 if (!file_exists($themeLoginFile)) {
 
-    $fileName = ((isset($authby)) ? 'mobile-login' : $urlStructure[0]);
+    $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
 
     $themeLoginFile = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH) . $fileName . '.php';
 

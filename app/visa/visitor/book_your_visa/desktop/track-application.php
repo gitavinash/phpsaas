@@ -1,7 +1,7 @@
 <?php
 
 require_once 'header.php';
-require_once UTIL_FUNCTIONS . 'getInitials.php';
+require_once UTIL_FUNCTIONS;
 ?>
 
 <main class="flex-grow container mx-auto py-[10em]">

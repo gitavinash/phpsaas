@@ -1,6 +1,6 @@
 <?php
 
-require_once UTIL_FUNCTIONS . 'getInitials.php';
+require_once UTIL_FUNCTIONS;
 
 $applicationStatusQuery = "SELECT JSON_OBJECT(
   'counts', (

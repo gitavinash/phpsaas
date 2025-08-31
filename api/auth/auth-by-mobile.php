@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $httpStatus = 200;
         } else {
             $status = 'error';
-            $msg = 'Failed to send OTP: ' . $response['msg'];
+            $msg = ((DEVELOPMENT_MODE == true)) ? $response['msg'] : 'Failed to send OTP';
             $httpStatus = 500;
         }
     } else {

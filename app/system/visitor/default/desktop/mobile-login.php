@@ -8,8 +8,7 @@ if (isset($_COOKIE['isLogin'])) {
     exit();
 }
 
-$quoteOfTheDay['quoteText'] = '';
-$quoteOfTheDay['quoteAuthor'] = '';
+$quoteOfTheDay = ['quoteText' => '', 'quoteAuthor' => ''];
 
 if (SITE_VERSION == 'desktop') {
     $context = stream_context_create([

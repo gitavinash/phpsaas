@@ -1,6 +1,4 @@
 <?php
-
-
 function getInitials($string)
 {
     // Remove any special characters except letters, numbers and spaces
@@ -18,4 +16,20 @@ function getInitials($string)
     }
 
     return $initials;
+}
+function isEmailValid(string $email): bool
+{
+    $email = trim($email);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+
+    [$local] = explode('@', strtolower($email), 2);
+
+    // Reject plus addressing for login
+    if (strpos($local, '+') !== false) {
+        return false;
+    }
+
+    return true;
 }
