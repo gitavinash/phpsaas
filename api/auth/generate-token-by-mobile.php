@@ -12,11 +12,17 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
         /** User has access of this site */
     } else {
 
-        $userEmail = $mobile . '@' . SITE_DOMAIN;
 
+        if (filter_var($mobile, FILTER_VALIDATE_EMAIL)) {
+            $checkUserCondition = "user_email='{$mobile}'";
+        } elseif (preg_match('/^[6-9]\d{9}$/', $mobile)) {
+            $checkUserCondition = "user_mobile='{$mobile}'";
+        }
+
+        $userEmail = ((isset($email)) ? $email : $mobile . '@' . SITE_DOMAIN);
         $user_salt_key = hash('sha256', uniqid(mt_rand(), true) . $mobile . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
 
-        if ($checkUser = mysqli_query($connection, "SELECT user_id as newUserId FROM " . TABLE_PREFIX . "user WHERE user_mobile='{$mobile}'")) {
+        if ($checkUser = mysqli_query($connection, "SELECT user_id as newUserId FROM " . TABLE_PREFIX . "user WHERE {$checkUserCondition}")) {
             if (mysqli_num_rows($checkUser) == 0) {
                 $addUserTableQuery = "INSERT INTO " . TABLE_PREFIX . "user (user_mobile, user_username, user_email, user_salt_key, user_status, user_reg_time, 
         user_reg_ip) VALUES ('{$mobile}', '{$mobile}', '{$userEmail}', '{$user_salt_key}', 1, NOW(), '" . IP . "')";
@@ -48,6 +54,9 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
             $tokenMsg = 'Something went wrong';
         }
     }
+
+    $profile_display_name = ((isset($profile_display_name)) ? $profile_display_name : '');
+    $profile_image = ((isset($profile_image)) ? $profile_image : '');
 
     if (isset($genarateToken)) {
         if ($genarateToken == true) {
