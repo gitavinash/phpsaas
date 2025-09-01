@@ -17,33 +17,56 @@ if ($chatGPTKey != '') {
 
     // Prepare the data to send in the API request
     $data = [
-        "model" => "gpt-3.5-turbo", // GPT-3.5-turbo model
+        // Prepare the data to send in the API request
+        "model" => "gpt-4o-mini",
+        "response_format" => [
+            "type" => "json_schema",
+            "json_schema" => [
+                "name" => "itinerary",
+                "strict" => true, // disallow keys not in schema
+                "schema" => [
+                    "type" => "object",
+                    "additionalProperties" => false,
+                    "properties" => [
+                        "overview" => [
+                            "type" => "object",
+                            "additionalProperties" => false,
+                            "properties" => [
+                                "intro" => ["type" => "string"],
+                                "inclusion" => ["type" => "string"],
+                                "exclusion" => ["type" => "string"]
+                            ],
+                            "required" => ["intro", "inclusion", "exclusion"]
+                        ],
+                        "durations" => [
+                            "type" => "array",
+                            "minItems" => 1,
+                            "items" => [
+                                "type" => "object",
+                                "additionalProperties" => false,
+                                "properties" => [
+                                    "day" => ["type" => "string"],
+                                    "details" => ["type" => "string"]
+                                ],
+                                "required" => ["day", "details"]
+                            ]
+                        ]
+                    ],
+                    "required" => ["overview", "durations"]
+                ]
+            ]
+        ],
         "messages" => [
             [
                 "role" => "system",
-                "content" => "You are an assistant that only responds in JSON format. Any answer provided should be a valid JSON object or array.  You are an expert travel planner with more than 10 years of experience in Tour Package Planning. You work for {$travelCompanyName}"
+                "content" => "You must respond with a SINGLE JSON object that strictly matches the provided JSON Schema. All values MUST be plain text strings: no HTML, no Markdown, no emojis, no code fences. Do not include any text before or after the JSON. You are an expert travel planner with 10+ years of experience working for {$travelCompanyName}."
             ],
             [
                 "role" => "user",
-                "content" => "Create a detailed {$packageName} package itinerary where travel style is {$travelStyle}. Prepare itinerary for {$destinationsAndDurations}. Day 1 tour will be starting from {$startingCity} and tour will be end at {$endCity}. {$localSighseeignVehicleUpdated}local sightseeing will be done by {$localSighseeignVehicle}.
-                - Format the output in JSON format with:
-                {
-                    'overview: [
-                        'intro': {{return_paragraph_overview_of_{$destinationCity[0]}_{$travelStyle}_tour_package_intinenary}}
-                        'inclusion': {{inclusion_of_{$destinationCity[0]}_{$travelStyle}_tour_package_intinenary}}
-                        'exclusion': {{exclusion_of_{$destinationCity[0]}_{$travelStyle}_tour_package_intinenary}}
-                    ]
-                    'durations':[
-                        {
-                            'day': {{day_number}} - {{day_title}},
-                            'details': {{detailed_paragraph_for_the_day}}
-                        }
-                    ]
-                }
-Ensure each day has at least a 500 word paragraph describing the day's activities. Make sure the JSON is valid and well-formed."
+                "content" => "Create a detailed \"{$packageName}\" package itinerary where travel style is \"{$travelStyle}\".\nDestinations and nights: {$destinationsAndDurations}\nDay 1 will start from \"{$startingCity}\" and the tour will end at \"{$endCity}\". {$localSighseeignVehicleUpdated}local sightseeing will be done by {$localSighseeignVehicle}. Start timings are {$startTimings}.\n\nPopulate the schema fields as follows:\n- overview.intro: A compelling plain-text paragraph introducing a {$destinationCity[0]} {$travelStyle} tour that spans all listed destinations.\n- overview.inclusion: A comma-separated plain-text list of inclusions written as a sentence/phrases (still just a single string value).\n- overview.exclusion: A comma-separated plain-text list of exclusions written as a sentence/phrases (single string value).\n- durations: One item per calendar day (sum of all nights + 1). For each item:\n  - day: \"Day N - <title>\"\n  - details: ~500 words of plain text describing activities for that day (informative, professional tone).\n\nReturn ONLY the JSON object that matches the schema; do not add extra keys."
             ]
         ],
-        "max_tokens" => 1024,
+        "max_tokens" => 3500,
         "n" => 1,
         "temperature" => 0.7
     ];
