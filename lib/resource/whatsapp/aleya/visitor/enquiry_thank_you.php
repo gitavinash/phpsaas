@@ -30,9 +30,9 @@ if (defined('COMPANY_WHATSAPP_ENQUIRY_THANK_YOU')) {
         $travelDate . "," .
         $mobile . "," .
         $email . "," .
-        $requirements . "," .
+        $requirements . ",";
 
-        $variablesValues = rtrim($variablesValues, ',');
+    $variablesValues = rtrim($variablesValues, ',');
 
     $sendMessageTo = $mobile;
 
