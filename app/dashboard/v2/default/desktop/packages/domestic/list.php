@@ -55,7 +55,7 @@
                                             <a href='/dashboard/packages/domestic/hotel-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Hotel lists' data-title='Hotel list'><i class='fi fi-rr-hotel bgWhite'></i></a>
                                             <a href='/dashboard/packages/domestic/transpotation-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Transpotation lists' data-title='Transpotation list'><i class='fi fi-rr-cars bgWhite'></i></a>
                                             <a href='{$link_url}' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-blue'></i></a>
-                                            <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-type='{$tour_package_type}' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
+                                            <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-type='{$tour_package_type}' data-title='Delete package' class='tableActionIconBtn deleteButton' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
                                         </td>
                                     </tr>
                                 ";

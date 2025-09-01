@@ -89,24 +89,34 @@
                         <?php
                                     $i = 1;
 
+                                    // decode safely and ensure array
                                     $tour_package_itinerary = json_decode($tour_package_itinerary, TRUE);
+                                    if (!is_array($tour_package_itinerary) || empty($tour_package_itinerary)) {
+                                        $showDeleteBtn = true;
+                                    }
 
+
+                                    // iterate and render
                                     foreach ($tour_package_itinerary as $days) {
+                                        $dayTitle = htmlspecialchars($days['day'] ?? "Day {$i}", ENT_QUOTES);
+                                        $dayOverview = $days['overview'] ?? '';
+
                                         echo "
                                          <div class='form-group'>
                                             <p class='form-label'>Day {$i}</p>
-                                            <input name='dayTitle[]' value='{$days['day']}' type='text' />
+                                            <input name='dayTitle[]' value='{$dayTitle}' type='text' />
                                          </div>
                                          <div class='form-group'>
                                             <div class='editor' style='min-height: 200px'>
-                                                {$days['overview']}
+                                                {$dayOverview}
                                             </div>
-                                            <textarea name='dayContent[]' id='editor-{$i}' style='display:none'>{$days['overview']}</textarea>
+                                            <textarea name='dayContent[]' id='editor-{$i}' style='display:none'>{$dayOverview}</textarea>
                                         </div>
                                     ";
                                         $i++;
                                     }
                                     ?>
+
                         <div class="form-group">
                             <p>Inclusions</p>
                             <div class="editor" style="min-height: 200px">
@@ -212,7 +222,15 @@
                         <div class="form-group">
                             <input type="hidden" name="packageType" id="packageType" value="domestic">
                             <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
-                            <input type="button" class="btn" id="updateTourPackageBtn" value="Update ininenary">
+                            <?php
+
+                                        if (isset($showDeleteBtn)) {
+                                            echo "<input type='button' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-title='Delete package' class='btn bgRed deleteButton' data-redirect='/dashboard/packages/domestic/list/' id='deleteTourPackageBtn' value='Delete itinerary'>";
+                                        } else {
+                                            echo "<input type='button' class='btn' id='updateTourPackageBtn' value='Update itinerary'>";
+                                        }
+
+                                        ?>
                         </div>
 
                         <?php
