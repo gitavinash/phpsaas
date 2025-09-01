@@ -2,6 +2,7 @@
 
 $("#fetchItinerary").click(function (e) {
   e.preventDefault();
+  $("#loader").show();
   $("#fetchItinerary").hide();
   $("#itineraryListBox").hide();
   $("#editorBox").hide();
@@ -21,6 +22,7 @@ $("#fetchItinerary").click(function (e) {
       },
       success: function (response) {
         $("#fetchItinerary").show();
+        $("#loader").hide();
         localStorage.removeItem("itineraryList");
         localStorage.setItem(
           "itineraryList",
@@ -36,13 +38,13 @@ $("#fetchItinerary").click(function (e) {
         $("#itineraryListBox").show();
       },
       error: function (response) {
-        console.log(`Error : `, response);
         popUpMessage(
           "center",
           response.responseJSON.msg,
           response.responseJSON.status
         );
         $("#fetchItinerary").show();
+        $("#loader").hide();
       },
     });
   } else {

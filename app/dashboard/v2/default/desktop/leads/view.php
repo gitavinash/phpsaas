@@ -137,8 +137,8 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
 
                             if ($enquiry_subject != '') {
                                 echo "<tr>
-                                <td class='box-3'><strong>" . ((SITE_APP == 'aleay') ? 'Tour package' : 'Subject') . "</strong></td>
-                                <td class='box-7'>{$enquiry_subject}</td>
+                                <td class='box-3'><strong>" . ((SITE_APP == 'aleya') ? 'Tour package' : 'Subject') . "</strong></td>
+                                <td class='box-7'><span id='quotationFor'>{$enquiry_subject}</span></td>
                             </tr>";
                             }
 
@@ -972,6 +972,9 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                     style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
                             </div>
                         </div>
+                    </div>
+                    <div id="loader" style="display: none; text-align: center;">
+                        <img src="<?php echo IMG_LIBRARY ?>circle-loader.gif" alt="Loading..." />
                     </div>
                     <div class="form-group" id="itineraryListBox" style="display: none;">
                         <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary<sup>*</sup></h4>

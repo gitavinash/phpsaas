@@ -25,15 +25,8 @@
             <label class="form-lable" id="Label">Mobile<sup>*</sup></label>
         </div>
         <div class="form-group">
-            <p>Tour package<sup>*</sup></p>
-            <select class="selectJS form-control" name="package" id="package">
-                <option value="">Select destination</option>
-                <option value="himachal">Himachal</option>
-                <option value="uttarakhand">Uttarakhand</option>
-                <option value="jammu & kashmir">Jammu & Kashmir</option>
-                <option value="ladakh">Ladakh</option>
-                <option value="punjab">Punjab</option>
-                <option value=""></option>
+            <p class="form-lable">Tour package for<sup>*</sup></p>
+            <select class="internationalCityAutoComplete" style="float: left; width:100%" name="package" id="package">
                 <option value=""></option>
             </select>
         </div>
@@ -58,17 +51,26 @@
             <label class="form-lable" id="Label">Number of infants ( Below 5 years)</label>
         </div>
         <div class="form-group">
-            <input id="currentLocation" name="current_location" type="text" required />
-            <label class="form-lable" id="Label">Current location<sup>*</sup></label>
+            <p class="form-lable" id="Label">Current location<sup>*</sup></p>
+            <select class="internationalCityAutoComplete" style="float: left; width:100%" name="current_location"
+                id="current_location">
+                <option value=""></option>
+            </select>
         </div>
         <div class="form-group">
-            <input id="pickupLocation" name="pickup_location" type="text" required />
-            <label class="form-lable" id="Label">Pickup location<sup>*</sup></label>
+            <p class="form-lable" id="Label">Pickup location<sup>*</sup></p>
+            <select class="internationalCityAutoComplete" style="float: left; width:100%" name="pickup_location"
+                id="pickup_location">
+                <option value=""></option>
+            </select>
         </div>
         <div class="form-group">
-            <input id="dropLocation" name="drop_location" type="text" />
-            <label class="form-lable" id="Label">Drop location ( ignore if same
-                )</label>
+            <p class="form-lable" id="Label">Drop location ( ignore if same
+                )</p>
+            <select class="internationalCityAutoComplete" style="float: left; width:100%" name="drop_location"
+                id="drop_location">
+                <option value=""></option>
+            </select>
         </div>
         <div class="form-group">
             <textarea name="requirements" id="requirements" cols="30" rows="10"></textarea>

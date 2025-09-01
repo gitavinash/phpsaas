@@ -1139,6 +1139,24 @@ $(document).ready(function (e) {
   $("#itineraryBtn").click(function (e) {
     document.querySelector(".itineraryBox").style.display = "flex";
     $(".itineraryBox").show();
+    const quotationFor = $("#quotationFor").text().trim();
+    if (quotationFor !== "") {
+      const $destination = $("#itineraryDestination");
+
+      // Check if the value exists already
+      if ($destination.find(`option[value="${quotationFor}"]`).length === 0) {
+        // Add new option if not found
+        $destination.append(
+          $("<option></option>").val(quotationFor).text(quotationFor)
+        );
+      }
+
+      // Now set it
+      $destination.val(quotationFor);
+
+      // Auto-click the fetch button
+      $("#fetchItinerary").trigger("click");
+    }
     hidePageLoader();
     e.preventDefault();
   });
