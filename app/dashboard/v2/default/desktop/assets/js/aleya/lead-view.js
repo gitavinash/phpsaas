@@ -53,8 +53,16 @@ $("#fetchItinerary").click(function (e) {
   }
 });
 
+// Helper function to decode HTML entities in strings
+function decodeHtmlEntities(text) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = text;
+  return txt.value;
+}
+
 $("#showItinerary").click(function (e) {
   e.preventDefault();
+  $("#loader").show();
   $("#itineraryListBox").hide();
 
   var itineraryList = $("#itineraryList").val();
@@ -65,23 +73,56 @@ $("#showItinerary").click(function (e) {
 
   var itinenaryPrice = itineraryDetails[0];
 
-  var itineraryData = JSON.parse(localStorage.getItem("itineraryList"));
+  var itineraryDataRaw = localStorage.getItem("itineraryList");
+
+  let itineraryData;
+  try {
+    itineraryData = JSON.parse(itineraryDataRaw);
+  } catch (error) {
+    console.error("JSON parsing failed for itineraryData:", error);
+    $("#loader").hide();
+    return popUpMessage("center", "Failed to parse itinerary data", "error");
+  }
+
   var matchedItinerary = itineraryData.find(
     (item) => item.tour_package_id == itinenaryPrice
   );
 
   if (matchedItinerary) {
-    var dayWiseItinerary = JSON.parse(matchedItinerary.tour_package_itinerary);
+    let dayWiseItinerary;
+    try {
+      console.log(
+        "Raw tour_package_itinerary:",
+        matchedItinerary.tour_package_itinerary
+      );
+      dayWiseItinerary = JSON.parse(matchedItinerary.tour_package_itinerary);
+      console.log("Parsed dayWiseItinerary:", dayWiseItinerary);
+    } catch (err) {
+      console.error("JSON parsing error for tour_package_itinerary:", err);
+      console.log("Raw data:", matchedItinerary.tour_package_itinerary);
+      $("#loader").hide();
+      return popUpMessage("center", "Itinerary data is invalid", "error");
+    }
+
+    if (!Array.isArray(dayWiseItinerary)) {
+      console.error("Itinerary data is not an array:", dayWiseItinerary);
+      return popUpMessage(
+        "center",
+        "Itinerary data format is incorrect",
+        "error"
+      );
+    }
 
     var dayWiseItineraryContent = "";
     dayWiseItinerary.forEach((list) => {
       dayWiseItineraryContent += `
         <h3>${list.day}</h3>
-        <p>${list.overview}</p>
+        <p>${decodeHtmlEntities(list.overview)}</p>
       `;
     });
 
-    var tripDurationDays = parseInt(matchedItinerary.tour_package_duration) + 1;
+    var tripDurationDays =
+      parseInt(matchedItinerary.tour_package_duration, 10) + 1;
 
     var tripDuration =
       matchedItinerary.tour_package_duration +
@@ -147,13 +188,14 @@ $("#showItinerary").click(function (e) {
       license_key: "gpl",
       menubar: true,
     });
+    $("#loader").hide();
     $("#editorBox").show();
 
-    // Show button
-
+    // Show buttons
     $("#sendItinerary").show();
     $("#downloadItinerary").show();
   } else {
+    $("#loader").hide();
     popUpMessage(
       "center",
       "Something went wrong while fetching local Itinerary details",
