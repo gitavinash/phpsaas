@@ -88,6 +88,7 @@ define('SEND_EMAIL', CONFIG . 'mail/send-email.php');
 define('EMAIL_TEMPLATE', RESOURCE . 'email/');
 define('APP_EMAIL_TEMPLATE', EMAIL_TEMPLATE . SITE_APP . '/' . USER_TYPE . '/');
 define('ADMIN_EMAIL_TEMPLATE', EMAIL_TEMPLATE . SITE_APP . '/admin/');
+define('USER_EMAIL_TEMPLATE', EMAIL_TEMPLATE . SITE_APP . '/' . USER_TYPE . '/');
 
 /* SMS Directory Configuration */
 
@@ -95,12 +96,14 @@ define('SEND_SMS', CONFIG . 'sms/send-sms.php');
 define('SMS_TEMPLATE', RESOURCE . 'sms/');
 define('APP_SMS_TEMPLATE', SMS_TEMPLATE . SITE_APP . '/default/');
 define('ADMIN_SMS_TEMPLATE', SMS_TEMPLATE . SITE_APP . '/admin/');
+define('USER_SMS_TEMPLATE', SMS_TEMPLATE . SITE_APP . '/' . USER_TYPE . '/');
 
 /* WhatsApp Directory Configuration */
 
 define('WHATSAPP_TEMPLATE', RESOURCE . 'whatsapp/');
 define('WHATSAPP_TEMPLATE_ADMIN', WHATSAPP_TEMPLATE . SITE_APP . '/administrator/');
 define('WHATSAPP_TEMPLATE_VISITOR', WHATSAPP_TEMPLATE . SITE_APP . '/visitor/');
+define('WHATSAPP_TEMPLATE_USER', WHATSAPP_TEMPLATE . SITE_APP . '/' . USER_TYPE . '/');
 
 /* Installation Directory  */
 

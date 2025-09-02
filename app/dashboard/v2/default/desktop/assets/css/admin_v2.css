@@ -3760,3 +3760,405 @@ button:disabled {
 .btn-ghost:hover {
   background: #f5f5f5;
 }
+
+/* =========================================
+   PREMIUM THEME OVERRIDES (put AFTER current CSS)
+   ========================================= */
+:root {
+  /* Brand (muted teal-slate) */
+  --brand-50: #f2f7f8;
+  --brand-100: #e6f0f2;
+  --brand-200: #cee3e7;
+  --brand-300: #a9cfd7;
+  --brand-400: #7fb6c3;
+  --brand-500: #5ba1b0;
+  --brand-600: #3d899a; /* main brand */
+  --brand-700: #2f7685; /* headers/active */
+  --brand-800: #215d6a;
+  --brand-900: #15434d;
+
+  /* Neutral slate */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1f2937;
+  --gray-900: #0f172a;
+
+  /* Status */
+  --success-600: #1f9d63;
+  --success-700: #188255;
+  --warning-500: #d8a106;
+  --warning-600: #b78705;
+  --danger-600: #c0504d;
+  --danger-700: #a23f3d;
+
+  /* Accents (subtle) */
+  --blue-600: #2563eb;
+  --indigo-600: #4f46e5;
+  --gold-500: #f4b400;
+  --purple-600: #7c3aed;
+
+  /* Text */
+  --text-strong: var(--gray-900);
+  --text-default: var(--gray-700);
+  --text-muted: var(--gray-500);
+
+  /* Surfaces & borders */
+  --surface: #ffffff;
+  --surface-subtle: var(--gray-50);
+  --border-soft: var(--gray-200);
+  --border-mid: var(--gray-300);
+}
+
+/* Body & general text */
+body {
+  background: var(--surface-subtle) !important;
+  color: var(--text-default) !important;
+}
+
+/* Headings use brand but softer */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.report-heading,
+main .container .heading {
+  color: var(--brand-700) !important;
+}
+
+/* Horizontal rule tint */
+hr {
+  border-color: var(--brand-700) !important;
+}
+
+/* Inputs / controls */
+.form-control,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="file"],
+input[type="password"],
+textarea,
+.select2-container--default .select2-selection--single,
+.dashboard-datepicker input[type="text"] {
+  background: #fff !important;
+  color: var(--text-default) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+input:hover,
+textarea:hover,
+.select2-container--default .select2-selection--single:hover {
+  border-color: var(--brand-300) !important;
+  background: var(--surface-subtle) !important;
+}
+input:focus,
+textarea:focus,
+.select2-container--default .select2-selection--single:focus {
+  outline: none !important;
+  border-color: var(--brand-500) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-500) 20%, transparent) !important;
+}
+
+/* Primary brand buttons & base .btn */
+.btn {
+  background: #fff !important;
+  border: 1px solid var(--border-soft) !important;
+  color: var(--text-default) !important;
+  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.06) !important;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.15s ease !important;
+}
+/* .btn:hover {
+  background: var(--surface-subtle) !important;
+  border-color: var(--border-mid) !important;
+  transform: translateY(-1px) !important;
+} */
+.btn:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+/* Semantic button variants (mapping your classes) */
+.btn-green,
+.dataTableSubmitBtn,
+.section.form .btn,
+.section.form button,
+.heading-btn,
+.leadActions .highlight,
+.roomBox .btnGroup a,
+.itinerarySearchBox,
+.select2-selection__choice:hover {
+  background: var(--brand-700) !important;
+  border-color: var(--brand-700) !important;
+  color: #fff !important;
+}
+.btn-blue,
+.dataTableBtn {
+  background: var(--brand-100) !important;
+  border-color: var(--brand-100) !important;
+  color: var(--brand-800) !important;
+}
+
+/* Your new semantic action buttons */
+.btn-green-sales {
+  background: var(--success-700) !important;
+  border-color: var(--success-700) !important;
+  color: #fff !important;
+}
+.btn-orange-follow {
+  background: var(--warning-500) !important;
+  border-color: var(--warning-500) !important;
+  color: #1e1e1e !important;
+}
+.btn-teal-payment {
+  background: var(--brand-600) !important;
+  border-color: var(--brand-600) !important;
+  color: #fff !important;
+}
+.btn-blue-itinerary {
+  background: var(--blue-600) !important;
+  border-color: var(--blue-600) !important;
+  color: #fff !important;
+}
+.btn-purple-links {
+  background: var(--purple-600) !important;
+  border-color: var(--purple-600) !important;
+  color: #fff !important;
+}
+.btn-gold-voucher {
+  background: var(--gold-500) !important;
+  border-color: var(--gold-500) !important;
+  color: #1e1e1e !important;
+}
+.btn-red-close {
+  background: var(--danger-700) !important;
+  border-color: var(--danger-700) !important;
+  color: #fff !important;
+}
+.btn-neutral {
+  background: var(--gray-500) !important;
+  border-color: var(--gray-500) !important;
+  color: #fff !important;
+}
+
+/* Old “utility” background classes remapped */
+.bgRed {
+  background: var(--danger-700) !important;
+  color: #fff !important;
+}
+.bgYellow {
+  background: var(--warning-500) !important;
+  color: #333 !important;
+  border-color: var(--warning-500) !important;
+}
+.bgLightGreen {
+  background: var(--brand-50) !important;
+  color: var(--text-default) !important;
+}
+.bgWhite {
+  background: #fff !important;
+  color: var(--text-default) !important;
+}
+
+/* Success / warning / danger text */
+.success {
+  color: var(--success-700) !important;
+}
+.warning {
+  color: var(--warning-600) !important;
+}
+.danger {
+  color: var(--danger-700) !important;
+}
+
+/* Header & navigation */
+header {
+  background: #fff !important;
+  border-bottom: 1px solid var(--border-soft);
+}
+nav.side-nav ul li a:hover,
+nav.side-nav ul li.active,
+.right-side ul li:hover ul {
+  background: var(--brand-700) !important;
+  color: #fff !important;
+}
+/* nav.side-nav ul li a:hover i,
+nav.side-nav ul li.active i {
+  color: #fff !important;
+} */
+/* nav.side-nav ul li a {
+  color: var(--text-default) !important;
+} */
+nav .header-section-name {
+  background: var(--brand-50) !important;
+}
+nav .header-section-name p {
+  color: var(--brand-700) !important;
+}
+
+/* Breadcrumb arrow color */
+.i-m-here-pagination ul li::after,
+.i-m-here-pagination ul li:first-child a {
+  color: var(--brand-700) !important;
+}
+
+/* Main box & cards */
+.main-box section,
+.widget-setting-info,
+.widget-info,
+.comment,
+.galleryImageBox,
+.slabsList .input-box {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-soft) !important;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, 0.04),
+    0 4px 12px rgba(17, 17, 17, 0.04) !important;
+  border-radius: 8px !important;
+}
+.widget-setting-info:hover {
+  border-color: var(--border-mid) !important;
+}
+
+/* Tables & datatables */
+table.dataTable thead,
+table.dataTable thead td,
+table.dataTable thead th {
+  background: var(--brand-50) !important;
+  color: var(--text-strong) !important;
+}
+.leadInfo table tr:nth-child(2n) {
+  background-color: var(--brand-50) !important;
+}
+.salesInfo strong,
+th.heading,
+.salesInfo .heading {
+  border-color: var(--brand-700) !important;
+  color: #fff !important;
+  background: var(--brand-700) !important;
+}
+
+/* Daterangepicker */
+.daterangepicker td.in-range {
+  background: color-mix(in srgb, var(--brand-100) 80%, white) !important;
+}
+.daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker .ranges li.active {
+  background: var(--brand-700) !important;
+}
+
+/* Select2 chips */
+.select2-selection__choice {
+  background: #fff !important;
+  border: 1px solid var(--brand-400) !important;
+  color: var(--brand-700) !important;
+}
+.select2-selection__choice:hover {
+  background: var(--brand-700) !important;
+  color: #fff !important;
+}
+
+/* Popups */
+.popUp .actionArea {
+  background: var(--brand-700) !important;
+}
+.popUp .actionArea .popUpBtn {
+  background: #fff !important;
+  color: var(--brand-700) !important;
+}
+
+/* Itinerary search bar & CTA */
+.itinerarySearchBox {
+  background: var(--brand-700) !important;
+}
+.itinerarySearchBox a {
+  background: #fff !important;
+  color: var(--brand-700) !important;
+}
+
+/* Feature tiles */
+.featureList {
+  background: #f3f7fa !important;
+  border-color: var(--border-soft) !important;
+  color: var(--text-default) !important;
+}
+.featureList:hover {
+  background: var(--brand-300) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Gallery cards */
+.galleryImageBox {
+  background: #f3f7fa !important;
+  border-color: var(--border-soft) !important;
+}
+.galleryImageBox:hover {
+  background: var(--brand-300) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--brand-600);
+}
+
+/* Checkbox tiles */
+.checkbox-wrapper-16 .checkbox-input:checked + .checkbox-tile,
+.checkbox-wrapper-16 .checkbox-tile:hover {
+  border-color: var(--brand-600) !important;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08) !important;
+}
+.checkbox-wrapper-16 .checkbox-input:checked + .checkbox-tile:before,
+.checkbox-wrapper-16 .checkbox-tile:before {
+  border-color: var(--brand-600) !important;
+  background-color: var(--brand-600) !important;
+}
+
+/* Table accents */
+table.stockInfo th,
+table.stockInfo td {
+  border-color: var(--brand-700) !important;
+}
+table.stockInfo thead th {
+  background: var(--brand-700) !important;
+  color: #fff !important;
+}
+
+/* Sticky action bar */
+.sticky {
+  background: #fff !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Links */
+a {
+  color: var(--brand-700);
+}
+a:hover {
+  color: var(--brand-800);
+}
+
+/* Tooltip */
+[data-title]::after {
+  background-color: var(--gray-800) !important;
+}
+
+/* Shortcut FAB */
+.shortcut {
+  background: var(--success-700) !important;
+}
+.shortcut a {
+  color: #fff !important;
+}
+
+/* Summernote toolbar override align to theme */
+.note-toolbar {
+  background: var(--brand-700) !important;
+  border-color: var(--brand-700) !important;
+}
+.note-toolbar .note-btn {
+  color: #fff !important;
+}

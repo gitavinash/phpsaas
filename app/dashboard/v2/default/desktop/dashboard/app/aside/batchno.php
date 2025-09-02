@@ -10,15 +10,15 @@ if ($site_access_type == 'administrator' || $site_access_type == 'superwiser' ||
     <div class="side-menu">
         <ul>
             <li><a href="inventory/list/"><i class="fi-rr-apps-sort"></i> All Inventory</a></li>
-            <li><a href="inventory/add/"><i class="fi fi-rr-add"></i> Add new Inventory</a></li>
-            <!-- <li><a href="/print_all_label/?theme=2" target="_blank"><i class="fi fi-rr-print"></i> Print all label</a></li> -->
+            <li><a href="inventory/add/"><i class="fi fi-rr-add"></i> Add new Product</a></li>
+            <li><a href="inventory/category/"><i class="fi fi-rr-category-alt"></i> Product Category</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="inventory/list/"><i class="fi-rr-apps-sort"></i> All Inventory</a></li>
-            <li><a href="inventory/add/"><i class="fi fi-rr-add"></i> Add new Inventory</a></li>
-            <!-- <li><a href="/print_all_label/?theme=2" target="_blank"><i class="fi fi-rr-print"></i> Print all label</a></li> -->
+            <li><a href="inventory/add/"><i class="fi fi-rr-add"></i> Add new Product</a></li>
+            <li><a href="inventory/category/"><i class="fi fi-rr-category-alt"></i> Product Category</a></li>
         </ul>
     </div>
 </li>

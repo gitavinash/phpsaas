@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO " . TABLE_PREFIX . "quotation (
                 quotation_parent_id, quotation_ref_id, quotation_ref_type,
                 quotation_type_id, quotation_type, quotation_site_id,
-                quotation_by, quotation_mrp, quotation_price, 
+                quotation_sent_by, quotation_mrp, quotation_price, 
                 quotation_description, quotation_status, quotation_time
             ) VALUES (
                 {$itineraryParentId}, '{$refId}', '{$refType}', {$id},
@@ -94,6 +94,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $httpStatus = 201;
                 $msg = "Itinerary published successfully";
                 $status = "success";
+
+                if ($checkCustomerProfile = mysqli_query($connection, "SELECT profile_email, profile_first_name, profile_mobile FROM " . TABLE_PREFIX . "profile INNER JOIN " . TABLE_PREFIX . "enquiry ON enquiry_user_id = profile_user_id AND enquiry_site_id=" . SITE_ID . " WHERE enquiry_id={$refId} LIMIT 0,1")) {
+
+                    if (mysqli_num_rows($checkCustomerProfile) != 0) {
+                        extract(mysqli_fetch_assoc($checkCustomerProfile));
+                        if ($data['isDownload'] == false) {
+                            // Customer profile
+
+                            $toAddress = $profile_email;
+                            $mobile = $profile_mobile;
+
+                            // Send Email
+                            require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+
+                            // Send WhatsApp
+                            // require_once WHATSAPP_TEMPLATE_VISITOR . 'send-itinerary.php';
+                        }
+                    }
+                } else {
+                    echo mysqli_error($connection);
+                    exit();
+                }
             } else {
                 $httpStatus = 500;
                 $msg = "Failed to update old itinerary";

@@ -541,65 +541,62 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
         <div class="main-box">
             <section class="leadQuickLinks">
                 <?php
-
                 if ($enquiry_status != 5) {
                     if ($enquiry_status != 4) {
                         if (SITE_APP_ID == 22 && ($enquiry_status == 2 || $enquiry_status == 1)) {
-                            echo "<a href='/dashboard/sales/add/?ref=enquiry&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
+                            echo "<a href='/dashboard/sales/add/?ref=enquiry&leadId=" . $id . "' class='btn btn-green-sales'>
+                            <i class='fi-rr-point-of-sale-bill'></i> Convert to sales
+                          </a>";
                         } else {
-                            echo (($enquiry_status != 1) ? "<a href='#' class='btn btn-natural-green' id='convertToSale' data-id='" . base64_encode($enquiry_id) . "'.><i class='fi-rr-octagon-check'></i> Convert to Sale</a>" : '');
+                            echo (($enquiry_status != 1)
+                                ? "<a href='#' class='btn btn-green-sales' id='convertToSale' data-id='" . base64_encode($enquiry_id) . "'>
+                              <i class='fi-rr-octagon-check'></i> Convert to Sale
+                           </a>"
+                                : '');
                         }
                 ?>
-
-                <a href="#" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+                <a href="#" class="btn btn-orange-follow" id="followUpBtn">
+                    <i class="fi-rr-alarm-clock"></i> Follow-ups
+                </a>
                 <?php
-
                         if (SITE_APP == 'astro_client') {
-                            echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
-                            echo "
-                <a href='' class='btn btn-green' id='updatePaymentBtn'><i class='fi-rr-notes'></i> Update payment
-                    records</a>";
+                            echo "<a href='' class='btn btn-teal-payment' id='upayBtn'>
+                            <i class='fi-rr-story-book'></i> Add Upay
+                          </a>";
+                            echo "<a href='' class='btn btn-teal-payment' id='updatePaymentBtn'>
+                            <i class='fi-rr-notes'></i> Update payment records
+                          </a>";
                         }
 
-                        if (SITE_APP == 'aleya') { ?>
-
-                <a href="#" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                    links</a>
-                <?php
-
+                        if (SITE_APP == 'aleya') {
                             if ($enquiry_status != 1) {
-                                echo '<a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>';
+                                echo '<a href="" class="btn btn-blue-itinerary" id="itineraryBtn">
+                                <i class="fi-rr-track"></i> Send itinerary
+                              </a>';
                             }
-
-                            ?>
-                <a href="#" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
-
+                        ?>
+                <a href="#" class="btn btn-purple-links" id="paymentBtn">
+                    <i class="fi-rr-indian-rupee-sign"></i> Send payment links
+                </a>
+                <a href="#" class="btn btn-gold-voucher" id="voucherBtn">
+                    <i class="fi-rr-ticket"></i> Send Vouchers
+                </a>
                 <?php
                         }
-
-                            ?><?php
-
-                                if ($enquiry_status != 1) {
-                                    echo '<a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>';
-                                }
-
-                                ?>
-
-
-                <?php
+                        if ($enquiry_status != 1) {
+                            echo '<a href="" class="btn btn-red-close" id="noteBtn">
+                            <i class="fi-rr-circle-xmark"></i> Close this lead
+                          </a>';
+                        }
                     } else { ?>
-
-                <form method="POST" class="">
+                <form method="POST">
                     <!-- Design a form to assign lead to intern -->
                 </form>
-
-                <?php
-                    }
-                }
-
-                    ?>
+                <?php }
+                } ?>
             </section>
         </div>
+
     </div>
 
     <div class="popUp notesBox">

@@ -1,3 +1,29 @@
+// Always reuse one TinyMCE instance instead of re-init every time
+function loadItineraryIntoEditor(itineraryHtmlBody) {
+  const editorId = "itineraryEditorBox";
+  const existing = tinymce.get(editorId);
+
+  if (existing) {
+    // Editor already initialized → just update content
+    existing.setContent(itineraryHtmlBody);
+  } else {
+    // Initialize TinyMCE fresh
+    tinymce.init({
+      selector: "#" + editorId,
+      license_key: "gpl",
+      menubar: true,
+      plugins: "autoresize lists link",
+      toolbar:
+        "undo redo | bold italic underline | bullist numlist | link | removeformat",
+      autoresize_bottom_margin: 20,
+      init_instance_callback: function (editor) {
+        // Safe: set content once editor is ready
+        editor.setContent(itineraryHtmlBody);
+      },
+    });
+  }
+}
+
 // Show itinerary
 
 $("#fetchItinerary").click(function (e) {
@@ -91,12 +117,7 @@ $("#showItinerary").click(function (e) {
   if (matchedItinerary) {
     let dayWiseItinerary;
     try {
-      console.log(
-        "Raw tour_package_itinerary:",
-        matchedItinerary.tour_package_itinerary
-      );
       dayWiseItinerary = JSON.parse(matchedItinerary.tour_package_itinerary);
-      console.log("Parsed dayWiseItinerary:", dayWiseItinerary);
     } catch (err) {
       console.error("JSON parsing error for tour_package_itinerary:", err);
       console.log("Raw data:", matchedItinerary.tour_package_itinerary);
@@ -181,13 +202,11 @@ $("#showItinerary").click(function (e) {
       <p>${matchedItinerary.tour_package_exclusions}</p>
     `;
 
-    $("#itineraryEditorBox").html(itineraryHtmlBody);
+    loadItineraryIntoEditor(itineraryHtmlBody);
 
-    tinymce.init({
-      selector: "#itineraryEditorBox",
-      license_key: "gpl",
-      menubar: true,
-    });
+    // Set new value in the editor
+    tinymce.get("itineraryEditorBox").setContent(itineraryHtmlBody);
+
     $("#loader").hide();
     $("#editorBox").show();
 
@@ -288,6 +307,7 @@ function sendItineraryToCustomer(isDownload = false) {
     refId: itinenaryRefId,
     refType: itinenaryRefType,
     content: intinenaryObject,
+    isDownload,
   };
 
   $.ajax({
