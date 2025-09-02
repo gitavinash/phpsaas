@@ -69,8 +69,8 @@ require_once 'header.php';
                 </div>
                 <form id="login" autocomplete="off">
                     <div class="form-group">
-                        <input type="email" class="form-control input-with-label" name="otp" id="otpEmailValue" required
-                            placeholder="123456" value="<?php echo ((isset($email)) ? $email : '') ?>">
+                        <input type="number" class="form-control input-with-label" name="otp" id="otpEmailValue"
+                            required placeholder="123456" value="<?php echo ((isset($email)) ? $email : '') ?>">
                     </div>
                     <input type="hidden" class="recaptcha_token" name="recaptcha_token">
                     <a href="#" id="resendEmailOTPBtn" class="disabled" style="pointer-events: none;">Resend OTP in
