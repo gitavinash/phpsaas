@@ -30,7 +30,11 @@ if (defined('COMPANY_WHATSAPP_ENQUIRY_THANK_YOU')) {
         $travelDate . "," .
         $mobile . "," .
         $email . "," .
-        $requirements . ",";
+        $requirements . "," .
+        SITE_NAME . "," .
+        ((defined('COMPANY_SITE_DOMAIN')) ? COMPANY_SITE_DOMAIN : SITE_URL) . "," .
+        ((defined('ADMIN_WHATSAPP_NUMBER')) ? ADMIN_WHATSAPP_NUMBER : SITE_URL) . "," .
+        ((defined('SITE_EMAIL')) ? SITE_EMAIL : $site_email);
 
     $variablesValues = rtrim($variablesValues, ',');
 
