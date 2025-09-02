@@ -1,17 +1,17 @@
 <h2 class="heading">
-    <?php echo ucwords(str_replace('_', ' ', $postType)) ?>
-    <span>Single line intro about this section</span>
+    <?php echo ucwords(str_replace('_', ' ', $postType)); ?>
+    <span>Quick overview of the <?php echo ucwords(str_replace('_', ' ', $postType)); ?> section</span>
 </h2>
 
 <div class="main-menu-list">
     <div class="widget box-2-5">
-        <a href="inventory/list/" aria-label="All blocks">
+        <a href="inventory/list/" aria-label="All <?php echo ((SITE_APP == 'ims_marble') ? 'Blocks' : 'Products') ?><">
             <div class="widget-setting-info">
                 <div class="feature-icon" aria-hidden="true">
                     <i class="fi-rr-apps-sort"></i>
                 </div>
                 <div class="about-feature">
-                    <h3>All blocks</h3>
+                    <h3>All <?php echo ((SITE_APP == 'ims_marble') ? 'Blocks' : 'Products') ?></h3>
                     <!-- <p>this feature is used</p> -->
                 </div>
             </div>

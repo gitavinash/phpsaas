@@ -9,82 +9,57 @@
         <!-- INVENTORY -->
         <div class="more-section is-inventory">
             <h4>Inventory <small>Inventory management</small></h4>
-            <div class="more-grid">
-                <a href="inventory/" class="more-item more-inventory">
-                    <i class="fi fi-rr-inventory-alt"></i><span>Inventory</span>
-                </a>
-                <a href="inventory/list/" class="more-item more-inventory">
-                    <i class="fi-rr-apps-sort"></i><span>All Inventory</span>
-                </a>
-                <a href="inventory/add/" class="more-item more-inventory">
-                    <i class="fi fi-rr-add"></i><span>Add Product</span>
-                </a>
-                <a href="inventory/add/" class="more-item more-inventory">
-                    <i class="fi fi-rr-add"></i><span>Product</span>
-                </a>
+
+            <!-- Row (tinted) -->
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="inventory/list/" class="more-item more-inventory">
+                        <i class="fi-rr-apps-sort"></i><span>All Inventory</span>
+                    </a>
+                    <a href="inventory/add/" class="more-item more-inventory">
+                        <i class="fi fi-rr-add"></i><span>Add Product</span>
+                    </a>
+                    <a href="inventory/category/" class="more-item more-inventory">
+                        <i class="fi fi-rr-category-alt"></i><span>Category</span>
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- BUSINESS HUB -->
         <div class="more-section is-business">
             <h4>Business Hub <small>Control your business</small></h4>
-            <div class="more-grid">
-                <a href="company/" class="more-item more-company">
-                    <i class="fi fi-rr-building"></i><span>Company</span>
-                </a>
-                <a href="company/list/" class="more-item more-company">
-                    <i class="fi-rr-apps-sort"></i><span>All companies</span>
-                </a>
-                <a href="company/add/" class="more-item more-company">
-                    <i class="fi fi-rr-add"></i><span>Add company</span>
-                </a>
 
-                <a href="warehouse/" class="more-item more-warehouse">
-                    <i class="fi fi-rr-warehouse-alt"></i><span>Warehouse</span>
-                </a>
-                <a href="warehouse/list/" class="more-item more-warehouse">
-                    <i class="fi-rr-apps-sort"></i><span>All warehouses</span>
-                </a>
-                <a href="warehouse/add/" class="more-item more-warehouse">
-                    <i class="fi fi-rr-add"></i><span>Add warehouse</span>
-                </a>
-
-                <a href="supplier/" class="more-item more-supplier">
-                    <i class="fi fi-rr-shipping-fast"></i><span>Supplier</span>
-                </a>
-                <a href="supplier/list/" class="more-item more-supplier">
-                    <i class="fi-rr-apps-sort"></i><span>All suppliers</span>
-                </a>
-                <a href="supplier/add/" class="more-item more-supplier">
-                    <i class="fi fi-rr-add"></i><span>Add supplier</span>
-                </a>
-
+            <!-- Row 1: Company -->
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="company/" class="more-item more-company">
+                        <i class="fi fi-rr-building"></i><span>Company</span>
+                    </a>
+                    <a href="warehouse/" class="more-item more-warehouse">
+                        <i class="fi fi-rr-warehouse-alt"></i><span>Warehouse</span>
+                    </a>
+                    <a href="supplier/" class="more-item more-supplier">
+                        <i class="fi fi-rr-shipping-fast"></i><span>Supplier</span>
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- SETTINGS + USERS -->
         <div class="more-section is-account">
             <h4>Account <small>Profile & access</small></h4>
-            <div class="more-grid">
-                <a href="setting/" class="more-item more-setting">
-                    <i class="fi-rr-settings"></i><span>Setting</span>
-                </a>
-                <a href="setting/configuration/" class="more-item more-setting">
-                    <i class="fi-rr-settings"></i><span>Configuration</span>
-                </a>
-                <a href="setting/profile/" class="more-item more-setting">
-                    <i class="fi-rr-portrait"></i><span>Profile</span>
-                </a>
 
-                <a href="user/" class="more-item more-users">
-                    <i class="fi fi-rr-user"></i><span>Users</span>
-                </a>
-                <a href="user/list/" class="more-item more-users">
-                    <i class="fi-rr-apps-sort"></i><span>All users</span>
-                </a>
-                <a href="user/add/" class="more-item more-users">
-                    <i class="fi fi-rr-user-add"></i><span>Add user</span>
-                </a>
+            <!-- Row 1: Settings -->
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="setting/" class="more-item more-setting">
+                        <i class="fi-rr-settings"></i><span>Setting</span>
+                    </a>
+                    <a href="user/" class="more-item more-users">
+                        <i class="fi fi-rr-user"></i><span>Users</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
