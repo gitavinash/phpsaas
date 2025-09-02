@@ -116,40 +116,6 @@
             </div>
         </div>
 
-        <!-- Account Settings -->
-        <div class="tab-content hidden" id="tab-account">
-            <!-- Place your Account Settings HTML here -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6">Account Settings</h2>
-                <div class="space-y-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Current
-                                Password</label>
-                            <input type="password" id="oldPassword" placeholder="Enter your old password"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">New
-                                Password</label>
-                            <input type="text" id="newPassword" placeholder="Enter your new password"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New
-                                Password</label>
-                            <input type="password" id="confirmPassword" placeholder="Confirm your password"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
-                        </div>
-                        <button id="savePasswordInformation"
-                            class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap button-effect w-full sw:w-auto">
-                            Save Changes
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

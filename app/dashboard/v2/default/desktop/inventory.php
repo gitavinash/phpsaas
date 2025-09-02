@@ -1,10 +1,13 @@
-<h2 class="heading"><?php echo ucwords(str_replace('_', ' ', $postType)) ?> <span>Single line intro about this
-        section</span></h2>
+<h2 class="heading">
+    <?php echo ucwords(str_replace('_', ' ', $postType)) ?>
+    <span>Single line intro about this section</span>
+</h2>
+
 <div class="main-menu-list">
     <div class="widget box-2-5">
-        <a href="inventory/list/">
+        <a href="inventory/list/" aria-label="All blocks">
             <div class="widget-setting-info">
-                <div class="feature-icon">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fi-rr-apps-sort"></i>
                 </div>
                 <div class="about-feature">
@@ -14,10 +17,11 @@
             </div>
         </a>
     </div>
+
     <div class="widget box-2-5">
-        <a href="inventory/add/">
+        <a href="inventory/add/" aria-label="Add new <?php echo ((SITE_APP == 'ims_marble') ? 'Block' : 'Product') ?>">
             <div class="widget-setting-info">
-                <div class="feature-icon">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fi-rr-add"></i>
                 </div>
                 <div class="about-feature">
@@ -26,13 +30,12 @@
             </div>
         </a>
     </div>
-    <?php
 
-    if (SITE_APP == 'batchno') { ?>
+    <?php if (SITE_APP == 'batchno') { ?>
     <div class="widget box-2-5">
-        <a href="inventory/category/">
+        <a href="inventory/category/" aria-label="Product Category">
             <div class="widget-setting-info">
-                <div class="feature-icon">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fi-rr-category-alt"></i>
                 </div>
                 <div class="about-feature">
@@ -41,7 +44,5 @@
             </div>
         </a>
     </div>
-    <?php
-    }
-
-    ?>
+    <?php } ?>
+</div>

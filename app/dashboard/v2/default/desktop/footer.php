@@ -1,5 +1,8 @@
 				</div>
 
+				<?php
+
+				if (SITE_VERSION != 'mobile') { ?>
 				<footer>
 				    <div class="credit">
 				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
@@ -11,6 +14,10 @@
 				                        Technologies</strong></a></p>
 				    </div>
 				</footer>
+				<?php
+				}
+
+				?>
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
@@ -30,6 +37,59 @@
 				<script src="<?php echo JS_LIBRARY ?>tinymce/tinymce.min.js"></script>
 				<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.js"></script>
+				<?php
+				if (SITE_VERSION == 'mobile') { ?>
+
+				<!-- Mobile JS -->
+				<script>
+(function() {
+    var openBtn = document.getElementById('moreOpen');
+    var panel = document.getElementById('morePanel');
+    var closeBtn = document.getElementById('moreClose');
+
+    if (!openBtn || !panel || !closeBtn) return;
+
+    function openMore() {
+        panel.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('more-open');
+        try {
+            closeBtn.focus();
+        } catch (e) {}
+    }
+
+    function closeMore() {
+        panel.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('more-open');
+        try {
+            openBtn.focus();
+        } catch (e) {}
+    }
+
+    // Open/Close controls
+    openBtn.addEventListener('click', openMore);
+    closeBtn.addEventListener('click', closeMore);
+
+    // Close on Esc
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeMore();
+    });
+
+    // Close panel after selecting a menu item (nice on mobile)
+    panel.querySelectorAll('.more-item, .logout-btn').forEach(function(el) {
+        el.addEventListener('click', closeMore);
+    });
+
+    // Optional: close when clicking empty space beside content (only if target is the outer panel)
+    panel.addEventListener('click', function(e) {
+        if (e.target === panel) closeMore();
+    });
+})();
+				</script>
+
+
+				<?php
+				}
+				?>
 				<script>
 if ($(".editor").length) {
     const editors = document.querySelectorAll('.editor');

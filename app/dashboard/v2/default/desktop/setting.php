@@ -14,19 +14,6 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="setting/password/">
-            <div class="widget-setting-info">
-                <div class="feature-icon">
-                    <i class="fi-rr-key"></i>
-                </div>
-                <div class="about-feature">
-                    <h3>Change Password</h3>
-                    <!-- <p>this feature is used</p> -->
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="widget box-2-5">
         <a href="setting/profile/">
             <div class="widget-setting-info">
                 <div class="feature-icon">

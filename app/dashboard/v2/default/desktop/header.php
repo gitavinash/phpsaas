@@ -100,15 +100,8 @@ if (isset($daterange)) {
     <header>
         <div class="right-side">
             <div class="mobileLogo"><a href="/dashboard/"><img
-                        src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : SITE_LOGO) ?>"
+                        src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : ((DEVELOPMENT_MODE == true) ? 'https://stock.vinodhomedecor.com//upload/stock.vinodhomedecor.com/2025/09/1756813624_batchno_logo.png' : SITE_LOGO)) ?>"
                         alt=""></a></div>
-            <div class="search-box">
-                <!-- <form action="#">
-                    <div class="form-group">
-                        <input type="text" placeholder="Search for all customers">
-                    </div>
-                </form> -->
-            </div>
             <ul>
                 <li <?php echo ((SITE_VERSION == 'mobile') ? "style='display:none'" : '') ?>><a
                         href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
@@ -121,15 +114,17 @@ if (isset($daterange)) {
                                 src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
                                 alt=""></div>
                     </a>
-                    <ul>
-                        <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Edit Profile</a></li>
-                        <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
-                        <li><a
-                                href="/logout/?redirect_url=<?php echo ACTIVE_URL . (($site_access_type == 'customer') ? '&authby=mobile' : '') ?>"><i
-                                    class="fi-rr-power"></i> Log
-                                Out</a>
-                        </li>
-                    </ul>
+                    <?php
+                    if (SITE_VERSION != 'mobile') { ?>
+                    <div class="profile-menu">
+                        <ul>
+                            <li><a href="/dashboard/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                            <li><a href="/dashboard/logout/"><i class="fi-rr-sign-out"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                    <?php
+                    }
+                    ?>
                 </li>
             </ul>
         </div>
@@ -171,7 +166,6 @@ if (isset($daterange)) {
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
-                            <li><a href="setting/password/"><i class="fi-rr-key"></i> Change password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
@@ -184,7 +178,6 @@ if (isset($daterange)) {
 
                             <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
-                            <li><a href="setting/password/"><i class="fi-rr-key"></i> Change Password</a></li>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
@@ -221,6 +214,22 @@ if (isset($daterange)) {
         </nav>
 
     </aside>
+
+    <?php
+
+    if (SITE_VERSION == 'mobile') {
+
+        $mobileMenuFile = $appDashboardDirectory . 'mobile-menu/' . strtolower(SITE_APP) . '.php';
+        $defaultMobileMenuFile = $appDashboardDirectory . 'mobile-menu/default.php';
+
+        if (file_exists($mobileMenuFile)) {
+            require_once $mobileMenuFile;
+        } else {
+            require_once $defaultMobileMenuFile;
+        }
+    }
+
+    ?>
 
     <main>
 

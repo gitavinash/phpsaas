@@ -45,8 +45,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                                 alt=""></div>
                     </a>
                     <ul>
-                        <li><a href="setting/?type=profile"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-                        <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                         <li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
                     </ul>
                 </li>
@@ -145,46 +143,46 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 if (SITE_ID == 35) { ?>
 
 
-                <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
-                    <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
+                    <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
+                        <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
+                        <div class="side-menu">
+                            <ul>
+                                <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                                <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                                <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-menu">
+                            <ul>
+                                <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                                <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                                <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            </ul>
+                        </div>
+                    </li>
 
                 <?php
                 }
 
                 if (SITE_ID != 22 && SITE_ID != 35 && SITE_ID != 32) { ?>
 
-                <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
-                    <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
-                            </li>
-                            <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
-                            </li>
-                            <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
-                        </ul>
-                    </div>
-                </li>
+                    <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
+                        <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
+                        <div class="side-menu">
+                            <ul>
+                                <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
+                                </li>
+                                <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-menu">
+                            <ul>
+                                <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
+                                </li>
+                                <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+                            </ul>
+                        </div>
+                    </li>
 
                 <?php
                 }
@@ -228,7 +226,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
-                            <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change password</a></li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i>
                                     URL redirection</a></li>
@@ -239,7 +236,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
-                            <li><a href="setting/?type=password"><i class="fas fa-key"></i> Change Password</a></li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i>
                                     URL redirection</a></li>

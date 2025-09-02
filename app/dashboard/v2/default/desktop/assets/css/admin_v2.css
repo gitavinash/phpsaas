@@ -878,6 +878,7 @@ main .container .heading span {
 
 .page-not-found img {
   margin-bottom: 50px;
+  max-width: 100%;
 }
 
 .page-not-found h1 {
@@ -1109,7 +1110,7 @@ main .container .heading span {
 
 .widget-setting-info .about-feature {
   float: left;
-  max-width: 70%;
+  max-width: 56%;
 }
 
 .widget-setting-info .about-feature h3 {
@@ -1119,6 +1120,7 @@ main .container .heading span {
   font-weight: 400;
   margin: 0;
   padding: 8px 0px 5px 0px;
+  word-wrap: break-word;
 }
 
 .widget-setting-info .about-feature p {
