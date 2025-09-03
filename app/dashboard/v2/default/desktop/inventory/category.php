@@ -120,7 +120,7 @@ ORDER BY
                                 $actionsHtml = '
                 <div class="tableActionButton">
                     <a href="#" data-id="' . base64_encode($catId) . '" data-title="' . $name . '" class="tableActionIconBtn editCategoryPopUp" title="Edit category" data-title="Edit category" target="_blank"><i class="fi fi-rr-edit bgWhite"></i></a>
-                    <a href="#" data-type="category" data-id="' . $catId . '" title="Delete category" data-title="Delete category" class="tableActionIconBtn deleteButton" data-redirect="false"><i class="fi fi-rr-trash bgRed"></i></a>
+                    <a href="#" data-type="inventory/category" data-id="' . $catId . '" title="Delete category" data-title="Delete category" class="tableActionIconBtn deleteButton" data-redirect="false"><i class="fi fi-rr-trash bgRed"></i></a>
                 </div>
             ';
 
@@ -178,7 +178,7 @@ if ($__rs = mysqli_query(
 
 <!-- Category Modal (Add + Edit) -->
 <div class="popUp categoryBox" id="categoryModal" aria-hidden="true" style="display:none;">
-    <div class="fullScreenPopUpBox">
+    <div class="<?php echo ((SITE_VERSION == 'mobile') ? 'fullScreenPopUpBox' : 'smallPopUpBox') ?>">
         <div class="widget box-7">
             <div class="contentArea">
                 <form id="categoryForm" method="POST" action="/dashboard/category/save/">
@@ -187,8 +187,6 @@ if ($__rs = mysqli_query(
                             <div class="form-header">
                                 <h4 class="heading" id="categoryModalTitle">Add category</h4>
                             </div>
-
-                            <input type="hidden" name="category_id" id="catIdHidden" value="">
                             <div class="form-group">
                                 <input type="text" name="category_title" id="catTitleInput" class="form-control"
                                     required>
@@ -201,15 +199,12 @@ if ($__rs = mysqli_query(
                                 </select>
                                 <label class="form-lable" for="catParentSelect">Parent category</label>
                             </div>
-
-
-                            <input type="hidden" name="category_id" id="catIdHidden" value="">
+                            <input type="hidden" name="category_id" id="category_id" value="">
                             <div class="form-group">
                                 <textarea name="category_description" id="catDescriptionInput"
                                     class="form-control"></textarea>
                                 <label class="form-lable" for="catDescriptionInput">Category description</label>
                             </div>
-
                         </div>
                     </section>
                 </form>

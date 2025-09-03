@@ -866,7 +866,7 @@ var $body = $("body");
 var $form = $("#categoryForm");
 
 var $titleEl = $("#categoryModalTitle");
-var $idHidden = $("#catIdHidden");
+var $idHidden = $("#category_id");
 var $nameInput = $("#catTitleInput");
 var $parentSel = $("#catParentSelect");
 var $statusSel = $("#catStatusSelect");
@@ -891,7 +891,6 @@ function closeModal() {
 function openAdd() {
   $(".shortcut").hide();
   $titleEl.text("Add category");
-  $form.attr("action", "/dashboard/category/save/"); // adjust if needed
   $idHidden.val("");
   $nameInput.val("");
   if ($parentSel.length) $parentSel.val("");
@@ -901,9 +900,8 @@ function openAdd() {
 
 function openEdit(b64Id, presetTitle) {
   $titleEl.text("Edit category");
-  $form.attr("action", "/dashboard/category/update/"); // adjust if needed
   $idHidden.val(b64Id || "");
-
+  $(".shortcut").hide();
   var resolvedTitle = presetTitle || "";
   if (!resolvedTitle) {
     // Try to read from the same table row if not provided
@@ -958,5 +956,55 @@ $(document).on("keydown", function (e) {
     $modal.attr("aria-hidden") === "false"
   ) {
     closeModal();
+  }
+});
+
+// Save category
+
+$("#saveCategoryBtn").click(function (e) {
+  e.preventDefault();
+  $(".actionArea").hide();
+  const categoryId = $idHidden.val();
+  const categoryTitle = $nameInput.val().trim();
+  const categoryParent = $parentSel.val();
+  const categoryDescription = $("#catDescriptionInput").val().trim();
+
+  console.log(`categoryId`, categoryId);
+
+  if (categoryTitle != "") {
+    // Proceed with the AJAX request
+    $.ajax({
+      url:
+        "/api/inventory/category/" + (categoryId ? "update" : "publish") + "/",
+      method: "POST",
+      data: {
+        categoryID: categoryId,
+        title: categoryTitle,
+        categoryParentID: categoryParent,
+        description: categoryDescription,
+        postType: "product",
+      },
+      success: function (response) {
+        $(".actionArea").show();
+        popUpMessage("center", response.msg, response.status);
+        if (response.status == "success") {
+          setTimeout(function () {
+            window.location.reload();
+          }, 1500);
+        }
+      },
+      error: function (errorResponse) {
+        $(".actionArea").show();
+        console.log(`Error:`, errorResponse);
+        popUpMessage(
+          "center",
+          errorResponse.responseJSON.msg,
+          errorResponse.responseJSON.status
+        );
+      },
+    });
+  } else {
+    popUpMessage("center", "Please enter a category title.", "warning");
+    $(".actionArea").show();
   }
 });
