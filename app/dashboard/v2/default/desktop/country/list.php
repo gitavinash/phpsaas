@@ -71,7 +71,7 @@ if ($countryInfoList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefi
                             <div class='tableActionButton'>
                                 <a href='//" . SITE_DOMAIN . "/start-application/?country=" . strtolower(str_replace(' ', '_', $country['visa_country_title'])) . "' class='tableActionIconBtn' title='View country' data-title='View country' target='_blank'><i class='fi fi-rr-eye bgLightGreen'></i></a>
                                 <a href='/dashboard/country/update/?id=" . base64_encode($country['visa_country_id']) . "' class='tableActionIconBtn' title='Edit country' data-title='Edit country' target='_blank'><i class='fi fi-rr-edit bgWhite'></i></a>
-                                <a href='#' data-type='country' data-id='{$country['visa_country_id']}' title='Delete country' data-title='Delete country' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>
+                                <a href='#' data-type='country' data-id='{$country['visa_country_id']}' title='Delete country' data-title='Delete country' class='tableActionIconBtn deleteButton' data-redirect='false' target='_blank'><i class='fi fi-rr-trash bgRed'></i></a>
                             </div>
                         </td>";
                         echo "</tr>";

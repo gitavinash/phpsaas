@@ -738,12 +738,9 @@ $("#addInventory").click(function (e) {
     $("#addInventory").show();
   } else {
     var formData = new FormData(document.getElementById("addNewInventoryForm"));
-
-    console.log(`formData`, formData);
-
     $.ajax({
       type: "POST",
-      url: "/api/block/publish/",
+      url: "/api/inventory/publish/",
       dataType: "JSON",
       data: formData,
       processData: false,
@@ -754,18 +751,19 @@ $("#addInventory").click(function (e) {
         if (successResponse.status == "success") {
           setTimeout(function () {
             const blockId = btoa(successResponse.id);
-            window.location.href = `/dashboard/inventory/update/?updateType=item&id=${blockId}`;
+            window.location.href = `/dashboard/inventory/list/`;
           }, 1500);
         }
+        $("#addInventory").show();
       },
       error: function (errorResponse) {
+        $("#addInventory").show();
         console.log(`Error:`, errorResponse);
         popUpMessage(
           "center",
           errorResponse.responseJSON.msg,
           errorResponse.responseJSON.status
         );
-        $("#addInventory").show();
       },
     });
   }
@@ -830,7 +828,7 @@ $("#updateInventory").click(function (e) {
 
     $.ajax({
       type: "POST",
-      url: "/api/block/update/",
+      url: "/api/inventory/update/",
       dataType: "JSON",
       data: formData,
       processData: false,

@@ -74,6 +74,13 @@ ol {
   border: #27ae60 !important;
 }
 
+.btn-sm {
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  height: auto !important;
+}
+
 .bgRed {
   background: #761b1b !important;
 }

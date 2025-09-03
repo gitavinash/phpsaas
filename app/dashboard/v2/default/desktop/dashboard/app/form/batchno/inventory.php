@@ -55,20 +55,24 @@
         <label class="form-lable" id="Label">Product code or SKU code<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <input id="purchaseCost" name="purchaseCost" type="text" />
+        <input id="purchaseCost" name="purchaseCost" type="number" />
         <label class="form-lable" id="Label">Purchase cost</label>
     </div>
     <div class="form-group">
-        <input id="purchaseMRP" name="purchaseMRP" type="text" />
+        <input id="purchaseMRP" name="purchaseMRP" type="number" />
         <label class="form-lable" id="Label">MRP</label>
     </div>
     <div class="form-group">
-        <input id="sellingPrice" name="sellingPrice" type="text" />
+        <input id="sellingPrice" name="sellingPrice" type="number" />
         <label class="form-lable" id="Label">Selling price</label>
     </div>
     <div class="form-group">
         <input id="totalItem" name="totalItem" type="number" onwheel="this.blur()" />
         <label class="form-lable" id="Label">Current stock<sup>*</sup></label>
+    </div>
+    <div class="form-group">
+        <input id="minStock" name="minStock" type="number" onwheel="this.blur()" />
+        <label class="form-lable" id="Label">Stock alert</label>
     </div>
     <div class="form-group">
         <select class="selectJS form-control" name="productType" id="productType">
@@ -89,7 +93,7 @@
         <label class="form-lable" id="Label">Product type<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <select class="selectJS form-control" name="supplier" id="supplier">
+        <select class="selectJS form-control" name="supplierId" id="supplier">
             <option value="select">Select supplier</option>
             <?php
 
