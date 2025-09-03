@@ -25,4 +25,31 @@
         </div>
     </a>
 </div>
+
+<div class="widget box-2 box-mb-5">
+    <a href="company/add/" class="actionBtn new-item-btn" aria-label="Add new purchase">
+        <div class="widget-info">
+            <i class="fi fi-rr-building plus-badge badge-amber" aria-hidden="true"></i>
+            Add new company
+        </div>
+    </a>
+</div>
+
+<div class="widget box-2 box-mb-5">
+    <a href="warehouse/add/" class="actionBtn new-item-btn" aria-label="Add new purchase">
+        <div class="widget-info">
+            <i class="fi fi-rr-warehouse-alt plus-badge badge-amber" aria-hidden="true"></i>
+            Add new warehouse
+        </div>
+    </a>
+</div>
+
+<div class="widget box-2 box-mb-5">
+    <a href="supplier/add/" class="actionBtn new-item-btn" aria-label="Add new purchase">
+        <div class="widget-info">
+            <i class="fi fi-rr-shipping-fast plus-badge badge-amber" aria-hidden="true"></i>
+            Add new supplier
+        </div>
+    </a>
+</div>
 <?php } ?>

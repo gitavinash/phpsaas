@@ -858,3 +858,105 @@ $("#updateInventory").click(function (e) {
     });
   }
 });
+
+// Category management
+
+var $modal = $("#categoryModal");
+var $body = $("body");
+var $form = $("#categoryForm");
+
+var $titleEl = $("#categoryModalTitle");
+var $idHidden = $("#catIdHidden");
+var $nameInput = $("#catTitleInput");
+var $parentSel = $("#catParentSelect");
+var $statusSel = $("#catStatusSelect");
+
+function openModal() {
+  $modal.css("display", "block").attr("aria-hidden", "false");
+  $body.addClass("more-open"); // reuse scroll lock utility if present
+  setTimeout(function () {
+    $nameInput.trigger("focus");
+  }, 50);
+}
+
+function closeModal() {
+  $(".shortcut").show();
+  $modal.css("display", "none").attr("aria-hidden", "true");
+  $body.removeClass("more-open");
+  // Reset form but keep defaults for parent/status
+  $form[0].reset();
+  $idHidden.val("");
+}
+
+function openAdd() {
+  $(".shortcut").hide();
+  $titleEl.text("Add category");
+  $form.attr("action", "/dashboard/category/save/"); // adjust if needed
+  $idHidden.val("");
+  $nameInput.val("");
+  if ($parentSel.length) $parentSel.val("");
+  if ($statusSel.length) $statusSel.val("1");
+  openModal();
+}
+
+function openEdit(b64Id, presetTitle) {
+  $titleEl.text("Edit category");
+  $form.attr("action", "/dashboard/category/update/"); // adjust if needed
+  $idHidden.val(b64Id || "");
+
+  var resolvedTitle = presetTitle || "";
+  if (!resolvedTitle) {
+    // Try to read from the same table row if not provided
+    var $btn = $('.editCategoryPopUp[data-id="' + (b64Id || "") + '"]').first();
+    if ($btn.length) {
+      var $row = $btn.closest("tr");
+      var $nameCell = $row.find(".cell-title strong").first();
+      if ($nameCell.length) {
+        resolvedTitle = $.trim($nameCell.text());
+      }
+    }
+  }
+  $nameInput.val(resolvedTitle || "");
+
+  // Optionally prefill parent/status if you add data-parent / data-status on the button
+  // var parentId = $btn.data('parent'); if (parentId !== undefined) $parentSel.val(parentId);
+  // var status   = $btn.data('status'); if (status   !== undefined) $statusSel.val(status);
+
+  openModal();
+}
+
+// Openers (event delegation)
+$(document).on("click", ".addCategoryPopUp", function (e) {
+  e.preventDefault();
+  openAdd();
+});
+
+$(document).on("click", ".editCategoryPopUp", function (e) {
+  e.preventDefault();
+  var b64Id = $(this).attr("data-id") || "";
+  var title = $(this).attr("data-title") || "";
+  openEdit(b64Id, title);
+});
+
+// Close buttons
+$(document).on("click", "#closeCategoryModal", function (e) {
+  e.preventDefault();
+  closeModal();
+});
+
+// Click outside to close
+$modal.on("click", function (e) {
+  if (e.target === this) {
+    closeModal();
+  }
+});
+
+// ESC to close
+$(document).on("keydown", function (e) {
+  if (
+    (e.key === "Escape" || e.keyCode === 27) &&
+    $modal.attr("aria-hidden") === "false"
+  ) {
+    closeModal();
+  }
+});
