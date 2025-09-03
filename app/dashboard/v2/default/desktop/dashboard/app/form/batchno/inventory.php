@@ -59,7 +59,7 @@
         <label class="form-lable" id="Label">Purchase cost</label>
     </div>
     <div class="form-group">
-        <input id="mrp" name="mrp" type="text" />
+        <input id="purchaseMRP" name="purchaseMRP" type="text" />
         <label class="form-lable" id="Label">MRP</label>
     </div>
     <div class="form-group">

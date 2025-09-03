@@ -1,0 +1,160 @@
+<h2 class="heading">
+    Category list
+    <span>All categories will be listed here</span>
+</h2>
+
+<div class="shortcut">
+    <a href="#" class="addCategoryPopUp" title="Add category">
+        <i class="fi fi-rr-plus"></i>
+    </a>
+</div>
+
+<div class="main-box">
+    <section>
+        <div class="list-box">
+            <table class="showInventoryTableList display nowrap" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parent</th>
+                        <th>Products</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Small esc helper
+                    $esc = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+
+                    // Build the query once
+                    $getCategoryQuery = "
+SELECT
+    c.category_id,
+    c.category_title,
+    c.category_parent_id,
+    c.category_status,
+    p.category_title AS parent_category_name,
+
+    COALESCE(self_cnt.products_self, 0)        AS products_self,
+    COALESCE(kids_cnt.products_in_children, 0) AS products_children,
+    COALESCE(self_cnt.products_self, 0)
+      + COALESCE(kids_cnt.products_in_children, 0) AS products_total,
+    COALESCE(kids_meta.child_categories, 0)    AS child_categories_count,
+    c.category_status
+FROM " . TABLE_PREFIX . "category AS c
+LEFT JOIN " . TABLE_PREFIX . "category AS p
+       ON p.category_id = c.category_parent_id
+
+LEFT JOIN (
+    SELECT
+        pr.product_category AS category_id,
+        COUNT(pr.product_id) AS products_self
+    FROM " . TABLE_PREFIX . "product pr
+    WHERE pr.product_status = 1
+    GROUP BY pr.product_category
+) AS self_cnt
+  ON self_cnt.category_id = c.category_id
+
+LEFT JOIN (
+    SELECT
+        ch.category_parent_id AS parent_id,
+        COUNT(pr.product_id)   AS products_in_children
+    FROM " . TABLE_PREFIX . "category ch
+    LEFT JOIN " . TABLE_PREFIX . "product pr
+           ON pr.product_category = ch.category_id
+          AND pr.product_status = 1
+    WHERE ch.category_status = 1
+      AND ch.category_site_id =17
+    GROUP BY ch.category_parent_id
+) AS kids_cnt
+  ON kids_cnt.parent_id = c.category_id
+
+LEFT JOIN (
+    SELECT
+        category_parent_id AS parent_id,
+        COUNT(*)           AS child_categories
+    FROM " . TABLE_PREFIX . "category
+    WHERE category_status = 1
+      AND category_site_id =17
+    GROUP BY category_parent_id
+) AS kids_meta
+  ON kids_meta.parent_id = c.category_id
+
+WHERE c.category_status = 1
+  AND c.category_site_id =17
+ORDER BY
+    COALESCE(p.category_title, c.category_title) ASC,
+    (c.category_parent_id IS NULL) DESC,
+    c.category_title ASC
+";
+
+                    // Run and echo
+                    if ($res = mysqli_query($connection, $getCategoryQuery)) {
+                        if (mysqli_num_rows($res) > 0) {
+                            while ($row = mysqli_fetch_assoc($res)) {
+                                $catId    = (int)$row['category_id'];
+                                $name     = $esc($row['category_title']);
+                                $parent   = $row['parent_category_name'] ? $esc($row['parent_category_name']) : '—';
+
+                                $self     = (int)$row['products_self'];
+                                $children = (int)$row['products_children'];
+                                $total    = (int)$row['products_total'];
+                                $kids     = (int)$row['child_categories_count'];
+
+                                $status   = ((int)$row['category_status'] === 1) ? 'Active' : 'Inactive';
+
+                                // Compose “Products” cell similar to your reference UI:
+                                // total as primary pill, show breakdown as title tooltip
+                                $productsHtml = '
+                <a class="badge badge-soft-primary" href="product/list/?category=' . $catId . '" title="Self: ' . $self . ' | Children: ' . $children . '">
+                    ' . $total . ' products
+                </a>
+            ';
+
+                                // Status pill
+                                $statusClass = ($status === 'Active') ? 'badge-soft-success' : 'badge-soft-warning';
+                                $statusHtml  = '<span class="badge ' . $statusClass . '">' . $status . '</span>';
+
+                                // Actions (edit / view / delete – wire up as needed)
+                                $actionsHtml = '
+                <div class="tableActionButton">
+                    <a href="#" data-id="' . base64_encode($catId) . '" class="tableActionIconBtn editCategoryPopUp" title="Edit category" data-title="Edit category" target="_blank"><i class="fi fi-rr-edit bgWhite"></i></a>
+                    <a href="#" data-type="category" data-id="' . $catId . '" title="Delete category" data-title="Delete category" class="tableActionIconBtn deleteButton" data-redirect="false"><i class="fi fi-rr-trash bgRed"></i></a>
+                </div>
+            ';
+
+                                echo '<tr>
+                <td>
+                    <div class="cell-title">
+                        <strong>' . $name . '</strong>
+                        ' . ($kids > 0 ? '<span class="badge badge-soft-info" title="Immediate child categories">' . $kids . ' sub</span>' : '') . '
+                    </div>
+                </td>
+                <td>' . $parent . '</td>
+                <td>' . $productsHtml . '</td>
+                <td>' . $statusHtml . '</td>
+                <td>' . $actionsHtml . '</td>
+            </tr>';
+                            }
+                        } else {
+                            echo '<tr><td colspan="5" class="empty-state">
+                <div class="empty">
+                    <i class="fi-rr-folder-open"></i>
+                    <div>No categories yet.</div>
+                    <a href="#" class="addCategoryPopUp" class="btn btn-green btn-sm" style="margin-top:6px;">
+                        <i class="fi-rr-plus"></i> Add category
+                    </a>
+                </div>
+            </td></tr>';
+                        }
+                        mysqli_free_result($res);
+                    } else {
+                        echo '<tr><td colspan="5" class="text-danger">Query failed: ' . $esc(mysqli_error($connection)) . '</td></tr>';
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

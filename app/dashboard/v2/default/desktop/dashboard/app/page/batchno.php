@@ -18,7 +18,7 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="inventory/purchase/" class="actionBtn new-item-btn" aria-label="Add new purchase">
+    <a href="sales/add/" class="actionBtn new-item-btn" aria-label="Add new purchase">
         <div class="widget-info">
             <i class="fi fi-rr-receipt plus-badge badge-amber" aria-hidden="true"></i>
             Add new purchase
