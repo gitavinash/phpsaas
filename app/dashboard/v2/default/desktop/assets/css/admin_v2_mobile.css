@@ -589,3 +589,11 @@ body.more-open {
 .shortcut {
   bottom: 10%;
 }
+
+section.form {
+  box-shadow: none !important;
+  border: none !important;
+}
+section.form .form-header h1 {
+  font-size: 24px !important;
+}

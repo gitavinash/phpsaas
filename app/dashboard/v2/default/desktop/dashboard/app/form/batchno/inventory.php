@@ -55,6 +55,18 @@
         <label class="form-lable" id="Label">Product code or SKU code<sup>*</sup></label>
     </div>
     <div class="form-group">
+        <input id="purchaseCost" name="purchaseCost" type="text" />
+        <label class="form-lable" id="Label">Purchase cost</label>
+    </div>
+    <div class="form-group">
+        <input id="mrp" name="mrp" type="text" />
+        <label class="form-lable" id="Label">MRP</label>
+    </div>
+    <div class="form-group">
+        <input id="sellingPrice" name="sellingPrice" type="text" />
+        <label class="form-lable" id="Label">Selling price</label>
+    </div>
+    <div class="form-group">
         <input id="totalItem" name="totalItem" type="number" onwheel="this.blur()" />
         <label class="form-lable" id="Label">Current stock<sup>*</sup></label>
     </div>
