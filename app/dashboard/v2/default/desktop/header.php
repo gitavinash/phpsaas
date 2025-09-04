@@ -99,9 +99,7 @@ if (isset($daterange)) {
     </div> -->
     <header>
         <div class="right-side">
-            <div class="mobileLogo"><a href="/dashboard/"><img
-                        src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : ((DEVELOPMENT_MODE == true) ? 'https://stock.vinodhomedecor.com//upload/stock.vinodhomedecor.com/2025/09/1756813624_batchno_logo.png' : SITE_LOGO)) ?>"
-                        alt=""></a></div>
+            <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt=""></a></div>
             <ul>
                 <li <?php echo ((SITE_VERSION == 'mobile') ? "style='display:none'" : '') ?>><a
                         href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
@@ -131,9 +129,8 @@ if (isset($daterange)) {
     </header>
 
     <aside id="sidebar">
-        <div class="logo"><a href="/dashboard/"><img
-                    src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : ((DEVELOPMENT_MODE == true) ? 'https://stock.vinodhomedecor.com//upload/stock.vinodhomedecor.com/2025/09/1756813624_batchno_logo.png' : SITE_LOGO)) ?>"
-                    alt=""></a></div>
+        <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
+        </div>
         <nav class="side-nav">
             <ul>
                 <li class="header-section-name">
