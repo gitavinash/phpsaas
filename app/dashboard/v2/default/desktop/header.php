@@ -119,7 +119,7 @@ if (isset($daterange)) {
                     <div class="profile-menu">
                         <ul>
                             <li><a href="/dashboard/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                            <li><a href="/dashboard/logout/"><i class="fi-rr-sign-out"></i> Logout</a></li>
+                            <li><a href="/dashboard/logout/"><i class="fi-rr-exit"></i> Logout</a></li>
                         </ul>
                     </div>
                     <?php
@@ -132,7 +132,7 @@ if (isset($daterange)) {
 
     <aside id="sidebar">
         <div class="logo"><a href="/dashboard/"><img
-                    src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : SITE_LOGO) ?>"
+                    src="<?php echo ((SITE_ID == 50) ? '/app/hms/visitor/mgihotels/desktop/assets/images/logo.png' : ((DEVELOPMENT_MODE == true) ? 'https://stock.vinodhomedecor.com//upload/stock.vinodhomedecor.com/2025/09/1756813624_batchno_logo.png' : SITE_LOGO)) ?>"
                     alt=""></a></div>
         <nav class="side-nav">
             <ul>

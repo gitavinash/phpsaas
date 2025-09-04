@@ -1,7 +1,5 @@
 <?php
 
-$tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
-
 if (!isset($id)) { ?>
 <script>
 window.location.href = '/dashboard/inventory/list/';
@@ -14,9 +12,9 @@ window.location.href = '/dashboard/inventory/list/';
 <?php
 }
 
-$blockId = base64_decode($id);
+$productId = base64_decode($id);
 
-if ($checkInventory = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block WHERE block_id='{$blockId}' AND block_status=1 AND block_site_id=" . SITE_ID)) {
+if ($checkInventory = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "inventory ON product_id=inventory_relation_id AND inventory_site_id=" . SITE_ID . " AND inventory_status=1 AND inventory_type='product' INNER JOIN " . TABLE_PREFIX . "warehouse ON warehouse_id=inventory_warehouse_id AND warehouse_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "company ON company_id=warehouse_company_id AND company_site_id=" . SITE_ID . " WHERE product_id='{$productId}' AND product_status=1 AND product_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkInventory) > 0) {
         $validId = true;
         extract(mysqli_fetch_assoc($checkInventory));
@@ -27,7 +25,7 @@ if (isset($validId)) { ?>
 
 <div class="step-open-box step_1_box">
     <div class="form-header">
-        <h1>Update block details</h1>
+        <h1>Update product details</h1>
         <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
     </div>
     <?php
@@ -53,7 +51,7 @@ if (isset($validId)) { ?>
                     if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($warehouseList) > 0) {
                             while ($row = mysqli_fetch_array($warehouseList)) {
-                                echo "<option value='{$row['warehouse_id']}'" . (($row['warehouse_id'] == $block_warehouse_id) ? 'selected' : '') . ">{$row['warehouse_title']}</option>";
+                                echo "<option value='{$row['warehouse_id']}'" . (($row['warehouse_id'] == $inventory_warehouse_id) ? 'selected' : '') . ">{$row['warehouse_title']}</option>";
                             }
                         }
                     }
@@ -70,53 +68,46 @@ if (isset($validId)) { ?>
 
         ?>
     <div class="form-group">
-        <input id="name" name="name" value="<?php echo $block_title ?>" type="text" />
-        <label class="form-lable" id="Label">Block name<sup>*</sup></label>
+        <input id="name" name="name" value="<?php echo $product_title ?>" type="text" />
+        <label class="form-lable" id="Label">Product name<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <textarea name="description" id="description" cols="30" rows="10"><?php echo $block_description ?></textarea>
-        <label class="form-lable" id="Label">About block</label>
+        <textarea name="description" id="description" cols="30" rows="10"><?php echo $product_description ?></textarea>
+        <label class="form-lable" id="Label">About product</label>
     </div>
     <div class="form-group">
-        <input id="itemCode" name="itemCode" value="<?php echo $block_code ?>" type="text" />
-        <label class="form-lable" id="Label">Block code or Item code<sup>*</sup></label>
+        <input id="itemCode" name="itemCode" value="<?php echo $inventory_sku ?>" type="text" />
+        <label class="form-lable" id="Label">Product code or SKU<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <input id="totalItem" name="totalItem" value="<?php echo $block_total_item ?>" type="number"
+        <input id="purchaseCost" name="purchaseCost" value="<?php echo $inventory_purchase_price ?>" type="number" />
+        <label class="form-lable" id="Label">Purchase cost</label>
+    </div>
+    <div class="form-group">
+        <input id="purchaseMRP" name="purchaseMRP" value="<?php echo $inventory_mrp ?>" type="number" />
+        <label class="form-lable" id="Label">MRP</label>
+    </div>
+    <div class="form-group">
+        <input id="sellingPrice" name="sellingPrice" value="<?php echo $inventory_price ?>" type="number" />
+        <label class="form-lable" id="Label">Selling price</label>
+    </div>
+    <div class="form-group">
+        <input id="totalItem" name="totalItem" value="<?php echo $inventory_stock ?>" type="number"
             onwheel="this.blur()" />
-        <label class="form-lable" id="Label">Total item in Block<sup>*</sup></label>
+        <label class="form-lable" id="Label">Total stock<sup>*</sup></label>
     </div>
-    <div class="full-width">
-        <div class="col-8">
-            <div class="form-group">
-                <input id="thickness" name="thickness" value="<?php echo $block_thickness_size ?>" type="number"
-                    onwheel="this.blur()" />
-                <label class="form-lable" id="Label">Thickness<sup>*</sup></label>
-            </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <!-- <p>Size<sup>*</sup></p> -->
-                <select class="selectJS form-control" name="thicknessSize" id="thicknessSize">
-                    <option value="mm" <?php echo (($block_thickness_dimension == 'mm') ? 'selected' : '') ?>>Millimeter
-                    </option>
-                    <option value="cm" <?php echo (($block_thickness_dimension == 'cm') ? 'selected' : '') ?>>Centimeter
-                    </option>
-                    <option value="in" <?php echo (($block_thickness_dimension == 'in') ? 'selected' : '') ?>>Inches
-                    </option>
-                </select>
-                <label class="form-lable" id="Label">Size<sup>*</sup></label>
-            </div>
-        </div>
+    <div class="form-group">
+        <input id="minStock" name="minStock" value="<?php echo $inventory_stock_notice ?>" type="number"
+            onwheel="this.blur()" />
+        <label class="form-lable" id="Label">Stock alert</label>
     </div>
     <div class="form-group">
         <select class="selectJS form-control" name="productType" id="productType">
             <?php
-                if ($measurementList = mysqli_query($connection, "SELECT site_configuration_key FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key LIKE '%measurement_%' AND site_configuration_status=1 AND site_configuration_site_id=" . SITE_ID . " ORDER BY site_configuration_key ASC")) {
-                    if (mysqli_num_rows($measurementList) != 0) {
-                        while ($data = mysqli_fetch_assoc($measurementList)) {
-                            $measurementName = ucwords(str_replace('measurement_', '', $data['site_configuration_key']));
-                            echo "<option value='" . strtolower($measurementName) . "' " . (($block_product_type == strtolower($measurementName)) ? 'selected' : '') . " >{$measurementName}</option>";
+                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title FROM " . TABLE_PREFIX . "category WHERE category_status=1 AND category_site_id=" . SITE_ID . " ORDER BY category_title ASC")) {
+                    if (mysqli_num_rows($categoryList) != 0) {
+                        while ($data = mysqli_fetch_assoc($categoryList)) {
+                            echo "<option value='{$data['category_id']}' " . (($product_category == $data['category_id']) ? 'selected' : '') . ">{$data['category_title']}</option>";
                         }
                     } else {
                         echo "<option>No product type measurement found</option>";
@@ -128,14 +119,14 @@ if (isset($validId)) { ?>
         <label class="form-lable" id="Label">Product type<sup>*</sup></label>
     </div>
     <div class="form-group">
-        <select class="selectJS form-control" name="supplier" id="supplier">
-            <option value="select">Select supplier</option>
+        <select class="selectJS form-control" name="supplierId" id="supplier">
+            <option value="">Select supplier</option>
             <?php
 
                 if ($supplierList = mysqli_query($connection, "SELECT supplier_id, supplier_code, supplier_title, city_name, state_name FROM " . TABLE_PREFIX . "supplier INNER JOIN " . TABLE_PREFIX . "address ON supplier_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id WHERE supplier_status=1 AND supplier_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($supplierList) > 0) {
                         while ($row = mysqli_fetch_array($supplierList)) {
-                            echo "<option value='{$row['supplier_id']}' " . (($row['supplier_id'] == $block_supplier_id) ? 'selected' : '') . ">{$row['supplier_title']}</option>";
+                            echo "<option value='{$row['supplier_id']}' " . (($row['supplier_id'] == $inventory_supplier_id) ? 'selected' : '') . ">{$row['supplier_title']}</option>";
                         }
                     }
                 }
@@ -146,29 +137,29 @@ if (isset($validId)) { ?>
     </div>
     <div class="form-group">
         <input id="totalItem" name="featureImage" type="file" accept="image/x-png, image/gif, image/jpeg" />
-        <label class="form-lable" id="Label">Block feature image</label>
+        <label class="form-lable" id="Label">Product feature image</label>
     </div>
     <div class="form-group">
         <div class="input-field">
             <div class="updateGallery" style="padding-top: .5rem;"></div>
-            <label class="form-lable" id="Label">Block image gallery</label>
+            <label class="form-lable" id="Label">Product image gallery</label>
         </div>
 
         <?php
 
-            if ($block_gallery != '') {
+            if ($product_gallery != '') {
 
-                $blockGalleryList = json_decode($block_gallery, true);
+                $productGalleryList = json_decode($product_gallery, true);
 
                 $oldGalleryImages = array();
 
-                for ($i = 0; $i < sizeof($blockGalleryList); $i++) {
+                for ($i = 0; $i < sizeof($productGalleryList); $i++) {
 
                     $oldGalleryImages[] = array(
                         'id' => $i + 1,
-                        'name' => $blockGalleryList[$i]['name'],
-                        'src' => $blockGalleryList[$i]['path'],
-                        'type' => $blockGalleryList[$i]['type'],
+                        'name' => $productGalleryList[$i]['name'],
+                        'src' => $productGalleryList[$i]['path'],
+                        'type' => $productGalleryList[$i]['type'],
                     );
                 }
 
@@ -184,12 +175,11 @@ if (isset($validId)) { ?>
     </div>
     <div class="box-1">
         <div class="form-group">
-            <input type="hidden" name="blockId" value="<?php echo $block_id ?>">
-            <input type="hidden" name="oldTotalItem" value="<?php echo $block_total_item ?>">
-            <input type="hidden" name="oldItemCode" value="<?php echo $block_code ?>">
-            <input type="hidden" name="oldFeatureImage" value="<?php echo $block_feature_image ?>">
-            <input type="hidden" name="oldGalleryImages" value="<?php echo $block_gallery ?>">
-            <input type="button" class="btn btn-green" id="updateBlock" value="Update block">
+            <input type="hidden" name="productId" value="<?php echo $productId ?>">
+            <input type="hidden" name="oldItemCode" value="<?php echo $inventory_sku ?>">
+            <input type="hidden" name="oldFeatureImage" value="<?php echo $product_image ?>">
+            <input type="hidden" name="oldGalleryImages" value="<?php echo $product_gallery ?>">
+            <input type="button" class="btn btn-green" id="updateInventory" value="Update product">
         </div>
     </div>
 </div>
@@ -198,7 +188,7 @@ if (isset($validId)) { ?>
 
 <div class="step-open-box step_1_box">
     <div class="form-header">
-        <h2>Invalid block request received</h2>
+        <h2>Invalid product request received</h2>
         <img src="<?php echo IMG_LIBRARY ?>storyset/missing.png">
     </div>
 

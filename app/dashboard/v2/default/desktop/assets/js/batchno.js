@@ -779,9 +779,7 @@ $("#updateInventory").click(function (e) {
   var name = $("#name").val();
   var warehouseId = $("#warehouseId").val();
   var itemCode = $("#itemCode").val();
-  var totalItem = $("#totalItem").val();
-  var thickness = $("#thickness").val();
-  var productType = $("#supplier").val();
+  var productType = $("#productType").val();
 
   if (warehouseId == "select") {
     warehouseId = "";
@@ -797,18 +795,10 @@ $("#updateInventory").click(function (e) {
   if (name != "") {
     if (warehouseId != "") {
       if (itemCode != "") {
-        if (totalItem != "") {
-          if (thickness != "") {
-            if (productType != "") {
-              submitRequest = true;
-            } else {
-              msg = "Kindly select product type";
-            }
-          } else {
-            msg = "Kindly enter block item thickness";
-          }
+        if (productType != "") {
+          submitRequest = true;
         } else {
-          msg = "Kindly enter the total number of items";
+          msg = "Kindly select product type";
         }
       } else {
         msg = "Kinldy enter item code of block";
@@ -840,7 +830,7 @@ $("#updateInventory").click(function (e) {
         if (successResponse.status == "success") {
           setTimeout(function () {
             const blockId = btoa(successResponse.id);
-            window.location.href = `/dashboard/inventory/update/?id=${blockId}`;
+            window.location.href = `/dashboard/inventory/list/`;
           }, 1500);
         }
       },
