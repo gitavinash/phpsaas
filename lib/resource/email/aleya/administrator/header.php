@@ -106,7 +106,7 @@ $email_header = "
 
 									<td colspan='4' valign='top' class='image-section' style='border-collapse: collapse;border: 0;margin: 0;padding: 0;-webkit-text-size-adjust: none;color: #555559;font-family: Arial, sans-serif;font-size: 16px;line-height: 26px;background-color: #fff;border-bottom: 4px solid #015e77'>
 
-										<a href='https://{$site_domain}?utm_source=" . SITE_NAME . "&utm_medium=email'><img class='top-image' src='{$site_logo}' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
+										<a href='https://{$site_domain}?utm_source=" . SITE_NAME . "&utm_medium=email'><img class='top-image' src='https://{$site_domain}{$site_logo}' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
 
 									</td>
 
