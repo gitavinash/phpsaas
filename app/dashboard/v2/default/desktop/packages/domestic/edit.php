@@ -99,7 +99,7 @@
                                     // iterate and render
                                     foreach ($tour_package_itinerary as $days) {
                                         $dayTitle = htmlspecialchars($days['day'] ?? "Day {$i}", ENT_QUOTES);
-                                        $dayOverview = $days['overview'] ?? '';
+                                        $dayOverview = isset($days['overview']) ? htmlspecialchars($days['overview'], ENT_QUOTES, 'UTF-8') : '';
 
                                         echo "
                                          <div class='form-group'>
@@ -107,7 +107,7 @@
                                             <input name='dayTitle[]' value='{$dayTitle}' type='text' />
                                          </div>
                                          <div class='form-group'>
-                                            <div class='editor' style='min-height: 200px'>
+                                            <div class='itineraryEditor' style='min-height: 200px'>
                                                 {$dayOverview}
                                             </div>
                                             <textarea name='dayContent[]' id='editor-{$i}' style='display:none'>{$dayOverview}</textarea>
@@ -227,7 +227,7 @@
                                         if (isset($showDeleteBtn)) {
                                             echo "<input type='button' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-title='Delete package' class='btn bgRed deleteButton' data-redirect='/dashboard/packages/domestic/list/' id='deleteTourPackageBtn' value='Delete itinerary'>";
                                         } else {
-                                            echo "<input type='button' class='btn' id='updateTourPackageBtn' value='Update itinerary'>";
+                                            echo "<input type='button' class='btn btn-green' id='updateTourPackageBtn' value='Update itinerary'>";
                                         }
 
                                         ?>

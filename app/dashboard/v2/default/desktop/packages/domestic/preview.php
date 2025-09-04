@@ -33,26 +33,33 @@
                             }
 
                             if (isset($tripData)) { ?>
-                                <div class="form-header">
-                                    <h1 style="float:left; width:100%; line-height:60px; padding: 3rem 0px;">
-                                        <?php echo $packageName ?>
-                                        <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333">
-                                            <strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Duration: </strong><?php echo $tripDuration . ' nights and ' . ($tripDuration + 1) . ' days' ?>
-                                        </span>
-                                        <span style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333"><strong style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Style: </strong><?php echo ucwords($travelStyle) ?></span>
-                                    </h1>
-                                </div>
-                                <input type="hidden" name="packageName" value="<?php echo $packageName ?>">
-                                <input type="hidden" name="travelStyle" value="<?php echo $travelStyle ?>">
-                                <input type="hidden" name="duration" value="<?php echo $tripDuration ?>">
-                                <div class="form-group">
-                                    <p class='form-label'>Overview</p>
-                                    <div class="editor" id="editor1" style="min-height: 200px">
-                                        <?php echo $tripData['overview']; ?>
-                                    </div>
-                                    <textarea name="overview" id="editor-0" style="display:none"><?php echo $tripData['overview']['intro'] ?></textarea>
-                                </div>
-                                <?php
+                        <div class="form-header">
+                            <h1 style="float:left; width:100%; line-height:60px; padding: 3rem 0px;">
+                                <?php echo $packageName ?>
+                                <span
+                                    style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333">
+                                    <strong
+                                        style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Duration:
+                                    </strong><?php echo $tripDuration . ' nights and ' . ($tripDuration + 1) . ' days' ?>
+                                </span>
+                                <span
+                                    style="float: left;width: 100%;font-size: 24px;line-height: 32px; font-weight:400; color: #333"><strong
+                                        style="font-size: 24px;line-height: 32px; font-weight: 700; color: #03637B">Style:
+                                    </strong><?php echo ucwords($travelStyle) ?></span>
+                            </h1>
+                        </div>
+                        <input type="hidden" name="packageName" value="<?php echo $packageName ?>">
+                        <input type="hidden" name="travelStyle" value="<?php echo $travelStyle ?>">
+                        <input type="hidden" name="duration" value="<?php echo $tripDuration ?>">
+                        <div class="form-group">
+                            <p class='form-label'>Overview</p>
+                            <div class="itineraryEditor" id="editor1" style="min-height: 200px">
+                                <?php echo $tripData['overview']; ?>
+                            </div>
+                            <textarea name="overview" id="editor-0"
+                                style="display:none"><?php echo $tripData['overview']['intro'] ?></textarea>
+                        </div>
+                        <?php
                                 $i = 1;
                                 foreach ($tripData['durations'] as $days) {
                                     echo "
@@ -61,7 +68,7 @@
                                             <input name='dayTitle[]' value='{$days['day']}' type='text' />
                                          </div>
                                          <div class='form-group'>
-                                            <div class='editor' style='min-height: 200px'>
+                                            <div class='itineraryEditor' style='min-height: 200px'>
                                                 {$days['details']}
                                             </div>
                                             <textarea name='dayContent[]' id='editor-{$i}' style='display:none'>{$days['details']}</textarea>
@@ -70,53 +77,56 @@
                                     $i++;
                                 }
                                 ?>
-                                <div class="form-group">
-                                    <p>Inclusions</p>
-                                    <div class="editor" style="min-height: 200px">
-                                        <?php echo $tripData['overview']['inclusion'] ?>
-                                    </div>
-                                    <textarea name="inclusion" id="editor-<?php echo $i ?>" style="display:none"><?php echo $tripData['overview']['inclusion']; ?></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <p>Exclusion</p>
-                                    <div class="editor" style="min-height: 200px">
-                                        <?php echo $tripData['overview']['exclusion'] ?>
-                                    </div>
-                                    <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>" style="display:none"><?php echo $tripData['overview']['exclusion']; ?></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <p>Hotel type<sup>*</sup></p>
-                                    <select class="selectJS form-control" name="hotel" id="hotel">
-                                        <option value="select">Select hotel type</option>
-                                        <option value="apartments">Apartments</option>
-                                        <option value="capsule_hotel">Capsule hotel</option>
-                                        <option value="guest_house">Guest house</option>
-                                        <option value="inn">Inn</option>
-                                        <option value="hostel">Hostel</option>
-                                        <option value="house">House</option>
-                                        <option value="home_stay">Home stay</option>
-                                        <option value="1_star_hotel">1 Star Hotel ( Tourist )</option>
-                                        <option value="2_star_hotel">2 Star Hotel ( Standard )</option>
-                                        <option value="3_star_hotel" selected>3 Star Hotel ( Comfort )</option>
-                                        <option value="4_star_hotel">4 Star Hotel ( First Class )</option>
-                                        <option value="5_star_hotel">5 Star Hotel ( Luxury )</option>
-                                        <option value="motel">Motel</option>
-                                        <option value="lodge">Lodge</option>
-                                        <option value="tent">Tent</option>
-                                        <option value="farm_stay">Farm stay</option>
-                                        <option value="resorts">Resorts</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <input type="hidden" name="packageType" id="packageType" value="domestic">
-                                    <input type="hidden" name="outstationVehicle" value="<?php echo $outstationVehicle ?>">
-                                    <input type="hidden" name="localSighseeignVehicle" value="<?php echo $localSighseeignVehicle ?>">
-                                    <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
-                                    <input type="hidden" name="startCity" value="<?php echo $startingCity ?>">
-                                    <input type="hidden" name="endCity" value="<?php echo $endCity ?>">
-                                    <input type="button" class="btn" id="createTourPackageBtn" value="Save ininenary">
-                                </div>
-                                <?php
+                        <div class="form-group">
+                            <p>Inclusions</p>
+                            <div class="itineraryEditor" style="min-height: 200px">
+                                <?php echo $tripData['overview']['inclusion'] ?>
+                            </div>
+                            <textarea name="inclusion" id="editor-<?php echo $i ?>"
+                                style="display:none"><?php echo $tripData['overview']['inclusion']; ?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <p>Exclusion</p>
+                            <div class="itineraryEditor" style="min-height: 200px">
+                                <?php echo $tripData['overview']['exclusion'] ?>
+                            </div>
+                            <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>"
+                                style="display:none"><?php echo $tripData['overview']['exclusion']; ?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <p>Hotel type<sup>*</sup></p>
+                            <select class="selectJS form-control" name="hotel" id="hotel">
+                                <option value="select">Select hotel type</option>
+                                <option value="apartments">Apartments</option>
+                                <option value="capsule_hotel">Capsule hotel</option>
+                                <option value="guest_house">Guest house</option>
+                                <option value="inn">Inn</option>
+                                <option value="hostel">Hostel</option>
+                                <option value="house">House</option>
+                                <option value="home_stay">Home stay</option>
+                                <option value="1_star_hotel">1 Star Hotel ( Tourist )</option>
+                                <option value="2_star_hotel">2 Star Hotel ( Standard )</option>
+                                <option value="3_star_hotel" selected>3 Star Hotel ( Comfort )</option>
+                                <option value="4_star_hotel">4 Star Hotel ( First Class )</option>
+                                <option value="5_star_hotel">5 Star Hotel ( Luxury )</option>
+                                <option value="motel">Motel</option>
+                                <option value="lodge">Lodge</option>
+                                <option value="tent">Tent</option>
+                                <option value="farm_stay">Farm stay</option>
+                                <option value="resorts">Resorts</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" name="packageType" id="packageType" value="domestic">
+                            <input type="hidden" name="outstationVehicle" value="<?php echo $outstationVehicle ?>">
+                            <input type="hidden" name="localSighseeignVehicle"
+                                value="<?php echo $localSighseeignVehicle ?>">
+                            <input type="hidden" name="location" value="<?php echo $destinationCity ?>">
+                            <input type="hidden" name="startCity" value="<?php echo $startingCity ?>">
+                            <input type="hidden" name="endCity" value="<?php echo $endCity ?>">
+                            <input type="button" class="btn" id="createTourPackageBtn" value="Save ininenary">
+                        </div>
+                        <?php
                             } else {
                                 $redirectUrl = "/dashboard/packages/domestic/preview/?packageName={$packageName}&destinationCity={$destinationCity}&startingCity={$startingCity}&endCity={$endCity}&tripDuration={$tripDuration}&outstationVehicle={$outstationVehicle}&localSighseeignVehicle={$localSighseeignVehicle}&travelStyle={$travelStyle}";
 
@@ -148,9 +158,9 @@
                                         print_r($decodedContent);
                                     }
                                 } else { ?>
-                                    <script>
-                                        window.location.reload();
-                                    </script>
+                        <script>
+                        window.location.reload();
+                        </script>
                         <?php
                                 }
                             }
