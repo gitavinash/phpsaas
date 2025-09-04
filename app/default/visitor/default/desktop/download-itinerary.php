@@ -517,7 +517,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                         </div> -->
 
                         <div class="w-full">
-                            <a href="#"
+                            <a href="<?php echo SITE_DOMAIN ?>/book-now/?id=<?php echo base64_encode($quotationId) ?>"
                                 class="block w-full bg-primary hover:bg-primary/90 text-white py-4 px-6 rounded-button font-medium text-lg text-center">
                                 Book Now
                             </a>
