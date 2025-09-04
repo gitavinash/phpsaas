@@ -3861,12 +3861,12 @@ textarea,
   color: var(--text-default) !important;
   border: 1px solid var(--border-soft) !important;
 }
-input:hover,
+/* input:hover,
 textarea:hover,
 .select2-container--default .select2-selection--single:hover {
   border-color: var(--brand-300) !important;
   background: var(--surface-subtle) !important;
-}
+} */
 input:focus,
 textarea:focus,
 .select2-container--default .select2-selection--single:focus {

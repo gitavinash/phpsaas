@@ -98,15 +98,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $msg = "Itinerary published successfully";
                     $status = "success";
 
-                    if ($checkCustomerProfile = mysqli_query($connection, "SELECT profile_email, profile_first_name, profile_mobile FROM " . TABLE_PREFIX . "profile INNER JOIN " . TABLE_PREFIX . "enquiry ON enquiry_user_id = profile_user_id AND enquiry_site_id=" . SITE_ID . " WHERE enquiry_id={$refId} LIMIT 0,1")) {
+                    if ($checkCustomerProfile = mysqli_query($connection, "SELECT enquiry_email, enquiry_mobile, enquiry_first_name FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id={$refId} LIMIT 0,1")) {
 
                         if (mysqli_num_rows($checkCustomerProfile) != 0) {
                             extract(mysqli_fetch_assoc($checkCustomerProfile));
                             if ($data['isDownload'] == false) {
                                 // Customer profile
 
-                                $toAddress = $profile_email;
-                                $mobile = $profile_mobile;
+                                $toAddress = $enquiry_email;
+                                $mobile = $enquiry_mobile;
 
                                 $itinerary  = isset($content['itinerary']) && is_array($content['itinerary']) ? $content['itinerary'] : [];
                                 $totalDays  = count($itinerary);
@@ -142,20 +142,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $pdfUrl    = 'https://' . SITE_DOMAIN . "/download-itinerary/{$encodedId}/";
 
                                 // Safety
-                                $safeName     = htmlspecialchars($profile_first_name ?? 'Traveler', ENT_QUOTES, 'UTF-8');
+                                $safeName     = htmlspecialchars($enquiry_first_name ?? 'Traveler', ENT_QUOTES, 'UTF-8');
                                 $safeTour     = htmlspecialchars((string)($content['title'] ?? 'Your Trip'), ENT_QUOTES, 'UTF-8');
                                 $safeSiteName = htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8');
 
                                 // Send Email
-                                require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+                                if ($toAddress != '') {
+                                    require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+                                }
 
                                 // Send WhatsApp
                                 // require_once WHATSAPP_TEMPLATE_VISITOR . 'send-itinerary.php';
                             }
                         }
-                    } else {
-                        echo mysqli_error($connection);
-                        exit();
                     }
                 }
             } else {

@@ -341,8 +341,6 @@ function sendItineraryToCustomer(isDownload = false) {
           alert("Popup blocked! Please allow popups for this site.");
         }
       } else {
-        // If not downloading, just log the itinerary ID
-        console.log("Itinerary ID:", response);
         popUpMessage("center", message, "success");
       }
 

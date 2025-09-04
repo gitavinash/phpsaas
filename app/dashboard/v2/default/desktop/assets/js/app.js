@@ -1331,6 +1331,7 @@ $(document).ready(function (e) {
   // Update leads data
 
   $("#updateEnquiry").click(function (e) {
+    $("#updateEnquiry").hide();
     var formData = $("#updateLeadForm").serialize();
     $.ajax({
       type: "POST",
@@ -1338,6 +1339,7 @@ $(document).ready(function (e) {
       dataType: "json",
       data: formData,
       success: function (response) {
+        $("#updateEnquiry").show();
         popUpMessage("center", response.msg, response.status);
         if (response.status == "success") {
           setTimeout(function () {
@@ -1347,6 +1349,7 @@ $(document).ready(function (e) {
         }
       },
       error: function (response) {
+        $("#updateEnquiry").show();
         console.log(`Error : `, response);
       },
     });
