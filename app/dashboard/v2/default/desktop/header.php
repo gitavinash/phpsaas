@@ -117,7 +117,7 @@ if (isset($daterange)) {
                     <div class="profile-menu">
                         <ul>
                             <li><a href="/dashboard/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                            <li><a href="/dashboard/logout/"><i class="fi-rr-exit"></i> Logout</a></li>
+                            <li><a href="/logout/"><i class="fi-rr-exit"></i> Logout</a></li>
                         </ul>
                     </div>
                     <?php
