@@ -53,7 +53,7 @@
                         <input type="hidden" name="duration" value="<?php echo $tripDuration ?>">
                         <div class="form-group">
                             <p class='form-label'>Overview</p>
-                            <div class="itineraryEditor" id="editor1" style="min-height: 200px">
+                            <div class="editor" id="editor1" style="min-height: 200px">
                                 <?php echo $tripData['overview']; ?>
                             </div>
                             <textarea name="overview" id="editor-0"
@@ -68,7 +68,7 @@
                                             <input name='dayTitle[]' value='{$days['day']}' type='text' />
                                          </div>
                                          <div class='form-group'>
-                                            <div class='itineraryEditor' style='min-height: 200px'>
+                                            <div class='editor' style='min-height: 200px'>
                                                 {$days['details']}
                                             </div>
                                             <textarea name='dayContent[]' id='editor-{$i}' style='display:none'>{$days['details']}</textarea>
@@ -79,7 +79,7 @@
                                 ?>
                         <div class="form-group">
                             <p>Inclusions</p>
-                            <div class="itineraryEditor" style="min-height: 200px">
+                            <div class="editor" style="min-height: 200px">
                                 <?php echo $tripData['overview']['inclusion'] ?>
                             </div>
                             <textarea name="inclusion" id="editor-<?php echo $i ?>"
@@ -87,7 +87,7 @@
                         </div>
                         <div class="form-group">
                             <p>Exclusion</p>
-                            <div class="itineraryEditor" style="min-height: 200px">
+                            <div class="editor" style="min-height: 200px">
                                 <?php echo $tripData['overview']['exclusion'] ?>
                             </div>
                             <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>"

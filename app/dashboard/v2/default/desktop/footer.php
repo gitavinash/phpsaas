@@ -2,7 +2,7 @@
 
 				<?php
 
-				if (SITE_VERSION != 'mobile') { ?>
+                if (SITE_VERSION != 'mobile') { ?>
 				<footer>
 				    <div class="credit">
 				        <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
@@ -15,9 +15,9 @@
 				    </div>
 				</footer>
 				<?php
-				}
+                }
 
-				?>
+                ?>
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
@@ -38,7 +38,7 @@
 				<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.js"></script>
 				<?php
-				if (SITE_VERSION == 'mobile') { ?>
+                if (SITE_VERSION == 'mobile') { ?>
 
 				<!-- Mobile JS -->
 				<script>
@@ -88,8 +88,8 @@
 
 
 				<?php
-				}
-				?>
+                }
+                ?>
 				<script>
 if ($(".editor").length) {
     const editors = document.querySelectorAll('.editor');
@@ -109,77 +109,17 @@ if ($(".editor").length) {
         }
     });
 }
-
-if ($(".itineraryEditor").length) {
-
-    // Helper: sanitize and return clean plain text
-    function sanitizeToPlainText(input) {
-        var s = String(input || '');
-
-        // Convert common HTML breaks to line breaks
-        s = s.replace(/<\s*br\s*\/?>/gi, '\n')
-            .replace(/<\/\s*p\s*>/gi, '\n\n');
-
-        // Decode HTML entities & strip HTML tags
-        var div = document.createElement('div');
-        div.innerHTML = s;
-        var text = div.textContent || '';
-
-        // Normalize whitespace and remove non-printable chars
-        text = text.replace(/\r\n?/g, '\n'); // CRLF -> LF
-        text = text.replace(/[\u00A0]/g, ' '); // nbsp -> space
-        text = text.replace(/[\u200B-\u200D\uFEFF]/g, ''); // zero-width chars
-        text = text.replace(/[ \t]+\n/g, '\n') // trim line-end spaces
-            .replace(/\n[ \t]+/g, '\n'); // trim line-start spaces
-        text = text.replace(/\n{3,}/g, '\n\n'); // collapse blank lines
-        text = text.replace(/[ \t]{2,}/g, ' '); // collapse spaces
-        text = text.replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\uFFFF]/g, ''); // remove control chars
-
-        return text.trim();
-    }
-
-    const editors = document.querySelectorAll('.editor');
-    const quillInstances = [];
-
-    editors.forEach(function(editor) {
-        // find matching textarea for this editor
-        var hiddenTextarea = editor.parentElement.querySelector('textarea[name="dayContent[]"]');
-
-        // initialize Quill editor
-        var quill = new Quill(editor, {
-            theme: 'snow',
-            modules: {
-                toolbar: false
-            } // no toolbar for plain text
-        });
-
-        // set initial clean text into Quill
-        if (hiddenTextarea) {
-            var initialValue = sanitizeToPlainText(hiddenTextarea.value);
-            quill.setText(initialValue);
-            hiddenTextarea.value = initialValue;
-
-            // keep synced on changes
-            quill.on('text-change', function() {
-                var cleanValue = sanitizeToPlainText(quill.getText());
-                hiddenTextarea.value = cleanValue;
-            });
-        }
-
-        quillInstances.push(quill);
-    });
-}
 				</script>
 				<?php
 
-				if ($site_access_type == 'agent') { ?>
+                if ($site_access_type == 'agent') { ?>
 				<script>
 const tempId = '<?php echo base64_encode(USER_ID) ?>';
 				</script>
 				<?php
-				}
+                }
 
-				?>
+                ?>
 				<script src="<?php echo ADMIN_JS ?>app.js"></script>
 				<script src="<?php echo ADMIN_JS . SITE_APP ?>.js"></script>
 				</body>

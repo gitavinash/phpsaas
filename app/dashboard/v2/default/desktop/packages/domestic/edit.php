@@ -107,7 +107,7 @@
                                             <input name='dayTitle[]' value='{$dayTitle}' type='text' />
                                          </div>
                                          <div class='form-group'>
-                                            <div class='itineraryEditor' style='min-height: 200px'>
+                                            <div class='editor' style='min-height: 200px'>
                                                 {$dayOverview}
                                             </div>
                                             <textarea name='dayContent[]' id='editor-{$i}' style='display:none'>{$dayOverview}</textarea>

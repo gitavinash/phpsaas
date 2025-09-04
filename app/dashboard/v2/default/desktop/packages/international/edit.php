@@ -82,7 +82,7 @@
                         <input type="hidden" name="duration" value="<?php echo $tour_package_duration ?>">
                         <div class="form-group">
                             <p class='form-label'>Overview</p>
-                            <div class="itineraryEditor" id="editor1" style="min-height: 200px">
+                            <div class="editor" id="editor1" style="min-height: 200px">
                                 <?php echo $tour_package_overview; ?>
                             </div>
                             <textarea name="overview" id="editor-0"
@@ -111,7 +111,7 @@
                                     ?>
                         <div class="form-group">
                             <p>Inclusions</p>
-                            <div class="itineraryEditor" style="min-height: 200px">
+                            <div class="editor" style="min-height: 200px">
                                 <?php echo $tour_package_inclusions ?>
                             </div>
                             <textarea name="inclusion" id="editor-<?php echo $i ?>"
@@ -119,7 +119,7 @@
                         </div>
                         <div class="form-group">
                             <p>Exclusion</p>
-                            <div class="itineraryEditor" style="min-height: 200px">
+                            <div class="editor" style="min-height: 200px">
                                 <?php echo $tour_package_exclusions ?>
                             </div>
                             <textarea name="exclusion" id="editor-<?php echo $i + 1 ?>"
