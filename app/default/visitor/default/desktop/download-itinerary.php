@@ -221,9 +221,10 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                         <i class="ri-phone-line"></i>
                         <span><?php echo SITE_MOBILE ?></span>
                     </a>
-                    <a href="https://<?php echo SITE_DOMAIN ?>" class="flex items-center gap-1 hover:text-primary">
+                    <a href="https://<?php echo COMPANY_SITE_DOMAIN ?>"
+                        class="flex items-center gap-1 hover:text-primary">
                         <i class="ri-global-line"></i>
-                        <span><?php echo SITE_DOMAIN ?></span>
+                        <span><?php echo COMPANY_SITE_DOMAIN ?></span>
                     </a>
                 </div>
             </div>
