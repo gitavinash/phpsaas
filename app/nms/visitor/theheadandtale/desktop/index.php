@@ -77,7 +77,8 @@
             ?>
 
             <!-- Left News Container -->
-            <div class="left-container">
+            <div class="left-container"
+                <?php echo (($site_domain != 'theheadandtale.com') ? 'style="width: 100%;"' : '') ?>>
                 <!-- Featured Article -->
                 <div class="featureArticle">
                     <?php if (!empty($latestNewsData[0])) renderNewsCard($latestNewsData[0]); ?>
@@ -96,7 +97,13 @@
             </div>
 
             <!-- Sidebar -->
-            <?php require_once 'sidebar.php'; ?>
+            <?php
+
+            if ($site_domain == 'theheadandtale.com') {
+                require_once 'sidebar.php';
+            }
+
+            ?>
         </div>
     </div>
 </section>

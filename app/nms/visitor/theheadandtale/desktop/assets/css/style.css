@@ -1157,3 +1157,13 @@ nav ul li a.partnerInsights {
     padding: 0;
   }
 }
+
+.sup {
+  padding: 5px 5px;
+  background: #ff0000;
+  border-radius: 7px;
+  margin-left: 3px;
+  font-size: 8px;
+  color: #fff;
+  top: -6px;
+}

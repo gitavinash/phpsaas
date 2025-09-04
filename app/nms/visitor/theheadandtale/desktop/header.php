@@ -256,8 +256,9 @@ if (isset($_COOKIE['user_data'])) {
                 <li><a href="/money-and-machines/"
                         <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
                         title="Money & Machines">Money & Machines</a></li>
-                <li><a href="/report/" title="Report" <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>
-                        class="disable">Report</a></li>
+                <li><a href="https://stack.theheadandtale.com/" target="_blank" title="Report"
+                        <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
+                            class="sup">NEW</sup></a></li>
                 <?php
                 }
 
