@@ -210,19 +210,18 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
         <div class="p-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <img src="<?php echo ((defined('WEBSITE_LOGO')) ? WEBSITE_LOGO : SITE_LOGO) ?>"
-                        style="height: 50px;" alt="<?php echo SITE_NAME ?>">
+                    <img src="<?php echo SITE_LOGO ?>" style="height: 50px;" alt="<?php echo SITE_NAME ?>">
                 </div>
                 <div class="flex items-center gap-6 text-gray-600 text-sm">
-                    <a href="mailto:info@logotravel.com" class="flex items-center gap-1 hover:text-primary">
+                    <a href="mailto:<?php echo SITE_EMAIL ?>" class="flex items-center gap-1 hover:text-primary">
                         <i class="ri-mail-line"></i>
                         <span><?php echo SITE_EMAIL ?></span>
                     </a>
-                    <a href="tel:+919876543210" class="flex items-center gap-1 hover:text-primary">
+                    <a href="tel:+91<?php echo SITE_MOBILE ?>" class="flex items-center gap-1 hover:text-primary">
                         <i class="ri-phone-line"></i>
                         <span><?php echo SITE_MOBILE ?></span>
                     </a>
-                    <a href="https://www.logotravel.com" class="flex items-center gap-1 hover:text-primary">
+                    <a href="https://<?php echo SITE_DOMAIN ?>" class="flex items-center gap-1 hover:text-primary">
                         <i class="ri-global-line"></i>
                         <span><?php echo SITE_DOMAIN ?></span>
                     </a>
