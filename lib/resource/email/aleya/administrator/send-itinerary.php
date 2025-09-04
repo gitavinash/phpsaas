@@ -1,44 +1,4 @@
 <?php
-// Inputs expected (from caller):
-// $profile_first_name, $quotationId, $content (decoded assoc array), SITE_NAME, SITE_DOMAIN
-
-$itinerary  = isset($content['itinerary']) && is_array($content['itinerary']) ? $content['itinerary'] : [];
-$totalDays  = count($itinerary);
-
-// Extract quick highlights (up to 3) from the 'day' field like "Day 1 - Delhi to Shimla"
-$highlights = [];
-foreach ($itinerary as $d) {
-  $raw = trim((string)($d['day'] ?? ''));
-  if ($raw === '') continue;
-  // Try to split by " - " to get the title part
-  $parts = explode(' - ', $raw, 2);
-  $title = isset($parts[1]) ? $parts[1] : $raw;
-  $title = trim($title);
-  if ($title !== '') $highlights[] = $title;
-  if (count($highlights) >= 3) break;
-}
-
-// First/last “titles” (for the mini range display)
-$firstTitle = $highlights[0] ?? null;
-$lastTitle  = null;
-if ($totalDays > 1) {
-  // Try to derive last title from the last “day” row
-  $lastRaw = trim((string)($itinerary[$totalDays - 1]['day'] ?? ''));
-  if ($lastRaw !== '') {
-    $parts = explode(' - ', $lastRaw, 2);
-    $lastTitle = isset($parts[1]) ? trim($parts[1]) : $lastRaw;
-  }
-}
-
-// Build URLs (correct mapping)
-$encodedId = base64_encode($quotationId);
-$viewUrl   = 'https://' . SITE_DOMAIN . "/view-itinerary/{$encodedId}/";
-$pdfUrl    = 'https://' . SITE_DOMAIN . "/download-itinerary/{$encodedId}/";
-
-// Safety
-$safeName     = htmlspecialchars($profile_first_name ?? 'Traveler', ENT_QUOTES, 'UTF-8');
-$safeTour     = htmlspecialchars((string)($content['title'] ?? 'Your Trip'), ENT_QUOTES, 'UTF-8');
-$safeSiteName = htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8');
 
 // Subject + preheader
 $subject   = "Your {$safeTour} — Quick Itinerary Overview | " . SITE_NAME;

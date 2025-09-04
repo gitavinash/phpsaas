@@ -289,9 +289,17 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                                 $msg = '<a>Lead mark Duplicate </a> updated by ' . $profile_display_name;
                                                 break;
 
+                                            case 'itinerary':
+                                                $icon = 'paper-plane';
+                                                $msg = "<a>" . ucwords($enquiry_notes_meta_type) . "</a> sent by " . $profile_display_name;
+                                                if ($enquiry_notes_meta_value != '') {
+                                                    $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                                }
+                                                break;
+
                                             default:
                                                 $icon = 'comment-alt';
-                                                $msg = "<a>{$enquiry_notes_meta_type}</a> updated by " . $profile_display_name;
+                                                $msg = "<a>" . ucwords($enquiry_notes_meta_type) . "</a> updated by " . $profile_display_name;
                                                 if ($enquiry_notes_meta_value != '') {
                                                     $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
                                                 }

@@ -91,30 +91,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   AND quotation_site_id = " . SITE_ID;
 
             if ($updateOldQuotation = mysqli_query($connection, $updateQuery)) {
-                $httpStatus = 201;
-                $msg = "Itinerary published successfully";
-                $status = "success";
 
-                if ($checkCustomerProfile = mysqli_query($connection, "SELECT profile_email, profile_first_name, profile_mobile FROM " . TABLE_PREFIX . "profile INNER JOIN " . TABLE_PREFIX . "enquiry ON enquiry_user_id = profile_user_id AND enquiry_site_id=" . SITE_ID . " WHERE enquiry_id={$refId} LIMIT 0,1")) {
+                if ($updateLog =  mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES({$refId}, " . USER_ID . ", 'itinerary', '')")) {
 
-                    if (mysqli_num_rows($checkCustomerProfile) != 0) {
-                        extract(mysqli_fetch_assoc($checkCustomerProfile));
-                        if ($data['isDownload'] == false) {
-                            // Customer profile
+                    $httpStatus = 201;
+                    $msg = "Itinerary published successfully";
+                    $status = "success";
 
-                            $toAddress = $profile_email;
-                            $mobile = $profile_mobile;
+                    if ($checkCustomerProfile = mysqli_query($connection, "SELECT profile_email, profile_first_name, profile_mobile FROM " . TABLE_PREFIX . "profile INNER JOIN " . TABLE_PREFIX . "enquiry ON enquiry_user_id = profile_user_id AND enquiry_site_id=" . SITE_ID . " WHERE enquiry_id={$refId} LIMIT 0,1")) {
 
-                            // Send Email
-                            require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+                        if (mysqli_num_rows($checkCustomerProfile) != 0) {
+                            extract(mysqli_fetch_assoc($checkCustomerProfile));
+                            if ($data['isDownload'] == false) {
+                                // Customer profile
 
-                            // Send WhatsApp
-                            // require_once WHATSAPP_TEMPLATE_VISITOR . 'send-itinerary.php';
+                                $toAddress = $profile_email;
+                                $mobile = $profile_mobile;
+
+                                $itinerary  = isset($content['itinerary']) && is_array($content['itinerary']) ? $content['itinerary'] : [];
+                                $totalDays  = count($itinerary);
+
+                                // Extract quick highlights (up to 3) from the 'day' field like "Day 1 - Delhi to Shimla"
+                                $highlights = [];
+                                foreach ($itinerary as $d) {
+                                    $raw = trim((string)($d['day'] ?? ''));
+                                    if ($raw === '') continue;
+                                    // Try to split by " - " to get the title part
+                                    $parts = explode(' - ', $raw, 2);
+                                    $title = isset($parts[1]) ? $parts[1] : $raw;
+                                    $title = trim($title);
+                                    if ($title !== '') $highlights[] = $title;
+                                    if (count($highlights) >= 3) break;
+                                }
+
+                                // First/last “titles” (for the mini range display)
+                                $firstTitle = $highlights[0] ?? null;
+                                $lastTitle  = null;
+                                if ($totalDays > 1) {
+                                    // Try to derive last title from the last “day” row
+                                    $lastRaw = trim((string)($itinerary[$totalDays - 1]['day'] ?? ''));
+                                    if ($lastRaw !== '') {
+                                        $parts = explode(' - ', $lastRaw, 2);
+                                        $lastTitle = isset($parts[1]) ? trim($parts[1]) : $lastRaw;
+                                    }
+                                }
+
+                                // Build URLs (correct mapping)
+                                $encodedId = base64_encode($quotationId);
+                                $viewUrl   = 'https://' . SITE_DOMAIN . "/view-itinerary/{$encodedId}/";
+                                $pdfUrl    = 'https://' . SITE_DOMAIN . "/download-itinerary/{$encodedId}/";
+
+                                // Safety
+                                $safeName     = htmlspecialchars($profile_first_name ?? 'Traveler', ENT_QUOTES, 'UTF-8');
+                                $safeTour     = htmlspecialchars((string)($content['title'] ?? 'Your Trip'), ENT_QUOTES, 'UTF-8');
+                                $safeSiteName = htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8');
+
+                                // Send Email
+                                require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+
+                                // Send WhatsApp
+                                // require_once WHATSAPP_TEMPLATE_VISITOR . 'send-itinerary.php';
+                            }
                         }
+                    } else {
+                        echo mysqli_error($connection);
+                        exit();
                     }
-                } else {
-                    echo mysqli_error($connection);
-                    exit();
                 }
             } else {
                 $httpStatus = 500;
