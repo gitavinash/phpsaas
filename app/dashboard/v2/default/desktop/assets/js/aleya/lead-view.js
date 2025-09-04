@@ -80,10 +80,18 @@ $("#fetchItinerary").click(function (e) {
 });
 
 // Helper function to decode HTML entities in strings
-function decodeHtmlEntities(text) {
-  var txt = document.createElement("textarea");
-  txt.innerHTML = text;
-  return txt.value;
+function decodeHtmlEntities(text = "") {
+  if (!text || typeof text !== "string") return "";
+
+  // Create a temporary div for decoding
+  const div = document.createElement("div");
+  div.innerHTML = text;
+
+  // Extract only plain text content
+  const plainText = div.textContent || div.innerText || "";
+
+  // Normalize whitespace: collapse multiple spaces and trim
+  return plainText.replace(/\s+/g, " ").trim();
 }
 
 $("#showItinerary").click(function (e) {
@@ -136,6 +144,8 @@ $("#showItinerary").click(function (e) {
 
     var dayWiseItineraryContent = "";
     dayWiseItinerary.forEach((list) => {
+      console.log("Day:", list.day);
+      console.log("Overview:", decodeHtmlEntities(list.overview));
       dayWiseItineraryContent += `
         <h3>${list.day}</h3>
         <p>${decodeHtmlEntities(list.overview)}</p>
@@ -300,6 +310,10 @@ function sendItineraryToCustomer(isDownload = false) {
   const itinenaryRefType = $("#itinenaryRefType").val();
   const editorContent = tinymce.get("itineraryEditorBox").getContent();
   const intinenaryObject = parseItineraryHtml(editorContent);
+
+  console.log(`editorContent`);
+  console.log(editorContent);
+
   const payload = {
     id: itinenaryId,
     type: itinenaryType,

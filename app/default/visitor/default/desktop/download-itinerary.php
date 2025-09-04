@@ -335,10 +335,13 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                 <?php
                 echo '<div class="space-y-6">';
                 $j = 0;
+
                 foreach ($itineraries as $day) {
                     // Extract title and remove "Day X - " prefix
                     $titleParts = explode(' - ', $day['day'], 2);
                     $title = isset($titleParts[1]) ? $titleParts[1] : $titleParts[0];
+
+                    $dayOverview = isset($day['overview']) ? str_replace(array("\r", "\n", "u003C",  "/pu003E", "pu003E",), '<br>', $day['overview']) : '';
 
                     echo '
     <div class="itinerary-day pb-6">
@@ -349,7 +352,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
             <h3 class="text-lg font-medium">' . htmlspecialchars($title) . '</h3>
         </div>
         <div class="pl-14">
-            <p class="mb-3">' . $day['overview'] . '</p>';
+            <p class="mb-3">' . $dayOverview . '</p>';
 
                     if (isset($hotelRoomMap[$j])) {
                         echo '<div class="mt-8">

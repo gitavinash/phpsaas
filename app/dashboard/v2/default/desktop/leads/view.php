@@ -973,7 +973,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                                 </select>
                             </div>
                             <div class="box-1">
-                                <a href="#" class="btn" id="fetchItinerary"
+                                <a href="#" class="btn btn-green" id="fetchItinerary"
                                     style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
                             </div>
                         </div>
@@ -985,7 +985,7 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary<sup>*</sup></h4>
                         <select class="selectJS form-control" id="itineraryList"></select>
                         <div class="box-1">
-                            <a href="#" class="btn" id="showItinerary"
+                            <a href="#" class="btn btn-green" id="showItinerary"
                                 style="float: left; padding:0.5rem 2rem; margin-top:10px">Show Itinerary</a>
                         </div>
                     </div>
