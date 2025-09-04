@@ -144,8 +144,6 @@ $("#showItinerary").click(function (e) {
 
     var dayWiseItineraryContent = "";
     dayWiseItinerary.forEach((list) => {
-      console.log("Day:", list.day);
-      console.log("Overview:", decodeHtmlEntities(list.overview));
       dayWiseItineraryContent += `
         <h3>${list.day}</h3>
         <p>${decodeHtmlEntities(list.overview)}</p>
