@@ -195,7 +195,9 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Price</td>
-          <td>₹ ${matchedItinerary.tour_package_price_selling_adult} per person</td>
+          <td>₹ ${
+            matchedItinerary.tour_package_price_selling_adult
+          } per person</td>
         </tr>
         <tr>
           <td>Prepared by</td>
@@ -203,13 +205,13 @@ $("#showItinerary").click(function (e) {
         </tr>
       </table>
       <h2>Overview</h2>
-      <p>${matchedItinerary.tour_package_overview}</p>
+      <p>${decodeHtmlEntities(matchedItinerary.tour_package_overview)}</p>
       <h2>Day wise itinerary</h2>
       <div>${dayWiseItineraryContent}</div>
       <h2>Inclusions</h2>
-      <p>${matchedItinerary.tour_package_inclusions}</p>
+      <p>${decodeHtmlEntities(matchedItinerary.tour_package_inclusions)}</p>
       <h2>Exclusions</h2>
-      <p>${matchedItinerary.tour_package_exclusions}</p>
+      <p>${decodeHtmlEntities(matchedItinerary.tour_package_exclusions)}</p>
     `;
 
     loadItineraryIntoEditor(itineraryHtmlBody);
