@@ -106,8 +106,6 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
     $curlError = curl_error($ch);
     curl_close($ch);
 
-    echo $result;
-
     if ($curlError) {
         return 'cURL Error: ' . $curlError;
     }
