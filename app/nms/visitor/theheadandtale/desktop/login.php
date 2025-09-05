@@ -79,6 +79,24 @@ if (isset($_COOKIE['user_data'])) {
                         </div>
                         <button type="button" id="verifyEmailOTPBtn" class="button theme-button">Verify OTP</button>
                     </div>
+
+                    <div id="userRegistration" style="display: none;">
+                        <div class="login_input">
+                            <p style="float: left; margin-bottom: 1rem !important;"><strong>Enter your full
+                                    name</strong></p>
+                        </div>
+
+                        <!-- No nested form here -->
+                        <div class="form-group">
+                            <input type="text" class="form-control input-with-label" name="name" id="userName"
+                                placeholder="Avinash Kumar">
+                        </div>
+
+                        <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+
+                        <button type="button" id="userRegistrationBtn" class="button theme-button">Complete
+                            Registration</button>
+                    </div>
                 </form>
 
                 <div class="or">
