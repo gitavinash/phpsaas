@@ -105,7 +105,7 @@ if (DEVELOPMENT_MODE == false) {
         }
     } else {
 
-        echo "<h2>Error: {$response['message']}</h2>";
+        echo "<h2>Error: {$response['message']} {$paymentAmount}</h2>";
     }
 
     ?>
