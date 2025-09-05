@@ -58,6 +58,9 @@ if (isset($id)) {
             break;
     }
 
+    echo $query;
+    exit();
+
     if ($checkStatus = mysqli_query($connection, $query)) {
 
         if (mysqli_num_rows($checkStatus) != 0) {
