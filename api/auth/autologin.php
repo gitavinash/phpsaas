@@ -18,7 +18,6 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_mobile, user_pa
 
                 ob_start();
 
-
                 setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                 setcookie('user_email', base64_encode($email), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                 setcookie('user_mobile', base64_encode($user_mobile), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);

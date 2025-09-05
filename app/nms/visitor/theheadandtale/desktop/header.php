@@ -1,5 +1,6 @@
 <?php
 
+
 $activeSubscription = false;
 if (isset($_COOKIE['user_data'])) {
     require_once LOGIN_CHECK;

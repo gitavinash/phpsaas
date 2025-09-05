@@ -180,6 +180,9 @@
         ?>
         <nav <?php echo $changeBackground ?>>
             <ul>
+                <?php
+
+                if (SITE_ID == 49) { ?>
                 <li><a href="/deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
                         title="Deepdives">Deepdives</a></li>
                 <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
@@ -191,8 +194,16 @@
                 </li>
                 <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
                         title="Money Trivia">Money Trivia</a></li>
-                <li><a href="/report/" title="Report" <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>
-                        class="disable">Report</a></li>
+                <li><a href="/money-and-machines/"
+                        <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
+                        title="Money & Machines">Money & Machines</a></li>
+                <li><a href="https://stack.theheadandtale.com/" target="_blank" title="Report"
+                        <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
+                            class="sup">NEW</sup></a></li>
+                <?php
+                }
+
+                ?>
             </ul>
         </nav>
     </header>

@@ -12,20 +12,25 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
         /** User has access of this site */
     } else {
 
-
         if (filter_var($mobile, FILTER_VALIDATE_EMAIL)) {
+            $secondValue = time();
             $checkUserCondition = "user_email='{$mobile}'";
+            $firstTwoColumnValue = "{$secondValue}', '{$mobile}";
+            $userEmail = $mobile;
         } elseif (preg_match('/^[6-9]\d{9}$/', $mobile)) {
+            $userEmail =  time() . '@' . SITE_DOMAIN;
             $checkUserCondition = "user_mobile='{$mobile}'";
+            $firstTwoColumnValue = "{$mobile}', '{$secondValue}";
         }
 
-        $userEmail = ((isset($email)) ? $email : $mobile . '@' . SITE_DOMAIN);
+        $userName = time();
+
         $user_salt_key = hash('sha256', uniqid(mt_rand(), true) . $mobile . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
 
         if ($checkUser = mysqli_query($connection, "SELECT user_id as newUserId FROM " . TABLE_PREFIX . "user WHERE {$checkUserCondition}")) {
             if (mysqli_num_rows($checkUser) == 0) {
-                $addUserTableQuery = "INSERT INTO " . TABLE_PREFIX . "user (user_mobile, user_username, user_email, user_salt_key, user_status, user_reg_time, 
-        user_reg_ip) VALUES ('{$mobile}', '{$mobile}', '{$userEmail}', '{$user_salt_key}', 1, NOW(), '" . IP . "')";
+                $addUserTableQuery = "INSERT INTO " . TABLE_PREFIX . "user (user_mobile, user_email, user_username, user_salt_key, user_status, user_reg_time, 
+        user_reg_ip) VALUES ('{$firstTwoColumnValue}', '{$userName}', '{$user_salt_key}', 1, NOW(), '" . IP . "')";
 
                 $createNewUser = mysqli_query($connection, $addUserTableQuery);
                 $newUserId = mysqli_insert_id($connection);
@@ -39,7 +44,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
             }
         }
         $site_access_meta = '';
-        $user_type = 'customer';
+        $user_type = ((isset($reg_type)) ? $reg_type : 'customer');
         $insertSiteAccessQuery = "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES('" . SITE_ID . "', '{$newUserId}', '{$user_type}', 1, '')";
         $createNewSiteAccess = mysqli_query($connection, $insertSiteAccessQuery);
 
@@ -58,20 +63,41 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
     $profile_display_name = ((isset($profile_display_name)) ? $profile_display_name : '');
     $profile_image = ((isset($profile_image)) ? $profile_image : '');
 
-    if (isset($genarateToken)) {
-        if ($genarateToken == true) {
-            ob_start();
-            setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('user_mobile', base64_encode($mobile), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-            $_COOKIE['user_data'] = $user_salt_key;
-            require_once API_MODULES . 'analytics/session-record.php';
-            ob_end_flush();
+    if (isset($genarateToken) && $genarateToken === true) {
+
+        ob_start();
+
+        $cleanDomain = preg_replace('#^https?://#', '', MAIN_DOMAIN);
+        $cleanDomain = explode(':', $cleanDomain)[0];
+        $cleanDomain = rtrim($cleanDomain, '/');
+
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+
+        $cookieOptions = [
+            'expires'  => time() + (30 * 24 * 60 * 60),
+            'path'     => '/',
+            'domain'   => '.' . $cleanDomain,
+            'secure'   => $isSecure,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
+
+        setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);
+        setcookie('user_mobile', base64_encode($mobile), $cookieOptions);
+        setcookie('user_image', base64_encode($profile_image), $cookieOptions);
+        setcookie('user_data', base64_encode($user_salt_key), $cookieOptions);
+        setcookie('user_meta', base64_encode($site_access_meta), $cookieOptions);
+        setcookie('user_type', base64_encode($user_type), $cookieOptions);
+        setcookie('site_app', base64_encode(SITE_APP), $cookieOptions);
+        $_COOKIE['user_data'] = base64_encode($user_salt_key);
+
+        if (headers_sent($file, $line)) {
+            error_log("Headers already sent in $file on line $line. Cookies may not work.");
         }
+
+        require_once API_MODULES . 'analytics/session-record.php';
+
+        ob_end_flush();
     }
 } else {
     $tokenStatus = 'error';

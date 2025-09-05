@@ -324,25 +324,36 @@ $("#verifyEmailOTPBtn").click(function (e) {
       data: {
         otp_ref_id: localStorage.getItem("otpRef"),
         otp_code: otpValue,
+        reg_type: "subscriber",
         otp_mode: "email",
       },
       success: function (data) {
         $("#verifyEmailOTPBtn").show();
         if (data.status == "success") {
-          popUpMessage("center", data.msg, data.status);
+          if (data.existingUser) {
+            console.log(`Login by existing user: ${data.existingUser}`);
 
-          // Hide OTP section and make input non-validatable again
-          $("#verifyEmailOTP").hide();
-          $("#otpEmailValue").prop("required", false).prop("disabled", true);
+            popUpMessage("center", data.msg, data.status);
+            // Hide OTP section and make input non-validatable again
+            $("#verifyEmailOTP").hide();
+            $("#otpEmailValue").prop("required", false).prop("disabled", true);
 
-          popUpMessage("center", "You are successfully logged in", data.status);
-          localStorage.setItem("existingUser", data.existingUser);
+            popUpMessage(
+              "center",
+              "You are successfully logged in",
+              data.status
+            );
 
-          const redirect = getURLParameter("redirect_url");
-          if (redirect) {
-            window.location.href = redirect;
+            const redirect = getURLParameter("redirect_url");
+            if (redirect) {
+              window.location.href = redirect;
+            } else {
+              window.location.href = "/manage-subscription/";
+            }
           } else {
-            window.location.href = "/dashboard/";
+            console.log("New user, proceed to registration");
+            $("#verifyEmailOTP").hide();
+            $("#userRegistration").show();
           }
         } else {
           popUpMessage("center", data.msg, data.status);
@@ -383,6 +394,61 @@ $("#resendEmailOTPBtn").click(function (e) {
     error: function (data) {
       console.log(data);
       popUpMessage("center", data.responseJSON.msg, data.responseJSON.status);
+    },
+  });
+});
+
+$("#userRegistrationBtn").click(function (e) {
+  e.preventDefault();
+
+  const $btn = $("#userRegistrationBtn");
+  const userName = $("#userName").val().trim();
+  // const userId = $.cookie("user_data"); // ✅ Corrected from $.cokie to $.cookie
+
+  // Disable the button to prevent multiple clicks
+  $btn.prop("disabled", true).hide();
+
+  // Validate user name
+  if (!userName) {
+    popUpMessage("center", "Please enter your name.", "warning");
+    $btn.prop("disabled", false).show();
+    return;
+  }
+
+  // Perform the AJAX request to update the name
+  $.ajax({
+    url: "/api/auth/user-profile-update/",
+    type: "POST", // ✅ Use POST for updates (better than GET)
+    dataType: "json",
+    data: {
+      // user_id: userId,
+      name: userName,
+    },
+    success: function (data) {
+      if (data.status == "success") {
+        popUpMessage(
+          "center",
+          data.msg || "Profile updated successfully!",
+          "success"
+        );
+
+        setTimeout(() => {
+          window.location.href = "/manage-subscription/";
+        }, 2000);
+      } else {
+        popUpMessage("center", data.msg || "Failed to update name.", "error");
+      }
+    },
+    error: function (xhr) {
+      console.error("Error:", xhr);
+      const errMsg =
+        xhr.responseJSON?.msg ||
+        "An unexpected error occurred. Please try again.";
+      popUpMessage("center", errMsg, "error");
+    },
+    complete: function () {
+      // Re-enable the button
+      $btn.prop("disabled", false).show();
     },
   });
 });

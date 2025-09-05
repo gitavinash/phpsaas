@@ -117,7 +117,7 @@ if (isset($_COOKIE['user_data'])) {
 
     <?php require_once NOTIFICATION . 'index.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="<?php echo USER_JS ?>script.min.js"></script>
+    <script src="<?php echo USER_JS ?>script.js"></script>
 
     <?php if (isset($alertMsg)) {
         echo "<script>alert('{$alertMsg}')</script>";
