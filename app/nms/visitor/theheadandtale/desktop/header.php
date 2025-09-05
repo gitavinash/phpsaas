@@ -172,7 +172,7 @@ if (isset($_COOKIE['user_data'])) {
                                         $increseDuration = "+1 year";
                                     }
 
-                                    $expiryDate = date('d M Y', strtotime($subscription_time . $increseDuration));;
+                                    $expiryDate = date('d M Y', strtotime($subscription_expiry));;
 
                                     echo "<div class='manage_link'>
                                             <a href='/manage-subscription/'>MANAGE MY SUBSCRIPTION</a>
