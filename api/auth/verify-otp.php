@@ -37,16 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if ($result && mysqli_num_rows($result) === 1) {
             $otpData = mysqli_fetch_assoc($result);
 
-            // ✅ Validate OTP status & time
+            // ✅ Validate OTP status & expiry
             $otpStatus = $otpData['otp_status'];
             $otpTime = strtotime($otpData['otp_time']);
+            $otpExpire = strtotime($otpData['otp_expire']);
+            $currentTime = time();
 
             if ($otpStatus != 0) {
                 $response['msg'] = 'OTP has already been used or is invalid.';
+            } elseif ($otpExpire < $currentTime) {
+                $response['msg'] = 'OTP has expired. Please request a new one.';
             } elseif ($otpData['otp_code'] !== $otpCode) {
                 $response['msg'] = 'Incorrect OTP.';
             } else {
-                // ✅ OTP verified
+                // ✅ OTP verified successfully
                 $update = "DELETE FROM " . TABLE_PREFIX . "otp WHERE otp_id = {$otpRefId}";
                 mysqli_query($connection, $update);
 

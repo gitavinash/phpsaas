@@ -51,15 +51,15 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
         return 'Invalid email address: ' . $email;
     }
 
-    $url = defined('DEFAULT_SMTP_HOST')
-        ? DEFAULT_SMTP_HOST
+    $url = defined('SMTP_API_TEMPLATE_HOST')
+        ? SMTP_API_TEMPLATE_HOST
         : 'https://api.zeptomail.in/v1.1/email/template';
 
-    $templateKey = defined('ZEPTO_TEMPLATE_KEY')
-        ? ZEPTO_TEMPLATE_KEY
+    $templateKey = defined('SMTP_OTP_TEMPLATE')
+        ? SMTP_OTP_TEMPLATE
         : '2518b.79db608369f04f8.k1.84d65520-8675-11f0-b801-62df313bf14d.199007f6b72';
 
-    $apiKey = defined('DEFAULT_SMTP_API_KEY') ? DEFAULT_SMTP_API_KEY : 'Zoho-enczapikey PHtE6r0IRenjiGUs8hEGsaPtF86gZtssqO00LwgVtt1CW/YKHk0Eqt4olDK/rkgvUaQXFfKYzIs9ub+e5eyGdzrsMTkZWmqyqK3sx/VYSPOZsbq6x00YtV8cf0fcUIbrd99r1yHWvNjeNA==';
+    $apiKey = defined('SMTP_API_KEY') ? SMTP_API_KEY : 'Zoho-enczapikey PHtE6r0IRenjiGUs8hEGsaPtF86gZtssqO00LwgVtt1CW/YKHk0Eqt4olDK/rkgvUaQXFfKYzIs9ub+e5eyGdzrsMTkZWmqyqK3sx/VYSPOZsbq6x00YtV8cf0fcUIbrd99r1yHWvNjeNA==';
 
     $headers = [
         'accept: application/json',
@@ -71,8 +71,8 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
     $payload = [
         "mail_template_key" => $templateKey,
         "from" => [
-            "address" => defined('DEFAULT_SMTP_EMAIL') ? DEFAULT_SMTP_EMAIL : 'alerts@blumox.com',
-            "name"    => defined('DEFAULT_SMTP_NAME') ? DEFAULT_SMTP_NAME : 'Blumox Technologies'
+            "address" => defined('EMAIL_SMTP_EMAIL') ? EMAIL_SMTP_EMAIL : 'alerts@blumox.com',
+            "name"    => defined('EMAIL_SMTP_NAME') ? EMAIL_SMTP_NAME : 'Blumox Technologies'
         ],
         "to" => [[
             "email_address" => [
@@ -105,6 +105,8 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
     $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
     curl_close($ch);
+
+    echo $result;
 
     if ($curlError) {
         return 'cURL Error: ' . $curlError;

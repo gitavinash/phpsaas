@@ -7,7 +7,6 @@ if (isset($responseMsg)) {
 }
 
 if (isset($_COOKIE['user_data'])) {
-
     header("Location: {$redirect_url}");
     exit();
 }
@@ -36,66 +35,93 @@ if (isset($_COOKIE['user_data'])) {
             <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt=""></a>
         </div>
         <div class="login_content">
-            <!-- <button>sign in using email</button> -->
             <div class="form_box login">
-                <form method="POST" id="login">
-                    <div class="login_input">
-                        <input type="text" placeholder="Email" name="email" required>
+                <form id="login" autocomplete="off">
+                    <div id="enterEmail">
+                        <div class="login_input">
+                            <p style="float: left; margin-bottom: 1rem !important;" id="formTitle">
+                                <strong>Enter your email to get started.</strong>
+                            </p>
+                        </div>
+                        <div class="login_input">
+                            <input type="text" id="email" placeholder="Email" name="email" required>
+                        </div>
+                        <div class="sign--in_btn">
+                            <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                            <button type="submit" id="emailLoginContinueBtn" class="button theme-button" formnovalidate>
+                                Continue
+                            </button>
+                        </div>
                     </div>
-                    <div class="login_input">
-                        <input type="password" placeholder="Password" name="pass" required>
-                    </div>
-                    <div class="login_input">
-                        <p>Forgot your password? <a href="/forgot-password/">Click Here</a></p>
-                    </div>
-                    <div class="sign--in_btn">
-                        <input type="hidden" name="type" value="auth">
-                        <input type="hidden" name="action" value="login">
-                        <input type="hidden" name="redirect_url"
-                            value="<?php echo ((isset($redirect_url)) ? $redirect_url : '/') ?>">
-                        <input type="hidden" name="hardRedirect" value="true">
-                        <input type="hidden" name="hardRedirectURL" value="/dashboard/">
-                        <?php
 
-                        if (isset($baseUrl)) {
-                            echo "<input type='hidden' name='baseUrl' value='{$baseUrl}'>";
-                            echo "<input type='hidden' name='method' value='{$method}'>";
-                            echo "<input type='hidden' name='id' value='{$id}'>";
-                        }
+                    <div id="verifyEmailOTP" style="display: none;">
+                        <div class="login_input">
+                            <p style="float: left; margin-bottom: 1rem !important;"><strong>Verify OTP</strong></p>
+                        </div>
 
-                        ?>
-                        <input type="hidden" name="recaptcha_token" class="recaptcha_token">
-                        <input type="submit" class="button" value="Sign in">
+                        <!-- No nested form here -->
+                        <div class="form-group">
+                            <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6"
+                                class="form-control input-with-label" name="otp" id="otpEmailValue" placeholder="123456"
+                                disabled>
+                        </div>
+
+                        <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+
+                        <div class="login_input">
+                            <p style="float: left; margin-bottom: 1rem !important; margin-top: 1rem !important;"><a
+                                    href="#" id="resendEmailOTPBtn" class="disabled"
+                                    style="pointer-events: none; text-decoration: none;">Resend
+                                    OTP
+                                    in
+                                    30s</a></p>
+                            </p>
+                        </div>
+                        <button type="button" id="verifyEmailOTPBtn" class="button theme-button">Verify OTP</button>
                     </div>
                 </form>
+
                 <div class="or">
                     <p>or</p>
                 </div>
-                <a href='/oauth/google/?redirect_url=<?php echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl  : '') ?>'
-                    class="authBtn"><img src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt="">Continue
-                    with Google</a>
+
+                <a href='/oauth/google/?redirect_url=<?php
+                                                        echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/')
+                                                            . ((isset($method)) ? '&method=' . $method : '')
+                                                            . ((isset($id)) ? '&id=' . $id : '')
+                                                            . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl  : '');
+                                                        ?>' class="authBtn">
+                    <img src="<?php echo USER_IMAGES ?>google.png" class="img-fluid" alt="">Continue with Google
+                </a>
+
                 <br />
-                <p>Don't have an account? <a
-                        href="/signup/<?php echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url . '&auth=true' : '/manage-subscription/') . ((isset($method)) ? '&method=' . $method : '') . ((isset($id)) ? '&id=' . $id : '') . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl . '&auth=true' : '') ?>">Sign
-                        up</a></p>
+                <p>
+                    Don't have an account?
+                    <a href="/signup/<?php
+                                        echo ((isset($redirect_url)) ? '?redirect_url=' . $redirect_url . '&auth=true' : '/manage-subscription/')
+                                            . ((isset($method)) ? '&method=' . $method : '')
+                                            . ((isset($id)) ? '&id=' . $id : '')
+                                            . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl . '&auth=true' : '');
+                                        ?>">Sign up</a>
+                </p>
+
                 <div class="form_bottom">
-                    <p>By signing for The Head And Tale, you agree to the <a href="/terms-and-conditions/"
-                            target="_blank"> Terms &
-                            Conditions</a>
-                        and <a href="/privacy-policy/" target="_blank"> Privacy Policy</a></p>
+                    <p>By signing for The Head And Tale, you agree to the
+                        <a href="/terms-and-conditions/" target="_blank">Terms & Conditions</a>
+                        and <a href="/privacy-policy/" target="_blank">Privacy Policy</a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+
     <?php require_once NOTIFICATION . 'index.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?php echo USER_JS ?>script.min.js"></script>
-    <?php
 
-    if (isset($alertMsg)) {
+    <?php if (isset($alertMsg)) {
         echo "<script>alert('{$alertMsg}')</script>";
-    }
-
-    ?>
+    } ?>
 </body>
 
 </html>
