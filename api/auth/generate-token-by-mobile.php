@@ -2,13 +2,14 @@
 
 mysqli_query($connection, "START TRANSACTION");
 
-if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1")) {
+if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1")) {
 
     if (mysqli_num_rows($checkUser) != 0) {
 
         extract(mysqli_fetch_assoc($checkUser));
         $genarateToken = true;
         $existingUser = true;
+        $userEmail = $user_email;
         /** User has access of this site */
     } else {
 
@@ -84,6 +85,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_salt_key, user_
 
         setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);
         setcookie('user_mobile', base64_encode($mobile), $cookieOptions);
+        setcookie('user_email', base64_encode($userEmail), $cookieOptions);
         setcookie('user_image', base64_encode($profile_image), $cookieOptions);
         setcookie('user_data', base64_encode($user_salt_key), $cookieOptions);
         setcookie('user_meta', base64_encode($site_access_meta), $cookieOptions);
