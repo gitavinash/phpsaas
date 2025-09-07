@@ -99,7 +99,7 @@
             <!-- Sidebar -->
             <?php
 
-            if ($site_domain == 'theheadandtale.com') {
+            if (MAIN_DOMAIN == 'theheadandtale.com') {
                 require_once 'sidebar.php';
             }
 
