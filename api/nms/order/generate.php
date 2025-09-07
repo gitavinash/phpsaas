@@ -13,7 +13,6 @@ function generate($connection, $data)
     if ($checkOrderStatus = mysqli_query($connection, "SELECT order_id, order_user_id, order_product_id, order_product_type, order_product_qty, order_delivery_charges, profile_first_name, profile_email, profile_mobile as mobile FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "profile ON order_user_id=profile_user_id WHERE order_id='{$order}' AND order_status=0 AND order_site_id=" . SITE_ID)) {
 
         if (mysqli_num_rows($checkOrderStatus) != 0) {
-
             extract(mysqli_fetch_assoc($checkOrderStatus));
 
             $orderProductID = str_replace(' ', '', explode(',', $order_product_id));
@@ -84,13 +83,6 @@ function generate($connection, $data)
                                     $transaction_id = base64_encode(mysqli_insert_id($connection));
 
                                     if ($paymentMode == 'cash') {
-
-                                        // /** Send SMS */
-                                        // require_once APP_SMS_TEMPLATE . 'order/cod.php';
-
-                                        // /** Send Email */
-                                        // require_once APP_EMAIL_TEMPLATE . 'order/cod.php';
-
                                         $url = '/thank-you/?id=' . $transaction_id;
                                     } else {
 

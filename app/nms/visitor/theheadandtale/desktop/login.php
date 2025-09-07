@@ -6,7 +6,7 @@ if (isset($responseMsg)) {
     echo "<script>alert('{$responseMsg}')</script>";
 }
 
-if (isset($_COOKIE['user_data'])) {
+if (isset($_COOKIE['isLogin'])) {
     header("Location: {$redirect_url}");
     exit();
 }

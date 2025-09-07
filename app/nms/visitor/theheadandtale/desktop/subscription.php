@@ -22,6 +22,7 @@ if (isset($_COOKIE['user_data'])) {
             extract(mysqli_fetch_assoc($checkUser));
         } else {
             echo "invalid activity found by unknown users";
+            exit();
         }
     }
 

@@ -13,7 +13,7 @@ $(document).ready(function () {
       appType = $("#app").val();
     }
     var formData = $(".shipping-box").serializeArray();
-    // formData.push({ name: "coupon", value: couponCode });
+    formData.push({ name: "coupon", value: couponCode });
     formData.push({ name: "type", value: "order" });
     formData.push({ name: "action", value: "generate" });
     formData.push({ name: "order", value: $("#orderId").val() });
