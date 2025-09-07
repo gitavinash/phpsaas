@@ -5,6 +5,7 @@ session_destroy();
 if (isset($_SERVER['HTTP_COOKIE'])) {
 
 	$cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+	$activeSiteID = ((SITE_ID == 234) ? " IN (49, 234)" : "=" . SITE_ID);
 
 	// Delete active session from database
 
@@ -14,10 +15,10 @@ if (isset($_SERVER['HTTP_COOKIE'])) {
 			if (mysqli_num_rows($checkUserIsReal) != 0) {
 				extract(mysqli_fetch_assoc($checkUserIsReal));
 				$deviceID = $_COOKIE['device_id'];
-				if ($checkUserSession = mysqli_query($connection, "SELECT us_id FROM " . TABLE_PREFIX . "user_sessions WHERE us_active_device='{$deviceID}' AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
+				if ($checkUserSession = mysqli_query($connection, "SELECT us_id FROM " . TABLE_PREFIX . "user_sessions WHERE us_active_device='{$deviceID}' AND us_user_id='{$user_id}' AND us_site_id{$activeSiteID}")) {
 					if (mysqli_num_rows($checkUserSession) != 0) {
 						extract(mysqli_fetch_assoc($checkUserSession));
-						if (mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "user_sessions WHERE us_id='{$us_id}' AND us_site_id=" . SITE_ID));
+						if (mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "user_sessions WHERE us_id='{$us_id}' AND us_site_id{$activeSiteID}"));
 					}
 				}
 			}

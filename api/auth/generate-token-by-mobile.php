@@ -5,7 +5,6 @@ mysqli_query($connection, "START TRANSACTION");
 if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1")) {
 
     if (mysqli_num_rows($checkUser) != 0) {
-
         extract(mysqli_fetch_assoc($checkUser));
         $genarateToken = true;
         $existingUser = true;
@@ -24,6 +23,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
             $firstTwoColumnValue = "{$mobile}', '{$secondValue}";
         }
 
+        $existingUser = false;
         $userName = time();
 
         $user_salt_key = hash('sha256', uniqid(mt_rand(), true) . $mobile . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
@@ -52,7 +52,6 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         if ($createNewUser && $createNewSiteAccess && $createNewUserProfile) {
             mysqli_query($connection, "COMMIT");
             $tokenStatus = 'success';
-            $existingUser = false;
             $genarateToken = true;
         } else {
             mysqli_query($connection, "ROLLBACK");
@@ -91,6 +90,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         setcookie('user_meta', base64_encode($site_access_meta), $cookieOptions);
         setcookie('user_type', base64_encode($user_type), $cookieOptions);
         setcookie('site_app', base64_encode(SITE_APP), $cookieOptions);
+
         $_COOKIE['user_data'] = base64_encode($user_salt_key);
 
         if (headers_sent($file, $line)) {
@@ -100,6 +100,9 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         require_once API_MODULES . 'analytics/session-record.php';
 
         ob_end_flush();
+    } else {
+        $tokenStatus = 'error';
+        $tokenMsg = 'Something went wrong';
     }
 } else {
     $tokenStatus = 'error';

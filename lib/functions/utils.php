@@ -33,3 +33,19 @@ function isEmailValid(string $email): bool
 
     return true;
 }
+
+function getRootDomain($host)
+{
+    $host = preg_replace('#^https?://#', '', $host); // Remove http/https
+    $host = explode(':', $host)[0];                  // Remove port if any
+    $host = rtrim($host, '/');                       // Remove trailing slash
+
+    $parts = explode('.', $host);
+    $count = count($parts);
+
+    if ($count >= 2) {
+        return $parts[$count - 2] . '.' . $parts[$count - 1]; // last two parts
+    } else {
+        return $host;
+    }
+}

@@ -2,6 +2,7 @@
 
 function record($connection, $data)
 {
+    require_once UTIL_FUNCTIONS;
 
     extract($data);
 
@@ -81,20 +82,39 @@ function record($connection, $data)
     $recordAnalytics = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "analytics(analytics_site_id, analytics_user_id, analytics_link_url, analytics_link_original, analytics_session_id, analytics_site_version, analytics_ip, analytics_os, analytics_browser, analytics_source, analytics_medium, analytics_campaign) VALUE(" . SITE_ID . ", '{$user_id}', '" . ACTIVE_URL_NON_QUERY . "', '" . ACTIVE_URL . "', '" . SESSION_ID . "', '" . SITE_VERSION . "', '" . IP . "', '" . DEVICE_OS . "', '" . DEVICE_BROWSER . "', '{$trafficSource}', '{$trafficMedium}', '{$trafficCampaign}')");
     $analyticsId = mysqli_insert_id($connection);
 
-    if (!isset($_COOKIE['device_id'])) {
-        $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID
-        setcookie('device_id', $deviceID, time() + (86400 * 365), "/"); // 1-year expiry
-    } else {
-        $deviceID = $_COOKIE['device_id'];
-    }
+    if ($user_id != 0) {
+        if (!isset($_COOKIE['device_id'])) {
 
+            if (!isset($cookieOptions)) {
 
-    if ($checkUserSession = mysqli_query($connection, "SELECT us_id FROM " . TABLE_PREFIX . "user_sessions WHERE us_active_device='{$deviceID}' AND us_status=1 AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
-        if (mysqli_num_rows($checkUserSession) == 0) {
-            $recordUserSession = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user_sessions(us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) VALUES('" . SITE_ID . "', '{$user_id}', '{$analyticsId}', '{$deviceID}', 1)");
+                $cleanDomain = getRootDomain(SITE_DOMAIN);
+
+                $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+                $cookieOptions = [
+                    'expires'  => time() + (30 * 24 * 60 * 60),
+                    'path'     => '/',
+                    'domain'   => '.' . $cleanDomain,
+                    'secure'   => $isSecure,
+                    'httponly' => true,
+                    'samesite' => 'Lax',
+                ];
+            }
+            $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID
+            setcookie('device_id', $deviceID, $cookieOptions); // 1-year expiry
+
         } else {
-            $recordUserSession = true;
+            $deviceID = $_COOKIE['device_id'];
         }
+
+        if ($checkUserSession = mysqli_query($connection, "SELECT us_id FROM " . TABLE_PREFIX . "user_sessions WHERE us_active_device='{$deviceID}' AND us_status=1 AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
+            if (mysqli_num_rows($checkUserSession) == 0) {
+                $recordUserSession = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user_sessions(us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) VALUES('" . SITE_ID . "', '{$user_id}', '{$analyticsId}', '{$deviceID}', 1)");
+            } else {
+                $recordUserSession = true;
+            }
+        }
+    } else {
+        $recordUserSession = true;
     }
 
 
