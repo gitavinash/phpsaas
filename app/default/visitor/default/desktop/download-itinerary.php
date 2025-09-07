@@ -436,7 +436,7 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                         </div>
                         <p class="text-gray-600 mt-1">
                             <?php echo ($persons == 1 ? '1 Adult' : $persons . ' Adults'); ?> |
-                            4-Star Accommodation |
+                            <?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?> Accommodation |
                             <?php echo $days; ?> Days, <?php echo $numberOfDays; ?> Nights
                         </p>
                     </div>
