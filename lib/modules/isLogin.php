@@ -73,26 +73,26 @@ if (!isset($_COOKIE['user_data'])) {
 						}
 					} else {
 
-						/** User is for current website */
+						// /** User is for current website */
 
-						if (SITE_ID != 49 && SITE_ID != 234) {
-							if ($site_access_site_id != $activeSiteID) {
+						// if (SITE_ID != 49 && SITE_ID != 234) {
+						// 	if ($site_access_site_id != $activeSiteID) {
 
-								if ($site_domain != '') {
+						// 		if ($site_domain != '') {
 
-									/** Redirect user to its own custom domain website */
+						// 			/** Redirect user to its own custom domain website */
 
-									header("Location: http://{$site_domain}/dashboard/", TRUE, 301);
-									exit();
-								} else {
+						// 			header("Location: http://{$site_domain}/dashboard/", TRUE, 301);
+						// 			exit();
+						// 		} else {
 
-									/** Redirect user to its own sub domain website */
+						// 			/** Redirect user to its own sub domain website */
 
-									header("Location: http://{$site_url}/dashboard/", TRUE, 301);
-									exit();
-								}
-							}
-						}
+						// 			header("Location: http://{$site_url}/dashboard/", TRUE, 301);
+						// 			exit();
+						// 		}
+						// 	}
+						// }
 					}
 
 					define('SITE_DASHBOARD_VERSION', $site_dashboard_version);
