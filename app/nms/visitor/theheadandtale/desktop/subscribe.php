@@ -1,5 +1,11 @@
 <?php
 
+if (SITE_ID == 234) {
+    $redirectURL = HTTP_PROTOCOL . MAIN_DOMAIN . '/manage-subscription/';
+    header("Location: {$redirectURL}", true, 301);
+    exit;
+}
+
 if (DEVELOPMENT_MODE == false) {
     $fetchIPData = file_get_contents("http://ip-api.com/json/" . ((IP == '127.0.0.1') ? '110.235.235.20' : IP) . "?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
 

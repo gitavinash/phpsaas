@@ -9,6 +9,8 @@ if (!isset($news_price)) {
     exit();
 }
 
+$orderType = ((isset($order)) ? $order : 'product');
+
 $userSaltKey = base64_decode($_COOKIE['user_data']);
 
 mysqli_query($connection, "START TRANSACTION");
@@ -39,7 +41,7 @@ if ($checkOrder = mysqli_query($connection, "SELECT order_id FROM " . TABLE_PREF
         $order_id = base64_encode(mysqli_insert_id($connection));
     } else {
         extract(mysqli_fetch_assoc($checkOrder));
-        $addNewOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_product_price='{$totalPrice}' WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "'");
+        $addNewOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_product_type='{$orderType}', order_product_price='{$totalPrice}' WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "'");
         $order_id = base64_encode($order_id);
     }
 }
