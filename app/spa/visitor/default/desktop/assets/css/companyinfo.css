@@ -1,0 +1,50 @@
+.company_wrapper{
+    background-color: var(--white-color);
+    border-radius: 8px;
+    padding: 30px;
+}
+.company_wrapper__top{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+.company_logo img{
+    /* width: 286px; */
+    height: 125px;
+    object-fit: contain;
+}
+.company_top__right{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.company_top__right button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+}
+.register_input .form-select{
+    background-color: #F2F7F8;
+    border: 1px solid var(--green-shade);
+    border-radius: 4px;
+    padding: 14px;
+}
+.form_parra p{
+    margin-top: 25px;
+    color: var(--grey-fade);
+}
+.form_btn{
+    display: flex;
+    gap: 18px;
+}
+.form_btn button{
+    max-width: max-content;
+    margin-top: 24px;
+    padding: 14px 50px;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+.form_btn__cancel{
+    background: #EFF0F1;
+}

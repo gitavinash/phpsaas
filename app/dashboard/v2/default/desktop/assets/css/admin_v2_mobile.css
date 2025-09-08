@@ -64,6 +64,8 @@
   header {
     height: auto !important;
     padding: 4px 0px;
+    height: 45px !important;
+    overflow: hidden;
   }
   aside {
     display: none;

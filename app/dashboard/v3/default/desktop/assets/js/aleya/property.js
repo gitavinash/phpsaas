@@ -1,4 +1,0 @@
-$(".editRoom").click(function (e) {
-  e.preventDefault();
-  alert("hi");
-});

@@ -39,8 +39,39 @@ if (isset($validRequest)) {
 
             extract(mysqli_fetch_assoc($checkBlock));
 
+            // ===== Input shape handling =====
+            // Existing array payloads (width[id] / height[id])
             $receivedWidth  = (isset($_POST['width'])  && is_array($_POST['width']))  ? $_POST['width']  : [];
             $receivedHeight = (isset($_POST['height']) && is_array($_POST['height'])) ? $_POST['height'] : [];
+
+            // NEW: support payloads that send ONLY a single block item id (and optional scalar width/height)
+            if (empty($receivedWidth) && empty($receivedHeight)) {
+                $singleItemId = null;
+                if (isset($_POST['block_item_id']) && ctype_digit((string)$_POST['block_item_id'])) {
+                    $singleItemId = (int)$_POST['block_item_id'];
+                } elseif (isset($_POST['item_id']) && ctype_digit((string)$_POST['item_id'])) {
+                    $singleItemId = (int)$_POST['item_id'];
+                }
+
+                if ($singleItemId !== null) {
+                    // Promote scalar width/height into the expected array shape
+                    if (isset($_POST['width']) && $_POST['width'] !== '') {
+                        $receivedWidth = [$singleItemId => $_POST['width']];
+                    }
+                    if (isset($_POST['height']) && $_POST['height'] !== '') {
+                        $receivedHeight = [$singleItemId => $_POST['height']];
+                    }
+
+                    // If neither width nor height provided, we still allow the id through so
+                    // the diff step can decide there is no change and do a no-op safely.
+                    if (empty($receivedWidth) && empty($receivedHeight)) {
+                        // ensure we at least carry the id forward for a proper diff check
+                        $receivedWidth = [$singleItemId => ''];
+                        $receivedHeight = [];
+                    }
+                }
+            }
+            // ===== End input shape handling =====
 
             $changedIds = array_unique(array_merge(array_keys($receivedWidth), array_keys($receivedHeight)));
             $changedIds = array_values(array_filter($changedIds, function ($v) {
@@ -142,16 +173,18 @@ if (isset($validRequest)) {
                 $currW = (float)$current[$idx]['block_item_width'];
                 $currH = (float)$current[$idx]['block_item_height'];
 
-                $newW = array_key_exists($index, $receivedWidth) ? (float)$receivedWidth[$index] : $currW;
-                $newH = array_key_exists($index, $receivedHeight) ? (float)$receivedHeight[$index] : $currH;
+                // Promote scalar → use current if not provided
+                $newW = array_key_exists($index, $receivedWidth) && $receivedWidth[$index] !== '' ? (float)$receivedWidth[$index] : $currW;
+                $newH = array_key_exists($index, $receivedHeight) && $receivedHeight[$index] !== '' ? (float)$receivedHeight[$index] : $currH;
 
+                // Only add/subtract when changed
                 if ($block_size_dimension == 'mt (t)') {
-                    $oldRaw = $currW;
-                    $newRaw = $newW;
+                    $oldRaw   = $currW;
+                    $newRaw   = $newW;
                     $itemDelta = $newRaw - $oldRaw;
                 } else {
-                    $oldRaw = $currW * ($currH ?: 1);
-                    $newRaw = $newW * ($newH ?: 1);
+                    $oldRaw   = $currW * ($currH ?: 1);
+                    $newRaw   = $newW * ($newH ?: 1);
                     $itemDelta = $convert($newRaw) - $convert($oldRaw);
                 }
 
@@ -163,17 +196,17 @@ if (isset($validRequest)) {
 
                 $itemGrossRaw = ($block_size_dimension == 'mt (t)') ? $newW : $newRaw;
                 $grossCase .= "WHEN block_item_id='{$idx}' THEN " . intval(round($itemGrossRaw)) . " ";
-                $netCase  .= "WHEN block_item_id='{$idx}' THEN " . intval(round($itemGrossRaw)) . " ";
+                $netCase   .= "WHEN block_item_id='{$idx}' THEN " . intval(round($itemGrossRaw)) . " ";
             }
 
             $new_total = (float)$block_total_size + $deltaSum;
             $new_gross = (float)$block_gross_size + $deltaSum;
-            $new_net = $new_gross - (float)$block_damage_size;
+            $new_net   = $new_gross - (float)$block_damage_size;
 
             // round and cast to int before saving
             $new_total = intval(round($new_total));
             $new_gross = intval(round($new_gross));
-            $new_net = intval(round($new_net));
+            $new_net   = intval(round($new_net));
 
             if ($new_total < 0 || $new_gross < 0 || $new_net < 0 || $new_net > $new_gross) {
                 mysqli_query($connection, "ROLLBACK");
@@ -206,6 +239,7 @@ if (isset($validRequest)) {
 
             if ($okItems && $okBlock) {
                 mysqli_query($connection, "COMMIT");
+                $httpStatus = 201;
                 $status = 'success';
                 $msg = 'Block updated successfully';
             } else {
@@ -217,4 +251,5 @@ if (isset($validRequest)) {
     }
 }
 
+http_response_code($httpStatus);
 echo json_encode(['status' => $status, 'msg' => $msg], TRUE);

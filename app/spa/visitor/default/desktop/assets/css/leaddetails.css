@@ -1,0 +1,404 @@
+.lead_details__title h3{
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--main-color);
+}
+.lead_details__title{
+    width: 100%;
+}
+.lead_details__title p{
+    color: var(--grey-fade);
+    font-size: 16px;
+}
+.details_container{
+    margin-top: 15px;
+}
+.details_flex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+}
+.details_left{
+    background: var(--white-color);
+    border-radius: 8px;
+    padding: 15px;
+}
+.user--details{
+    display: flex;
+    gap: 18px;
+}
+.details_img img{
+    width: 74px;
+    height: 74px;
+    object-fit: cover;
+}
+.details_name h3{
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--main-color);
+}
+.details_name p{
+    color: var(--grey-fade);
+    font-size: 16px;
+    margin-top: 18px;
+    font-style: italic;
+}
+.social{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+.social a img{
+    width: 47px;
+}
+.details_right{
+    background: var(--white-color);
+    /* height: 100%; */
+    padding: 55px 15px 2rem 15px;
+    border-radius: 18px 0 0 18px;
+    position: sticky;
+    top: 0;
+}
+.details_right__content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.details_right__content button{
+    text-align: left;
+    padding: 4px 4px 4px 10px;
+}
+.back_page{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+.back_page a{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: var(--grey-fade);
+}
+.back_page p{
+    color: var(--grey-fade);
+    font-size: 14px;
+}
+
+/* tabs_wrapper */
+.tabs_wrapper{
+    margin-top: 10px;
+}
+.tabs_heading{
+    background: var(--white-color);
+    max-width: max-content;
+    padding: 14px;
+    border-radius: 8px;
+}
+.nav-tabs .nav-link.active {
+    border-color: transparent !important;
+    background: var(--main-color) !important;
+    color: var(--white-color) !important;
+}
+.nav-tabs {
+    border-bottom: transparent !important;
+}
+.nav-link{
+    color: var(--main-color) !important;
+    font-size: 16px !important;
+}
+.nav{
+    gap: 15px;
+}
+.tabs_content{
+    margin-top: 15px;
+}
+.details_box{
+    background: var(--white-color);
+    padding: 38px 38px 160px 38px;
+    border-radius: 8px;
+}
+.details_box__content{
+    display: flex;
+    gap: 175px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.details_box__content h3{
+    color: var(--grey-fade);
+    font-size: 18px;
+}
+.details_box__content p{
+    font-size: 18px;
+    color: var(--grey-color);
+}
+.details_box__content:nth-child(2){
+    gap: 222px;
+}
+.details_box__content:nth-child(3){
+    gap: 147px;
+}
+.details_box__content:nth-child(4){
+    gap: 143px;
+}
+.details_box__content a{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 18px;
+}
+.details_container .number{
+    color: var(--grey-color);
+}
+.details_msg h3{
+    color: var(--grey-fade);
+    font-size: 18px;
+}
+.details_msg p{
+    font-size: 16px;
+    color: var(--grey-color);
+    margin-top: 15px;
+}
+
+/* note */
+.note_date{
+    text-align: center;
+}
+.note_date h3{
+    font-size: 18px;
+    color: var(--grey-color);
+    font-weight: 500;
+}
+.note_box{
+    border-radius: 8px;
+    background: var(--white-color);
+    padding: 20px;
+    margin-top: 15px;
+}
+.note_box h3{
+    font-size: 24px;
+    color: var(--grey-color);
+    font-weight: 500;
+}
+.note_box p{
+    margin-top: 35px;
+    font-size: 16px;
+    color: var(--grey-color);
+}
+.note_box_name{
+    display: flex;
+    align-items: center;
+    margin-top: 50px;
+    justify-content: space-between;
+}
+.note_box_name h6{
+    font-size: 18px;
+    color: var(--grey-color);
+}
+.note_box_name h6 span{
+    color: #ACB1CE;
+}
+.note_box_name p{
+    margin-top: 0;
+}
+.note_wrapper__content{
+    margin-top: 10px;
+}
+
+/* payment */
+.payment_wrapper__heading{
+    background-color: var(--white-color);
+    border-radius: 8px;
+    padding: 25px 15px;    
+}
+.payment_title h3{
+    font-size: 18px;
+    color: var(--main-color);
+    font-weight: 500;
+}
+.payment_content{
+    background-color: var(--white-color);
+    border-radius: 8px;
+    padding: 25px 15px;  
+    margin-top: 15px;
+}
+.payment_details_title h3{
+    font-size: 18px;
+    color: var(--grey-color);
+}
+.status_title h3{
+    color: var(--green-color);
+    font-size: 18px;
+}
+.failed h3{
+    color: #FD411C;
+}
+
+/* note form */
+.note_form .form-select{
+    border: 1px solid var(--main-color) !important;
+    padding: 12px;
+    cursor: pointer;
+    color: var(--grey-color);
+    font-size: 18px;
+    font-weight: 500;
+}
+.form-select:focus{
+    box-shadow: none !important;
+    border: 1px solid var(--main-color) !important;
+}
+
+/* payment modal */
+.payment_heading{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.payment_btn button{
+    border: none;
+    outline: none;
+    background: transparent;
+}
+.payment_heading h3{
+    color: var(--main-color);
+    font-size: 24px;
+    font-weight: 500;
+}
+.payment_form{
+    margin-top: 30px;
+}
+.payment_form__content{
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 18px;
+}
+.payment_form__content label{
+    border: 1px solid var(--green-shade);
+    width: 100%;
+    padding: 20px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.payment_form__content label img{
+    width: 50px;
+}
+
+.payment_form__content .form-check-input:checked {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+.payment_modal .modal-dialog {
+    max-width: 720px !important;
+}
+.payment_amount{
+    width: 100%;
+}
+.payment_form__left{
+    width: 100%;
+}
+.payment_amount h3{
+    font-size: 24px;
+    color: var(--grey-color);
+    font-weight: 500;
+    border: 1px solid var(--main-color);
+    padding: 15px;
+    border-radius: 8px;
+}
+.total_payment{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.total_payment h6{
+    color: var(--grey-fade);
+    font-size: 18px;
+    font-weight: 500;
+}
+.total_payment__price h3{
+    font-size: 24px;
+    color: var(--grey-color);
+    text-align: right;
+    font-weight: 500;
+}
+.total_payment__price p{
+    color: var(--grey-fade);
+}
+
+/* itinerary_wrapper */
+.itinerary_wrapper{
+    position: fixed;
+    left:-100%;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+    background: var(--white-color);
+    height: 100%;
+    transition: 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.itinerary_wrapper.show{
+    left: 0;
+    transition: 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.itinerary_wrapper__left{
+    padding: 36px 30px;
+}
+.itinerary_wrapper__left h3{
+    font-size: 24px;
+    color: var(--main-color);
+    font-weight: 500;
+}
+.itinerary_wrapper__left p{
+    margin-top: 75px;
+    color: var(--grey-color);
+    font-size: 18px;
+}
+
+.itinerary_btn button{
+    background: var(--white-color);
+    color: var(--main-color);
+}
+.lead_button button{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+.lead_form__right{
+    position: relative;
+}
+.cancel_itinerary{
+    position: absolute;
+    top: 36px;
+    right: 36px;
+    cursor: pointer;
+}
+
+/* edit */
+.edit_content{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.edit_content__left{
+    width: 100%;
+}
+.edit_content__left h6{
+    color: var(--grey-fade);
+    font-size: 18px;
+}
+.edit_input{
+    width: 100%;
+}
+.edit_input input{
+    width: 100%;
+}

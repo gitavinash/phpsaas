@@ -325,6 +325,7 @@ $(document).ready(function (e) {
 
   $(document).on("click", ".deleteButton", function (event) {
     event.preventDefault();
+    $(".deleteButton").hide();
     const redirectUrl = $(this).data("redirect");
     Swal.fire({
       title: "Are you sure?",
@@ -352,10 +353,14 @@ $(document).ready(function (e) {
                   location.reload();
                 }
               }, 1500);
+              $(".deleteButton").show();
+            } else {
+              $(".deleteButton").show();
             }
           },
           error: function (response) {
             console.log(`Error : `, response);
+            $(".deleteButton").show();
             popUpMessage(
               "center",
               response.responseJSON.msg,
@@ -363,6 +368,8 @@ $(document).ready(function (e) {
             );
           },
         });
+      } else {
+        $(".deleteButton").show();
       }
     });
   });

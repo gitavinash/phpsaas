@@ -3,7 +3,7 @@
 session_start();
 date_default_timezone_set($time_zone);
 
-define('ALEYA_APP_VERSION', '1.0.0');
+define('ALEYA_APP_VERSION', '1.5.0');
 
 /** Browser current active session id */
 

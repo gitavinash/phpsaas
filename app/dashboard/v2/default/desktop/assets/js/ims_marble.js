@@ -1942,6 +1942,7 @@ $(document).ready(function () {
 
   $(".markAsSold").click(function (e) {
     e.preventDefault();
+    $(".markAsSold").hide();
     var id = $(this).attr("data-id");
     var productType = $(this).attr("data-type");
     Swal.fire({
@@ -1964,9 +1965,13 @@ $(document).ready(function () {
               setTimeout(function () {
                 window.location.reload();
               }, 1500);
+              $(".markAsSold").show();
+            } else {
+              $(".markAsSold").show();
             }
           },
           error: function (errorResponse) {
+            $(".markAsSold").show();
             popUpMessage(
               "center",
               errorResponse.responseJSON.msg,
@@ -1974,6 +1979,8 @@ $(document).ready(function () {
             );
           },
         });
+      } else {
+        $(".markAsSold").show();
       }
     });
   });
