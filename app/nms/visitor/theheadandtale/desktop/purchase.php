@@ -1,5 +1,7 @@
 <?php
 
+require_once LOGIN_CHECK;
+
 $productInfo = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "{$order} WHERE {$order}_id='{$id}' AND {$order}_status=1 AND {$order}_type='{$order}' AND  {$order}_site_id=" . SITE_ID);
 
 extract(mysqli_fetch_assoc($productInfo));
