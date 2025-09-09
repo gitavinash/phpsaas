@@ -11,7 +11,7 @@ echo json_encode([
   "display" => "standalone",
   "orientation" => "portrait-primary",
   "theme_color" => SITE_THEME_COLOUR,
-  "background_color" => "#ffffff",
+  "background_color" => ((!defined('SITE_BACKGROUND_COLOR')) ? '#ffffff' : SITE_BACKGROUND_COLOR),
   "id" => strtolower(str_replace(' ', '-', SITE_NAME)) . "-dashboard",
   "lang" => SITE_LANG,
   "dir" => "ltr",
