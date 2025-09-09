@@ -176,7 +176,7 @@
 
     <!-- Logout -->
     <div class="more-footer">
-        <a href="logout/" class="logout-btn" aria-label="Log out">
+        <a href="/logout/" class="logout-btn" aria-label="Log out">
             <i class="fi-rr-power"></i>
             <span>Log out</span>
         </a>
