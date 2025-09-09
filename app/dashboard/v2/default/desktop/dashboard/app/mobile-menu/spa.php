@@ -6,6 +6,12 @@
     </div>
 
     <div class="more-scroller">
+
+        <?php if ($site_access_type === 'administrator') { ?>
+        <!-- =========================
+         ADMIN SECTIONS
+         ========================= -->
+
         <!-- MEMBERSHIP MANAGEMENT -->
         <div class="more-section is-membership">
             <h4>Membership <small>Plans & members</small></h4>
@@ -131,6 +137,44 @@
                 </div>
             </div>
         </div>
+
+        <?php } else { ?>
+        <!-- =========================
+         RECEPTION SECTIONS
+         ========================= -->
+
+        <!-- MEMBERSHIP (Reception focus: Check-in) -->
+        <div class="more-section is-membership">
+            <h4>Membership <small>Quick actions</small></h4>
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="/membership/check-in/" class="more-item spa-link" data-route="/membership/check-in/">
+                        <i class="fi fi-rr-entrance"></i><span>Check-in</span>
+                    </a>
+                    <a href="/membership/member/" class="more-item spa-link" data-route="/membership/member/">
+                        <i class="fi fi-rr-users"></i><span>Members</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROOMS (Reception focus: Active rooms) -->
+        <div class="more-section is-rooms">
+            <h4>Rooms <small>Live status</small></h4>
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="/rooms/active/" class="more-item spa-link" data-route="/rooms/active/">
+                        <i class="fi fi-rr-door-open"></i><span>Active Rooms</span>
+                    </a>
+                    <a href="/room/booking/" class="more-item spa-link" data-route="/room/booking/">
+                        <i class="fi fi-rr-calendar-check"></i><span>New Booking</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <?php } ?>
+
     </div>
 
     <!-- Logout -->
@@ -144,16 +188,43 @@
 
 <!-- Bottom Navigation -->
 <nav class="bottom-nav" role="navigation" aria-label="Primary">
-    <a href="/dashboard/" class="bn-item spa-link" data-route="/dashboard/">
+    <?php if ($site_access_type === 'administrator') { ?>
+    <a href="/dashboard/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/dashboard/') !== false) ? 'active' : ''; ?>"
+        data-route="/dashboard/">
         <i class="fi-rr-home"></i><span>Home</span>
     </a>
-    <a href="/membership/" class="bn-item spa-link" data-route="/membership/">
+    <a href="/membership/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/') !== false) ? 'active' : ''; ?>"
+        data-route="/membership/">
         <i class="fi fi-rr-id-badge"></i><span>Membership</span>
     </a>
-    <a href="/room/" class="bn-item spa-link" data-route="/room/">
+    <a href="/room/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/room/') !== false) ? 'active' : ''; ?>"
+        data-route="/room/">
         <i class="fi fi-rr-door-open"></i><span>Rooms</span>
     </a>
     <button type="button" class="bn-item bn-more" id="moreOpen" aria-haspopup="dialog" aria-controls="morePanel">
         <i class="fi-rr-apps"></i><span>More</span>
     </button>
+    <?php } else { ?>
+    <a href="/dashboard/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/dashboard/') !== false) ? 'active' : ''; ?>"
+        data-route="/dashboard/">
+        <i class="fi-rr-home"></i><span>Home</span>
+    </a>
+    <a href="/membership/check-in/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/check-in/') !== false) ? 'active' : ''; ?>"
+        data-route="/membership/check-in/">
+        <i class="fi fi-rr-entrance"></i><span>Check-in</span>
+    </a>
+    <a href="/rooms/active/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/rooms/active/') !== false) ? 'active' : ''; ?>"
+        data-route="/rooms/active/">
+        <i class="fi fi-rr-door-open"></i><span>Rooms</span>
+    </a>
+    <button type="button" class="bn-item bn-more" id="moreOpen" aria-haspopup="dialog" aria-controls="morePanel">
+        <i class="fi-rr-apps"></i><span>More</span>
+    </button>
+    <?php } ?>
 </nav>
