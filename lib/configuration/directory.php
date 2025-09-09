@@ -11,7 +11,7 @@ define('RESOURCE', ROOT . '/lib/resource/');
 define('SOCIAL_LOGIN', RESOURCE . 'social-login/');
 define('PAYMENT_GATEWAY', RESOURCE . 'payment-gateway/');
 define('NOTIFICATION', value: RESOURCE . 'notification/');
-define('PWA', RESOURCE . '/lib/resource/pwa/');
+define('PWA', RESOURCE . 'pwa/');
 define('QR_CODE', RESOURCE . 'qrcode/');
 define('CONTLO', RESOURCE . 'contlo/');
 define('RECAPTCHA', RESOURCE . 'recaptcha/');
@@ -57,9 +57,9 @@ define('EDITOR', PLUGIN_LIBRARY . 'editor/editor.min.js');
 
 /** Default Service Worker */
 
-define('DASHBOARD_SERVICE_WORKER', RESOURCE . 'service-worker/admin/sw.js');
+define('DASHBOARD_SERVICE_WORKER', RESOURCE . 'service-worker/admin/sw.php');
 define('VISITOR_SERVICE_WORKER', RESOURCE . 'service-worker/visitor/sw.min.js');
-define('MAINFEST_JSON', SITE_URL . '/mainfest.json');
+define('manifest_JSON', SITE_URL . '/manifest.json');
 
 /** System default and usefull modules */
 

@@ -31,11 +31,6 @@ if (isset($daterange)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php
-    if ($postType == '') {
-        echo "<meta http-equiv='refresh' content='300'>";
-    }
-    ?>
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title><?php echo str_replace('_', ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
     <!-- <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css"> -->
@@ -55,7 +50,6 @@ if (isset($daterange)) {
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
-    <link rel="manifest" href="mainfest.json">
     <?php
     if (SITE_VERSION == 'mobile') {
         echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_v2_mobile.min.css'>";
@@ -63,6 +57,10 @@ if (isset($daterange)) {
     ?>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
         media="screen">
+    <?php require_once PWA . 'header.php'; ?>
+    <?php
+
+    if (DEVELOPMENT_MODE == false) { ?>
     <script type="text/javascript">
     var oldGalleryImages = '';
     (function(c, l, a, r, i, t, y) {
@@ -76,6 +74,10 @@ if (isset($daterange)) {
         y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "lrfkm51aya");
     </script>
+    <?php
+    }
+
+    ?>
 </head>
 
 <body>

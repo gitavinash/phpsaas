@@ -3,7 +3,7 @@
 <?php if ($site_access_type === 'administrator') { ?>
 <!-- Admin: Create membership • Check-in • Reports • Active rooms -->
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
+    <a href="membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
         aria-label="Create membership">
         <div class="widget-info">
             <i class="fi fi-rr-user-add plus-badge badge-blue" aria-hidden="true"></i>
@@ -13,7 +13,7 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/check-in/" class="actionBtn new-item-btn spa-link" data-route="/membership/check-in/"
+    <a href="membership/check-in/" class="actionBtn new-item-btn spa-link" data-route="/membership/check-in/"
         aria-label="Deduct a membership visit">
         <div class="widget-info">
             <i class="fi fi-rr-entrance plus-badge badge-amber" aria-hidden="true"></i>
@@ -23,7 +23,7 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/reports/" class="actionBtn new-item-btn spa-link" data-route="/membership/reports/"
+    <a href="membership/reports/" class="actionBtn new-item-btn spa-link" data-route="/membership/reports/"
         aria-label="Membership reports">
         <div class="widget-info">
             <i class="fi fi-rr-chart-histogram plus-badge" aria-hidden="true"></i>
@@ -33,7 +33,7 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
+    <a href="rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
         aria-label="Manage active rooms">
         <div class="widget-info">
             <i class="fi fi-rr-door-open plus-badge badge-green" aria-hidden="true"></i>
@@ -47,7 +47,7 @@
 <!-- Reception: Check-in • Active rooms -->
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
+    <a href="membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
         aria-label="Create membership">
         <div class="widget-info">
             <i class="fi fi-rr-user-add plus-badge badge-blue" aria-hidden="true"></i>
@@ -57,7 +57,7 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/check-in/" class="actionBtn new-item-btn spa-link" data-route="/membership/check-in/"
+    <a href="membership/check-in/" class="actionBtn new-item-btn spa-link" data-route="/membership/check-in/"
         aria-label="Deduct a membership visit">
         <div class="widget-info">
             <i class="fi fi-rr-entrance plus-badge badge-amber" aria-hidden="true"></i>
@@ -67,7 +67,7 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
+    <a href="rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
         aria-label="Manage active rooms">
         <div class="widget-info">
             <i class="fi fi-rr-door-open plus-badge badge-green" aria-hidden="true"></i>

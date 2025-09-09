@@ -21,8 +21,6 @@
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
-
-				<script src="<?php echo PWA_REGISTER ?>"></script>
 				<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 				<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
 				<script src='<?php echo PLUGIN_LIBRARY ?>moment/moment.min.js' type='text/javascript'></script>
@@ -123,7 +121,13 @@ const tempId = '<?php echo base64_encode(USER_ID) ?>';
 
                 ?>
 				<script src="<?php echo ADMIN_JS ?>app.js"></script>
-				<script src="<?php echo ADMIN_JS . SITE_APP ?>.js"></script>
+				<?php
+                $appJSScitp = ADMIN_JS . SITE_APP . '.js';
+                if (file_exists($appJSScitp)) {
+                    echo "<script src='{$appJSScitp}'></script>";
+                }
+                ?>
+				<?php require_once PWA . 'footer.php'; ?>
 				</body>
 
 				</html>

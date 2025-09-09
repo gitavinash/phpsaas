@@ -1,5 +1,22 @@
 <?php
 
+// Load manifest.json
+
+if (ADMIN_BASE_URL == '/manifest.json') {
+	$manifestFile = ROOT . '/app/dashboard/v' . $site_dashboard_version . '/default/desktop/manifest/' . strtolower(SITE_APP) . '.php';
+	if (file_exists($manifestFile)) {
+		require_once $manifestFile;
+	} else {
+		require_once ROOT . '/app/dashboard/v' . $site_dashboard_version . '/default/desktop/manifest/default.php';
+	}
+	exit();
+}
+
+if (ADMIN_BASE_URL == '/sw.js') {
+	require_once DASHBOARD_SERVICE_WORKER;
+	exit();
+}
+
 /* Check user is logged in or not */
 
 require_once LOGIN_CHECK;

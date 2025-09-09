@@ -72,6 +72,7 @@
   }
   .mobileLogo {
     display: block;
+    margin-top: -4px !important;
   }
   .mobileLogo img {
     max-width: 100px;

@@ -313,7 +313,7 @@ $(document).ready(function (e) {
     });
   }
 
-  if (updateGallery) {
+  if (typeof oldGalleryImages !== "undefined" && updateGallery.length > 0) {
     $(".updateGallery").imageUploader({
       preloaded: oldGalleryImages,
       imagesInputName: "gallery",
