@@ -8,7 +8,7 @@ echo json_encode([
   "description" => SITE_DESC,
   "start_url" => "/dashboard/?source=pwa",
   "scope" => "/dashboard/",
-  "display" => "fullscreen",
+  "display" => "standalone",
   "orientation" => "portrait-primary",
   "theme_color" => SITE_THEME_COLOUR,
   "background_color" => SITE_BACKGROUND_COLOUR,
@@ -18,10 +18,22 @@ echo json_encode([
   "categories" => ["business", "productivity", "management"],
   "icons" => [
     [
-      "src" => SITE_ICON,
+      "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_ICON) . '&width=512&height=512',
       "sizes" => "512x512",
       "type" => "image/png",
-      "purpose" => "any maskable"
+      "purpose" => "any"
+    ],
+    [
+      "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_ICON) . '&width=192&height=192',
+      "sizes" => "192x192",
+      "type" => "image/png",
+      "purpose" => "any"
+    ],
+    [
+      "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_ICON) . '&width=96&height=96',
+      "sizes" => "96x96",
+      "type" => "image/png",
+      "purpose" => "any"
     ]
   ],
   "prefer_related_applications" => false

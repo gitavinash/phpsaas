@@ -130,6 +130,12 @@ switch ($urlStructure[0]) {
 		require_once 'service-worker.php';
 		break;
 
+	// Image render
+
+	case 'viewmedia':
+		require_once MODULES . 'media/image.php';
+		break;
+
 	// CSS Configuration
 
 	case 'config.min.css':
