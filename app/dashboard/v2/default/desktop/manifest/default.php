@@ -36,5 +36,21 @@ echo json_encode([
       "purpose" => "any"
     ]
   ],
+  "screenshots" => [
+    [
+      "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_URL . "/lib/resource/ui/img/logo-hd.png") . '&width=1600&height=900',
+      "sizes" => "1600x900",
+      "type" => "image/png",
+      "form_factor" => "wide",
+      "label" => "Dashboard Overview"
+    ],
+    [
+      "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_URL . "/lib/resource/ui/img/logo-hd.png") . '&width=1080&height=1920',
+      "sizes" => "1080x1920",
+      "type" => "image/png",
+      "form_factor" => "narrow",
+      "label" => "Mobile View of Dashboard"
+    ]
+  ],
   "prefer_related_applications" => false
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
