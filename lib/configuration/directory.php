@@ -11,6 +11,7 @@ define('RESOURCE', ROOT . '/lib/resource/');
 define('SOCIAL_LOGIN', RESOURCE . 'social-login/');
 define('PAYMENT_GATEWAY', RESOURCE . 'payment-gateway/');
 define('NOTIFICATION', value: RESOURCE . 'notification/');
+define('PWA', RESOURCE . '/lib/resource/pwa/');
 define('QR_CODE', RESOURCE . 'qrcode/');
 define('CONTLO', RESOURCE . 'contlo/');
 define('RECAPTCHA', RESOURCE . 'recaptcha/');
@@ -72,6 +73,10 @@ define('SITE_STATUS', MODULES . 'siteStatus.php');
 define('UTIL_FUNCTIONS', FUNCTIONS . '/utils.php');
 define('COMMUNICATION_FUNCTIONS', FUNCTIONS . 'communicatipn.php');
 define('HOMEPAGE_FUNCTIONS', FUNCTIONS . 'homepage.php');
+
+/** System default and usefull modules */
+
+define('PWA_REGISTER', PWA . '/register.js');
 
 /** Font Directory */
 
