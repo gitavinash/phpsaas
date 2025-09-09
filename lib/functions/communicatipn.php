@@ -1,5 +1,47 @@
 <?php
 
+function sendOTPviaSMS($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in')
+{
+    $smsUserName = defined('SMS_USERNAME') ? SMS_USERNAME : 'blumoxsms';
+    $smsPassword = defined('SMS_PASSWORD') ? SMS_PASSWORD : '123456';
+    $smsHeader   = defined('SMS_HEADER')   ? SMS_HEADER   : 'BLUMOX';
+
+    $message = "Hi {$name}, your {$site_name} OTP is {$otpCode}. Please do not share this code with anyone. - {$site_name}";
+
+    $queryParams = http_build_query([
+        'user'     => $smsUserName,
+        'pass'     => $smsPassword,
+        'sender'   => $smsHeader,
+        'phone'    => $mobile,
+        'text'     => $message,
+        'priority' => 'ndnd',
+        'stype'    => 'normal',
+    ], '', '&', PHP_QUERY_RFC3986);
+
+    $sendMessageUrl = "https://bhash.notify360.in/api/sendmsg.php?" . $queryParams;
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => $sendMessageUrl,
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_HEADER         => false,
+        CURLOPT_NOSIGNAL       => true,
+        CURLOPT_TIMEOUT_MS     => 2000,
+    ]);
+
+    curl_exec($ch);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if (DEVELOPMENT_MODE == true) {
+        if (stripos($curlError, 'timed out') !== false) {
+            return "Timeout: " . $sendMessageUrl;
+        }
+    }
+
+    return true;
+}
+
 function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in')
 {
     $url = "https://control.msg91.com/api/v5/flow/";

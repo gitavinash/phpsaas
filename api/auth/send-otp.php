@@ -49,9 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $response['otpRef'] = mysqli_insert_id($connection);
 
             if (isset($mobile)) {
+
+                if (!defined('SMS_GATEWAY')) {
+                    define('SMS_GATEWAY', '');
+                }
+
                 switch (SMS_GATEWAY) {
                     case 'msg91':
                         $sendResult = sendOTPviaMSG91($mobile, $otpCode, $otpComment, $site_name);
+                        break;
+                    default:
+                        $sendResult = sendOTPviaSMS($mobile, $otpCode, $otpComment, $site_name);
                         break;
                 }
             } else {
@@ -60,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             if ($sendResult !== true) {
                 $response['status'] = 'warning';
-                $response['msg'] = 'OTP stored but failed to send';
+                $response['msg'] = 'OTP stored but failed to send' . ((DEVELOPMENT_MODE == true) ? $sendResult : '');
                 $response['error'] = $sendResult;
             }
 

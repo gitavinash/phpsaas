@@ -24,11 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
                 switch ($otp_mode) {
                     case 'sms';
+                        if (!defined('SMS_GATEWAY')) {
+                            define('SMS_GATEWAY', '');
+                        }
+
                         switch (SMS_GATEWAY) {
                             case 'msg91':
-                                $sendStatus = sendOTPviaMSG91($otpData['otp_destination'], $otpCode, $otpComment, $site_domain);
+                                $sendStatus = sendOTPviaMSG91($otpData['otp_destination'], $otpCode, $otpComment, $site_name);
                                 break;
                             default:
+                                $sendStatus = sendOTPviaSMS($otpData['otp_destination'], $otpCode, $otpComment, $site_name);
                                 break;
                         }
                         break;
@@ -43,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $httpStatus = 200;
                 } else {
                     $response['status'] = 'error';
-                    $response['msg'] = 'Failed to resend OTP: ' . $sendStatus;
+                    $response['msg'] = 'Failed to resend OTP: '  . ((DEVELOPMENT_MODE == true) ? $sendStatus : '');;
                     $httpStatus = 500;
                 }
             } else {
