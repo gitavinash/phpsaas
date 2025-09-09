@@ -96,6 +96,7 @@ define(
 /** Site Settings Configuration */
 
 define('SITE_THEME_COLOUR', ((isset($site_theme_color)) ? $site_theme_color : '#00b7ff'));
+define('SITE_BACKGROUND_COLOUR', ((isset($site_background_color)) ? $site_background_color : SITE_THEME_COLOUR));
 
 // Encrption and Descryption
 
