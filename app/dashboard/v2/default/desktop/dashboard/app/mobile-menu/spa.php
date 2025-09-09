@@ -166,9 +166,6 @@
                     <a href="/rooms/active/" class="more-item spa-link" data-route="/rooms/active/">
                         <i class="fi fi-rr-door-open"></i><span>Active Rooms</span>
                     </a>
-                    <a href="/room/booking/" class="more-item spa-link" data-route="/room/booking/">
-                        <i class="fi fi-rr-calendar-check"></i><span>New Booking</span>
-                    </a>
                 </div>
             </div>
         </div>
