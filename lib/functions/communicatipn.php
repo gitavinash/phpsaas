@@ -20,25 +20,7 @@ function sendOTPviaSMS($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in
 
     $sendMessageUrl = "https://bhash.notify360.in/api/sendmsg.php?" . $queryParams;
 
-    $ch = curl_init();
-    curl_setopt_array($ch, [
-        CURLOPT_URL            => $sendMessageUrl,
-        CURLOPT_RETURNTRANSFER => false,
-        CURLOPT_HEADER         => false,
-        CURLOPT_NOSIGNAL       => true,
-        CURLOPT_TIMEOUT_MS     => 2000,
-    ]);
-
-    curl_exec($ch);
-    $curlError = curl_error($ch);
-    curl_close($ch);
-
-    if (DEVELOPMENT_MODE == true) {
-        if (stripos($curlError, 'timed out') !== false) {
-            return "Timeout: " . $sendMessageUrl;
-        }
-    }
-
+    file_get_contents($sendMessageUrl);
     return true;
 }
 

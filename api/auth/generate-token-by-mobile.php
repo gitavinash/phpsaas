@@ -20,7 +20,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         } elseif (preg_match('/^[6-9]\d{9}$/', $mobile)) {
             $userEmail =  time() . '@' . SITE_DOMAIN;
             $checkUserCondition = "user_mobile='{$mobile}'";
-            $firstTwoColumnValue = "{$mobile}', '{$secondValue}";
+            $firstTwoColumnValue = "{$mobile}', '{$userEmail}";
         }
 
         $existingUser = false;
