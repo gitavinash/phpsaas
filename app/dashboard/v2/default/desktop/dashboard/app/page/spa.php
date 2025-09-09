@@ -1,73 +1,69 @@
 <?php if (SITE_VERSION == 'mobile') { ?>
-<!-- Membership-focused quick actions (SPA-ready) -->
+
+<?php if ($site_access_type === 'administrator') { ?>
+<!-- Admin: Create membership • Check-in • Reports • Active rooms -->
 <div class="widget box-2 box-mb-5">
     <a href="/membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
-        aria-label="Sell a membership package">
+        aria-label="Create membership">
         <div class="widget-info">
-            <i class="fi fi-rr-receipt plus-badge badge-amber" aria-hidden="true"></i>
-            Sell Membership
+            <i class="fi fi-rr-user-add plus-badge badge-blue" aria-hidden="true"></i>
+            Create membership
         </div>
     </a>
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/plan/add/" class="actionBtn new-item-btn spa-link" data-route="/membership/plan/add/"
-        aria-label="Create a new membership plan">
+    <a href="/membership/check-in/" class="actionBtn new-item-btn spa-link" data-route="/membership/check-in/"
+        aria-label="Deduct a membership visit">
         <div class="widget-info">
-            <i class="fi fi-rr-category-alt plus-badge badge-blue" aria-hidden="true"></i>
-            New Plan
+            <i class="fi fi-rr-entrance plus-badge badge-amber" aria-hidden="true"></i>
+            Check-in
         </div>
     </a>
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/plan/" class="actionBtn new-item-btn spa-link" data-route="/membership/plan/"
-        aria-label="Manage membership plans">
+    <a href="/membership/reports/" class="actionBtn new-item-btn spa-link" data-route="/membership/reports/"
+        aria-label="Membership reports">
         <div class="widget-info">
-            <i class="fi fi-rr-boxes plus-badge" aria-hidden="true"></i>
-            Manage Plans
+            <i class="fi fi-rr-chart-histogram plus-badge" aria-hidden="true"></i>
+            Reports
         </div>
     </a>
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/member/add/" class="actionBtn new-item-btn spa-link" data-route="/membership/member/add/"
-        aria-label="Add a new member">
+    <a href="/rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
+        aria-label="Manage active rooms">
         <div class="widget-info">
-            <i class="fi fi-rr-building plus-badge badge-amber" aria-hidden="true"></i>
-            Add Member
+            <i class="fi fi-rr-door-open plus-badge badge-green" aria-hidden="true"></i>
+            Active rooms
+        </div>
+    </a>
+</div>
+<?php } ?>
+
+<?php if ($site_access_type === 'reception' || $site_access_type === '') { ?>
+<!-- Reception: Check-in • Active rooms -->
+<div class="widget box-2 box-mb-5">
+    <a href="/membership/check-in/" class="actionBtn new-item-btn spa-link" data-route="/membership/check-in/"
+        aria-label="Deduct a membership visit">
+        <div class="widget-info">
+            <i class="fi fi-rr-entrance plus-badge badge-amber" aria-hidden="true"></i>
+            Check-in
         </div>
     </a>
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="/membership/member/" class="actionBtn new-item-btn spa-link" data-route="/membership/member/"
-        aria-label="View all members">
+    <a href="/rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
+        aria-label="Manage active rooms">
         <div class="widget-info">
-            <i class="fi fi-rr-warehouse-alt plus-badge badge-amber" aria-hidden="true"></i>
-            Members
+            <i class="fi fi-rr-door-open plus-badge badge-green" aria-hidden="true"></i>
+            Active rooms
         </div>
     </a>
 </div>
-
-<div class="widget box-2 box-mb-5">
-    <a href="/membership/renewals/" class="actionBtn new-item-btn spa-link" data-route="/membership/renewals/"
-        aria-label="Process renewals">
-        <div class="widget-info">
-            <i class="fi fi-rr-shipping-fast plus-badge badge-amber" aria-hidden="true"></i>
-            Renewals
-        </div>
-    </a>
-</div>
-
-<div class="widget box-2 box-mb-5">
-    <a href="/membership/payments/" class="actionBtn new-item-btn spa-link" data-route="/membership/payments/"
-        aria-label="View membership payments">
-        <div class="widget-info">
-            <i class="fi fi-rr-receipt plus-badge" aria-hidden="true"></i>
-            Payments
-        </div>
-    </a>
-</div>
+<?php } ?>
 
 <?php } ?>

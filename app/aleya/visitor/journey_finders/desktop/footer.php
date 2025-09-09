@@ -141,40 +141,29 @@
 <script src="<?php echo USER_JS ?>app.min.js"></script>
 <script src="<?php echo USER_JS ?>tailwind.config.min.js"></script>
 <script>
-// Back to top button
-document.getElementById("back-to-top").addEventListener("click", () => {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+    // Back to top button
+    document.getElementById("back-to-top").addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     });
-});
-// Add event listeners to form elements
-document.addEventListener("DOMContentLoaded", function() {
-    const selects = document.querySelectorAll("select");
-    selects.forEach((select) => {
-        const parent = select.parentElement;
-        if (!parent.querySelector(".ri-arrow-down-s-line")) {
-            const icon = document.createElement("div");
-            icon.className = "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none";
-            icon.innerHTML = '<i class="ri-arrow-down-s-line text-gray-500"></i>';
-            parent.style.position = "relative";
-            parent.appendChild(icon);
-        }
+    // Add event listeners to form elements
+    document.addEventListener("DOMContentLoaded", function() {
+        const selects = document.querySelectorAll("select");
+        selects.forEach((select) => {
+            const parent = select.parentElement;
+            if (!parent.querySelector(".ri-arrow-down-s-line")) {
+                const icon = document.createElement("div");
+                icon.className = "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none";
+                icon.innerHTML = '<i class="ri-arrow-down-s-line text-gray-500"></i>';
+                parent.style.position = "relative";
+                parent.appendChild(icon);
+            }
+        });
     });
-});
 </script>
-<script>
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                console.log('Service Worker registered with scope:', registration.scope);
-            },
-            function(err) {
-                console.log('Service Worker registration failed:', err);
-            });
-    });
-}
-</script>
+<?php require_once PWA_REGISTER   ?>
 
 </body>
 
