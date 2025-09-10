@@ -13,14 +13,14 @@
 
 <!-- Exact iOS touch icons (fix double slash; ensure these are real sizes) -->
 <link rel="apple-touch-icon" sizes="180x180"
-    href="https://honey2spa.sourcenear.com/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=180&height=180">
+    href="<?php echo SITE_URL ?>/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=180&height=180">
 <!-- Optional extra sizes for older devices -->
 <link rel="apple-touch-icon" sizes="167x167"
-    href="https://honey2spa.sourcenear.com/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=167&height=167">
+    href="<?php echo SITE_URL ?>/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=167&height=167">
 <link rel="apple-touch-icon" sizes="152x152"
-    href="https://honey2spa.sourcenear.com/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=152&height=152">
+    href="<?php echo SITE_URL ?>/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=152&height=152">
 <link rel="apple-touch-icon" sizes="120x120"
-    href="https://honey2spa.sourcenear.com/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=120&height=120">
+    href="<?php echo SITE_URL ?>/viewmedia/?url=<?php echo urlencode(SITE_ICON); ?>&width=120&height=120">
 
 
 <!-- Basic PWA Meta -->
