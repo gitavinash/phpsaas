@@ -65,4 +65,25 @@
         }
     });
 })();
+
+(function() {
+    const isiOSStandalone = window.navigator.standalone === true;
+    if (!isiOSStandalone) return;
+
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('a[href]');
+        if (!a) return;
+
+        const url = new URL(a.getAttribute('href'), location.href);
+        const sameOrigin = url.origin === location.origin;
+
+        // Avoid target=_blank and external opens when installed on iOS
+        if (sameOrigin) {
+            e.preventDefault();
+            location.assign(url.href);
+        }
+    }, {
+        capture: true
+    });
+})();
 </script>
