@@ -74,14 +74,14 @@ echo json_encode([
   ],
   "screenshots" => [
     [
-      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/desktop/dashboard.png",
+      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/desktop/spa/dashboard.png",
       "sizes" => "1600x900",
       "type" => "image/png",
       "form_factor" => "wide",
       "label" => "Dashboard Overview"
     ],
     [
-      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/mobile/dashboard.png",
+      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/mobile/spa/dashboard.png",
       "sizes" => "1080x1920",
       "type" => "image/png",
       "form_factor" => "narrow",
