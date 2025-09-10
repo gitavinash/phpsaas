@@ -38,14 +38,14 @@ echo json_encode([
   ],
   "screenshots" => [
     [
-      "src" => "/lib/resource/ui/img/app/screenshot/desktop/aleya/dashboard.png",
+      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/desktop/aleya/dashboard.png",
       "sizes" => "1600x900",
       "type" => "image/png",
       "form_factor" => "wide",
       "label" => "Dashboard Overview"
     ],
     [
-      "src" => "/lib/resource/ui/img/app/screenshot/mobile/aleya/dashboard.png",
+      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/mobile/aleya/dashboard.png",
       "sizes" => "1080x1920",
       "type" => "image/png",
       "form_factor" => "narrow",
