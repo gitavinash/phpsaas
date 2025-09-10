@@ -6,11 +6,6 @@
 </title>
 <!-- Canonical URL -->
 <link rel="canonical" href="<?php echo $canonicalURL; ?>" />
-<!-- PWA Start -->
-<link rel="manifest" href="<?php echo MAINFEST_JSON ?>">
-<link rel="apple-touch-icon" href="<?php echo SITE_ICON ?>">
-<meta name="apple-mobile-web-app-status-bar" content="<?php echo SITE_THEME_COLOUR ?>">
-
 
 <?php
 
