@@ -122,9 +122,10 @@ const tempId = '<?php echo base64_encode(USER_ID) ?>';
                 ?>
 				<script src="<?php echo ADMIN_JS ?>app.js"></script>
 				<?php
-                $appJSScitp = ADMIN_JS . SITE_APP . '.js';
-                if (file_exists($appJSScitp)) {
-                    echo "<script src='{$appJSScitp}'></script>";
+                $appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
+                $appJSScript = ADMIN_JS . SITE_APP . '.js';
+                if (file_exists($appJSPath)) {
+                    echo "<script src='{$appJSScript}'></script>";
                 }
                 ?>
 				<?php require_once PWA . 'footer.php'; ?>
