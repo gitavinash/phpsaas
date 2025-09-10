@@ -25,27 +25,6 @@ if (SITE_VERSION == 'desktop') {
 require_once 'header.php';
 
 ?>
-<div class="col d-none d-lg-block">
-    <div class="slider">
-        <div class="slide">
-            <div class="blockquote-wrapper">
-                <div class="blockquote">
-                    <?php
-
-                    if ($quoteOfTheDay['quoteText'] != '') {
-                        echo '<p>' . $quoteOfTheDay['quoteText'] . '</p>';
-                    }
-                    if ($quoteOfTheDay['quoteAuthor'] != '') {
-                        echo '<p><strong>&mdash; ' . $quoteOfTheDay['quoteAuthor'] . '</strong></p>';
-                    }
-
-                    ?>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="col form-bg">
     <div class="form">
         <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>
