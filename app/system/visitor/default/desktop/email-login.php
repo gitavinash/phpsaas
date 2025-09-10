@@ -8,43 +8,10 @@ if (isset($_COOKIE['isLogin'])) {
     exit();
 }
 
-$quoteOfTheDay = ['quoteText' => '', 'quoteAuthor' => ''];
-
-if (SITE_VERSION == 'desktop') {
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 60
-        ]
-    ]);
-
-    $quoteOfTheDay = file_get_contents("https://api.forismatic.com/api/1.0/?method=getQuote&format=json&key=1&lang=en", false, $context);
-    $quoteOfTheDay = json_decode($quoteOfTheDay, TRUE);
-}
-
 require_once 'header.php';
 
 ?>
-<div class="col d-none d-lg-block">
-    <div class="slider">
-        <div class="slide">
-            <div class="blockquote-wrapper">
-                <div class="blockquote">
-                    <?php
 
-                    if ($quoteOfTheDay['quoteText'] != '') {
-                        echo '<p>' . $quoteOfTheDay['quoteText'] . '</p>';
-                    }
-                    if ($quoteOfTheDay['quoteAuthor'] != '') {
-                        echo '<p><strong>&mdash; ' . $quoteOfTheDay['quoteAuthor'] . '</strong></p>';
-                    }
-
-                    ?>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="col form-bg">
     <div class="form">
         <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>

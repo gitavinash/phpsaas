@@ -8,20 +8,6 @@ if (isset($_COOKIE['isLogin'])) {
     exit();
 }
 
-$quoteOfTheDay['quoteText'] = '';
-$quoteOfTheDay['quoteAuthor'] = '';
-
-if (SITE_VERSION == 'desktop') {
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 60
-        ]
-    ]);
-
-    $quoteOfTheDay = file_get_contents("https://api.forismatic.com/api/1.0/?method=getQuote&format=json&key=1&lang=en", false, $context);
-    $quoteOfTheDay = json_decode($quoteOfTheDay, TRUE);
-}
-
 require_once 'header.php';
 
 ?>
