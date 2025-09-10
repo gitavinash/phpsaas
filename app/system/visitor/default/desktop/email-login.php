@@ -40,7 +40,10 @@ require_once 'header.php';
                             required placeholder="123456" value="<?php echo ((isset($email)) ? $email : '') ?>">
                     </div>
                     <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-                    <a href="#" id="resendEmailOTPBtn" class="disabled" style="pointer-events: none;">Resend OTP in
+                    <a href="#" id="resendEmailOTPBtn" class="disabled"
+                        style="pointer-events: none; float: left; margin-bottom: 10px; text-decoration: none;">Resend
+                        OTP
+                        in
                         30s</a>
                     <button type="submit" id="verifyEmailOTPBtn" class="button theme-button">Verify OTP</button>
                 </form>
